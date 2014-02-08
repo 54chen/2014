@@ -2,10 +2,17 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Test | 五四陈科学院]]></title>
+<<<<<<< HEAD
   <link href="http://2014.54chen.com/blog/categories/test/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
   <updated>2014-02-08T18:36:14+08:00</updated>
   <id>http://2014.54chen.com/</id>
+=======
+  <link href="http://54chen.github.io/2014/blog/categories/test/atom.xml" rel="self"/>
+  <link href="http://54chen.github.io/2014/"/>
+  <updated>2014-02-08T18:16:44+08:00</updated>
+  <id>http://54chen.github.io/2014/</id>
+>>>>>>> 1a06192706fd3b8db0c41c48c38c4035c4eb4500
   <author>
     <name><![CDATA[54chen]]></name>
     
@@ -15,9 +22,15 @@
   
   <entry>
     <title type="html"><![CDATA[Title]]></title>
+<<<<<<< HEAD
     <link href="http://2014.54chen.com/blog/2014/02/08/title/"/>
     <updated>2014-02-08T14:57:52+08:00</updated>
     <id>http://2014.54chen.com/blog/2014/02/08/title</id>
+=======
+    <link href="http://54chen.github.io/2014/blog/2014/02/08/title/"/>
+    <updated>2014-02-08T14:57:52+08:00</updated>
+    <id>http://54chen.github.io/2014/blog/2014/02/08/title</id>
+>>>>>>> 1a06192706fd3b8db0c41c48c38c4035c4eb4500
     <content type="html"><![CDATA[<p>this is a test
 <div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>a.java</span></figcaption>
 <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
