@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-<<<<<<< HEAD
         <loc>http://2014.54chen.com/blog/2014/02/08/title/</loc>
         <lastmod>2014-02-08T15:43:08+08:00</lastmod>
     </url>
@@ -15,21 +14,6 @@
     </url>
     <url>
         <loc>http://2014.54chen.com/robots.txt</loc>
-=======
-        <loc>http://54chen.github.io/2014/blog/2014/02/08/title/</loc>
-        <lastmod>2014-02-08T15:43:08+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://54chen.github.io/2014/blog/archives/</loc>
-        <lastmod>2014-02-08T15:43:08+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://54chen.github.io/2014/</loc>
-        <lastmod>2014-02-08T15:43:08+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://54chen.github.io/2014/robots.txt</loc>
->>>>>>> 1a06192706fd3b8db0c41c48c38c4035c4eb4500
         <lastmod>2014-02-08T15:35:50+08:00</lastmod>
     </url>
 </urlset>

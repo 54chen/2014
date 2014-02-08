@@ -1,8 +1,4 @@
 User-agent: *
 Disallow: 
 
-<<<<<<< HEAD
 Sitemap: http://2014.54chen.com/sitemap.xml 
-=======
-Sitemap: http://54chen.github.io/2014/sitemap.xml 
->>>>>>> 1a06192706fd3b8db0c41c48c38c4035c4eb4500
