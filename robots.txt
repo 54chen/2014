@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://54chen.github.io/2014/sitemap.xml 
