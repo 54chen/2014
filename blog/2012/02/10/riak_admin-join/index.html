@@ -44,6 +44,7 @@ riak_kv_console:join => %%入口 riak:Join(Node) => %% 真正执行 riak_core:jo
 <div>
 <a href="/">首页</a>
 <a href="/blog/archives">归档</a>
+<a href="/about">关于</a>
 </span>
 
 </header>
@@ -139,6 +140,8 @@ riak_core_vnode:start_manager_event_timer</strong>
 独有的vnode进程与vnode manager结合紧密。当vnode的事件触发，这个vnode必须确保这个事件被发送到vnode manager，这将会产生一个状态变化的决定，并且发回适当的信息给这个vnode。为了最大限度地减少阻塞，使用了异步的消息。vnode manager挂掉而丢失靠vnode发送的信息是可能的。因此，vnode周期性地重发事件消息，直到一个从vnode manager来的合适的消息被接收。</p>
 </div>
 
+<div><a href=/donate>本文接受捐赠</a>
+</div>
 
   <footer>
     <p class="meta">
