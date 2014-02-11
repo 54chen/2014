@@ -1,0 +1,243 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Mediawiki脚本自动发内容实现 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="相信很多公司都是在使用mediawiki做内部team的知识管理，同时也有一些边边角角的脚本去做诸如上线、报警一类的工作。经常会有这样的需求：在上线的时候自动更新wiki的一页内容。 实现起来很简单，只需要一个curl即可，mediawiki提供了http restful的接口，在api. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2011/07/01/mediawiki-scripts-auto-post">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Mediawiki脚本自动发内容实现</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1r11iXhVkXXX_.NQ8_100702.jpg" alt="mediawiki auto post" /></p>
+
+<p>相信很多公司都是在使用mediawiki做内部team的知识管理，同时也有一些边边角角的脚本去做诸如上线、报警一类的工作。经常会有这样的需求：在上线的时候自动更新wiki的一页内容。</p>
+
+<p>实现起来很简单，只需要一个curl即可，mediawiki提供了http restful的接口，在api.php上，可以做很多事情，下面是实际使用的举例。</p>
+
+<p>目标：上线脚本最后执行一下记录，更新wiki里的一页做为上线记录，Online logging包换的元素有：日期，项目，版本号，机器。</p>
+
+<p>环境：安装了 curl的机器</p>
+
+<p><strong>实现细节（wiki.sh）：</strong>
+<blockquote>#! /bin/sh<br />
+OPS_APP=$1<br />
+shift<br />
+OPS_REV=$1<br />
+shift<br />
+OPS_SERVER=$1<br />
+OPS_TIME=`date`<br />
+echo &#8220;\nwrite to wiki&#8221;</blockquote></p>
+
+<p>TOKEN=`curl -s -d &#8216;action=login&lgname=你的用户名&lgpassword=你的密码&format=json&#8217; http://你的wiki域名/wiki/api.php -D cookies.txt -b cookies.txt | sed -e &#8216;s/.*token&#8221;:&#8221;//&#8217; -e &#8216;s/&#8221;.*//&#8217;`</p>
+
+<p>curl -s -d &#8220;action=login&lgname=你的用户名&lgpassword=你的密码&lgtoken=${TOKEN}&format=json&#8221; http://你的wiki域名/wiki/api.php -b cookies.txt -D cookies.txt > result</p>
+
+<p>RET=`curl -s &#8216;http://你的wiki域名/wiki/api.php?action=query&prop=info&intoken=edit&titles=Online_logging&indexpageids=&format=json&#8217; -b cookies.txt -D cookies.txt `</p>
+
+<p>ETOKEN=`echo ${RET}|sed -e &#8216;s/.*token&#8221;:&#8221;//&#8217; -e &#8216;s/&#8221;.*//&#8217; -e &#8216;s/+/%2B/g&#8217;`<br />
+ETOKEN=`echo ${ETOKEN}|sed -e &#8216;s/&#92;&#92;/%5C/g&#8217;`<br />
+TIME=`echo ${RET}|sed -e &#8216;s/.*starttimestamp&#8221;:&#8221;//&#8217; -e &#8216;s/&#8221;.*//&#8217;`<br />
+URL=&#8221;action=edit&title=Online_logging&section=0&appendtext=%0A|${OPS_TIME}||${OPS_APP}||${OPS_REV}||${OPS_SERVER} %0A |-&summary=robot change&starttimestamp=${TIME}&token=${ETOKEN}&format=json&#8221;</p>
+
+<p>curl -s -d &#8220;${URL}&#8221; http://你的wiki域名/wiki/api.php -b cookies.txt -D cookies.txt > result<br />
+echo &#8220;\n**write successful**\n&#8221;
+</p>
+
+<p><strong>具体使用：</strong>
+首先新建一个名字为Online_logging的页面，内容如下：
+<blockquote>{|border=&#8221;1&#8221; cellspacing=&#8221;0&#8221; <br />
+|-<br />
+! 日期 || 项目 || 版本号 || 机器<br />
+|-</blockquote></p>
+
+<p><blockquote>sh wiki.sh 项目 版本号 服务器ip</blockquote></p>
+
+<p><strong>api参考：</strong>
+http://www.mediawiki.org/wiki/API:Login
+</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-01T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/php/'>php</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/06/26/54chen-twitter-memo-2011-06-26/" title="Previous Post: 54chen Twitter memo 2011-06-26">&laquo; 54chen Twitter memo 2011-06-26</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/07/03/54chen-twitter-memo-2011-07-03/" title="Next Post: 54chen Twitter memo 2011-07-03">54chen Twitter memo 2011-07-03 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2011/07/01/mediawiki-scripts-auto-post/';
+        var disqus_url = 'http://2014.54chen.com/blog/2011/07/01/mediawiki-scripts-auto-post/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

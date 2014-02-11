@@ -1,0 +1,244 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>rose手册第三章C节：DAO层：分表设置 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="欢迎顺利进入本章，如果您的企业需要这一节的内容，那么说明用户量很有前途，如果使用了本节的内容，不防向czhttp@gmail.com发信一封以表谢意，我们会很高兴收到各种反馈。 3.C.1 mysql分表的常规做法 以下是个人从业经验中的分表规则： 按照 id % 100 分为一百份 按照 id &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2012/07/11/rose-3-c">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">rose手册第三章C节：DAO层：分表设置</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-11T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" /></p>
+
+<p>欢迎顺利进入本章，如果您的企业需要这一节的内容，那么说明用户量很有前途，如果使用了本节的内容，不防向czhttp@gmail.com发信一封以表谢意，我们会很高兴收到各种反馈。</p>
+
+<p><strong>3.C.1 mysql分表的常规做法</strong></p>
+
+<p>以下是个人从业经验中的分表规则：</p>
+
+<p>    按照 id % 100 分为一百份<br />
+    按照 id % 16 分为十六份<br />
+    按照 id/10 % 10 分为十份<br />
+    按照 id%10 分为十份</p>
+
+<p>  以上分表规则特别在mysql中使用机会比较多，各有优势，没有对错，只有最好与最不好用。</p>
+
+<p><strong>3.C.2 使用分表第一步：添加新的依赖</strong></p>
+
+<p>要使用分表，需要添加新的依赖，由bmw提供的bmwutils。</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.54chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>bmwutils</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>0.0.2</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>3.C.3 使用分表第二步：设置applicationContext.xml分表规则</strong></p>
+
+<p>在开写代码之前，需要告诉DAO是哪个表需要分表，按照什么规则分，分多少份。</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="comments">&lt;!&#8211;&nbsp;以下配置为分表设置&nbsp;&#8211;&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">&#8220;jade.routerInterpreter&#8221;</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">&#8220;com.xiaomi.common.service.dal.routing.RewriteSQLInterpreter&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;routingConfigurator&#8221;</span><span>&nbsp;</span><span class="attribute">ref</span><span>=</span><span class="attribute-value">&#8220;jade.routingConfigurator&#8221;</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">&#8220;jade.routingConfigurator&#8221;</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">&#8220;com.xiaomi.common.service.dal.routing.RoutingConfigurator&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;partitions&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>hash:test:id:test_{0}:100</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    此处配置中，partitions参数为一个list，可以对多个table进行定义。<br />
+        hash:test:id:test_{0}:100 表示：使用hash这种办法，将test这个表，按照id的值，分成100份，每份的表名为test_x</p>
+
+<p><strong>3.C.4 使用分表第三步：bmwutils支持的分表办法</strong></p>
+
+<p>    (hash)上例中的hash: 最常用的 id % 100 就是这种办法。该办法会把传入的值先进行转为数字后与定义的份数进行取模（%）。<br />
+    (direct)最直接的一种：用的少一些，没有什么规则，直接根据第四个正则，与第三位传入的值进行替换。假设有个人名表，按照字母分表可以用。name_A,name_B,name_C&#8230;<br />
+    (round)轮循：根据设置，按照调用sql的情况，轮流使用各个表。<br />
+    (range)范围：一般用来做日期范围的分表，比如说微博类的，可变值为一个时间，当时间传入时，第三位支持log{yyyy} log{yyyy_MM}等时间格式的替换，可轻松做到按周、月、年分表。<br />
+    (xm-hash)小米hash：一种古怪的办法，按照传入值的十位进行取模的分表方案。<br />
+    (xm-str-hash)小米字符串hash：将字符串按照固定算法变成long之后，再按照小米hash逻辑处理。<br />
+    (hex-hash)16进制分表：固定256份以内，传入的值按照16进制转换后按hash求模。</p>
+
+<p><strong>3.C.5 使用分表第四步：写DAO代码@ShardBy</strong></p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">&#8220;SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test&nbsp;where&nbsp;user_id&nbsp;=:id&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsById(</span><span class="annotation">@ShardBy</span><span>&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;id&#8221;</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;id);&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>与不分表的dao相比，只多了一个shardBy，标识按照这个参数值分表。</p>
+
+<p>    文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
+    长期更新版本：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_C">https://github.com/XiaoMi/rose/tree/master/chapter_3_C</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-11T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/07/08/54chen-twitter-memo-2012-07-08/" title="Previous Post: 54chen Twitter memo 2012-07-08">&laquo; 54chen Twitter memo 2012-07-08</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/07/15/54chen-twitter-memo-2012-07-15/" title="Next Post: 54chen Twitter memo 2012-07-15">54chen Twitter memo 2012-07-15 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2012/07/11/rose-3-c/';
+        var disqus_url = 'http://2014.54chen.com/blog/2012/07/11/rose-3-c/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

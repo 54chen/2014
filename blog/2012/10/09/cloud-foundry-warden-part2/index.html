@@ -1,0 +1,273 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cloud Foundry之warden代码解读-part2 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="简介
+cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。 代码位置在： https://github.com/cloudfoundry/warden 代码结构
+|&#8211; em-warden-client &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2012/10/09/cloud-foundry-warden-part2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cloud Foundry之warden代码解读-part2</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden" /></p>
+
+<p><strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
+
+<p>代码位置在： https://github.com/cloudfoundry/warden</p>
+
+<p><strong>代码结构</strong>
+|&#8211; em-warden-client   基于eventmachine的client 依赖 warden-client与warden-protocol 通过 unix socket来通讯<br />
+|&#8211; warden  巨复杂的warden实现，大部分是shell脚本+ruby，还有两个c实现。<br />
+|&#8211; warden-client   客户端驱动，提供与warden的阻塞式通讯client。依赖warden-protocol。其中的V1.rb对各自command进行解析之后的处理。这里有一个v1mode的概念， v1mode使用字符串，转为pb后与其他的一起使用protobuf。  <br />
+`&#8211; warden-protocol  依赖beefcake(protobuf library for Ruby)。protocol下有所有支持的pb生成格式。</p>
+
+<p><strong>小坑：ruby中的send方法</strong>
+send其实就是动态地根据名字调用函数，传递后面的内容作为调用参数，api函数原型为：<br />
+obj.send(symbol [, args&#8230;]) => obj</p>
+
+<p>在V1.rb中，所能的convert_xxxx_request方法都是这样被调用到的。</p>
+
+<p><strong>专注warden实现</strong>
+src下四个C程序：<br />
+|&#8211; clone  用来快速复制一个环境  夹杂一堆的shell在其中运行<br />
+|&#8211; iomux  分成两个部分：iomux-spawn把子进程的pid写到stdout来标示它已经做好准备接收连接。在尝试连接之后一直等待。iomux-link是用来根据pid重新link到其上去。<br />
+|&#8211; oom   通过eventfd得到内存不够的通知<br />
+`&#8211; repquota  报告quota使用情况</p>
+
+<p>四个c程序将在编译后复制到root/linux/skeleton/bin中</p>
+
+<p><strong>其他目录：</strong>
+|&#8211; bin  下面有两个脚本文件，用来启动和进入命令行的<br />
+|&#8211; config  下面有一个配置文件，定义了linux下的配置<br />
+|&#8211; lib     所有的ruby代码<br />
+|&#8211; root   各种shell脚本，操作cgroup之类的</p>
+
+<p><strong>启动warden</strong>
+环境：<br />
+chenzhen@ubuntu-chenzhen:~/warden/warden$ lsb_release -a<br />
+No LSB modules are available.<br />
+Distributor ID:	Ubuntu<br />
+Description:	Ubuntu 12.04 LTS<br />
+Release:	12.04<br />
+Codename:	precise</p>
+
+<p><blockquote>$cd warden/warden<br />
+$sudo bundle exec rake setup[config/linux.yml]<br />
+$sudo bundle exec rake warden:start[config/linux.yml]<br />
+$ctrl+z <br />
+$bg<br />
+$sudo bundle exec bin/warden-repl<br />
+$ping<br />
+&#8230;pong
+</blockquote></p>
+
+<p><strong>调用过程：</strong></p>
+
+<p><blockquote>bin/warden-repl >> lib/warden/repl.rb >> Warden::Client >> warden.sock  >> lib/warden/server.rb << Warden::Server.run! << Rakefile</blockquote></p>
+
+<p><strong>处理调用：</strong></p>
+
+<p><blockquote>server.rb > ClientConnection > receive_request > process(request) >  process_container_request(request, container) > base.rb >  dispatch(request, &blk) > send(do_method, request, response, &blk) -> linux.rb > do_xxx  > shell script</blockquote></p>
+
+<p><strong>clone.c分析：</strong>
+src/clone/clone.c: main ->  <br />
+	console.c: openpty -> <br />
+clone.c: daemonize -> <br />
+	barrier.c: barrier_open -> <br />
+clone.c: run(&#8220;./hook-parent-before-clone.sh&#8221;); -> <br />
+clone.c: parent_clone_child ->
+	clone.c: pid = clone(start, stack, flags, h); ->
+		clone.c: start() ->
+			console_mount(&h->console, &#8220;dev/console&#8221;); ->
+			pivot_root ->
+clone.c: run(&#8220;./hook-parent-after-clone.sh&#8221;); ->
+clone.c: barrier_signal(&h->barrier_parent); ->
+clone.c: barrier_wait(&h->barrier_child);  </p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/jia-gou-yan-jiu/'>架构研究</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/09/20/travel/" title="Previous Post: 丰宁坝上草原自驾游">&laquo; 丰宁坝上草原自驾游</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/10/12/cloud-foundry-warden-part3/" title="Next Post: cloud foundry之warden代码解读-part3">cloud foundry之warden代码解读-part3 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2012/10/09/cloud-foundry-warden-part2/';
+        var disqus_url = 'http://2014.54chen.com/blog/2012/10/09/cloud-foundry-warden-part2/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>分布式日志系统scribe使用手记 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="scribe 是facebook 开源的分布式日志系统 。其使用了thrift传输log，由于使用thrift，所以不论是什么语言的项目都可以实现日志收集，可达到远程或者是本地同步远程的分布式日志收集效果，在其示例配置中，并发量可达到max_msg_per_second=2000000， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2011/02/24/log-server-scribe-helper">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">分布式日志系统scribe使用手记</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="java,scribe" width="400/" />
+scribe 是facebook 开源的分布式日志系统 。其使用了thrift传输log，由于使用thrift，所以不论是什么语言的项目都可以实现日志收集，可达到远程或者是本地同步远程的分布式日志收集效果，在其示例配置中，并发量可达到max_msg_per_second=2000000，对普通的应用来说，每秒上百万的访问量可能性很小，因此基本上即使最简单的配置，远程收集所有项目的log也是可靠的，如果压力大的话，可以采取主从的配置，将日志打到本地后由scribe的主从配置来自动同步。下面讲述如何安装和使用scribe。</p>
+
+<p><strong>下载boost、thrift、scribe</strong>
+<blockquote>boost_1_45_0.tar.gz<br />
+thrift-0.5.0.tar.gz<br />
+facebook-scribe-2ee14d3.zip</blockquote></p>
+
+<p><strong>通过yum安装需要的依赖</strong>
+<blockquote>yum install libevent libevent-devel python-devel<br />
+yum install gcc-c++<br />
+yum install automake<br />
+yum install byacc flex
+</blockquote></p>
+
+<p><strong>安装boost</strong>
+<blockquote>tar -zxvf boost_1_45_0.tar.gz <br />
+cd boost_1_45_0<br />
+./bootstrap.sh<br />
+./bjam install &#8211;prefix=/opt/soft/bootstrap</blockquote></p>
+
+<p><strong>安装thrift-0.5.0</strong>
+<blockquote>tar zxvf thrift-0.5.0.tar.gz<br />
+./configure &#8211;with-php-config=/opt/soft/php/bin/php-config  &#8211;with-boost=/opt/soft/boost/ &#8211;with-java &#8211;prefix=/opt/soft/thrift<br />
+make<br />
+make install</blockquote></p>
+
+<p><strong>安装fb303</strong>
+<blockquote>cd contrib/fb303<br />
+./bootstrap.sh &#8211;prefix=/opt/soft/thrift/fb303 &#8211;with-boost=/opt/soft/boost/ &#8211;with-thriftpath=/opt/soft/thrift/<br />
+make<br />
+make install</blockquote></p>
+
+<p><strong>安装scribe</strong>
+<blockquote>unzip facebook-scribe-2ee14d3.zip<br />
+cd facebook-scribe-2ee14d3</blockquote></p>
+
+<p>export BOOST_ROOT=/opt/soft/boost/<br />
+export LD_LIBRARY_PATH=/opt/soft/thrift/lib:/usr/lib:/usr/local/lib:/opt/soft/boost/lib/<br />
+./bootstrap.sh &#8211;prefix=/opt/soft/scribe &#8211;with-boost=/opt/soft/boost/ &#8211;with-thriftpath=/opt/soft/thrift/<br />
+make<br />
+make install</p>
+
+<p><strong>启动scribe服务</strong>
+<blockquote>cd facebook-scribe-2ee14d3<br />
+cp example/exmaple1.conf /opt/soft/scribe/bin<br />
+cd /opt/soft/scribe/bin/<br />
+export BOOST_ROOT=/opt/soft/boost/<br />
+export LD_LIBRARY_PATH=/opt/soft/thrift/lib:/usr/lib:/usr/local/lib:/opt/soft/boost/lib/<br />
+./scibed example1.conf</blockquote></p>
+
+<p><strong>生成客户端使用scribe</strong></p>
+
+<p><blockquote>先产生java的thrift代码:<br />
+cd facebook-scribe-2ee14d3/if/<br />
+thrift -r -I ../../thrift-0.5.0/contrib/（这里需要指到你的thrift的源码目录） -gen java scribe.thrift</blockquote></p>
+
+<p> 
+<strong>使用</strong>
+<blockquote>gen-java目录下有thrift的客户端，即取即用。javaeye里有一篇写配置log4j使用scribe的不错：http://www.javaeye.com/topic/800208</blockquote></p>
+
+<p></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-24T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/02/20/54chen-twitter-memo-2011-02-20/" title="Previous Post: 54chen Twitter memo 2011-02-20">&laquo; 54chen Twitter memo 2011-02-20</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/02/27/54chen-twitter-memo-2011-02-27/" title="Next Post: 54chen Twitter memo 2011-02-27">54chen Twitter memo 2011-02-27 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2011/02/24/log-server-scribe-helper/';
+        var disqus_url = 'http://2014.54chen.com/blog/2011/02/24/log-server-scribe-helper/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Rose Pipe–一次对http技术的伟大革新实现（54chen乱弹版） - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="网站速度一直是互联网公司所关注的核心目标之一，作为SNS网站更是这样。来自世界第一大的打不开的SNS网站facebook的工程师日志中提到，BigPipe: Pipelining web pages for high performance。
+原文在墙外，豆瓣有存根，地址为http://9. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2010/08/14/rose-pipe-http-54chen">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Rose Pipe–一次对http技术的伟大革新实现（54chen乱弹版）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img class="alignnone" src="http://img07.taobaocdn.com/imgextra/i7/T1cjJIXiJxXXaTrOk6_062158.jpg" alt="" width="450" height="335" /></p>
+
+<p>网站速度一直是互联网公司所关注的核心目标之一，作为SNS网站更是这样。来自世界第一大的打不开的SNS网站facebook的工程师日志中提到，BigPipe: Pipelining web pages for high performance。
+<blockquote>原文在墙外，豆瓣有存根，地址为<a href="http://9.douban.com/site/entry/139173635/">http://9.douban.com/site/entry/139173635/</a>。</blockquote></p>
+
+<p>来自infoq的一篇资料报道：<a href="http://www.infoq.com/cn/news/2010/08/bigpipe-facebook-optimize">http://www.infoq.com/cn/news/2010/08/bigpipe-facebook-optimize</a>
+它本意是充分利用http，将用户感受到的延迟时间降低<span style="color: #ff0000;">一半</span>，是如何做到的呢，下面由54chen流水记账一篇解释实现原理。院内曾经由人人网架构师王志亮大侠发表过一篇文章，地址是<a href="http://www.54chen.com/architecture/rose-open-source-portal-framework.html">http://www.54chen.com/architecture/rose-open-source-portal-framework.html</a>，本文将以此例中的项目举例。
+<strong>HTTP协议</strong>
+HTTP是一个客户端和服务器端请求和应答的标准，尽管TCP/IP协议是互联网上最流行的应用，HTTP协议并没有规定必须使用它和（基于）它支持的层。 事实上，HTTP可以在任何其他互联网协议上，或者在其他网络上实现。HTTP只假定（其下层协议提供）可靠的传输，任何能够提供这种保证的协议都可以被其使用。<br />
+在这里重新解释HTTP是为了后面做铺垫，一次http访问的过程如下：<br />
+1.打开一个连接后，客户机把请求消息送到服务器的停留端口上，完成提出请求动作；<br />
+2.服务器在处理完客户的请求之后，要向客户机发送响应消息；<br />
+3.客户和服务器双方都可以通过关闭套接字来结束TCP/IP对话。<br />
+在使用java的ServletResponse的时候，往往都是如下的操作返回结果到用户：
+<blockquote>out.write(sb.toString());<br />
+out.flush();<br />
+out.close();</blockquote>
+<strong>传统的WEB请求</strong></p>
+
+<p>以图1为例，一个WEB项目往往由不同的部分组成，不同的格局里往往代表需要从不同的数据表里去取不同的数据。
+<img src="http://img07.taobaocdn.com/bao/uploaded/i7/T1M_hCXiplXXXZgsbb_123302.jpg" alt="renren page" />
+图1 人人网公共主页页面</p>
+
+<p>一个用户来访问这个页面，按照传统的做法，其流程图可能是如图2这样的。
+<img src="http://img02.taobaocdn.com/imgextra/i2/T15jFIXbxsXXc0QmZW_024631.jpg" alt="54chen:rose pipe" />
+图2 一个传统的http请求过程<br />
+在图2中可以看到，一次打开网站页面的过程中，请求发到后端进行了处理（1和2步），只有当后端的取数据操作（2步）全部完成的时候，才可能进入第3步，向用户返回组装好的html页。如果说图1中一共有四个模块，对应后台有四条sql语句的话，那么，必须这四条sql语句全部返回了结果，才可能让用户看到页面。</p>
+
+<p><strong>pipe</strong>
+pipe技术充分利用了前后端技术。将一个页面里的多个模块分成不同的window，多线程取数据的操作，然后再充分利用http请求的连接，将原来的输出，从一次flush变成多次flush：
+<blockquote>out.write(“基础的dom”);<br />
+out.flush();<br />
+//数据一准备好时<br />
+out.write(“js带数据一”);<br />
+out.flush();<br />
+//数据十二准备好时<br />
+out.write(“js带数据二”);<br />
+out.flush();<br />
+out.close();</blockquote>
+其过程如图3所示：
+<img src="http://img05.taobaocdn.com/imgextra/i5/T13kJIXaNaXXatZfg2_044035.jpg" alt="54chen:rose pipe" />
+图3 pipe的请求过程<br />
+借用big pipe的代码，第一次是输出的：</p>
+
+<p><code>&lt;div&gt;<br />
+&lt;div id=”left_column”&gt;<br />
+&lt;div id=”pagelet_navigation”&gt;&lt;/div&gt;<br />
+&lt;/div&gt;<br />
+&lt;div id=”middle_column”&gt;<br />
+&lt;div id=”pagelet_composer”&gt;&lt;/div&gt;<br />
+&lt;div id=”pagelet_stream”&gt;&lt;/div&gt;<br />
+&lt;/div&gt;<br />
+&lt;div id=”right_column”&gt;<br />
+&lt;div id=”pagelet_pymk”&gt;&lt;/div&gt;<br />
+&lt;div id=”pagelet_ads”&gt;&lt;/div&gt;<br />
+&lt;div id=”pagelet_connect”&gt;&lt;/div&gt;<br />
+&lt;/div&gt;<br />
+&lt;/div&gt;</code></p>
+
+<p>当有了完整的dom结构时，浏览器就会开始显示没有数据的框架了。</p>
+
+<p>后面的数据每次都以js继续发送到页面中，浏览器收到即开始写入：
+<code>
+&lt;script type="text/javascript"&gt;<br />
+big_pipe.onPageletArrive({id: “pagelet_composer”, content=&lt;HTML&gt;, css=[..], js=[..], …})<br />
+&lt;/script&gt;</code></p>
+
+<p><strong>性能</strong>
+这种显示方式的性能，再借用facebook的图来表示之，如图4：
+<img src="http://sphotos.ak.fbcdn.net/hphotos-ak-snc3/hs539.snc3/30586_396772147199_9445547199_3988332_604391_n.jpg" alt="facebook:pipe" /></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-14T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/jia-gou-yan-jiu/'>架构研究</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/08/08/54chen-twitter-memo-2010-08-08/" title="Previous Post: 54chen Twitter memo 2010-08-08">&laquo; 54chen Twitter memo 2010-08-08</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/08/15/54chen-twitter-memo-2010-08-15/" title="Next Post: 54chen Twitter memo 2010-08-15">54chen Twitter memo 2010-08-15 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2010/08/14/rose-pipe-http-54chen/';
+        var disqus_url = 'http://2014.54chen.com/blog/2010/08/14/rose-pipe-http-54chen/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

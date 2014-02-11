@@ -1,0 +1,860 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="上一记传送门：android开发入门
+在第一记中，我（54chen）完成了一个完整的android开发环境，并且简单开发了一个Hello world android程序，在有了一个大概的开发过程的感觉之后，再进一步来学习android开发过程中需要接触到的常识。 android开发表皮几大块
+1 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/page/23">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/11/04/androiddev2/">Android开发入门2：概念建立</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img01.taobaocdn.com/imgextra/i1/T19G0QXdVzXXcu602a_120602.jpg" alt="android 54chen dev" /></p>
+
+<p>上一记传送门：<a href="http://www.54chen.com/_linux_/androiddev.html">android开发入门</a>
+在第一记中，我（54chen）完成了一个完整的android开发环境，并且简单开发了一个Hello world android程序，在有了一个大概的开发过程的感觉之后，再进一步来学习android开发过程中需要接触到的常识。</p>
+
+<p><strong>android开发表皮几大块</strong>
+1）extends Activity的Activity类很是奇异，其实这很像是mvc框架中的controller，继承Activity实现的类，它控制了所有的业务逻辑。<br />
+2）打开项目的文件夹，你会发现有许多的xml，其中，比较关键的一个是main.xml（layout目录下），它相当于mvc框架中的view，负责了软件界面哪个位置摆放一个什么样的控件，当然了，这些控件都是系统本身的，你可以想像成是html标签里的那些控件一样。<br />
+3）values目录下有settings.xml，是定义了一些字符串、颜色、数组等常量数据，有点像普通java项目里的属性文件（properties文件）</p>
+
+<p><strong>走进android项目中的layout/main.xml</strong>
+开发android项目和开发web项目有几分神似，在main.xml里(也可能是xx.xml哦，main.xml是默认的第一个，在java代码里，会用R.layout.main来表示man.xml)，包括了各种各样的基础控件（它们都是大小写敏感的，如果在xml里写错了，那一定会在运行过程中出现空指针错误），就像是web项目的前端一样，不过其复杂程度自然要比写html复杂。可能大部分入门android的时间都会花在这里。</p>
+
+<p>&lt;TextView<br />
+android:layout_height=”wrap_content”<br />
+android:layout_width=”fill_parent”<br />
+android:id=”@+id/TextView01″<br />
+android:text=”54chen Android2.2 学习手记”<br />
+android:textColor=”#0f0″<br />
+android:textSize=”28dip”<br />
+android:layout_y=”330dip”<br />
+android:layout_x=”35dip“&gt;<br />
+&lt;/TextView&gt;</p>
+
+<p>这就是main.xml里的一个片段，这是一个TextView控件(请勿直接复制，看看即可，有半角全角的问题会出现错误)，这个控件，关键词是TextView，大小写是敏感的，另外它丰富的属性都是由android:xx来定义的，其他的控件也是类似的定义。一般都会有，高度、宽度、内容、id、颜色、字体大小、布局相关的信息。</p>
+
+<p>例子到此，详细的更多控件的使用，我们在学习完intent之后再在后面的手记中去记录。</p>
+
+<p><strong>Intent：android项目中的胶水</strong>
+前面说到，相当于controller层的activity，实际上一般情况是一个activity对应一个layout的xml，而一个常见的软件，都会弹出来多个窗体（做过vb vc delphi啥的一定知道subform的概念），这个时候需要多个 activity来回切换，这时候就是靠intent在中间起作用。<br />
+在一个Android应用中，Intent是对执行某个操作的一个抽象描述，Intent 负责提供组件之间相互调用的相关信息传递，实现调用者和被调用者之间的解耦。Intent是一种在不同组件之间传递的请求信息，是应用程序发出的请求和意图，作为一个完整的消息传递机制，Intent不仅需要发送端，还需要接收端。</p>
+
+<p>在android应用总控xml（AndroidManifest.xml）里有这样的内容：&lt;intent-filter&gt; ，这里面定义了可以访问的intent动作。</p>
+
+<p><blockquote>
+				// 获得可编辑文本框中的值，也就是电话号码<br />
+				String phoneNumber = PhoneNumberEditText.getText().toString();<br />
+				// new Intent(行为，数据)，其中action_dial是拨号行为，数据是电话号码<br />
+				Intent intent = new Intent(Intent.ACTION_DIAL, Uri<br />
+						.parse(&#8220;tel://&#8221; + phoneNumber));<br />
+				// 去调用那些可以处理拨号行为的Activity<br />
+				startActivity(intent);
+</blockquote></p>
+
+<p>看完上述代码，是不是有点对intent概念的感觉了呢，如果还有疑惑，再看 </p>
+
+<p><blockquote>//在当前Activity中启动另外一个Activity<br />
+startActivity(new Intent(this,目标Activity.class));</blockquote></p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/11/01/androiddev/">Android 开发入门</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1EQxPXdxHXXXcN3c7_064540.jpg" alt="android2.2" /></p>
+
+<p>最近我(54chen)的兴趣都在android上，看到做的软件放到手持设备上的时候，找到了大学时光写delphi、gnome程序时久违的成就感。<br />
+下面是一些手记，这一系列的日志都将记录学习过程。<br />
+手记假设：<br />
+1.开发环境为ubuntu eclipse<br />
+2.你和我(54chen)一样有几年的java开发经验，对java基础不再进行描述<br />
+3.一开始就是以android2.2开始搞的，不排除后面的3出来，到时再另行通知</p>
+
+<p><strong>一 开发环境搭建</strong>
+要开始开发Hello world，先要准备java环境（略），准备eclipse（略），再在eclipse上用software upadte安装上sdk的tools，再使用sdk的tools来安装platform（现在的最新版本是2.2），官方的文档和下载地址在http://developer.android.com/sdk/installing.html（洋文，被墙）。</p>
+
+<p>因为是ubuntu 10.04，eclipse java都是可以apt-get install eclipse java6-sun-sdk(印象中是openjdk-6-jdk)来安装的。网上有许多切换openjdk到sunjdk的资料，不过提醒一点，这个openjdk似乎也一样可以用，如果切换成sunjdk的话，可能会遇到字体不正常的问题。</p>
+
+<p>eclipse版本：3.5.2 Build id: M20100211-1343<br />
+第一步，要给eclipse安装一个android开发工具包<br />
+在eclipse的install new software上增加site:https://dl-ssl.google.com/android/eclipse/，安装这个传说中的ADT，其作用是一个最最基础的包，依靠这个包再进一步安装。（文件不大，所费时间不长）</p>
+
+<p>第二步，下载SDK基础包：android-sdk_r07-linux_x86.tgz<br />
+http://developer.android.com/sdk/installing.html（洋文，被墙）<br />
+下载后解压。<br />
+假设解压后是/home/chen/下载/android-sdk-linux_x86，在eclipse>windows>proferences中找到Andriod，在SDK Location中写下这个地址。
+<img src="http://img01.taobaocdn.com/imgextra/i1/T1aStPXo4bXXac4jg7_065233.jpg" alt="android" /></p>
+
+<p>第三步，进一步安装需要的平台<br />
+eclipse>windows>Andriod SDK and AVD manager>available packages<br />
+打开后选platform 2.8，里面还有一些别的包，像google的api啥的，是提供你简单调用google map啥的。<br />
+这一步会费很长的时间，东西比较大。</p>
+
+<p><strong>二 第一个android程序 Hello54chen</strong>
+上面环境就ok了，来做第一个程序。<br />
+第一步 创建项目 <br />
+file>new>new Android project<br />
+假设包名为com.chen.hello，类名为Show<br />
+会有一个关键的文件：com.chen.hello.Show<br />
+第二步 修改代码<br />
+打开这个文件，关键代码如下：
+<blockquote>public class Show extends Activity {<br />
+    /** Called when the activity is first created. */<br />
+    @Override<br />
+    public void onCreate(Bundle savedInstanceState) {<br />
+        super.onCreate(savedInstanceState);<br />
+        //setContentView(R.layout.main); 这行是原来的 注释掉，下面是新添加的<br />
+        TextView t = new TextView(this);<br />
+        t.setText(&#8220;你好，世界&#8221;);<br />
+        setContentView(t);<br />
+    }<br />
+}</blockquote></p>
+
+<p>第三步 整一个新的AVD（andriod 虚拟设备）<br />
+eclipse>windows>Android SDK and AVD manager>Virtual Devices>new&#8230;<br />
+然后起个名，设置下存储大小等等。</p>
+
+<p>第四步 run<br />
+run as android application后，选则刚刚建好的AVD，于是出来一个界面，要等啊等等啊等的，很长时间后，虚拟机才能进来，然后才会显示出来你的结果。
+<img src="http://img01.taobaocdn.com/imgextra/i1/T1W84PXjdjXXaUZi77_064915.jpg" alt="android" /></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/31/54chen-twitter-memo-2010-10-31/">54chen Twitter Memo 2010-10-31</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-31T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul class="aktt_tweet_digest">
+Fusion-io：与SSD不一样的固态技术 听到DBA传来的牛X介质，为之一震。 </ul><a href="http://twitter.com/54chen/statuses/29069095576" class="aktt_tweet_time">#</a>
+在360和杀软im打得火热的时候，开源系统突显了全人类智慧的结晶，在ubuntu下，一切都很安宁。 <a href="http://twitter.com/54chen/statuses/29061216257" class="aktt_tweet_time">#</a>
+&quot;做企业如做人&quot;，敬佩。 <a href="http://twitter.com/54chen/statuses/29059114468" class="aktt_tweet_time">#</a>
+mozilla大杯具，今天firefox升级3.5.15，重启后进了欢迎页面，静态域名被墙，页面像屎。 <a href="http://twitter.com/54chen/statuses/29044134815" class="aktt_tweet_time">#</a>
+这广告做的，大街小巷都在讨论360力战群雄，说不好此刻周鸿祎李彦宏马化腾还有老俅等人还在某地快乐地高尔夫中。 <a href="http://twitter.com/54chen/statuses/28947108565" class="aktt_tweet_time">#</a>
+一大早的，屏幕正中央开始和屏幕右下角吵架，这是要大决战了吗。 <a href="http://twitter.com/54chen/statuses/28946539962" class="aktt_tweet_time">#</a>
+互联网下一个类千年虫问题：微博和sns的内容feed自动同步，导致死循环同步后的信息大拥堵。 <a href="http://twitter.com/54chen/statuses/28875671859" class="aktt_tweet_time">#</a>
+海纳百川——人人网海量存储系统Nuclear开发手记 <a href="http://goo.gl/fb/bvEOt" rel="nofollow">http://goo.gl/fb/bvEOt</a> <a href="http://twitter.com/54chen/statuses/28849589195" class="aktt_tweet_time">#</a>
+<a href="http://www.donews.com/original/201010/251728.shtm" rel="nofollow">http://www.donews.com/original/201010/251728.shtm</a>  陈一舟：我和程炳皓的故事 “度尽劫波兄弟在，相逢一笑泯恩仇”&#8212;个人不发表任何看法。 <a href="http://twitter.com/54chen/statuses/28775262029" class="aktt_tweet_time">#</a>
+世界上最遥远的距离是：我们俩一起出门，你去买苹果四代，我去买四袋苹果 <a href="http://twitter.com/54chen/statuses/28772995543" class="aktt_tweet_time">#</a>
+人生就像一张有去无回的单程车票,没有彩排,每一场都是现场直播,剩下的是回憶。 <a href="http://twitter.com/54chen/statuses/28720304204" class="aktt_tweet_time">#</a>
+岁月催人，&quot;相濡以沫，不如相忘于江湖&quot;&#8211;《庄子·大宗师》 <a href="http://twitter.com/54chen/statuses/28719680508" class="aktt_tweet_time">#</a>
+两年前我立下誓言，人人网是我呆的最后一个大公司，之后我只会去创业，让人生充满激情是一件很好的事情不是吗。 <a href="http://twitter.com/54chen/statuses/28718958690" class="aktt_tweet_time">#</a>
+今夜竟然失眠，万分抱歉于UGC的领导们。 <a href="http://twitter.com/54chen/statuses/28718231355" class="aktt_tweet_time">#</a>
+创业看人，只讲一个词：仗义。 <a href="http://twitter.com/54chen/statuses/28669877273" class="aktt_tweet_time">#</a>
+QQ群的cdn搞好了？可以发图了 <a href="http://twitter.com/54chen/statuses/28658102655" class="aktt_tweet_time">#</a>
+如果你爸不是李刚，学java做无线，是你最好的选择#哥学社 山鸡真言# <a href="http://twitter.com/54chen/statuses/28652946515" class="aktt_tweet_time">#</a>
+真是神奇，公司送了150块钱的当当购物券，凑来凑去只花了148.5，继续想找1.5的东西时发现比登天还难。 <a href="http://twitter.com/54chen/statuses/28579592539" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2010-10-24 <a href="http://goo.gl/fb/DKOdL" rel="nofollow">http://goo.gl/fb/DKOdL</a> <a href="http://twitter.com/54chen/statuses/28550577915" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/27/renren-nuclear/">海纳百川——人人网海量存储系统Nuclear开发手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1gZpPXgFnXXXJ5G_c_095806.jpg" alt="程序员2010第九期" /></p>
+
+<p><blockquote>此文为《程序员》杂志约稿，发表在2010年9月刊。怀念过去美好的时光和所有的UGC兄弟真挚友谊，谨以此文为个人职业发展阶段作一个美好的终结。以下是全文原稿。</blockquote></p>
+
+<p>        2009年8月左右，由于业务扩展的需要，我们的团队开始了一个新项目的研发，其中需要完成一个存储系统，把评论数据聚合到一起同时还要提供线上的读写服务。这些评论来自不同的业务产品，数据量非常之巨大；同时对稳定性的要求非常高，因为如果出现宕机，将影响到大量的业务线。于是，我们开始了对此类系统的探索。</p>
+
+<p>Nuclear 的由来<br />
+       经过需求分析阶段，摆在我们面前的是五点要求：高可用、高可扩展、高性能、Key-Value存储、支持关系化查询。经过一段痛苦的系统选型分析，我们最终决定开发属于人人网的海量存储系统。Nuclear，正如其名，nuclear的未来将要肩负起整个评论系统存储的核反应般的压力爆发的重任。由于当时并没有这方面的经验，一切都是摸着石头过河，我们设计了好几期的雏形，一开始明显就是有问题的构架设计，慢慢地在学习和进步的过程中，团队的成员也在慢慢地成长，离我们的目标也越来越近。又因为业务模型的需要和方便分布到集群，这个系统慢慢演变，最后成为了一个可靠的分布式key- value存储系统。以下特将在研发过程中遇到的问题做一个总结。</p>
+
+<p>Key-Value系统的优缺点<br />
+       NoSQL系统在过去的一两年里，饱受了争议和技术界的目光。从原理上讲，基本上这类系统都会有一些相同的优点和缺点：<br />
+优点：<br />
+1. 只有高效的查询可用，性能是可想像的。<br />
+2. 容易分布到集群。<br />
+3. 可以很容易增加缓存层用来加速读操作。<br />
+4. 逻辑和存储清晰分离（出于性能考虑，关系型数据库鼓励将商业逻辑和存储操作混在一起）。<br />
+缺点：<br />
+1. 没有复杂的查询过滤器。<br />
+2. 所有的联合查询必须在代码实现。<br />
+3. 没有外键的结构。<br />
+4. 没有触发器和视图。<br />
+      Nuclear系统的一大特点是，我们改进了普通的key-value系统在存储模式上的固定形态，设计为上层的存储协议和底层的存储引擎完全分离，以便在不同的应用场景选择更合适的存储引擎。例如，当底层存储使用MySQL时，可以支持key→list结构的弱结构化读取；当底层存储只使用内存时，那无疑便是一个分布式缓存系统了。</p>
+
+<p>高可用性<br />
+      任意一个分布式的存储系统，都会遇到一个棘手的问题，那就是当一个数据节点出现故障的时候怎么办？是不是整个系统都跟着崩溃了？当然不行。是不是可以丢掉一部分数据呢？这也是不可接受的。这也是有不少网友经常反馈的一个问题。答案是唯一的，那就是不要把所有的鸡蛋都放在一个篮子里。但是如果一份数据在多个节点上有备份的话，那么这份数据的一致性也是一个致命的问题。<br />
+       在参考了一些国内外分布式系统的处理方法后，我们归纳典型的做法有两种，一种是以亚马逊的dynamo系统为代表的NRW的方法；另一种是简单的主从备份使用心跳检测时刻检查节点是否故障的一种做法。<br />
+（1）亚马逊Dynamo的NRW<br />
+       在Dynamo系统中，第一次提出来了NRW的方法。Dynamo系统是将数据复制多份的系统，靠以下的机制来保障节点故障时服务的正常提供：<br />
+N – 复制的次数<br />
+R – 读数据的最小节点数<br />
+W – 写成功的最小分区数<br />
+       这三个数的具体作用呢，是用来灵活地调整Dynamo系统的可用性与复制数据一致性的。<br />
+       举例来说，如果R=1的话，表示最少只需要去一个节点读数据即可，读到即返回，这时是可用性是很高的，但并不能保证数据的一致性，如果W同时为1的 话，那可用性更新是最高的一种情况，但这时完全不能保障数据的一致性，因为在可供复制的N个节点里，只需要写成功一次的话就返回了，也就意味着，有可能在读的这一次并没有真正读到需要的数据（一致性相当的不好）。理论上上我们可以做到N个节点中只要有一个节点正常，那么这次操作就不会失败。如果 W=R=N=3的话，也就是说，每次写的时候，都保证所有要复制的点都写成功，读的时候也 是都读到，这样子一定读出来的数据是正确的，但是这中间的性能大打折扣，也就是说，数据的一致性非常的高，但系统的可用性却非常低了，有一个节点出故障了，这次操作就失败了。如果R + W > N能够保证要读的数据肯定都是写成功的，Dynamo推荐使用322的组合使用可。<br />
+（2）常见的主从备份和心跳检测<br />
+       主从备份最常见的要算是MySQL数据库的备份了，而如果做了主从备份的MySQL出现了故障的话，常规的做法也是即时检测与手机短信通知到人，然后再由工程师去手动处理，在工程师手动处理主从备份数据的过程中，MySQL靠log模式来保证数据的一致性。在诸如kata（apache下的一个分布式搜索）之类的系统中，由于在源码中使用了ZooKeeper这样的开发套件，在遇到分布式系统单点故障时，使得可以做到依靠系统本身也能全自动地进行节点的切换取舍，而这时数据的一致性，往往又需要另外的策略来保证。<br />
+      以上两种方案，我们选择了第一种，原因主要是亚马逊的方法实现非常的简单，但是从理论上讲却非常的实用，真正有一种四两拨千斤的感觉，所以很多时候，好用的东西往往不是最难的，实用才是硬道理。</p>
+
+<p>数据分布与迁移时遇到的压力冲击<br />
+       Nuclear是一个分布式的key-value存储系统，key对应的数据分布在什么节点上，需要遵守一定的规则。在Nuclear中，数据分布在0~2^64的哈希环上，Nuclear集群初始化的时候，根据节点数均分整个哈希环。假如有A、B、C三个节点，key的分布如图1所示：
+<img width="500" src="http://img01.taobaocdn.com/imgextra/i1/T17HBPXm4yXXa0mrYc_095905.jpg" alt=" key分布在三个节点的示意图" />
+图1 key分布在三个节点的示意图<br />
+       图1中，箭头方向表示复制的方向，假设N=3，表示复制三份，如图上的情况也就意味着每个节点都有三份数据，以此类推。<br />
+       因为数据有多份，所以也存在着数据的自动迁移和恢复。这就会遇到一个问题：如果一个节点宕机后恢复，迁移程序势必需要以最快的速度将原来需要的数据通过网络从其他节点复制过来。这样的数据导出导入必然会对对应的节点造成一定的冲击，如果这时此节点开始提供服务，极有可能达到系统的临界点，反而将刚刚恢复的节点冲击宕机。<br />
+       为了极力避开这样的情况发生，而且能快速地完成迁移的过程，在nuclear中，所有的数据迁移过程，都会提前判断操作系统当前的负载情况，根据系统负载来暂停和重启迁移数据的线程。我们使用的开发语言是java，在JDK提供的java.lang.management包中，有许多监控系统负载的方法可以直接使用，非常方便。</p>
+
+<p>系统架构和瓶颈分析<br />
+       整个Nuclear系统构建于java之上，其系统架构如图2所示：
+<img width="500" src="http://img04.taobaocdn.com/imgextra/i4/T1KZtPXgNlXXbSjcrc_095951.jpg" alt="Nuclear系统构架图" />
+图2 Nuclear系统构架图<br />
+      处在最上层的是对外的存储API，提供put、get等操作，接下来一层分成了两个部分，一部分是正常的节点部分，一部分是后台运行的定时任务，下面都是组件化的模块，共同搭建了整个系统的稳定服务。<br />
+      整个系统中最大的瓶颈出现在并发任务处理和数据传输上，为此我们大量使用了NIO、并发编程，充分发挥了多核CPU多线程处理的优势，尽量将网络传输导致延迟缩小到最小。这样做的结果是，在高并发的情况下系统中也不存在阻塞点，甚至可以说，Ncluear系统的设计哲学是：万事皆异步。<br />
+       另一个更为直接的瓶颈，就是磁盘的IO瓶颈，在我们的实际线上环境中，最后遇到的问题也就是磁盘的瓶颈，在读写比为8比1且高并发压力的情况下，如果底层的存储引擎表现不佳，多半的原因都是，过多依赖了硬盘的读写，很容易就达到了硬盘IO的瓶颈，此时，我们的cache层的作用就举足轻重，将大多数的数据留在内存中，这是一个不错的做法。</p>
+
+<p>结束语<br />
+       人人网UGC团队（http://ugc.renren.com）利用Nuclear，将炙手可热的NoSQL系统真正用于生产环境中，提升了整体系统的稳定性和自动维护性，在中国众多的互联网企业中树立了自己的技术风格，同时也为技术行业提供了不少可供参考的宝贵资料，热忱欢迎更多的朋友加入到我们的行列中来。</p>
+
+<p><img width="160" src="http://img03.taobaocdn.com/imgextra/i3/T1Hr4PXjJsXXXdEIU8_100050.jpg" alt="冷昊" />
+冷昊：人人网UGC团队成员，现和UGC技术团队一起为人人网用户在信息共享和传播的更加便捷做不懈努力，关注系统架构、分布式技术、数据挖掘。个人Blog: http://www.lenghao.com。可以通过电子邮件 jerome.leng@gmail.com 联系到他。
+<img width="160" src="http://img03.taobaocdn.com/imgextra/i3/T1UYhPXXpEXXauR038_100208.jpg" alt="陈臻（54chen）" />
+陈臻（54chen）：人人网UGC团队成员，技术组织哥学社创始人，PHPChina内核版主，业余时间混迹于各技术组织且乐此不疲。个人Blog：http://www.54chen.com/ 。可以通过电子邮件 czhttp@gmail.com 联系到他。
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/24/54chen-twitter-memo-2010-10-24/">54chen Twitter Memo 2010-10-24</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul class="aktt_tweet_digest">
+#</ul><a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#我们补了一个KATA的补丁，关于client的线程池的重复产生。 <a href="http://twitter.com/54chen/statuses/28391579298" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#分布式的评分、排序，请求分成三步，1.到每个节点发请求去算满足的数量和词频，在客户端临时换算 2.第二次带上1的计算结果去各节点查后在客户端排序 3.第三次请求已经知道节点和shards的具体信息去请求详细内容 <a href="http://twitter.com/54chen/statuses/28390375741" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#在kata中搜数据时：先分词，索引逻辑或进行查询，客户端向zk拿到索引列表，每个索引维护一个索引，zk索引变化会通知客户端。 <a href="http://twitter.com/54chen/statuses/28390138745" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#整个集群共同管理整套虚拟目录，这是zk提供的牛B机制。 <a href="http://twitter.com/54chen/statuses/28389444211" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#kata有主节点，zoolkeeper维护终端 sh zkCli.sh -server 127.0.0.1:2182 <a href="http://twitter.com/54chen/statuses/28389280078" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#kata提供了不少的管理工具，比如：sh kata showStructure(在kata.java中定义) <a href="http://twitter.com/54chen/statuses/28388458817" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#Zookeeper在kata中作用巨大，是一个去中心化的系统。kata中有一个专门的包与其通信。 <a href="http://twitter.com/54chen/statuses/28387623579" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#搜索的缓存热点很少，缓存5分钟即可。 <a href="http://twitter.com/54chen/statuses/28387456332" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#kata提供现成的临时摘下某个小索引的api。 <a href="http://twitter.com/54chen/statuses/28387079714" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#单天的索引文件的重建只需要只秒左右。 <a href="http://twitter.com/54chen/statuses/28387017072" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#建立索引时会影响读的性能，如果索引文件比较大，相对去比较影响，如果读写分离，将要维护两份索引，将索引文件尽量小是一个不错的办法。 <a href="http://twitter.com/54chen/statuses/28386939695" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#hadoop负责本地索引和发布到kata的过程。 <a href="http://twitter.com/54chen/statuses/28386580607" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#小索引文件，增量增加索引文件，一个小时增加今天的索引。 <a href="http://twitter.com/54chen/statuses/28386467402" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#环境准备：索引建立 1.定期查DB 2.新产生的存在队列中定期建 <a href="http://twitter.com/54chen/statuses/28386331006" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk# UTT 讨论直播  分布式搜索kata的二次开发实战 <a href="http://twitter.com/54chen/statuses/28386150183" class="aktt_tweet_time">#</a>
+转自贾睿韬: 魔兽史上一大难题已被破解：whosyourdaddy 答：我爸是李刚 <a href="http://twitter.com/54chen/statuses/28383753911" class="aktt_tweet_time">#</a>
+从反馈到现在24小时去了，http://places.renren.com/web/PoiFeed，一个很容易被用户发现低级错误还在线上。 <a href="http://twitter.com/54chen/statuses/28378936061" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/bravetaoy" class="aktt_username">bravetaoy</a> 感谢兄弟提供，马上加上 <a href="http://twitter.com/bravetaoy/statuses/27996678518" class="aktt_tweet_reply">in reply to bravetaoy</a> <a href="http://twitter.com/54chen/statuses/28378559200" class="aktt_tweet_time">#</a>
+转自刘启荣: 毕业前，快乐是件简单的事；毕业后，简单是件快乐的事。 <a href="http://twitter.com/54chen/statuses/28365713181" class="aktt_tweet_time">#</a>
+百度知道赫然发现有窗口下的条，和人人网的神似，这难道是百度SNS的第二步？ <a href="http://twitter.com/54chen/statuses/28004847773" class="aktt_tweet_time">#</a>
+<a href="http://places.renren.com/web/PoiFeed?pid=B000A30D3A" rel="nofollow">http://places.renren.com/web/PoiFeed?pid=B000A30D3A</a> 人人网LBS <a href="http://twitter.com/54chen/statuses/28001820896" class="aktt_tweet_time">#</a>
+RT小Z：哥在erp上请假 半天也提交不了 后来才发现这玩意只支持IE6 // 这个现象存在于多家一流企业。 <a href="http://twitter.com/54chen/statuses/27996064594" class="aktt_tweet_time">#</a>
+<a href="http://www.54chen.com/_linux_/china-internet-db-report.html" rel="nofollow">http://www.54chen.com/_linux_/china-internet-db-report.html</a> 国内互联网公司数据库访问层调查，新增加了淘宝支付宝和腾讯的分析，感谢@fenng和胖子、呵呵哥提供线索支持。 <a href="http://twitter.com/54chen/statuses/27995739937" class="aktt_tweet_time">#</a>
+由于最近国际天气不好，科学院feed地址已经切回国内，如果用原来feedburner地址订阅的同志没有红杏，请将订阅地址转为http://www.54chen.com/feed，周知。 <a href="http://twitter.com/54chen/statuses/27986502180" class="aktt_tweet_time">#</a>
+国内互联网公司数据库访问层调查 <a href="http://goo.gl/fb/KrCcJ" rel="nofollow">http://goo.gl/fb/KrCcJ</a> <a href="http://twitter.com/54chen/statuses/27919812246" class="aktt_tweet_time">#</a>
+明显感觉到最近通胀压力，因为猎头在找上门的时候，都是以15k为单位的，几年前的时候10k都很多了，人民币和白纸似的了。 <a href="http://twitter.com/54chen/statuses/27911119936" class="aktt_tweet_time">#</a>
+以为涨的房价自己赚了，切不知一加息都让银行收去了。 <a href="http://twitter.com/54chen/statuses/27909056006" class="aktt_tweet_time">#</a>
+通过哥学社，统计了人人、百度、腾讯、金山、盛大、新浪（排名不分先后，想到哪个写哪个）等公司的数据库系统的中间件架构，近期放出分析报告。 <a href="http://twitter.com/54chen/statuses/27904919107" class="aktt_tweet_time">#</a>
+北京互联网创业团队招靠谱UI设计师，工作地点在海淀，团队和项目都很靠谱，不缺钱，其他资源不是问题，待遇从优，感兴趣的发送个人简历和作品到mynameisfung@gmail.com，需要的话邮件进一步沟通。 <a href="http://twitter.com/54chen/statuses/27812898876" class="aktt_tweet_time">#</a>
+转自·嫫__茉❤: 我同学恋爱啦，她的男友是在世博沙特馆排四个小时的队认识的，真是世博改变生活啊~！！！单身的同学抓紧了~ <a href="http://twitter.com/54chen/statuses/27719786570" class="aktt_tweet_time">#</a>
+“我愿化身石桥，愿受五百年风吹，五百年日晒，五百年雨打，只为你从桥上走过。”&#8211;走过之后用石灰画一个圈写一个字：拆 <a href="http://twitter.com/54chen/statuses/27703137532" class="aktt_tweet_time">#</a>
+化随机为顺序，如果有这样一种算法，算不算是对硬盘技术的提升呢？但是要怎么来实现呢？ <a href="http://twitter.com/54chen/statuses/27702608871" class="aktt_tweet_time">#</a>
+对于一个互联网公司，时断时续的网速，IT部门上班时间魔兽，我表示无语。 <a href="http://twitter.com/54chen/statuses/27697939045" class="aktt_tweet_time">#</a>
+nginx.conf控制指定的代理ip和ip访问的设置手记 <a href="http://goo.gl/fb/WNtQl" rel="nofollow">http://goo.gl/fb/WNtQl</a> <a href="http://twitter.com/54chen/statuses/27692588172" class="aktt_tweet_time">#</a>
+波兰科学家认为今冬北半球将迎“千年极寒”，不管这消息真假，nnd今天比昨天感觉又冷多了。 <a href="http://twitter.com/54chen/statuses/27686004681" class="aktt_tweet_time">#</a>
+淘宝的武侠文化一直是我所欣赏的文化，一种江湖气息贯穿工作，正如哥学社的哥文化，已然成为所有技术哥中坚定的信念。 <a href="http://twitter.com/54chen/statuses/27594611312" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2010-10-17 <a href="http://goo.gl/fb/Klbtg" rel="nofollow">http://goo.gl/fb/Klbtg</a> <a href="http://twitter.com/54chen/statuses/27594287389" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/20/china-internet-db-report/">国内互联网公司数据库访问层调查</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-20T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1BgpOXhlKXXb04jU7_065317.jpg" alt="中间层" /></p>
+
+<p>在WEB开发中，数据库的数据读写和传输一向是瓶颈，在此基础上的解决方案基本都是数据库连接层的设计，一个公司数据库连接层的牛B与否可以标识这个公司的全局规划的“工艺水平”到达一个什么样了。下面的内容来自明查暗访，决无BS之意，旨在提供给需要统一规划整体架构的架构师一个帮助。
+<blockquote>54chen声明：本文所有内容本着技术分享的原则，收集资料皆来自网络，绝不透露不该透露的内容，绝不隐藏不该隐藏的内容（阿弥托佛，资本家万岁）。</blockquote>
+<strong>1.人人网 </strong>
+参考：http://ugc.renren.com/2009/12/28/renren-ice-problem/<br />
+关键词：ice中间层，统一配置数据源，开发者不关心分库分表</p>
+
+<p>与很多大型的网站一样，人人网的系统全部是由开源软件构建的。使用Nginx做前端接入，resin做容器，Memcached做通用 cache，MySQL做数据库，使用Linux操作系统。<br />
+除了上述的部分外，人人网还有一个与众不同的中间层。中间层以服务的形式存在，位于MySQL和resin中间，提供高并发低成本的数据访问层。</p>
+
+<p><strong>2.百度</strong>
+参考：http://wenku.baidu.com/view/9daa2b8102d276a200292e9c.html<br />
+关键词：dbproxy，服务器都是flash卡，DBA与开发者都不关心分裤分表（半自动）<br />
+百度的dbproxy利器，将mysql的管理半自动化，HA等功能一应俱全，再加上SSD等硬件支持，性能相当不一般。</p>
+
+<p><strong>3.盛大-技术保障中心</strong>
+参考：网友<br />
+关键词：无中间件，每个系统一个数据库，开发者严重关心分库分表</p>
+
+<p><strong>4.新浪</strong>
+参考：网友<br />
+关键词：无中间件  分表要开发者自己做</p>
+
+<p><strong>5.金山</strong>
+参考：网友<br />
+关键词：无中间件  分表要开发者自己做</p>
+
+<p><strong>6.腾讯</strong>
+参考：腾讯大讲堂45-解剖TTC<br />
+关键词：Tencent Table Cache<br />
+TTC是提供高速数据访问服务的通用cache server。特点是采用epoll和异步状态机模式提高并发能力。TTC看上去是一个数据库缓冲层，由于资料有限，只能如此分析。<br />
+&#8211;感谢胖子和呵呵哥提供线索支持</p>
+
+<p><strong>7.淘宝、支付宝</strong>
+参考：http://wenku.baidu.com/view/f36d620c844769eae009edba.html<br />
+关键词：JBoss作为中间件，有数据路由层，数据库 Oracle 与 MySQL<br />
+在网络上许多文档里都有提到阿里内部是有一数据路由层的，另外JBoss的使用也使得他们轻便不少（可惜当年哥在淘宝时只搞的是搜索，不使用DB）<br />
+&#8211;感谢Fenng提供线索支持</p>
+
+<p><strong>8.阿里巴巴B2B</strong>
+自己实现了db proxy，自定义分库及路由规则，有client版也有server版；分布式数据库原型<br />
+&#8211;感谢Brave提供线索支持</p>
+
+<p>调查中采访了许多人，比较遗憾的是腾讯的布道者 太少，基本上只有一个呵呵哥可以问，可他工作中还没有用到数据库，在此特进行BS。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/18/nginx-conf-ip-setting/">nginx.conf控制指定的代理ip和ip访问的设置手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img01.taobaocdn.com/imgextra/i1/T1nZJOXfFJXXcYn1U9_103242.jpg" alt="nginx conf" /></p>
+
+<p>工作中有一次用到利用nginx的配置来让只有公司ip的访问才能打开指定的后台url，于是有了下面的记录。</p>
+
+<p>在nginx中if很弱，http://www.nginxcn.com/doc/standard/httprewrite.html，基本上不能写太复杂的条件或者是嵌套。</p>
+
+<p>因为公司我(<a href="http://www.54chen.com">54chen</a>)网络的设置，过去打到服务器的ip有可能是几个ip，同时也有可能是代理的ip，所以在if判断的时候，可能有多个条件。</p>
+
+<p><blockquote>
+location /administrator {<br />
+                #log_format  www_54chen_com  &#8216;$remote_addr - $remote_user [$time_local] $request &#8217;<br />
+                 #               &#8216;&#8221;$status&#8221; $body_bytes_sent &#8220;$http_referer&#8221; &#8217;<br />
+                  #              &#8216;&#8221;$http_user_agent&#8221; &#8220;$http_x_forwarded_for&#8221;&#8217;;<br />
+             # access_log  /data/www.log  www_54chen_com;<br />
+            set $fuck 0;<br />
+            if ($remote_addr = &#8216;1.1.1.1&#8217;){<br />
+                set $fuck 1;<br />
+            }<br />
+            if ($remote_addr = &#8216;1.1.1.2&#8217;){<br />
+                set $fuck 1;<br />
+            }<br />
+            if ($remote_addr = &#8216;1.1.1.3&#8217;){<br />
+                set $fuck 1;<br />
+            }<br />
+            if ($http_x_forwarded_for = &#8216;2.2.2.2&#8217;) {<br />
+                set $fuck 1;<br />
+            }<br />
+            if ($fuck = 0){<br />
+                return 404;<br />
+            }<br />
+         #此处还需要填写和其他location一样的以提供正常服务环境<br />
+        }
+</blockquote>
+1） 1.1.1.1 1.1.1.2 1.1.1.3都是直接ip地址<br />
+2)  2.2.2.2是代理之前的ip地址</p>
+
+<p>另外流行的另一种做法：
+<blockquote>            allow 1.1.1.1;<br />
+            allow 1.1.1.2;<br />
+            allow 1.1.1.3;<br />
+            deny all;</blockquote>
+但此方法我(<a href="http://www.54chen.com">54chen</a>)始终没找到支持代理的判断。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/17/54chen-twitter-memo-2010-10-17/">54chen Twitter Memo 2010-10-17</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-17T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul class="aktt_tweet_digest">
+九九重阳节，今天天气不错，适合登高望远。 </ul><a href="http://twitter.com/54chen/statuses/27492125454" class="aktt_tweet_time">#</a>
+明日牡丹园藏书馆，众英雄齐聚商议地方门户站点的发展和执行。 <a href="http://twitter.com/54chen/statuses/27429577957" class="aktt_tweet_time">#</a>
+试了一下xweibo的开源代码，有点屎。 <a href="http://twitter.com/54chen/statuses/27409472044" class="aktt_tweet_time">#</a>
+今天的评论员文章很有感觉哦，继续吹。 <a href="http://twitter.com/54chen/statuses/27398020677" class="aktt_tweet_time">#</a>
+drizzle 设计理念：1 异步 2 架构解决复制同步和插件 <a href="http://twitter.com/54chen/statuses/27320097993" class="aktt_tweet_time">#</a>
+一直都认为QQ是个技术封闭的公司，看了大讲堂的PPT才知道，内部分享还是比较活跃的，分享东西还是比较深层次的。 <a href="http://twitter.com/54chen/statuses/27229873389" class="aktt_tweet_time">#</a>
+成立“技术人员俱乐部”，每个会员每年：1）有10万元经费可以吃喝玩乐。2）至少出国考察1次。3）专用俱乐部大厦中的各项休闲、娱乐、健身设施。 <a href="http://twitter.com/54chen/statuses/27198985143" class="aktt_tweet_time">#</a>
+说说中国互联网公司的地域差异 <a href="http://goo.gl/fb/WjnHT" rel="nofollow">http://goo.gl/fb/WjnHT</a> <a href="http://twitter.com/54chen/statuses/27125036625" class="aktt_tweet_time">#</a>
+还是古代好混，割掉小JJ就能当中央公务员。 <a href="http://twitter.com/54chen/statuses/27110070213" class="aktt_tweet_time">#</a>
+大公司要不断引入3年以上工作经验的人，才能保证技术的领先，一味地只招应届生，只会让公司的技术水平停滞不前。 <a href="http://twitter.com/54chen/statuses/27105665214" class="aktt_tweet_time">#</a>
+大公司要不断引入3年以上工作经验的人，才能保证技术的领先，一味地只招应届生，只会让公司的技术水品停滞不前。 <a href="http://twitter.com/54chen/statuses/27105339407" class="aktt_tweet_time">#</a>
+<a href="http://liuming.javaeye.com/blog/776890" rel="nofollow">http://liuming.javaeye.com/blog/776890</a> 那些令人喷饭的注释 <a href="http://twitter.com/54chen/statuses/27101351330" class="aktt_tweet_time">#</a>
+<a href="http://wildrain.blog.163.com/blog/static/143002201081914031956/" rel="nofollow">http://wildrain.blog.163.com/blog/static/143002201081914031956/</a>    网易跟贴的前世今生 <a href="http://twitter.com/54chen/statuses/27099719776" class="aktt_tweet_time">#</a>
+有人使用Tornado做为web service吗？性能如何？ <a href="http://twitter.com/54chen/statuses/27096652201" class="aktt_tweet_time">#</a>
+QQ今天弹的提示很有爱，“某公司”。。。 <a href="http://twitter.com/54chen/statuses/27095317939" class="aktt_tweet_time">#</a>
+oldRT 雨果曾说：一个国家不把钱花在造学校上，那就必然花在造监狱上。 一个项目如果不花钱在设计上，那就必然花在后期改错上。 <a href="http://twitter.com/54chen/statuses/27016277095" class="aktt_tweet_time">#</a>
+最新统计数据发布，上海人均年收入21.7万，北京19.8万。//我日 又拉了平均 <a href="http://twitter.com/54chen/statuses/27011888066" class="aktt_tweet_time">#</a>
+RT徐志斌:twitter上70%的tweet没有得到任何回应，23%会有人回复，只有6%得到转推。被回复的tweet中，85%只有1人回复，10.7%2人回复，1.53%有三人以上回复。在被转推的，有超过92%在第一个小时被转。//消息可靠度未知 <a href="http://twitter.com/54chen/statuses/27011767621" class="aktt_tweet_time">#</a>
+女性更多的团队更可能胜出。 <a href="http://twitter.com/54chen/statuses/27009562580" class="aktt_tweet_time">#</a>
+<a href="http://photo.renren.com/photo/224923721/photo-3472533235?curpage=0&amp;t=" rel="nofollow">http://photo.renren.com/photo/224923721/photo-3472533235?curpage=0&amp;t=</a>  80后的语文课本回忆。 <a href="http://twitter.com/54chen/statuses/27007629468" class="aktt_tweet_time">#</a>
+中国国际展览中心：#2010通信展# 看到了各种微博的市场人员，在我门口经过。。。 <a href="http://twitter.com/54chen/statuses/26990215396" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2010-10-10 <a href="http://goo.gl/fb/fz1Kk" rel="nofollow">http://goo.gl/fb/fz1Kk</a> <a href="http://twitter.com/54chen/statuses/26895669160" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/12/china-internet-company-problem/">说说中国互联网公司的地域差异</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-12T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们，是一个尚义轻利的民族。 </p>
+
+<p>中国山东，有这样一对夫妇：</p>
+
+<p>刚刚结婚时，妻子在济宁，丈夫在枣庄；过了若干年，妻子调到了枣庄，丈夫却一纸调令到了菏泽。若干年后，妻子又费尽周折，调到了菏泽，但不久，丈夫又被提拔到了省城济南。妻子又托关系找熟人，好不容易调到了济南。可是不到一年，丈夫又被国家电业总公司调到重庆。 </p>
+
+<p>于是，她所有的朋友，就给她开玩笑——你们俩呀，天生就是牛郎织女的命。要我们说呀，你也别追了，干脆辞职，跟着你们家老张算了。 </p>
+
+<p>但是，她以及公婆、父母，都一致反对。“干了这么多年，马上就退休了，再说， 你的这么好，辞职多可惜。要丢掉多少钱呀！再干几年吧，也给孩子多挣一些。” </p>
+
+<p>夫妻两个至今依然是牛郎织女。 </p>
+
+<p>英国某小镇：</p>
+
+<p>有一个青年人，整日以沿街为小镇的人说唱为生；这儿，有一个华人妇女，远离家人，在这儿打工。他们总是在同一个小餐馆用餐，于是他们屡屡相遇。时间长了，彼此已十分的熟悉。 </p>
+
+<p>有一日，我们的女同胞，关切地对那个小伙子说：“不要沿街卖唱了，去做一个正当的职业吧。我介绍你到中国去教书，在那儿，你完全可以拿到比你现在高得多的薪水。” </p>
+
+<p>小伙子听后，先是一愣，然后反问道：“难道我现在从事的不是正当的职业吗？我喜欢这个职业，它给我，也给其他人带来欢乐。有什么不好？我何必要远渡重洋，抛弃亲人，抛弃家园，去做我并不喜欢的工作？” </p>
+
+<p>邻桌的英国人，无论老人孩子，也都为之愕然。他们不明白，仅仅为了多挣几张钞票，抛弃家人，远离幸福，有什么可以值得羡慕的。在他们的眼中，家人团聚，平平安安，才是最大的幸福。它与财富的多少，地位的贵贱无关。于是，小镇上的人，开始可怜我们的女同胞了。 </p>
+
+<p>只要锄头好，没有墙角挖不倒。中国的互联网公司的精英们正在日复一日地忙碌着。</p>
+
+<p>回到以前，你要是在哪个厂子里呆着没到退休，都不好意思出来混。</p>
+
+<p>21世纪的70后80后，毕业时为了理想工作后为了生存背井离乡在北上广奋斗着，越来越多的人开始筹备逃离北上广了，北上广人口重负什么时候得到解放还不得而知。</p>
+
+<p>Fenng在杭州求人，老王在山东求人，还有众多不知名的在全国各地求人，靠谱的人都在北上广。。。</p>
+
+<p>直到五年十年之后，北上广的技术人才要结婚生子养家的时候，全国各地省会城市，才会出现一个又一个坚如磐石的技术团队，他们呆在家人身边，快乐生活，努力工作，而那时的中国互联网，才是真正的欣欣向荣。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/10/54chen-twitter-memo-2010-10-10/">54chen Twitter Memo 2010-10-10</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-10T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul class="aktt_tweet_digest">
+如果不能让员工认同企业文化，至少让他感觉这个公司有前途；如果员工感觉不到公司有前途，至少让他觉得这份工作还有点意思；如果员工觉得这份工作没啥意思，至少能让他学到点什么；如果学也学不到什么，那么趁早解散吧。 </ul><a href="http://twitter.com/54chen/statuses/26828609198" class="aktt_tweet_time">#</a>
+互联网除了内容就是工具，sns的目的是以熟悉为前提勾引用户产生内容，微博是以个人中心为前提引诱用户产生内容。 <a href="http://twitter.com/54chen/statuses/26825237836" class="aktt_tweet_time">#</a>
+回了@Fenng才发现，记录一下，对比相似图片的办法：http://libpuzzle.pureftpd.org/project/libpuzzle/php <a href="http://twitter.com/54chen/statuses/26814246126" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/Fenng" class="aktt_username">Fenng</a> php相似图片，可以看看opencv的网站有没有现成的 <a href="http://twitter.com/Fenng/statuses/26806752108" class="aktt_tweet_reply">in reply to Fenng</a> <a href="http://twitter.com/54chen/statuses/26814118555" class="aktt_tweet_time">#</a>
+传统SNS的隐私设置组成的social graph，会不会阻碍网站的发展，人们或者可以认为网络是一种拓宽人脉的方式，按照各种属性的群组也许是改写这历史的时刻。 <a href="http://twitter.com/54chen/statuses/26813547446" class="aktt_tweet_time">#</a>
+公司变身节省成本招数之年度体检：通知一个时间，然后说明必须提前2天电话预约，大部分员工上班时间无暇打电话，千万不要划分某个部门几点到几点去。 <a href="http://twitter.com/54chen/statuses/26809125230" class="aktt_tweet_time">#</a>
+今天的主角，一是一位小月月，另一是和平的敏感词。今晚上要喝酒庆祝。 <a href="http://twitter.com/54chen/statuses/26732452751" class="aktt_tweet_time">#</a>
+俄罗斯的宇宙飞船飞往国际空间站之前都要进行一下“神职人员”的洗礼，我们的嫦娥2号不知道有没有这一步。 <a href="http://twitter.com/54chen/statuses/26722111442" class="aktt_tweet_time">#</a>
+真的猛士，敢于面对dz屎一般的代码。 <a href="http://twitter.com/54chen/statuses/26716609369" class="aktt_tweet_time">#</a>
+<a href="http://www.cnta.gov.cn/html/2010-10/2010-10-6-16-50-26629.html" rel="nofollow">http://www.cnta.gov.cn/html/2010-10/2010-10-6-16-50-26629.html</a> 这个新闻亮了：刚和我们科长玩跑跑卡丁车 <a href="http://twitter.com/54chen/statuses/26713619393" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/xm_dragon" class="aktt_username">xm_dragon</a> 快鸟快鸟。。 <a href="http://twitter.com/xm_dragon/statuses/26703789205" class="aktt_tweet_reply">in reply to xm_dragon</a> <a href="http://twitter.com/54chen/statuses/26706313734" class="aktt_tweet_time">#</a>
+才用上了twitter新版，更加加深了我在十一期间的普通互联网用户的分析感觉，能够一步完成的操作，绝对不搞两步。 <a href="http://twitter.com/54chen/statuses/26701140776" class="aktt_tweet_time">#</a>
+国庆七天记忆:1.拍婚纱照 2.认识了一位执着的创业者 3.池塘网鱼 4.逛街打架 5.挤火车  如此充实的十一，又杀回来京城鸟。。。 <a href="http://twitter.com/54chen/statuses/26700905505" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2010-10-03 <a href="http://goo.gl/fb/AAFdW" rel="nofollow">http://goo.gl/fb/AAFdW</a> <a href="http://twitter.com/54chen/statuses/26225732004" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="/blog/page/24/">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="/blog/page/22/">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

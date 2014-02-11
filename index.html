@@ -9,15 +9,12 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="this is a test a.java
-1
-2
-3
-4
-5
-# Given an alphabet:
-alphabet = &#39;abcdefghijklmnopqrstuvwxyz&#39; # Iterate over part of the alphabet:
-console.log &hellip;">
+  <meta name="description" content="基础环境
+rmbp
+8G MEM
+Intel(R) Core(TM) i7-3615QM CPU @ 2.30GHz 四核 八线程
+oracle jdk 1.7.0_45 原理
+如上图，是类似tomcat的nio实现过程，不过将queue换成了高性能的disruptor，可能会得到更好的性能。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -46,10 +43,12 @@ console.log &hellip;">
 </head>
 
 <body   >
-  <header role="banner"><img src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
-
-<a href="/">Blog</a>
-<a href="/blog/archives">Archives</a>
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
 
 </header>
   <nav role="navigation"><ul class="subscription" data-subscription="rss">
@@ -78,7 +77,7 @@ console.log &hellip;">
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2014/02/08/title/">Title</a></h1>
+      <h1 class="entry-title"><a href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/">Disruptor Thrift Server连接参数与rps数值影响记录</a></h1>
     
     
       <p class="meta">
@@ -94,30 +93,885 @@ console.log &hellip;">
   
 
 
-<time datetime="2014-02-08T14:57:52+08:00" pubdate data-updated="true">Feb 8<span>th</span>, 2014</time>
+<time datetime="2014-01-22T00:00:00+08:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>this is a test</p>
+  <div class="entry-content"><p><img src="http://chen54.b0.upaiyun.com/0122/267176d6-5ef4-3e0b-937e-c492f5ba7807.jpg" alt="disruptor thrift server" width="450/" /></p>
 
-<figure class='code'><figcaption><span>a.java</span></figcaption>
-<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class='java'><span class='line'><span class="err">#</span> <span class="n">Given</span> <span class="n">an</span> <span class="nl">alphabet:</span>
-</span><span class='line'><span class="n">alphabet</span> <span class="o">=</span> <span class="err">&#39;</span><span class="n">abcdefghijklmnopqrstuvwxyz</span><span class="err">&#39;</span>
-</span><span class='line'>
-</span><span class='line'><span class="err">#</span> <span class="n">Iterate</span> <span class="n">over</span> <span class="n">part</span> <span class="n">of</span> <span class="n">the</span> <span class="nl">alphabet:</span>
-</span><span class='line'><span class="n">console</span><span class="o">.</span><span class="na">log</span> <span class="n">letter</span> <span class="k">for</span> <span class="n">letter</span> <span class="n">in</span> <span class="n">alphabet</span><span class="o">[</span><span class="mi">4</span><span class="o">..</span><span class="mi">8</span><span class="o">]</span>
-</span></code></pre></td></tr></table></div></figure>
+<p><strong>基础环境</strong>
+rmbp<br />
+8G MEM<br />
+Intel(R) Core(TM) i7-3615QM CPU @ 2.30GHz  四核 八线程<br />
+oracle jdk 1.7.0_45</p>
+
+<p><strong>原理</strong>
+如上图，是类似tomcat的nio实现过程，不过将queue换成了高性能的disruptor，可能会得到更好的性能。可调整参数为numAcceptors，numSelectors，numWorkersPerSelector三个值。<br />
+测试的代码位置在 https://github.com/54chen/disruptor_thrift_server 项目中的BenchmarkTest同时启动一个server，同时对其进行压测。</p>
+
+<p>AbstractDisruptorTest.Service类中实现了server的逻辑，里面实际上是一个加减乘除的简单方法，故意加了300ms的sleep以尽可能模拟真实的消费时间。<br />
+BenchmarkTest类中实现了client的压力逻辑，固定了200个线程同时死循环地进行访问，同时进行计数统计rps。</p>
+
+<p><strong>调整记录</strong>
+1.A(cceptors):4  S(electors):2 W(orkersPerSelector):2</p>
+
+<p>处理接入的线程数:4  <br />
+处理调用逻辑的线程数:2 推荐是cpu的核数以上<br />
+每个处理逻辑上的worker数量:2</p>
+
+<p>结果：<br />
+Rate: 16 req/s<br />
+Rate: 12 req/s<br />
+Rate: 12 req/s</p>
+
+<p>无reset等异常。</p>
+
+<p>2.A:40  S:2  W:2</p>
+
+<p>结果：<br />
+Rate: 16 req/s<br />
+Rate: 12 req/s<br />
+Rate: 12 req/s</p>
+
+<p>4.A:40  S:8 W:2<br />
+Rate: 48 req/s<br />
+cpu:10%  线程数:287</p>
+
+<p>5.A:40  S:80 W:2<br />
+Rate: 385 req/s<br />
+cpu:25%  线程数:503</p>
+
+<p>6.A:40 S:100 W:2<br />
+Rate: 400-500 req/s<br />
+cpu:30%  线程数:563<br />
+开始出现reset异常 java.net.SocketException: Connection reset</p>
+
+<p>7.A:40 S:100 W:4<br />
+Rate: 600-700 req/s<br />
+cpu:50%  线程数:763<br />
+开始出现java.net.NoRouteToHostException: Can&#8217;t assign requested address<br />
+极其不稳定，还会出现too many open files的异常<br />
+这是因为客户端同服务器端在同一机器的原因，受到了ulimit之类的限制<br />
+还出现了java.net.ConnectException: Operation timed out</p>
+
+<p><strong>后记</strong>
+上面的尝试都是在我的笔记本上进行的，因为mac不像centos这么好调整ulimit maxsockets这些参数，所以点到即止。<br />
+简单说，A值是水龙头，S值是分水管道，W值是发电机，W的值与CPU的负载有直接关系，所以一般以CPU的核数来对这个值进行调优。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/12/30/cassandra-thrift/">Cassandra的thrift用法学习手记</a></h1>
+    
+    
+      <p class="meta">
+        
 
 
 
+
+
+
+
+
+  
+
+
+<time datetime="2013-12-30T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="thrift" />
+<a href="#en">__English Version__The notes about the usage of Thrift in Cassandra</a></p>
+
+<p>Cassandra在client访问server cluster的时候使用了thrift，在cluster node间的通讯，依旧是自己实现的二进制协议。</p>
+
+<p><strong>先决条件</strong>
+thrift 0.9.1<br />
+mac<br />
+libthrift-0.9.1<br />
+Cassandra 2.0.3</p>
+
+<p>本文所涉及的代码：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
+
+<p><strong>看代码</strong>
+thrift的定义：server的逻辑实现代码叫做Processor，创建的等待socket代码里叫做Transport，最后启动的进程叫做Server，大致就会有要启动一个thrift server，需要有一个socket（Transport）和一堆逻辑（Processor）。</p>
+
+<p>这里有一篇2011年写的thrift入门手记：<a href="http://www.54chen.com/java-ee/thrift-quick-start.html">http://www.54chen.com/java-ee/thrift-quick-start.html</a></p>
+
+<p>示例代码中以TNonBlockingServer来举例。TNonBlockingServer是采用libevent lib实现的一种thrift内置的server类型，理论上是最快的一种。</p>
+
+<p><strong>CustomTNonBlockingServer</strong>
+Cassandra并没有默认使用这种类型的server，默认的是基于TServerTransport连接完成的CustomTThreadPoolServer（自行实现了连接池）。</p>
+
+<p>以示例代码为例：<br />
+CassandraTestServer －> CustomTNonBlockingServer.Factory().buildTServer -> new CustomTNonBlockingServer -> new TCustomNonblockingServerSocket.</p>
+
+<p>这个调用传递中，在接入客户端连接时，可以插入一定的代码（比如说来来保存session之类的）。</p>
+
+<p>代码中被插入的代码和阶段有：<br />
+TCustomNonblockingServerSocket->acceptImpl  一次客户端请求进入时，可用来设置服务器端的超时设置之类的数值。<br />
+CustomTNonBlockingServer->requestInvoke   紧接着上面的执行后具体的调用会打到这里来，这里看上去Cassandra把一个父类强转为子类，为了取当时的socket信息，有点小bug。</p>
+
+<p><strong>其他server</strong>
+Cassandra默认的CustomTThreadPoolServer也有类似前文提到的插入代码的地方，主要目的也是超时设置buffer设置等，而且因为使用的是普通TServerTransport，设置的点更加灵活。<br />
+不得不提的是另一个的实现，THsHaDisruptorServer，大有来头。<br />
+THsHaDisruptorServer使用TCustomNonblockingServerSocket当socket，上层TDisruptorServer使用的是基于LMAX（一家牛B的金融平台公司）开源的Disruptor（一个巨牛B的高吞吐低延迟的并发处理机制）来实现的TDisruptorServer，TDisruptorServer的代码在：<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> 可以理解为一个经过队列改造的TNonBlockingServer。</p>
+
+<p>以后再找机会分析这个disruptor_thrift_server。<br />
+__EOF__</p>
+
+<p><a name="en">__English Version__</a>
+Cassandra uses thrift when the client visits the server, but it still uses binary protocol between the cluster nodes. </p>
+
+<p><strong>Prerequisite</strong>
+thrift 0.9.1<br />
+mac<br />
+libthrift-0.9.1<br />
+Cassandra 2.0.3</p>
+
+<p>The codes mentioned in this blog：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
+
+<p><strong>See Codes</strong>
+The definition of Thrift: The codes which implements the server is named Processor. The codes which implements the socket for waiting is named Transport. At last, the codes which starts all logic is named Server. All of this, we need a thrift server,a socket(Transport) and a Processor.</p>
+
+<p>This is a blog link about thrift written in 2011:<a href="http://www.54chen.com/java-ee/thrift-quick-start.html">http://www.54chen.com/java-ee/thrift-quick-start.html</a></p>
+
+<p>The example codes take TNonBlockingServer for example.TNonBlockingServer is a built-in type server designed by lib-event.It is the fast type  in theory.</p>
+
+<p><strong>CustomTNonBlockingServer</strong>
+Cassandra does not use this type by default.The default type is based on TServerTransport named CustomTThreadPoolServer(implements the thread pool).</p>
+
+<p>For example:<br />
+CassandraTestServer －> CustomTNonBlockingServer.Factory().buildTServer -> new CustomTNonBlockingServer -> new TCustomNonblockingServerSocket.</p>
+
+<p>In this link,when client is come,we can plug in some codes(for saving session, etc.）。</p>
+
+<p>the codes and the stages which plugged in:<br />
+TCustomNonblockingServerSocket->acceptImpl  When the client is comming,we can set the configuration like the value of timeout,etc.<br />
+CustomTNonBlockingServer->requestInvoke   And then it will be called here.It seems that Cassandra&#8217;s codes cast a parent class to children one.It is maybe a bug。</p>
+
+<p><strong>Else Server</strong>
+Cassandra&#8217;s default server CustomTThreadPoolServer is also can be plugged in like above talked.The plugin main target is set timeout,buffer,etc.And the TServerTransport it used is more flexible to setting values。</p>
+
+<p>It&#8217;s hard to ignore the another type,THsHaDisruptorServer,is not normaI。<br />
+THsHaDisruptorServer is use TCustomNonblockingServerSocket to socket.The TDisruptorServer is based on LMAX Disruptor.The TDisruptorServer&#8217;s codes is here:<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> Can be understood as,a queue-improved TNonBlockingServer。</p>
+
+<p>I&#8217;ll write a blog about disruptor_thrift_server later.<br />
+__EOF__</p>
+
+<p>Happy New Year!</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/30/bluno/">BLUNO试用手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-30T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
+<strong>准备工作</strong>
+rmbp<br />
+BLUNO ×1<br />
+Android 4.3+ Devices with BLE or IOS 7.0+ Devices<br />
+Accessory Shield with Arduino ×1<br />
+Micro USB cable x1<br />
+http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。</p>
+
+<p><strong>通过AT指令配置BLUNO的蓝牙属性</strong>
+1.把BLUNO上的AT开关，从NORMAL拔到AT<br />
+2.连接BLUNO到电脑，打开CoolTerm<br />
+3.CoolTerm -> Options -> baud rate -> 115200 -> ok<br />
+4. Connect<br />
+5. Connection -> send String<br />
+6.弹出来的框框可以输入AT指令了<br />
+注意：Port要选择USBmodem***，因为电脑有延迟，如果没出来，可以拔了重新插入micro usb线，然后点下面的Re-scan。<br />
+7.（注意每个指令末尾要加回车）send之后，后面如果提示OK，表示发送成功，其他的提示或者没有提示，回到3。</p>
+
+<p><strong>常见AT指令集</strong>
+AT+NAME=?   －  你叫啥名字<br />
+AT+NAME=54CHEN_110005  － 把你的名字改为54CHEN_110005<br />
+AT+MAC=? - 你的mac地址是多少<br />
+AT+RESTART －去死吧<br />
+AT+CONN_INTERVAL=? －多少秒搞一次尝试连接？</p>
+
+<p><strong>设置好BLUNO</strong>
+Input : AT+ROLE=ROLE_PERIPHERAL<CR+LF>	Answer(Return):OK  // 角色调整为周边设备，相对于中央设备，从机的概念？<br />
+Input : AT+FSM=FSM_TRANS_USB_COM_BLE<CR+LF>	Answer(Return):OK //通过usb传输</p>
+
+<p>然后把AT开关从AT转为NORMAL，断电。</p>
+
+<p><strong>上传代码</strong>
+1.Accessory Shield插到BLUNO上，通电。<br />
+2.下载PlainProtocol：http://www.dfrobot.com.cn/download/PlainProtocol.zip<br />
+3.打开arduino IDE -> sketch->import library->add library，选择刚刚下载的包<br />
+4.在arduino IDE中写代码。</p>
+
+<p><strong>板子介绍</strong>
+BLUNO<br />
+内置BLE（低功耗蓝牙）模块的arduino板子。<br />
+Accessory Shield with Arduino <br />
+不知道哪位神仙想出来的大杂烩板子，上面有：128x64 OLED显示屏，喇叭一个，DHT11温度湿度传感器，1.5A继电器一枚，螺旋电位器一枚，RGB LED灯一颗。 </p>
+
+<p>__等再研究清楚点之后再续写arduino代码__</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/27/jvm/">Java 1.6.0_38-b05 Vm 20.13-b02优化手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg" alt="jvm" /></p>
+
+<p><strong>基础：</strong>
+业务代码<br />
+rose框架（底层是spring）<br />
+resin4<br />
+java 1.6.0_38-b05<br />
+centos</p>
+
+<p><strong>初始配置：</strong>
+只修改了以下三个值<br />
+-Xmx5000M  // <font color="red">max的heap的大小。</font>
+-Xms5000M  // <font color="red">min的heap的大小，就是一初始给的大小，不够先GC，还不够再加，直到max。</font>
+-Xmn2000M  //<font color="red">young区的大小，一般来讲：heap=Y+O，P是额外的值。Sun推荐Y=heap*(3/8)。</font></p>
+
+<p><strong>gc情况解读：</strong>
+# jstat -gcutil 20538 1000 100<br />
+S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT<br />
+0.00  51.96  62.53  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
+0.00  51.96  69.83  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
+0.00  51.96  77.75  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
+0.00  51.96  85.79  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
+0.00  51.96  92.35  73.42  99.93  35830 1554.778   185 1089.488 2644.266</p>
+
+<p>S0\S1是survivor区，就是没被gc掉的对象，在这两个survivor里来回导来导去，满足条件最后进行O区。<br />
+E是Eden区，E＋S0＋S1＝Y。<br />
+从jstat的数据看，这个机器大概15s发生一次YGC，很长时间没有FGC了（超过1天以上），而且P区已经99.93％使用了。</p>
+
+<p><strong>各区内存情况解读：</strong>
+<div id="_mcePaste">#jmap -heap 20538</div>
+<div id="_mcePaste">Attaching to process ID 20538, please wait&#8230;</div>
+<div id="_mcePaste">Debugger attached successfully.</div>
+<div id="_mcePaste">Server compiler detected.</div>
+<div id="_mcePaste">JVM version is 20.13-b02</div>
+<div id="_mcePaste">using thread-local object allocation.</div>
+<div id="_mcePaste">Parallel GC with 8 thread(s)</div>
+<div id="_mcePaste">Heap Configuration:</div>
+<div id="_mcePaste">MinHeapFreeRatio = 40 //<font color="red">如果连40％空闲都空不出来，就需要增加heap到xmx了。</font></div>
+<div id="_mcePaste">MaxHeapFreeRatio = 70 <span style="line-height: 19px;">//<font color="red">如果70％空闲了就别折腾了，减少去xms。</font></span></div>
+<div id="_mcePaste">MaxHeapSize      = 5242880000 (5000.0MB) -Xmx</div>
+<div id="_mcePaste">NewSize          = 2097152000 (2000.0MB)  // -Xmn</div>
+<div id="_mcePaste">MaxNewSize       = 2097152000 (2000.0MB)</div>
+<div id="_mcePaste">OldSize          = 5439488 (5.1875MB)  //<font color="red">old区的初始大小 此默认值在32位平台上是4M，在64位平台上是5M多。基本无用。</font></div>
+<div id="_mcePaste">NewRatio         = 2  // <font color="red">Y/O=1/2  表示Y区要占三分之一</font></div>
+<div id="_mcePaste">SurvivorRatio    = 8 //<font color="red"> Y区里的S与E的比例：S/E = 2/8，Y区里十分之一当S区（因为有两个S）。</font></div>
+<div id="_mcePaste">PermSize         = 21757952 (20.75MB)  //<font color="red">P区默认配置初始值</font></div>
+<div id="_mcePaste">MaxPermSize      = 85983232 (82.0MB) //<font color="red">P区默认配置最大值   32位的服务器时是64M，64位服务器时是64×(0.3*64) =82.2M左右。</font></div>
+<div id="_mcePaste">Heap Usage:</div>
+<div id="_mcePaste">PS Young Generation</div>
+<div id="_mcePaste">Eden Space:</div>
+<div id="_mcePaste">capacity = 1966604288 (1875.5MB)</div>
+<div id="_mcePaste">used     = 968355296 (923.4955749511719MB)</div>
+<div id="_mcePaste">free     = 998248992 (952.0044250488281MB)</div>
+<div id="_mcePaste">49.23996667294971% used</div>
+<div id="_mcePaste">From Space:</div>
+<div id="_mcePaste">capacity = 64880640 (61.875MB)</div>
+<div id="_mcePaste">used     = 32440384 (30.93756103515625MB)</div>
+<div id="_mcePaste">free     = 32440256 (30.93743896484375MB)</div>
+<div id="_mcePaste">50.00009864267677% used</div>
+<div id="_mcePaste">To Space:</div>
+<div id="_mcePaste">capacity = 65273856 (62.25MB)</div>
+<div id="_mcePaste">used     = 0 (0.0MB)</div>
+<div id="_mcePaste">free     = 65273856 (62.25MB)</div>
+<div id="_mcePaste">0.0% used</div>
+<div id="_mcePaste">PS Old Generation</div>
+<div id="_mcePaste">capacity = 3145728000 (3000.0MB)</div>
+<div id="_mcePaste">used     = 2375317280 (2265.279083251953MB)</div>
+<div id="_mcePaste">free     = 770410720 (734.7209167480469MB)</div>
+<div id="_mcePaste">75.50930277506511% used</div>
+<div id="_mcePaste">PS Perm Generation</div>
+<div id="_mcePaste">capacity = 80805888 (77.0625MB)</div>
+<div id="_mcePaste">used     = 80753328 (77.01237487792969MB)</div>
+<div id="_mcePaste">free     = 52560 (0.0501251220703125MB)</div>
+<div id="_mcePaste">99.93495523494525% used</div>
+<div>P区虽然显示的99％used，但是与max相比还有剩余，在spring AOP众多，一次性启动的特点下，相比82M的max，才使用到77M，还有上扬的空间。实测FGC的发生也只是一天一次。</div>
+<strong>是否需要优化判定：</strong></p>
+
+<p>YGCT/YGC=40ms  且十几秒才一次，健康</p>
+
+<p>FGCT/FGC=5s  但是一天也没几次，业务允许，一般健康可优化。未来可考虑优化为多次FGC减少FGCT的时长。</p>
+
+<p><strong>后续思考：</strong>
+虽然FGC并不频繁，但因为xmx值比较大，导致了O区相对变大，同时FGC缓慢，考虑从两个方向：1.调整Y区大小，让YGC去到O区的数据更少，让FGC频率更加慢（有可能很难有变化）2.调整整体的大小，让FGC频繁一点点但更加快一点  3.调整FGC的算法，让速度快一点到1秒内来。</p>
+
+<p>对照组结果后续有结论了再来续本文内容。</p>
+
+<p><strong>GC优化永远是最后一项任务。</strong></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/18/ssdc2013/">《移动互联网技术挑战》－ssdc</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://image.slidesharecdn.com/ssdc-54chen-131117235043-phpapp01/95/slide-1-638.jpg" width="200" /></p>
+
+<p>以下是上周末在苏州参加的活动使用的slide，<a href="http://softwaresuzhou.org">http://softwaresuzhou.org</a>。</p>
+
+<p><iframe src="http://chen54.b0.upaiyun.com/1118/ssdc.html" width="344" height="292" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://chen54.b0.upaiyun.com/1118/ssdc.html" title="ssdc-移动互联网技术挑战" target="_blank">看不到的同学请猛击这里 ssdc-移动互联网技术挑战</a> </strong> </div>
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/01/maven-nexus-notes/">百人共用企业maven私服nexus迁移搭建手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img class="alignnone" title="nexus" src="http://chen54.b0.upaiyun.com/1101/nexus200x50.png" alt="nexus" width="200" height="55" /></p>
+
+<p>三年前，小米的第一个nexus（版本1.8.0）在一台dell的办公机上安装完成。域名为http://www.a.com。</p>
+
+<p>三年后，a.com时不时已经慢得不行了。特别一到周一，大家都在update snapshot的时候，完全陷入一种无尽的痛苦中。</p>
+
+<p>然后弄来了一台专业server做这事情，域名为http://www.b.com。版本到官网一看，已经2.64了。日新月异！</p>
+
+<p>看升级文档顿时没了兴趣考虑升级，全新从零安装。</p>
+
+<p>最后的办法是，在新机器上安装新的，把老的仓库挑出来设置为proxy类型。然后启用了ldap，同时保障大家都有deploy权限的同时，最大保障大家的密码不明文出现，同时通过代理ngx来限制最大上传的包，同时规定了snapshot的使用规则，防止在线上使用snapshot。以下是详细记录：</p>
+
+<p><strong>一、下载安装nexus和配置nginx</strong></p>
+
+<p>找个磁盘分区不小的：</p>
+
+<p>wget http://sxrelease.n.miliao.com/nexus-2.6.4-02-bundle.zip</p>
+
+<p>unzip nexus-2.6.4-02-bundle.zip</p>
+
+<p>bin/nexus start</p>
+
+<p>然后就能用了。http://www.a.com:8081已经启动了。当然了，如果还不能访问，应该是iptables在捣乱，试一下iptables -F。</p>
+
+<p>［nginx安装忽略］</p>
+
+<p>然后再在此机器上配置一个nginx代理到8081端口上。只举是为了：1.分担jetty的访问压力，毕竟公司人已经越来越多了。2.好做后续更多的事情。
+<div id="_mcePaste">server {</div>
+<div id="_mcePaste">listen       80;</div>
+<div id="_mcePaste">server_name  b.com;</div>
+<div id="_mcePaste">location / {</div>
+<div id="_mcePaste">rewrite ^/(.*)$  http://www.b.com/nexus/$1  permanent;</div>
+<div id="_mcePaste">}</div>
+<div id="_mcePaste">access_log  logs/nexus.access.log  main;</div>
+<div id="_mcePaste">location /nexus {</div>
+<div id="_mcePaste">proxy_pass         http://127.0.0.1:8081;</div>
+<div id="_mcePaste">proxy_redirect     off;</div>
+<div id="_mcePaste">proxy_set_header   Host             $host;</div>
+<div id="_mcePaste">proxy_set_header   X-Real-IP        $remote_addr;</div>
+<div id="_mcePaste">proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;</div>
+<div id="_mcePaste">proxy_read_timeout  5m;</div>
+<div id="_mcePaste">client_max_body_size       30m;</div>
+<div id="_mcePaste">}</div>
+<div id="_mcePaste">}</div>
+<div id="_mcePaste">server {</div>
+<div id="_mcePaste">listen       443;</div>
+<div id="_mcePaste">server_name  b.com;</div>
+<div id="_mcePaste">ssl on;</div>
+<div id="_mcePaste">ssl_certificate ../ssl/b.com.crt;</div>
+<div id="_mcePaste">ssl_certificate_key ../ssl/b.com.key;</div>
+<div id="_mcePaste">&#8230;.</div>
+配置中，启用了443的https代理，有安全意识的工程师使用ldap的时候传输密码要安全一点。</p>
+
+<p>proxy_read_timeout设置5分钟，是因为在下载包时，有可能需要去国外拉一些没见过的包，设长一点以防出现504。</p>
+
+<p>client_max_body_size设置30m，如果再有巨大的奇怪包要deploy，不这么容易了，用来防止不明真相的群众往maven库里传乱七八糟的东西。</p>
+
+<p><strong>二、设置nexus</strong></p>
+
+<p>第一个设置，为了防止仓库爆仓。</p>
+
+<p>login-&gt;scheduled tasks-&gt;add，添加一个定时清理目录的计划任务即可。最后一个选项“remove if released”需要慎重，平时开发可能不是特别正规的时候可能会snapshot和release都需要。</p>
+
+<p>第二个设置，打开LDAP支持，让每个人都有权限。</p>
+
+<p>login-&gt;security-&gt;ldap configuration，填写各种惨无人道的ldap参数，［此处需要求助IT部门］，然后security-&gt;roles-&gt;add-&gt;External Role Mapping，Realm选择LDAP，Role里如果没有数据，说明ldap没设置好，Role里选择一个组，点击create mapping。</p>
+
+<p>然后在configuration中选择add，添加两个权限，一个是Nexus deployment role，一个是All maven repositories (Full control)。</p>
+
+<p>然后在对应组的小伙伴们就有权限了。</p>
+
+<p><strong>三、设置本地settings.xml</strong></p>
+
+<p>把原来的settings文件的url从a.com改为b.com，普通的小伙伴即可使用新的仓库了。</p>
+
+<p>要发包的小伙伴，因为ldap用户名密码明文写在文件里不好，于是就用下面的办法：
+<h2 style="background-image: none; margin-bottom: 0.6em; padding-top: 0.5em; padding-bottom: 0.17em; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #aaaaaa; font-size: 19px; font-family: sans-serif; line-height: 19px;"><span class="mw-headline">step 1.先随意定义一个种子</span></h2>
+<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> localhost:54chen 54chen$ mvn --encrypt-master-password 123asdadfafdadf
+ {BHe/qKN8q30HBG3bAGbYLOVLnAqVRkzjb9/7yWs+Ks0=}</pre>
+<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> vim ~/.m2/settings-security.xml</pre>
+<p style="margin: 0.4em 0px 0.5em; line-height: 19px; color: #000000; font-family: sans-serif; font-size: 13px;">写入内容：</p></p>
+
+<p><pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;settingsSecurity&gt;
+   &lt;master&gt;{BHe/qKN8q30HBG3bAGbYLOVLnAqVRkzjb9/7yWs+Ks0=}&lt;/master&gt;
+&lt;/settingsSecurity&gt;</pre>
+<h2 style="background-image: none; margin-bottom: 0.6em; padding-top: 0.5em; padding-bottom: 0.17em; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #aaaaaa; font-size: 19px; font-family: sans-serif; line-height: 19px;"><span class="mw-headline">step 2.最终生成</span></h2>
+<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">mvn --encrypt-password 你的邮箱密码
+{RxLx1asdfiafrjIHfXZDadfwveda23avsdv=}</pre>
+<p style="margin: 0.4em 0px 0.5em; line-height: 19px; color: #000000; font-family: sans-serif; font-size: 13px;">然后修改：</p></p>
+
+<p><pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">vim ~/.m2/settings.xml</pre>
+<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">&lt;server&gt;
+     &lt;id&gt;internal&lt;/id&gt;
+     &lt;username&gt;54chen&lt;/username&gt;
+     &lt;password&gt;{RxLx1asdfiafrjIHfXZDadfwveda23avsdv=}&lt;/password&gt;
+&lt;/server&gt;</pre>
+当然了，mvn的版本要在2.1.0以上才行。</p>
+
+<p>然后对deploy过程中明文传输有顾虑的小伙伴，直接上https即可。</p>
+
+<p><strong>四、在a.com中存在的包，在b.com中没有怎么办？</strong></p>
+
+<p>其实很简单，先在a.com中定位404的包在什么repo中，复制下来在a中的repo位置，在b.com中新加一个repo，类型为proxy，同时将remote storage location写成a的。同时， 单击public repositories，调整刚加的repo到ordered repo中去，即可。</p>
+
+<p>［后记］</p>
+
+<p>标题有点大，解释一下，百人共用的保障，主要还是在nginx上，挡这一层之后，可以做很多事情，比如再加点cache之类的，实际情况下，所有用户减少过度的snapshot使用，也有一定帮助。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/17/mi-trap/">移动互联网系统架构十大陷阱</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-17T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg" alt="移动互联网十宗罪" /></p>
+
+<p>过去的三年，54chen一直奋斗在中国移动互联网一线，历经各种坑爹的情况。以下特做记录。</p>
+
+<p><strong>Top 1.时不我待 连通性 </strong>
+cmwap cmnet这样的词语以后应该都会消失在人世间。三年前，经常性地有移不动联不通手机连不上服务器机房的情况。两年前，这种情况要好了一些。一年前，改善很多。现在还存在。相信未来会越来越好，时代在召唤！解法，花钱找有“背景”的机房。</p>
+
+<p><strong>Top 2.生不逢时 HTML5</strong>
+在去年的网络情况下，HTML5依旧不适合用来做优秀的app。前几年的时候，网速各种烂的情况下，2G下的html5应用基本上完全不能用。现在好一点，开始有闲人把html5全部封装好native的调用，使其只做view的显示部分，但是，性能也是个大问题。当然了，同样地，相信未来会越来越好，同样是时代在召唤！解法，过几年再用。</p>
+
+<p><strong>Top 3.环境恶劣 DNS</strong>
+DNS解析也有失败的情况下，app做得再漂亮，请求也不可达。IP要比域名靠谱一些，却有别的问题。解法就是在客户端多留下点域名和ip，一个不能用换下一个。</p>
+
+<p><strong>Top 4.车匪路霸 http拦截</strong>
+天朝运营商，可以干得出你想不到的事情。各种小广告帖你家防盗门上。所以你最好还是在header里声明好了:畜生，这个不是html，这是json，不要加广告!</p>
+
+<p><strong>Top 5.五花八门 app添加按钮一定要克制</strong>
+特别是android app，完全没有限制，或者统一标准，什么样的App都有，做一个大气的App，最重要的一点，看看能不能打开就是主要功能，手指点一下就能到重要功能。</p>
+
+<p><strong>Top 6.逆流而上 完全不要在传统web上有所期待</strong>
+除了新浪微博、QQ空间这种从传统web上推出的App之外，几乎不可能在完成一个App之后，能够让用户按你的引导打开一个网站。其难度不低于当年在传统广告商打完广告，等用户来访问网站一样。</p>
+
+<p><strong>Top 7.天下大同 App上的sqlite与服务器的mysql数据同步，是个大麻烦</strong>
+当App也有一个db在保存数据的时候，就会接二连三地出现数据不一致的问题。最好的解法，公司有个统一的同步机制，最好是固定的框架代码，让业务逻辑隔离开这个同步过程。当然，实际工作过程中，我们甚至还想把所有的云端数据只当成备份，干脆全部交给客户端工程师来完成逻辑，我们让cluster更加可靠和可扩展。</p>
+
+<p><strong>Top 8.通则不痛 下载渠道要通畅</strong>
+动则几M的包，下载不通畅，基本上分分钟新增用户就归零了。而且，要上CDN。这里有个坑，有些个CDN厂商的代理服务器可能会出现缓存有限的情况，文件太大会出现前半部分下载挺快，后面越下越慢，请谨慎使用。</p>
+
+<p><strong>Top 9.兵贵中速 移动网络更新太快不是好事，太慢也不是好事</strong>
+你看看哪个App天天在更新，已经不是web2.0时代了，亲！ 同时，不要慢速运转，你的伙伴们会养成拖拉的习惯。最好的办法，内部天天更新，外部月更新甚至是季更新。</p>
+
+<p><strong>Top 10.未雨绸缪 一定要提前准备全体用户可以看到的公告条，以备不时之需</strong>
+web2.0时代，我们要维护系统，在全部页面顶部加一个黄条：今天xx点全站维护。移动时代，这不太可能了，于是你会看到各种微博公告、微信公告、xx公告，反正就是不在自己家公告，因为自己家坏了要维护。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/10/08/upai-cdn-test/">又拍云cdn试用体验</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-10-08T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg" alt="54chen又拍云试用体验报告" /></p>
+
+<p><span style="font-size:33px;font-weight:bold">十</span>一之前，又拍云存储（upyun.com）市场部的谢静同学邮件我，让我试用又拍云的功能。之前在infoq或者是之类的技术讲座上有看到过又拍云的报道和技术架构讲解，印象还是不错的，本着支持创业提升期企业的态度，特写此文写下全部试用感受。</p>
+
+<p><strong>用法</strong>
+我的用法比较简单，因为diahosting给我提供的vps在国外，流量是个大问题，所以写博客时，基本都不上传大图片。遇到要上传的图片，之前基本都是两个地方，一是淘宝（嘿嘿，提醒淘宝的兄弟不要把那个上传的口关了哈，淘宝的cdn岗岗的！），二是新浪微博。</p>
+
+<p>上述两个老办法的坏处：淘宝的话，每次上传打开步骤都老麻烦了，又是密码又是选上架之类的。微博呢，又老有那个水印。二者图片质量都不行，老是压缩得不行了。</p>
+
+<p><span style="font-size:33px;font-weight:bold">申</span>请了又拍云存储之后，直接使用它的ftp功能，无压缩，cdn速度也岗岗的。<a href="http://www.54chen.com/architecture/how-to-document-code.html">http://www.54chen.com/architecture/how-to-document-code.html</a> 此文中第一个图即为又拍云提供。</p>
+
+<p>使用记录（mac下纯ftp命令记录）：</p>
+
+<p><blockquote>localhost:~ chenzhen$ mkdir -p 54chen-pic/1008<br />
+localhost:~ chenzhen$ cd 54chen-pic/1008<br />
+localhost:1008 chenzhen$ cp ~/Downloads/wallpaper_1282030786.jpg .<br />
+localhost:1008 chenzhen$ ls<br />
+wallpaper_1282030786.jpg</blockquote></p>
+
+<p>localhost:1008 chenzhen$ ftp v2.ftp.upyun.com <br />
+Connected to v2.ftp.upyun.com.<br />
+220 Usoppe: King of Snipers Sniper King<br />
+500 Command &#8220;AUTH&#8221; not understood.<br />
+Name (v2.ftp.upyun.com:chenzhen): XXX/XXX<br />
+331 Username ok, send password.<br />
+Password:<br />
+230 Login successful.<br />
+Remote system type is UNIX.<br />
+Using binary mode to transfer files.</p>
+
+<p>ftp> mkdir 1008<br />
+257 &#8220;/1008&#8221; directory created.</p>
+
+<p>ftp> cd 1008<br />
+250 &#8220;/1008&#8221; is the current directory.</p>
+
+<p>ftp> put wal*   <br />
+local: wallpaper_1282030786.jpg remote: wallpaper_1282030786.jpg<br />
+200 Active data connection established.<br />
+125 Data connection already open. Transfer starting.<br />
+226 Transfer complete.<br />
+43103 bytes sent in </p>
+
+<p>以上操作便得到了文章前面的图，url为http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg。</p>
+
+<p><strong>优点</strong>
+1.日志统计流量分析做得超级赞！<br />
+2.操作员和空间的分隔，可能会方便企业用户，不过个人用户可能没什么用，增加了学习成本。<br />
+3.各种详细的api以及现成的sdk（但是我没用过）。</p>
+
+<p><strong>缺点</strong>
+1.upyun.com的官网太丑陋了，像是05年前的网站，各种图片像索质量巨差（可能和我用的retina屏有关），第一次打开的时候，我以为是个冒充又拍网的。<br />
+2.没有web-ftp有点小遗憾。</p>
+
+<p><strong>用处</strong>
+如果你是一个苦逼创业团队，如果你有需求把apk\ipa包放在哪里，如果你有需求把css/js放在哪里，如果你没有足够多的资金又想有淘宝百度的下载速度，值得一试！</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/23/how-to-document-code/">如何写一手好文档（好代码）？</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-23T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://chen54.b0.upaiyun.com/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="document" /></p>
+
+<p><span style="font-size:33px;font-weight:bold">好</span>久没见。</p>
+
+<p>中秋去了一趟草原，放空了大脑，回来灵感突发，对文档、代码写法这方面的感悟多了些，特记录一下。
+<img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e8udr90gv4j218g0p0gr6.jpg" alt="54chen" /></p>
+
+<p><strong>一、什么样的文档（代码）叫做“好”？</strong>
+任何一篇文档，目标都是给别人看懂。<br />
+任何一段代码，首先也都是别人能看爽了才是目标。</p>
+
+<p>以上述“世界观”为准，很容易得到文档（代码）好不好的结论。</p>
+
+<p>以80后小时候读的连环画为例，它就是优秀文档的典范。
+<img src="http://ww3.sinaimg.cn/bmiddle/62014881jw1e8wgzgj8eyj20hf0go40k.jpg" alt="连环画" /></p>
+
+<p><span style="font-size:33px;font-weight:bold">像</span>连环画这样优秀的文档，主要具备以下几个特点：<br />
+1.长篇被分成小节。<br />
+2.小节中关键页有图。<br />
+3.描述言简意赅。<br />
+4.页数固定不多。</p>
+
+<p>典型地，如果在写文档（代码）时，能够做到上述四点，都是优秀的。<br />
+比如：<br />
+PHP文档造福了多少PHP程序员，让PHP这门语言流芳百世、追随者众多。在PHP文档中，每一小节都进行了特别归类; 在关键位置还有不少例子代码; 每个方法的作用也是言简意赅; 每一小节的数量都不是很多。</p>
+
+<p>再来看nginx代码，完全是一个大型服务端软件构建的一个范例。只看src目录中的源码，从一开始就分成了core、event、http、mail、misc、os，这样相当清晰明了的层级结构和定义，让后续很多事情方便扩展; 每一部分的代码都能够让读者一眼看明白是做什么的; 每个细节的方法长度也不是特别长; 每个分类里的内容也相对是固定的，后续的改进都是在plugin上比较多。</p>
+
+<p><strong>二、几种实际的土办法提高文档（代码）能力</strong>
+在上述建立好了对好文档（好代码）的世界观之后，下面再分享一些总结出来的套路，如果前面世界观没理解透，只把这里的土办法理解了，也能写出来容易读的文档（代码）。</p>
+
+<p><b>办法一、写文档先写段落标题，写代码先建分类目录（java叫做package）。</b>
+在一切开始之前，如果无法下笔，则先想想要写代码架子都有哪些。</p>
+
+<p><b>办法二、一级段落不要超过5个。</b>
+这纯粹是个经验值，实际超过3个的时候已经开始有些遗忘前面的了。套在代码上，不要超过5种主要功能的目录，像nginx有6个，不过os和misc基本上都是固定不改的东西，所以常动的也只有4个而已。</p>
+
+<p><b>办法三、不要没有段落画大饼</b>
+这和办法二是相反的，因为人脑对内容的吸收是有阶梯的，越往后的内容越难记住。所以在适当的时候要歇一歇。套在代码上，就是不要搞一个大类，什么都能干。</p>
+
+<p><b>办法四、尽可能让文档（代码）先少后多</b>
+这个办法是指，让读代码的人先看一小部分，慢慢再“勾引”读者不断地深入。</p>
+
+<p><span style="font-size:33px;font-weight:bold">好</span>了，上面的办法都实施之后，一手好湿就应该不远了。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/06/xiaomi/">记最近的事情－有关小米</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近小米好事连连，许多事情大家都知道了，这里只是纯粹的以个人视角把遇到的一些照片整理出来。按常规，只代表个人观点，与所就职公司没有半毛钱关系。还有很重要的一点，没有F码！</p>
+
+<p>以下，按照记叙文的过程进行一一记录。</p>
+
+<p><span style="font-size:33px;font-weight:bold">2</span>013年08月30日，据纽约时报当天的报道，“智能手机制造商小米公司在周四宣布，该公司已从谷歌公司(Google)挖来一名高管，出任拓展其国际业务计划的带头人，这是中国手机行业出口雄心勃勃的一个迹象”。出处见：<a href="http://cn.nytimes.com/technology/20130830/c30xiaomi/">http://cn.nytimes.com/technology/20130830/c30xiaomi/</a> &#8211;你有可能打不开，别问原因，可以问候方校长。</p>
+
+<p>没错，Hugo Barra，前Google全球副总裁，android的老大，加入了小米。以下是当天虎哥来我米报道的情形：
+<img src="http://ww4.sinaimg.cn/bmiddle/7d47b003gw1e8a77ee5sxj209l0afwf9.jpg" alt="hugo" /></p>
+
+<p>请自行忽略穿工作服的保安哥，他老是让我出示工牌。</p>
+
+<p><span style="font-size:33px;font-weight:bold">2</span>013年09月04日，HBase的头号带头大哥Michael Stack来到小米，给MITC进行了一场为时2小时的技术交流活动。以下是海报，
+<img src="http://ww1.sinaimg.cn/bmiddle/990b5710jw1e89ubtphutj20wy18gaea.jpg" alt="hbase mitc" /></p>
+
+<p><span style="font-size:33px;font-weight:bold">然</span>后进入到现场：
+<img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e8ajdq0jf7j218g0p00v0.jpg" alt="hbase michael" /></p>
+
+<p>当然了，他此行的原因有一部分是想来看一看这家为国际开源项目做出贡献的中国公司是什么样的，这主要是依靠我们优秀的小伙伴们。</p>
+
+<p><span style="font-size:33px;font-weight:bold">还</span>有这一张照片要附一下，多少是个心意：
+<img src="http://ww3.sinaimg.cn/thumbnail/62014881jw1e8d26yf9xkj20ci0k475k.jpg" alt="Stack & me" /></p>
+
+<p><span style="font-size:33px;font-weight:bold">2</span>013年09月05日，秋了，还没有树的叶子飘然而落，没有凄凉地在空中打着旋儿。天空不是灰色的，空气有一点冷冷的。偶尔飞过一只麻雀，传来的也是愉快的叫声，仿佛知道当天要在国家会议中心发生什么……</p>
+
+<p><img src="http://ww2.sinaimg.cn/bmiddle/62014881jw1e8d1xne6j8j20m80m8wfk.jpg" alt="2013 xiaomi" /></p>
+
+<p><span style="font-size:33px;font-weight:bold">我</span>相信，我所知道所有的细节你都知道，直接上图算了。
+<img src="http://ww4.sinaimg.cn/bmiddle/62014881jw1e8d1wxv188j20mo0h03zx.jpg" alt="hugo" />
+<span style="font-size:33px;font-weight:bold">场</span>子的外面，才到的时候，没门票进不去的。
+<img src="http://ww4.sinaimg.cn/bmiddle/62014881jw1e8d2kb70dlj20p018g439.jpg" alt="95xiaomi" />
+<span style="font-size:33px;font-weight:bold">米</span>聊的易拉宝。
+<img src="http://ww4.sinaimg.cn/bmiddle/62014881jw1e8d2jwp44sj218g0p0go3.jpg" alt="95xiaomi miliao" />
+<span style="font-size:33px;font-weight:bold">最</span>后的两把神兵，摇旗的是全国各地的同城会头头，千万别认为是啥传销组织聚头。
+<img src="http://ww4.sinaimg.cn/bmiddle/62014881jw1e8d2jnwh3tj218g0p0dk8.jpg" alt="95xiaomi end" /></p>
+
+<p><span style="font-size:33px;font-weight:bold">综</span>上，国际走进中国的时代开始了……</p>
 </div>
   
   
@@ -126,6 +980,8 @@ console.log &hellip;">
     </article>
   
   <div class="pagination">
+    
+      <a class="prev" href="/blog/page/2/">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -143,6 +999,19 @@ console.log &hellip;">
 
 </footer>
   
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
 
 
 

@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>记hadoop故障一例：BlockAlreadyExistsException - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="hive版本：0.7.0 hadoop版本：0.20.2 在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。 在hive执行时留下的蛛丝马迹：
+Failed with exception org.apache.hadoop.hdfs.server.namenode. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2011/08/15/hive-hadoop-blockalreadyexistsexception">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">记hadoop故障一例：BlockAlreadyExistsException</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="" />
+hive版本：0.7.0 hadoop版本：0.20.2 <br />
+在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。</p>
+
+<p>在hive执行时留下的蛛丝马迹：
+<blockquote>Failed with exception org.apache.hadoop.hdfs.server.namenode.NotReplicatedYetException: Not replicated yet:/tmp/hive-root/hive_2011-08-15_00-31-02_332_247809173824307798/-ext-10000/access_bucket-2011-08-14_00004<br />
+        at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getAdditionalBlock(FSNamesystem.java:1257)<br />
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.addBlock(NameNode.java:422)<br />
+        at sun.reflect.GeneratedMethodAccessor2037.invoke(Unknown Source)<br />
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br />
+        at java.lang.reflect.Method.invoke(Method.java:597)<br />
+        at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:508)<br />
+        at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:959)<br />
+        at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:955)<br />
+        at java.security.AccessController.doPrivileged(Native Method)<br />
+        at javax.security.auth.Subject.doAs(Subject.java:396)<br />
+        at org.apache.hadoop.ipc.Server$Handler.run(Server.java:953)</blockquote></p>
+
+<p>FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.CopyTask</p>
+
+<p>在DN中发现：</p>
+
+<p><blockquote>2011-08-15 00:47:09,138 INFO org.apache.hadoop.hdfs.server.datanode.DataNode: writeBlock blk_8964076545845199727_216399 received exception org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br />
+2011-08-15 00:47:09,138 ERROR org.apache.hadoop.hdfs.server.datanode.DataNode: DatanodeRegistration(192.168.1.23:50010, storageID=DS-52195649-192.168.1.23-50010-1299427987620, infoPort=50075, ipcPort=50020):DataXceiver<br />
+org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br />
+        at org.apache.hadoop.hdfs.server.datanode.FSDataset.writeToBlock(FSDataset.java:983)<br />
+        at org.apache.hadoop.hdfs.server.datanode.BlockReceiver.<init>(BlockReceiver.java:98)<br />
+        at org.apache.hadoop.hdfs.server.datanode.DataXceiver.writeBlock(DataXceiver.java:259)<br />
+        at org.apache.hadoop.hdfs.server.datanode.DataXceiver.run(DataXceiver.java:103)<br />
+        at java.lang.Thread.run(Thread.java:662)</init></blockquote></p>
+
+<p>2011-08-15 00:47:15,366 WARN org.apache.hadoop.util.Shell: Could not get disk usage information<br />
+org.apache.hadoop.util.Shell$ExitCodeException: du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018_216371.meta&#8217;: No such file or directory<br />
+du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018&#8217;: No such file or directory</p>
+
+<p>        at org.apache.hadoop.util.Shell.runCommand(Shell.java:195)<br />
+        at org.apache.hadoop.util.Shell.run(Shell.java:134)<br />
+        at org.apache.hadoop.fs.DU.access$200(DU.java:29)<br />
+        at org.apache.hadoop.fs.DU$DURefreshThread.run(DU.java:84)<br />
+        at java.lang.Thread.run(Thread.java:662)</p>
+
+<p> <br />
+看着像是DN写入的时候遇到了服务不响应，google追了一把，发现DN上全都忘记设置ulimit了，汗：<br />
+ulimit -SHn 18912</p>
+
+<p><strong>参考：</strong>
+http://www.cloudera.com/blog/2009/03/configuration-parameters-what-can-you-just-ignore/<br />
+http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/<br />
+http://sudhirvn.blogspot.com/2010/07/hadoop-error-logs-orgapachehadoophdfsse.html
+</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-15T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/java/'>java</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2011/08/14/54chen-twitter-memo-2011-08-14/" title="Previous Post: 54chen Twitter memo 2011-08-14">&laquo; 54chen Twitter memo 2011-08-14</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2011/08/21/54chen-twitter-memo-2011-08-21/" title="Next Post: 54chen Twitter memo 2011-08-21">54chen Twitter memo 2011-08-21 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2011/08/15/hive-hadoop-blockalreadyexistsexception/';
+        var disqus_url = 'http://2014.54chen.com/blog/2011/08/15/hive-hadoop-blockalreadyexistsexception/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

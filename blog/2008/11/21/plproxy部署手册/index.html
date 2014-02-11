@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Plproxy部署手册 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="安装过程如下： 1 安装plproxy：下载plproxy.安装完成plproxy后,运行{$PATH_TO_PG}/share/contrib/plproxy.sql 2 建立数据库_proxy； 3 建立plpgsql语言； 4 在_proxy中建立模式plproxy;分配权限 grant &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2008/11/21/plproxy%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8C">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Plproxy部署手册</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><dt>安装过程如下： </dt><dt>1 安装<a href="http://www.54chen.com/c/109">plproxy</a>：下载<a class="external text" title="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" rel="nofollow" href="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" target="_blank">plproxy</a>.安装完成plproxy后,运行{$PATH_TO_PG}/share/contrib/plproxy.sql </dt><dt>2 建立数据库_proxy； </dt><dt>3 建立plpgsql语言； </dt><dt>4 在_proxy中建立模式plproxy;分配权限 grant all on schema plproxy to &lt;用户&gt;。 </dt><dt>5 建立pgcluster； </dt><dt>
+</dt><dt>
+<pre> --以上步骤sql语句：
+ CREATE FUNCTION plpgsql_call_handler () RETURNS language_handler AS
+     '/usr/local/pgsql/lib/plpgsql.so'  LANGUAGE C;</pre></dt></p>
+
+<p> CREATE FUNCTION plpgsql_validator(oid) RETURNS void AS<br />
+     &#8216;/usr/local/pgsql/lib/plpgsql.so&#8217;  LANGUAGE C;</p>
+
+<p> CREATE TRUSTED PROCEDURAL LANGUAGE &#8216;plpgsql&#8217;<br />
+     HANDLER plpgsql_call_handler<br />
+     VALIDATOR plpgsql_validator;</p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
+
+<p> drop schema if exists plproxy cascade;</p>
+
+<p> create schema plproxy;</p>
+
+<p> grant all on schema plproxy to yahoo;</p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+ create or replace function plproxy.get_cluster_version(cluster_name text)</p>
+
+<p> returns integer as $$</p>
+
+<p> begin<br />
+     if cluster_name = &#8216;&lt;cluster名字&gt;&#8217; then</p>
+
+<p> 	return 8;</p>
+
+<p>     end if;</p>
+
+<p>     raise exception &#8216;no such cluster: %&#8217;, cluster_name;</p>
+
+<p> end; $$ language plpgsql;</p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;  <br />
+ create or replace function plproxy.get_cluster_partitions(cluster_name text)</p>
+
+<p> returns setof text as $$</p>
+
+<p> begin</p>
+
+<p>    if cluster_name = &#8216;&lt;cluster名字&gt;&#8217; then</p>
+
+<p> 	&#8211;return next &#8216;host=202.165.97.144 port=6000 user=chry password=chry dbname=chry_134&#8217;;</p>
+
+<p> 	return next &#8216;host=pg1.sns.cn3.yahoo.com user=yahoo dbname=sns_search&#8217;;<br />
+ 	return next &#8216;host=pg2.sns.cn3.yahoo.com user=yahoo dbname=sns_search&#8217;;</p>
+
+<p> 	return;</p>
+
+<p>     end if;</p>
+
+<p>     raise exception &#8216;no such cluster: %&#8217;, cluster_name;</p>
+
+<p> end; $$ language plpgsql;</p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+ create or replace function plproxy.get_cluster_config(cluster_name text, out key text, out val text)</p>
+
+<p> returns setof record as $$</p>
+
+<p> begin</p>
+
+<p>     key := &#8216;statement_timeout&#8217;;</p>
+
+<p>     val := 60;</p>
+
+<p>     return next;</p>
+
+<p>     return;</p>
+
+<p> end; $$ language plpgsql;
+<pre><dl>
+<dt>6 建立查询函数 </dt></dl>
+<pre> --在_proxy中建立查询函数:
+ CREATE OR REPLACE FUNCTION public.doquery(query text)
+ RETURNS setof record AS $$
+ CLUSTER '&lt;cluster名字&gt;';
+ RUN ON ALL;
+ $$ LANGUAGE plproxy;</pre></pre></p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+ CREATE OR REPLACE FUNCTION public.doquery(urlstr text,query text)<br />
+ RETURNS setof record AS $$<br />
+ CLUSTER &#8216;&lt;cluster名字&gt;&#8217;;<br />
+ RUN ON hashtext(urlstr);<br />
+ $$ LANGUAGE plproxy;</p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;  <br />
+ CREATE OR REPLACE FUNCTION public.dmlExec(query text)<br />
+ RETURNS integer AS $$<br />
+ CLUSTER &#8216;&lt;cluster名字&gt;&#8217;;<br />
+ RUN ON ALL;<br />
+ $$ LANGUAGE plproxy;</p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+ CREATE OR REPLACE FUNCTION public.dmlExec(urlstr text,query text)<br />
+ RETURNS integer AS $$<br />
+ CLUSTER &#8216;&lt;cluster名字&gt;&#8217;;<br />
+ RUN ON hashtext(urlstr);<br />
+ $$ LANGUAGE plproxy;
+ 
+<pre> --在所联邦的数据库中建立查询函数:
+ CREATE OR REPLACE FUNCTION public.doquery(query text)
+ RETURNS SETOF RECORD AS $$
+ DECLARE
+ row RECORD;
+ BEGIN
+ for row in execute query loop
+ return next row;
+ end loop;
+ return;
+ END;
+ $$ LANGUAGE plpgsql;</pre></p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-<br />
+ CREATE OR REPLACE FUNCTION public.doquery(urlstr text,query text)<br />
+ RETURNS SETOF RECORD AS $$<br />
+ DECLARE<br />
+ row RECORD;<br />
+ BEGIN<br />
+ for row in execute query loop<br />
+ return next row;<br />
+ end loop;<br />
+ return;<br />
+ END;<br />
+ $$ LANGUAGE plpgsql;</p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-</p>
+
+<p> CREATE OR REPLACE FUNCTION public.dmlExec(query text)<br />
+ RETURNS integer AS $$<br />
+ DECLARE<br />
+ ret integer;<br />
+ BEGIN<br />
+ execute query;</p>
+
+<p> GET DIAGNOSTICS ret = ROW_COUNT;<br />
+ RETURN ret;</p>
+
+<p> END;<br />
+ $$ LANGUAGE plpgsql;</p>
+
+<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;<br />
+ CREATE OR REPLACE FUNCTION public.dmlExec(urlstr text,query text)<br />
+ RETURNS integer AS $$<br />
+ DECLARE<br />
+ ret integer;<br />
+ BEGIN<br />
+ execute query;</p>
+
+<p> GET DIAGNOSTICS ret = ROW_COUNT;<br />
+ RETURN ret;</p>
+
+<p> END;<br />
+ $$ LANGUAGE plpgsql;
+
+</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2008/11/21/pgsql%E5%A6%82%E4%BD%95%E6%8E%A7%E5%88%B6%E6%9D%A5%E8%87%AA%E5%85%B6%E4%BB%96%E7%94%B5%E8%84%91%E7%9A%84%E8%BF%9E%E6%8E%A5%EF%BC%9F/" title="Previous Post: pgsql如何控制来自其他电脑的连接？">&laquo; pgsql如何控制来自其他电脑的连接？</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2008/11/21/postgresql%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85linux/" title="Next Post: PostgreSQL系统安装(Linux)">PostgreSQL系统安装(Linux) &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2008/11/21/plproxy%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8C/';
+        var disqus_url = 'http://2014.54chen.com/blog/2008/11/21/plproxy%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8C/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

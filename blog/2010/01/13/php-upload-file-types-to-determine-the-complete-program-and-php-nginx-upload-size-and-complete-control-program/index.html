@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>PHP上传文件类型彻底判断方案及PHP＋nginx上传大小彻底控制方案 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="上回科学院发过一篇讲述上传判断的文章，位置是
+PHP JAVA C上传文件如何准确判断文件类型－mime知识普及
+本文目的在于，进一步更正前文所述的mime判断方式，以及增加一个nginx环境里的文件上传大小所影响的代码。 上传类型控制： 在我（54chen）工作中发现，其实修改文件的后缀， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2010/01/13/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">PHP上传文件类型彻底判断方案及PHP＋nginx上传大小彻底控制方案</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-13T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>上回科学院发过一篇讲述上传判断的文章，位置是
+<h3><a rel="bookmark" href="../cc/php-java-c-upload-files-how-to-accurately-determine-the-file-type-mime-literacy.html">PHP JAVA C上传文件如何准确判断文件类型－mime知识普及</a></h3>
+本文目的在于，进一步更正前文所述的mime判断方式，以及增加一个nginx环境里的文件上传大小所影响的代码。</p>
+
+<p><strong>上传类型控制：</strong></p>
+
+<p>在我（<a href="http://www.54chen.com">54chen</a>）工作中发现，其实修改文件的后缀，浏览器就会很傻瓜地传送错误的<a href="http://www.54chen.com/_linux_/everyone-network-intel-technology-symposium-record.html">mime</a>类型，所以前文的判断是一个半错误的方法（除了C代码是正确的）。</p>
+
+<p>网上流传一段PHP读取文件头判断文件类型的方法，有一些bug，经我（<a href="http://www.54chen.com/php-tech/mediawiki-pgsql.html">54chen</a>）修改实测，应该是这个样子：
+<blockquote>/**<br />
+* 读取文件前几个字节 判断<a href="http://www.54chen.com/webfe/academy-of-sciences-in-recent-years-a-good-article-summing-up.html">文件</a>类型<br />
+*
+* @return String<br />
+*/<br />
+function checkTitle($filename) {<br />
+$file     = fopen($filename, &#8220;rb&#8221;);<br />
+$bin      = fread($file, 2); //只读2字节<br />
+fclose($file);<br />
+$strInfo  = @unpack(&#8220;c2chars&#8221;, $bin);<br />
+$typeCode = intval($strInfo[&#8216;chars1&#8217;].$strInfo[&#8216;chars2&#8217;]);<br />
+$fileType = &#8221;;<br />
+switch ($typeCode)<br />
+{
+case 7790:<br />
+$fileType = &#8216;exe&#8217;;<br />
+break;<br />
+case 7784:<br />
+$fileType = &#8216;midi&#8217;;<br />
+break;<br />
+case 8297:<br />
+$fileType = &#8216;rar&#8217;;<br />
+break;<br />
+case 255216:<br />
+$fileType = &#8216;jpg&#8217;;<br />
+break;<br />
+case 7173:<br />
+$fileType = &#8216;gif&#8217;;<br />
+break;<br />
+case 6677:<br />
+$fileType = &#8216;bmp&#8217;;<br />
+break;<br />
+case 13780:<br />
+$fileType = &#8216;png&#8217;;<br />
+break;<br />
+default:<br />
+$fileType = &#8216;unknown&#8217;.$typeCode;<br />
+}
+//Fix<br />
+if ($strInfo[&#8216;chars1&#8217;]==&#8217;-1&#8217; &amp;&amp; $strInfo[&#8216;chars2&#8217;]==&#8217;-40&#8217; ) {<br />
+return &#8216;jpg&#8217;;<br />
+}
+if ($strInfo[&#8216;chars1&#8217;]==&#8217;-119&#8217; &amp;&amp; $strInfo[&#8216;chars2&#8217;]==&#8217;80&#8217; ) {<br />
+return &#8216;png&#8217;;<br />
+}
+return $fileType;<br />
+}</blockquote>
+这代码可以非常正确地分出修改后的文件，从而达到阻止修改后缀名上传的情况。</p>
+
+<p><strong>上传大小控制：</strong></p>
+
+<p>在PHP代码中直接读取$_FILE的size，而如果是特别大的文件，又使用了PHP＋<a href="http://www.54chen.com/architecture/54-chen-skills-the-whole-point-for-domain-names-using-nginx-and-javascript-to-do-a-simple-jump-to-inform-the-friendly-exchange-of-domain-names.html">nginx</a>的话，很有可能，超过2M的文件直接就被nginx就抛出来413错误了。</p>
+
+<p>解决的办法：</p>
+
+<p>修改/etc/nginx/nginx.conf</p>
+
+<p>找到对应域名的<a href="http://www.54chen.com/architecture/wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes.html">server</a>段：修改client_max_body_size的值，默认是2M。</p>
+
+<p>这样子还不够，如果不修改php.ini里的值，你会发现上传的文件用上面的代码判断类型的时候会出问题。</p>
+
+<p>修改/etc/php.ini</p>
+
+<p>找到upload_max_<a href="http://www.54chen.com/cc/php-java-c-upload-files-how-to-accurately-determine-the-file-type-mime-literacy.html">filesize</a>，修改这个值，默认是2M。</p>
+
+<p>一番折腾，类型和大小的控制基本上就完善了。
+<h2><strong><span style="color: #ff0000;">重要PS</span>：</strong></h2>
+对于上传文件类型的判断，一直没有太好的办法，即使使用上面的代码，也有办法构造假的图片的（如何构造不再传播），有人使用getimagesize来判断，不失为一种好办法：</p>
+
+<p>if(in_array($attach[&#8216;ext&#8217;], array(&#8216;jpg&#8217;, &#8216;jpeg&#8217;, &#8216;gif&#8217;, &#8216;png&#8217;, &#8216;swf&#8217;, &#8216;bmp&#8217;)) &amp;&amp; function_exists(&#8216;getimagesize&#8217;) &amp;&amp; <a href="mailto:!@getimagesize($target">!@getimagesize($target</a>)) {<br />
+    @unlink($target);<br />
+    upload_error(&#8216;post_attachment_ext_notallowed&#8217;, $attacharray);<br />
+   }</p>
+
+<p>摘自dz代码。</p>
+
+<p>函数参考 <a href="http://cn2.php.net/getimagesize">http://cn2.php.net/getimagesize</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-01-13T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/linux/'>linux</a>, <a class='category' href='/blog/categories/php/'>php</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2010/01/10/54chen-twitter-memo-2010-01-10/" title="Previous Post: 54chen Twitter memo 2010-01-10">&laquo; 54chen Twitter memo 2010-01-10</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2010/01/17/54chen-twitter-memo-2010-01-17-2/" title="Next Post: 54chen Twitter memo 2010-01-17">54chen Twitter memo 2010-01-17 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2010/01/13/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program/';
+        var disqus_url = 'http://2014.54chen.com/blog/2010/01/13/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

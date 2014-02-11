@@ -1,0 +1,320 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cloud Foundry之warden代码解读-part3 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="简介
+cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。 代码位置在： https://github.com/cloudfoundry/warden 根据part2里提到的过程，本节以create命令为例进行追踪。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2012/10/12/cloud-foundry-warden-part3">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  	<link rel="apple-touch-icon" href="/touch-icon.png" />
+	<link rel="shortcut icon" href="/favicon.ico?ver=2014" />
+
+<!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<!--link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css"-->
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+<a href="/">首页</a>
+<a href="/blog/archives">归档</a>
+</span>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cloud Foundry之warden代码解读-part3</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-12T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden" />
+<strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
+
+<p>代码位置在： https://github.com/cloudfoundry/warden</p>
+
+<p>根据part2里提到的过程，本节以create命令为例进行追踪。</p>
+
+<p><blockquote>调用过程：<br />
+bin/warden-repl >> lib/warden/repl.rb >> Warden::Client >> warden.sock  >> lib/warden/server.rb << Warden::Server.run! << Rakefile<br />
+处理调用：<br />
+server.rb > ClientConnection > receive_request > process(request) >  process_container_request(request, container) > base.rb >  dispatch(request, &blk) > send(do_method, request, response, &blk) -> linux.rb > do_xxx  > shell script</blockquote></p>
+
+<p><strong>过程放大</strong></p>
+
+<p><strong>一、进入repl命令行</strong>
+<h2>1.1 名词</h2>
+bundle：主要用于管理Ruby应用程序的依赖关系，并按照此依赖关系安装所需的Gems。当运行bundle install命令来安装Gems时，bundler会使用当前目录下的名为Gemfile的文件来处理依赖关系。<br />
+gem：就是ruby的软件包，一个gem就是一个ruby软件。<br />
+Gemfile：定义了各种依赖情况，bundler命令必须在存在此文件的目录下执行。<br />
+Gemfile.lock：记录本机目前所有依赖的gem命令和版本。<br />
+rake：编译工具，类似java的ant。<br />
+Rakefile：rake命令所定义的配置任务文件，类似ant.xml。</p>
+
+<p><h2>1.2 进入</h2>
+<blockquote>#sudo bundle exec bin/warden-repl</blockquote>
+使用bundle exec来保证项目依赖的gem版本。在bin目录下有warden-repl脚本（ruby），这将会执行lib/warden/repl.rb文件，先会使用Warden:Client发起对warden.sock的连接，然后在start方法中对命令行模式的交互进行反馈。</p>
+
+<p><strong>二、输入create</strong>
+当输入create时，repl.rb执行到process_line中的respond_to的判断：</p>
+
+<p><h2>2.1 respond_to?</h2>
+if respond_to? words[0].to_sym。。。<br />
+这种写法的意思是，当前对象中是否有方法名为words[0].to_sym变量值的方法。</p>
+
+<p><h2>2.2 create</h2>
+repl.rb果断有这个create方法，然后talk_to_warden。就进入了client写的过程了。</p>
+
+<p><strong>三、warden收到create的响应</strong>
+<h2>3.1 warden server的启动</h2>
+早在part2中，使用了命令：
+<blockquote>sudo bundle exec rake warden:start[config/linux.yml]</blockquote>
+就已经启动了warden。<br />
+这将使在bundle定义的环境下，执行warden/warden/Rakefile里写好的任务：Warden::Server.run!。</p>
+
+<p><h2>3.2 warden server的响应</h2>
+在lib/warden/server.rb中，run!方法下，使用了EM的start_unix_domain_server的方法启动了一个unixsock，第二个参数ClientConnection定义了接收到东西怎么处理。<br />
+ClientConnection中的process方法具体处理了create：</p>
+
+<p><blockquote>	when Protocol::CreateRequest<br />
+          container = Server.container_klass.new<br />
+          container.register_connection(self)<br />
+          response = container.dispatch(request) </blockquote></p>
+
+<p>container_klass为配置中的Warden::Container::Linux。</p>
+
+<p>最终，将会执行linux.rb中的<strong>do_create</strong>方法。</p>
+
+<p><strong>四、shell脚本中的猫腻</strong>
+warden/root/linux中，有大量的sh脚本，里面通过一系列的命令，完成了基础环境的搭建，非常值得一读。
+<h2>4.1 linux/base/setup.sh</h2>
+这个脚本在运行安装warden时会被执行，按照执行过程：<br />
+1）分析本机最近的apt源地址。<br />
+2）debootstrap到/tmp/warden中<br />
+3）debootstrap的作用见前面的文章，主要是可以用于在系统的某个目录中安装一套基本系统. http://www.54chen.com/architecture/cloud-foundry-warden-part1.html<br />
+4）使用chroot将子系统中的缺失软件安装好</p>
+
+<p><h2>4.2 base.rb的dispatch create过程</h2>
+1）拼接before_create<br />
+2）执行 linux.rb中的 features/quota.rb的 before_create方法<br />
+2.5）执行base中的before_create方法，产生一个十六进制的handle值（也就是每个contaner的标识）<br />
+3）setquota<br />
+4）linux.rb do_create</p>
+
+<p><h2>4.3 linux.rb的do_create过程</h2>
+1）create.sh脚本的执行：传入目录，检查是否存在；unshare -m setup.sh。<br />
+2）unshare的作用是在指定的环境下执行程序setup.sh，不影响上一级环境。<br />
+3）此处的setup.sh与base/setup.sh相比，没有了debootstrap的过程。<br />
+4）setup.sh中设置了cgroup、磁盘挂载、限额、网络。<br />
+5）紧接着如果需要会执行hook-parent-before-clone.sh<br />
+6）修改limits.conf的参数<br />
+7）执行start.sh：建立子网，打通两条ssh通道。<br />
+8）完成create</p>
+
+<p><strong>五、交互演示</strong></p>
+
+<p><blockquote>$ sudo bundle exec bin/warden-repl<br />
+warden>  list<br />
+[&#8220;16bp35aue5i&#8221;]<br />
+warden> stop 16bp35aue5i<br />
+&#8220;ok&#8221;<br />
+warden> list<br />
+[&#8220;16bp35aue5i&#8221;]<br />
+warden> destroy 16bp35aue5i<br />
+&#8220;ok&#8221;<br />
+warden> list<br />
+nil<br />
+warden> create<br />
+16bp35aue5j<br />
+warden> info 16bp35aue5j<br />
+{&#8220;state&#8221;=>&#8221;active&#8221;,<br />
+ &#8220;host_ip&#8221;=>&#8221;10.254.0.5&#8221;,<br />
+ &#8220;container_ip&#8221;=>&#8221;10.254.0.6&#8221;,<br />
+ &#8220;container_path&#8221;=>&#8221;/tmp/warden/containers/16bp35aue5j&#8221;,<br />
+ &#8220;memory_stat&#8221;=>
+  <Warden::Protocol::InfoResponse::MemoryStat cache: 1789952, rss: 2826240, mapped_file: 8192, pgpgin: 5593, pgpgout: 4466, swap: 0, pgfault: 21494, pgmajfault: 53, inactive_anon: 8192, active_anon: 2826240, inactive_file: 1761280, active_file: 20480, unevictable: 0, hierarchical_memory_limit: 9223372036854775807, hierarchical_memsw_limit: 9223372036854775807, total_cache: 1789952, total_rss: 2826240, total_mapped_file: 8192, total_pgpgin: 5593, total_pgpgout: 4466, total_swap: 0, total_pgfault: 21494, total_pgmajfault: 53, total_inactive_anon: 8192, total_active_anon: 2826240, total_inactive_file: 1761280, total_active_file: 20480, total_unevictable: 0>,<br />
+ &#8220;cpu_stat&#8221;=>
+  <Warden::Protocol::InfoResponse::CpuStat usage: 286431704, user: 12, system: 12>,<br />
+ &#8220;disk_stat&#8221;=>
+  <Warden::Protocol::InfoResponse::DiskStat bytes_used: 20480, inodes_used: 6>}</blockquote></p>
+
+<p>warden> spawn 16bp35aue5j w  <br />
+2
+warden> link 16bp35aue5j 2<br />
+exit status: 0</p>
+
+<p>stdout:<br />
+ 03:18:51 up 29 days, 14:51,  0 users,  load average: 0.00, 0.04, 0.05<br />
+USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT</p>
+
+<p>stderr:</p>
+
+<p></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-12T00:00:00+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/jia-gou-yan-jiu/'>架构研究</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/10/09/cloud-foundry-warden-part2/" title="Previous Post: cloud foundry之warden代码解读-part2">&laquo; cloud foundry之warden代码解读-part2</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/10/14/54chen-twitter-memo-2012-10-14/" title="Next Post: 54chen Twitter memo 2012-10-14">54chen Twitter memo 2012-10-14 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = '54chen';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://2014.54chen.com/blog/2012/10/12/cloud-foundry-warden-part3/';
+        var disqus_url = 'http://2014.54chen.com/blog/2012/10/12/cloud-foundry-warden-part3/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
