@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一直都对gae冷眼旁观，今天得知支持java，甚是兴奋，是否暗示python也向java低头了，记一篇手记，送给万千不怕功夫网的同志。 首先用你的GAE账号登录http://appengine.google.com/start/newtos，当然，如果你没有GAE账号的话，得申请一下， &hellip;">
+  <meta name="description" content="[文章作者：陈臻 本文版本：v1.1 最后修改：2009.4.13 转载请注明原文链接：http://www.54chen.com/c/539 ] 这是一次公司内部的交流会，主题是校内的发展史和构架讲解，主讲人是校内网CTO黄晶，其中关于架构变迁的一段个人觉得是很具有代表性的过程， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,70 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/13/%E5%8E%9F%E5%88%9B%E6%95%B4%E7%90%86%E6%A0%A1%E5%86%85%E7%BD%91cto%E9%BB%84%E6%99%B6%E8%AE%B2%E8%BF%B0%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E5%8F%98%E8%BF%81-54chen%E5%9B%9E%E5%BF%86%E7%89%88/">[原创][整理]校内网CTO黄晶讲述网站架构变迁-54chen回忆版</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-13T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[文章作者：陈臻 本文版本：v1.1 最后修改：2009.4.13 转载请注明原文链接：<a href="http://www.54chen.com/c/539">http://www.54chen.com/c/539</a> ]<em> </em></p>
+
+<p><em> 这是一次公司内部的交流会，主题是校内的发展史和构架讲解，主讲人是校内网CTO黄晶，其中关于架构变迁的一段个人觉得是很具有代表性的过程，特在会上作了大概的笔记，现在是凌晨一点不到，正好清醒头脑进行回忆总结。</em></p>
+
+<p>每个网站的发展都会按照一个大致相同的路线去完成，当然这里说的是每个相对成功的网站。</p>
+
+<p>第一阶段：</p>
+
+<p>这一阶段没有太大的访问量，甚至只有一台服务器就搞定了所有的访问。<a href="http://www.54chen.com/c/406">DB</a>和前端的代码全都在一起，压力不高。忆者注：我觉得在<a href="http://www.54chen.com/c/154">alexa</a>没进五万的时候，只要不是特殊的应用，基本都在此列吧。</p>
+
+<p>第二阶段：</p>
+
+<p>网站初具规模，DB压力大增，单独的一台DB已经满足不了现在的访问量，开始考虑读写分离的<a href="http://www.54chen.com/c/406">Master-slave</a>库，使用三个及以上的服务器。忆者注：这时网站的alexa基本上会在1-3万的位置，每天的ip在5-10w的样子，当然，DB我们都认为是MySql。</p>
+
+<p>第三阶段：</p>
+
+<p>访问量继续增加，增加到了DB的压力在Master的机器上非常的明显了，Master开始出现吃不消的情况，出现写耗尽。主从也已经不能满足要求，需要进一步解决负载问题，此时要引入Mysql <a href="http://www.54chen.com/c/113">Proxy</a>程序，进行中间层代理，实现负载均衡，易于扩展。忆者注：这时网站已经不可限量了，先恭喜下你的网站能用到这段。</p>
+
+<p>第四阶段：</p>
+
+<p>网站继续发展，进而出现了数据量的成倍增长，原来的N台DB都出现了一个问题，数据量巨大，无法完成正常速度的读写。此时，需要对网站按功能进行垂直划分，比如用户注册登录是一部分、UGC又是另一部分。与此同时，对数据本身进行水平划分，也就是Hash散表或者是散库。</p>
+
+<p>第五阶段：</p>
+
+<p>真的没了。再往下玩就灭了。</p>
+
+<p><em>其实再进一步第五第六阶段，就是无法预想的未来了，也许有什么突飞猛进的科学技术发明也说不好。</em>
+<blockquote>今天和yahoo的agentZhang（openResty作者）聊起，他说到第五个阶段其实应该是BigTable，的确很强大，来自google的作品。不过美中不足的是，它并不像我相像中的那样能够顺利过渡到第五阶段。以下论述来自infoQ:<br />
+Todd从定义BigTable的适用范围开始论述。由于BigTable引入的各种代价，只有在以下情况下使用BigTable才能带来益处：a)需要伸缩到巨量的用户数，b)更新与读取操作相比比例很小。Todd还着重强调为了“优化读取速度和可伸缩性”，所采取的理论路线与关系数据库中的做法存在根本的分歧，很可能初看起来是违背直觉甚至相当冒险的。</blockquote></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -645,44 +709,6 @@ then<br />
   eval vvv=&#8217;$&#8217;$vname ; echo vvv: $vvv    #将变量v1的值赋予vvv,即,使vvv=aaa<br />
 #eval vvv=$$vname   ; echo vvv: $vvv    #错误用法<br />
 fi</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/03/05/%E6%9C%AC%E7%AB%99%E6%9C%8D%E5%8A%A1%E5%99%A8mysql%E9%81%87%E5%88%B0%E9%97%AE%E9%A2%98-%E6%9C%9B%E8%B0%85/">本站服务器mysql遇到问题 望谅</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-03-05T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>本站服务器mysql遇到问题 访问时会时常出现db error 机房正在处理 望谅</p>
-
-<p></p>
 </div>
   
   

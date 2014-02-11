@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="转自: 知道分子查看完整个人资料  http://hutuworm.blogspot.com   从前，我们一直在做装机民工这份很有前途的职业。自打若干年前 Red Hat 推出了Kickstart，此后我们顿觉身价倍增。不再需要刻了光盘一台一台地安装 Linux，只要搞定PXE、DHCP、 &hellip;">
+  <meta name="description" content="修改JBoss启动配置 打开JBOSS_HOME/bin目录下的run.conf文件，找到：  #JAVA_OPTS=&#8221;$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y&# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/07/eclipse%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95jboss%E5%BA%94%E7%94%A8%E8%AE%BE%E7%BD%AE/">Eclipse远程调试JBoss应用设置(linux&win版本)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul>
+	<li>修改<a href="http://www.54chen.com/c/364">JBoss</a>启动配置</li>
+</ul>
+打开JBOSS_HOME/bin目录下的run.conf文件，找到：</p>
+
+<p> #JAVA_OPTS=&#8221;$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y&#8221;</p>
+
+<p>将其修改为：</p>
+
+<p> JAVA_OPTS=&#8221;$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n&#8221;</p>
+
+<p>(最后的y改成n)</p>
+
+<p>其中：8787为调试的端口号；</p>
+
+<p><strong>WIN:</strong></p>
+
+<p>直接修改run.bat，找到这一行，删除前面的rem，修改suspend为n。
+<ul>
+	<li> 启动JBoss</li>
+</ul>
+ ./run.sh -b192.168.1.x</p>
+
+<p>其中192.168.1.x是Jboss所在机器的ip；
+<ul>
+	<li>新建调试配置</li>
+</ul>
+在Eclipse中，<a href="http://www.54chen.com/c/47">打开</a>菜单“run”-〉“debug configurations&#8230;”；在出现的对话框中，选择“Remote Java Application”，右键单击，在弹出的菜单中选择“New”，在出现的对话框的“host”中输入Jboss<a href="http://www.54chen.com/c/379">服务器</a>的ip（192.168.1.x），在“port”中输入调试的端口号（8787），选择“debug”开始调试；
+<ul>
+	<li>  调试</li>
+</ul>
+在出现的“debug view”中，打开需要调试的<a href="http://www.54chen.com/c/354">Java</a>源文件，设置相应的断点就可以了</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -935,46 +1002,6 @@ gcc的常用连接选项有下列几个：<br />
 <code>% gcc -o prog main.o subr.o -L../lib -lany -lm</code></p>
 
 <p>From:<a href="http://www.ownlinux.cn/2008/11/14/linux-gcc-c/">http://www.ownlinux.cn/2008/11/14/linux-gcc-c/</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/12/17/%E5%9D%90%E9%98%B5%E6%9D%AD%E5%B7%9E%E6%B7%98%E5%AE%9D/">坐阵杭州淘宝</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-12-17T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>照片欠奉。</p>
-
-<p>涉及到技术转型，看到一句话，共勉。</p>
-
-<p>如果程序语言是宗教，那么： C语言是犹太教，Java是基督教，c++是回教. C#是摩門教，LISP是禪宗佛教，PHP是Cafeteria基督教，Haskell是道教，Erlang是印度教，Perl是伏都教，Lua是巫术，Ruby是新异教主义，Python是世俗人文主义，COBOL是古异教主义，APL是山达基教，Visual Basic是撒旦教。</p>
 </div>
   
   

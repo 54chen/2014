@@ -9,7 +9,13 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="http://www.baidu.com/s?wd=%B7%B9%B7%F1 百度搜“饭否” 你可以看到两个竞价排名欺压着可怜的饭否。 # nuclear - 人人网海量数据储存系统 吹风中 # 人人网新鲜事架构分享现场直播进行中 http://www.54chen.com/844-net- &hellip;">
+  <meta name="description" content="先做一个试验：
+Test.java package test;
+import java.util.ArrayList;
+import java.util.List;
+public class Test {
+public static void main(String[] args) {
+List& &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +85,124 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/08/java-list-transferred-byte-method/">Java List转byte[]的方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-12-08T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>先做一个试验：
+<blockquote>Test.java</blockquote></p>
+
+<p>package test;<br />
+import java.util.ArrayList;<br />
+import java.util.List;<br />
+public class Test {<br />
+public static void main(String[] args) {<br />
+List&lt;Integer&gt; lst = new ArrayList&lt;Integer&gt;();<br />
+for (int i = 0; i &lt; 100; i++) {<br />
+lst.add(i);<br />
+}
+System.out.print(lst.toString());<br />
+}
+}
+得到结果：列出了所有的数字
+<blockquote>[0, 1, 2, 3, 4, 5, 6。。。</blockquote>
+进一步进行改进：
+<blockquote>package test;</blockquote></p>
+
+<p>import java.util.ArrayList;<br />
+import java.util.List;</p>
+
+<p>public class Test {<br />
+public static void main(String[] args) {<br />
+List&lt;BlockData&gt; lst = new ArrayList&lt;BlockData&gt;();<br />
+for (int i = 0; i &lt; 100; i++) {</p>
+
+<p>lst.add(new BlockData(i,i));<br />
+}
+System.out.print(lst.toString());<br />
+}
+/**<br />
+* 定义一个乱七八糟的class<br />
+* @author cc<br />
+*
+*/<br />
+public static class BlockData {<br />
+public int version;<br />
+public int count;<br />
+public List&lt;String&gt; list;</p>
+
+<p>public BlockData(int version, int count) {<br />
+this.version = version;<br />
+this.count = count;<br />
+this.list = new ArrayList&lt;String&gt;(count);<br />
+}</p>
+
+<p>public BlockData(int version, int count, List&lt;String&gt; list) {<br />
+this.version = version;<br />
+this.count = count;<br />
+this.list = list;<br />
+}
+}<br />
+}
+运行后的结果：
+<blockquote>[test.Test$BlockData@1bc4459, test.Test$BlockData@12b6651, &#8230;</blockquote>
+从后面一个例子看到的object在<a href="http://www.54chen.com/705-peer-to-peer-distributed-hash-algorithm-in-the-mainstream-of-comparative-analysis-of-the-collection/">toString</a>的时候，对象只是一个串了，要想再恢复成<a href="http://www.54chen.com/814-tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">object</a>不可能了。54chen曾想把list.toString.getBytes，被证明是不靠谱的做法。</p>
+
+<p>而要想把一个list变成byte[]在网络上传输，看下面的代码：
+<blockquote>public void encode(OutputStream os) throws IOException {<br />
+List&lt;NuclearStorageValue&gt; list = data.list;</blockquote></p>
+
+<p>if (list != null &amp;&amp; list.size() &gt; 0) {</p>
+
+<p>for (NuclearStorageValue value : list) {<br />
+// 依次写入每条数据的长度和数据内容<br />
+byte[] bytes = value.toByteArray();</p>
+
+<p>os.write(int2bytes(bytes.length));<br />
+os.write(bytes);<br />
+}
+}<br />
+}</p>
+
+<p>public byte[] int2bytes(int val) {<br />
+byte[] b = new byte[4];<br />
+b[0] = (byte) (val &gt;&gt; 24);<br />
+b[1] = (byte) ((val &lt;&lt; 8) &gt;&gt; 24);<br />
+b[2] = (byte) ((val &lt;&lt; 16) &gt;&gt; 24);<br />
+b[3] = (byte) ((val &lt;&lt; 24) &gt;&gt; 24);<br />
+return b;<br />
+}</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -631,52 +755,6 @@ initrd (hd0,0)/initrd.lz
 <p>安装结束后，重启进系统，中文不全，选择一下最快的源，联网下语言包。</p>
 
 <p>thinpad x200 所有硬件全部正常可使用。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/14/54chen-twitter-2009-11-14/">一周废话汇总【54chen Twitter 2009-11-14】</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-11-14T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><ul class="aktt_tweet_digest">
-	<li>流感开始了，大批的兄弟倒下 <a href="http://twitter.com/54chen/statuses/5582085250">#</a></li>
-	<li>我从知道有爱情这么回事以来，樱木没和晴子好，宜静没有嫁大雄，新一也没有娶小兰，就连Li lei和Han meimei到现在也没结果&#8230;不能因为寂寞而苟且，不能因为孤独而恋爱 <a href="http://twitter.com/54chen/statuses/5582936359">#</a></li>
-	<li>露肩不拼医生吼啊~该触手时就触手啊~疯疯祸祸床就皱啊~ <a href="http://twitter.com/54chen/statuses/5611734240">#</a></li>
-	<li>上一推想歪的，一定是光棍，哦哈哈 <a href="http://twitter.com/54chen/statuses/5611752572">#</a></li>
-	<li>QQ2.7W 群中Lokoo：你公司5人，你老板赚100W，你实习的，没薪水，<br />
-那你的平均收入中50W了？ 能这样算吗 <a href="http://twitter.com/54chen/statuses/5641994661">#</a></li>
-	<li>@<a href="http://twitter.com/long132">long132</a> 万能的人工智能 <a href="http://twitter.com/54chen/statuses/5642529256">#</a></li>
-	<li>太白金星：娘娘为何闷闷不乐呢？王母娘娘：哎，最近发现玉帝老是心不在焉，时不时的往人间看。后来我才知道原来是在看美女。太白金星：是呀，不光玉帝，很多神仙也在偷看，只怪人间的女子衣服穿的越来越少，裙子越来越短。王母娘娘：那就降大雪冻冻他们吧。太白金星：好，臣这就去办。 <a href="http://twitter.com/54chen/statuses/5675785224">#</a></li>
-</ul>
-</p>
 </div>
   
   

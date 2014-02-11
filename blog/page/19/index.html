@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="#linux 必杀技# /usr/sbin/tmpwatch -m 240 /opt/resin/log/ 删除某目录下1周后的过期日志 #
-maven项目代码质量检测工具sonar使用手记 http://goo.gl/fb/pJqS1 #
-开源项目Sonar： &hellip;">
+  <meta name="description" content="hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供完整的sql查询功能，可以将sql语句转换为 MapReduce任务进行运行。 其优点是学习成本低，可以通过类SQL语句快速实现简单的MapReduce统计，不必开发专门的MapReduce应用， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +79,237 @@ maven项目代码质量检测工具sonar使用手记 http://goo.gl/fb/pJqS1 #
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/02/hive-hadoop-how-to-install/">Hadoop Hive安装手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-02T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="hadoop hive" />
+hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供完整的sql查询功能，可以将sql语句转换为 MapReduce任务进行运行。 其优点是学习成本低，可以通过类SQL语句快速实现简单的MapReduce统计，不必开发专门的MapReduce应用，十分适合数据仓库的统计分析。</p>
+
+<p><strong>[网络环境设置]</strong>
+vim /etc/hosts</p>
+
+<p><blockquote>192.168.100.52 hadoop1<br />
+192.168.99.34 hadoop2<br />
+192.168.103.135 hadoop3</blockquote></p>
+
+<p>分别到对应机器执行：</p>
+
+<p><blockquote>hostname hadoop1<br />
+hostname hadoop2<br />
+hostname hadoop3</blockquote></p>
+
+<p><strong>[打通机器]</strong></p>
+
+<p><blockquote>hadoop1# ssh-keygen -t dsa -P &#8221; -f ~/.ssh/id_dsa<br />
+hadoop1# scp ~/.ssh/id_dsa.pub hadoop2:/root/<br />
+hadoop1# scp ~/.ssh/id_dsa.pub hadoop3:/root/<br />
+hadoop2# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys<br />
+hadoop3# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys</blockquote></p>
+
+<p>验证：从hadoop1登录到hadoop2和hadoop3，不再需要密码。</p>
+
+<p><strong>[安装hadoop]</strong>
+确保所有机器有 ssh rsync jdk<br />
+确保设置了：<br />
+export JAVA_HOME=/opt/soft/jdk</p>
+
+<p>hive在0.20.x的hadoop做了大量的测试，因此选择0.20</p>
+
+<p><blockquote>cd /opt/soft/<br />
+wget http://mirror.bjtu.edu.cn/apache/hadoop/core/hadoop-0.20.2/hadoop-0.20.2.tar.gz<br />
+tar -zxvf hadoop-0.20.2.tar.gz<br />
+cd hadoop-0.20.2/<br />
+vim .bashrc<br />
+export HADOOP_HOME=/opt/soft/hadoop-0.20.2</blockquote></p>
+
+<p>（重复以上操作到另外两机器）</p>
+
+<p><strong>[配置hadoop]</strong>
+vim conf/core-site.xml<br />
+修改：</p>
+
+<p><blockquote>&lt;configuration&gt;<br />
+&lt;property&gt;<br />
+&lt;!&#8211; 用于dfs命令模块中指定默认的文件系统协议 &#8211;&gt;<br />
+&lt;name&gt;fs.default.name&lt;/name&gt;<br />
+&lt;value&gt;hdfs://hadoop1:9000&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;/configuration&gt;</blockquote></p>
+
+<p>vim conf/hdfs-site.xml<br />
+修改：</p>
+
+<p><blockquote>&lt;configuration&gt;<br />
+&lt;property&gt;<br />
+&lt;!&#8211; DFS中存储文件命名空间信息的目录 &#8211;&gt;<br />
+&lt;name&gt;dfs.name.dir&lt;/name&gt;<br />
+&lt;value&gt;/opt/hadoop/data/dfs.name.dir&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;property&gt;<br />
+&lt;!&#8211; DFS中存储文件数据的目录 &#8211;&gt;<br />
+&lt;name&gt;dfs.data.dir&lt;/name&gt;<br />
+&lt;value&gt;/opt/hadoop/data/dfs.data.dir&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;property&gt;<br />
+&lt;!&#8211; 是否对DFS中的文件进行权限控制(测试中一般用false)&#8211;&gt;<br />
+&lt;name&gt;dfs.permissions&lt;/name&gt;<br />
+&lt;value&gt;false&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;/configuration&gt;</blockquote></p>
+
+<p>vim conf/mapred-site.xml<br />
+修改：</p>
+
+<p><blockquote>&lt;configuration&gt;<br />
+&lt;property&gt;<br />
+&lt;!&#8211; 用来作JobTracker的节点的(一般与NameNode保持一致) &#8211;&gt;<br />
+&lt;name&gt;mapred.job.tracker&lt;/name&gt;<br />
+&lt;value&gt;hadoop1:9001&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;property&gt;<br />
+&lt;!&#8211; map/reduce的系统目录（使用的HDFS的路径） &#8211;&gt;<br />
+&lt;name&gt;mapred.system.dir&lt;/name&gt;<br />
+&lt;value&gt;/opt/hadoop/system/mapred.system.dir&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;property&gt;<br />
+&lt;!&#8211; map/reduce的临时目录（可使用“,”隔开，设置多重路径来分摊磁盘IO） &#8211;&gt;<br />
+&lt;name&gt;mapred.local.dir&lt;/name&gt;<br />
+&lt;value&gt;/opt/hadoop/data/mapred.local.dir&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;/configuration&gt;</blockquote></p>
+
+<p>vim masters</p>
+
+<p><blockquote>hadoop1</blockquote>
+vim slaves</p>
+
+<p><blockquote>hadoop2<br />
+hadoop3</blockquote></p>
+
+<p>scp conf/* hadoop2:/opt/soft/hadoop-0.20.2/conf/<br />
+scp conf/* hadoop3:/opt/soft/hadoop-0.20.2/conf/</p>
+
+<p><strong>
+[初始化]</strong></p>
+
+<p><blockquote>cd $HADOOP_HOME/bin<br />
+./hadoop namenode -format</blockquote></p>
+
+<p>启动<br />
+./start-all.sh</p>
+
+<p><strong>[验证]</strong>
+$HADOOP_HOME/bin/hadoop dfs -ls /<br />
+打开 http://192.168.100.52:50030<br />
+http://192.168.100.52:50070</p>
+
+<p><strong>
+[搭建hive集群]</strong>
+下载<br />
+只需要在hadoop1机器上安装</p>
+
+<p><blockquote>cd /opt/soft/hadoop-0.20.2<br />
+wget http://mirror.bjtu.edu.cn/apache/hive/hive-0.7.0/hive-0.7.0.tar.gz<br />
+tar zxvf hive-0.7.0.tar.gz<br />
+cd hive-0.7.0<br />
+vim ~/.bashrc<br />
+export HIVE_HOME=/opt/soft/hadoop-0.20.2/hive-0.7.0</blockquote></p>
+
+<p>$HIVE_HOME/bin/hive<br />
+&gt;create table tt(id int,name string) row format delimited fields terminated by &#8216;,&#8217; collection items terminated by &#8220;\n&#8221; stored as textfile;<br />
+&gt;select * from tt;<br />
+&gt;drop table tt;</p>
+
+<p>试玩结束。</p>
+
+<p><strong>[配置hive]</strong>
+准备mysql:hadoop1 user:hadoop pwd:hadoop</p>
+
+<p><blockquote>&gt;create database hive<br />
+&gt;GRANT all ON hive.* TO hadoop@% IDENTIFIED BY &#8216;hadoop&#8217;;<br />
+&gt;FLUSH PRIVILEGES ;</blockquote></p>
+
+<p>vim $HIVE_HOME/conf/hive-site.xml</p>
+
+<p><blockquote>
+&lt;?xml version=&#8221;1.0&#8221;?&gt;<br />
+&lt;?xml-stylesheet type=&#8221;text/xsl&#8221; href=&#8221;configuration.xsl&#8221;?&gt;<br />
+&lt;configuration&gt;<br />
+&lt;property&gt;<br />
+&lt;name&gt;hive.metastore.local&lt;/name&gt;<br />
+&lt;value&gt;true&lt;/value&gt;<br />
+&lt;/property&gt;</blockquote></p>
+
+<p>&lt;property&gt;<br />
+&lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;<br />
+&lt;value&gt;jdbc:mysql://hadoop1:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;<br />
+&lt;/property&gt;</p>
+
+<p>&lt;property&gt;<br />
+&lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;<br />
+&lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;<br />
+&lt;/property&gt;</p>
+
+<p>&lt;property&gt;<br />
+&lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;<br />
+&lt;value&gt;hadoop&lt;/value&gt;<br />
+&lt;/property&gt;</p>
+
+<p>&lt;property&gt;<br />
+&lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;<br />
+&lt;value&gt;hadoop&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;/configuration&gt;</p>
+
+<p><strong>[启动]</strong>
+复制一个mysql-connector-java-5.1.10.jar到hive/lib下后：</p>
+
+<p><blockquote>$HIVE_HOME/bin/hive<br />
+&gt;create table tt(id int,name string) row format delimited fields terminated by &#8216;,&#8217; collection items terminated by &#8220;\n&#8221; stored as textfile;</blockquote></p>
+
+<p>如果报如下错：</p>
+
+<p><blockquote>FAILED: Error in metadata: javax.jdo.JDOException: Couldnt obtain a new sequence (unique id) : Binary logging not possible. Message: Transaction level &#8216;READ-COMMITTED&#8217; in InnoDB is not safe for binlog mode &#8216;STATEMENT&#8217;</blockquote></p>
+
+<p>退出hive后，以root进入mysql执行：</p>
+
+<p><blockquote>&gt;set global binlog_format=&#8217;MIXED&#8217;;</blockquote></p>
+
+<p>这是mysql的一个bug。</p>
+
+<p>安装结束。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -816,103 +1045,6 @@ linkedin也被墙了 <a href="http://twitter.com/54chen/statuses/407713425676165
 54chen Twitter memo 2011-02-20 <a href="http://goo.gl/fb/aoPUv" rel="nofollow">http://goo.gl/fb/aoPUv</a> <a href="http://twitter.com/54chen/statuses/39142268090847232" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/02/24/log-server-scribe-helper/">分布式日志系统scribe使用手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-02-24T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="java,scribe" width="400/" />
-scribe 是facebook 开源的分布式日志系统 。其使用了thrift传输log，由于使用thrift，所以不论是什么语言的项目都可以实现日志收集，可达到远程或者是本地同步远程的分布式日志收集效果，在其示例配置中，并发量可达到max_msg_per_second=2000000，对普通的应用来说，每秒上百万的访问量可能性很小，因此基本上即使最简单的配置，远程收集所有项目的log也是可靠的，如果压力大的话，可以采取主从的配置，将日志打到本地后由scribe的主从配置来自动同步。下面讲述如何安装和使用scribe。</p>
-
-<p><strong>下载boost、thrift、scribe</strong>
-<blockquote>boost_1_45_0.tar.gz<br />
-thrift-0.5.0.tar.gz<br />
-facebook-scribe-2ee14d3.zip</blockquote></p>
-
-<p><strong>通过yum安装需要的依赖</strong>
-<blockquote>yum install libevent libevent-devel python-devel<br />
-yum install gcc-c++<br />
-yum install automake<br />
-yum install byacc flex
-</blockquote></p>
-
-<p><strong>安装boost</strong>
-<blockquote>tar -zxvf boost_1_45_0.tar.gz <br />
-cd boost_1_45_0<br />
-./bootstrap.sh<br />
-./bjam install &#8211;prefix=/opt/soft/bootstrap</blockquote></p>
-
-<p><strong>安装thrift-0.5.0</strong>
-<blockquote>tar zxvf thrift-0.5.0.tar.gz<br />
-./configure &#8211;with-php-config=/opt/soft/php/bin/php-config  &#8211;with-boost=/opt/soft/boost/ &#8211;with-java &#8211;prefix=/opt/soft/thrift<br />
-make<br />
-make install</blockquote></p>
-
-<p><strong>安装fb303</strong>
-<blockquote>cd contrib/fb303<br />
-./bootstrap.sh &#8211;prefix=/opt/soft/thrift/fb303 &#8211;with-boost=/opt/soft/boost/ &#8211;with-thriftpath=/opt/soft/thrift/<br />
-make<br />
-make install</blockquote></p>
-
-<p><strong>安装scribe</strong>
-<blockquote>unzip facebook-scribe-2ee14d3.zip<br />
-cd facebook-scribe-2ee14d3</blockquote></p>
-
-<p>export BOOST_ROOT=/opt/soft/boost/<br />
-export LD_LIBRARY_PATH=/opt/soft/thrift/lib:/usr/lib:/usr/local/lib:/opt/soft/boost/lib/<br />
-./bootstrap.sh &#8211;prefix=/opt/soft/scribe &#8211;with-boost=/opt/soft/boost/ &#8211;with-thriftpath=/opt/soft/thrift/<br />
-make<br />
-make install</p>
-
-<p><strong>启动scribe服务</strong>
-<blockquote>cd facebook-scribe-2ee14d3<br />
-cp example/exmaple1.conf /opt/soft/scribe/bin<br />
-cd /opt/soft/scribe/bin/<br />
-export BOOST_ROOT=/opt/soft/boost/<br />
-export LD_LIBRARY_PATH=/opt/soft/thrift/lib:/usr/lib:/usr/local/lib:/opt/soft/boost/lib/<br />
-./scibed example1.conf</blockquote></p>
-
-<p><strong>生成客户端使用scribe</strong></p>
-
-<p><blockquote>先产生java的thrift代码:<br />
-cd facebook-scribe-2ee14d3/if/<br />
-thrift -r -I ../../thrift-0.5.0/contrib/（这里需要指到你的thrift的源码目录） -gen java scribe.thrift</blockquote></p>
-
-<p> 
-<strong>使用</strong>
-<blockquote>gen-java目录下有thrift的客户端，即取即用。javaeye里有一篇写配置log4j使用scribe的不错：http://www.javaeye.com/topic/800208</blockquote></p>
-
-<p></p>
 </div>
   
   
