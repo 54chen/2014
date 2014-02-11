@@ -44,7 +44,18 @@
 <a href="/">首页</a>
 <a href="/blog/archives">归档</a>
 <a href="/about">关于</a>
-</span>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
 
 </header>
   <nav role="navigation"><ul class="subscription" data-subscription="rss">
@@ -148,8 +159,6 @@ Q:容灾，如果节点A掉了，那B上是否有A所保存的信息？</p>
 <p>A:一个节点下有至少两个物理实际节点做主主备份，上面是一个带网络检测和自动选取连接的工具，虚拟成一个节点，换句话说，A节点两台机器全部坏掉的可能性这里视为零。</p>
 </div>
 
-<div><a href=/donate>本文接受捐赠</a>
-</div>
 
   <footer>
     <p class="meta">
@@ -201,6 +210,7 @@ Q:容灾，如果节点A掉了，那B上是否有A所保存的信息？</p>
 </article>
 
   <section>
+<a href=/donate>本文接受捐赠</a><br>
     <h1>Comments</h1>
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>

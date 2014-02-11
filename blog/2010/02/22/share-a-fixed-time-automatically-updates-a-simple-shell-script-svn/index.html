@@ -50,7 +50,18 @@ done &hellip;">
 <a href="/">首页</a>
 <a href="/blog/archives">归档</a>
 <a href="/about">关于</a>
-</span>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
 
 </header>
   <nav role="navigation"><ul class="subscription" data-subscription="rss">
@@ -111,8 +122,6 @@ done</blockquote>
 原理很简单，利用shell中sleep的单位为秒作自动执行，如果要更加小的精度，估计可以利用这个基础之上多个同时执行:) 仅猜想，标准一些的作法还是用java或者是php的sleep（毫秒级的）。</p>
 </div>
 
-<div><a href=/donate>本文接受捐赠</a>
-</div>
 
   <footer>
     <p class="meta">
@@ -164,6 +173,7 @@ done</blockquote>
 </article>
 
   <section>
+<a href=/donate>本文接受捐赠</a><br>
     <h1>Comments</h1>
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>

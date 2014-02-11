@@ -44,7 +44,18 @@
 <a href="/">首页</a>
 <a href="/blog/archives">归档</a>
 <a href="/about">关于</a>
-</span>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
 
 </header>
   <nav role="navigation"><ul class="subscription" data-subscription="rss">
@@ -110,8 +121,6 @@ RewriteRule ^feed/?([_0-9a-z-]+)?/?$ <a href="http://feeds.feedburner.com/-about
 都是302跳，可能对seo不是太好，不过可能是对一些rss客户端比较好。</p>
 </div>
 
-<div><a href=/donate>本文接受捐赠</a>
-</div>
 
   <footer>
     <p class="meta">
@@ -163,6 +172,7 @@ RewriteRule ^feed/?([_0-9a-z-]+)?/?$ <a href="http://feeds.feedburner.com/-about
 </article>
 
   <section>
+<a href=/donate>本文接受捐赠</a><br>
     <h1>Comments</h1>
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>

@@ -44,7 +44,18 @@
 <a href="/">首页</a>
 <a href="/blog/archives">归档</a>
 <a href="/about">关于</a>
-</span>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
 
 </header>
   <nav role="navigation"><ul class="subscription" data-subscription="rss">
@@ -122,8 +133,6 @@
 <p>各类 Buffer 是数据的容器对象；各类Channel 实现在各类Buffer 与各类I/O 服务间传输数据。Selector 是实现并发型非阻塞I/O 的核心，各种可选择的通道将其感兴趣的事件注册到Selector 对象上，Selector 在一个循环中不断轮循监视这各些注册在其上的Socket 通道。SelectionKey 类则封装了SelectableChannel 对象在Selector 中的注册信息。当Selector 监测到在某个注册的SelectableChannel 上发生了感兴趣的事件时,自动激活产生一个SelectionKey对象,在这个对象中记录了哪一个SelectableChannel 上发生了哪种事件，通过对被激活的SelectionKey 的分析,外界可以知道每个SelectableChannel 发生的具体事件类型,进行相应的处理。</p>
 </div>
 
-<div><a href=/donate>本文接受捐赠</a>
-</div>
 
   <footer>
     <p class="meta">
@@ -175,6 +184,7 @@
 </article>
 
   <section>
+<a href=/donate>本文接受捐赠</a><br>
     <h1>Comments</h1>
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
