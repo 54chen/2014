@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-02-11T11:59:41+08:00</updated>
+  <updated>2014-02-11T13:48:09+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -29,7 +29,7 @@ oracle jdk 1.7.0_45</p>
 <p><strong>原理</strong>
 如上图，是类似tomcat的nio实现过程，不过将queue换成了高性能的disruptor，可能会得到更好的性能。可调整参数为numAcceptors，numSelectors，numWorkersPerSelector三个值。<br />
 测试的代码位置在 https://github.com/54chen/disruptor_thrift_server 项目中的BenchmarkTest同时启动一个server，同时对其进行压测。</p>
-
+<!-- more -->
 <p>AbstractDisruptorTest.Service类中实现了server的逻辑，里面实际上是一个加减乘除的简单方法，故意加了300ms的sleep以尽可能模拟真实的消费时间。<br />
 BenchmarkTest类中实现了client的压力逻辑，固定了200个线程同时死循环地进行访问，同时进行计数统计rps。</p>
 
@@ -100,7 +100,7 @@ libthrift-0.9.1<br />
 Cassandra 2.0.3</p>
 
 <p>本文所涉及的代码：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
-
+<!-- more -->
 <p><strong>看代码</strong>
 thrift的定义：server的逻辑实现代码叫做Processor，创建的等待socket代码里叫做Transport，最后启动的进程叫做Server，大致就会有要启动一个thrift server，需要有一个socket（Transport）和一堆逻辑（Processor）。</p>
 
@@ -184,7 +184,7 @@ Android 4.3+ Devices with BLE or IOS 7.0+ Devices<br />
 Accessory Shield with Arduino ×1<br />
 Micro USB cable x1<br />
 http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。</p>
-
+<!-- more -->
 <p><strong>通过AT指令配置BLUNO的蓝牙属性</strong>
 1.把BLUNO上的AT开关，从NORMAL拔到AT<br />
 2.连接BLUNO到电脑，打开CoolTerm<br />
@@ -237,7 +237,7 @@ rose框架（底层是spring）<br />
 resin4<br />
 java 1.6.0_38-b05<br />
 centos</p>
-
+<!-- more -->
 <p><strong>初始配置：</strong>
 只修改了以下三个值<br />
 -Xmx5000M  // <font color="red">max的heap的大小。</font>
@@ -347,7 +347,7 @@ E是Eden区，E＋S0＋S1＝Y。<br />
 <p>然后弄来了一台专业server做这事情，域名为http://www.b.com。版本到官网一看，已经2.64了。日新月异！</p>
 
 <p>看升级文档顿时没了兴趣考虑升级，全新从零安装。</p>
-
+<!-- more -->
 <p>最后的办法是，在新机器上安装新的，把老的仓库挑出来设置为proxy类型。然后启用了ldap，同时保障大家都有deploy权限的同时，最大保障大家的密码不明文出现，同时通过代理ngx来限制最大上传的包，同时规定了snapshot的使用规则，防止在线上使用snapshot。以下是详细记录：</p>
 
 <p><strong>一、下载安装nexus和配置nginx</strong></p>

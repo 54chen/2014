@@ -108,7 +108,7 @@ oracle jdk 1.7.0_45</p>
 <p><strong>原理</strong>
 如上图，是类似tomcat的nio实现过程，不过将queue换成了高性能的disruptor，可能会得到更好的性能。可调整参数为numAcceptors，numSelectors，numWorkersPerSelector三个值。<br />
 测试的代码位置在 https://github.com/54chen/disruptor_thrift_server 项目中的BenchmarkTest同时启动一个server，同时对其进行压测。</p>
-
+<!-- more -->
 <p>AbstractDisruptorTest.Service类中实现了server的逻辑，里面实际上是一个加减乘除的简单方法，故意加了300ms的sleep以尽可能模拟真实的消费时间。<br />
 BenchmarkTest类中实现了client的压力逻辑，固定了200个线程同时死循环地进行访问，同时进行计数统计rps。</p>
 

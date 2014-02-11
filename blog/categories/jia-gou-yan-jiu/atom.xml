@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 架构研究 | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/jia-gou-yan-jiu/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-02-11T11:59:41+08:00</updated>
+  <updated>2014-02-11T13:48:09+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -62,6 +62,7 @@
 <p>看升级文档顿时没了兴趣考虑升级，全新从零安装。</p>
 
 
+<!-- more -->
 
 
 <p>最后的办法是，在新机器上安装新的，把老的仓库挑出来设置为proxy类型。然后启用了ldap，同时保障大家都有deploy权限的同时，最大保障大家的密码不明文出现，同时通过代理ngx来限制最大上传的包，同时规定了snapshot的使用规则，防止在线上使用snapshot。以下是详细记录：</p>

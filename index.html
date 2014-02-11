@@ -111,59 +111,12 @@ oracle jdk 1.7.0_45</p>
 <p><strong>原理</strong>
 如上图，是类似tomcat的nio实现过程，不过将queue换成了高性能的disruptor，可能会得到更好的性能。可调整参数为numAcceptors，numSelectors，numWorkersPerSelector三个值。<br />
 测试的代码位置在 https://github.com/54chen/disruptor_thrift_server 项目中的BenchmarkTest同时启动一个server，同时对其进行压测。</p>
-
-<p>AbstractDisruptorTest.Service类中实现了server的逻辑，里面实际上是一个加减乘除的简单方法，故意加了300ms的sleep以尽可能模拟真实的消费时间。<br />
-BenchmarkTest类中实现了client的压力逻辑，固定了200个线程同时死循环地进行访问，同时进行计数统计rps。</p>
-
-<p><strong>调整记录</strong>
-1.A(cceptors):4  S(electors):2 W(orkersPerSelector):2</p>
-
-<p>处理接入的线程数:4  <br />
-处理调用逻辑的线程数:2 推荐是cpu的核数以上<br />
-每个处理逻辑上的worker数量:2</p>
-
-<p>结果：<br />
-Rate: 16 req/s<br />
-Rate: 12 req/s<br />
-Rate: 12 req/s</p>
-
-<p>无reset等异常。</p>
-
-<p>2.A:40  S:2  W:2</p>
-
-<p>结果：<br />
-Rate: 16 req/s<br />
-Rate: 12 req/s<br />
-Rate: 12 req/s</p>
-
-<p>4.A:40  S:8 W:2<br />
-Rate: 48 req/s<br />
-cpu:10%  线程数:287</p>
-
-<p>5.A:40  S:80 W:2<br />
-Rate: 385 req/s<br />
-cpu:25%  线程数:503</p>
-
-<p>6.A:40 S:100 W:2<br />
-Rate: 400-500 req/s<br />
-cpu:30%  线程数:563<br />
-开始出现reset异常 java.net.SocketException: Connection reset</p>
-
-<p>7.A:40 S:100 W:4<br />
-Rate: 600-700 req/s<br />
-cpu:50%  线程数:763<br />
-开始出现java.net.NoRouteToHostException: Can&#8217;t assign requested address<br />
-极其不稳定，还会出现too many open files的异常<br />
-这是因为客户端同服务器端在同一机器的原因，受到了ulimit之类的限制<br />
-还出现了java.net.ConnectException: Operation timed out</p>
-
-<p><strong>后记</strong>
-上面的尝试都是在我的笔记本上进行的，因为mac不像centos这么好调整ulimit maxsockets这些参数，所以点到即止。<br />
-简单说，A值是水龙头，S值是分水管道，W值是发电机，W的值与CPU的负载有直接关系，所以一般以CPU的核数来对这个值进行调优。</p>
-
-<p></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -209,76 +162,12 @@ libthrift-0.9.1<br />
 Cassandra 2.0.3</p>
 
 <p>本文所涉及的代码：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
-
-<p><strong>看代码</strong>
-thrift的定义：server的逻辑实现代码叫做Processor，创建的等待socket代码里叫做Transport，最后启动的进程叫做Server，大致就会有要启动一个thrift server，需要有一个socket（Transport）和一堆逻辑（Processor）。</p>
-
-<p>这里有一篇2011年写的thrift入门手记：<a href="http://www.54chen.com/java-ee/thrift-quick-start.html">http://www.54chen.com/java-ee/thrift-quick-start.html</a></p>
-
-<p>示例代码中以TNonBlockingServer来举例。TNonBlockingServer是采用libevent lib实现的一种thrift内置的server类型，理论上是最快的一种。</p>
-
-<p><strong>CustomTNonBlockingServer</strong>
-Cassandra并没有默认使用这种类型的server，默认的是基于TServerTransport连接完成的CustomTThreadPoolServer（自行实现了连接池）。</p>
-
-<p>以示例代码为例：<br />
-CassandraTestServer －> CustomTNonBlockingServer.Factory().buildTServer -> new CustomTNonBlockingServer -> new TCustomNonblockingServerSocket.</p>
-
-<p>这个调用传递中，在接入客户端连接时，可以插入一定的代码（比如说来来保存session之类的）。</p>
-
-<p>代码中被插入的代码和阶段有：<br />
-TCustomNonblockingServerSocket->acceptImpl  一次客户端请求进入时，可用来设置服务器端的超时设置之类的数值。<br />
-CustomTNonBlockingServer->requestInvoke   紧接着上面的执行后具体的调用会打到这里来，这里看上去Cassandra把一个父类强转为子类，为了取当时的socket信息，有点小bug。</p>
-
-<p><strong>其他server</strong>
-Cassandra默认的CustomTThreadPoolServer也有类似前文提到的插入代码的地方，主要目的也是超时设置buffer设置等，而且因为使用的是普通TServerTransport，设置的点更加灵活。<br />
-不得不提的是另一个的实现，THsHaDisruptorServer，大有来头。<br />
-THsHaDisruptorServer使用TCustomNonblockingServerSocket当socket，上层TDisruptorServer使用的是基于LMAX（一家牛B的金融平台公司）开源的Disruptor（一个巨牛B的高吞吐低延迟的并发处理机制）来实现的TDisruptorServer，TDisruptorServer的代码在：<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> 可以理解为一个经过队列改造的TNonBlockingServer。</p>
-
-<p>以后再找机会分析这个disruptor_thrift_server。<br />
-__EOF__</p>
-
-<p><a name="en">__English Version__</a>
-Cassandra uses thrift when the client visits the server, but it still uses binary protocol between the cluster nodes. </p>
-
-<p><strong>Prerequisite</strong>
-thrift 0.9.1<br />
-mac<br />
-libthrift-0.9.1<br />
-Cassandra 2.0.3</p>
-
-<p>The codes mentioned in this blog：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
-
-<p><strong>See Codes</strong>
-The definition of Thrift: The codes which implements the server is named Processor. The codes which implements the socket for waiting is named Transport. At last, the codes which starts all logic is named Server. All of this, we need a thrift server,a socket(Transport) and a Processor.</p>
-
-<p>This is a blog link about thrift written in 2011:<a href="http://www.54chen.com/java-ee/thrift-quick-start.html">http://www.54chen.com/java-ee/thrift-quick-start.html</a></p>
-
-<p>The example codes take TNonBlockingServer for example.TNonBlockingServer is a built-in type server designed by lib-event.It is the fast type  in theory.</p>
-
-<p><strong>CustomTNonBlockingServer</strong>
-Cassandra does not use this type by default.The default type is based on TServerTransport named CustomTThreadPoolServer(implements the thread pool).</p>
-
-<p>For example:<br />
-CassandraTestServer －> CustomTNonBlockingServer.Factory().buildTServer -> new CustomTNonBlockingServer -> new TCustomNonblockingServerSocket.</p>
-
-<p>In this link,when client is come,we can plug in some codes(for saving session, etc.）。</p>
-
-<p>the codes and the stages which plugged in:<br />
-TCustomNonblockingServerSocket->acceptImpl  When the client is comming,we can set the configuration like the value of timeout,etc.<br />
-CustomTNonBlockingServer->requestInvoke   And then it will be called here.It seems that Cassandra&#8217;s codes cast a parent class to children one.It is maybe a bug。</p>
-
-<p><strong>Else Server</strong>
-Cassandra&#8217;s default server CustomTThreadPoolServer is also can be plugged in like above talked.The plugin main target is set timeout,buffer,etc.And the TServerTransport it used is more flexible to setting values。</p>
-
-<p>It&#8217;s hard to ignore the another type,THsHaDisruptorServer,is not normaI。<br />
-THsHaDisruptorServer is use TCustomNonblockingServerSocket to socket.The TDisruptorServer is based on LMAX Disruptor.The TDisruptorServer&#8217;s codes is here:<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> Can be understood as,a queue-improved TNonBlockingServer。</p>
-
-<p>I&#8217;ll write a blog about disruptor_thrift_server later.<br />
-__EOF__</p>
-
-<p>Happy New Year!</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/12/30/cassandra-thrift/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -320,45 +209,12 @@ Android 4.3+ Devices with BLE or IOS 7.0+ Devices<br />
 Accessory Shield with Arduino ×1<br />
 Micro USB cable x1<br />
 http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。</p>
-
-<p><strong>通过AT指令配置BLUNO的蓝牙属性</strong>
-1.把BLUNO上的AT开关，从NORMAL拔到AT<br />
-2.连接BLUNO到电脑，打开CoolTerm<br />
-3.CoolTerm -> Options -> baud rate -> 115200 -> ok<br />
-4. Connect<br />
-5. Connection -> send String<br />
-6.弹出来的框框可以输入AT指令了<br />
-注意：Port要选择USBmodem***，因为电脑有延迟，如果没出来，可以拔了重新插入micro usb线，然后点下面的Re-scan。<br />
-7.（注意每个指令末尾要加回车）send之后，后面如果提示OK，表示发送成功，其他的提示或者没有提示，回到3。</p>
-
-<p><strong>常见AT指令集</strong>
-AT+NAME=?   －  你叫啥名字<br />
-AT+NAME=54CHEN_110005  － 把你的名字改为54CHEN_110005<br />
-AT+MAC=? - 你的mac地址是多少<br />
-AT+RESTART －去死吧<br />
-AT+CONN_INTERVAL=? －多少秒搞一次尝试连接？</p>
-
-<p><strong>设置好BLUNO</strong>
-Input : AT+ROLE=ROLE_PERIPHERAL<CR+LF>	Answer(Return):OK  // 角色调整为周边设备，相对于中央设备，从机的概念？<br />
-Input : AT+FSM=FSM_TRANS_USB_COM_BLE<CR+LF>	Answer(Return):OK //通过usb传输</p>
-
-<p>然后把AT开关从AT转为NORMAL，断电。</p>
-
-<p><strong>上传代码</strong>
-1.Accessory Shield插到BLUNO上，通电。<br />
-2.下载PlainProtocol：http://www.dfrobot.com.cn/download/PlainProtocol.zip<br />
-3.打开arduino IDE -> sketch->import library->add library，选择刚刚下载的包<br />
-4.在arduino IDE中写代码。</p>
-
-<p><strong>板子介绍</strong>
-BLUNO<br />
-内置BLE（低功耗蓝牙）模块的arduino板子。<br />
-Accessory Shield with Arduino <br />
-不知道哪位神仙想出来的大杂烩板子，上面有：128x64 OLED显示屏，喇叭一个，DHT11温度湿度传感器，1.5A继电器一枚，螺旋电位器一枚，RGB LED灯一颗。 </p>
-
-<p>__等再研究清楚点之后再续写arduino代码__</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/11/30/bluno/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -400,87 +256,12 @@ rose框架（底层是spring）<br />
 resin4<br />
 java 1.6.0_38-b05<br />
 centos</p>
-
-<p><strong>初始配置：</strong>
-只修改了以下三个值<br />
--Xmx5000M  // <font color="red">max的heap的大小。</font>
--Xms5000M  // <font color="red">min的heap的大小，就是一初始给的大小，不够先GC，还不够再加，直到max。</font>
--Xmn2000M  //<font color="red">young区的大小，一般来讲：heap=Y+O，P是额外的值。Sun推荐Y=heap*(3/8)。</font></p>
-
-<p><strong>gc情况解读：</strong>
-# jstat -gcutil 20538 1000 100<br />
-S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT<br />
-0.00  51.96  62.53  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
-0.00  51.96  69.83  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
-0.00  51.96  77.75  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
-0.00  51.96  85.79  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
-0.00  51.96  92.35  73.42  99.93  35830 1554.778   185 1089.488 2644.266</p>
-
-<p>S0\S1是survivor区，就是没被gc掉的对象，在这两个survivor里来回导来导去，满足条件最后进行O区。<br />
-E是Eden区，E＋S0＋S1＝Y。<br />
-从jstat的数据看，这个机器大概15s发生一次YGC，很长时间没有FGC了（超过1天以上），而且P区已经99.93％使用了。</p>
-
-<p><strong>各区内存情况解读：</strong>
-<div id="_mcePaste">#jmap -heap 20538</div>
-<div id="_mcePaste">Attaching to process ID 20538, please wait&#8230;</div>
-<div id="_mcePaste">Debugger attached successfully.</div>
-<div id="_mcePaste">Server compiler detected.</div>
-<div id="_mcePaste">JVM version is 20.13-b02</div>
-<div id="_mcePaste">using thread-local object allocation.</div>
-<div id="_mcePaste">Parallel GC with 8 thread(s)</div>
-<div id="_mcePaste">Heap Configuration:</div>
-<div id="_mcePaste">MinHeapFreeRatio = 40 //<font color="red">如果连40％空闲都空不出来，就需要增加heap到xmx了。</font></div>
-<div id="_mcePaste">MaxHeapFreeRatio = 70 <span style="line-height: 19px;">//<font color="red">如果70％空闲了就别折腾了，减少去xms。</font></span></div>
-<div id="_mcePaste">MaxHeapSize      = 5242880000 (5000.0MB) -Xmx</div>
-<div id="_mcePaste">NewSize          = 2097152000 (2000.0MB)  // -Xmn</div>
-<div id="_mcePaste">MaxNewSize       = 2097152000 (2000.0MB)</div>
-<div id="_mcePaste">OldSize          = 5439488 (5.1875MB)  //<font color="red">old区的初始大小 此默认值在32位平台上是4M，在64位平台上是5M多。基本无用。</font></div>
-<div id="_mcePaste">NewRatio         = 2  // <font color="red">Y/O=1/2  表示Y区要占三分之一</font></div>
-<div id="_mcePaste">SurvivorRatio    = 8 //<font color="red"> Y区里的S与E的比例：S/E = 2/8，Y区里十分之一当S区（因为有两个S）。</font></div>
-<div id="_mcePaste">PermSize         = 21757952 (20.75MB)  //<font color="red">P区默认配置初始值</font></div>
-<div id="_mcePaste">MaxPermSize      = 85983232 (82.0MB) //<font color="red">P区默认配置最大值   32位的服务器时是64M，64位服务器时是64×(0.3*64) =82.2M左右。</font></div>
-<div id="_mcePaste">Heap Usage:</div>
-<div id="_mcePaste">PS Young Generation</div>
-<div id="_mcePaste">Eden Space:</div>
-<div id="_mcePaste">capacity = 1966604288 (1875.5MB)</div>
-<div id="_mcePaste">used     = 968355296 (923.4955749511719MB)</div>
-<div id="_mcePaste">free     = 998248992 (952.0044250488281MB)</div>
-<div id="_mcePaste">49.23996667294971% used</div>
-<div id="_mcePaste">From Space:</div>
-<div id="_mcePaste">capacity = 64880640 (61.875MB)</div>
-<div id="_mcePaste">used     = 32440384 (30.93756103515625MB)</div>
-<div id="_mcePaste">free     = 32440256 (30.93743896484375MB)</div>
-<div id="_mcePaste">50.00009864267677% used</div>
-<div id="_mcePaste">To Space:</div>
-<div id="_mcePaste">capacity = 65273856 (62.25MB)</div>
-<div id="_mcePaste">used     = 0 (0.0MB)</div>
-<div id="_mcePaste">free     = 65273856 (62.25MB)</div>
-<div id="_mcePaste">0.0% used</div>
-<div id="_mcePaste">PS Old Generation</div>
-<div id="_mcePaste">capacity = 3145728000 (3000.0MB)</div>
-<div id="_mcePaste">used     = 2375317280 (2265.279083251953MB)</div>
-<div id="_mcePaste">free     = 770410720 (734.7209167480469MB)</div>
-<div id="_mcePaste">75.50930277506511% used</div>
-<div id="_mcePaste">PS Perm Generation</div>
-<div id="_mcePaste">capacity = 80805888 (77.0625MB)</div>
-<div id="_mcePaste">used     = 80753328 (77.01237487792969MB)</div>
-<div id="_mcePaste">free     = 52560 (0.0501251220703125MB)</div>
-<div id="_mcePaste">99.93495523494525% used</div>
-<div>P区虽然显示的99％used，但是与max相比还有剩余，在spring AOP众多，一次性启动的特点下，相比82M的max，才使用到77M，还有上扬的空间。实测FGC的发生也只是一天一次。</div>
-<strong>是否需要优化判定：</strong></p>
-
-<p>YGCT/YGC=40ms  且十几秒才一次，健康</p>
-
-<p>FGCT/FGC=5s  但是一天也没几次，业务允许，一般健康可优化。未来可考虑优化为多次FGC减少FGCT的时长。</p>
-
-<p><strong>后续思考：</strong>
-虽然FGC并不频繁，但因为xmx值比较大，导致了O区相对变大，同时FGC缓慢，考虑从两个方向：1.调整Y区大小，让YGC去到O区的数据更少，让FGC频率更加慢（有可能很难有变化）2.调整整体的大小，让FGC频繁一点点但更加快一点  3.调整FGC的算法，让速度快一点到1秒内来。</p>
-
-<p>对照组结果后续有结论了再来续本文内容。</p>
-
-<p><strong>GC优化永远是最后一项任务。</strong></p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/11/27/jvm/">Read on &rarr;</a>
+    </footer>
   
 
 
@@ -564,107 +345,12 @@ E是Eden区，E＋S0＋S1＝Y。<br />
 <p>然后弄来了一台专业server做这事情，域名为http://www.b.com。版本到官网一看，已经2.64了。日新月异！</p>
 
 <p>看升级文档顿时没了兴趣考虑升级，全新从零安装。</p>
-
-<p>最后的办法是，在新机器上安装新的，把老的仓库挑出来设置为proxy类型。然后启用了ldap，同时保障大家都有deploy权限的同时，最大保障大家的密码不明文出现，同时通过代理ngx来限制最大上传的包，同时规定了snapshot的使用规则，防止在线上使用snapshot。以下是详细记录：</p>
-
-<p><strong>一、下载安装nexus和配置nginx</strong></p>
-
-<p>找个磁盘分区不小的：</p>
-
-<p>wget http://sxrelease.n.miliao.com/nexus-2.6.4-02-bundle.zip</p>
-
-<p>unzip nexus-2.6.4-02-bundle.zip</p>
-
-<p>bin/nexus start</p>
-
-<p>然后就能用了。http://www.a.com:8081已经启动了。当然了，如果还不能访问，应该是iptables在捣乱，试一下iptables -F。</p>
-
-<p>［nginx安装忽略］</p>
-
-<p>然后再在此机器上配置一个nginx代理到8081端口上。只举是为了：1.分担jetty的访问压力，毕竟公司人已经越来越多了。2.好做后续更多的事情。
-<div id="_mcePaste">server {</div>
-<div id="_mcePaste">listen       80;</div>
-<div id="_mcePaste">server_name  b.com;</div>
-<div id="_mcePaste">location / {</div>
-<div id="_mcePaste">rewrite ^/(.*)$  http://www.b.com/nexus/$1  permanent;</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">access_log  logs/nexus.access.log  main;</div>
-<div id="_mcePaste">location /nexus {</div>
-<div id="_mcePaste">proxy_pass         http://127.0.0.1:8081;</div>
-<div id="_mcePaste">proxy_redirect     off;</div>
-<div id="_mcePaste">proxy_set_header   Host             $host;</div>
-<div id="_mcePaste">proxy_set_header   X-Real-IP        $remote_addr;</div>
-<div id="_mcePaste">proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;</div>
-<div id="_mcePaste">proxy_read_timeout  5m;</div>
-<div id="_mcePaste">client_max_body_size       30m;</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">server {</div>
-<div id="_mcePaste">listen       443;</div>
-<div id="_mcePaste">server_name  b.com;</div>
-<div id="_mcePaste">ssl on;</div>
-<div id="_mcePaste">ssl_certificate ../ssl/b.com.crt;</div>
-<div id="_mcePaste">ssl_certificate_key ../ssl/b.com.key;</div>
-<div id="_mcePaste">&#8230;.</div>
-配置中，启用了443的https代理，有安全意识的工程师使用ldap的时候传输密码要安全一点。</p>
-
-<p>proxy_read_timeout设置5分钟，是因为在下载包时，有可能需要去国外拉一些没见过的包，设长一点以防出现504。</p>
-
-<p>client_max_body_size设置30m，如果再有巨大的奇怪包要deploy，不这么容易了，用来防止不明真相的群众往maven库里传乱七八糟的东西。</p>
-
-<p><strong>二、设置nexus</strong></p>
-
-<p>第一个设置，为了防止仓库爆仓。</p>
-
-<p>login-&gt;scheduled tasks-&gt;add，添加一个定时清理目录的计划任务即可。最后一个选项“remove if released”需要慎重，平时开发可能不是特别正规的时候可能会snapshot和release都需要。</p>
-
-<p>第二个设置，打开LDAP支持，让每个人都有权限。</p>
-
-<p>login-&gt;security-&gt;ldap configuration，填写各种惨无人道的ldap参数，［此处需要求助IT部门］，然后security-&gt;roles-&gt;add-&gt;External Role Mapping，Realm选择LDAP，Role里如果没有数据，说明ldap没设置好，Role里选择一个组，点击create mapping。</p>
-
-<p>然后在configuration中选择add，添加两个权限，一个是Nexus deployment role，一个是All maven repositories (Full control)。</p>
-
-<p>然后在对应组的小伙伴们就有权限了。</p>
-
-<p><strong>三、设置本地settings.xml</strong></p>
-
-<p>把原来的settings文件的url从a.com改为b.com，普通的小伙伴即可使用新的仓库了。</p>
-
-<p>要发包的小伙伴，因为ldap用户名密码明文写在文件里不好，于是就用下面的办法：
-<h2 style="background-image: none; margin-bottom: 0.6em; padding-top: 0.5em; padding-bottom: 0.17em; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #aaaaaa; font-size: 19px; font-family: sans-serif; line-height: 19px;"><span class="mw-headline">step 1.先随意定义一个种子</span></h2>
-<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> localhost:54chen 54chen$ mvn --encrypt-master-password 123asdadfafdadf
- {BHe/qKN8q30HBG3bAGbYLOVLnAqVRkzjb9/7yWs+Ks0=}</pre>
-<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> vim ~/.m2/settings-security.xml</pre>
-<p style="margin: 0.4em 0px 0.5em; line-height: 19px; color: #000000; font-family: sans-serif; font-size: 13px;">写入内容：</p></p>
-
-<p><pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;settingsSecurity&gt;
-   &lt;master&gt;{BHe/qKN8q30HBG3bAGbYLOVLnAqVRkzjb9/7yWs+Ks0=}&lt;/master&gt;
-&lt;/settingsSecurity&gt;</pre>
-<h2 style="background-image: none; margin-bottom: 0.6em; padding-top: 0.5em; padding-bottom: 0.17em; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #aaaaaa; font-size: 19px; font-family: sans-serif; line-height: 19px;"><span class="mw-headline">step 2.最终生成</span></h2>
-<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">mvn --encrypt-password 你的邮箱密码
-{RxLx1asdfiafrjIHfXZDadfwveda23avsdv=}</pre>
-<p style="margin: 0.4em 0px 0.5em; line-height: 19px; color: #000000; font-family: sans-serif; font-size: 13px;">然后修改：</p></p>
-
-<p><pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">vim ~/.m2/settings.xml</pre>
-<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">&lt;server&gt;
-     &lt;id&gt;internal&lt;/id&gt;
-     &lt;username&gt;54chen&lt;/username&gt;
-     &lt;password&gt;{RxLx1asdfiafrjIHfXZDadfwveda23avsdv=}&lt;/password&gt;
-&lt;/server&gt;</pre>
-当然了，mvn的版本要在2.1.0以上才行。</p>
-
-<p>然后对deploy过程中明文传输有顾虑的小伙伴，直接上https即可。</p>
-
-<p><strong>四、在a.com中存在的包，在b.com中没有怎么办？</strong></p>
-
-<p>其实很简单，先在a.com中定位404的包在什么repo中，复制下来在a中的repo位置，在b.com中新加一个repo，类型为proxy，同时将remote storage location写成a的。同时， 单击public repositories，调整刚加的repo到ordered repo中去，即可。</p>
-
-<p>［后记］</p>
-
-<p>标题有点大，解释一下，百人共用的保障，主要还是在nginx上，挡这一层之后，可以做很多事情，比如再加点cache之类的，实际情况下，所有用户减少过度的snapshot使用，也有一定帮助。</p>
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/11/01/maven-nexus-notes/">Read on &rarr;</a>
+    </footer>
   
 
 
