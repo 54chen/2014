@@ -41,7 +41,7 @@ http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html
 </head>
 
 <body   >
-  <header role="banner"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
 </a>
 <div>
 <a href="/">首页</a>
@@ -141,6 +141,8 @@ vim WEB-INF/web.xml
 quercus写土了，没有在用户设置为unicode的时候来解析用户的输入，到处是hard code的latin1。（本来在GAE里使用这东西的人挺多的，可惜吧，AGE被盾了，然后quercus反馈latin1问题的人也不多，唉。）
 <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>com.caucho.quercus.lib.db.JdbcConnectionResource:&nbsp;</span><span class="number">94</span><span>&nbsp;&nbsp;</span><span class="number">348</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>com.caucho.quercus.lib.db.Mysqli:<span class="number">229</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
 上面三处修改为utf8即可。</p>
+ 
+<p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
 </div>
 
 
@@ -211,7 +213,7 @@ quercus写土了，没有在用户设置为unicode的时候来解析用户的输
 
     </div>
   </div>
-  <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
+  <footer role="contentinfo" class="footer_css">  Copyright &copy; 2014 - 54chen -
 
 </footer>
   <p>&nbsp;</p>
