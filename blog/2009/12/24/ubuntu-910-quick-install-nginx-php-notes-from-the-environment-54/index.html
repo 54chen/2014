@@ -44,7 +44,9 @@ sudo apt-get install php5 php5-cgi php5-cli php5-gd php5-curl php5-mysql nginx s
 <div>
 <a href="/">首页</a>
 <a href="/blog/archives">归档</a>
+<a href="/video">视频</a>
 <a href="/about">关于</a>
+
 <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
 </div>
 <div class="subscription">
@@ -224,24 +226,20 @@ include /etc/nginx/fastcgi_params; #fastcgi的参数文件地址<br />
   <footer role="contentinfo">  Copyright &copy; 2014 - 54chen -
 
 </footer>
-  
-
+  <p>&nbsp;</p>
 <script type="text/javascript">
-      var disqus_shortname = '54chen';
-      
-        
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://2014.54chen.com/blog/2009/12/24/ubuntu-910-quick-install-nginx-php-notes-from-the-environment-54/';
-        var disqus_url = 'http://2014.54chen.com/blog/2009/12/24/ubuntu-910-quick-install-nginx-php-notes-from-the-environment-54/';
-        var disqus_script = 'embed.js';
-      
-    (function () {
-      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-      dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
-      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    }());
+(function(){
+var url = "http://widget.weibo.com/distribution/comments.php?width=0&url=auto&border=1&appkey=4158305779&dpc=1";
+url = url.replace("url=auto", "url=" + document.URL); 
+document.write('<iframe id="WBCommentFrame" src="' + url + '" scrolling="no" frameborder="0" style="width:100%"></iframe>');
+})();
 </script>
-
+<script src="http://tjs.sjs.sinajs.cn/open/widget/js/widget/comment.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+window.WBComment.init({
+    "id": "WBCommentFrame"
+});
+</script>
 
 
 

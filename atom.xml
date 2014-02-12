@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-02-11T21:15:04+08:00</updated>
+  <updated>2014-02-12T10:57:47+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -35,18 +35,20 @@
 <h2>执行步骤</h2>
 
 <ul>
-<li>step 0.确认你的外地车是否转得进来</li>
+<li>step 0.确认你的外地车是否转得进来
+
+<ul>
+<li>2013年3月1日开始，北京市实行第五阶段排放标准。</li>
+<li>大家常传说的国四国五京五啥的，就是这些标准的简称。</li>
+<li>一个快速辨别的办法，如果车是在2013年3月后出厂并在北京销售的，一般都是符合的。</li>
+</ul>
+</li>
 </ul>
 
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>百度搜“北京市环保局”，网站的某个角落里，放着一堆的doc文件，你需要在每个doc文件里去寻找你的车型，如果能够找到，则可正常转入，找不到的话，请终止。</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>百度搜“北京市环保局”，网站的某个角落里，放着一堆的doc文件，你需要在每个doc文件里去寻找你的车型（环保局招个计算机专业的实习生做个查询系统会死啊！），如果能够找到，则可正常转入，找不到的话，请终止。</span></code></pre></td></tr></table></div></figure>
 
-
-<pre><code>* 2013年3月1日开始，北京市实行第五阶段排放标准。
-* 大家常传说的国四国五京五啥的，就是这些标准的简称。
-* 一个快速辨别的办法，如果车是在2013年3月后出厂并在北京销售的，一般都是符合的。
-</code></pre>
 
 <ul>
 <li>step 1.开车回外地提出档案
