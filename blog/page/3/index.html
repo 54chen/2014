@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="YY创始人李学凌十年前就被誉为“京城IT名记”;优酷古永古永锵曾经是搜狐总裁&#8230;现实说起来很残酷，创业其实是精英玩的游戏，在职场证明过自己的精英们，去创业也非常容易成功。原因很简单，他们的经验和资源，能轻松干掉“100个无脑的创业大学生”。什么?你有勇气，你以为创业是参加选秀比赛呢 &hellip;">
+  <meta name="description" content="http://www.infoq.com/cn/articles/nosql-dynamo 三年前在infoq发表的一篇关于两种特别有代表性的分布式存储的设计思路解析，三年过去了，今天再来总结看看这几年的变化。
+实际上，这三年，还是两个东西，一直没有冒出来更牛B的东西。 一、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +82,79 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/04/distributed-auto-ops/">从分布式存储设计到自动化运维</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img02.taobaocdn.com/bao/uploaded/i2/T11wdBXn8gXXbWvNA4_052909.jpg" alt="分布式存储" /></p>
+
+<p><a href="http://www.infoq.com/cn/articles/nosql-dynamo">http://www.infoq.com/cn/articles/nosql-dynamo</a> 三年前在infoq发表的一篇关于两种特别有代表性的分布式存储的设计思路解析，三年过去了，今天再来总结看看这几年的变化。<br />
+实际上，这三年，还是两个东西，一直没有冒出来更牛B的东西。</p>
+
+<p><strong>一、dynamo代表作riak特点</strong>
+早几年以cassandra为代表此类项目，固定特点为：水平扩展、无中心节点、多备份、最终一致性、性能一般、适合海量数据。因为cassandra在业界的使用失败案例太多，让大家避而远之。这两年，以erlang开发的riak又冒出水面。</p>
+
+<p><strong>1.1 erlang</strong>
+这作为riak的最大特点一点也不为过，因为语言在分布式领域的独特能力，使得riak的源代码十分简洁干净。不过一万多行的代码，在第一次读到它的代码时，我也感叹，几年前，傻希希的用java代码堆了十几万行的nuclear代码，真是太笨了。</p>
+
+<p><strong>1.2 完整的dynamo实现</strong>
+在cassandra的年代，许多东西不方便实现，版本控制的向量时钟使用了timestamp代替，vnode在cassandra上是非常大的区块，在进行负载均衡时有很大可能不均匀。到了riak的时代，所有的特点，在erlang的支持下，完成了各种细节。并且增加了：1.http存取的支持。2.双向索引。3.搜索支持。4.m/r支持。</p>
+
+<p><strong>二、bigtable代表作hbase特点</strong>
+与dynamo对应的解决方案bigtable的历史更加悠久一些，开源项目也进行了很多年，hbase社区也正在不断地完善。</p>
+
+<p><strong>1.1 偷懒地依赖hdfs</strong>
+严格说来hbase的实现，只主要关心了regionServer（中心节点所在，用来分配数据所在位置），所以说偷懒地在底下使用了hdfs完成备份工作。</p>
+
+<p><strong>1.2 列簇</strong>
+在借用hdfs之后，在其上实现的存储格式让hbase可以满足各式各样的需求，当然了，这么复杂的交互，最好还是使用ssd之类的高速度的存储介质。</p>
+
+<p><strong>三、发展方向及特点</strong>
+在回顾了两大阵营的各自特点之后，再来看看未来。</p>
+
+<p><strong>3.1 mysql时代</strong>
+招一堆的mysql dba，指哪打哪，哪坏修哪。工作得很好!</p>
+
+<p><strong>3.2 nosql时代</strong>
+开发工程师了解了dba的苦逼，以及老板招不到dba的苦逼，决定将数据结构化，简化代码的数据结构。<br />
+典型的代表key-value系统。<br />
+再基于这些单一的结构，做一堆的自动加机器自动转数据的功能。riak在此列。hbase略高于此。</p>
+
+<p><strong>3.3 未来时代</strong>
+不仅是存储，整个运维工作，都应该是自动化演进，你可以想象：一个晴朗的下午，工程师带着耳机听着歌，将需求模型输入之后，一个红按钮一按，代码已经写好，test自动开始，AB test，staging，一切OK，自动分发到了各处。上线五分钟，某处开始报警，中央自动判断如何添加机器，执行添加。</p>
+
+<p>－－写在32位服务器已经过时了的日子，纪念一下，中国都应该记住。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -720,84 +794,6 @@ sudo -u gitlab -H bundle exec rake gitlab:enable_namespaces RAILS_ENV=production
 依赖管理：java大多已经使用maven，老早的ant带一堆jar包的形式已经落后了，赶紧换。php的依赖管理一直都很弱，不过有人参考ruby搞了一个composer，可以试试，也许可以帮助改进。<br />
 代码制度：什么样的代码才可以checkin/merge master？一般的标准为：跑过所有的unit test、master维护者或者团队成员review通过。<br />
 项目发布流程：项目立项到项目上线，划分N个小阶段，实施scrum或者变体的scrum，但是一个原则就是任何一个阶段的不确定，都会在后面的阶段里放大，小步快跑才是正确的节奏，有时候宁愿不要一些功能，也一定要先发出来。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/23/github-gitlab/">企业github之高仿选择－gitlab使用实录</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-23T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1L56.XfNeXXasdY75_054835.jpg" alt="gitlab" />
-自从上周使用git-svn以来（<a href="http://www.54chen.com/_linux_/git-svn.html">http://www.54chen.com/_linux_/git-svn.html</a>），一发不可收拾，于是在偶然的机会发现了gitlab这个不错的选择（可以想象成是github的公司自己搭建的内部版本），还有什么理由继续使用svn+redmine+wiki!</p>
-
-<p><blockquote>@有个梨UGlee<br />
-一个人，20年，单枪匹马的干翻了整个计算工业。如果你是程序员，还没有在他写的操作系统上工作，或者还没有开始使用他缔造的版本管理系统，那么你还是趁早改行吧，你干这行是没希望的。</blockquote></p>
-
-<p><strong>安装</strong>
-用ubuntu，让生活更加轻松。
-<blockquote>root@ubuntu-chenzhen:/home/gitlab/gitlab# lsb_release -a<br />
-No LSB modules are available.<br />
-Distributor ID:	Ubuntu<br />
-Description:	Ubuntu 12.04 LTS<br />
-Release:	12.04<br />
-Codename:	precise</blockquote></p>
-
-<p>请打开以下地址并收藏：<a href="https://github.com/gitlabhq/gitlabhq/blob/stable/doc/install/installation.md">https://github.com/gitlabhq/gitlabhq/blob/stable/doc/install/installation.md</a></p>
-
-<p>所有的安装只需要一步一步按照说明做就可以完成。以下记录一些中国特色的安装过程。</p>
-
-<p><strong>中国特色</strong>
-1.安装ruby1.9.3p0<br />
-不要下了，打不开的（原因你懂的）。<br />
-直接 apt-get install ruby1.9.3</p>
-
-<p>2.补充安装bundler<br />
-装完ruby就有gem了，然后把源改在淘宝：<br />
-gem source -r http://rubygems.org/<br />
-gem source -a http://ruby.taobao.org</p>
-
-<p>gem install bundler &#8211;no-rdoc &#8211;no-ri<br />
-gem install rails &#8211;no-rdoc &#8211;no-ri</p>
-
-<p>3.所有有bundle命令的执行都要注意<br />
-在执行目录下，要修改Gemfile文件头的rubygems.org到ruby.taobao.org，否则是不工作的，原因都懂的。</p>
-
-<p><strong>LDAP登录gitlab</strong>
-vim config/gitlab.yml<br />
-配置在
-<blockquote># 2. Auth settings<br />
-# ==========================<br />
-ldap:</blockquote></p>
-
-<p>当你安装好打开的时候，一定会惊呼：还有什么理由继续使用svn+redmine+wiki!</p>
 </div>
   
   

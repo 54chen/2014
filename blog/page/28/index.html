@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="29号，星期六，参加了在ThoughtWorks办公室举行的mongodb workshop。
-主讲者Peter Membrey，是个年轻有为的牛人，17岁就获得了RHCE。
-这是一个很小团体的技术会议，人数没有超过20人，来参加的都是有名气的牛人们。会上认识了腾讯超群大侠（ &hellip;">
+  <meta name="description" content="1.关系普及
+Empathy是个托，python-papyon是个python实现的msn库，telepathy-butterfly是个完成msn功能的python客户端。 2.修改办法
+sudo vim /usr/share/pyshared/papyon/conversation.py
+查找 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +84,80 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/04/ubuntu-1004-lts-version-of-the-empathy-msn-group-chat-under-the-nickname-display-method/">Ubuntu 10.04 LTS版本下的Empathy MSN群聊显示昵称方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img06.taobaocdn.com/bao/uploaded/i6/T1BulCXhXkXXXYjVM9_072304.jpg" alt="54chen ubuntu empathy msn" />
+<h2><strong>1.关系普及</strong></h2>
+Empathy是个托，python-papyon是个python实现的msn库，telepathy-butterfly是个完成msn功能的python客户端。</p>
+
+<p><h2><strong>2.修改办法</strong></h2>
+sudo vim /usr/share/pyshared/papyon/conversation.py<br />
+查找 if message_type == 这个字符串<br />
+找到内容为：
+<blockquote>if message_type == &#8216;text/plain&#8217;:<br />
+            msg = ConversationMessage(unicode(message.body, message_encoding),<br />
+                    TextFormat.parse(message_formatting),<br />
+                    self.__last_received_msn_objects)<br />
+            try:<br />
+                display_name = message.get_header(&#8216;P4-Context&#8217;)</blockquote></p>
+
+<p>将if判断后try之前中间定义msg这一堆内容修改为如下：</p>
+
+<p><blockquote> try:<br />
+                msg = ConversationMessage(unicode(&#8220;[&#8220;+message.get_header(&#8216;P4-Context&#8217;)+&#8221;]&#8221;+message.body, message_encoding),<br />
+                    TextFormat.parse(message_formatting),<br />
+                    self.__last_received_msn_objects)<br />
+            except KeyError:<br />
+                  msg = ConversationMessage(unicode(message.body, message_encoding),<br />
+                    TextFormat.parse(message_formatting),<br />
+                    self.__last_received_msn_objects)</blockquote></p>
+
+<p>保存后重新启动empathy，msn群里就能显示昵称鸟。</p>
+
+<p><img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1_udCXfXjXXbldwg4_053033.jpg" alt="empathy" /></p>
+
+<p><a href="http://www.54chen.com/conversation.py.gz"><font color="red">点击此处下载我的conversation.py文件</font></a></p>
+
+<p>下载下来后执行：</p>
+
+<p><blockquote>chen@54chen:~$ gunzip conversation.py.gz <br />
+chen@54chen:~$ sudo cp conversation.py /usr/share/pyshared/papyon/</blockquote></p>
+
+<p><strong>我的版本是：Empathy 2.30.1</strong>
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -698,60 +773,6 @@ MySQL需要额外的一次传递，以找出如何按排序顺序检索行。</p
 54chen有幸参加并记录了Qcon24日的全过程，上周接到会议的ppt，大小共计90M左右，在网上看到TimYang大侠和blogKid都有提供下载，无赖因为文件太大，反而没有办法持续提供，周末想想，根据以前我发<a title="802.1x代码" href="../8021x">802.1x代码</a>的经验，可以让需要的同志提供email，我转发过去，前提是你要准备个有90M左右空间的邮箱，我是用gamil发过来的，分成了4个部分，一部分20M的附件。慢慢享用吧！需要的同志请留言留下email地址，通过RSS看到本文的同志，如果点feedburner的url被墙的话，请点击下面的地址进来：</p>
 
 <p><a href="http://www.54chen.com/architecture/qcon-beijing-2010-related-ppt-download.html">http://www.54chen.com/architecture/qcon-beijing-2010-related-ppt-download.html</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/16/54chen-twitter-memo-2010-05-16-2/">54chen Twitter Memo 2010-05-16</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-16T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><ul class="aktt_tweet_digest">
-	<li>建外soho着火了 <a href="http://twitter.com/54chen/statuses/13716906363">#</a></li>
-	<li>友人来报:小火，不以为观。。。 <a href="http://twitter.com/54chen/statuses/13717072716">#</a></li>
-	<li><a href="http://is.gd/c2odt" rel="nofollow">http://is.gd/c2odt</a>   建外soho着火实况视频 <a href="http://twitter.com/54chen/statuses/13719201959">#</a></li>
-	<li><a href="http://is.gd/c5bM3" rel="nofollow">http://is.gd/c5bM3</a>  中国原创技术博客组织 哥学社 <a href="http://twitter.com/54chen/statuses/13831466216">#</a></li>
-	<li>关于天上人间被关一事，你有什么看法？ <a href="http://twitter.com/54chen/statuses/13888695857">#</a></li>
-	<li>朝阳警方兵分四路突查天上人间、名门夜宴、花都、凯富国际等4家豪华夜总会，当场查获有偿陪侍小姐557人。有言曰：“天上人间，一炮三千。”这一皇城里的大窝，据说有“三个代表”的背景，96年有警察不识趣碰过，结果下场难看，看来，“三个代表”不灵了。 <a href="http://twitter.com/54chen/statuses/13889493831">#</a></li>
-	<li><a href="http://is.gd/c6Ney" rel="nofollow">http://is.gd/c6Ney</a>   强大的袁腾飞事件处理报告 <a href="http://twitter.com/54chen/statuses/13889742427">#</a></li>
-	<li>每个人心中都有一个天上人间的，势力重新划分了而已 @yanb1985: @<a href="http://twitter.com/54chen">54chen</a> 惋惜，爷还没去呢，头牌都被抓了 <a href="http://twitter.com/54chen/statuses/13899035747">#</a></li>
-	<li>RT 冷笑话 : 吕布、貂婵每次情到深处，貂婵总娇柔地道：“不…… ”吕布顿时泄气。貂婵为何总说“不”？吕布请教诸葛亮，诸葛亮一语道破天际：原来你叫吕“布”！ <a href="http://twitter.com/54chen/statuses/13952590889">#</a></li>
-	<li>RT @Orzr: 当我慢慢变老后，唯一值得我回味和自豪的年轻时光：大家一起翻墙向往自由；一起揭穿谎言发现真相；一起追寻公平正义，并且感染我们身边的每一个人 <a href="http://twitter.com/54chen/statuses/13954761939">#</a></li>
-	<li>hack了一把gmail的css和图片，弄了一个模板，更新了方向：坚信科学，分享技术。http://ur.ly/ccDp <a href="http://twitter.com/54chen/statuses/13956692273">#</a></li>
-	<li>RT 李岩: 要怎么避免椅子爆炸悲剧呢？专家提醒广大消费者，可以从以下几点入手：三是体重超过100公斤的慎选 <a href="http://twitter.com/54chen/statuses/13962187560">#</a></li>
-	<li>一个很有爱的橙子设计  <a href="http://tinyurl.com/2vy3owj" rel="nofollow">http://tinyurl.com/2vy3owj</a> <a href="http://twitter.com/54chen/statuses/13962383419">#</a></li>
-	<li>@chen_- 小时候,中华是一管白白的牙膏.我在这头,笑容在那头； <a href="http://twitter.com/54chen/statuses/13962959578">#</a></li>
-	<li>小时候,中华是一管白白的牙膏.我在这头,笑容在那头；上学了,中华是一支细细的铅笔.我在这头,考卷在那头；工作了,中华是一条红红的香烟.我在这头,领导在那头. <a href="http://twitter.com/54chen/statuses/13962979874">#</a></li>
-	<li>狗中的施瓦辛格 <a href="http://fmn.xnimg.cn/fmn038/20100514/1255/p_large_OkGb_2677000217322d10.jpg" rel="nofollow">http://fmn.xnimg.cn/fmn038/20100514/1255/p_large_OkGb_2677000217322d10.jpg</a> <a href="http://twitter.com/54chen/statuses/13963250921">#</a></li>
-</ul>
-</p>
 </div>
   
   

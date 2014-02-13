@@ -9,8 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="经过上周一周朋友们帮忙测试和bug fix，nginx_http_hashdos_module已经达到可以线上使用的水平，下面是使用记录。
-下载 #wget &#8211;no-check-certificate https://github.com/54chen/nginx-http- &hellip;">
+  <meta name="description" content="http://t.co/OQzzjGtA 有亮点，雷倒了吗？ #
+描述性工作流程是指大多数技术人员不愿意写wiki，只愿意口口相传。必须要写下来才会沉淀。我们团队写wiki标准为“如果你成长了就写下来”。 #
+在facebook，公司文化与工作流程是有抵触的，引入新的工作流程的通常模式是“ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +83,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/15/54chen-twitter-memo-2012-01-15/">54chen Twitter Memo 2012-01-15</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul class="aktt_tweet_digest">
+</ul><a href="http://t.co/OQzzjGtA" rel="nofollow">http://t.co/OQzzjGtA</a> 有亮点，雷倒了吗？ <a href="http://twitter.com/54chen/statuses/156947537188765697" class="aktt_tweet_time">#</a>
+描述性工作流程是指大多数技术人员不愿意写wiki，只愿意口口相传。必须要写下来才会沉淀。我们团队写wiki标准为“如果你成长了就写下来”。 <a href="http://twitter.com/54chen/statuses/156614673540722688" class="aktt_tweet_time">#</a>
+在facebook，公司文化与工作流程是有抵触的，引入新的工作流程的通常模式是“只有在事情快要到了不可收拾的时候，才会考虑引入新的工作流程。” <a href="http://twitter.com/54chen/statuses/156613429174603776" class="aktt_tweet_time">#</a>
+nginx防hashdos模块使用帮助 <a href="http://t.co/DIsCU1SI" rel="nofollow">http://t.co/DIsCU1SI</a> <a href="http://twitter.com/54chen/statuses/156582030975569921" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-01-08 <a href="http://t.co/9reuxYIS" rel="nofollow">http://t.co/9reuxYIS</a> <a href="http://twitter.com/54chen/statuses/155838420214743040" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -639,76 +683,6 @@ maven插件编写实例 </ul><a href="http://t.co/S3mz5O7P" rel="nofollow">http:
 54chen Twitter memo 2011-12-11 <a href="http://t.co/lOQ3IFaz" rel="nofollow">http://t.co/lOQ3IFaz</a> <a href="http://twitter.com/54chen/statuses/145682264553037824" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/12/14/maven-plugin/">Maven插件编写实例</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-14T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://maven.apache.org/images/maventxt_logo_200.gif" alt="apache maven" /></p>
-
-<p><strong>概况</strong>
-实现一个自定义的类，必须要继承自 org.apache.maven.plugin.AbstractMojo，同时实现execute方法。<br />
-maven使用了在注释中写代码，BT的写法，所以注释里的@goal @parameter都是有含义的。</p>
-
-<p><strong>实例</strong>
-<div class="chen-hl"><ol class="dp-j" start="1"><li class="alt"><span><span>mvn&nbsp;hello:gogo&nbsp;&nbsp;</span></span></li></ol></div>
-这样的一个命令，到代码里，应该是如下过程</p>
-
-<p><strong>进入</strong>
-hello被叫做plugin的prefix，maven会去寻找以hello开头的插件。<br />
-在插件的pom里必须定义其名字为hello开头的，例如：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>hello-maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p><strong>goal目标</strong>
-hello后面的gogo叫做goal，目标，则以注释中写代码的方式来完成：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">*@goal&nbsp;gogo</span>&nbsp;</span></li><li class="alt"><span><span class="comment">**/</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>HelloMojo&nbsp;<span class="keyword">extends</span><span>&nbsp;AbstractMojo&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p><strong>需要的依赖</strong>
-<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.apache.maven</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>maven-plugin-api</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>3.0.3</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p><strong>必需的选项</strong>
-<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">packaging</span><span class="tag">&gt;</span><span>maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">packaging</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
-必需要是maven-plugin才能成功。</p>
-
-<p><strong>参数</strong>
-如果要传什么参数给插件，应该是
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">*&nbsp;if&nbsp;false&nbsp;all&nbsp;compression&nbsp;is&nbsp;off&nbsp;(default&nbsp;is&nbsp;true)</span>&nbsp;</span></li><li class="alt"><span><span class="comment">*</span>&nbsp;</span></li><li class=""><span><span class="comment">*&nbsp;@parameter&nbsp;expression=&#8221;${hello.enabled}&#8221;&nbsp;default-value=&#8221;true&#8221;</span>&nbsp;</span></li><li class="alt"><span><span class="comment">*/</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">private</span><span>&nbsp;Boolean&nbsp;enabled=</span><span class="keyword">true</span><span>;&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p><strong>使用时项目定义</strong>
-然后在使用的项目里，需要定义的有
-<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">plugin</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>demo-maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">configuration</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">goalPrefix</span><span class="tag">&gt;</span><span>hello</span><span class="tag">&lt;/</span><span class="tag-name">goalPrefix</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">enabled</span><span class="tag">&gt;</span><span>false</span><span class="tag">&lt;/</span><span class="tag-name">enabled</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">configuration</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">plugin</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>然后执行上述命令时自然可以执行HelloMojo的execute方法。</p>
 </div>
   
   
