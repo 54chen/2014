@@ -1,24 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+    <channel>
+        <description><![CDATA[五四陈科学院]]></description>
+        <title><![CDATA[五四陈科学院]]></title>
+        <link>http://2014.54chen.com/</link>
+        <pubDate>2014-02-14T14:53:59+08:00</pubDate>
 
-  <title><![CDATA[五四陈科学院]]></title>
-  <link href="http://2014.54chen.com/atom.xml" rel="self"/>
-  <link href="http://2014.54chen.com/"/>
-  <updated>2014-02-14T14:53:59+08:00</updated>
-  <id>http://2014.54chen.com/</id>
-  <author>
-    <name><![CDATA[54chen]]></name>
-    
-  </author>
-  <generator uri="http://octopress.org/">Octopress</generator>
-
-  
-  <entry>
-    <title type="html"><![CDATA[过年十天技术阅读推荐汇总]]></title>
-    <link href="http://2014.54chen.com/blog/2014/02/13/new-year-10-day/"/>
-    <updated>2014-02-13T11:34:08+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/02/13/new-year-10-day</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p>春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。</p>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p>春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。</p>
 
 <ul>
 <li>@温高铁</li>
@@ -132,15 +124,22 @@
 
 
 <p>网友 good-life 公开发布了”推聊“开源项目，一个基于极光推送的Android手机聊天系统 <a href="http://t.cn/zjqbYrG">http://t.cn/zjqbYrG</a> 这个项目最赞的点在于：他声称 3 分钟就可以运行起来整套系统</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[2014年外地车牌转北京攻略]]></title>
-    <link href="http://2014.54chen.com/blog/2014/02/11/foreign-to-beijing/"/>
-    <updated>2014-02-11T19:30:03+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/02/11/foreign-to-beijing</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://chen54.b0.upaiyun.com/0211/28322841.jpg" alt="2014年外地车牌转北京攻略 外转京"></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[过年十天技术阅读推荐汇总]]></title>
+            <link>http://2014.54chen.com/blog/2014/02/13/new-year-10-day/</link>
+            <pubDate>2014-02-13T11:34:08+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/02/13/new-year-10-day</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://chen54.b0.upaiyun.com/0211/28322841.jpg" alt="2014年外地车牌转北京攻略 外转京"></p>
 
 <h2>先决条件</h2>
 
@@ -222,15 +221,22 @@
 
 
 <p>急需java工程师，条件：在互联网行业从事java开发一年以上，最好是BAT的人，请简历我54chen at xiaomi dot com，你懂的，一切都会有的。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Disruptor Thrift Server连接参数与rps数值影响记录]]></title>
-    <link href="http://2014.54chen.com/blog/2014/01/22/disruptor-thrift-server-link-param-rps/"/>
-    <updated>2014-01-22T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/01/22/disruptor-thrift-server-link-param-rps</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://chen54.b0.upaiyun.com/0122/267176d6-5ef4-3e0b-937e-c492f5ba7807.jpg" alt="disruptor thrift server" width="450/" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[2014年外地车牌转北京攻略]]></title>
+            <link>http://2014.54chen.com/blog/2014/02/11/foreign-to-beijing/</link>
+            <pubDate>2014-02-11T19:30:03+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/02/11/foreign-to-beijing</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://chen54.b0.upaiyun.com/0122/267176d6-5ef4-3e0b-937e-c492f5ba7807.jpg" alt="disruptor thrift server" width="450/" /></p>
 
 <p><strong>基础环境</strong>
 rmbp<br />
@@ -292,15 +298,22 @@ cpu:50%  线程数:763<br />
 简单说，A值是水龙头，S值是分水管道，W值是发电机，W的值与CPU的负载有直接关系，所以一般以CPU的核数来对这个值进行调优。</p>
 
 <p></p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Cassandra的thrift用法学习手记]]></title>
-    <link href="http://2014.54chen.com/blog/2013/12/30/cassandra-thrift/"/>
-    <updated>2013-12-30T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/12/30/cassandra-thrift</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="thrift" />
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[disruptor thrift server连接参数与rps数值影响记录]]></title>
+            <link>http://2014.54chen.com/blog/2014/01/22/disruptor-thrift-server-link-param-rps/</link>
+            <pubDate>2014-01-22T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/01/22/disruptor-thrift-server-link-param-rps</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="thrift" />
 <a href="#en">__English Version__The notes about the usage of Thrift in Cassandra</a></p>
 
 <p>Cassandra在client访问server cluster的时候使用了thrift，在cluster node间的通讯，依旧是自己实现的二进制协议。</p>
@@ -380,15 +393,22 @@ THsHaDisruptorServer is use TCustomNonblockingServerSocket to socket.The TDisrup
 __EOF__</p>
 
 <p>Happy New Year!</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[BLUNO试用手记]]></title>
-    <link href="http://2014.54chen.com/blog/2013/11/30/bluno/"/>
-    <updated>2013-11-30T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/11/30/bluno</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[Cassandra的thrift用法学习手记]]></title>
+            <link>http://2014.54chen.com/blog/2013/12/30/cassandra-thrift/</link>
+            <pubDate>2013-12-30T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/12/30/cassandra-thrift</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
 <strong>准备工作</strong>
 rmbp<br />
 BLUNO ×1<br />
@@ -433,15 +453,22 @@ Accessory Shield with Arduino <br />
 不知道哪位神仙想出来的大杂烩板子，上面有：128x64 OLED显示屏，喇叭一个，DHT11温度湿度传感器，1.5A继电器一枚，螺旋电位器一枚，RGB LED灯一颗。 </p>
 
 <p>__等再研究清楚点之后再续写arduino代码__</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java 1.6.0_38-b05 Vm 20.13-b02优化手记]]></title>
-    <link href="http://2014.54chen.com/blog/2013/11/27/jvm/"/>
-    <updated>2013-11-27T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/11/27/jvm</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg" alt="jvm" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[BLUNO试用手记]]></title>
+            <link>http://2014.54chen.com/blog/2013/11/30/bluno/</link>
+            <pubDate>2013-11-30T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/11/30/bluno</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg" alt="jvm" /></p>
 
 <p><strong>基础：</strong>
 业务代码<br />
@@ -528,29 +555,43 @@ E是Eden区，E＋S0＋S1＝Y。<br />
 <p>对照组结果后续有结论了再来续本文内容。</p>
 
 <p><strong>GC优化永远是最后一项任务。</strong></p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[《移动互联网技术挑战》－ssdc]]></title>
-    <link href="http://2014.54chen.com/blog/2013/11/18/ssdc2013/"/>
-    <updated>2013-11-18T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/11/18/ssdc2013</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://image.slidesharecdn.com/ssdc-54chen-131117235043-phpapp01/95/slide-1-638.jpg" width="200" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[java 1.6.0_38-b05 vm 20.13-b02优化手记]]></title>
+            <link>http://2014.54chen.com/blog/2013/11/27/jvm/</link>
+            <pubDate>2013-11-27T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/11/27/jvm</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://image.slidesharecdn.com/ssdc-54chen-131117235043-phpapp01/95/slide-1-638.jpg" width="200" /></p>
 
 <p>以下是上周末在苏州参加的活动使用的slide，<a href="http://softwaresuzhou.org">http://softwaresuzhou.org</a>。</p>
 
 <p><iframe src="http://chen54.b0.upaiyun.com/1118/ssdc.html" width="344" height="292" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://chen54.b0.upaiyun.com/1118/ssdc.html" title="ssdc-移动互联网技术挑战" target="_blank">看不到的同学请猛击这里 ssdc-移动互联网技术挑战</a> </strong> </div>
 </p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[百人共用企业maven私服nexus迁移搭建手记]]></title>
-    <link href="http://2014.54chen.com/blog/2013/11/01/maven-nexus-notes/"/>
-    <updated>2013-11-01T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/11/01/maven-nexus-notes</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img class="alignnone" title="nexus" src="http://chen54.b0.upaiyun.com/1101/nexus200x50.png" alt="nexus" width="200" height="55" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[《移动互联网技术挑战》－ssdc]]></title>
+            <link>http://2014.54chen.com/blog/2013/11/18/ssdc2013/</link>
+            <pubDate>2013-11-18T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/11/18/ssdc2013</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img class="alignnone" title="nexus" src="http://chen54.b0.upaiyun.com/1101/nexus200x50.png" alt="nexus" width="200" height="55" /></p>
 
 <p>三年前，小米的第一个nexus（版本1.8.0）在一台dell的办公机上安装完成。域名为http://www.a.com。</p>
 
@@ -658,15 +699,22 @@ E是Eden区，E＋S0＋S1＝Y。<br />
 <p>［后记］</p>
 
 <p>标题有点大，解释一下，百人共用的保障，主要还是在nginx上，挡这一层之后，可以做很多事情，比如再加点cache之类的，实际情况下，所有用户减少过度的snapshot使用，也有一定帮助。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[移动互联网系统架构十大陷阱]]></title>
-    <link href="http://2014.54chen.com/blog/2013/10/17/mi-trap/"/>
-    <updated>2013-10-17T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/10/17/mi-trap</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg" alt="移动互联网十宗罪" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[百人共用企业maven私服nexus迁移搭建手记]]></title>
+            <link>http://2014.54chen.com/blog/2013/11/01/maven-nexus-notes/</link>
+            <pubDate>2013-11-01T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/11/01/maven-nexus-notes</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg" alt="移动互联网十宗罪" /></p>
 
 <p>过去的三年，54chen一直奋斗在中国移动互联网一线，历经各种坑爹的情况。以下特做记录。</p>
 
@@ -699,15 +747,22 @@ DNS解析也有失败的情况下，app做得再漂亮，请求也不可达。IP
 
 <p><strong>Top 10.未雨绸缪 一定要提前准备全体用户可以看到的公告条，以备不时之需</strong>
 web2.0时代，我们要维护系统，在全部页面顶部加一个黄条：今天xx点全站维护。移动时代，这不太可能了，于是你会看到各种微博公告、微信公告、xx公告，反正就是不在自己家公告，因为自己家坏了要维护。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[又拍云cdn试用体验]]></title>
-    <link href="http://2014.54chen.com/blog/2013/10/08/upai-cdn-test/"/>
-    <updated>2013-10-08T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/10/08/upai-cdn-test</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg" alt="54chen又拍云试用体验报告" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[移动互联网系统架构十大陷阱]]></title>
+            <link>http://2014.54chen.com/blog/2013/10/17/mi-trap/</link>
+            <pubDate>2013-10-17T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/10/17/mi-trap</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg" alt="54chen又拍云试用体验报告" /></p>
 
 <p><span style="font-size:33px;font-weight:bold">十</span>一之前，又拍云存储（upyun.com）市场部的谢静同学邮件我，让我试用又拍云的功能。之前在infoq或者是之类的技术讲座上有看到过又拍云的报道和技术架构讲解，印象还是不错的，本着支持创业提升期企业的态度，特写此文写下全部试用感受。</p>
 <!-- more -->
@@ -763,15 +818,22 @@ local: wallpaper_1282030786.jpg remote: wallpaper_1282030786.jpg<br />
 
 <p><strong>用处</strong>
 如果你是一个苦逼创业团队，如果你有需求把apk\ipa包放在哪里，如果你有需求把css/js放在哪里，如果你没有足够多的资金又想有淘宝百度的下载速度，值得一试！</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[如何写一手好文档（好代码）？]]></title>
-    <link href="http://2014.54chen.com/blog/2013/09/23/how-to-document-code/"/>
-    <updated>2013-09-23T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/09/23/how-to-document-code</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://chen54.b0.upaiyun.com/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="document" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[又拍云cdn试用体验]]></title>
+            <link>http://2014.54chen.com/blog/2013/10/08/upai-cdn-test/</link>
+            <pubDate>2013-10-08T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/10/08/upai-cdn-test</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://chen54.b0.upaiyun.com/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="document" /></p>
 
 <p><span style="font-size:33px;font-weight:bold">好</span>久没见。</p>
 
@@ -815,15 +877,22 @@ PHP文档造福了多少PHP程序员，让PHP这门语言流芳百世、追随�
 这个办法是指，让读代码的人先看一小部分，慢慢再“勾引”读者不断地深入。</p>
 
 <p><span style="font-size:33px;font-weight:bold">好</span>了，上面的办法都实施之后，一手好湿就应该不远了。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[记最近的事情－有关小米]]></title>
-    <link href="http://2014.54chen.com/blog/2013/09/06/xiaomi/"/>
-    <updated>2013-09-06T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/09/06/xiaomi</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p>最近小米好事连连，许多事情大家都知道了，这里只是纯粹的以个人视角把遇到的一些照片整理出来。按常规，只代表个人观点，与所就职公司没有半毛钱关系。还有很重要的一点，没有F码！</p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[如何写一手好文档（好代码）？]]></title>
+            <link>http://2014.54chen.com/blog/2013/09/23/how-to-document-code/</link>
+            <pubDate>2013-09-23T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/09/23/how-to-document-code</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p>最近小米好事连连，许多事情大家都知道了，这里只是纯粹的以个人视角把遇到的一些照片整理出来。按常规，只代表个人观点，与所就职公司没有半毛钱关系。还有很重要的一点，没有F码！</p>
 
 <p>以下，按照记叙文的过程进行一一记录。</p>
 
@@ -859,15 +928,22 @@ PHP文档造福了多少PHP程序员，让PHP这门语言流芳百世、追随�
 <img src="http://ww4.sinaimg.cn/bmiddle/62014881jw1e8d2jnwh3tj218g0p0dk8.jpg" alt="95xiaomi end" /></p>
 
 <p><span style="font-size:33px;font-weight:bold">综</span>上，国际走进中国的时代开始了……</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Arduino-蓝牙各种版本类型及费用对比]]></title>
-    <link href="http://2014.54chen.com/blog/2013/08/13/arduino-bl/"/>
-    <updated>2013-08-13T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/08/13/arduino-bl</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://leiphone.qiniudn.com/uploads/09-2/-3/09-25-32-27.jpg" alt="arduino" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[记最近的事情－有关小米]]></title>
+            <link>http://2014.54chen.com/blog/2013/09/06/xiaomi/</link>
+            <pubDate>2013-09-06T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/09/06/xiaomi</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://leiphone.qiniudn.com/uploads/09-2/-3/09-25-32-27.jpg" alt="arduino" /></p>
 
 <p><strong>厂商</strong>
 做单芯片系统和蓝牙模块的厂商主要有：Bluegiga（蓝兆），Texas Instruments（德州仪器），Nordic Semiconductor（北欧半导体），Cambridge Silicon Radio（CSR公司），Broadcom Corporation（博通公司），这几家公司，基本掌控了全球所有的蓝牙、无线、voip、音视频解码等核心技术。（技术门槛岗岗的！）</p>
@@ -898,15 +974,22 @@ http://www.cnblogs.com/zdz8207/archive/2012/10/17/bluetooth_ble_android.html</p>
 <p>能找到的好消息是：所有采用 TI CC254x 蓝牙低功耗系统单晶片 （SoC） 解决方案的使用者皆可使用 TI BLE-Stack 1.2，并可免专利费。找不到BLE不收专利费的消息，猜测是谣传。</p>
 
 <p></p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Arduino－各种无线方案的对比]]></title>
-    <link href="http://2014.54chen.com/blog/2013/08/08/open-hard/"/>
-    <updated>2013-08-08T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/08/08/open-hard</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1e7fajrr07jj20cu0k00tu.jpg" alt="电磁波" />
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[arduino-蓝牙各种版本类型及费用对比]]></title>
+            <link>http://2014.54chen.com/blog/2013/08/13/arduino-bl/</link>
+            <pubDate>2013-08-13T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/08/13/arduino-bl</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1e7fajrr07jj20cu0k00tu.jpg" alt="电磁波" />
 <strong>初中物理</strong>
 振荡的电场和磁场在空间中以波的形式传播就形成了电磁波，gamma射线、X光、紫外光、可见光、红外光、微波、无线电波和长波无线电，这些都是电磁波。电磁波具有波粒二象性，光子就是量子化的电磁波，是电磁波能量的最小单位。光子的能量和电磁波的波长成反比，比如说，波长最短的gamma射线光子能量高达百万甚至数亿电子伏，医疗和安检用的x光光子能量一般在数百到上万电子伏，紫外光的能量一般在数个到数十电子伏，可见光的能量在1.8（700纳米的红色光）到3.1电子伏（400纳米的蓝色光）之间，红外、微波和无线电波的光子能量就小的多。在电磁波和物质相互作用时，物质只能吸收或者放出整个的光子。</p>
 <!-- more -->
@@ -937,15 +1020,22 @@ XBee OEM RF模块是与ZigBee/IEEE 802.15.4 兼容的解决方案，可以满足
 
 <p><strong>总结</strong>
 除了红外，其他几种在低频微波段混的无线技术，基本上都是同一种硬件，换不同的软件技术来达到更可靠的传输，更有效的交互。zigbee在智能家居的组网中更是被吹得不行。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[线上jvm进程CPU Load高排查脚本-jkiller]]></title>
-    <link href="http://2014.54chen.com/blog/2013/07/25/jvm-cpu-load-high-script/"/>
-    <updated>2013-07-25T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/07/25/jvm-cpu-load-high-script</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png" alt="java" />
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[arduino－各种无线方案的对比]]></title>
+            <link>http://2014.54chen.com/blog/2013/08/08/open-hard/</link>
+            <pubDate>2013-08-08T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/08/08/open-hard</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png" alt="java" />
 <strong>jkiller</strong>
 如果遇到线上java进程占用过多的cpu，可以用这个脚本来帮助你快速找到代码的问题。</p>
 
@@ -962,15 +1052,22 @@ XBee OEM RF模块是与ZigBee/IEEE 802.15.4 兼容的解决方案，可以满足
 </blockquote></p>
 
 <p>*centos系统下测试通过。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Arduino学习手记四：串行编程]]></title>
-    <link href="http://2014.54chen.com/blog/2013/07/06/arduino-starter-4/"/>
-    <updated>2013-07-06T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/07/06/arduino-starter-4</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p>前面几节介绍了一些常见的传感器使用办法，许多人一定会有一种困惑，如果要做一个arduino发微博的例子得怎么做？</p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[线上jvm进程CPU load高排查脚本-jkiller]]></title>
+            <link>http://2014.54chen.com/blog/2013/07/25/jvm-cpu-load-high-script/</link>
+            <pubDate>2013-07-25T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/07/25/jvm-cpu-load-high-script</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p>前面几节介绍了一些常见的传感器使用办法，许多人一定会有一种困惑，如果要做一个arduino发微博的例子得怎么做？</p>
 
 <p>本节不是教发微博的。</p>
 
@@ -1056,15 +1153,22 @@ char buffer[6]; </p>
 <p>在arduino中使用Serial.write，在电脑上用port.read()。</p>
 
 <p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1e6d4imgv9xj20rs0xc42o.jpg" alt="arduino processing" /></p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Arduino学习手记三：八位数码管]]></title>
-    <link href="http://2014.54chen.com/blog/2013/07/04/arduino-starter-3/"/>
-    <updated>2013-07-04T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/07/04/arduino-starter-3</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e69op40p20j205308daa0.jpg" alt="8位数码管" /></p>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[arduino学习手记四：串行编程]]></title>
+            <link>http://2014.54chen.com/blog/2013/07/06/arduino-starter-4/</link>
+            <pubDate>2013-07-06T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/07/06/arduino-starter-4</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e69op40p20j205308daa0.jpg" alt="8位数码管" /></p>
 
 <p>上图是八位数码管里各二极管和引脚的关系。</p>
 
@@ -1326,15 +1430,22 @@ void numd()<br />
 } </p>
 
 <p></p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Arduino学习手记二：写程序控制灯控制蜂鸣器红外]]></title>
-    <link href="http://2014.54chen.com/blog/2013/07/03/arduino-starter-2-led/"/>
-    <updated>2013-07-03T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/07/03/arduino-starter-2-led</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><a href="http://www.54chen.com/_linux_/arduino-starter-1.html">在上一节中</a>，初步领会了基础精神，对电路板和ide有了一点感觉。<br />
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[arduino学习手记三：八位数码管]]></title>
+            <link>http://2014.54chen.com/blog/2013/07/04/arduino-starter-3/</link>
+            <pubDate>2013-07-04T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/07/04/arduino-starter-3</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><a href="http://www.54chen.com/_linux_/arduino-starter-1.html">在上一节中</a>，初步领会了基础精神，对电路板和ide有了一点感觉。<br />
 这里的目标是完成一个电路，通过红外传感头，用摇控器控制LED灯和蜂鸣器。</p>
 
 <p><strong>Arduino Libraries</strong>
@@ -1396,15 +1507,22 @@ decode_results results;   //解码结果放在decode_results构造的对象resul
 
 <p><strong>效果</strong>
 按摇控器，蜂鸣器响一下同时灯闪一下。IRemote简化了大量的代码。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Arduino学习手记一：基础知识]]></title>
-    <link href="http://2014.54chen.com/blog/2013/07/02/arduino-starter-1/"/>
-    <updated>2013-07-02T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/07/02/arduino-starter-1</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><strong>历史</strong>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[arduino学习手记二：写程序控制灯控制蜂鸣器红外]]></title>
+            <link>http://2014.54chen.com/blog/2013/07/03/arduino-starter-2-led/</link>
+            <pubDate>2013-07-03T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/07/03/arduino-starter-2-led</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><strong>历史</strong>
 arduino是一个商标。<br />
 2005年诞生于意大利一个设计学校。然后学生和老师们一起把它开源了。<br />
 教科书上一般说，arduino是一个开源电子原型制作平台，包括一个简单易用的电路板和一个软件开发环境。<br />
@@ -1472,15 +1590,22 @@ LED灯接到GND和13引脚（LED短脚接地）。<br />
 <p><strong>公式</strong></p>
 
 <p>电阻＝电压/电流</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[创业启示录]]></title>
-    <link href="http://2014.54chen.com/blog/2013/06/27/startup/"/>
-    <updated>2013-06-27T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/06/27/startup</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="startup" />
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[arduino学习手记一：基础知识]]></title>
+            <link>http://2014.54chen.com/blog/2013/07/02/arduino-starter-1/</link>
+            <pubDate>2013-07-02T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/07/02/arduino-starter-1</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+        <item>
+            <description>
+                <![CDATA[
+                <p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="startup" />
 <strong>创业公司之痛</strong>
 某某公司上市，A君扯旗创业，由A君朋友OR亲戚投资人投资，拉走某某公司原团队人马十几号人。<br />
 第一个月，山盟海誓。有某资源，可做某大事。大家走起。git、svn、php、java、rabbitmq、tomcat、nginx、iOS、android，一人分多角，身兼数职。轰轰烈烈，搞起。<br />
@@ -1516,7 +1641,17 @@ C君公司里，现在天天开会讨论的都是这个x功能应该谁做，似
 
 <p>以上，谨是观察到的中国式创业现象，切勿对号入座。<br />
 只要不扯淡、坚持、持续，在中国成功的企业还是有很多的。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-</feed>
+
+                Included file &#8216;post/copyright.html&#8217; not found in _includes directory
+                ]]>
+            </description>
+            <title><![CDATA[创业启示录]]></title>
+            <link>http://2014.54chen.com/blog/2013/06/27/startup/</link>
+            <pubDate>2013-06-27T00:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/06/27/startup</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
+        
+    </channel>
+</rss>
