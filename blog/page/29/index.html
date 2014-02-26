@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="建外soho着火了 # 友人来报:小火，不以为观。。。 # http://is.gd/c2odt 建外soho着火实况视频 # http://is.gd/c5bM3 中国原创技术博客组织 哥学社 # 关于天上人间被关一事，你有什么看法？ # 朝阳警方兵分四路突查天上人间、名门夜宴、花都、 &hellip;">
+  <meta name="description" content="QCon是由C4Media媒体集团InfoQ网站主办的全球顶级技术盛会，每年在伦敦、旧金山、东京、北京召开。2009年4月，QCon首次登陆北 京。大会吸引了500多名架构师、项目经理、资深开发者和技术领导者、以及100多家企业的参与，并获得了业界空前的好评！2010年，QCon全球企业 开发大会 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/17/qcon-beijing-2010-related-ppt-download/">Qcon北京2010相关ppt下载</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-17T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>QCon是由C4Media媒体集团InfoQ网站主办的全球顶级技术盛会，每年在伦敦、旧金山、东京、北京召开。2009年4月，QCon首次登陆北 京。大会吸引了500多名架构师、项目经理、资深开发者和技术领导者、以及100多家企业的参与，并获得了业界空前的好评！2010年，QCon全球企业 开发大会（北京站）将于4月23日～25日，在北京京仪大酒店举行。大会将开设包括架构、语言、敏捷、SOA、BAAP、案例在内的6大主题，邀请40多 名国内外著名讲师授课，预计将有200多家企业、500多名来自业内的资深人士参会。
+<h4><a title="QCon回忆录" rel="bookmark" href="../architecture/qcon-memoirs.html">QCon回忆录</a></h4>
+<h4><a title="4月24日QCon现场直播流水帖" rel="bookmark" href="../architecture/april-24-live-stream-qcon-posts.html">4月24日QCon现场直播流水帖</a></h4>
+54chen有幸参加并记录了Qcon24日的全过程，上周接到会议的ppt，大小共计90M左右，在网上看到TimYang大侠和blogKid都有提供下载，无赖因为文件太大，反而没有办法持续提供，周末想想，根据以前我发<a title="802.1x代码" href="../8021x">802.1x代码</a>的经验，可以让需要的同志提供email，我转发过去，前提是你要准备个有90M左右空间的邮箱，我是用gamil发过来的，分成了4个部分，一部分20M的附件。慢慢享用吧！需要的同志请留言留下email地址，通过RSS看到本文的同志，如果点feedburner的url被墙的话，请点击下面的地址进来：</p>
+
+<p><a href="http://www.54chen.com/architecture/qcon-beijing-2010-related-ppt-download.html">http://www.54chen.com/architecture/qcon-beijing-2010-related-ppt-download.html</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -948,250 +989,6 @@ memcached for reads</p>
 <p>（笔记本没电了。。。）</p>
 
 <p>后面还有“去哪儿”网站架构、人人网架构、新浪微博架构。。。晚上回去再补上来。。。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/18/php-upload-progress/">PHP上传进度条深度解析</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-04-18T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>随着互联网的发展，越来越多的技术开始注重用户体验，以人为本才是长久之道，于是在上传的时候，大家都不再满足一个单一的“浏览”按钮，纷纷推出了带上传进度条的功能。而作为解释型语言的PHP，如何做到对上传文件的检测，如何实现上传进度条以其背后的原理，54chen将在本文中一步步展开。</p>
-
-<p><strong>一. 实现篇</strong></p>
-
-<p>一般情况，用PHP实现上传进度条就下面两种方法：</p>
-
-<p>1.APC扩展（作者是PHP的创始人，5.2后PHP已经加入APC扩展）</p>
-
-<p>2.PECL扩展模块 uploadprogress</p>
-
-<p>不论是APC还是uploadprogress，都需要编译源码，因为原有的PHP函数根本不可能读取到临时文件夹里的东西。下面来看如何使用以及关键的代码：
-<div id="_mcePaste"><strong>APC实现方法:</strong></div>
-<div id="_mcePaste">1.安装APC</div>
-<div id="_mcePaste">2.配置php.ini，设置参数 apc.rfc1867=1</div>
-<div id="_mcePaste">3.关键代码：</div>
-<blockquote>
-<div id="_mcePaste">if ($_SERVER[&#8216;REQUEST_METHOD&#8217;] == &#8216;POST&#8217;) {  //上传请求</div>
-<div id="_mcePaste">$status = apc_fetch(&#8216;upload_&#8217; . $_POST[&#8216;APC_UPLOAD_PROGRESS&#8217;]);</div>
-<div id="_mcePaste">$status[&#8216;done&#8217;] = 1;</div>
-<div id="_mcePaste">echo json_encode($status);  //输出给用户端页面里的ajax调用，相关文档请自己寻找</div>
-<div id="_mcePaste">exit;</div>
-<div id="_mcePaste">} elseif (isset($_GET[&#8216;progress_key&#8217;])) {   //读取上传进度</div>
-<div id="_mcePaste">$status = <span style="color: #ff0000;">apc_fetch</span>(&#8216;upload_&#8217;.$_GET[&#8216;progress_key&#8217;]);</div>
-<div id="_mcePaste">echo json_encode($status);</div>
-<div id="_mcePaste">exit;</div>
-<div id="_mcePaste">}</div></blockquote>
-<div id="_mcePaste"><strong>uploadprogress实现方法：</strong></div>
-<div id="_mcePaste">1.使用PECL 安装uploadprogress</div>
-<div id="_mcePaste">2.php.ini里面设置 uploadprogress.file.filename_template = “/tmp/upd_%s.txt”</div>
-<div id="_mcePaste">3.关键代码：</div>
-<blockquote>
-<div id="_mcePaste">if($_SERVER[&#8216;REQUEST_METHOD&#8217;]==&#8217;POST&#8217;) {</div>
-<div id="_mcePaste">if (is_uploaded_file($_FILES[&#8216;upfile&#8217;][&#8216;tmp_name&#8217;])) {</div>
-<div id="_mcePaste">$upload_dir = &#8216;your_path/&#8217;;</div>
-<div id="_mcePaste">$ext        = strrchr($_FILES[&#8216;video&#8217;][&#8216;name&#8217;], &#8216;.&#8217;);</div>
-<div id="_mcePaste">$sessid     = $_POST[&#8216;UPLOAD_IDENTIFIER&#8217;] ;</div>
-<div id="_mcePaste">$tmpfile    = $upload_dir . $sessid;</div>
-<div id="_mcePaste">$sessfile   = $upload_dir . $sessid .$ext;</div>
-<div id="_mcePaste">if (move_uploaded_file($_FILES[&#8216;upfile&#8217;][&#8216;tmp_name&#8217;],$tmpfile)) {</div>
-<div id="_mcePaste">//上传成功</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">} elseif (!empty($_GET[&#8216;sessid&#8217;])) {</div>
-<div id="_mcePaste">header(&#8220;Expires: Mon, 26 Jul 1997 05:00:00 GMT&#8221;);</div>
-<div id="_mcePaste">header(&#8220;Last-Modified: &#8221; . gmdate(&#8220;D, d M Y H:i:s&#8221;) . &#8221; GMT&#8221;);</div>
-<div id="_mcePaste">header(&#8220;Cache-Control: no-store, no-cache, must-revalidate&#8221;);</div>
-<div id="_mcePaste">header(&#8220;Cache-Control: post-check=0, pre-check=0&#8221;, false);</div>
-<div id="_mcePaste">header(&#8220;Pragma: no-cache&#8221;);</div>
-<div id="_mcePaste">header(&#8220;Content-Type:text/html;charset=UTF-8&#8221;);</div>
-<div id="_mcePaste">$unique_id = $_GET[&#8216;sessid&#8217;];</div>
-<div id="_mcePaste">$uploadvalues = <span style="color: #ff0000;">uploadprogress_get_info</span>($unique_id);</div>
-<div id="_mcePaste">if (is_array($uploadvalues)) {</div>
-<div id="_mcePaste">echo json_encode($uploadvalues);</div>
-<div id="_mcePaste">} else {</div>
-<div id="_mcePaste">//读取进度失败，另外处理逻辑</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">}</div></blockquote>
-<strong>二. 原理篇 </strong></p>
-
-<p>注意上一篇中的红色函数。</p>
-
-<p>下载到uploadprogress1.0.1进行源码分析，在代码中作了注释。
-<blockquote>static void uploadprogress_file_php_get_info(char * id, zval * return_value)</blockquote></p>
-
-<p>{</p>
-
-<p>char s[1024];</p>
-
-<p>char * filename;</p>
-
-<p>char * template;</p>
-
-<p>FILE *F;</p>
-
-<p>TSRMLS_FETCH();</p>
-
-<p>template = INI_STR(&#8220;uploadprogress.file.filename_template&#8221;); <span style="color: #008000;">&lt;&lt;这里读取设置好的模板</span></p>
-
-<p>if (strcmp(template, &#8220;&#8221;) == 0)  {</p>
-
-<p>return;</p>
-
-<p>} else {</p>
-
-<p>filename = uploadprogress_mk_filename( id, template );<span style="color: #008000;">&lt;&lt;&lt;存在的话，会创建</span></p>
-
-<p>if (!filename) return;</p>
-
-<p>F = VCWD_FOPEN(filename, &#8220;rb&#8221;);</p>
-
-<p>if (F) {</p>
-
-<p>array_init(return_value);</p>
-
-<p>while ( fgets(s, 1000, F) ) {<span style="color: #008000;">&lt;&lt;&lt;从流中读取一字符串 *s结果数据的首地址；1000-1:一次读入数据块的长度,其默认值为1k，即1024;F文件指针</span></p>
-
-<p>char *k, *v, *e;</p>
-
-<p>int index = 0;</p>
-
-<p>e = strchr(s,&#8217;=&#8217;); <span style="color: #008000;">&lt;&lt;&lt;查找字符串s中首次出现字符=的位置</span></p>
-
-<p>if (!e) continue;</p>
-
-<p>*e = 0; /* break the line into 2 parts */</p>
-
-<p>v = e+1;</p>
-
-<p>k = s;</p>
-
-<p>/* trim spaces in front of the name/value */</p>
-
-<p>while (*k &amp;&amp; *k &lt;= 32) k++;</p>
-
-<p>while (*v &amp;&amp; *v &lt;= 32) v++;</p>
-
-<p>/* trim spaces everywhere in the name */</p>
-
-<p>for (e=k; *e; e++) if (*e &lt;= 32) { *e = 0; break; }</p>
-
-<p>/* trim spaces only at the end of the value */</p>
-
-<p>/* http://pecl.php.net/bugs/bug.php?id=14525 */</p>
-
-<p>//for (e=v; *e; e++) if (*e &lt;= 32) { *e = 0; break; }</p>
-
-<p>if (v != NULL) {<span style="color: #008000;">&lt;&lt;&lt;当文件有内容时</span></p>
-
-<p>for (index = strlen(v); index &gt; 0; index&#8211;) {</p>
-
-<p>if (v[index] &gt; 32) break;<span style="color: #008000;">&lt;&lt;&lt;累计</span></p>
-
-<p>v[index] = 0;</p>
-
-<p>}</p>
-
-<p>}</p>
-
-<p>add_assoc_string( return_value, k, v, 1 );</p>
-
-<p>}</p>
-
-<p>fclose(F);</p>
-
-<p>}</p>
-
-<p>if (filename) efree(filename);</p>
-
-<p>return;</p>
-
-<p>}</p>
-
-<p>}
-在源码中还能发现:
-<blockquote>PHP_MINIT_FUNCTION(uploadprogress)</blockquote></p>
-
-<p>{</p>
-
-<p>REGISTER_INI_ENTRIES();</p>
-
-<p>php_rfc1867_callback = uploadprogress_php_rfc1867_file;</p>
-
-<p>return SUCCESS;</p>
-
-<p>}
-在MINIT中修改了php_rfc1867_callback，抽取uploadprogress_php_rfc1867_file的关键代码：
-<blockquote>upload_id = emalloc(strlen(*e_data-&gt;value) + 1);</blockquote></p>
-
-<p>strcpy(upload_id, *e_data-&gt;value);</p>
-
-<p>progress-&gt;upload_id = upload_id;</p>
-
-<p>progress-&gt;time_last  = time(NULL);</p>
-
-<p>progress-&gt;speed_average  = 0;</p>
-
-<p>progress-&gt;speed_last     = 0;</p>
-
-<p>progress-&gt;bytes_uploaded = read_bytes;</p>
-
-<p>progress-&gt;files_uploaded = 0;</p>
-
-<p>progress-&gt;est_sec        = 0;</p>
-
-<p>progress-&gt;identifier = uploadprogress_mk_filename(upload_id, template);<span style="color: #008000;">&lt;&lt;&lt;在指定的模板位置放下了临时文件</span></p>
-
-<p>progress-&gt;identifier_tmp = emalloc(strlen( progress-&gt;identifier) + 4);</p>
-
-<p>sprintf( progress-&gt;identifier_tmp, &#8220;%s.wr&#8221;, progress-&gt;identifier );
-关于php_rfc1867_callback是什么，可以看哥学社另一哥鸟哥的分析 <a href="http://www.laruence.com/2008/11/07/586.html">http://www.laruence.com/2008/11/07/586.html</a></p>
-
-<p><strong>三.总结</strong></p>
-
-<p>在探测临时文件大小的时候，APC和 uploadprogress其实是大同小异的方法，先记录，再取大小百分比。</p>
-
-<p>关于哥学社：
-<a style="color: #0b3b8c; text-decoration: none;" title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个自由博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。</p>
-
-<p>关于五四陈：<br />
-54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br />
-个人技术站点:<a style="color: #0b3b8c; text-decoration: none;" href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 czhttp@gmail.com 联系到他。</p>
-
-<p>本文提及的文章：</p>
-
-<p><a href="http://www.php.net/releases/5_2_0.php">http://www.php.net/releases/5_2_0.php</a></p>
-
-<p><a href="http://www.ibm.com/developerworks/cn/opensource/os-php-v525/">http://www.ibm.com/developerworks/cn/opensource/os-php-v525/</a></p>
-
-<p><a href="http://www.laruence.com/2008/11/07/586.html">http://www.laruence.com/2008/11/07/586.html</a></p>
 </div>
   
   

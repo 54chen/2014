@@ -9,10 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="上周记录了如何用quercus建立混合型项目。
-http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html
-这里来说说与数据库的访问，使用jndi得到连接池的好处。 JNDI
-(Java Naming and &hellip;">
+  <meta name="description" content="quercus记录：php使用连接池访问数据库 http://t.co/KhR0AG9I #
+爆走了两天，准备把codeigniter放在quercus里跑，先后解决了SHA1加密bug，解析$与&amp;的bug，最后还有mysql latin1字符的问题，时间不等人， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +82,47 @@ http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/06/54chen-twitter-memo-2011-11-06/">54chen Twitter Memo 2011-11-06</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul class="aktt_tweet_digest">
+quercus记录：php使用连接池访问数据库 </ul><a href="http://t.co/KhR0AG9I" rel="nofollow">http://t.co/KhR0AG9I</a> <a href="http://twitter.com/54chen/statuses/132283387288371201" class="aktt_tweet_time">#</a>
+爆走了两天，准备把codeigniter放在quercus里跑，先后解决了SHA1加密bug，解析$与&amp;的bug，最后还有mysql latin1字符的问题，时间不等人，quercus跑php绝对比nginx+fpm安全，遗憾问题太多，后面如果fix会提供下载。 <a href="http://twitter.com/54chen/statuses/131336323452772353" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-10-30 <a href="http://t.co/AddQugsn" rel="nofollow">http://t.co/AddQugsn</a> <a href="http://twitter.com/54chen/statuses/130462815726211072" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1008,51 +1047,6 @@ riak-java-client 1.0.0 released；跟进riak1.0的同志们，可以更新了！
   <div class="entry-content"><p><ul class="aktt_tweet_digest">
 十一回来，小米米聊team吸各路php好手，一到两年经验的大侠们，团队主要方向:php java erlang，如果你有计划在php以外的领域有所建树，请速来：chenzhen at xiaomi.com。 </ul><a href="http://twitter.com/54chen/statuses/122564514498625536" class="aktt_tweet_time">#</a>
 54chen Twitter memo 2011-10-02 <a href="http://t.co/cCI9keqP" rel="nofollow">http://t.co/cCI9keqP</a> <a href="http://twitter.com/54chen/statuses/120324511034904577" class="aktt_tweet_time">#</a>
-
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/02/54chen-twitter-memo-2011-10-02/">54chen Twitter Memo 2011-10-02</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-02T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><ul class="aktt_tweet_digest">
-riak java client针对riak1.0.0的rc1昨天才发出来，想尝鲜还需要时日，官方的宣传以http为主，实际使用时pb才是王道。 </ul><a href="http://twitter.com/54chen/statuses/119968694590914561" class="aktt_tweet_time">#</a>
-北京时间1号凌晨4点，riak 1.0 正式发布。此版本经2年时间15次RC，话说我也贡献了一个bug。这次改动实际上弱化了bitcask，巧妙利用了leveldb完成了Secondary Indexes。http://t.co/TI4z1Ymh （左右键翻页） <a href="http://twitter.com/54chen/statuses/119966091257724930" class="aktt_tweet_time">#</a>
-@<a href="http://twitter.com/rednaxelafx" class="aktt_username">rednaxelafx</a> @turingbook OceanBase不能算作一类，tair beansdb nuclear或多或少都有dynamo的影子，而oceanbase已经很不一样了。 <a href="http://twitter.com/54chen/statuses/119006561682194433" class="aktt_tweet_time">#</a>
-“API design is like sex: Make one mistake and support it for the rest of your life.” – @<a href="http://twitter.com/joshbloch" class="aktt_username">joshbloch</a> <a href="http://twitter.com/54chen/statuses/118969033658875904" class="aktt_tweet_time">#</a>
-thrift最佳实践:版本与兼容 <a href="http://t.co/419R7gYk" rel="nofollow">http://t.co/419R7gYk</a> <a href="http://twitter.com/54chen/statuses/118953744787451904" class="aktt_tweet_time">#</a>
-riak坏处：不好debug,节点关系变化是危险的,默认使用的bitcask所有的key都维护在内存里,List-keys操作可能会搞死一个集群。 <a href="http://twitter.com/54chen/statuses/118619267276091392" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-09-25 <a href="http://t.co/jIjRPKtr" rel="nofollow">http://t.co/jIjRPKtr</a> <a href="http://twitter.com/54chen/statuses/117776523532046336" class="aktt_tweet_time">#</a>
 
 </p>
 </div>

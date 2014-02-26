@@ -9,8 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="      打酱油(http://www.dajoyo.com)是一种生活方式，既不是简单的路过，也不是单纯的看热闹。       和一个随机的陌生人聊天。谁也不知道你是谁，谁也不知道你会遇见谁。可以放心倾诉、交友甚至发泄，因为大家都在打酱油。
-       聊天对象虽然是随机的，陌生的， &hellip;">
+  <meta name="description" content="[ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.4.27 转载请注明原文链接：http://www.54chen.com/c/560 ] 环境：
+Windows XP
+PHP Version 5.2.9
+MySQL Server 5.1 第一步、创建一个表date_test（非定长、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +84,116 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/04/27/%E5%8E%9F%E5%88%9B%E5%AE%9E%E6%B5%8Bmysql%E6%97%B6%E9%97%B4%E5%AD%97%E6%AE%B5%E7%A9%B6%E7%AB%9F%E4%BD%BF%E7%94%A8int%E8%BF%98%E6%98%AFdatetime%EF%BC%9F/">[原创][实测]MySQL时间字段究竟使用INT还是DateTime？</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-04-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.4.27 转载请注明原文链接：<a href="../c/560">http://www.54chen.com/c/560</a> ]</p>
+
+<p>环境：<br />
+Windows XP
+<a href="http://www.54chen.com/c/441">PHP </a>Version 5.2.9<br />
+MySQL Server 5.1</p>
+
+<p>第一步、创建一个表date_test（非定长、int时间）</p>
+
+<p>CREATE TABLE `test`.`date_test` (<br />
+`id` INT NOT NULL AUTO_INCREMENT ,<br />
+`start_time` INT NOT NULL ,<br />
+`some_content` VARCHAR( 255 ) NOT NULL ,<br />
+PRIMARY KEY ( `id` )<br />
+) ENGINE = InnoDB;</p>
+
+<p>第二步、创建第二个表date_test2（定长、int时间）</p>
+
+<p>CREATE TABLE `test`.`date_test2` (<br />
+`id` INT NOT NULL AUTO_INCREMENT ,<br />
+`start_time` INT NOT NULL ,<br />
+`some_content` CHAR( 255 ) NOT NULL ,<br />
+PRIMARY KEY ( `id` )<br />
+) ENGINE = InnoDB;</p>
+
+<p>第三步、创建第三个<a href="http://www.54chen.com/c/539">表</a>date_test3（varchar、datetime时间）</p>
+
+<p>CREATE TABLE `test`.`date_test3` (<br />
+`id` INT NOT NULL AUTO_INCREMENT ,<br />
+`start_time` DATETIME NOT NULL ,<br />
+`some_content` VARCHAR( 255 ) NOT NULL ,<br />
+PRIMARY KEY ( `id` )<br />
+) ENGINE = InnoDB;</p>
+
+<p>第四步、创建第四个表date_test3（char、datetime时间）</p>
+
+<p>CREATE TABLE `test`.`date_test4` (<br />
+`id` INT NOT NULL AUTO_INCREMENT ,<br />
+`start_time` DATETIME NOT NULL ,<br />
+`some_content` CHAR( 255 ) NOT NULL ,<br />
+PRIMARY KEY ( `id` )<br />
+) ENGINE = InnoDB;</p>
+
+<p>ok，现在我们开始做<a href="http://www.54chen.com/c/45">测试</a>，环境是php，先向各个表插入一百万条数据。插入的时候分200次，每次进库5000条。</p>
+
+<p>表一执行记录：页面运行时间: 26.5997889042 秒，插入的时候发现一个有趣的现象：SELECT count( id ) FROM `date_test` WHERE 1 的结果是100w,而直接select * from `date_test`却是1,000,374条结果。（后来看到这是一个可能接近的值，请参看MySQL FAQ 3.11）。<br />
+表二执行记录：页面运行时间: 62.3908278942 秒，这次记录是1,000,066条。<br />
+表三执行记录：页面运行时间: 30.2576560974 秒，这次的是1,000,224条。<br />
+表四执行记录：页面运行时间: 67.5393900871 秒，这次的是：1,000,073条。</p>
+
+<p>现在把四个表的start_time字段一一加上索引。</p>
+
+<p>测试四个表的更新，分别update 100条记录，并记录时间:<br />
+表一：页面运行时间: 2.62180089951 秒（非定长，int时间）<br />
+表二：页面运行时间: 2.5475358963 秒（定长，int时间）<br />
+表三：页面运行时间: 2.45077300072 秒（varchar,datetime时间）<br />
+表四：页面运行时间: 2.82798409462 秒（char,datetime时间）</p>
+
+<p>测试四个表的读取，分别select 100条随机记录，以主键id为条件查询，并记录时间：<br />
+表一：页面运行时间: 0.382651090622 秒（非定长，int时间）<br />
+表二：页面运行时间: 0.542181015015 秒（定长，int时间）<br />
+表三：页面运行时间: 0.334048032761 秒（varchar,datetime时间）<br />
+表四：页面运行时间: 0.506206989288 秒（char,datetime时间）</p>
+
+<p>测试四个表的读取，分别select 10条随机记录，以star_time为条件查询，并记录时间：<br />
+表一：页面运行时间: 30.1972880363 秒（非定长，int时间）<br />
+表二：页面运行时间: 65.1926910877 秒（定长，int时间）<br />
+表三：页面运行时间: 39.7210869789 秒（varchar,datetime时间）<br />
+表四：页面运行时间: 70.4632740021 秒（char,datetime时间）</p>
+
+<p>因为量比较小，所以我们默认即使是微小的变化，也是有意义的。</p>
+
+<p>结论：</p>
+
+<p><strong>大数据量下，如果存在大量的select * from table where 时间&gt;XX这样的查询，在MySQL5.1时使用int换datetime是有意义的。</strong></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -612,57 +724,6 @@ END</p>
 <p> 211工程学校的优先考虑</p>
 
 <p>待遇：5.6.7.8.9.10 等等</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/03/16/discuz-bbs-active-and-passive-cache/">[原创]Discuz! BBS的主动缓存和被动缓存</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-03-16T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>[文章作者：陈臻 本文版本：v1.1 最后修改：2009.3.16 转载请注明原文链接：<a href="http://www.54chen.com/c/505">http://www.54chen.com/c/505</a>]
-<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的缓存同样分了主动缓存和被动缓存。从功能上来说，主动缓存一般用到管理员对全站的设置，等等需要手动更新的地方，这些地方的数据都有一个特点，那就是它们的更新可能性很小，平时不需要自动更新；</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的被动缓存，一般分布在诸如帖子内容显示，用户信息更新这些地方，这些地方的更新基本上都是因为用户使用了某一特定的功能时所激发的。</span></span></p>
-<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">在正常运行的</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">系统文件夹里面会有一个</span><span lang="EN-US"><span style="font-family: Times New Roman;">forum<a href="http://www.54chen.com/c/399">data</a></span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">文件夹，这个是论坛记录和缓存文件的存放目录，一般这些文件都是自动生成的，在</span><span lang="EN-US"><span style="font-family: Times New Roman;">forumdata/cache/</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">里面存储的都是一些</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的基本设置和一些常使用的值，这些值一般在系统初始化的时候就保存在</span><span lang="EN-US"><span style="font-family: Times New Roman;">$_DCACHE</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">全局变量中，在后面的操作中将可以简单地使用它们进行功能上的判断。</span></span></p>
-<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">（</span><span lang="EN-US"><span style="font-family: Times New Roman;">1</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">）主动缓存，也就是只在用户操作后台时，由</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">系统去删除原有缓存进行更新的缓存。它们普遍存在于</span><span lang="EN-US"><span style="font-family: Times New Roman;">forumdata/cache/</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">目录中，比如说</span><span lang="EN-US"><span style="font-family: Times New Roman;">/forumdata/cache/cache_settings.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">保存了整个系统的核心设置，一般情况是不会更新的，只有后台修改了比如站点名称等关键信息的时候才会去主动更新这个缓存文件。还有用于保存用户组和管理员组相关信息的两类缓存文件：</span></span></p>
-<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span lang="EN-US"><span style="font-size: small; font-family: Times New Roman;">/forumdata/cache/usergroup_&#8217;.intval($groupid).&#8217;.php</span></span></p>
-<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span lang="EN-US"><span style="font-size: small; font-family: Times New Roman;">/forumdata/cache/admingroup_&#8217;.intval($adminid).&#8217;.php</span></span></p>
-<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">另外还有在</span><span lang="EN-US"><span style="font-family: Times New Roman;">index</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">forumdisplay</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">post</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">blog</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">topicadmin</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">register</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">archiver</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">几个模块中的时候分别会使用的</span><span lang="EN-US"><span style="font-family: Times New Roman;">cache_&#8217;</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">模块名</span><span lang="EN-US"><span style="font-family: Times New Roman;">&#8216;.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的缓存。在</span><span lang="EN-US"><span style="font-family: Times New Roman;">include/common.inc.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">中的流程可以看到，这些类似的主动缓存都有一个特点：统一进行引用（</span><span lang="EN-US"><span style="font-family: Times New Roman;">include</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">），最后进行失败检测，最后再对失败的缓存（比如说文件丢失或者是上次更新还没生成这样的情况下）统一进行重新生成的操作，具体的生成方法见</span><span lang="EN-US"><span style="font-family: Times New Roman;">/include/cache.func.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">中的</span><span lang="EN-US"><span style="font-family: Times New Roman;">updatecache</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">函数。</span></span></p>
-<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">（</span><span lang="EN-US"><span style="font-family: Times New Roman;">2</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">）被动缓存，也就是缓存的生成并非是由用户手动更新的，而是在系统里判断是否需要生成缓存，需要缓存多长时间，由系统自身来完成整个过程。很典型的代表有帖子内容的缓存生成过程。帖子内容的缓存路径被</span><span lang="EN-US"><span style="font-family: Times New Roman;">cache_setting.<a href="http://www.54chen.com/c/157">php</a></span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">里定义为一个可以由用户修改的值，默认是在</span><span lang="EN-US"><span style="font-family: Times New Roman;">forumdata/threadcaches</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">下，由</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">里的逻辑可以看到，当满足使用缓存条件的时候（一般情况是第一页的内容），系统会执行</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread_loadcache</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">函数，此函数会判断缓存是否过期，如果不过期就执行函数中间读取缓存的操作，最后</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">直接巧妙地在函数中</span><span lang="EN-US"><span style="font-family: Times New Roman;">die</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">出一段</span><span lang="EN-US"><span style="font-family: Times New Roman;">javaScript</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">，结束访问。专研</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">代码的你可能会很疑惑，究竟是什么时候生成的缓存呢？</span><span lang="EN-US"><span style="font-family: Times New Roman;">include</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">文件夹里有一个</span><span lang="EN-US"><span style="font-family: Times New Roman;">global.func.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">，这个文件包括了整个</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">系统使用到的全局方法，其中有一个叫</span><span lang="EN-US"><span style="font-family: Times New Roman;">output</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的函数，在函数里判断了是否可以缓存当前的页面，并且使用</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_get_contents</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">函数直接缓存页面。</span></span></p>
-<p class="MsoList" style="MARGIN: 0cm 0cm 0pt 63.8pt"><span style="font-size: small;"><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">提示：</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_start()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">在服务器打开一个缓冲区来保存所有的输出。所以在任何时候使用</span><span lang="EN-US"><span style="font-family: Times New Roman;">echo </span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">，输出都将被加入缓冲区中，直到程序运行结束或者使用</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_flush()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">来结束。然后在服务器中缓冲区的内容才会发送到浏览器，由浏览器来解析显示。函数</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_end_clean </span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">会清除缓冲区的内容，并将缓冲区关闭，但不会输出内容。此时得用一个函数</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_get_contents()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">在</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_end_clean()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">前面来获得缓冲区的内容。这样的话，</span><span style="font-family: Times New Roman;"> </span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">能将在执行</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_end_clean()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">前把内容保存到一个变量中，然后在</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_end_clean()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">后面对这个变量做操作。</span></span></p></p>
-
-<p>关于哥学社：
-<a title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个自由博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。</p>
-
-<p>关于五四陈：<br />
-54chen(陈臻)，人人网海量存储NuClear核心开发人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br />
-个人技术站点:<a href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 czhttp@gmail.com 联系到他。</p>
 </div>
   
   

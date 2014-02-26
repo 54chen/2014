@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="智勇君名言：乱世的魅力就是乱。 #
-鸡动人心的时刻，米聊的sis文件，按下回车后scp出去了。 #
-看到一颇有见的文章，文尾简介：xx has programmed in a variety of languages for more than 13 years, including Java &hellip;">
+  <meta name="description" content="Q:在java中如何加载properties文件或者configure文件才是最好的办法呢？
+A:当你在考虑如何加载java的资源文件的时候，许多选择都会立即闪现在你的头脑中：files, classpath resources, 还有URLs。尽管上述所有的方法都能得到最终需要的效果， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +82,100 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/18/java-read-properties-files-part/">[Java]如何优雅读取properties文件-part1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://www.themoderndaypirates.com/pirates/wp-content/uploads/2010/10/drink_duke_java.jpg" alt="java properties" />
+Q:在java中如何加载properties文件或者configure文件才是最好的办法呢？<br />
+A:当你在考虑如何加载java的资源文件的时候，许多选择都会立即闪现在你的头脑中：files, classpath resources, 还有URLs。尽管上述所有的方法都能得到最终需要的效果，但经验表明classpath resources 和 URLs 是到目前为止最靠谱的选择。<br />
+通常情况下，一个配置文件都有一个异常复杂的结构（比如说xml结构的定义），为了简单，下文里我们以name-value对为例子来讲解（非常类似properties文件的格式）。就算这样，只要你考虑使用inputStream来读取资源文件，你没有理由不采纳下文里提到的办法。</p>
+
+<p><strong>一、邪恶的java.io.File</strong>
+任何没有java背景的人明显的做法是使用原来的files里的足够简单的办法（通过FileInputStream, FileReader,RandomAccessFile）。但是在java应用的布署来说，这是最差的办法。对于追求轻便和不依赖磁盘位置的代码来说，在你的代码中使用绝对文件地址并不是一个很好的方式。使用相对路径看上去是个不错的替代方案，不过不要忘记，是相对于jvm运行时当前的路径。这个相对路径的设置取决于JVM的启动进程，而且会被启动的shell等脚本搞混乱了。如果决定将一些不标准的设置存放依赖最终用户的环境（而且在一些情况下，还未被验证过是否有用户权限），只要换个环境，（比如说EJB或者是WEB应用服务器），你和用户都不能有更多的基于JVM一开始启动时目录的控制。java.io.File是java里最不能跨平台的部分。<br />
+java模块的做法是将其加入到classpath中去，直接就可用 。考虑EJB jars，Web应用可以打包成war文件，还有其他类似的便利的布署方式。除非你非得用它，还是对其说不吧。</p>
+
+<p><strong>二、Classpath resources</strong>
+抛开上面所说的坏话，让我们来谈谈更好一点的办法：通过classloaders来加载资源。这样做会更好，因为classloaders本来就扮演了一个资源文件同它的在硬盘上或者其他地方实际位置的关系之间的抽象层。<br />
+比如说，你需要从some/pkg/resource.properties加载一个classpath的资源。使用classpath资源是指把文件打包到jar包里或者是在程序运行前加入到classpath里。你可以通过JVM的参数-classpath在每次程序启动前向classpath中写入，也可以一次性写到<jre home>\classes的位置一直使用。要点是classpath的资源文件布署和java class文件一样，而方便也正是在于此。<br />
+从java代码里拿some/pkg/resource.properties有许多方法。首先可以用：
+<blockquote><code>ClassLoader.getResourceAsStream ("some/pkg/resource.properties");<br />
+  Class.getResourceAsStream ("/some/pkg/resource.properties");<br />
+  ResourceBundle.getBundle ("some.pkg.resource");</code></blockquote>
+此外，如果代码在一个位于some.pkg包的class里，下面的代码也可以很好地工作：
+<blockquote><code>Class.getResourceAsStream ("resource.properties");
+</code></blockquote>
+注意两者在参数上微妙的不同之处。所有的getResourceAsStream方法都使用斜杠分割包名的间隔，而且资源文件要包括扩展名。和resource bundles相比，后者更像是java标识符，用点标识包（并且没有文件名后缀）。这是理所当然的，因为resource bundle（资源绑定）可以不仅仅是properties文件，比如还可以是class文件。<br />
+稍微有点复杂的地方，java.lang.Class的getResourceAsStream方法的实例方法可以执行相对于包的资源搜索（同样也很灵活，见 http://www.javaworld.com/javaworld/javaqa/2002-11/02-qa-1122-resources.html）。为了区分相对和绝对的资源名字，Class.getResourceAsStream()用斜杠开头表示绝对路径。通常，如果你在代码里不用相对于package的资源的话，没有必要使用这个方法。<br />
+ClassLoader.getResourceAsStream(), Class.getResourceAsStream(), ResourceBundle.getBundle()之间微小的区别很容易造成混乱。下面这个表记录了他们之间的特点：</jre></p>
+
+<p><strong>方法操作差异</strong>
+<table cellspacing="0" cellpadding="0" border="1" width="548" style="word-wrap:break-word;word-break:break-all;">
+<tr>
+                                    <td width="100">Method</td>
+                                    <td width="150">Parameter format</td>
+                                    <td width="150">Lookup failure behavior</td>
+                                    <td width="100">Usage example</td>
+                                 </tr>
+                                 <tr bgcolor="#cccccc" /></table></p>
+
+<p>                                    <td>ClassLoader.<br />getResourceAsStream()</td>
+                                    <td>&#8221;/&#8221;-separated names; no leading &#8220;/&#8221; (all names are absolute)</td>
+                                    <td>Silent (returns null)<br />
+                                    </td>
+                                    <td>this.getClass().getClassLoader()<br />.getResourceAsStream<br />(&#8220;some/pkg/resource.properties&#8221;)</td></p>
+
+<p>                                 
+                                 <tr bgcolor="#ffffff">
+                                    <td>Class.<br />getResourceAsStream()</td>
+                                    <td>&#8221;/&#8221;-separated names; leading &#8220;/&#8221; indicates absolute names; all other names are relative to the class&#8217;s package</td>
+                                    <td>Silent (returns null)<br />
+                                    </td>
+                                    <td>this.getClass()<br />.getResourceAsStream<br />(&#8220;resource.properties&#8221;)</td></tr></p>
+
+<p>                                 
+                                 <tr bgcolor="#cccccc">
+                                    <td>ResourceBundle.<br />getBundle()</td>
+                                    <td>&#8221;.&#8221;-separated names; all names are absolute; .properties suffix is implied<br />
+                                    </td>
+                                    <td>Throws unchecked<br /> java.util.<br />MissingResource<br />Exception</td></tr></p>
+
+<p>                                    <td>ResourceBundle.getBundle<br />(&#8220;some.pkg.resource&#8221;)</td>
+                                 
+                              
+[未完待续]<br />
+54chen copy from http://www.javaworld.com/javaqa/2003-08/01-qa-0808-property.html?page=1</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -567,56 +660,6 @@ public class Runner implements Runnable {<br />
 }</blockquote></p>
 
 <p>scheduler下有很多的方法，达到的目的有：定时执行，执行完后一段时间再次执行；而Executors更有更多控制线程的方法，平时不可忽视。
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/12/19/54chen-twitter-memo-2010-12-19/">54chen Twitter Memo 2010-12-19</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-19T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><ul class="aktt_tweet_digest">
-gdata不放到nexus中央库，搞出来一堆专门搞gdata mvn化的项目，老外真蛋疼。 </ul><a href="http://twitter.com/54chen/statuses/16065531903746048" class="aktt_tweet_time">#</a>
-昨天又有一组兄弟升级程序连续通宵上班爆走至今天，哥们悠着点。 <a href="http://twitter.com/54chen/statuses/15604825005756417" class="aktt_tweet_time">#</a>
-把一个叫做“beanstalk”的MQ代码翻了一遍，全部中文注释了一遍观后感。 <a href="http://twitter.com/54chen/statuses/15397121553342464" class="aktt_tweet_time">#</a>
-event_dispatch() 表示进入 event loop，Queue 里面的任何一个 File Description 发生事件的时候就会进入 callback function 执行，libevent学习残记。 <a href="http://twitter.com/54chen/statuses/15373131543748608" class="aktt_tweet_time">#</a>
-把手机当无线网卡-andriod usb0 ssh tunnle <a href="http://goo.gl/fb/hFjQS" rel="nofollow">http://goo.gl/fb/hFjQS</a> <a href="http://twitter.com/54chen/statuses/15327275734016000" class="aktt_tweet_time">#</a>
-linux有大量的工具可以用来做统计用：gawk &#039;{print $1}&#039; 选择第几列；sort排一下序；uniq -c合并相同项合计；sort -nr 按数值比较，倒序；head 取前多少行；tail 取后多少行。 <a href="http://twitter.com/54chen/statuses/14616909957832704" class="aktt_tweet_time">#</a>
-百度搜“神秘离奇 创业公司”，哈哈，雷得一慎一慎的。 <a href="http://twitter.com/54chen/statuses/14561887723192320" class="aktt_tweet_time">#</a>
-未知、神秘、离奇、创业公司，哇，这个形容词形容@小米科技 太cool了。 <a href="http://twitter.com/54chen/statuses/14561455508553728" class="aktt_tweet_time">#</a>
-和优秀的人接触前沿：大学里，一位技术伙伴，六年前就研究im~sns~当时腾讯没有这么疼，sns国内还没有出名的。此哥大学没毕业，现在移民加拿大了。 <a href="http://twitter.com/54chen/statuses/14539807942246400" class="aktt_tweet_time">#</a>
-@小米科技，厨房可以看见13号线飞奔而去，犹如这群正在为理想飞驰的牛人 <a href="http://twitter.com/54chen/statuses/14531135589580800" class="aktt_tweet_time">#</a>
-为什么各种bug系统都难用得要死，因为写这些bug系统的人，都不是真正用的人。打算召集哥学社的同志们写一个互联网专用的开源bug系统。 <a href="http://twitter.com/54chen/statuses/14171695925432320" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2010-12-12 <a href="http://goo.gl/fb/XwaCf" rel="nofollow">http://goo.gl/fb/XwaCf</a> <a href="http://twitter.com/54chen/statuses/13775901321854976" class="aktt_tweet_time">#</a>
-
 </p>
 </div>
   
