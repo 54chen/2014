@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-02-26T15:00:12+08:00</updated>
+  <updated>2014-02-26T15:11:36+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -22,7 +22,7 @@
 
 <p>在使用java web container的时候，我们都在前面挡一层nginx，方便使用各种nginx的功能，设置成代理。
 访问特别多的时候发现，服务器上存在大量的TIME_WAIT状态的连接。
-经分析，可能是nginx早期版本的upstream还是使用的1.0的短连接代理，java container老是以1.0的方式主动断开进入TIME_WAIT状态，浪费了大师的连接。</p>
+经分析，可能是nginx早期版本的upstream还是使用的1.0的短连接代理，java container老是以1.0的方式主动断开进入TIME_WAIT状态，浪费了大量的连接。</p>
 
 <!-- more -->
 
