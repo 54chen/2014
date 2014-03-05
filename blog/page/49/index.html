@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="perl workshop 2008 归来 1.四十分钟的演讲中agent的演讲最具有吸引力，老何的演讲最生动。 2.关于0penResty的角色部分没讲完是个遗憾，以后实际运用的时候还得在公司问agent。 3.english的talk也会站着听了一会儿，完全听不懂。 4.照片欠奉
-">
+  <meta name="description" content="[文章作者：陈臻 本文版本：v1.0 最后修改：2008.11.12 转载请注明原文链接：http://www.54chen.com/c/83] 这只是个说明，你不按说明来办事也不会怎么样，svn照样工作得很好。 branches：分枝 当多个人合作（Sally和John）时，可能有这样的情况出现 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +81,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/12/svn%E9%87%8C%E7%9A%84branch%E3%80%81trunk%E3%80%81tag%E7%9A%84%E7%94%A8%E5%A4%84/">Svn里的branch、trunk、tag的用处</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-12T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2008.11.12 转载请注明原文链接：<a href="http://www.54chen.com/c/83">http://www.54chen.com/c/83</a>]</p>
+
+<p>这只是个说明，你不按说明来办事也不会怎么样，svn照样工作得很好。</p>
+
+<p>branches：分枝</p>
+
+<p>当多个人合作（Sally和John）时，可能有这样的情况出现：John突然有个想法，跟原先的设计不太一致，可能是功能的添加或者日志格式的改进等等，总而言之，这个想法可能需要花一段时间来完成，而这个过程中，John的一些操作可能会影响Sally的工作，John从现有的状态单独出一个project的话，又不能及时得到Sally对已有代码做的修正，而且独立出来的话，John的尝试成功时，跟原来的合并也存在困难。这时最好的实践方法是使用branches。John建立一个自己的branch，然后在里面实验，必要的时候从Sally的trunk里取得更新，或者将自己的阶段成果汇集到trunk中。（svn copy SourceURL/trunk \ DestinationURL/branchName \ -m &#8220;Creating a private branch of xxxx/trunk.&#8221; ）</p>
+
+<p>trunk：主干</p>
+
+<p>主干，一般来说就是开发的主要呆的地方，</p>
+
+<p>tag:</p>
+
+<p>在经过了一段时间的开发后，项目到达了一个里程碑阶段，你可能想记录这一阶段的代码的状态，那么你就需要给代码打上标签。(svn cp <a href="file:///svnroot/mojavescripts/trunk">file:///svnroot/mojavescripts/trunk</a> \ file:///svnroot/mojavescripts/tags/mirrorutils_rel_0_0_1 \<br />
+-m &#8220;taged mirrorutils_rel_0_0_1&#8221;)</p>
+
+<p>另有一说，无所谓谁对谁错。</p>
+
+<p>trunk<span>：表示开发时版本存放的目录，即在开发阶段的代码都提交到该目录上。</span></p>
+
+<p>branches<span>：表示发布的版本存放的目录，即项目上线时发布的稳定版本存放在该目录中。</span></p>
+
+<p>tags<span>：表示标签存放的目录。</span></p>
+
+<p><span>在这需要说明下分三个目录的原因，如果项目分为一期、二期、三期等，那么一期上线时的稳定版本就应该在一期完成时将代码</span>copy<span>到</span>branches<span>上，这样二期开发的代码就对一期的代码没有影响，如新增的模块就不会部署到生产环境上。而</span>branches<span>上的稳定的版本就是发布到生产环境上的代码，如果用户使用的过程中发现有</span>bug<span>，则只要在</span>branches<span>上修改该</span>bug<span>，修改完</span>bug<span>后再编译</span>branches<span>上最新的代码发布到生产环境即可。</span>tags<span>的作用是将在</span>branches<span>上修改的</span>bug<span>的代码合并到</span>trank<span>上时创建个版本标识，以后</span>branches<span>上修改的</span>bug<span>代码再合并到</span>trunk<span>上时就从</span>tags<span>的</span>version<span>到</span>branches<span>最新的</span>version<span>合并到</span>trunk<span>，以保证前期修改的</span>bug<span>代码不会在合并。</span></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1804,88 +1864,6 @@ printf(&#8220;$data[$j]&lt;BR&gt;\n&#8221;);<br />
 }<br />
 */<br />
 ?&gt;</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/08/20/%E5%85%A8%E8%A7%92%E5%8D%8A%E8%A7%92%E5%88%A4%E6%96%AD/">全角半角判断</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-08-20T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><li>半角范围：u0000 - u00FF, uFF61 - uFF9F, uFFE8 - uFFEE</li>
-	<li>全角范围：
-<ul class="list2" style="padding-left: 16px; margin-left: 16px;">
-	<li>全角数字(0-9) uFF10 - uFF19</li>
-	<li>全角大文字(A-Z): uFF21 - uFF3A</li>
-	<li>全角小文字(a-z): uFF41 - uFF5A</li>
-	<li>全角平仮名：u3040 - u309F</li>
-	<li>全角片仮名：u30A0 - u30FF</li>
-	<li>全角Latin: uFF01 - uFF5E</li>
-	<li>全角Symbol: uFFE0 - uFFE5</li>
-</ul>
-以下是判断全角半角混合字符串的字节数是否超过指定的字节数。(半角被认为是一个字节)
-<div class="highlighter">
-<ol class="highlighter-c">
-	<li><span class="keyword">function</span><span> isOverBytes(s, maxbytes)</span></li>
-	<li class="alt"><span>{</span></li>
-	<li><span>    </span><span class="keyword">var</span><span> i = 0;</span></li>
-	<li class="alt"><span>    </span><span class="keyword">var</span><span> bytes = 0;</span></li>
-	<li><span>    </span><span class="keyword">var</span><span> uFF61 = parseInt(</span><span class="string">&#8220;FF61&#8221;</span><span>, 16);</span></li>
-	<li class="alt"><span>    </span><span class="keyword">var</span><span> uFF9F = parseInt(</span><span class="string">&#8220;FF9F&#8221;</span><span>, 16);</span></li>
-	<li><span>    </span><span class="keyword">var</span><span> uFFE8 = parseInt(</span><span class="string">&#8220;FFE8&#8221;</span><span>, 16);</span></li>
-	<li class="alt"><span>    </span><span class="keyword">var</span><span> uFFEE = parseInt(</span><span class="string">&#8220;FFEE&#8221;</span><span>, 16);</span></li>
-	<li><span>    </span><span class="keyword">while</span><span> (i &lt; s.length)</span></li>
-	<li class="alt"><span>     {</span></li>
-	<li><span>        </span><span class="keyword">var</span><span> c = parseInt(s.charCodeAt(i));</span></li>
-	<li class="alt"><span>        </span><span class="keyword">if</span><span> (c &lt; 256) {</span></li>
-	<li><span>             bytes = bytes + 1;</span></li>
-	<li class="alt"><span>         }</span></li>
-	<li><span>        </span><span class="keyword">else</span><span> {</span></li>
-	<li class="alt"><span>            </span><span class="keyword">if</span><span> ((uFF61 &lt;= c) &amp;&amp; (c &lt;= uFF9F)) {</span></li>
-	<li><span>                 bytes = bytes + 1;</span></li>
-	<li class="alt"><span>             } </span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span> ((uFFE8 &lt;= c) &amp;&amp; (c &lt;= uFFEE)) {</span></li>
-	<li><span>                                bytes = bytes + 1;</span></li>
-	<li class="alt"><span>                        }</span></li>
-	<li><span>                       </span><span class="keyword">else</span><span> {</span></li>
-	<li class="alt"><span>                 bytes = bytes + 2;</span></li>
-	<li><span>             }</span></li>
-	<li class="alt"><span>         }</span></li>
-	<li><span>        </span><span class="keyword">if</span><span> (bytes &gt; maxbytes) {</span></li>
-	<li class="alt"><span>            </span><span class="keyword">return</span><span> </span><span class="keyword">true</span><span>;</span></li>
-	<li><span>         }</span></li>
-	<li class="alt"><span>         i = i + 1;</span></li>
-	<li><span>     }</span></li>
-	<li class="alt"><span>    </span><span class="keyword">return</span><span> </span><span class="keyword">false</span><span>;</span></li>
-	<li><span>}</span></li>
-</ol>
-</div></li></p>
 </div>
   
   

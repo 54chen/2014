@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="quercus记录：php使用连接池访问数据库 http://t.co/KhR0AG9I #
-爆走了两天，准备把codeigniter放在quercus里跑，先后解决了SHA1加密bug，解析$与&amp;的bug，最后还有mysql latin1字符的问题，时间不等人， &hellip;">
+  <meta name="description" content="Thrift是Facebook的核心框架之一，使不同的开发语言开发的系统可以通过该框架实现彼此的通信，类似于webservice，但是Thrift提供了近乎变态的效率和开发的方便性，是webservice所不能比拟的。给分布式开发带来了极大的方便。但是这柄利器也有一些不完美。 安装thrift &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +81,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/18/thrift-quick-start/">Thrift快速入门实例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="facebook thrift" />
+Thrift是Facebook的核心框架之一，使不同的开发语言开发的系统可以通过该框架实现彼此的通信，类似于webservice，但是Thrift提供了近乎变态的效率和开发的方便性，是webservice所不能比拟的。给分布式开发带来了极大的方便。但是这柄利器也有一些不完美。 </p>
+
+<p><strong>安装thrift</strong>
+<blockquote>1、./configure &#8211;with-boost=/usr/include<br />
+2、make<br />
+3、make install</blockquote></p>
+
+<p><strong>定义接口文件</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-rb" start="1"><li class="alt"><span><span>vim&nbsp;chen.thrift&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="comment">#!/usr/local/bin/thrift&nbsp;&#8211;gen&nbsp;java</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>namespace&nbsp;java&nbsp;com.chen&nbsp;&nbsp;</span></li><li class="alt"><span>service&nbsp;Hello{&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i32&nbsp;hello()&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p><strong>生成代码</strong>
+<div class="chen-hl"><ol class="dp-perl" start="1"><li class="alt"><span><span>thrift&nbsp;&#8211;gen&nbsp;java&nbsp;chen.thrift&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>要使用1.6的jdk
+<strong>
+实现server代码：</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*&nbsp;@author&nbsp;54chen(陈臻)&nbsp;[chenzhen@xiaomi.com&nbsp;czhttp@gmail.com]</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;*&nbsp;@since&nbsp;2011-6-24&nbsp;下午08:11:15</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">package</span><span>&nbsp;com.chen;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">import</span><span>&nbsp;org.apache.thrift.TException;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;HelloImpl&nbsp;</span><span class="keyword">implements</span><span>&nbsp;Hello.Iface&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;HelloImpl()&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;hello()&nbsp;</span><span class="keyword">throws</span><span>&nbsp;TException&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">&#8220;hello&nbsp;54chen&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p><strong>通过下面的代码启动server</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>TServerSocket&nbsp;serverTransport&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;TServerSocket(</span><span class="number">7911</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello.Processor&nbsp;processor&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Hello.Processor(</span><span class="keyword">new</span><span>&nbsp;HelloImpl());&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Factory&nbsp;protFactory&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TBinaryProtocol.Factory(</span><span class="keyword">true</span><span>,&nbsp;</span><span class="keyword">true</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TServer&nbsp;server&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TThreadPoolServer(processor,&nbsp;serverTransport,&nbsp;protFactory);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">&#8220;Starting&nbsp;server&nbsp;on&nbsp;port&nbsp;7911&nbsp;&#8230;&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server.serve();&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p><strong>通过下面代码启动client</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>TTransport&nbsp;transport&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;TSocket(</span><span class="string">&#8220;localhost&#8221;</span><span>,&nbsp;</span><span class="number">7911</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TProtocol&nbsp;protocol&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TBinaryProtocol(transport);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello.Client&nbsp;client&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Hello.Client(protocol);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transport.open();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">&#8220;Client&nbsp;calls&nbsp;hello()&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.hello();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transport.close();&nbsp;&nbsp;</span></li></ol></div></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1007,46 +1065,6 @@ riak_kv:<br />
 <a href="http://t.co/eJXNz8pe" rel="nofollow">http://t.co/eJXNz8pe</a> web test利器，还有更利的吗？ <a href="http://twitter.com/54chen/statuses/124105952273235968" class="aktt_tweet_time">#</a>
 riak-java-client 1.0.0 released；跟进riak1.0的同志们，可以更新了！ <a href="http://twitter.com/54chen/statuses/124034768999432192" class="aktt_tweet_time">#</a>
 54chen Twitter memo 2011-10-09 <a href="http://t.co/2FTs3k7n" rel="nofollow">http://t.co/2FTs3k7n</a> <a href="http://twitter.com/54chen/statuses/122856471498203136" class="aktt_tweet_time">#</a>
-
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/09/54chen-twitter-memo-2011-10-09/">54chen Twitter Memo 2011-10-09</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-09T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><ul class="aktt_tweet_digest">
-十一回来，小米米聊team吸各路php好手，一到两年经验的大侠们，团队主要方向:php java erlang，如果你有计划在php以外的领域有所建树，请速来：chenzhen at xiaomi.com。 </ul><a href="http://twitter.com/54chen/statuses/122564514498625536" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-10-02 <a href="http://t.co/cCI9keqP" rel="nofollow">http://t.co/cCI9keqP</a> <a href="http://twitter.com/54chen/statuses/120324511034904577" class="aktt_tweet_time">#</a>
 
 </p>
 </div>

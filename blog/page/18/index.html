@@ -9,11 +9,12 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="五一归来两周，精力都放在了因为服务器压力突增而来的各种鸡飞狗跳的事情上，今天总结一下，算是对过去两周的总结，希望对各创业团队有所借鉴。
-1.访问突增，连锁反应
-最先开始出现问题的，是在小负载下没有出现的问题，在大压力时，只要DB一堵，表像就会是循环锁死。
-解决之道：
-服务要有清晰的架构， &hellip;">
+  <meta name="description" content="需求：
+1号机服务移到2号机，然后要把1号机搬走。 原理：
+交换机有ip对应mac地址的缓存，只需复制到ip和mac，可以在机房内的局域网里瞬间切换到另一个机器上。 操作：
+1）在2号机准备好1号机的服务，并测试通过。记录1号机的mac和ip
+2）以下操作要双开窗口，快速操作
+3）在1号机执行： &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -85,6 +86,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/20/h3c-load-balance/">巧用交换机，瞬间切流量</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-20T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_NWcXbNXXXcQbh6a_121410.jpg" alt="h3c" />
+需求：<br />
+1号机服务移到2号机，然后要把1号机搬走。</p>
+
+<p>原理：<br />
+交换机有ip对应mac地址的缓存，只需复制到ip和mac，可以在机房内的局域网里瞬间切换到另一个机器上。</p>
+
+<p>操作：<br />
+1）在2号机准备好1号机的服务，并测试通过。记录1号机的mac和ip<br />
+2）以下操作要双开窗口，快速操作<br />
+3）在1号机执行：ifocnfig eth0 down<br />
+4）在2号机执行：<br />
+ifconfig eth0:0 123.123.123.1<br />
+ifconfig eth0:0 hw ether 111111111111[1号机mac]<br />
+ifconfig eth0:0 up<br />
+5）恭喜成功了！<br />
+6）搬走1号机，再也不要回来！<br />
+7）在2号机/etc/rc.local里添加：<br />
+ifconfig eth0:0 123.123.123.1<br />
+ifconfig eth0:0 hw ether 111111111111[1号机mac]<br />
+ifconfig eth0:0 up<br />
+终。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -696,56 +754,6 @@ System.out.println(res.getString(1));<br />
 &lt;/dependency&gt;</p>
 
 <p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/04/11/qcon2011-qcon2011-ppt/">QCon2011讲师经验总结及QCon2011的ppt下载</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-04-11T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://img01.taobaocdn.com/imgextra/i1/T1pix8XnBbXXXgP6k._082702.jpg" alt="qcon 2011 ppt" /></p>
-
-<p>第一次作为讲师参加这样大规模的会议，经验不足，特总结一下：<br />
-1.虚心接受批评建议，诚心提高演讲技巧。<br />
-2.会前准备过份考虑切合当天大会主旋律。<br />
-3.铺垫过多，观众需要速食。<br />
-4.要讲的东西一定要放到ppt上，会场很大，由于音响回声，前半场需要讲师，后半场只需要幻灯播放员。<br />
-5.三段式的ppt最能快速切入主题：1）解决什么问题 2）用什么关键代码解决 3）在哪里下载<br />
-6.不谈构架，潜心解决实际问题。<br />
-7.10月份杭州QCon如果时间允许，再去分享更好的主题：米聊团队背后的技术，届时一定不忘记上面的6点。<br />
-如果您当天听了我的讲座有任何建议，欢迎以评论方式提出。<br />
-下面是ppt：
-<div style="width:425px" id="__ss_7581393"><strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/54chen/qcon201154chen" title="Qcon2011-54chen-互联网分步式构架分享">Qcon2011-54chen-互联网分步式构架分享</a></strong><object id="__sse7581393" width="425" height="355"><param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=qcon-110410191558-phpapp01&stripped_title=qcon201154chen&userName=54chen" /><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><embed name="__sse7581393" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=qcon-110410191558-phpapp01&stripped_title=qcon201154chen&userName=54chen" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="355"></embed></object><div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/54chen">zhen chen</a>.</div></div>
-QCon 2011 beijing官方下载地址 <a href="http://www.qconbeijing.com">http://www.qconbeijing.com</a>
-</p>
 </div>
   
   

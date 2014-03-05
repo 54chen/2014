@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="QCon是由C4Media媒体集团InfoQ网站主办的全球顶级技术盛会，每年在伦敦、旧金山、东京、北京召开。2009年4月，QCon首次登陆北 京。大会吸引了500多名架构师、项目经理、资深开发者和技术领导者、以及100多家企业的参与，并获得了业界空前的好评！2010年，QCon全球企业 开发大会 &hellip;">
+  <meta name="description" content="doubanclaimed89ad216b01beaf
+题注：感谢suchasplus兄弟在第一时间提示explain拼写错误~~~:) 对于经常使用mysql的兄弟们，对explain一定不会陌生。当你在一条SELECT语句前放上关键词EXPLAIN，MySQL解释它将如何处理SELECT， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +82,131 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/19/mysql-explain/">Mysql Explain详解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-19T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><p style="text-align: center;"><img class="aligncenter" src="http://img07.taobaocdn.com/bao/uploaded/i7/T1cRdAXeVlXXbDaB72_044910.jpg" alt="mysql explain" /></p></p>
+
+<p><span style="color: #ffffff;">doubanclaimed89ad216b01beaf</span>
+题注：感谢suchasplus兄弟在第一时间提示explain拼写错误~~~:)</p>
+
+<p>对于经常使用mysql的兄弟们，对explain一定不会陌生。当你在一条SELECT语句前放上关键词EXPLAIN，MySQL解释它将如何处理SELECT，提供有关表如何联合和以什么次序的信息。<br />
+借助于EXPLAIN，你可以知道<br />
+1)你什么时候必须为表加入索引以得到一个使用索引找到记录的更快的SELECT。<br />
+2)你也能知道优化器是否以一个最佳次序联结表。为了强制优化器对一个SELECT语句使用一个特定联结次序，增加一个STRAIGHT_JOIN子句。<br />
+官方的关于explain的文档在http://dev.mysql.com/doc/refman/5.1/en/using-explain.html（英文），本文可作为官方文献的不完整通俗读物。
+<h2><strong>使用的方法</strong></h2>
+EXPLAIN tbl_name<br />
+或：<br />
+EXPLAIN [EXTENDED] SELECT select_options</p>
+
+<p>前者可以得出一个表的字段结构等等，后者主要是给出相关的一些索引信息，而今天要讲述的重点是后者。
+<h2>举例</h2>
+mysql&gt; explain select * from event;<br />
++&#8212;-+&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;-+&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;-+<br />
+| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra |<br />
++&#8212;-+&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;-+&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;-+<br />
+|  1 | SIMPLE      | event | ALL  | NULL          | NULL | NULL    | NULL |   13 |       |<br />
++&#8212;-+&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;-+&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;-+<br />
+1 row in set (0.00 sec)
+<h2><strong>各个属性的含义</strong></h2>
+id<br />
+select查询的序列号</p>
+
+<p>select_type<br />
+select查询的类型，主要是区别普通查询和联合查询、子查询之类的复杂查询。</p>
+
+<p>table<br />
+输出的行所引用的表。</p>
+
+<p>type<br />
+联合查询所使用的类型。<br />
+type显示的是访问类型，是较为重要的一个指标，结果值从好到坏依次是：<br />
+system &gt; const &gt; eq_ref &gt; ref &gt; fulltext &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; index &gt; ALL<br />
+一般来说，得保证查询至少达到range级别，最好能达到ref。</p>
+
+<p>possible_keys<br />
+指出MySQL能使用哪个索引在该表中找到行。如果是空的，没有相关的索引。这时要提高性能，可通过检验WHERE子句，看是否引用某些字段，或者检查字段不是适合索引。</p>
+
+<p>key<br />
+显示MySQL实际决定使用的键。如果没有索引被选择，键是NULL。</p>
+
+<p>key_len<br />
+显示MySQL决定使用的键长度。如果键是NULL，长度就是NULL。文档提示特别注意这个值可以得出一个多重主键里mysql实际使用了哪一部分。</p>
+
+<p>ref<br />
+显示哪个字段或常数与key一起被使用。</p>
+
+<p>rows<br />
+这个数表示mysql要遍历多少数据才能找到，在innodb上是不准确的。</p>
+
+<p>Extra<br />
+如果是Only index，这意味着信息只用索引树中的信息检索出的，这比扫描整个表要快。<br />
+如果是where used，就是使用上了where限制。<br />
+如果是impossible where 表示用不着where，一般就是没查出来啥。<br />
+如果此信息显示Using filesort或者Using temporary的话会很吃力，WHERE和ORDER BY的索引经常无法兼顾，如果按照WHERE来确定索引，那么在ORDER BY时，就必然会引起Using filesort，这就要看是先过滤再排序划算，还是先排序再过滤划算。
+<h2><strong>常见的一些名词解释</strong></h2>
+Using filesort<br />
+MySQL需要额外的一次传递，以找出如何按排序顺序检索行。</p>
+
+<p>Using index<br />
+从只使用索引树中的信息而不需要进一步搜索读取实际的行来检索表中的列信息。</p>
+
+<p>Using temporary<br />
+为了解决查询，MySQL需要创建一个临时表来容纳结果。</p>
+
+<p>ref<br />
+对于每个来自于前面的表的行组合，所有有匹配索引值的行将从这张表中读取</p>
+
+<p>ALL<br />
+完全没有索引的情况，性能非常地差劲。</p>
+
+<p>index<br />
+与ALL相同，除了只有索引树被扫描。这通常比ALL快，因为索引文件通常比数据文件小。</p>
+
+<p>SIMPLE<br />
+简单SELECT(不使用UNION或子查询)
+<h2><strong>关于哥学社</strong></h2>
+<a style="color: #0b3b8c; text-decoration: none;" title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个自由博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。
+<h2><strong>关于五四陈</strong></h2>
+54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br />
+个人技术站点:<a style="color: #0b3b8c; text-decoration: none;" href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 czhttp@gmail.com 联系到他。
+<h2><strong>本文提及的文章</strong></h2>
+<a href="http://dev.mysql.com/doc/refman/5.1/en/using-explain.html">http://dev.mysql.com/doc/refman/5.1/en/using-explain.html</a></p>
+
+<p><a href="http://dev.mysql.com/doc/refman/5.1/zh/optimization.html#explain">http://dev.mysql.com/doc/refman/5.1/zh/optimization.html#explain</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -689,306 +815,6 @@ gabriel@dreamingcrow.com</p>
 	<li>兄弟是哪位呢，交换了明片没？:) @chaifeng: @<a href="http://twitter.com/54chen">54chen</a> 上午在 #<a href="http://search.twitter.com/search?q=%23QCon">QCon</a> 看见你上推了，真是不好意思，我站在你背后 ;-D <a href="http://twitter.com/54chen/statuses/12766738859">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/23/april-24-live-stream-qcon-posts/">4月24日QCon现场直播流水帖</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-04-23T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>才连接上3G，开始直播</p>
-
-<p>Eric Gamma因为冰岛火山灰原因，没能到，更换成了Scurm的主席</p>
-
-<p> </p>
-
-<p>1.scrum agile<br />
-30+years管理经验<br />
-存在的问题：<br />
-1.在公司和团队的环境中，存在沟通问题<br />
-2.组织的管理层没有关注到知识性的工作与体力性工作之间的差异<br />
-3.高技术的工作人员存在优先选择的问题<br />
-4.人们觉得我们不了解我们工作的复杂性</p>
-
-<p>agile宣言<br />
-四项价值观：<br />
-个体和交互重于过程和工具<br />
-可工作软件重于详尽的文档<br />
-。。<br />
-12个原则：</p>
-
-<p>要经常性地交互可用的软件，周期从几周到几个月不等到，交互的时间越短越好（经常和客户沟通）<br />
-最重要的一点：激励项目人员，调动工作经验，钱不是万能的<br />
-非常有意思的原则<br />
-面对面的交谈<br />
-可用的软件是衡量进度的主要指标<br />
-项目周期需要保持长期稳定，要有节奏，不要过多催促<br />
-技术的精益求精及对设计的不断完善将提升敏捷性<br />
-尽最大可能简洁<br />
-允许团队自己放手去做，相信你的团队成员，他们会犯错误但是可以理解的<br />
-团队经常地自我反省如何提高技术能力</p>
-
-<p>Scrum 不仅仅用在软件上，其他用途也是可以的<br />
-Scrum的角色职能<br />
-ScrumMaster的误解：这个角色不是项目经理，是为这个团队提供服务的。5-12个人组织团队<br />
-产品的backlog：产品功能表<br />
-任务表:sprint backlog 在实现上述的功能，我们要做些什么，这并不是真正意义上的时间表</p>
-
-<p>sprint planning:30天要完成这个工作<br />
-日常会议<br />
-sprint review<br />
-sprint retrospective</p>
-
-<p>是一种风险管理的方式，把风险降到最低，特别是大规模开发某个程序的话，可以规避这种风险<br />
-可以经常性问客户这样行不行<br />
-它是一个非常科学的方式</p>
-
-<p>三个原则能解决很多问题：<br />
-询问团队人员<br />
-检查代码、检查工作程序<br />
-快速提供成绩</p>
-
-<p>有许多问题会导致失败：<br />
-1.文化和不信任<br />
-2.投资人之间的交流不畅通<br />
-3.设计人员同时做多个项目<br />
-4.没有遵循sprint<br />
-5.外行人加以干涉<br />
-6.团队成员没有全力投入(我帮不了你，这不是我的事情)<br />
-7.scrum master成了项目经理<br />
-8.工作不够迅速</p>
-
-<p>被误解的一些：<br />
-Done:必须是可交互了<br />
-团队没有投入到改善工作中去<br />
-他们经常去探索问题而不解决<br />
-对个人的奖励而不是团队奖励</p>
-
-<p>Scrum doesn&#8217;t work in china<br />
-这哥们的图很牛B</p>
-
-<p>中国是共产主义国家，是可以使用scrum的</p>
-
-<p>文化对scrum的影响</p>
-
-<p>讲一个指数，power distance index<br />
-另一个：Cultural agility index<br />
-个人主义和集体主义的文化</p>
-
-<p>根据agility index 在中国是可行的 而且是更有利的执行</p>
-
-<p>管理人员的指令</p>
-
-<p>专业经理人官僚的作风</p>
-
-<p>中国的小道消息文化</p>
-
-<p>绩效的评估</p>
-
-<p>避免员工与家庭分开</p>
-
-<p>对成员要有耐心</p>
-
-<p><strong>下一个是facebook的memcache实战：</strong></p>
-
-<p><a href="mailto:memcache@facebook">memcache@facebook</a>
-企业的周五，穿正装<br />
-how big is facebook?<br />
-4亿用户<br />
-1000个服务器？？？错了，上千个服务器</p>
-
-<p>facebook memcache规模<br />
-400M gets/s<br />
-28M sets/s<br />
-2T<br />
-收：9.7M/s</p>
-
-<p>图很cool<br />
-facebook terms<br />
-tier：层级<br />
-cluster:数据中心<br />
-ToR:top of rack switch<br />
-memcache/memcached</p>
-
-<p>游戏中的memcache规则<br />
-get : on miss query data and set（这点我赞同）</p>
-
-<p>short profile<br />
-PHP并行数据查询：php polling IO  / 有一个PHP异步IO的方案？<br />
-用户的好友信息缓存效果并不是很好<br />
-把大数据和小数据分类</p>
-
-<p>序列化与压缩<br />
-fb-serialization:快3倍 小30%<br />
-gzompress serialized string</p>
-
-<p>mcproxy<br />
-scaling servers</p>
-
-<p>增加服务器<br />
-查5000个好友的时候 用UDP解决这个问题 测量时间<br />
-热门的页面：把key复制 公布热键<br />
-replicated keys</p>
-
-<p>举例说在profile表里的一个字段confirmed int:Mirrored keys</p>
-
-<p>mutexes：锁 （这个方案用图演示的，感觉会有可能出现一次出不来信息）</p>
-
-<p>公共主页的数据更新方案：多级memcache方案</p>
-
-<p>删除的一致性：schema-version</p>
-
-<p>delete replay:<br />
-delete can fail<br />
-log failed deletes<br />
-用了iptable</p>
-
-<p>McSQL</p>
-
-<p>测试：<br />
-你的动作要快，不要影响系统</p>
-
-<p>python and ctypes<br />
-write tests not test frameworks</p>
-
-<p>memcache今后的发展规划<br />
-有限的解决方案</p>
-
-<p><strong>下一位是：twitter</strong></p>
-
-<p><strong>twitter的大胡子哥们</strong>
-what&#8217;s real-time data?</p>
-
-<p>在讲什么是tweet<br />
-memcached for reads</p>
-
-<p>同声传译太烂了。。。<br />
-根据主键进行分区的例子</p>
-
-<p>根据主键进行分区的例子和根据用户进行分区会有困难</p>
-
-<p>twitter是根据时间来分区，一开始考虑不是很好的办法？这是一个非常临时性的分区方案，但也能满足99%的查询<br />
-将来的解决方式：nosql</p>
-
-<p>实时数据的解决方案：适时的服务</p>
-
-<p>通过offline的解决方案</p>
-
-<p>发布一个新的tweet在timeline里排序，当你tweet的时候开始推送</p>
-
-<p>通过提前的处理，可以提高处理量</p>
-
-<p>一个表格对比08和10的tweets速度</p>
-
-<p>只把数据保存到了内存里，是昂贵的</p>
-
-<p>发一推给所有人的时候，尽量在一秒内，而且要保证120万的推送量</p>
-
-<p>social graph:</p>
-
-<p>所有数据都从内存里读，单元性地读取数据，把问题从大化小。<br />
-按照用户分解数据</p>
-
-<p>数据二级索引<br />
-（看上去是复制两个维度的数据）</p>
-
-<p>flockDB?开源的</p>
-
-<p>分布性的存储中的数据一致性</p>
-
-<p>分区和索引变得越来越复杂了。。。</p>
-
-<p>(时间不够了。。)</p>
-
-<p>吃饭时间，下午再来。。。</p>
-
-<p>回来了，在大宴会厅听阿里巴巴国际站的架构。主要是境像。</p>
-
-<p>数据同步1.0</p>
-
-<p>SQL复制的方式会带来数据冲突，比如说批量操作。</p>
-
-<p>双站点应用拆分的问题。</p>
-
-<p>CAP原理</p>
-
-<p>写数据一致性和可用性</p>
-
-<p>读数据容忍一致性，境像</p>
-
-<p>结论：读应用更容易实现跨IDC的部署</p>
-
-<p>数据同步会放大数据不一致</p>
-
-<p>从设计上避免数据完整性的问题</p>
-
-<p>设计业务流程的时候需要避免跨IDC的WEB Flow</p>
-
-<p>阿里的读应用基本是从搜索来或者是cache来</p>
-
-<p>缺陷：</p>
-
-<p>双向同步的冲突</p>
-
-<p>解决业务冲突</p>
-
-<p>双站点扩展性已经好了很多</p>
-
-<p>进入第三阶段：多站点 全境像</p>
-
-<p>目标是所有机房的所有应用都必须有跨IDC的备份，数据亦然。</p>
-
-<p>数据同步瓶颈分析</p>
-
-<p>受制于为了满足数据一致性而对写入操作进行的排序</p>
-
-<p>数据同步2.0设计原则</p>
-
-<p>在数据库层面记录数据变更</p>
-
-<p>并行所有可以并行的内容</p>
-
-<p>有选择的侵入业务</p>
-
-<p>merge操作</p>
-
-<p>写应用的镜像方案：</p>
-
-<p>双master在实现复杂性上会带来问题</p>
-
-<p>可维护性提高</p>
-
-<p>（笔记本没电了。。。）</p>
-
-<p>后面还有“去哪儿”网站架构、人人网架构、新浪微博架构。。。晚上回去再补上来。。。</p>
 </div>
   
   
