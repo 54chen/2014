@@ -9,12 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="最终搞定，同步到疼讯 #
-这是一推发向腾讯微博的内容。 #
-王熙凤今天得了哮喘，说话声音怪怪的。 #
-今天的红楼梦，背景音乐很吓人 #
-大公司把多个子公司的产品简单地合成一个叫做“通行证”的做法显然是失败的，搜狐即是如此，看到那个登录，连找回密码的勇气都没有了。 #
-哈哈，有意思，看过的才明白 &hellip;">
+  <meta name="description" content="微博同步更新工具（包括腾讯微博） * 软件大小：24889B * 人气指数：970 * 软件语言：英文/中文 * 软件评级：1 * 开 发 商：http://cuies.com http://www.54chen.com * 软件类别：国内软件/微博同步 * 软件授权：免费开源版 * 运行环境： &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -86,6 +81,105 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/09/14/twitter/">[54chen山寨]发布微博同步更新工具（包括腾讯微博、百度说吧）9月16更新</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-09-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>微博同步更新工具（包括腾讯微博）</strong>
+    </p>
+
+<p><blockquote>*  软件大小：24889B<br />
+    * 人气指数：970 <br />
+    * 软件语言：英文/中文<br />
+    * 软件评级：1<br />
+    * 开 发 商：http://cuies.com http://www.54chen.com</blockquote></p>
+
+<p>    * 软件类别：国内软件/微博同步<br />
+    * 软件授权：免费开源版<br />
+    * 运行环境：Winxp/vista/win7/2000/2003/Linux/PHP<br />
+    * 更新时间：2010-9-14 10:24:44<br />
+    * 联 系 人：54chen<br />
+    * 支持：腾讯、新浪、网易、人人网、digu、做啥、follow5、人间、豆瓣、鲜果、9911
+</p>
+
+<p><strong><a href="http://www.54chen.com/web-ral/twitter.html">微博同步更新工具（包括腾讯微博）</a>软件简介</strong>
+<blockquote>此工具加工自cuies的tw2other，修改的地方有：<br />
+1.添加了QQ的支持<br />
+2.去除了twitter的callback的过程<br />
+3.简化了crontab的过程
+</blockquote>
+<strong><a href="http://www.54chen.com/web-ral/twitter.html">微博同步更新工具（包括腾讯微博）</a>使用步骤</strong>
+<blockquote>
+1.使用前修改host文件，准备php环境：<br />
+128.242.240.244 www.twitter.com <br />
+128.242.245.244 dev.twitter.com<br />
+128.242.240.244 twitter.com<br />
+128.242.240.221 api.twitter.com</blockquote></p>
+
+<p>2.申请twitter应用<br />
+在http://dev.twitter.com申请(不需要https，多刷新几次)，注意要是browser类型的，而且要打开读和写。<br />
+然后取到四个key填写到config.php中对应位置。（在dev.twitter.com（不是twitter.com/api）的右边菜单上有“my access token可取到两个ACESS_TOKEN”）</p>
+
+<p>3.如果使用腾讯微博，注意config.php中的密码是加密后的密文，非明文。本页提供了一个简单的js的加密，你可以简单使用，也可以把javascript复制下来自己运行。</p>
+
+<p>4.填写config.php里的四个twitter的key（从dev获取），填写想同步的账号信息。</p>
+
+<p>5.在twitter发一条消息，在本地执行 php  index.php（聪明的你肯定能想到，用crontab去定时执行）</p>
+
+<p>6.第一次执行，会一下子同步过去很多，后面有了记录了后就会一条一条地同步。</p>
+
+<p>7.看明白了不，是以twitter为核心的。如果想从其他地方同步，有许多同步到twitter的工具。enjoy it!
+</p>
+
+<p><strong><a href="http://www.54chen.com/web-ral/twitter.html">微博同步更新工具（包括腾讯微博）</a>注意事项</strong>
+<blockquote>1.QQ的登录是很BT的，在国外ip的地方，都要图形验证码，这一步是没有做的。<br />
+2.尽量在本机使用（上面都给了这么多的host了，在本机使用是多么方便的一件事情）<br />
+3.QQ登录需要计算一下密文，下面的框框用js计算的，放心使用。（何况在这里计算密码时只需要提供密码不需要QQ号）<br />
+4.所有产生的cookies文件都是使用后即删除，没有机会看到。<br />
+5.如果QQ微博发送失败，可能的原因有：1.QQ改登录算法了  2.你运行的ip环境要求输入图形验证码了（换地方运行或者用浏览器多登录几次试试）
+</blockquote></p>
+
+<p><strong><a href="http://www.54chen.com/web-ral/twitter.html">微博同步更新工具（包括腾讯微博）</a>下载地址</strong>
+<blockquote>
+点击下载源代码 <a href="http://www.54chen.com/tw2other-54chen-0916.tar.gz">http://www.54chen.com/tw2other-54chen-0916.tar.gz</a>
+</blockquote></p>
+
+<p><strong><a href="http://www.54chen.com/web-ral/twitter.html">微博同步更新工具（包括腾讯微博）</a>QQ密码加密器</strong>
+http://www.54chen.com/tqq.js里定义了按钮的onclick加密函数（绝无发起ajax请求）。
+<script type="text/javascript" src="/tqq.js"></script>
+<input type="text" value="请输入密码进行加密" id="pwd" size="50" /><input type="button" value="转换" onclick="trans(document.getElementById('pwd').value)" />
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -660,111 +754,6 @@ rose框架如何实现拦截器请看<a href="http://code.google.com/p/paoding-r
 	<li>rose pipe–一次对http技术的伟大革新实现（54chen乱弹版） <a href="http://goo.gl/fb/PCHZ8" rel="nofollow">http://goo.gl/fb/PCHZ8</a> <a href="http://twitter.com/54chen/statuses/21140470132">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/08/14/rose-pipe-http-54chen/">Rose Pipe–一次对http技术的伟大革新实现（54chen乱弹版）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-08-14T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img class="alignnone" src="http://img07.taobaocdn.com/imgextra/i7/T1cjJIXiJxXXaTrOk6_062158.jpg" alt="" width="450" height="335" /></p>
-
-<p>网站速度一直是互联网公司所关注的核心目标之一，作为SNS网站更是这样。来自世界第一大的打不开的SNS网站facebook的工程师日志中提到，BigPipe: Pipelining web pages for high performance。
-<blockquote>原文在墙外，豆瓣有存根，地址为<a href="http://9.douban.com/site/entry/139173635/">http://9.douban.com/site/entry/139173635/</a>。</blockquote></p>
-
-<p>来自infoq的一篇资料报道：<a href="http://www.infoq.com/cn/news/2010/08/bigpipe-facebook-optimize">http://www.infoq.com/cn/news/2010/08/bigpipe-facebook-optimize</a>
-它本意是充分利用http，将用户感受到的延迟时间降低<span style="color: #ff0000;">一半</span>，是如何做到的呢，下面由54chen流水记账一篇解释实现原理。院内曾经由人人网架构师王志亮大侠发表过一篇文章，地址是<a href="http://www.54chen.com/architecture/rose-open-source-portal-framework.html">http://www.54chen.com/architecture/rose-open-source-portal-framework.html</a>，本文将以此例中的项目举例。
-<strong>HTTP协议</strong>
-HTTP是一个客户端和服务器端请求和应答的标准，尽管TCP/IP协议是互联网上最流行的应用，HTTP协议并没有规定必须使用它和（基于）它支持的层。 事实上，HTTP可以在任何其他互联网协议上，或者在其他网络上实现。HTTP只假定（其下层协议提供）可靠的传输，任何能够提供这种保证的协议都可以被其使用。<br />
-在这里重新解释HTTP是为了后面做铺垫，一次http访问的过程如下：<br />
-1.打开一个连接后，客户机把请求消息送到服务器的停留端口上，完成提出请求动作；<br />
-2.服务器在处理完客户的请求之后，要向客户机发送响应消息；<br />
-3.客户和服务器双方都可以通过关闭套接字来结束TCP/IP对话。<br />
-在使用java的ServletResponse的时候，往往都是如下的操作返回结果到用户：
-<blockquote>out.write(sb.toString());<br />
-out.flush();<br />
-out.close();</blockquote>
-<strong>传统的WEB请求</strong></p>
-
-<p>以图1为例，一个WEB项目往往由不同的部分组成，不同的格局里往往代表需要从不同的数据表里去取不同的数据。
-<img src="http://img07.taobaocdn.com/bao/uploaded/i7/T1M_hCXiplXXXZgsbb_123302.jpg" alt="renren page" />
-图1 人人网公共主页页面</p>
-
-<p>一个用户来访问这个页面，按照传统的做法，其流程图可能是如图2这样的。
-<img src="http://img02.taobaocdn.com/imgextra/i2/T15jFIXbxsXXc0QmZW_024631.jpg" alt="54chen:rose pipe" />
-图2 一个传统的http请求过程<br />
-在图2中可以看到，一次打开网站页面的过程中，请求发到后端进行了处理（1和2步），只有当后端的取数据操作（2步）全部完成的时候，才可能进入第3步，向用户返回组装好的html页。如果说图1中一共有四个模块，对应后台有四条sql语句的话，那么，必须这四条sql语句全部返回了结果，才可能让用户看到页面。</p>
-
-<p><strong>pipe</strong>
-pipe技术充分利用了前后端技术。将一个页面里的多个模块分成不同的window，多线程取数据的操作，然后再充分利用http请求的连接，将原来的输出，从一次flush变成多次flush：
-<blockquote>out.write(“基础的dom”);<br />
-out.flush();<br />
-//数据一准备好时<br />
-out.write(“js带数据一”);<br />
-out.flush();<br />
-//数据十二准备好时<br />
-out.write(“js带数据二”);<br />
-out.flush();<br />
-out.close();</blockquote>
-其过程如图3所示：
-<img src="http://img05.taobaocdn.com/imgextra/i5/T13kJIXaNaXXatZfg2_044035.jpg" alt="54chen:rose pipe" />
-图3 pipe的请求过程<br />
-借用big pipe的代码，第一次是输出的：</p>
-
-<p><code>&lt;div&gt;<br />
-&lt;div id=”left_column”&gt;<br />
-&lt;div id=”pagelet_navigation”&gt;&lt;/div&gt;<br />
-&lt;/div&gt;<br />
-&lt;div id=”middle_column”&gt;<br />
-&lt;div id=”pagelet_composer”&gt;&lt;/div&gt;<br />
-&lt;div id=”pagelet_stream”&gt;&lt;/div&gt;<br />
-&lt;/div&gt;<br />
-&lt;div id=”right_column”&gt;<br />
-&lt;div id=”pagelet_pymk”&gt;&lt;/div&gt;<br />
-&lt;div id=”pagelet_ads”&gt;&lt;/div&gt;<br />
-&lt;div id=”pagelet_connect”&gt;&lt;/div&gt;<br />
-&lt;/div&gt;<br />
-&lt;/div&gt;</code></p>
-
-<p>当有了完整的dom结构时，浏览器就会开始显示没有数据的框架了。</p>
-
-<p>后面的数据每次都以js继续发送到页面中，浏览器收到即开始写入：
-<code>
-&lt;script type="text/javascript"&gt;<br />
-big_pipe.onPageletArrive({id: “pagelet_composer”, content=&lt;HTML&gt;, css=[..], js=[..], …})<br />
-&lt;/script&gt;</code></p>
-
-<p><strong>性能</strong>
-这种显示方式的性能，再借用facebook的图来表示之，如图4：
-<img src="http://sphotos.ak.fbcdn.net/hphotos-ak-snc3/hs539.snc3/30586_396772147199_9445547199_3988332_604391_n.jpg" alt="facebook:pipe" /></p>
 </div>
   
   

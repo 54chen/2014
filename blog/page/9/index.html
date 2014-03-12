@@ -9,9 +9,12 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="3.1.1) url对照规则——最简单的例子 先看看怎样把url和某个方法对应起来。为了方便说明，现在我们来一起完成一个极简版的贴吧。
-1)贴吧需要什么功能？ 贴吧中当然会有很多“主帖”（topic），“主帖”下会有很多“跟帖”（comment）。
-一般，贴吧中最基本的， &hellip;">
+  <meta name="description" content="nginx准备支持spdy，不错哦，http://t.co/ylumpRSn #
+@sosofaraway 去哪了哥 #
+@shenzhenyu 要使用0.5.0的thrift包。 #
+@roadli 这个是假的活动 #
+@PiouseLeo 哈哈，还没，不过只差最后这道工序了 #
+@Fenng &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +86,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/29/54chen-twitter-memo-2012-04-29/">54chen Twitter Memo 2012-04-29</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul class="aktt_tweet_digest">
+nginx准备支持spdy，不错哦，http://t.co/ylumpRSn </ul><a href="http://twitter.com/54chen/statuses/196062378117439488" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/sosofaraway" class="aktt_username">sosofaraway</a> 去哪了哥 <a href="http://twitter.com/54chen/statuses/195788513738891264" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/shenzhenyu" class="aktt_username">shenzhenyu</a> 要使用0.5.0的thrift包。 <a href="http://twitter.com/54chen/statuses/195780272950755328" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/roadli" class="aktt_username">roadli</a> 这个是假的活动 <a href="http://twitter.com/54chen/statuses/195780184803262464" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/PiouseLeo" class="aktt_username">PiouseLeo</a> 哈哈，还没，不过只差最后这道工序了 <a href="http://twitter.com/54chen/statuses/195779752198545408" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/Fenng" class="aktt_username">Fenng</a> 哪尼？ <a href="http://twitter.com/54chen/statuses/195777743995158528" class="aktt_tweet_time">#</a>
+IT从业人员京城摇号买车攻略，哈哈，有空写一写。 <a href="http://twitter.com/54chen/statuses/195746592198901763" class="aktt_tweet_time">#</a>
+rose手册第三章一节：controller层：url对照规则与返回结果规则 <a href="http://t.co/OZmQzv5w" rel="nofollow">http://t.co/OZmQzv5w</a> <a href="http://twitter.com/54chen/statuses/194647060354576384" class="aktt_tweet_time">#</a>
+roser 第3.1节，https://t.co/jMa5Xa7h，由团队的@vaporz 完成此节，是不是和之前的风格有点不一样，很细很有爱。 <a href="http://twitter.com/54chen/statuses/194642782604902400" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -708,112 +758,6 @@ senseidb使用手记 <a href="http://t.co/Zzw8Nn0r" rel="nofollow">http://t.co/Z
 senseidb使用手记 <a href="http://t.co/vJcor36O" rel="nofollow">http://t.co/vJcor36O</a> <a href="http://twitter.com/54chen/statuses/179520508717563904" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/03/13/senseidb-notes/">Senseidb使用手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-03-13T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://www.cgichina.com/uploads/allimg/c100706/12N3911E10-233O9.jpg" alt="linkedin, senseidb" />
-<strong>下载</strong>
-https://github.com/downloads/linkedin/sensei/sensei-1.0.0-release.tar.gz<br />
-这个版本是2012年1月份发布的，如果您看到此文时时间太久，请到他们的官方网站去寻找：http://senseidb.com</p>
-
-<p><strong>下载kafka</strong>
-kafka：由linkedin开源的高吞吐量的消息系统。<br />
-http://people.apache.org/~nehanarkhede/kafka-0.7.0-incubating/kafka-0.7.0-incubating-src.tar.gz</p>
-
-<p><strong>下载中文分词包IKAnalyzer</strong>
-http://code.google.com/p/ik-analyzer/downloads/list</p>
-
-<p><strong>编译sensei</strong>
-tar zxvf sensei-1.0.0-release.tar.gz<br />
-cd sensei-trunk<br />
-./bin/build.sh 或者 mvn package 要是没有maven客户端，需要自行安装（ubuntu下直接apt-get install maven）</p>
-
-<p><strong>编译kafka</strong>
-tar zxvf kafka-0.7.0-incubating-src.tar.gz <br />
-cd kafka-0.7.0-incubating-src/<br />
-./sbt<br />
-update<br />
-pacakge</p>
-
-<p><strong>编译IKA</strong>
-新建一个jar包，里面只有一个类，内容如下：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;IKAnalyzerFactory&nbsp;</span><span class="keyword">implements</span><span>&nbsp;SenseiPluginFactory&lt;IKAnalyzer&gt;&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;IKAnalyzer&nbsp;getBean(Map&lt;String,&nbsp;String&gt;&nbsp;initProperties,&nbsp;String&nbsp;fullPrefix,&nbsp;SenseiPluginRegistry&nbsp;pluginRegistry)&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">new</span><span>&nbsp;IKAnalyzer();&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;&nbsp;&nbsp;</span></li></ol></div>
-<strong>
-配置sensei的sensei.properties</strong>
-重要的几点：<br />
-1）zookeeper的url:
-<em>sensei.cluster.url=zookeeper.n.miliao.com:2181</em>
-2）IKA的class设置:
-<em>sensei.index.analyzer.class = com.chen.IKA.IKAnalyzerFactory</em>
-3）kafka所使用的声明:
-<em>sensei.gateway.class=com.senseidb.gateway.kafka.KafkaDataProviderBuilder<br />
-sensei.gateway.kafka.zookeeperUrl=zookeeper.n.miliao.com</em>
-#下面的topic很关键，消息系统中用topic区别不同的消息
-<em>sensei.gateway.kafka.topic=<font color="orange">hotTopic</font></em>
-#ProducerData生成时，也应该叫hotTopic</p>
-
-<p><strong>启动sensei</strong>
-略去了设置schema，可参考<a href="http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html">http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html</a>.</p>
-
-<p><blockquote>cd sensei-trunk<br />
-bin/start-sensei-node.sh example/xxx/conf</blockquote></p>
-
-<p><blockquote>(所有的使用的jar，比如说kafka\IKA及其依赖的包，都扔到conf/ext下)</blockquote></p>
-
-<p><strong>配置kafka的server.properties</strong>
-关键的一点：<br />
-1）设置kafka使用的zookeeper地址：</p>
-
-<p><blockquote>zk.connect=zookeeper.n.miliao.com:2181</blockquote></p>
-
-<p><strong>启动kafka</strong></p>
-
-<p><blockquote>cd kafka-0.7.0-incubating-src<br />
-nohup bin/kafka-server-start.sh config/server.properties &</blockquote></p>
-
-<p><strong>
-[如果你的schema定义无误，那么到这里你就可以通知kafka有消息进入，sensei就会自动开始消费这些消息进行索引等过程]</strong></p>
-
-<p>在具体业务中传入数据参考前文：<a href="http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html">http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html</a></p>
-
-<p><strong>
-发起搜索</strong>
- <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">static</span><span>&nbsp;JSONArray&nbsp;doSearch(String&nbsp;key,&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit,&nbsp;</span><span class="keyword">int</span><span>&nbsp;offset,&nbsp;String&nbsp;senseiServer)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;JSONException&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SenseiClientRequest&nbsp;senseiRequest&nbsp;=&nbsp;SenseiClientRequest.builder().query(Queries.stringQuery(key)).paging(limit,&nbsp;offset)&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.fetchStored(<span class="keyword">true</span><span>).build();&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SenseiResult&nbsp;senseiResult&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;SenseiServiceProxy(senseiServer,&nbsp;</span><span class="number">8080</span><span>).sendSearchRequest(senseiRequest);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;SenseiHit&gt;&nbsp;list&nbsp;=&nbsp;senseiResult.getHits();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONArray&nbsp;l&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;JSONArray();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(</span><span class="keyword">int</span><span>&nbsp;i&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;i&nbsp;&lt;&nbsp;list.size();&nbsp;i++)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SenseiHit&nbsp;hit&nbsp;=&nbsp;list.get(i);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;l.put(<span class="keyword">new</span><span>&nbsp;JSONObject(hit.getSrcdata()));&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;l;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p>____EOF____<br />
-2012.3.13 version 1</p>
 </div>
   
   

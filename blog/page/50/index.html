@@ -9,7 +9,11 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="半角范围：u0000 - u00FF, uFF61 - uFF9F, uFFE8 - uFFEE 全角范围： 全角数字(0-9) uFF10 - uFF19 全角大文字(A-Z): uFF21 - uFF3A 全角小文字(a-z): uFF41 - uFF5A 全角平仮名：u3040 - &hellip;">
+  <meta name="description" content="&lt;?php
+if ($EMAIL_INC) return;
+$EMAIL_INC=   &#8220;defined&#8221;;
+define( &#8220;SmtpPort&#8221;,25); class Pop3 {
+var $subject &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +85,487 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/08/22/php-send-and-receive-the-message/">PHP“收发”邮件的一个程序</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-08-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>&lt;?php<br />
+if ($EMAIL_INC) return;<br />
+$EMAIL_INC=   &#8220;defined&#8221;;<br />
+define( &#8220;SmtpPort&#8221;,25);</p>
+
+<p>class Pop3 {<br />
+var $subject;                           // 邮件主题<br />
+var $from_email;                        // 发件人地址<br />
+var $from_name;                         // 发件人姓名<br />
+var $to_email;                          // 收件人地址<br />
+var $to_name;                           // 收件人姓名<br />
+var $body;                              // 邮件内容<br />
+var $filename;                          // 文件名<br />
+var $socket;                  // 当前的 socket<br />
+var $Line;<br />
+var $Status;</p>
+
+<p>function pop3_open($server, $port)<br />
+{</p>
+
+<p>$this-&gt;Socket = fsockopen($server, $port);<br />
+if ($this-&gt;Socket &lt;= 0){<br />
+return false;<br />
+}
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return false;<br />
+return true;<br />
+}</p>
+
+<p>function pop3_user($user)<br />
+{</p>
+
+<p>if ($this-&gt;Socket &lt; 0){<br />
+return false;<br />
+}
+fputs($this-&gt;Socket,   &#8220;USER $this-&gt;user\r\n&#8221;);<br />
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return false;</p>
+
+<p>return true;<br />
+}</p>
+
+<p>function pop3_pass( $pass)<br />
+{</p>
+
+<p>fputs($this-&gt;Socket,   &#8220;PASS $pass\r\n&#8221;);<br />
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+
+<p>return 1;<br />
+}</p>
+
+<p>function pop3_stat()<br />
+{</p>
+
+<p>fputs($this-&gt;Socket,   &#8220;STAT\r\n&#8221;);<br />
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+
+<p>if (!eregi( &#8220;+OK (.*) (.*)&#8221;, $this-&gt;Line, $regs))<br />
+return 0;</p>
+
+<p>return $regs[1];<br />
+}</p>
+
+<p>function pop3_list()<br />
+{
+fputs($this-&gt;Socket,   &#8220;LIST\r\n&#8221;);<br />
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+
+<p>$i = 0;<br />
+while   (substr($this-&gt;Line   =   fgets($this-&gt;Socket, 1024),   0,   1)   &lt;&gt;    &#8220;.&#8221;)<br />
+{
+$articles[$i] = $this-&gt;Line;<br />
+$i++;<br />
+}
+$articles[ &#8220;count&#8221;] = $i;</p>
+
+<p>return $articles;<br />
+}</p>
+
+<p>function pop3_retr($nr)<br />
+{</p>
+
+<p>fputs($this-&gt;Socket,   &#8220;RETR $nr\r\n&#8221;);<br />
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+
+<p>while   (substr($this-&gt;Line   =   fgets($this-&gt;Socket, 1024),   0,   1)   &lt;&gt;    &#8220;.&#8221;)<br />
+{
+$data[$i] = $this-&gt;Line;<br />
+$i++;<br />
+}
+$data[ &#8220;count&#8221;] = $i;</p>
+
+<p>return $data;<br />
+}</p>
+
+<p>function pop3_dele( $nr)<br />
+{</p>
+
+<p>fputs($this-&gt;Socket,   &#8220;DELE $nr\r\n&#8221;);<br />
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;<br />
+return 1;<br />
+}</p>
+
+<p>function pop3_quit()<br />
+{</p>
+
+<p>fputs($this-&gt;Socket,   &#8220;QUIT\r\n&#8221;);<br />
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+
+<p>return 1;<br />
+}
+}</p>
+
+<p>class Smtp {</p>
+
+<p>var $Subject;               // string the email@#s subject<br />
+var $FromName;                  // string sender@#s name (opt)<br />
+var $ToName;                    // string recipient@#s name (opt)<br />
+var $Body;                      // string body copy<br />
+var $Attachment;          // attachment (optional)<br />
+var $AttachmentType;<br />
+var $Socket;<br />
+var $Line;<br />
+var $Status;</p>
+
+<p>function Smtp($Server =   &#8220;localhost&#8221;,$Port = SmtpPort)<br />
+{
+return $this-&gt;Open($Server, $Port);<br />
+}</p>
+
+<p>function SmtpMail($FromEmail, $FromName, $ToEmail, $ToName, $Subject, $Body, $Attachment=null, $AttachmentType= &#8220;TEXT&#8221;)<br />
+{
+$this-&gt;Subject    = $Subject;<br />
+$this-&gt;ToName     = $ToName;</p>
+
+<p>$this-&gt;FromName     = $FromName;<br />
+$this-&gt;Body       = $Body;</p>
+
+<p>$this-&gt;Attachment = $Attachment;<br />
+$this-&gt;AttachmentType = $AttachmentType;</p>
+
+<p>if ($this-&gt;Helo() == false){<br />
+return false;<br />
+}
+if ($this-&gt;MailFrom($FromEmail) == false){<br />
+return false;<br />
+}
+if ($this-&gt;RcptTo($ToEmail) == false){<br />
+return false;<br />
+}
+if ($this-&gt;Body() == false){<br />
+return false;<br />
+}
+if ($this-&gt;Quit() == false){<br />
+return false;<br />
+}
+}</p>
+
+<p>function Open($Server, $Port)<br />
+{</p>
+
+<p>$this-&gt;Socket = fsockopen($Server, $Port);<br />
+if ($this-&gt;Socket &lt; 0) return false;</p>
+
+<p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+
+<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;</p>
+
+<p>return true;<br />
+}
+function Helo()<br />
+{
+if (fputs($this-&gt;Socket,   &#8220;helo\r\n&#8221;) &lt; 0 ){<br />
+return false;<br />
+}
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+
+<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;</p>
+
+<p>return true;<br />
+}</p>
+
+<p>function Ehlo()<br />
+{</p>
+
+<p>/* Well, let@#s use &#8220;helo&#8221; for now.. Until we need the<br />
+extra func@#s    [Unk]<br />
+*/<br />
+if(fputs($this-&gt;Socket,   &#8220;helo localhost\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+
+<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;</p>
+
+<p>return true;<br />
+}</p>
+
+<p>function MailFrom($FromEmail)<br />
+{</p>
+
+<p>if (fputs($this-&gt;Socket,   &#8220;MAIL FROM: &lt;$FromEmail&gt;\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+
+<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;</p>
+
+<p>return true;<br />
+}</p>
+
+<p>function RcptTo($ToEmail)<br />
+{</p>
+
+<p>if(fputs($this-&gt;Socket,   &#8220;RCPT TO: &lt;$ToEmail&gt;\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+
+<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;<br />
+return true;<br />
+}</p>
+
+<p>function Body()<br />
+{
+$FileSize = 0;<br />
+$Attachment = null;<br />
+$fp = null;</p>
+
+<p>$buffer = sprintf( &#8220;From: %s\r\nTo:%s\r\nSubject:%s\r\n&#8221;, $this-&gt;FromName, $this-&gt;ToName, $this-&gt;Subject);</p>
+
+<p>if(fputs($this-&gt;Socket,   &#8220;DATA\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+
+<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;3&#8221;) return false;</p>
+
+<p>if(fputs($this-&gt;Socket, $buffer)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>if ($this-&gt;Attachment == null){</p>
+
+<p>if(fputs($this-&gt;Socket,   &#8220;MIME-Version: 1.0\r\nContent-Type: text/plain; charset=ISO-8859-1\r\nContent-Transfer-Encoding: 7bit\r\n\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}
+if(fputs($this-&gt;Socket,   &#8220;$this-&gt;Body\r\n\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>if(fputs($this-&gt;Socket,   &#8220;.\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+if (substr($this-&gt;Line, 0, 1) &lt;&gt;   &#8220;2&#8221;){<br />
+return false;<br />
+}else{<br />
+return true;<br />
+}
+}else{<br />
+if(fputs($this-&gt;Socket, &#8220;MIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=&#34;&#8212;-=_NextPart_000_01BCFA61.A3697360&#34;\r\n&#8221;.<br />
+&#8220;Content-Transfer-Encoding: 7bit\r\n\r\n&#8221;.<br />
+&#8220;This is a multi-part message in MIME format.\r\n&#8221;.<br />
+&#8220;\r\n&#8212;&#8212;=_NextPart_000_01BCFA61.A3697360\r\n&#8221;.<br />
+&#8220;Content-Type: text/plain; charset=ISO-8859-1\r\n&#8221;.<br />
+&#8220;Content-Transfer-Encoding: 7bit\r\n&#8221;.<br />
+&#8220;\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>/* 输出邮件内容 */<br />
+if(fputs($this-&gt;Socket,   &#8220;$this-&gt;Body\r\n\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>if ( fputs($this-&gt;Socket, &#8220;\r\n&#8212;&#8212;=_NextPart_000_01BCFA61.A3697360\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}
+$FileSize = filesize($this-&gt;Attachment);<br />
+if ($FileSize == false){<br />
+return false;<br />
+}
+if (($fp = fopen($this-&gt;Attachment, &#8220;r&#8221;))== false) {<br />
+return false;<br />
+}else{<br />
+$Attachment = fread($fp,$FileSize);<br />
+}</p>
+
+<p>// 如果没有附件的目录<br />
+if (($AttachName = strrchr($this-&gt;Attachment, @#/@#)) == false){</p>
+
+<p>$AttachName = $this-&gt;Attachment;<br />
+}</p>
+
+<p>if( fputs($this-&gt;Socket,<br />
+&#8220;Content-Type: application/octet-stream; \r\nname=&#34;$AttachName&#34;\r\n&#8221;.<br />
+&#8220;Content-Transfer-Encoding: quoted-printable\r\n&#8221;.<br />
+&#8220;Content-Description: $AttachName\r\n&#8221;.<br />
+&#8220;Content-Disposition: attachment; \r\n\tfilename=&#34;$AttachName&#34;\r\n&#8221;.<br />
+&#8220;\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>/* 输出附件*/<br />
+if( fputs($this-&gt;Socket, $Attachment)&lt;0){<br />
+return false;<br />
+}
+if ( fputs($this-&gt;Socket, &#8220;\r\n\r\n&#8212;&#8212;=_NextPart_000_01BCFA61.A3697360&#8211;\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>if( fputs($this-&gt;Socket, &#8220;.\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}</p>
+
+<p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
+if (substr($this-&gt;Line, 0, 1) &lt;&gt;   &#8220;2&#8221;)<br />
+return false;</p>
+
+<p>return true;</p>
+
+<p>}<br />
+}</p>
+
+<p>function Quit()<br />
+{</p>
+
+<p>if(fputs($this-&gt;Socket,   &#8220;QUIT\r\n&#8221;)&lt;0){<br />
+return false;<br />
+}
+$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+
+<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+
+<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return 0;</p>
+
+<p>return 1;<br />
+}
+function Close()<br />
+{
+fclose($this-&gt;Socket);<br />
+}
+}<br />
+/*</p>
+
+<p>怎样使用这个程序的一个示例</p>
+
+<p>$MailTo = new Smtp();<br />
+$MailTo-&gt;SmtpMail(&#8220;Dave@micro-automation.net&#8221;,&#8221;Dave Cramer&#8221;,<br />
+&#8220;Dave@micro-automation.net&#8221;,&#8221;David&#8221;,<br />
+&#8220;Test Mail&#8221;,$MailMessage,&#8221;service.tab&#8221;,0);<br />
+$MailTo-&gt;Close();<br />
+$MailTo=null;</p>
+
+<p>*/<br />
+/*<br />
+$pop3 = pop3_open(&#8220;localhost&#8221;, &#8220;110&#8221;);<br />
+if (!$pop3) {<br />
+printf(&#8220;[ERROR] Failed to connect to localhost&lt;BR&gt;\n&#8221;);<br />
+return 0;<br />
+}</p>
+
+<p>if (!pop3_user($pop3, &#8220;unk&#8221;)) {<br />
+printf(&#8220;[ERROR] Username failed!&lt;BR&gt;\n&#8221;);<br />
+return 0;<br />
+}</p>
+
+<p>if (!pop3_pass($pop3, &#8220;secret&#8221;)) {<br />
+printf(&#8220;[ERROR] PASS failed!&lt;BR&gt;\n&#8221;);<br />
+return 0;<br />
+}</p>
+
+<p>$articles = pop3_list($pop3);<br />
+if (!$articles) {<br />
+printf(&#8220;[ERROR] LIST failed!&lt;BR&gt;\n&#8221;);<br />
+return 0;<br />
+}</p>
+
+<p>for ($i = 1; $i &lt; $articles [&#8220;count&#8221;] + 1; $i++)<br />
+{
+printf(&#8220;i=$i&lt;BR&gt;\n&#8221;);<br />
+$data = pop3_retr($pop3,$i);<br />
+if (!$data) {<br />
+printf(&#8220;data goes wrong on @#$i@#&lt;BR&gt;\n&#8221;);<br />
+return 0;<br />
+}</p>
+
+<p>for ($j = 0; $j &lt; $data[&#8220;count&#8221;]; $j++)<br />
+{
+printf(&#8220;$data[$j]&lt;BR&gt;\n&#8221;);<br />
+}
+}<br />
+*/<br />
+?&gt;</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1096,60 +1581,6 @@ caoz告诉你，在apache 下，caoz所能达到的数字是4000万次，而且�
 <p>思考: MSNS</p>
 
 <p>[对话]待续</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/03/15/discuss-community-development-from-the-internet-to-see-the-school-bbs/">[讨论]从互联网社区发展看学校BBS</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-03-15T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p> 很欣慰学校的BBS能够打得开,即使是如此的慢(我的网络北京网通ADSL 1M).找了一个黑龙江的代理,总算可以打开发贴的页面了,看到blue的一席话,我也来鸟语几句,看完能明白的师弟师妹引以为介.看完觉得无聊的权当鸟语便罢.<br />
-      互联网从诞生开始,其目的就是信息的传达.<br />
-      中国第一个BBS是冒似是丁磊在电信局搭建的firebirdBBS(无从查证,这是他自己说的)&#8230;不过这足以说明火鸟系BBS的历史悠久.(我把从火鸟系统中繁殖出来的众多系统都算一个系列).另一个不得不提的第一,是曙光,看smth的源代码就知道这个名字了.这是在93\94年间,我们学校好像是在合并中吧&#8230;相信那时候我们学校的前辈们肯定还是依靠书信传达信息的&#8230;<br />
-      互联网瞬间进入了高校,那时候&#8230;我还没上高中吧&#8230;不过咱们学校的互联网建设是在2000年开始搞的吧,庆幸我已经上了高中了&#8230;[em21]<br />
-      全国高校BBS大动乱的时候,我们学校还没有BBS.<br />
-      后来,2004年左右的时候,国家工商开始全国所有网站的ICP备案(这是全世界首屈一指的动作哦&#8230;).接下来,高校BBS实名制.<br />
-      实名制闹得很厉害,水木BBS在这一闹中分离了一个校内一个校外,校外是以公司名义运营;北大的未名直接关站,后来也转向校内,直到后来两全其美站以替代未名站的姿态出现,同样以公司的名义运营(lqqm站长之一是我一同事).<br />
-      互联网的开放性,不适合国情,不适合社会.再往下写就要被定义成反动了.下面讲我们.</p>
-
-<p>      海天白云BBS,经过的风风雨雨估计是水木这些都没经历过的吧,因为我们总是经历灾难式的数据全部丢失事件.<br />
-      首先,从系统安全和技术实现层面来说.现在的系统比两年前的系统,进步肯定不是一个级别的,不管是硬件还是软件.这要归功于给予支持的学校各部门和站务组的同学们.<br />
-      其次,从BBS内容建设层面来说.现在和两年前对比,也算是有了进步.至少有更多的人在使用BBS了.然而,BBS离同学们究竟还有多远的距离,究竟还要花多长的时间,BBS和它的组织,才能成为一个成熟的系统组织,真正服务于同学,服务于学校.这些都是现在的站务组同学和老师值得深究的.<br />
-      再次,从管理组组成来说.一个合理的BBS管理组,最好且应该包括一半及以上的技术人员,另一部分是BBS活动组织策划管理人员.如果能长期保持这个比例且各成员都任意施展才华的话,BBS自然会长期健康有序发展.纵观站务组,值得沉思.<br />
-      最后,劲往一处使.互联网决策最忌拍脑袋的行为.</p>
-
-<p>有想沟通的同学可以来我空间,学校太慢看起来累&#8230;http://www.54chen.com<br />
-祝母校繁荣昌盛!祝海天白云BBS更加民主自由,更加强大!</p>
-
-<p>cc0cc</p>
 </div>
   
   
