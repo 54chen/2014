@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="http://t.co/ubbcGIuv http service test case首选。 #
-http://t.co/eJXNz8pe web test利器，还有更利的吗？ #
-riak-java-client 1.0.0 released；跟进riak1.0的同志们，可以更新了！ # &hellip;">
+  <meta name="description" content="基于0.14.2的记录，1.0的变化会在后续记录。 riak源码阅读手记一 初出茅庐 项目入口
+http://www.54chen.com/_linux_/riak-source.html
+riak源码阅读手记二 左右开弓 启动
+http://www.54chen.com/_linux_/riak &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +84,94 @@ riak-java-client 1.0.0 released；跟进riak1.0的同志们，可以更新了！
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/10/18/riak-source-notes-operation-supvisor-detail/">Riak源码阅读手记 操作列表及supervisorTree一览</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-10-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>基于0.14.2的记录，1.0的变化会在后续记录。
+<img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" />
+riak源码阅读手记一 初出茅庐 项目入口
+<a href="http://www.54chen.com/_linux_/riak-source.html">http://www.54chen.com/_linux_/riak-source.html</a>
+riak源码阅读手记二 左右开弓 启动
+<a href="http://www.54chen.com/_linux_/riak-cource-code.html">http://www.54chen.com/_linux_/riak-cource-code.html</a>
+riak源码阅读手记 运行安装
+<a href="http://www.54chen.com/_linux_/riak-source-install-run.html">http://www.54chen.com/_linux_/riak-source-install-run.html</a>
+一些常用的指令：
+<a href="http://wiki.basho.com/Command-Line-Tools.html#riak-admin">http://wiki.basho.com/Command-Line-Tools.html#riak-admin</a>
+riak源码阅读手记 压力测试
+<a href="http://www.54chen.com/_linux_/riak-benchmark.html">http://www.54chen.com/_linux_/riak-benchmark.html</a>
+riak源码阅读手记 操作列表及supervisorTree一览
+<a href="http://www.54chen.com/_linux_/riak-source-notes-operation-supvisor-detail.html">http://www.54chen.com/_linux_/riak-source-notes-operation-supvisor-detail.html</a>
+<strong>[山寨收集操作列表]</strong></p>
+
+<p>看系统状况，有各种内存cpu硬盘的情况<br />
+bin/riak-admin status</p>
+
+<p>节点更换新的ip地址：<br />
+如果是所有的节点都换，那在停下来集群，在每个节点都依次运行:<br />
+./riak-admin reip riak@192.168.103.9 riak@10.235.2.226<br />
+./riak-admin reip riak@192.168.97.48 riak@10.235.2.183<br />
+./riak-admin reip riak@192.168.100.52 riak@10.235.2.138</p>
+
+<p>依次去对应的节点，修改etc:
+<div class="chen-hl"><div class="bar"></div><ol class="dp-perl" start="1"><li class="alt"><span><span>sed&nbsp;-i&nbsp;&#8217;</span><span class="keyword">s</span><span>/192.168.103.9/10.235.2.226/g&#8217;&nbsp;app.config&nbsp;&nbsp;</span></span></li><li class=""><span>sed&nbsp;-i&nbsp;&#8217;<span class="keyword">s</span><span>/192.168.103.9/10.235.2.226/g&#8217;&nbsp;vm.args&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>sed&nbsp;-i&nbsp;&#8217;<span class="keyword">s</span><span>/192.168.97.48/10.235.2.183/g&#8217;&nbsp;app.config&nbsp;&nbsp;</span></span></li><li class="alt"><span>sed&nbsp;-i&nbsp;&#8217;<span class="keyword">s</span><span>/192.168.97.48/10.235.2.183/g&#8217;&nbsp;vm.args&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>sed&nbsp;-i&nbsp;&#8217;<span class="keyword">s</span><span>/192.168.100.52/10.235.2.138/g&#8217;&nbsp;app.config&nbsp;&nbsp;</span></span></li><li class=""><span>sed&nbsp;-i&nbsp;&#8217;<span class="keyword">s</span><span>/192.168.100.52/10.235.2.138/g&#8217;&nbsp;vm.args&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>进入运行着的集群：<br />
+./riak attach<br />
+ctrl+d退出</p>
+
+<p>看ring的分布情况：<br />
+>{ok,Ring} = riak_core_ring_manager:get_my_ring().</p>
+
+<p><strong>[看一点代码]</strong>
+riak_kv_app -> riak_core->riak_core_sup[supervisor]->
+riak_core_sup<br />
+|-riak_core_handoff_manager  handoff管理  gen_server<br />
+|-riak_core_handoff_listener    handoff接收  gen_nb_server<br />
+|-riak_core_ring_events           处理ring变化  gen_event<br />
+|-riak_core_ring_manager       ring管理   gen_server2<br />
+|-riak_core_node_watcher_events   节点侦察 gen_event<br />
+|-riak_core_node_watcher                节点 gen_server<br />
+|-riak_core_gossip                   gossip协议 gen_server</p>
+
+<p><strong>[riak里的自定义behaviour]</strong>
+-gen_nb_server from gen_server <br />
+-gen_server2   gen_server的一个拷贝 增加了pxxx的办法及增加了许多参数<br />
+-riak_core_vnode from gen_fsm<br />
+riak_kv:<br />
+-riak_kv_backend  Riak backend behaviour 
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -775,47 +864,6 @@ http://wiki.basho.com/Command-Line-Tools.html#riak-admin
 <p><strong>可配置的存储：</strong>
 1）riak默认是bitcast存储，还有innodb，开发者很勤快，甚至还有leveldb。<br />
 2）Cassandra一直就是SSTable。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/11/54chen-twitter-memo-2011-09-11/">54chen Twitter Memo 2011-09-11</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-11T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><ul class="aktt_tweet_digest">
-riak源码阅读手记 运行安装 </ul><a href="http://t.co/L5ocH6k" rel="nofollow">http://t.co/L5ocH6k</a> <a href="http://twitter.com/54chen/statuses/112117980162306048" class="aktt_tweet_time">#</a>
-在享受流量冲击带来的兴奋之余，是不是应该考虑，是根据10%的用户建议去做损害100%用户体验的事情，还是让100%的用户可以平滑地享受整个操作过程。大学的报课系统你用过吧？ <a href="http://twitter.com/54chen/statuses/110584568612003840" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-09-04 <a href="http://t.co/J7xsiSU" rel="nofollow">http://t.co/J7xsiSU</a> <a href="http://twitter.com/54chen/statuses/110172375898800129" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   

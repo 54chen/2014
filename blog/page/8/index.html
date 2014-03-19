@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="老人只写代码不写文档的公司注定是要混乱的。 #
-rose手册从3.6开始提供 mobi kindle电子书下载 持续更新 小米 bmw 团队荣誉出品（BasicMiliaoWare）https://t.co/lJDIVNDd #
-riak手册卖174.34港元，电子版的，要是在国内， &hellip;">
+  <meta name="description" content="3.7.1 什么是portal?
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211; *字面意思，做门户用的。
+*简单来说，把一个网页分成了N个区域，每个区域由不同的action去执行，多线程并行提高cpu使用率。 3.7.2 使用例子
+&# &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +84,88 @@ riak手册卖174.34港元，电子版的，要是在国内， &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/07/rose-3-7/">Rose手册第三章七节：controller层：门户必备portal支持</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" /></p>
+
+<p><strong>3.7.1 什么是portal?</strong>
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
+
+<p>*字面意思，做门户用的。<br />
+*简单来说，把一个网页分成了N个区域，每个区域由不同的action去执行，多线程并行提高cpu使用率。</p>
+
+<p><strong>3.7.2 使用例子</strong>
+&#8212;&#8212;&#8212;&#8211;</p>
+
+<p>*要使用portal，必须先在web.xml里声明所使用的线程池大小：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">context-param</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>portalExecutorCorePoolSize</span><span class="tag">&lt;/</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>1024</span><span class="tag">&lt;/</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">context-param</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>*然后看示例代码：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Get</span><span>(</span><span class="string">&#8220;/3.7&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;String&nbsp;portal(Portal&nbsp;portal)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;portal.addWindow(<span class="string">&#8220;p1&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;/wp1&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;portal.addWindow(<span class="string">&#8220;p2&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;/wp2&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;portal&#8221;</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span><span class="annotation">@Get</span><span>(</span><span class="string">&#8220;/wp1&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;String&nbsp;portal1()&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;@this&nbsp;is&nbsp;p1&#8221;</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="annotation">@Get</span><span>(</span><span class="string">&#8220;/wp2&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;String&nbsp;portal2()&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;@this&nbsp;is&nbsp;p2&#8221;</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>*然后在第一个action中的portal.jsp中写到：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-c" start="1"><li class="alt"><span><span>&lt;%@&nbsp;page&nbsp;contentType=</span><span class="string">&#8220;text/html;charset=UTF-8&#8221;</span><span>%&gt;&nbsp;&nbsp;</span></span></li><li class=""><span>portal演示信息：&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;br&gt;&nbsp;&nbsp;</span></li><li class=""><span>${p1}&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;br&gt;&nbsp;&nbsp;</span></li><li class=""><span>${p2}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>*当我们部属好了之后，访问http://127.0.0.1/3.7<br />
+*将从浏览器中得到：<br />
+ *portal演示信息：<br />
+ *this is p1<br />
+ *this is p2</p>
+
+<p><strong>3.7.3 这样子做的好处</strong>
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
+
+<p>*更加充分地使用多核cpu。<br />
+*更加方便多人协作时对项目进行模块划分，搞的时候，按照url一分，一个url一个模块，>所有的页面都可以切成小的豆腐块，所以，你懂的。</p>
+
+<p><strong>3.7.4 过去的经典事迹</strong>
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
+
+<p>* 2010年的6月9日晚上7点&#8221;圣战&#8221;<br />
+* <a href="http://www.54chen.com/architecture/rose-open-source-portal-framework.html">http://www.54chen.com/architecture/rose-open-source-portal-framework.html</a></p>
+
+<p> [文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。]</p>
+
+<p>常期更新版本在：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_7">https://github.com/XiaoMi/rose/tree/master/chapter_3_7</a></p>
+
+<p>                             
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -607,105 +690,6 @@ scala会越来越流行。 <a href="http://twitter.com/54chen/statuses/197970381
 快要败给这个官方读法了 <a href="http://t.co/wogMYjAg" rel="nofollow">http://t.co/wogMYjAg</a> <a href="http://twitter.com/54chen/statuses/197548342207713280" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/04/rose-3-2/">Rose手册第三章二节：controller层：拦截器支持</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-04T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" />
-<strong>3.2.1 拦截器作用</strong></p>
-
-<p>    面向切面编程（AOP）方法可以让一个项目更加关注核心逻辑，常见的一些最佳实践包括<br />
-        权限<br />
-        缓存<br />
-        错误处理<br />
-        延时加载<br />
-        调试<br />
-        持久化<br />
-        资源池<br />
-        等等。。。<br />
-    而此处的拦截器目标是在controller层提供各种在controller执行前、执行后的代码切入，以达到各种可AOP的目标。<br />
-    简单地说，拦截器能干的事情就是当你的项目写了一半时发现缺少啥全局要做的事情（比如需要验证权限），不用担心，搞一个拦截器就是了。</p>
-
-<p><strong>3.2.2 拦截器例子</strong></p>
-
-<p><blockquote>public class AccessTrackInterceptor extends ControllerInterceptorAdapter {<br />
-    public AccessTrackInterceptor() {<br />
-    setPriority(29600);<br />
-    }<br />
-    @Override<br />
-    public Class<? extends Annotation> getRequiredAnnotationClass() {<br />
-        return PriCheckRequired.class; // 这是一个注解，只有标过的controller才会接受这个拦截器的洗礼。<br />
-    }<br />
-    @Override<br />
-    public Object before(Invocation inv) throws Exception {<br />
-        // TODO &#8230;.<br />
-    return super.before(inv);<br />
-    }</blockquote></p>
-
-<p>    @Override<br />
-    public void afterCompletion(final Invocation inv, Throwable ex) throws Exception {<br />
-    // TODO &#8230;.<br />
-    }<br />
-}
-</p>
-
-<p><strong>需要注意几点：</strong></p>
-
-<p>    拦截器要放在controllers下(高级用法:打在rose-jar包里，参见5.1)<br />
-    继承net.paoding.rose.web.ControllerInterceptorAdapter<br />
-    按照实现的方法名，在controller执行前、中、后执行：<br />
-        before：在controller执行前执行。<br />
-        after：在controller执行中（后）执行，如果一个返回抛出了异常，则不会进来。<br />
-        afterCompletion：在controller执行后执行，不论是否异常，都会进来。<br />
-        isForAction：定义满足某条件的才会被拦截。</p>
-
-<p><strong>3.2.3 拦截器可动的位置细节</strong></p>
-
-<p>    上面都讲得差不多了，实际上还有不少地方可以拦截的：<br />
-        isForDispatcher：根据响应的情况判断是否拦截，比如说是正常请求、内部forward、还是include （但是没用过）<br />
-        setPriority：设置一个数字表示拦截优先级，当有多个拦截器时，要精准控制，数字小的内层，大的在外层，在最外层的before方法最先执行，大家都执行完后它的after才最后执行。<br />
-        round：这才是真正的controller执行中执行，不过用得很少。<br />
-        getRequiredAnnotationClass：返回一个Annotation class name，表示这个拦截器只对此Annotation标过的controller才生效。常用。</p>
-
-<p><strong>3.2.4 实际应用场景</strong></p>
-
-<p>    全站是否登录判断相关的逻辑，写在一个拦截器里，一次完成后，其他地方不再关心这个代码，在需要登录才能做的controller上注解一下，表示需要被执行拦截。<br />
-    日志收集的逻辑，在一个拦截器里进行当前的access log记录。<br />
-    权限体系的逻辑，写在一个拦截器里，在对应的操作上作注解，拦截器中进行细节的判断，新加的api也只是需要一次注解就得到了权限的判断。</p>
-
-<p>[文中所提代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a>]<br />
-常期更新版本在：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_2">https://github.com/XiaoMi/rose/tree/master/chapter_3_2</a></p>
 </div>
   
   

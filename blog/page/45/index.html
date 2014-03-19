@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content=" 5.1.24版本的配置请看：http://www.masalife.com/archives/173 一、先修改服务器的配置文件        1、Master服务器配置简单，修改my.cnf为:        server-id       = 1 log-bin set-variable= &hellip;">
+  <meta name="description" content="数据库服务器的时间与真实时间一旦出现差异，就要对数据库服务器进行时间同步。很多地方都把ntpdate放到cron中，5分钟自动同步一次。然而，这么做，常常会引会数据库ORA-01555，甚至db crash。 找到一种方法据说可以解决这个问题。即使用ntpd -x来同步时间 instead of　 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,74 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/17/%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5%E5%BC%95%E8%B5%B7oracle-%E4%B8%8D%E7%A8%B3%E5%AE%9A%E7%9A%84%E9%97%AE%E9%A2%98/">如何解决时间同步引起oracle 不稳定的问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-17T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>数据库服务器的时间与真实时间一旦出现差异，就要对数据库服务器进行时间同步。很多地方都把ntpdate放到cron中，5分钟自动同步一次。然而，这么做，常常会引会数据库ORA-01555，甚至db crash。</p>
+
+<p>找到一种方法据说可以解决这个问题。即使用ntpd -x来同步时间 instead of　ntpdate。<br />
+实际上ntpd，不只是一种时间服务器的server端，同时也可以做client端，相当于ntpdate。当它做client时，与ntpdate的差别是，ntpdate已近淘汰，ntpd则可看作是它升级版。<br />
+　
+下面的方法是讲如何在linux的环境中设置ntpd：</p>
+
+<p>1. 修改/etc/ntp.conf</p>
+
+<p>2. 加入time server。每个数据库中心都应用会有一组时间服务器，可以找sa要， 比如国际站，加入：</p>
+
+<p>server ntp1.alibaba.com<br />
+server ntp2.alibaba.com<br />
+server ntp3.alibaba.com</p>
+
+<p>ntp.conf有很多参数，都忽略就行。</p>
+
+<p>3. 修改/etc/sysconfig/ntpd， 加入-x参数，变成：</p>
+
+<p>OPTIONS=&#8221;-U ntp -x -p /var/run/ntpd.pid&#8221;</p>
+
+<p>这据说是为db同步所要求的。</p>
+
+<p>4. 首先同步一次时间：<br />
+ntpdate time.nist.gov; hwclock &#8211;systohc</p>
+
+<p>如果数据库还要在运行，建议不要这么做。待例行维护时再处理。</p>
+
+<p>5. 然后启动ntpd：<br />
+/etc/init.d/ntpd start</p>
+
+<p>6. 最后加入到自动启动列表：<br />
+chkconfig &#8211;level 2345 ntpd on</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -928,145 +996,6 @@ initrd (hd0,0)/initrd.gz</p>
 <p>5.RAR包：后缀为.rar</p>
 
 <p>这个包应该比较好理解，它是资源适配器模块，包括java连接器，帮助库函数，以及其他一些相关资源。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/12/26/windowsxp%E5%AE%89%E8%A3%85jdk15-jboss4-tips/">windowsXP安装jdk1.5 Jboss4 Antx Tips</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-12-26T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>1.jdk 1.5(也就是5)</p>
-
-<p>文件名：java_ee_sdk-5_01-windows.exe</p>
-
-<p>下载地址：http://cds-esd.sun.com/ESD28/JSCDL/java_ee_sdk/5.0_01-fcs/java_ee_sdk-5_01-windows.exe?AuthParam=1230186860_df7d73a40e743135e1323ad74ae1cd16&amp;TicketId=B%2Fw5lx%2BGTl1OShVEMlBdkgPg&amp;GroupName=CDS&amp;FilePath=/ESD28/JSCDL/java_ee_sdk/5.0_01-fcs/java_ee_sdk-5_01-windows.exe&amp;File=java_ee_sdk-5_01-windows.exe</p>
-
-<p>双击安装至：C:\Sun\SDK</p>
-
-<p>环境变量设置：</p>
-
-<p>JAVA_HOME：C:\Sun\SDK\jdk</p>
-
-<p>classpath：.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar;</p>
-
-<p>PATH：%JAVA_HOME%\bin;</p>
-
-<p> </p>
-
-<p>2.jboss 4.02</p>
-
-<p>文件名：jboss-4.0.2.zip</p>
-
-<p>下载地址：http://nchc.dl.sourceforge.net/sourceforge/jboss/jboss-4.0.2.zip</p>
-
-<p>双击解压缩到：D:\jboss\</p>
-
-<p>环境变量：</p>
-
-<p>JBOSS_PATH：D:\jboss\jboss-4.0.2</p>
-
-<p> </p>
-
-<p>3.antx</p>
-
-<p>svn co &#8230;. antx</p>
-
-<p>目录：D:\antx</p>
-
-<p>运行：build.bat</p>
-
-<p>环境变量：</p>
-
-<p>ANTX_HOME：D:\antx\dist\antx</p>
-
-<p>PATH：D:\antx\dist\antx\bin</p>
-
-<p> </p>
-
-<p>4.hesper</p>
-
-<p>代码： svn co hesper</p>
-
-<p>配置antx构建工程：C:\Documents and Settings\dongfangbai\antx.properties
-<blockquote>antx.properties释义：</blockquote></p>
-
-<p>antx.repository.project  = d:/antx/repository.project(二方库的位置，修改成你自己的)</p>
-
-<p>hesper.output  = D:/work/logs/hesper（hesper的日志指定目录，修改成你自己的）</p>
-
-<p>hesper.vmcommon.path  = D:/work/vmcommon（公共模板文件目录，修改成你自己的）
-进入代码文件夹构建工程：antx reactor goals=default,eclipse</p>
-
-<p>导入eclipse：导入现有的工程-&gt;指向hesper主目录</p>
-
-<p> </p>
-
-<p>5.ear发布至jboss</p>
-
-<p>修改jboss配置(修改默认的发布目录为自己的开发目录，这样不用来回复制了)：</p>
-
-<p>D:\jboss\jboss-4.0.2\server\default\conf\jboss-service.xml
-<blockquote> &lt;attribute name=&#8221;URLs&#8221;&gt;</blockquote></p>
-
-<p>         deploy/,file:/D:\dev\hesper\deploy\target（你自己的目录）</p>
-
-<p> &lt;/attribute&gt;</p>
-
-<p> 
-修改jboss配置（修改默认端口为80）：</p>
-
-<p>D:\jboss\jboss-4.0.2\server\default\deploy\jbossweb-tomcat55.sar\server.xml</p>
-
-<p> 
-<blockquote> &lt;Connector port=&#8221;80&#8221; address=&#8221;${jboss.bind.address}&#8221;</blockquote></p>
-
-<p>         maxThreads=&#8221;250&#8221; strategy=&#8221;ms&#8221; maxHttpHeaderSize=&#8221;8192&#8221;</p>
-
-<p>         emptySessionPath=&#8221;true&#8221;</p>
-
-<p>         enableLookups=&#8221;false&#8221; redirectPort=&#8221;8443&#8221; acceptCount=&#8221;100&#8221;</p>
-
-<p>         connectionTimeout=&#8221;20000&#8221; disableUploadTimeout=&#8221;true&#8221;/&gt;
- </p>
-
-<p> </p>
-
-<p>修改jboss配置（加虚拟目录，这个是意思意思&#8230;说不好哪天会使用&#8230;）：</p>
-
-<p>D:\jboss\jboss-4.0.2\server\default\deploy\jbossweb-tomcat55.sar\server.xml</p>
-
-<p>找到&lt;Host name=&#8221;localhost&#8221;</p>
-
-<p>            autoDeploy=&#8221;false&#8221; deployOnStartup=&#8221;false&#8221; deployXML=&#8221;false&#8221;&gt; 下一行添加：
-<blockquote>&lt;Context   path=&#8221;/h&#8221;   docBase=&#8221;D:\dev&#34;   debug=&#8221;0&#8221;   reloadable=&#8221;false&#8221;/&gt;</blockquote></p>
 </div>
   
   

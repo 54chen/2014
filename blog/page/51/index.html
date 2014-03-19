@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content=" 很欣慰学校的BBS能够打得开,即使是如此的慢(我的网络北京网通ADSL 1M).找了一个黑龙江的代理,总算可以打开发贴的页面了,看到blue的一席话,我也来鸟语几句,看完能明白的师弟师妹引以为介.看完觉得无聊的权当鸟语便罢.
-      互联网从诞生开始,其目的就是信息的传达.
-      &hellip;">
+  <meta name="description" content="ethereal居然自己就分析了msn messager service&#8230; [登录] DNS -&gt; TCP 建立TCP连接后,开始发文. 1.本地向Hi发: 内容可能加密了,没看出什么来 1.1 Hi返回:按照MSN协议,应该是返回一个地址了,不过登录前后的Hi-ip一直都没变, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +81,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/04/01/baidu-hi-ethereal-protocol-analysis/">百度hi通讯协议 抓包分析</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>ethereal居然自己就分析了msn messager service&#8230;</p>
+
+<p>[登录]</p>
+
+<p>DNS -&gt; TCP</p>
+
+<p>建立TCP连接后,开始发文.</p>
+
+<p>1.本地向Hi发: 内容可能加密了,没看出什么来</p>
+
+<p>1.1 Hi返回:按照MSN协议,应该是返回一个地址了,不过登录前后的Hi-ip一直都没变,估计不是这样子实现的.</p>
+
+<p>1.2 本地响应给Hi: 乱七八糟</p>
+
+<p>1.3&#8230;循环五次左右&#8230;大都是乱的&#8230;</p>
+
+<p>思考: MSNS</p>
+
+<p>[对话]待续</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1075,81 +1127,6 @@ __asm__(<br />
 <p>//tmp变了;<br />
 }
 这来自一段用过的加密过程中，8位的tmp变量传入了内嵌的汇编中，一通翻江倒海后变了。。。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2006/10/25/linux-c-to-obtain-the-machine-mac-and-ip-2-functions/">Linux C获取机器MAC及IP的两个函数</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2006-10-25T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.25 转载请注明原文链接：<a href="http://www.54chen.com/c/28">http://www.54chen.com/c/28</a>]</p>
-
-<p>以下两函数分别将mac ip通过memcpy至mac_addr和ip_addr<br />
-char *<br />
-get_mac()<br />
-{
-int nSocket;<br />
-struct ifreq struReq;<br />
-nSocket = socket(PF_INET,SOCK_STREAM,0);<br />
-memset(&amp;struReq,0,sizeof(struReq));<br />
-strncpy(struReq.ifr_name, &#8220;eth0&#8221;, sizeof(struReq.ifr_name));<br />
-ioctl(nSocket,SIOCGIFHWADDR,&amp;struReq);<br />
-close(nSocket);<br />
-memcpy(mac_addr,(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data),strlen((char<br />
-*)ether_ntoa(struReq.ifr_hwaddr.sa_data)));<br />
-return 0;<br />
-}
-char *<br />
-get_ip()<br />
-{
-int sock;<br />
-struct sockaddr_in sin;<br />
-struct ifreq ifr;<br />
-sock = socket(AF_INET, SOCK_DGRAM, 0);<br />
-if (sock == -1)<br />
-{
-perror(&#8220;socket&#8221;);<br />
-return &#8220;&#8221;;<br />
-}
-strncpy(ifr.ifr_name, &#8220;eth0&#8221;, sizeof(ifr.ifr_name));<br />
-if (ioctl(sock, SIOCGIFADDR, &amp;ifr) &lt; 0)<br />
-{
-perror(&#8220;ioctl&#8221;);<br />
-return &#8220;&#8221;;<br />
-}
-memcpy(&amp;sin, &amp;ifr.ifr_addr, sizeof(sin));<br />
-close(sock);<br />
-memcpy(ip_addr,inet_ntoa(sin.sin_addr),strlen(inet_ntoa(sin.sin_addr)));<br />
-return &#8220;&#8221;;<br />
-}</p>
 </div>
   
   

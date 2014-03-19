@@ -9,7 +9,11 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="KeepAliveTimeout 5 是允许用户保持连接5秒内有效，如果用户在5秒内点击其他页面不需要重新建立联结，这个值设置短不利于降低效率，如果设置长可能导致的同时联结数会跟高，一般建议按照缺省的15 MaxKeepAliveRequests 这个缺省是100 你这个设置太高了， &hellip;">
+  <meta name="description" content="[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.25 转载请注明原文链接：http://www.54chen.com/c/28] 以下两函数分别将mac ip通过memcpy至mac_addr和ip_addr
+char *
+get_mac()
+{
+int nSocket; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +85,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/10/25/linux-c-to-obtain-the-machine-mac-and-ip-2-functions/">Linux C获取机器MAC及IP的两个函数</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-25T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.25 转载请注明原文链接：<a href="http://www.54chen.com/c/28">http://www.54chen.com/c/28</a>]</p>
+
+<p>以下两函数分别将mac ip通过memcpy至mac_addr和ip_addr<br />
+char *<br />
+get_mac()<br />
+{
+int nSocket;<br />
+struct ifreq struReq;<br />
+nSocket = socket(PF_INET,SOCK_STREAM,0);<br />
+memset(&amp;struReq,0,sizeof(struReq));<br />
+strncpy(struReq.ifr_name, &#8220;eth0&#8221;, sizeof(struReq.ifr_name));<br />
+ioctl(nSocket,SIOCGIFHWADDR,&amp;struReq);<br />
+close(nSocket);<br />
+memcpy(mac_addr,(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data),strlen((char<br />
+*)ether_ntoa(struReq.ifr_hwaddr.sa_data)));<br />
+return 0;<br />
+}
+char *<br />
+get_ip()<br />
+{
+int sock;<br />
+struct sockaddr_in sin;<br />
+struct ifreq ifr;<br />
+sock = socket(AF_INET, SOCK_DGRAM, 0);<br />
+if (sock == -1)<br />
+{
+perror(&#8220;socket&#8221;);<br />
+return &#8220;&#8221;;<br />
+}
+strncpy(ifr.ifr_name, &#8220;eth0&#8221;, sizeof(ifr.ifr_name));<br />
+if (ioctl(sock, SIOCGIFADDR, &amp;ifr) &lt; 0)<br />
+{
+perror(&#8220;ioctl&#8221;);<br />
+return &#8220;&#8221;;<br />
+}
+memcpy(&amp;sin, &amp;ifr.ifr_addr, sizeof(sin));<br />
+close(sock);<br />
+memcpy(ip_addr,inet_ntoa(sin.sin_addr),strlen(inet_ntoa(sin.sin_addr)));<br />
+return &#8220;&#8221;;<br />
+}</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

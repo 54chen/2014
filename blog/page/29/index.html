@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="如果你正在使用nginx+php，请关注。 表像： 具体的重现过程，用php代码修改后缀名后上传，比如说www.xxx.com/1.jpg，访问的时候用www.xxx.com/1.jpg/xxx.php
-这段jpg代码将会被执行！！！
-http://docs.php.net/manual/zh/ &hellip;">
+  <meta name="description" content="在过去的两年里，ubuntu发展迅速，快速成为了技术人员居家工作旅行必备系统。54chen从8.04开始从fc系列（RH的后续个人系统）换到ubuntu来使用，期间连续发布了多篇使用ubuntu各个版本的安装和使用手记。54chen作为互联网最早的ubuntu&#8221;义务推广员&#8221 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +81,117 @@ http://docs.php.net/manual/zh/ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/20/update-ubuntu-1004-installed-hard-disk-notes/">[更新]ubuntu 10.04 硬盘安装手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-20T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img07.taobaocdn.com/bao/uploaded/i7/T1CCxAXlthXXcwnIIY_025651.jpg" alt="技术娱乐" />
+在过去的两年里，ubuntu发展迅速，快速成为了技术人员居家工作旅行必备系统。54chen从8.04开始从fc系列（RH的后续个人系统）换到ubuntu来使用，期间连续发布了多篇使用ubuntu各个版本的安装和使用手记。54chen作为互联网最早的ubuntu&#8221;义务推广员&#8221;，一路看到了ubuntu队伍的发展和壮大。</p>
+
+<p>安装的记录：
+<a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/">ubuntu 8.10 desktop版本 硬盘安装手记</a>
+<a rel="bookmark" href="http://www.54chen.com/_linux_/11-return-ubuntu-910-notes-from-the-hard-disk-installation.html">[十一归来]ubuntu 9.10 硬盘安装手记</a>
+还有许多配置相关的手记。</p>
+
+<p>10.04的发布：2010年4月29日(看上去是这样的，四月份发布的都是长期支持的版本，后缀里有一个LTS的标识，同时4月份出的版本往往也是没有啥巨大动作的。)</p>
+
+<p>根据官方总结，Ubuntu 10.04中将会具有以下全新特性：</p>
+
+<p>       快速启动：在几乎所有机型上的启动速度都明显更快，在使用固态硬盘(SSD)的笔记本电脑或者上网本等机型上的速度超快。这意味着用户可以开机后立即进入浏览器，快速访问网站。</p>
+
+<p>　　 起点社交：Ubuntu 10.04LTS桌面版新的“Me Menu”(我的菜单)整合了社交网站如Facebook、Digg、Twitter和Identica，使得各个网站的登录和个人信息更新一次完成。 Me Menu的聊天软件，支持同时登录QQ、MSN、Google Talk等多个应用程序，和朋友或者同事聊天。（没有出现本土化的SNS和微博，墙干净了，没啥用）</p>
+
+<p>　　Ubuntu One：增强的在线服务桌面整合功能意味着用户可以更容易地使用云端服务存储、分享和同步文件及文件夹、浏览器书签和通讯录，使得从个人计算机向个人计算应用的演进更进一步。</p>
+
+<p>　　Ubuntu One音乐库：Ubuntu用户可直接使用默认音乐播放器试听全球巨星和著名乐队的作品。用户购买的乐曲将会直接存储在云端的Ubuntu One存储空间中，并可在自己的多台电脑和音乐播放设备上调用和播放。(限无数字版权管理DRM-Free的音乐)</p>
+
+<p>　　Ubuntu软件中心2.0：使用界面更加简洁友好，轻松完成寻找、安装新的应用程序以及查看和删除已安装程序的过程。用户还可直观辨别来自 Ubuntu、Canonical合作伙伴或者使用 Canonical Launchpad PPA服务的开发人员的所提供的软件。</p>
+
+<p>　　Ubuntu 10.04 上网本版(UNE)：除了标准版本拥有的新功能，上网本用户还能在基于固态硬盘(SSD)设备上享受到超快的启动速度，更快的挂起/恢复速度可以进一步延长电池使用时间，当然还包括针对这些小屏幕定制的业界领先的界面。<br />
+与9.10相比，Amazon机器镜像的事情没有被继续做深，期待10.10（十全十美）的版本中的表现。</p>
+
+<p>以下是安装步骤记录：</p>
+
+<p><strong>下载：</strong></p>
+
+<p><a href="http://releases.ubuntu.com/lucid/">http://releases.ubuntu.com/lucid/</a></p>
+
+<p>大小600M左右，提示一下下，如果有个2G的U盘啥的，用U盘来安装可以省去很多事情（装进U盘，从U盘启动即可安装）。</p>
+
+<p>改名为ubuntu10.iso，放在了D：根目录里，用winrar打开，解压casper文件下的两个文件到c盘根目录。</p>
+
+<p>vmlinuz   和 initrd.lz</p>
+
+<p><strong>winGrub配置：</strong>
+很高兴这个老机器安装了一个fedora core5和win2k，n年前的系统，从来不换系统，有毒杀毒，有病治病。</p>
+
+<p>winGrub的安装见 <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/"><span style="font-size: x-small; font-family: Arial; color: #3366cc;">ubuntu 8.10 desktop版本 硬盘安装手记</span></a> 前半部分内容。</p>
+
+<p>所以系统中已经有一个之前的GRLDR了，现在抄一下boot.ini和menu.lst</p>
+
+<p>C:\boot.ini
+<blockquote>[boot loader]<br />
+timeout=5<br />
+default=multi(0)disk(0)rdisk(0)partition(1)\WINNT<br />
+[operating systems]<br />
+multi(0)disk(0)rdisk(0)partition(1)\WINNT=”Microsoft Windows 2000 Professional” /fastdetect<br />
+C:\GRLDR=”Linux”</blockquote>
+C:\boot\grub\menu.lst
+<blockquote>timeout 15</blockquote></p>
+
+<p>title 1. install Ubuntu10.04<br />
+root (hd0,0)<br />
+kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu10.iso ro quiet splash –<br />
+label check live-install<br />
+initrd (hd0,0)/initrd.lz
+<strong>进入liveCD安装：</strong></p>
+
+<p>重启，先从boot.ini的界面进linux，再从wingrub的界面进 install Ubuntu10.04</p>
+
+<p>一切正常的话，能直接进入LiveCD的桌面了。</p>
+
+<p>然后打开终端，运行：
+<blockquote>umount -l /isodevice</blockquote>
+双击桌面的安装。。。</p>
+
+<p>这台老机器，2个80G的硬盘，全都使用了97%左右的空间（鬼知道装了些什么，难道有过量的毛片），每次到第四步识别分区的时候都要花12分钟左右。</p>
+
+<p><strong>总结：</strong></p>
+
+<p>liveCD一般都中文包不全，很多地方没翻译完，需要更新。<br />
+网速如果不够快，79%进度时最好拔掉网线，因为配置apt时间会过长而不往下面进行。<br />
+没有大的惊喜，期待10.10</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -699,86 +808,6 @@ gabriel@dreamingcrow.com</p>
 <p><a href="http://www.54chen.com/_linux_/ssh-twitter-client.html">中文使用说明文档</a></p>
 
 <p><a href="http://www.54chen.com/ssh-t.tar.gz">>点击此处下载（4.08K）<</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/26/qcon-memoirs/">QCon回忆录</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-04-26T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在前天（2010年4月24日），有幸参加了第二届的QCon北京全球企业开发大会。会上有来自facebook\twitter等国际知名企业的技术高手，和来自国内一线互联网公司的高手，对相应研究的主题进行了深刻的交流。</p>
-
-<p>大早爬起床来，困顿中来到大钟寺附近，寻找到目标酒店。</p>
-
-<p>找到目标、进入，入口很开放，不需要有效证件，能找到自己的牌子就能进去了。领了写上自己名字的牌子挂上脖子，感觉质量差了点。</p>
-
-<p>凭感觉上楼，无特别标识。找到主会场。</p>
-
-<p>未遇到同事，领同声传译耳机，无身份证，不给领。正巧电话淘宝老同事正赴现场，帮领，一枚。</p>
-
-<p>会议开始，现场满座。</p>
-
-<p>第一场，万众期待的eclipse之父Erich Gamma没有出现，颇有些失望。取而代之的是一场敏捷开发管理的内容。相关的现场笔录在 http://www.54chen.com/architecture/april-24-live-stream-qcon-posts.html</p>
-
-<p>第二场，facebook的大侠，讲他们咋用memcached，这哥们具说是设计了个memcache的udp读取的方法，得了个美国的奖。同声传译的影响太大，断断续续的理解了些大概，感觉他们用的二级甚至三级的memcache的方案是很不错的。这哥们自己也同意，方法有些山寨，但好用才是王道。他一定不知道什么是“山寨”。</p>
-
-<p>第三场，twitter的大侠上场，兄弟胡子好浓密呀，哪国人仕？胡子浓密的一定是高手。讲了他们在使用时间片的分步数据方案时的问题。</p>
-
-<p>然后基本上就到了中午十二点了。。。开饭时间一到，拖了十分钟，结束了早上的会议。</p>
-
-<p>同淘宝的老同事一起吃饭，不到四十分钟吃饭的时间。</p>
-
-<p>回到主会议现场，下午是国内讲师。这时第一次见到了台上的Fenng，平心而论，要比头像上帅，还是特意处理过的？</p>
-
-<p>然后第四场一开始，是阿里巴巴的国际站做镜像的一些经验。东西讲得不深，很大面上的来讲～～听一半，笔记本没有电了，撤到外面去上了个厕所。</p>
-
-<p>回来的途中，遇到了Fenng。第一眼他没认出来。看牌子看出来了，看来我的头像也没有本人帅。。。拉拉家长换了名片后，他语重心长的说，科学院一定要坚持办下去。那情景，和某某革命电影情节类似，不过我一时想不出来了，很久没有看革命电影了。激动之下，我解释了下为什么是“五四陈科学院”，是为了纪念一场胜利的革命（1919年5月4日在北京爆发的中国人民彻底的反对帝国主义、封建主义的爱国运动）和70年零一个月后另一场革命未胜利的惨剧，借以勉励，同志仍需努力的道理。</p>
-
-<p>再进入到现场，阿里的大侠已经行文渐尾。</p>
-
-<p>第六场是去哪儿网站的吴永强大侠讲他们的一些运维经验，这哥们也是雅虎出来的，雅虎的运维肯定被继承了过去，所以稳定是没得说的。</p>
-
-<p>掌声中，进入到第六场。人人网的高级技术总兼，我们的老大黄sir，飘逸地带着mac大本上场。这里要多讲一讲，黄sir一向重视技术，对人人网从小到大的发展了如指掌。几个主题下来，从人人网的发展，到我们的nuclear项目介绍，再到王志亮大侠的rose框架，行云流水。</p>
-
-<p>再掌声中，大家对nuclear的设计很感兴趣，会后纷纷在外面探讨起来。按压不住，我也去和前辈们过过招。这一过招，认识了不少朋友，其中还有来自盛大的俞前辈，对dynamo原理理解深刻，经验丰富，似乎盛大在考虑开拓S3类似的业务。另外也和twitter上一系列的同志对上了号，交换了名片。</p>
-
-<p>一番探讨之后，回到现场，新浪微博的大侠timyang已经讲了大半了，听了个大概，作了些笔录。</p>
-
-<p>时间过得很快，一天过去了，最后的时候，找到timyang简单聊了下新浪微博的一些动向。</p>
-
-<p>然后，同原同事、现场twitter上一些朋友，一一告别。Fenng和infoQ的老大（神似）忙里忙外，没顾上去打招呼，领了个t-shirt作纪念，离开。</p>
-
-<p>酒店里一天没有自然光线，感觉很晕。。。（不排除是因为起太早）</p>
-
-<p>国内类似的技术聚会，聚到一起的大侠们越来越多啦。。。感叹一下。</p>
 </div>
   
   

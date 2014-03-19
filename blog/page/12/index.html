@@ -9,10 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="最近最经常的回答是：没有内部价，没有机器。经常遇到的问题的是：有内部价吗，来XX台。 #
-不管啥事，做到极致就算假的也可以成真的。#雨林木风# #
-十几年前用access当数据库的时候，有个字段类型叫password，打开看是**，mysql应该做这功能的，谁有空做个plugin？ #
-riak &hellip;">
+  <meta name="description" content="起因：
+Wed, 28 Dec 2011 22:28:16 GMT apache tomcat公布了一个安全漏洞。
+http://mail-archives.apache.org/mod_mbox/www-announce/201112.mbox/%3C4EFB9800.5010106@ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +83,72 @@ riak &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/30/hashdos/">年终攻击hashDos-哈希表多碰撞实现拒绝服务-破解办法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-30T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>起因：</strong>
+Wed, 28 Dec 2011 22:28:16 GMT apache tomcat公布了一个安全漏洞。<br />
+http://mail-archives.apache.org/mod_mbox/www-announce/201112.mbox/%3C4EFB9800.5010106@apache.org%3E</p>
+
+<p><strong>漏洞原理：</strong>
+依靠相应语言的hashtable/hashmap实现过程（request多为此结构），当不同的key存入时如果hash值相等则以链表方式连接在前面。此漏洞利用碰撞相同的hash值得到一个长链表，重新get时，map的计算过程会将时间复杂度巨增，原来一个简单的过程将变成一个很费cpu的过程。</p>
+
+<p><strong>影响到的：</strong>
+最快时间tomcat公布了解决办法。<br />
+php进行了升级。<br />
+ms也发了公告http://technet.microsoft.com/en-us/security/bulletin/ms11-100。</p>
+
+<p><strong>解决办法：</strong>
+<strong>tomcat</strong>
+<strong>临时办法：</strong>
+默认大小2097152，当maxPostSize=0时，不限制；maxPostSize=20971520时，为20M，改为一个小于10k的值，<strong>所有版本可用</strong>，会影响用户。
+<strong>持久办法：</strong>
+用新的版本，maxParameterCount默认值1000。
+<strong>nginx</strong>
+<strong>临时办法：</strong>
+默认的最大请求body大小为8m，修改设置client_max_body_size=10k；此招为各种情况下万金油，会影响用户。
+<strong>持久办法：</strong>
+暂无，应该很快会有max_request_count的参数。
+<strong>php</strong>
+<strong>持久办法：</strong>
+php升级到5.3.9，5.2需要打patch。详细见：http://www.laruence.com/2011/12/30/2440.html</p>
+
+<p><strong>后记</strong>
+54chen人肉构造打到php，php立马100%，转到java（resin+spring+rose），轻松化解，没有反应。</p>
+
+<p><img src="http://img05.taobaocdn.com/bao/uploaded/i5/T1.RRAXjVDXXX7OsE8_070026.jpg" alt="hashDos,important" /></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -540,85 +605,6 @@ perfcounter用于对api的监控设计指标，如果一个api有异常，应当
 居然有卖“美国原装留学生代购”的小米手机。。。雷得个里娕外焦 <a href="http://twitter.com/54chen/statuses/138442701451431936" class="aktt_tweet_time">#</a>
 54chen Twitter memo 2011-11-20 <a href="http://t.co/X2xZ1Arc" rel="nofollow">http://t.co/X2xZ1Arc</a> <a href="http://twitter.com/54chen/statuses/138077321767825408" class="aktt_tweet_time">#</a>
 
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/24/monit-notes/">神器monit监控报警设置手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-24T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://img.taobaocdn.com/imgextra/i1/13078490/T28C9aXblXXXXXXXXX_!!13078490.png" alt="monit" /></p>
-
-<p>系统监控工具monit是一款功能非常丰富的进程、文件、目录和设备的监测软件，用于Unix平台。它可以自动修复那些已经停止运作的程序，特使适合处理那些由于多种原因导致的软件错误。 </p>
-
-<p><strong>安装</strong>
-centos:
-<blockquote>yum install monit</blockquote>
-ubuntu:
-<blockquote>apt-get install monit</blockquote></p>
-
-<p><strong>使用</strong>
-配置文件在/etc/monit.conf</p>
-
-<p><strong>配置发邮件的smtp服务器</strong>
-<blockquote>set mailserver 111.111.111.111 USERNAME &#8220;xxx@xiaomi.com&#8221; PASSWORD &#8220;54chen54chen&#8221;</blockquote></p>
-
-<p><strong>配置服务检测的周期</strong>
-<blockquote>set daemon 30     <br />
-30秒检查一次</blockquote></p>
-
-<p><strong>配置报警邮件格式</strong>
-<blockquote>set mail-format {<br />
-      from: ALERT<alert@xiaomi.com>
-   subject: $SERVICE $EVENT at $DATE<br />
-   message: Monit $ACTION $SERVICE at $DATE on $HOST: $DESCRIPTION.<br />
-}</blockquote></p>
-
-<p><strong>配置收报警的人</strong></p>
-
-<p><blockquote>set alert 54chen@xiaomi.com with reminder on 3 cycles ；出问题时最多连续报3次</blockquote></p>
-
-<p><strong>配置监控对象</strong>
-<blockquote>check host webim-91 with address 192.168.1.2<br />
-  if failed host www.miliao.com port 80 proto http and request &#8220;/test.html&#8221;  for 2 times within 2 cycles  then alert</blockquote></p>
-
-<p><strong>其他</strong>
-可以监控的类型有： CHECK PROCESS FILE  FIFO DEVICE DIRECTORY HOST SYSTEM  </p>
-
-<p><strong>帮助</strong></p>
-
-<p><blockquote>man monit</blockquote></p>
-
-<p>        
 </p>
 </div>
   
