@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java,akka | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/java-akka/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-04-15T16:50:51+08:00</updated>
+  <updated>2014-04-15T16:54:24+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -113,12 +113,12 @@
 <h2>常见问题</h2>
 
 <ul>
-<li>Q:shutting down JVM since &lsquo;akka.jvm-exit-on-fatal-error&rsquo; is enabled
-** A:所有出错的时候都会有这个提示，快速错误退出是一个常见的机制，让系统最快时间发现错误。</li>
-<li>Q:java.lang.ClassNotFoundException: akka.remote.RemoteActorRefProvider
-** A:没有添加进来akka-remote的时候会这样</li>
-<li>Q:class akka.remote.WireFormats$AkkaControlMessage overrides final method getUnknownFields.()Lcom/google/protobuf/UnknownFieldSet
-** A:这是pb版本太低导致的，声明到2.5.0或以上</li>
+<li>Q:shutting down JVM since &lsquo;akka.jvm-exit-on-fatal-error&rsquo; is enabled</li>
+<li>A:所有出错的时候都会有这个提示，快速错误退出是一个常见的机制，让系统最快时间发现错误。</li>
+<li>Q:java.lang.ClassNotFoundException: akka.remote.RemoteActorRefProvider</li>
+<li>A:没有添加进来akka-remote的时候会这样</li>
+<li>Q:class akka.remote.WireFormats$AkkaControlMessage overrides final method getUnknownFields.()Lcom/google/protobuf/UnknownFieldSet</li>
+<li>A:这是pb版本太低导致的，声明到2.5.0或以上</li>
 </ul>
 
 

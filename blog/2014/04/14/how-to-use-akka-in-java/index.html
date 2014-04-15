@@ -197,12 +197,12 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
 <h2>常见问题</h2>
 
 <ul>
-<li>Q:shutting down JVM since &lsquo;akka.jvm-exit-on-fatal-error&rsquo; is enabled
-** A:所有出错的时候都会有这个提示，快速错误退出是一个常见的机制，让系统最快时间发现错误。</li>
-<li>Q:java.lang.ClassNotFoundException: akka.remote.RemoteActorRefProvider
-** A:没有添加进来akka-remote的时候会这样</li>
-<li>Q:class akka.remote.WireFormats$AkkaControlMessage overrides final method getUnknownFields.()Lcom/google/protobuf/UnknownFieldSet
-** A:这是pb版本太低导致的，声明到2.5.0或以上</li>
+<li>Q:shutting down JVM since &lsquo;akka.jvm-exit-on-fatal-error&rsquo; is enabled</li>
+<li>A:所有出错的时候都会有这个提示，快速错误退出是一个常见的机制，让系统最快时间发现错误。</li>
+<li>Q:java.lang.ClassNotFoundException: akka.remote.RemoteActorRefProvider</li>
+<li>A:没有添加进来akka-remote的时候会这样</li>
+<li>Q:class akka.remote.WireFormats$AkkaControlMessage overrides final method getUnknownFields.()Lcom/google/protobuf/UnknownFieldSet</li>
+<li>A:这是pb版本太低导致的，声明到2.5.0或以上</li>
 </ul>
 
 
