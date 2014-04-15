@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="联合利华引进了一条香皂包装生产线，结果发现这条生产线有个缺陷：常常会有盒子里没 装入香皂。总不能把空盒子卖给顾客啊，他们只好请了一个学自动化的博士后设计一个方案来分拣空的香皂盒。博士后拉起了一个十几人的科 研攻关小组，综合采用了机械、微电子、自动化、X射线探测等技术，花了几十万，成功解决了问题。 &hellip;">
+  <meta name="description" content="[转载请注明：http://www.54chen.com/727-how-to-redirect-wordpress-rss-feeds-to-feedburner-with-nginx-original/ 作者：陈臻] &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/08/15/how-to-redirect-wordpress-rss-feeds-to-feedburner-with-nginx-original/">How to: Redirect WordPress RSS Feeds to Feedburner With Nginx[原创]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>[转载请注明：<a href="http://www.54chen.com/727-how-to-redirect-wordpress-rss-feeds-to-feedburner-with-nginx-original/">http://www.54chen.com/727-how-to-redirect-wordpress-rss-feeds-to-feedburner-with-nginx-original/</a> 作者：陈臻]</p>
+
+<p>可能有大多数朋友都会在用wordpress的时候需要从原始的feed地址转到feedburner上，看到一个老外的博客上说了apache的htaccess的修改方案：
+<blockquote>&lt;IfModule mod_rewrite.c&gt;<br />
+RewriteEngine on<br />
+RewriteCond %{HTTP_USER_AGENT} !FeedBurner    [NC]<br />
+RewriteCond %{HTTP_USER_AGENT} !FeedValidator [NC]<br />
+RewriteRule ^feed/?([_0-9a-z-]+)?/?$ <a href="http://feeds.feedburner.com/-aboutJavaAndPhp">http://feeds.feedburner.com/-aboutJavaAndPhp</a> [R=302,NC,L]<br />
+&lt;/IfModule&gt;</blockquote>
+心想这nginx也不能没个着落下，于是就试验了一下，nginx作如下修改即可：
+<blockquote>if ($http_user_agent !~ FeedBurner) {<br />
+  rewrite ^/feed$ <a href="http://feeds.feedburner.com/-aboutJavaAndPhp">http://feeds.feedburner.com/-aboutJavaAndPhp</a> redirect;<br />
+  rewrite ^/feed/$ <a href="http://feeds.feedburner.com/-aboutJavaAndPhp">http://feeds.feedburner.com/-aboutJavaAndPhp</a> redirect;<br />
+}</blockquote>
+都是302跳，可能对seo不是太好，不过可能是对一些rss客户端比较好。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1153,44 +1203,6 @@ http://tokyocabinet.sourceforge.net/tokyoproducts.pdf<br />
 可关注下其中的TCTDB,就是对table database的<a href="http://www.54chen.com/591-twitter-api-%e4%b8%ad%e6%96%87%e6%96%87%e6%a1%a3-%e5%89%8d%e8%a8%80/">支持</a></p>
 
 <p>使用哪种存储方式,取决于tyrant启动时指定的存储文件名称,table database的文件后缀是.tct</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/26/published-a-log/">发布一个日志，看完二十年前的故事</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-07-26T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>RT</p>
-
-<p>血雨腥风的历史，不明真相的围观群众，受人控制的组织者，矫情的演说。</p>
 </div>
   
   

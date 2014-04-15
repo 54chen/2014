@@ -9,11 +9,18 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一、安装环境
-localhost:~ chenzhen$ java -version
-java version &#8220;1.6.0_37&#8221;
-Java(TM) SE Runtime Environment (build 1.6.0_37-b06-434-11M3909)
-Java &hellip;">
+  <meta name="description" content="基础条件
+位置参数
+server
+resin 4
+1 rose+1 thrift
+java version &#8220;1.6.0_29&#8221;
+Ubuntu 10.04 LTS
+双核cpu
+8G mem client
+macbook pro
+ab server代码
+1. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -85,6 +92,128 @@ Java &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/02/06/resin-thrift-benchmark/">Resin+thrift压力测试报告</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-02-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_NWcXbNXXXcQbh6a_121410.jpg" alt="thrift resin" />
+<strong>基础条件</strong>
+<table border="1"><tr><td>位置</td><td>参数</td></tr>
+<tr><td>server</td><td>
+resin 4<br />
+1 rose+1 thrift<br />
+java version &#8220;1.6.0_29&#8221;<br />
+Ubuntu 10.04 LTS<br />
+双核cpu<br />
+8G mem
+</td></tr><tr>
+<td>client</td><td>
+macbook pro<br />
+ab
+</td></tr></table></p>
+
+<p><strong>server代码</strong>
+1.用thrift创建了一个方法，内部只有几行代码：
+<blockquote>logger.info(&#8220;in call&#8221;);<br />
+try {<br />
+Thread.sleep(1000);<br />
+} catch (InterruptedException e) {<br />
+logger.info(&#8220;sleep error&#8221;);<br />
+}</blockquote>
+2.使用的paoding-rose调用这个thrift方法。</p>
+
+<p><strong>第一波，thrift 10 thread/sleep 1s/rose timeout 3s，ab 100并发发1000次请求</strong>
+ab -n 1000 -c 100 http://10.235.7.249/test
+<blockquote>Complete requests:      1000<br />
+Failed requests:        980</blockquote>
+试了多次，一定在20次请求时开始超时，服务器端大量timeout。</p>
+
+<p><strong>第二波，thrift 10 thread/sleep 300ms/rose timeout 3s，ab 100并发发1000次请求</strong>
+<blockquote>Complete requests:      1000<br />
+Failed requests:        386</blockquote></p>
+
+<p><strong>一二波结论</strong>
+同第一波，还远未触及resin的thread上限（free版本有thread限制）。<br />
+这个值大概可以计算出来：<br />
+thrift: (1s/300 ms)×10 thread = 33req/s ，<br />
+resin: 3s timeout，大概能够处理进入不超时的连接为 33req/s × 3s ＝ 99 req，100个并发进来，大概会随机timeout掉1个甚至更多。<br />
+第二波花了30s左右，所以会有两三百的timeout引发的500失败出现。
+<blockquote>逆向思考：<br />
+如果需要resin的qps达到1000qps，client 1s timeout，而thrift保持300ms话，需要thrift thread: 300-400</blockquote>
+于是得出一表格：
+<table border="1"><tr><td>resin qps</td><td>thrift client timeout</td><td>thrift return time</td><td>thrift server thread</td></tr>
+<tr><td>小于1000</td><td>1s</td><td>300ms</td><td>300-400</td></tr>
+<tr><td>小于1000</td><td>1s</td><td>10ms</td><td>10-20</td></tr>
+<tr><td>小于100</td><td>100ms</td><td>10ms</td><td>10-20</td></tr>
+<tr><td>小于2000</td><td>300ms</td><td>10ms</td><td>100-200</td></tr>
+<tr><td>小于330</td><td>100ms</td><td>30ms</td><td>100</td></tr>
+<tr><td>小于100</td><td>60s</td><td>3s</td><td>100</td></tr>
+</table></p>
+
+<p><strong>第三波，thrift 100 thread/sleep 30ms/rose timeout 100ms，ab 100并发发1000次请求</strong>
+这次在日志中出现了非thrift timeout的异常了，而是thrift client在未关闭已经完成的处理时，新请求进来了，将会得到获取sokect失败的异常。（这种异常算是池化连接对其性能损耗，在产品工作状态下，应该优于未池化的情况。）
+<blockquote>Complete requests:      1000<br />
+Failed requests:        681</blockquote></p>
+
+<p><strong>第四波，thrift 100 thread/sleep 3s/rose timeout 60s，ab 100并发发1000次请求</strong>
+<blockquote>Complete requests:      1000<br />
+Failed requests:        0</blockquote></p>
+
+<p>因为rose timeout为60s，所以所有的等待都基本上会得到返回，当把并发加大到200也没有处理失败的情况，原因是http的默认超时应该是120s。通过netstat看server的80连接已经到了1002个。</p>
+
+<p><strong><font color="red">第五波，thrift 1000 thread/sleep 3s/rose timeout 120s，ab 4000并发发50000次请求</font></strong>
+这都快成了long polling server了。。。<br />
+这个状态下，load到了6，内存吃满。
+<blockquote># netstat -anop|grep :80|grep EST|wc -l<br />
+4229<br />
+# jstack 26485 | grep -c http<br />
+8001<br />
+# jstack 26485 | grep -c resin-<br />
+93<br />
+Complete requests:      50000<br />
+Failed requests:        45656
+</blockquote>
+大把大把的超时。</p>
+
+<p><strong>综述</strong>
+1.提升thrift中逻辑处理速度，减少单个处理时间，是最有效提升thrift qps的办法。<br />
+2.thrift thread数量增加一个数量级，前端QPS提升略小于一个数量级。thrift节点数量加1，QPS提升略小于一倍，但不如加thread。<br />
+3.resin节点数量×resin qps ＝ thrift节点数量×thrift qps×网络系数，要提高resin qps，可以：提高thrift qps、增加thrift节点数量。此处网络系数肯定小于1。<br />
+4.减少不必要的网络系数影响，app+midtier的架构变为service架构，按业务内聚后再SOA化是云后台非常关键的一个原则。<br />
+5.resin4的rose框架代码表现在最多4020左右的并发，多于的将会拒绝，类似apache的max-keepalive-connections。<br />
+6.tomcat7的同一份代码表现最多在300（未经任何优化）。
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -755,164 +884,6 @@ Ha ha, expect my next time write again, write here today, very tired of. </p>
 cloud foundry之warden代码解读-part2 </ul><a href="http://t.co/czkUa5m0" rel="nofollow">http://t.co/czkUa5m0</a> <a href="http://twitter.com/54chen/statuses/255597921444179968" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/12/cloud-foundry-warden-part3/">Cloud Foundry之warden代码解读-part3</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-12T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden" />
-<strong>简介</strong>
-cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
-
-<p>代码位置在： https://github.com/cloudfoundry/warden</p>
-
-<p>根据part2里提到的过程，本节以create命令为例进行追踪。</p>
-
-<p><blockquote>调用过程：<br />
-bin/warden-repl >> lib/warden/repl.rb >> Warden::Client >> warden.sock  >> lib/warden/server.rb << Warden::Server.run! << Rakefile<br />
-处理调用：<br />
-server.rb > ClientConnection > receive_request > process(request) >  process_container_request(request, container) > base.rb >  dispatch(request, &blk) > send(do_method, request, response, &blk) -> linux.rb > do_xxx  > shell script</blockquote></p>
-
-<p><strong>过程放大</strong></p>
-
-<p><strong>一、进入repl命令行</strong>
-<h2>1.1 名词</h2>
-bundle：主要用于管理Ruby应用程序的依赖关系，并按照此依赖关系安装所需的Gems。当运行bundle install命令来安装Gems时，bundler会使用当前目录下的名为Gemfile的文件来处理依赖关系。<br />
-gem：就是ruby的软件包，一个gem就是一个ruby软件。<br />
-Gemfile：定义了各种依赖情况，bundler命令必须在存在此文件的目录下执行。<br />
-Gemfile.lock：记录本机目前所有依赖的gem命令和版本。<br />
-rake：编译工具，类似java的ant。<br />
-Rakefile：rake命令所定义的配置任务文件，类似ant.xml。</p>
-
-<p><h2>1.2 进入</h2>
-<blockquote>#sudo bundle exec bin/warden-repl</blockquote>
-使用bundle exec来保证项目依赖的gem版本。在bin目录下有warden-repl脚本（ruby），这将会执行lib/warden/repl.rb文件，先会使用Warden:Client发起对warden.sock的连接，然后在start方法中对命令行模式的交互进行反馈。</p>
-
-<p><strong>二、输入create</strong>
-当输入create时，repl.rb执行到process_line中的respond_to的判断：</p>
-
-<p><h2>2.1 respond_to?</h2>
-if respond_to? words[0].to_sym。。。<br />
-这种写法的意思是，当前对象中是否有方法名为words[0].to_sym变量值的方法。</p>
-
-<p><h2>2.2 create</h2>
-repl.rb果断有这个create方法，然后talk_to_warden。就进入了client写的过程了。</p>
-
-<p><strong>三、warden收到create的响应</strong>
-<h2>3.1 warden server的启动</h2>
-早在part2中，使用了命令：
-<blockquote>sudo bundle exec rake warden:start[config/linux.yml]</blockquote>
-就已经启动了warden。<br />
-这将使在bundle定义的环境下，执行warden/warden/Rakefile里写好的任务：Warden::Server.run!。</p>
-
-<p><h2>3.2 warden server的响应</h2>
-在lib/warden/server.rb中，run!方法下，使用了EM的start_unix_domain_server的方法启动了一个unixsock，第二个参数ClientConnection定义了接收到东西怎么处理。<br />
-ClientConnection中的process方法具体处理了create：</p>
-
-<p><blockquote>	when Protocol::CreateRequest<br />
-          container = Server.container_klass.new<br />
-          container.register_connection(self)<br />
-          response = container.dispatch(request) </blockquote></p>
-
-<p>container_klass为配置中的Warden::Container::Linux。</p>
-
-<p>最终，将会执行linux.rb中的<strong>do_create</strong>方法。</p>
-
-<p><strong>四、shell脚本中的猫腻</strong>
-warden/root/linux中，有大量的sh脚本，里面通过一系列的命令，完成了基础环境的搭建，非常值得一读。
-<h2>4.1 linux/base/setup.sh</h2>
-这个脚本在运行安装warden时会被执行，按照执行过程：<br />
-1）分析本机最近的apt源地址。<br />
-2）debootstrap到/tmp/warden中<br />
-3）debootstrap的作用见前面的文章，主要是可以用于在系统的某个目录中安装一套基本系统. http://www.54chen.com/architecture/cloud-foundry-warden-part1.html<br />
-4）使用chroot将子系统中的缺失软件安装好</p>
-
-<p><h2>4.2 base.rb的dispatch create过程</h2>
-1）拼接before_create<br />
-2）执行 linux.rb中的 features/quota.rb的 before_create方法<br />
-2.5）执行base中的before_create方法，产生一个十六进制的handle值（也就是每个contaner的标识）<br />
-3）setquota<br />
-4）linux.rb do_create</p>
-
-<p><h2>4.3 linux.rb的do_create过程</h2>
-1）create.sh脚本的执行：传入目录，检查是否存在；unshare -m setup.sh。<br />
-2）unshare的作用是在指定的环境下执行程序setup.sh，不影响上一级环境。<br />
-3）此处的setup.sh与base/setup.sh相比，没有了debootstrap的过程。<br />
-4）setup.sh中设置了cgroup、磁盘挂载、限额、网络。<br />
-5）紧接着如果需要会执行hook-parent-before-clone.sh<br />
-6）修改limits.conf的参数<br />
-7）执行start.sh：建立子网，打通两条ssh通道。<br />
-8）完成create</p>
-
-<p><strong>五、交互演示</strong></p>
-
-<p><blockquote>$ sudo bundle exec bin/warden-repl<br />
-warden>  list<br />
-[&#8220;16bp35aue5i&#8221;]<br />
-warden> stop 16bp35aue5i<br />
-&#8220;ok&#8221;<br />
-warden> list<br />
-[&#8220;16bp35aue5i&#8221;]<br />
-warden> destroy 16bp35aue5i<br />
-&#8220;ok&#8221;<br />
-warden> list<br />
-nil<br />
-warden> create<br />
-16bp35aue5j<br />
-warden> info 16bp35aue5j<br />
-{&#8220;state&#8221;=>&#8221;active&#8221;,<br />
- &#8220;host_ip&#8221;=>&#8221;10.254.0.5&#8221;,<br />
- &#8220;container_ip&#8221;=>&#8221;10.254.0.6&#8221;,<br />
- &#8220;container_path&#8221;=>&#8221;/tmp/warden/containers/16bp35aue5j&#8221;,<br />
- &#8220;memory_stat&#8221;=>
-  <Warden::Protocol::InfoResponse::MemoryStat cache: 1789952, rss: 2826240, mapped_file: 8192, pgpgin: 5593, pgpgout: 4466, swap: 0, pgfault: 21494, pgmajfault: 53, inactive_anon: 8192, active_anon: 2826240, inactive_file: 1761280, active_file: 20480, unevictable: 0, hierarchical_memory_limit: 9223372036854775807, hierarchical_memsw_limit: 9223372036854775807, total_cache: 1789952, total_rss: 2826240, total_mapped_file: 8192, total_pgpgin: 5593, total_pgpgout: 4466, total_swap: 0, total_pgfault: 21494, total_pgmajfault: 53, total_inactive_anon: 8192, total_active_anon: 2826240, total_inactive_file: 1761280, total_active_file: 20480, total_unevictable: 0>,<br />
- &#8220;cpu_stat&#8221;=>
-  <Warden::Protocol::InfoResponse::CpuStat usage: 286431704, user: 12, system: 12>,<br />
- &#8220;disk_stat&#8221;=>
-  <Warden::Protocol::InfoResponse::DiskStat bytes_used: 20480, inodes_used: 6>}</blockquote></p>
-
-<p>warden> spawn 16bp35aue5j w  <br />
-2
-warden> link 16bp35aue5j 2<br />
-exit status: 0</p>
-
-<p>stdout:<br />
- 03:18:51 up 29 days, 14:51,  0 users,  load average: 0.00, 0.04, 0.05<br />
-USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT</p>
-
-<p>stderr:</p>
-
-<p></p>
 </div>
   
   

@@ -9,11 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="关键配置：
-&lt;plugin&gt;
-&lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
-&lt;artifactId&gt;appassembler-maven-plugin&lt;/artifactId&gt;
-&lt;version&gt; &hellip;">
+  <meta name="description" content="关于hadoop:1.用坏机器基本就在维护硬件 2.离线拖日志的带宽费用不如买机器去机房。 #
+maven打jar包自动生成run脚本-appassembler插件的使用 http://goo.gl/fb/JiC8G #
+54chen Twitter memo 2011-05-22 http &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -85,6 +83,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/29/54chen-twitter-memo-2011-05-29/">54chen Twitter Memo 2011-05-29</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><ul class="aktt_tweet_digest">
+关于hadoop:1.用坏机器基本就在维护硬件 2.离线拖日志的带宽费用不如买机器去机房。 </ul><a href="http://twitter.com/54chen/statuses/74316085117190145" class="aktt_tweet_time">#</a>
+maven打jar包自动生成run脚本-appassembler插件的使用 <a href="http://goo.gl/fb/JiC8G" rel="nofollow">http://goo.gl/fb/JiC8G</a> <a href="http://twitter.com/54chen/statuses/72929266106515456" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-05-22 <a href="http://goo.gl/fb/pDT9c" rel="nofollow">http://goo.gl/fb/pDT9c</a> <a href="http://twitter.com/54chen/statuses/72119224809689088" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -580,92 +619,6 @@ gprs来访者中，许多ip都会瞬时漂移到69.28.58.*，奇怪的事情。 
 54chen Twitter memo 2011-04-17 <a href="http://goo.gl/fb/9tTTK" rel="nofollow">http://goo.gl/fb/9tTTK</a> <a href="http://twitter.com/54chen/statuses/59430870787948544" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/04/21/sqoop-mysql-to-hive/">利用sqoop将mysql数据同步到hive手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-04-21T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://img01.taobaocdn.com/imgextra/i1/T14rp.XdVmXXa7cv.Z_032332.jpg" alt="sqoop mysql hive" /></p>
-
-<p>1.下载 http://archive.cloudera.com/cdh/3/sqoop-1.2.0-CDH3B4.tar.gz</p>
-
-<p>2.下载 http://archive.cloudera.com/cdh/3/hadoop-0.20.2-CDH3B4.tar.gz</p>
-
-<p>3.解压 2</p>
-
-<p>4.复制3里hadoop-core-0.20.2-CDH3B4.jar到sqoop的lib下</p>
-
-<p>5.在某处复制mysql-connector-java-5.1.10.jar到sqoop的lib下</p>
-
-<p>6.修改configure-sqoop</p>
-
-<p><blockquote>注释掉hbase zookeeper检查：<br />
-#if [ ! -d &#8220;${HBASE_HOME}&#8221; ]; then<br />
-#  echo &#8220;Error: $HBASE_HOME does not exist!&#8221;<br />
-#  echo &#8216;Please set $HBASE_HOME to the root of your HBase installation.&#8217;<br />
-#  exit 1<br />
-#fi<br />
-#if [ ! -d &#8220;${ZOOKEEPER_HOME}&#8221; ]; then<br />
-#  echo &#8220;Error: $ZOOKEEPER_HOME does not exist!&#8221;<br />
-#  echo &#8216;Please set $ZOOKEEPER_HOME to the root of your ZooKeeper installation.&#8217;<br />
-#  exit 1<br />
-#fi</blockquote></p>
-
-<p>7.运行：<br />
-列出mysql所有的表：</p>
-
-<p><blockquote>./sqoop list-tables &#8211;connect jdbc:mysql://127.0.0.1/operation &#8211;username root &#8211;password 123</blockquote></p>
-
-<p>导入mysql表到hive：</p>
-
-<p><blockquote>./sqoop import &#8211;connect jdbc:mysql://192.168.100.52/operation &#8211;username root &#8211;password 3487e498770b9740086144fc03140876 &#8211;table active_uuid &#8211;hive-import</blockquote></p>
-
-<p>导入需要表里有主建，还要注意不要使用127.0.0.1，因为map出去不一定在哪个节点执行。</p>
-
-<p>如果曾经执行失败过，那再执行的时候，会有错误提示：</p>
-
-<p><blockquote>ERROR tool.ImportTool: Encountered IOException running import job: org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory xxx already exists</blockquote></p>
-
-<p>执行 $HADOOP_HOME/bin/hadoop fs -rmr xxx 即可     </p>
-
-<p>8.验证:<br />
- </p>
-
-<p><blockquote>bin/hive<br />
- show tables;多了一个表</blockquote></p>
-
-<p>9.经验：<br />
- sqoop做了一些mysqldump时的map reduce，所以速度会比单纯的dump后load快。</p>
 </div>
   
   

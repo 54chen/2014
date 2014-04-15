@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-03-19T21:44:31+08:00</updated>
+  <updated>2014-04-15T15:01:33+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,164 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java中使用akka手记一]]></title>
+    <link href="http://2014.54chen.com/blog/2014/04/14/how-to-use-akka-in-java/"/>
+    <updated>2014-04-14T21:38:24+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/04/14/how-to-use-akka-in-java</id>
+    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
+
+<h2>什么是actor?</h2>
+
+<ul>
+<li>Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。</li>
+<li>它由Carl Hewitt于上世纪70年代早期提出，目的是为了解决分布式编程中一系列的编程问题。</li>
+<li>Actor模型的本质已经被强调了无数遍：万物皆Actor。Actor之间只有发送消息这一种通信方式。</li>
+<li>一个Actor如何处理多个Actor的请求呢？它先建立一个消息队列，每次收到消息后，就放入队列，而它每次也从队列中取出消息体来处理。通常我们都使得这个过程是循环的。让Actor可以时刻处理发送来的消息。</li>
+</ul>
+
+
+<h2>什么是akka?</h2>
+
+<p>Akka是一个用Scala编写的库，用于简化编写容错的、高可伸缩性的Java和Scala的Actor模型应用。</p>
+
+<!--more-->
+
+
+<ul>
+<li>下面以在java项目中使用akka写代码为例子。</li>
+</ul>
+
+
+<h2>依赖</h2>
+
+<ul>
+<li>maven项目</li>
+<li>java6 or 7</li>
+<li>添加akka相关的包</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;dependency>
+</span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
+</span><span class='line'>            &lt;artifactId>akka-actor_2.10&lt;/artifactId>
+</span><span class='line'>            &lt;version>2.3.1&lt;/version>
+</span><span class='line'>        &lt;/dependency>
+</span><span class='line'>        &lt;dependency>
+</span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
+</span><span class='line'>            &lt;artifactId>akka-remote_2.10&lt;/artifactId>
+</span><span class='line'>            &lt;version>2.3.1&lt;/version>
+</span><span class='line'>        &lt;/dependency>
+</span><span class='line'>        &lt;dependency>
+</span><span class='line'>            &lt;groupId>com.google.protobuf&lt;/groupId>
+</span><span class='line'>            &lt;artifactId>protobuf-java&lt;/artifactId>
+</span><span class='line'>            &lt;version>2.5.0&lt;/version>
+</span><span class='line'>        &lt;/dependency>
+</span><span class='line'>        &lt;dependency>
+</span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
+</span><span class='line'>            &lt;artifactId>akka-testkit_2.10&lt;/artifactId>
+</span><span class='line'>            &lt;version>2.3.1&lt;/version>
+</span><span class='line'>        &lt;/dependency></span></code></pre></td></tr></table></div></figure>
+
+
+<h2>依赖包解析</h2>
+
+<ul>
+<li>akka-actor 核心包，有这个包就可以写简单的代码了</li>
+<li>akka-remote 远程包，有这个包，才能够跨进程和网络调用</li>
+<li>protobuf-java 不解释了，之所有是要声明版本，是因为pb的版本太低会造成消息传递过程中序列化反序列化有问题</li>
+<li>akka-testkit 测试集，有这个包，写test case方便</li>
+</ul>
+
+
+<h2>常见问题</h2>
+
+<ul>
+<li>Q:shutting down JVM since &lsquo;akka.jvm-exit-on-fatal-error&rsquo; is enabled
+** A:所有出错的时候都会有这个提示，快速错误退出是一个常见的机制，让系统最快时间发现错误。</li>
+<li>Q:java.lang.ClassNotFoundException: akka.remote.RemoteActorRefProvider
+** A:没有添加进来akka-remote的时候会这样</li>
+<li>Q:class akka.remote.WireFormats$AkkaControlMessage overrides final method getUnknownFields.()Lcom/google/protobuf/UnknownFieldSet
+** A:这是pb版本太低导致的，声明到2.5.0或以上</li>
+</ul>
+
+
+<h2>例子</h2>
+
+<ul>
+<li>这是typesafe的经典例子。</li>
+<li>所有actor的配置都在classpath中。</li>
+<li>此例启动了两个system（简称为worker与creator）：startRemoteWorkerSystem &amp;&amp; startRemoteCreationSystem</li>
+<li>worker使用calculator.conf，在2552端口侦听。</li>
+<li>creator使用remotecreation.conf，定义了它的worker在远程的2552端口，路径在creationActor下，自己的端口为2554。</li>
+</ul>
+
+
+<h2>creator中的逻辑</h2>
+
+<ul>
+<li>creator启动后，调用了schedule，进行了一秒一次的随机调用乘法或除法。</li>
+<li>具体的计算，在creationActor这个actor中完成。</li>
+<li>而creationActor这个actor被定义到了远程2552端口的进程中执行。</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>akka {
+</span><span class='line'>  actor {
+</span><span class='line'>    deployment {
+</span><span class='line'>      "/creationActor/*" {
+</span><span class='line'>        remote = "akka.tcp://CalculatorWorkerSystem@127.0.0.1:2552"
+</span><span class='line'>      }
+</span><span class='line'>    }
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>运行中进程观察</h2>
+
+<ul>
+<li>run CreationApplication.java</li>
+<li>一个进程 启动了一个端口</li>
+<li>进程通过这个端口，产生随机算式，交给另一个进程（这里是同一个进程）。</li>
+</ul>
+
+
+<h2>代码</h2>
+
+<ul>
+<li>本文提及代码在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a></li>
+</ul>
+
+ <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Phonegap试用手记]]></title>
@@ -2738,100 +2896,6 @@ XBee OEM RF模块是与ZigBee/IEEE 802.15.4 兼容的解决方案，可以满足
 </blockquote></p>
 
 <p>*centos系统下测试通过。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Arduino学习手记四：串行编程]]></title>
-    <link href="http://2014.54chen.com/blog/2013/07/06/arduino-starter-4/"/>
-    <updated>2013-07-06T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/07/06/arduino-starter-4</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p>前面几节介绍了一些常见的传感器使用办法，许多人一定会有一种困惑，如果要做一个arduino发微博的例子得怎么做？</p>
-
-<p>本节不是教发微博的。</p>
-
-<p>通过在pc上运行的程序去访问互联网，然后把数据通过usb返给arduino的做法，就是利用了串口的编程办法。</p>
-
-<p>在第一节里（<a href="http://www.54chen.com/_linux_/arduino-starter-1.html">http://www.54chen.com/_linux_/arduino-starter-1.html</a>），我们说到了arduino使用的主要语言是processing。</p>
-
-<p>以下例子均在mac下试验通过，ubuntu应该差不多，windows不知道应该怎么搞。</p>
-
-<p><strong>Processing</strong>
-这是一门目标群体类似设计师的编程语言，非常的极简，语法类似java，java开发者基本不用学习。其IDE：PDE也是极简到了极致。<br />
-PDE(processing IDE)的极简程度令人发指，用习惯了eclipse的同学上来就找的第一个功能就是自动完成，遗憾的是，人家的定义是给设计师们用的，看来工程师们还是回到eclipse的世界去吧。PDE is admirably simple。</p>
-
-<p>十分想用代码自动完成功能的同学，可以试试在eclipse里完成代码：
-<a href="http://t.cn/zH3b2KP">http://t.cn/zH3b2KP</a></p>
-
-<p>其下载和安装都非常简单：http://processing.org/download/下载之后直接使用即可。以mac为例，长得和arduino的IDE基本上一样（应该是说arduino的和它长得基本上一样）。</p>
-
-<p><strong>开始互动之旅</strong></p>
-
-<p>打开PDE，代码如下：
-<blockquote>import processing.serial.*;</blockquote></p>
-
-<p>String cs;<br />
-String buffer = &#8220;&#8221;;</p>
-
-<p>Serial port;</p>
-
-<p>void setup() {<br />
-  println(Serial.list());<br />
-  String arduinoPort = Serial.list()[5];//如果你运行代码后arduino里没反应，需要来调整这个端口号，据机器不同而不同，看上一行代码打印出来的序号哪一个是arduino就写几。<br />
-  port = new Serial(this, arduinoPort, 9600); //link to arduino<br />
-  cs = &#8220;#hello&#8221;;<br />
-}</p>
-
-<p>void draw() {<br />
-  port.write(cs); //send to arduino<br />
-}
-</p>
-
-<p>运行代码，会有提示：
-<blockquote>To use the serial library, first open<br />
-Applications -> Utilities -> Terminal.app<br />
-and enter the following:<br />
-sudo mkdir -p /var/lock<br />
-sudo chmod 777 /var/lock</blockquote></p>
-
-<p>打开终端，对var/lock权限修改。<br />
-再运行，就可以打开一个框框，啥也做不了。</p>
-
-<p><strong>arduino上的代码</strong>
-<blockquote>#define LED 11</blockquote></p>
-
-<p>byte inByte = 0;<br />
-int pointer = 0;<br />
-char buffer[6]; </p>
-
-<p>void setup(){<br />
-  pinMode(LED,OUTPUT); <br />
-  Serial.begin(9600); // open port to 9600<br />
-}</p>
-
-<p>void loop(){<br />
-  if(Serial.available() > 0){<br />
-    inByte = Serial.read();<br />
-    if(inByte == &#8216;#&#8217;){<br />
-      while(pointer < 5){<br />
-        buffer[pointer] = Serial.read();<br />
-      }<br />
-    }<br />
-    digitalWrite(LED,HIGH);<br />
-  }<br />
-}</p>
-
-<p>连线：<br />
-在数字11连一220欧电阻加一LED灯。</p>
-
-<p>效果：<br />
-启动arduino时，灯不亮，再运行电脑上的代码之后，灯亮了。</p>
-
-<p><strong>通过arduino通知电脑</strong></p>
-
-<p>在arduino中使用Serial.write，在电脑上用port.read()。</p>
-
-<p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1e6d4imgv9xj20rs0xc42o.jpg" alt="arduino processing" /></p>
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
   </entry>
   

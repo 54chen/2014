@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="ruby 1993年诞生于日本。rails是用ruby写的web framework，所谓的ROR正是这一搭档。 ruby安装 ubuntu 10.04很简单，安装ruby和rails：
-sudo apt-get install ruby
-sudo apt-get install rails &hellip;">
+  <meta name="description" content="简介
+cloudfoundry是vmvare推出来的开源PaaS平台，vmc全称是The VMware Cloud CLI，是vmware的应用平台命令行接口。
+ubuntu安装vmc
+sudo gem install vmc 常见的用法 vmc target api.paas.n.xiaomi &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +84,111 @@ sudo apt-get install rails &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/29/cloud-foundry-vmc/">Cloud Foundry之vmc代码解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloud" />
+<strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，vmc全称是The VMware Cloud CLI，是vmware的应用平台命令行接口。<br />
+ubuntu安装vmc
+<blockquote>sudo gem install vmc</blockquote></p>
+
+<p><strong>常见的用法 </strong>
+<blockquote>vmc target api.paas.n.xiaomi.net<br />
+vmc add-user<br />
+vmc login<br />
+vmc push
+</blockquote></p>
+
+<p>vmc其实是使用ruby来实现的一整套的cli命令转化为http restful请求的对应工具。<br />
+其代码位于：https://github.com/cloudfoundry/vmc<br />
+git clone回来代码之后，下面对代码进行半瓶水解析法解析。</p>
+
+<p><strong>入口 </strong>
+bin/vmc<br />
+引用了 $github/vmc/lib/cli<br />
+直接运行VMC::Cli::Runner.run<br />
+位于：lib/cli/runner.rb</p>
+
+<p>看上去run会被执行。</p>
+
+<p><strong>进入到parse_command!方法中</strong></p>
+
+<p>以push为例：</p>
+
+<p> when &#8216;push&#8217;<br />
+      usage(&#8216;vmc push [appname] [&#8211;path PATH] [&#8211;url URL] [&#8211;instances N] [&#8211;mem] [&#8211;runtime RUNTIME] [&#8211;no-start]&#8217;)<br />
+      if @args.size == 1<br />
+        set_cmd(:apps, :push, 1)<br />
+      else<br />
+        set_cmd(:apps, :push, 0)<br />
+      end</p>
+
+<p><strong>进入到set_cmd中设置变量</strong></p>
+
+<p>module Cli<br />
+    :Runner<br />
+     module Command<br />
+         :Apps</p>
+
+<p><strong>然后</strong>
+cmd = VMC::Cli::Command.const_get(@namespace.to_s.capitalize)<br />
+cmd.new(@options).send(@action, *@args.collect(&:dup))</p>
+
+<p><strong>最终</strong>
+<blockquote>VMC::Cli::Command::Apps.new().send(push)<br />
+（在ruby语法中，此处send方法是一个关键词，表示callMethod)</blockquote></p>
+
+<p><strong>
+于是来到了lib/cli/commands/apps.rb</strong></p>
+
+<p><blockquote>def push(appname=nil)<br />
+	def do_push(appname=nil)<br />
+	upload_app_bits(appname, @application)<br />
+		def upload_app_bits(appname, path)<br />
+		client.upload_app(appname, file, appcloud_resources)<br />
+lib/vmc/clinet.rb<br />
+		def upload_app<br />
+			http_post(path(VMC::APPS_PATH, name, &#8220;application&#8221;), upload_data)<br />
+			def http_post(path, body, content_type=nil)<br />
+				def request(method, path, content_type = nil, payload = nil, headers = {})<br />
+					perform_http_request<br />
+						RestClient::Request.execute(req)
+</blockquote></p>
+
+<p>于是就没有了（RestClient是ruby中一个rest库）。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -656,89 +762,6 @@ rose手册第三章C节：DAO层：分表设置 <a href="http://t.co/R0zdOCWF" r
 54chen Twitter memo 2012-07-08 <a href="http://t.co/kJnBarCk" rel="nofollow">http://t.co/kJnBarCk</a> <a href="http://twitter.com/54chen/statuses/221792405660237826" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/11/rose-3-c/">rose手册第三章C节：DAO层：分表设置</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-11T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" /></p>
-
-<p>欢迎顺利进入本章，如果您的企业需要这一节的内容，那么说明用户量很有前途，如果使用了本节的内容，不防向czhttp@gmail.com发信一封以表谢意，我们会很高兴收到各种反馈。</p>
-
-<p><strong>3.C.1 mysql分表的常规做法</strong></p>
-
-<p>以下是个人从业经验中的分表规则：</p>
-
-<p>    按照 id % 100 分为一百份<br />
-    按照 id % 16 分为十六份<br />
-    按照 id/10 % 10 分为十份<br />
-    按照 id%10 分为十份</p>
-
-<p>  以上分表规则特别在mysql中使用机会比较多，各有优势，没有对错，只有最好与最不好用。</p>
-
-<p><strong>3.C.2 使用分表第一步：添加新的依赖</strong></p>
-
-<p>要使用分表，需要添加新的依赖，由bmw提供的bmwutils。</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.54chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>bmwutils</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>0.0.2</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p><strong>3.C.3 使用分表第二步：设置applicationContext.xml分表规则</strong></p>
-
-<p>在开写代码之前，需要告诉DAO是哪个表需要分表，按照什么规则分，分多少份。</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="comments">&lt;!&#8211;&nbsp;以下配置为分表设置&nbsp;&#8211;&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">&#8220;jade.routerInterpreter&#8221;</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">&#8220;com.xiaomi.common.service.dal.routing.RewriteSQLInterpreter&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;routingConfigurator&#8221;</span><span>&nbsp;</span><span class="attribute">ref</span><span>=</span><span class="attribute-value">&#8220;jade.routingConfigurator&#8221;</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">&#8220;jade.routingConfigurator&#8221;</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">&#8220;com.xiaomi.common.service.dal.routing.RoutingConfigurator&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;partitions&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>hash:test:id:test_{0}:100</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>    此处配置中，partitions参数为一个list，可以对多个table进行定义。<br />
-        hash:test:id:test_{0}:100 表示：使用hash这种办法，将test这个表，按照id的值，分成100份，每份的表名为test_x</p>
-
-<p><strong>3.C.4 使用分表第三步：bmwutils支持的分表办法</strong></p>
-
-<p>    (hash)上例中的hash: 最常用的 id % 100 就是这种办法。该办法会把传入的值先进行转为数字后与定义的份数进行取模（%）。<br />
-    (direct)最直接的一种：用的少一些，没有什么规则，直接根据第四个正则，与第三位传入的值进行替换。假设有个人名表，按照字母分表可以用。name_A,name_B,name_C&#8230;<br />
-    (round)轮循：根据设置，按照调用sql的情况，轮流使用各个表。<br />
-    (range)范围：一般用来做日期范围的分表，比如说微博类的，可变值为一个时间，当时间传入时，第三位支持log{yyyy} log{yyyy_MM}等时间格式的替换，可轻松做到按周、月、年分表。<br />
-    (xm-hash)小米hash：一种古怪的办法，按照传入值的十位进行取模的分表方案。<br />
-    (xm-str-hash)小米字符串hash：将字符串按照固定算法变成long之后，再按照小米hash逻辑处理。<br />
-    (hex-hash)16进制分表：固定256份以内，传入的值按照16进制转换后按hash求模。</p>
-
-<p><strong>3.C.5 使用分表第四步：写DAO代码@ShardBy</strong></p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">&#8220;SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test&nbsp;where&nbsp;user_id&nbsp;=:id&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsById(</span><span class="annotation">@ShardBy</span><span>&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;id&#8221;</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;id);&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>与不分表的dao相比，只多了一个shardBy，标识按照这个参数值分表。</p>
-
-<p>    文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
-    长期更新版本：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_C">https://github.com/XiaoMi/rose/tree/master/chapter_3_C</a></p>
 </div>
   
   

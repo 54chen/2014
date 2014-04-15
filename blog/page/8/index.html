@@ -9,10 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="3.7.1 什么是portal?
-&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211; *字面意思，做门户用的。
-*简单来说，把一个网页分成了N个区域，每个区域由不同的action去执行，多线程并行提高cpu使用率。 3.7.2 使用例子
-&# &hellip;">
+  <meta name="description" content="移动互联网做app是个酷毙的事情，同等产品条件下比拼的是渠道。怎么样让渠道人员（非技术）快捷地拿到想到的标识有相关渠道信息的包，是个关键的问题。
+因为平台不一样，打包手法也不尽相同，下面总结下54chen在工作过程中遇到的问题和解决的办法： 1.android &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,6 +82,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/08/app-build/">移动互联网必备：各平台自助渠道打包手段公开</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-08T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://img02.taobaocdn.com/imgextra/i2/13078490/T28EicXgtXXXXXXXXX_!!13078490.jpg" alt="mi" />
+移动互联网做app是个酷毙的事情，同等产品条件下比拼的是渠道。怎么样让渠道人员（非技术）快捷地拿到想到的标识有相关渠道信息的包，是个关键的问题。<br />
+因为平台不一样，打包手法也不尽相同，下面总结下54chen在工作过程中遇到的问题和解决的办法：</p>
+
+<p><strong>1.android</strong>
+android下无法将一个apk包修改字节流之后apk还重新生效，因为android加key的过程会使这一过程变得无效。<br />
+采取的办法：用ant或者maven在对java代码进行build时传入渠道信息。<br />
+简单地说：当你有一个xxx渠道的包需要打的时候，后台要做的事情就是 ant -Dchannel=xxx 或者 mvn -U clean package -Dchannel=xxx</p>
+
+<p><strong>2.iphone</strong>
+iphone的正式渠道很少，先说越狱过的：<br />
+一个ipa包就是一个标准的zip包，只要在包里放一个channel.txt，保存渠道信息。<br />
+简单地说：当你有一个xxx渠道包需要打的时候，后台要做的事情就是打开这个ipa，修改channel.txt的内容为xxx，重新按zip压缩为ipa。</p>
+
+<p>没有越狱过的iphone（占多数）：<br />
+安装渠道只有一个，那就是appstore。但是推广渠道可能是多个，用户点击后到达appstore，再从appstore下载。这个过程中，ipa包没有办法携带渠道信息，希望apple公司改进。有人用一次跳转记录用户ip，但是不能准确反馈这个渠道的安装量。</p>
+
+<p><strong>3.塞班</strong>
+sis/sisx的签名比较弱，签好的包，可以在包末尾写入一些字节达到携带渠道信息。<br />
+简单地说：当你有一个xxx渠道包需要打的时候，后台要做的事情就是打开这个文件，在最末尾写入xxx，关闭文件。</p>
+
+<p><strong>4.winphone</strong>
+xap包与ipa包极像，不一样的地方在于，xap包在windows下打出来的zip，文件分隔符是反斜线风格，在linux下解压压缩一定要用ant来做不容易写错。<br />
+简单地说：当你有一个xxx渠道包需要打的时候，后台要做的事情和iphone一样。不同在于要引入ant.jar。</p>
+
+<p>周末愉快！
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -642,52 +702,6 @@ import net.paoding.rose.web.Invocation;</p>
   <div class="entry-content"><p><ul class="aktt_tweet_digest">
 开这些年互联网开发最怕的事情：设立一个专门的QA团队，让研发团队通过不断的开关bug帮助QA团队理解产品需求和架构设计。 </ul><a href="http://twitter.com/54chen/statuses/200061631839993856" class="aktt_tweet_time">#</a>
 54chen Twitter memo 2012-05-06 <a href="http://t.co/5RcTU0GG" rel="nofollow">http://t.co/5RcTU0GG</a> <a href="http://twitter.com/54chen/statuses/198949168809648128" class="aktt_tweet_time">#</a>
-
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/06/54chen-twitter-memo-2012-05-06/">54chen Twitter Memo 2012-05-06</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-06T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><ul class="aktt_tweet_digest">
-在小米面试技术，基础一定要好，数据结构算法啥的，最关键的，一定要有一技之长，或者叫做闪光点。没有闪光点的哥们，来了也会很郁闷，我们也会很郁闷。面试不通过的哥们，不是你技术太差，是被上一家公司磨洋工磨得太平。 </ul><a href="http://twitter.com/54chen/statuses/198713933601841152" class="aktt_tweet_time">#</a>
-rose手册第三章二节：controller层：拦截器支持 <a href="http://t.co/qX4gW9qG" rel="nofollow">http://t.co/qX4gW9qG</a> <a href="http://twitter.com/54chen/statuses/198423938366316545" class="aktt_tweet_time">#</a>
-今天五四，丢出来一份青春时期的代码，802.1x在gtk下的实现，大学校园局域网拔号你用过吧，https://t.co/OU6LpNPM 一晃已经过去七八年了，当时还没有git啊(readme写的时间大概是08年左右)，为了不侵犯人家公司权利，代码仅供学习呀作毕业设计呀啥的使用。 <a href="http://twitter.com/54chen/statuses/198417402285920257" class="aktt_tweet_time">#</a>
-NIH综合症是叫“不花钱自己搞癖好”好呢，还是叫“参考开源自己搞癖好”好呢？ <a href="http://twitter.com/54chen/statuses/198278507468570624" class="aktt_tweet_time">#</a>
-今天是五四青年节，http://t.co/WPe8C5Cn ，五四陈科学院祝十四岁以上的青年们节日快乐！同时不要忘记下个月的今天。 <a href="http://twitter.com/54chen/statuses/198244810568634368" class="aktt_tweet_time">#</a>
-scala会越来越流行。 <a href="http://twitter.com/54chen/statuses/197970381619998720" class="aktt_tweet_time">#</a>
-保持松散结构团队持续战斗力的秘密：每一个成员明确自己的目标，分清主次，日常解决重要不紧急的事情，形成良好的时间管理习惯，还有scrum。 <a href="http://twitter.com/54chen/statuses/197566703687839744" class="aktt_tweet_time">#</a>
-快要败给这个官方读法了 <a href="http://t.co/wogMYjAg" rel="nofollow">http://t.co/wogMYjAg</a> <a href="http://twitter.com/54chen/statuses/197548342207713280" class="aktt_tweet_time">#</a>
 
 </p>
 </div>
