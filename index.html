@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="什么是actor? Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。
-它由Carl Hewitt于上世纪70年代早期提出，目的是为了解决分布式编程中一系列的编程问题。
-Actor模型的本质已经被强调了无数遍： &hellip;">
+  <meta name="description" content="Java中使用akka手记一 Apr 14th, 2014 什么是actor? Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。
+它由Carl Hewitt于上世纪70年代早期提出， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -112,7 +111,7 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
   </header>
 
 
-  <div class="entry-content"><p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
 
 <h2>什么是actor?</h2>
 
@@ -167,7 +166,7 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
   </header>
 
 
-  <div class="entry-content"><p><img src=http://chen54.b0.upaiyun.com/20140318/chart.png></p>
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140318/chart.png></p>
 
 <h2>phoneGap是什么？</h2>
 
@@ -217,7 +216,7 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
   </header>
 
 
-  <div class="entry-content"><ul>
+  <div class="entry-content entry-content1"><ul>
 <li>本文译自 <a href="http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/">http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/</a></li>
 <li>原作者：Buddhika Chamith</li>
 <li>译者：54chen</li>
@@ -269,7 +268,7 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
   </header>
 
 
-  <div class="entry-content"><h2>总体思考</h2>
+  <div class="entry-content entry-content1"><h2>总体思考</h2>
 
 <p>总结这些年经验，进行构架演进的方向选择时，大致要做到下面的目标：</p>
 
@@ -324,7 +323,7 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
   </header>
 
 
-  <div class="entry-content"><h2>前情提要</h2>
+  <div class="entry-content entry-content1"><h2>前情提要</h2>
 
 <p>在使用java web container的时候，我们都在前面挡一层nginx，方便使用各种nginx的功能，设置成代理。
 访问特别多的时候发现，服务器上存在大量的TIME_WAIT状态的连接。
@@ -369,7 +368,7 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
   </header>
 
 
-  <div class="entry-content"><p>春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。</p>
+  <div class="entry-content entry-content1"><p>春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。</p>
 
 <ul>
 <li>@温高铁</li>
@@ -417,7 +416,7 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
   </header>
 
 
-  <div class="entry-content"><p><img src="http://chen54.b0.upaiyun.com/0211/28322841.jpg" alt="2014年外地车牌转北京攻略 外转京"></p>
+  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/0211/28322841.jpg" alt="2014年外地车牌转北京攻略 外转京"></p>
 
 <h2>先决条件</h2>
 
@@ -467,7 +466,7 @@ Actor模型的本质已经被强调了无数遍： &hellip;">
   </header>
 
 
-  <div class="entry-content"><p><img src="http://chen54.b0.upaiyun.com/0122/267176d6-5ef4-3e0b-937e-c492f5ba7807.jpg" alt="disruptor thrift server" width="450/" /></p>
+  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/0122/267176d6-5ef4-3e0b-937e-c492f5ba7807.jpg" alt="disruptor thrift server" width="450/" /></p>
 
 <p><strong>基础环境</strong>
 rmbp<br />
@@ -517,7 +516,7 @@ oracle jdk 1.7.0_45</p>
   </header>
 
 
-  <div class="entry-content"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="thrift" />
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="thrift" />
 <a href="#en">__English Version__The notes about the usage of Thrift in Cassandra</a></p>
 
 <p>Cassandra在client访问server cluster的时候使用了thrift，在cluster node间的通讯，依旧是自己实现的二进制协议。</p>
@@ -568,7 +567,7 @@ Cassandra 2.0.3</p>
   </header>
 
 
-  <div class="entry-content"><p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
+  <div class="entry-content entry-content1"><p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
 <strong>准备工作</strong>
 rmbp<br />
 BLUNO ×1<br />

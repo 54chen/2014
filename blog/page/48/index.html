@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="本文只有一个连接 没有那么多内容 http://www.pgsqldb.org/mwiki/index.php/配置一个使用plproxy的PostgreSQL数据库集群
-">
+  <meta name="description" content="配置一个使用plproxy的PostgreSQL数据库集群 本文只有一个连接 没有那么多内容 http://www.pgsqldb.org/mwiki/index.php/配置一个使用plproxy的PostgreSQL数据库集群 当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -111,7 +110,7 @@
   </header>
 
 
-  <div class="entry-content"><p>本文只有一个连接 没有那么多内容</p>
+  <div class="entry-content entry-content1"><p>本文只有一个连接 没有那么多内容</p>
 
 <p><a href="http://www.pgsqldb.org/mwiki/index.php/%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AA%E4%BD%BF%E7%94%A8plproxy%E7%9A%84PostgreSQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4">http://www.pgsqldb.org/mwiki/index.php/配置一个使用plproxy的PostgreSQL数据库集群</a></p>
 </div>
@@ -149,7 +148,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Q： 当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of memory<br />
+  <div class="entry-content entry-content1"><p>Q： 当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of memory<br />
 A：在 Linux 2.4  以及之后的版本里，缺省的虚拟内存的设置对于  PgSQL而言不是最优的(32M)。原因也可能在于内核实现内存提交的方法导致出现了“过提交”内存（具体情况由于没有遇到，不作评述），如果其它进程的内存请求导致系统用光虚拟内存，那么内核可能会立即终止  PGSQL 服务器进程并会出具Out of memory报错，唯一的解救方法只能手工kill掉数据库进程，重启数据库。修改方法为：
 <pre>sysctl -w kernel.shmmax=134217728
 sysctl -w kernel.shmall=2097152
@@ -204,7 +203,7 @@ A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不
   </header>
 
 
-  <div class="entry-content"><p> </p>
+  <div class="entry-content entry-content1"><p> </p>
 
 <p>plproxy和pgbouncer都是skype开发的基于<a href="http://www.54chen.com/c/105">postgresql</a>的开源应用；前者主要用于完成分布式计算，后者主要充当数据库连接池；它们的主页在[<a class="external text" title="https://developer.skype.com/SkypeGarage/DbProjects/PlProxy" rel="nofollow" href="https://developer.skype.com/SkypeGarage/DbProjects/PlProxy" target="_blank">plproxy</a>]和[<a class="external text" title="https://developer.skype.com/SkypeGarage/DbProjects/PgBouncer" rel="nofollow" href="https://developer.skype.com/SkypeGarage/DbProjects/PgBouncer" target="_blank">pgbouncer</a>] </p>
 
@@ -265,7 +264,7 @@ A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不
   </header>
 
 
-  <div class="entry-content"><p><li>1. 到 <a class="external text" title="http://www.postgresql.org/" rel="nofollow" href="http://www.postgresql.org/" target="_blank">http://www.postgresql.org</a>下载pg8.2.4 source</li>
+  <div class="entry-content entry-content1"><p><li>1. 到 <a class="external text" title="http://www.postgresql.org/" rel="nofollow" href="http://www.postgresql.org/" target="_blank">http://www.postgresql.org</a>下载pg8.2.4 source</li>
 	<li>2. 编译安装<a href="http://www.54chen.com/c/101">pgsql</a>
 <ul>
 	<li>tar xvfj postgresql-8.2.4.tar.bz2</li>
@@ -324,7 +323,7 @@ A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不
   </header>
 
 
-  <div class="entry-content"><p><dt>安装过程如下： </dt><dt>1 安装<a href="http://www.54chen.com/c/109">plproxy</a>：下载<a class="external text" title="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" rel="nofollow" href="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" target="_blank">plproxy</a>.安装完成plproxy后,运行{$PATH_TO_PG}/share/contrib/plproxy.sql </dt><dt>2 建立数据库_proxy； </dt><dt>3 建立plpgsql语言； </dt><dt>4 在_proxy中建立模式plproxy;分配权限 grant all on schema plproxy to &lt;用户&gt;。 </dt><dt>5 建立pgcluster； </dt><dt>
+  <div class="entry-content entry-content1"><p><dt>安装过程如下： </dt><dt>1 安装<a href="http://www.54chen.com/c/109">plproxy</a>：下载<a class="external text" title="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" rel="nofollow" href="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" target="_blank">plproxy</a>.安装完成plproxy后,运行{$PATH_TO_PG}/share/contrib/plproxy.sql </dt><dt>2 建立数据库_proxy； </dt><dt>3 建立plpgsql语言； </dt><dt>4 在_proxy中建立模式plproxy;分配权限 grant all on schema plproxy to &lt;用户&gt;。 </dt><dt>5 建立pgcluster； </dt><dt>
 </dt><dt>
 <pre> --以上步骤sql语句：
  CREATE FUNCTION plpgsql_call_handler () RETURNS language_handler AS
@@ -520,7 +519,7 @@ A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不
   </header>
 
 
-  <div class="entry-content"><p><ul>
+  <div class="entry-content entry-content1"><p><ul>
 	<li>缺省情况下，<a href="http://www.54chen.com/c/101">PostgreSQL</a>只允许来自本机且通过 unix  域套接字或TCP/IP方式的连接。你只有在修改了配置文件postgresql.conf中的listen_addresses，且也在配置文件$PGDATA/pg_hba.conf中打开了  基于远程电脑（ host-based ）的身份认证，并重新启动<a href="http://www.54chen.com/c/101">PostgreSQL</a>，否则其他电脑是不能与你的<a href="http://www.54chen.com/c/101">PostgreSQL</a>服务器进行<a href="http://www.54chen.com/c/89">连接</a>的。</li>
 	<li>将postgresql.conf中的listen_addresses设为：listen_addresses = &#8216;*&#8217;</li>
 	<li>在pg_hba.conf中加入访问<a href="http://www.54chen.com/c/89">数据库</a>的服务器的IP。如，IP=10.62.130.136，在pg_hba.conf的最后加入 host all  all 10.62.130.136/32 trust</li>
@@ -561,7 +560,7 @@ A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不
   </header>
 
 
-  <div class="entry-content"><p><pre class="cmd">下载地址：http://pgfoundry.org/projects/pgpool/
+  <div class="entry-content entry-content1"><p><pre class="cmd">下载地址：http://pgfoundry.org/projects/pgpool/
 文件为：pgpool-II-2.0.1.tar，tar xvfj pgpool-II-2.0.1.tar
 在pgpool-II-2.0.1目录下，执行./configure --prefix=/home/y/share/pgsql ----with-pgsql=/home/y/share/pgsql,
 要求with-pgsql目录必须为<a href="http://www.54chen.com/c/101">pgsql</a>安装目录。
@@ -629,7 +628,7 @@ pgpool stop</p>
   </header>
 
 
-  <div class="entry-content"><p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="534" height="344" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="http://swf.news.163.com/flvplayer081029/~false~v_4QAG1LMG~v.2008.163.com/img/snapshot/M/G/v_4QAG1LMG_m~.swf" /><embed type="application/x-shockwave-flash" width="534" height="344" src="http://swf.news.163.com/flvplayer081029/~false~v_4QAG1LMG~v.2008.163.com/img/snapshot/M/G/v_4QAG1LMG_m~.swf"></embed></object><a href="http://swf.news.163.com/flvplayer081029/~false~v_4QAG1LMG~v.2008.163.com/img/snapshot/M/G/v_4QAG1LMG_m~.swf"></a></p>
+  <div class="entry-content entry-content1"><p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="534" height="344" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="http://swf.news.163.com/flvplayer081029/~false~v_4QAG1LMG~v.2008.163.com/img/snapshot/M/G/v_4QAG1LMG_m~.swf" /><embed type="application/x-shockwave-flash" width="534" height="344" src="http://swf.news.163.com/flvplayer081029/~false~v_4QAG1LMG~v.2008.163.com/img/snapshot/M/G/v_4QAG1LMG_m~.swf"></embed></object><a href="http://swf.news.163.com/flvplayer081029/~false~v_4QAG1LMG~v.2008.163.com/img/snapshot/M/G/v_4QAG1LMG_m~.swf"></a></p>
 </div>
   
   
@@ -665,7 +664,7 @@ pgpool stop</p>
   </header>
 
 
-  <div class="entry-content"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2008.11.20 转载请注明原文链接：<a href="http://www.54chen.com/c/94">http://www.54chen.com/c/94</a>]</p>
+  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2008.11.20 转载请注明原文链接：<a href="http://www.54chen.com/c/94">http://www.54chen.com/c/94</a>]</p>
 
 <p>今天遇到一个测试机的环境要连通生产机的pgsql,后来用了SSH Tunnel，记录一下：<br />
 在hostA中执行<br />
@@ -710,7 +709,7 @@ L 连接<br />
   </header>
 
 
-  <div class="entry-content"><p> [文章作者：陈臻 本文版本：v1.0 最后修改：2008.11.18 转载请注明原文链接：<a href="http://www.54chen.com/c/91">http://www.54chen.com/c/91</a>]</p>
+  <div class="entry-content entry-content1"><p> [文章作者：陈臻 本文版本：v1.0 最后修改：2008.11.18 转载请注明原文链接：<a href="http://www.54chen.com/c/91">http://www.54chen.com/c/91</a>]</p>
 
 <p>[caption id=&#8221;attachment_92&#8221; align=&#8221;alignleft&#8221; width=&#8221;480&#8221; caption=&#8221;点击看大图&#8221;]<a href="http://www.54chen.com/wp-content/uploads/2008/11/index.jpg"><img class="size-medium wp-image-92" title="index" src="http://www.54chen.com/wp-content/uploads/2008/11/index-300x213.jpg" alt="cool" width="480" /></a>[/caption] </p>
 </div>
