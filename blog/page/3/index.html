@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Arduino学习手记四：串行编程 前面几节介绍了一些常见的传感器使用办法，许多人一定会有一种困惑，如果要做一个arduino发微博的例子得怎么做？ 本节不是教发微博的。 通过在pc上运行的程序去访问互联网，然后把数据通过usb返给arduino的做法，就是利用了串口的编程办法。 在第一节里（ &hellip;">
+  <meta name="description" content="线上jvm进程CPU Load高排查脚本-jkiller jkiller
+如果遇到线上java进程占用过多的cpu，可以用这个脚本来帮助你快速找到代码的问题。 https://github.com/54chen/jkiller 使用过程 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +82,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/25/jvm-cpu-load-high-script/">线上jvm进程CPU Load高排查脚本-jkiller</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-25T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png" alt="java" />
+<strong>jkiller</strong>
+如果遇到线上java进程占用过多的cpu，可以用这个脚本来帮助你快速找到代码的问题。</p>
+
+<p><a href="https://github.com/54chen/jkiller">https://github.com/54chen/jkiller</a></p>
+
+<p><strong>使用过程</strong></p>
+
+<p>先用top或者是jps定位占用cpu过多的java进程的pid是多少。</p>
+
+<p>然后执行如下过程即可得到结论：</p>
+
+<p><blockquote>#wget https://raw.github.com/54chen/jkiller/master/jkiller.sh && chmod +x jkiller.sh<br />
+#sh jkiller.sh [pid]
+</blockquote></p>
+
+<p>*centos系统下测试通过。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1016,73 +1069,6 @@ ssd：可以考虑在db机器上使用一部分，app机器上完全不需要。
 
 <p>综合以上，移动互联才刚刚开始，坑还很深，欢迎互相交流各种坑。
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/11/2012/">庆某会召开，发2012总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-11T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T14z9eXa4fXXXUxOU4_053357.jpg" alt="2012 54chen总结" />
-<strong>开场致辞</strong>
-2012年，全年情绪稳定，采取了各种手段遏制了技术水平过快下降势头，共计发出80篇左右博客。
-<a href="http://www.54chen.com/2012">http://www.54chen.com/2012</a></p>
-
-<p><strong>十大感动我自己内容</strong></p>
-
-<p>1.rose框架使用入门手册连载，详细记载了新手入门java开发框架的过程，用时大概2个月<a href="http://www.54chen.com/rose.html" target="_blank">http://www.54chen.com/rose.html</a></p>
-
-<p>2.cloud foundry代码阅读手记,  记录了所有的ruby学习、cf代码学习、服务器虚拟化文案warden细节，用时大概2个月 <a href="http://www.54chen.com/tag/cloud-foundry">http://www.54chen.com/tag/cloud-foundry</a></p>
-
-<p>3.riak早期代码阅读手记，记录了对分布式存储riak的代码解析过程，相当稳定的一个dynamo产品！<a href="http://www.54chen.com/tag/riak">http://www.54chen.com/tag/riak</a></p>
-
-<p>4.好用的搜索文案senseidb使用手记，现在他的作者之一已经来到了小米，而且小米更多员工也成为其项目开发人员。<a href="http://www.54chen.com/tag/senseidb">http://www.54chen.com/tag/senseidb</a></p>
-
-<p>5.linkedin的kafka使用手记，用sensei时学习的好东西，可以用来做日志收集、分发，比scribe的好处在于，它的集群和可配置。<a href="http://www.54chen.com/architecture/linkedin-kafka-usage.html">http://www.54chen.com/architecture/linkedin-kafka-usage.html</a></p>
-
-<p>6.用上了git和gitlab。<a href="http://www.54chen.com/tag/git">http://www.54chen.com/tag/git</a></p>
-
-<p>7.学用新语言GO。<a href="http://www.54chen.com/document/go-lang-install.html">http://www.54chen.com/document/go-lang-install.html</a></p>
-
-<p>8.学用新语言ruby。<a href="http://www.54chen.com/web-ral/learn-ruby-ubuntu.html">http://www.54chen.com/web-ral/learn-ruby-ubuntu.html</a></p>
-
-<p>9.解决了maven拉不到新jar的问题。<a href="http://www.54chen.com/java-ee/maven-nexus-jar-note.html">http://www.54chen.com/java-ee/maven-nexus-jar-note.html</a></p>
-
-<p>10.综合了各种测试方法以丰富写代码办法。<a href="http://www.54chen.com/tag/easymock">http://www.54chen.com/tag/easymock</a>   <a href="http://www.54chen.com/java-ee/spring-static-class-maven-cobertura-site.html">http://www.54chen.com/java-ee/spring-static-class-maven-cobertura-site.html</a></p>
-
-<p><strong>结论</strong>
-各位代表!<br />
-　　回顾过去，我们拼搏奋进，取得显著成就;展望未来，我们任重道远，仍须不懈努力。让我们紧密团结在以技术为核心的团队中央周围，解放思想，开拓创新，扎实工作，奋力开创社会主义现代化建设新局面!</p>
-
-<p>附2011年总结 <a href="http://www.54chen.com/life/spicy-fish-2011-2.html">http://www.54chen.com/life/spicy-fish-2011-2.html</a> 看2011年的第三条，多有预见性的一条！</p>
 </div>
   
   

@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-03-25 关于mysql cluster有用与否，转老牌工程师老板@小米KKWong 警句：&quot;比较相信DB除了Tables以上全部都应该自己开发（数据库使用必须要纯透明白箱才能睡好觉）&quot; #
-@Fenng &hellip;">
+  <meta name="description" content="Rose手册第一章：入门指引 ROSE
+1.1 简介： 人人网、糯米网释出的、开源的高效Java web开发框架。在小米米聊服务端再次被验证和使用。一个从零开始的创业公司，在大家技术背景不一的情况下，rose很简单快速地传达到了大家中间。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/30/rose-manual-1/">Rose手册第一章：入门指引</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-30T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><p style="font-size:66px">ROSE</p>
+<strong>1.1 简介：</strong>
+    人人网、糯米网释出的、开源的高效Java web开发框架。在小米米聊服务端再次被验证和使用。一个从零开始的创业公司，在大家技术背景不一的情况下，rose很简单快速地传达到了大家中间。本手册致力于让php开发人员也能快速使用上java开发高性能服务。
+<strong>1）rose是什么？</strong></p>
+
+<p><blockquote>    基于IoC容器 (使用Spring 2.5.6).<br />
+    收集最佳实践，形成规范和惯例，引导按规范惯例，简便开发.<br />
+    收集通用功能，形成一些可使用的组件，提高生产效率.<br />
+    特性的插拔，使用基于组合而非继承的设计.<br />
+    提供可扩展的点，保持框架的可扩展性.<br />
+    注重使用简易性的同时，注重内部代码设计和实现.
+</blockquote></p>
+
+<p>如果你是一个创业公司在选择php还是java，同时如果你的团队有一个人写过一年java其他人都没写过。如果你想选择一个更加大型的系统框架，请使用rose，它收集了来自人人网、糯米网、小米科技的众多工程师的经验，你可以免费拥有这些。</p>
+
+<p><strong>2）rose能做什么？</strong>
+<strong>初级rose用户：</strong>
+rose可以用来完成一个网站。
+<strong>中级rose用户：</strong>
+rose可以用来完成一个大型网站，它提供的jade功能使得你的项目可以快速开发，自然切入连接池；它提供的portal功能，可以将一个网页分多个线程发起向DB的请求，节省用户的时间；它提供的pipe功能类似facebook的bigpipe，让前端加速，与此同时还有portal多线程的优势。
+<strong>高级rose用户：</strong>
+rose可以自由加入spring任何特性，比如定时执行（去TM的crontab）；比如拦截器做统一权限控制。可以自由配置主库从库，分表规则。配置thrift、zookeeper可以得到牛B的高可用性高性能服务集群。</p>
+
+<p><strong>1.2 简明教程：</strong>
+下面开始来进入rose框架下的开发。只需要有一个感性的认识即可。下一章里会专门详细的手把手教你搭建hello world项目。
+<strong>1）需要些什么？</strong>
+提前学习什么是maven：简单地说，maven是个build工具，用一个pom.xml来定义项目的依赖。通过一个命令mvn，可以自由地build compile（知道make吧，类似，或者类似ant）。<br />
+也许还需要一个nexus，用来搭建自己的maven仓库（这些都是门槛啊，知道为什么java用的人在全球多，而在中国php的人似乎更多，因为我们的基础设施太落后了）。nexus的作用是配合maven工作。（54chen正在向sonatype申请将rose项目push到sonatype的官方库中，成功后这将省略掉这一步）</p>
+
+<p>然后需要在你的项目的pom文件中添加：<br />
+	<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-jade</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.1-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-scanning</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+这是三个最基础的框架包。</p>
+
+<p><strong>2）一个controller长什么样？</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Path</span><span>(</span><span class="string">&#8221;/&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;TestController&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Get</span><span>(</span><span class="string">&#8220;hello&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;test(){&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;@a&#8221;</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>http://localhost/hello</p>
+
+<p>将会返回:a。就是这么简单。</p>
+
+<p><strong>下一节预告：rose手册第二章：配置与使用</strong></p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -585,85 +663,6 @@ erlang与go在部分功能上类似，主要区别是erlang是函数式语言，
 54chen Twitter memo 2012-02-05 <a href="http://t.co/VwMYT1Wa" rel="nofollow">http://t.co/VwMYT1Wa</a> <a href="http://twitter.com/54chen/statuses/165976334240198657" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/10/riak_admin-join/">人肉解析riak_admin Join</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-10T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2AT9jXolXXXXXXXXX_!!13078490.jpg" alt="riak" />
-riak_admin只是一个bash脚本，当riak_admin join被执行时，都是在执行riak_kv_console join。</p>
-
-<p><strong>大概过程分析</strong>
-riak_kv_console:join  =>  %%入口 <br />
-riak:Join(Node) => %% 真正执行<br />
-	riak_core:join(Node) => %%去到riak_core<br />
-		riak_core_gossip:legacy_gossip() => %%通知检查是否是 legacy gossip，<br />
-	riak_core:standard_join(Node,Ring,false) =>  %%非rejoin 非legacy<br />
-		riak_core_gossip:send_ring(Node, node()) =>  %% 进入gossip模块发起ring请求<br />
-			gen_server:cast({?MODULE, FromNode}, {send_ring_to, ToNode}) => %%广而告之<br />
-		riak_core_gossip:handle_cast({send_ring_to, Node}, State) => %%收到<br />
-			gen_server:cast({?MODULE, Node}, {reconcile_ring, RingOut}) => %%告诉它们开始协调<br />
- 		riak_core_gossip:handle_cast({reconcile_ring, RingIn}, State) => %%收到<br />
-			riak_core_ring_manager:ring_trans(fun reconcile/2, [OtherRing]) => %%由一个协调函数传入到ring manager中去执行<br />
-			riak_core_ring_manager:prune_write_notify_ring => %%搞定一个新的ring文件，通知所有的listener<br />
-			riak_core_ring_events:ring_update(Ring) => %%通过event通知<br />
-riak_core_ring_handler:handle_event({ring_update, Ring}, State) => %%接到event<br />
-	riak_core_vnode_manager:ring_changed(Ring) => %%vnode_manager通知大家环修改了<br />
-		riak_core_vnode_manager:trigger_ownership_handoff(?MODULE, {ring_changed, Ring}) =>%%接通知触发handoff<br />
-			riak_core_vnode:trigger_handoff(Pid, TargetNode) => %%由vnode来干活<br />
-				gen_fsm:send_all_state_event(VNode, {trigger_handoff, TargetNode}) => %%使用gen_fsm来通知vnode们<br />
-			riak_core_vnode:maybe_handoff => %%准备开始导数据<br />
-			riak_core_vnode:start_handoff => %%开始<br />
-			riak_core_handoff_manager:add_outbound => %%发handoff<br />
-			handle_call({add_outbound,Mod,Idx,Node,Pid},_From,State=#state{handoffs=HS}) => %%收到请求<br />
-				riak_core_handoff_manager:send_handoff => %%发<br />
-					riak_core_handoff_sender_sup:start_sender => %%启动sender  最终启动了 riak_core_vnode_master:sync_command直到同步结束。 </p>
-
-<p> </p>
-
-<p><strong>riak_core_vnode:mark_handoff_complete</strong>
-此代码生存在riak_core_vnode，而不是riak_core_vnode_manager，因为ring_trans是一个同步的call到ring manager的过程，block一个单独的vnode要比block整个vnode manager要好。block这个manager会影响所有的vnode。此代码对多个并行的vnode执行是安全<br />
-的,因为靠单个 ring manager提供的同步化保证了拥有所有的环的变更经过 。</p>
-
-<p><strong>riak_core_vnode:vnode_command</strong>
-活动的vnode运行于三种状态中：正常、handoff、推进。<br />
-在正常状态，vnode命令靠handle_command来传递。当一个handoff被触发，handoff_node被设置为目标节点，并且这个vnode被称做进入了handoff状态。<br />
-在handoff状态，vnode命令依靠handle_handoff_command来传递。即使handoff程序是非block的（比如在riak_kv中没有使用async fold时），在handoff期间，一个vnode也会被block住（所以没有服务命令）。<br />
-handoff状态之后，一个vnode会进入到推进状态。推进状态是新的gossip/membership代码的产物，并且legacy模式的节点里不会出现。推进状态代表了vnode已经传递自己数据到新节点的情况，但新的节点并未在环上列出当前节点的信息。这会出现是因为增加的vnode仍然在等handoff他们的数据给新的拥有者，或者只是因为环还汇聚在这个新节点之上。在推进状态，所有的vnode指令和coverage命令都会按过程推给新的拥有者。</p>
-
-<p><strong>
-riak_core_vnode:start_manager_event_timer</strong>
-独有的vnode进程与vnode manager结合紧密。当vnode的事件触发，这个vnode必须确保这个事件被发送到vnode manager，这将会产生一个状态变化的决定，并且发回适当的信息给这个vnode。为了最大限度地减少阻塞，使用了异步的消息。vnode manager挂掉而丢失靠vnode发送的信息是可能的。因此，vnode周期性地重发事件消息，直到一个从vnode manager来的合适的消息被接收。</p>
 </div>
   
   

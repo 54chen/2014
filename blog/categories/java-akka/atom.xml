@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java,akka | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/java-akka/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-04-15T20:08:53+08:00</updated>
+  <updated>2014-04-16T17:20:46+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,239 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java中使用akka手记二 Cluster]]></title>
+    <link href="http://2014.54chen.com/blog/2014/04/16/how-to-use-akka-in-java-2/"/>
+    <updated>2014-04-16T15:12:32+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/04/16/how-to-use-akka-in-java-2</id>
+    <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
+
+<h2>基础知识</h2>
+
+<ul>
+<li><p>2.3.2的cluster还有些想实现的东西没有实现，包括：actor分区（负载均衡） actor handoff（临时故障时的actor处理） actor重新平衡（增减节点时有用） actor状态复制机制（类似做M/S作用）</p></li>
+<li><p>2.3.2的cluster已经有的能力有：节点－集群－leader节点; membership; gossip协议同步状态; VECTOR CLOCKS保障顺序; 失败检测－节点不可达算法; seed节点－新节点加入时可以向这些节点发消息，但也是可以向任意成员发的; membership生命周期有joining up leaving exiting removed unreachable几种状态。</p></li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>依赖</h2>
+
+<p>maven中添加akka-cluster包：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>&lt;dependency>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>        &lt;groupId&gt;com.typesafe.akka&lt;/groupId&gt;
+</span><span class='line'>        &lt;artifactId&gt;akka-cluster_2.10&lt;/artifactId&gt;
+</span><span class='line'>        &lt;version&gt;2.3.1&lt;/version&gt;
+</span><span class='line'>    &lt;/dependency&gt;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>配置</h2>
+
+<p>下面的配置启用了Cluster。application.conf</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>akka {
+</span><span class='line'>  actor {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>provider = "akka.cluster.ClusterActorRefProvider"
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }
+</span><span class='line'>  remote {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>log-remote-lifecycle-events = off
+</span><span class='line'>netty.tcp {
+</span><span class='line'>  hostname = "127.0.0.1"
+</span><span class='line'>  port = 0
+</span><span class='line'>}
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  cluster {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>seed-nodes = [
+</span><span class='line'>  "akka.tcp://ClusterSystem@127.0.0.1:2551",
+</span><span class='line'>  "akka.tcp://ClusterSystem@127.0.0.1:2552"]
+</span><span class='line'>
+</span><span class='line'>auto-down-unreachable-after = 10s
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }
+</span><span class='line'>}&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>这里面定义的seed节点，用来作为cluster的初始化和加入点。要跨机器的话，就要修改这里的127.0.0.1了。</p>
+
+<h2>代码</h2>
+
+<p>下面是一个使用cluster的actor实现：</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>public class SimpleClusterListener extends UntypedActor {
+</span><span class='line'>  LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+</span><span class='line'>  Cluster cluster = Cluster.get(getContext().system());&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  //subscribe to cluster changes
+</span><span class='line'>  @Override
+</span><span class='line'>  public void preStart() {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>//#subscribe
+</span><span class='line'>cluster.subscribe(getSelf(), ClusterEvent.initialStateAsEvents(), 
+</span><span class='line'>    MemberEvent.class, UnreachableMember.class);
+</span><span class='line'>//#subscribe
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  //re-subscribe when restart
+</span><span class='line'>  @Override
+</span><span class='line'>  public void postStop() {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>cluster.unsubscribe(getSelf());
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  @Override
+</span><span class='line'>  public void onReceive(Object message) {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li><p>这个actor把自己注册了一个cluster事件。当cluster上有风吹草动时，都会收到消息。</p></li>
+<li><p>运行这段代码只需要运行后面代码中的SimpleClusterApp。</p></li>
+</ul>
+
+
+<h2>加入种子节点</h2>
+
+<ul>
+<li><p>一开始能够预料的节点们被叫做种子节点（seed nodes），有节点加入的时候，会等种子节点的返回确认才算是加入成功。</p></li>
+<li><p>两种方式指定seed nodes的位置，一种是在application.xml中，另一种是在jvm的参数里。</p></li>
+</ul>
+
+
+<h2>自动和手动down机</h2>
+
+<ul>
+<li>被失败检测出来不可达的节点，会被leader进行处理，也可以手动搞下来。</li>
+<li>akka.cluster.atuo-down-unreadchable-after=10s 10秒不可达就自动关</li>
+<li><p>也可以写代码 Cluster.get(system).down(address)</p></li>
+<li><p>网络分裂时，这个自动down有可能会出现脑裂。</p></li>
+</ul>
+
+
+<h2>cluster的事件</h2>
+
+<ul>
+<li>ClusterEvent.MemberUp</li>
+<li>ClusterEvent.MemberExited</li>
+<li>ClusterEvent.MemberRemoved</li>
+<li>ClusterEvent.UnreachableMember</li>
+<li>ClusterEvent.ReachableMember</li>
+</ul>
+
+
+<h2>代码</h2>
+
+<ul>
+<li>sample.cluster.simple.main启动了system。</li>
+<li>一共三个actorSystem被启动，端口为2551 2552 0，0的时候会是随机最大端口。</li>
+<li>application.conf里定义了2551与2552为seed nodes，所以2551与2552先组成了cluster，0加入的时候会收到2551和2552的确认。</li>
+<li><p>gossip协议的功劳让一个状态值可能会被重复传递。</p></li>
+<li><p>本文提及代码在 <a href="https://github.com/54chen/akka_cluster_learn">https://github.com/54chen/akka_cluster_learn</a></p></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java中使用akka手记一]]></title>

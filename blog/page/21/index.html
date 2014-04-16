@@ -9,8 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-02-06 写完《米聊春节应急手册》，群发了下，下午准备离开北京，进入春节状态。 #
-http://blog.sina.com.cn/s/blog_4c174bee0100q0dr.html 一个找回曾经真情的米聊用户，关键词：中科院，姑娘，小姐 &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2011-02-13 研究一下maven里引用ant的子项目怎么搞 #
+用virtualbox作开发机，团队迈向更高效 #
+读好代码,如入芝兰之室,久而不闻其香;读破代码,如过鲍鱼之肆,久而闻其臭. #
+从我后台的同步twitter的代码发现， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +84,53 @@ http://blog.sina.com.cn/s/blog_4c174bee0100q0dr.html 一个找回曾经真情的
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/02/13/54chen-twitter-memo-2011-02-13/">54chen Twitter Memo 2011-02-13</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-13T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+研究一下maven里引用ant的子项目怎么搞 </ul><a href="http://twitter.com/54chen/statuses/36247163671416832" class="aktt_tweet_time">#</a>
+用virtualbox作开发机，团队迈向更高效 <a href="http://twitter.com/54chen/statuses/36039164252127232" class="aktt_tweet_time">#</a>
+读好代码,如入芝兰之室,久而不闻其香;读破代码,如过鲍鱼之肆,久而闻其臭. <a href="http://twitter.com/54chen/statuses/35977373346172928" class="aktt_tweet_time">#</a>
+从我后台的同步twitter的代码发现，twitter的读写同步越来越慢了。 <a href="http://twitter.com/54chen/statuses/35938445121552384" class="aktt_tweet_time">#</a>
+虚拟机作开发，是个不错的选择。 <a href="http://twitter.com/54chen/statuses/35728467685277696" class="aktt_tweet_time">#</a>
+<a href="http://www.baidu.com/s?wd=%B3%C2" rel="nofollow">http://www.baidu.com/s?wd=%B3%C2</a>   百度真是给面子，这也能把我博客排前头 <a href="http://twitter.com/54chen/statuses/35719882431537152" class="aktt_tweet_time">#</a>
+今日开工，米聊的同志们基本到齐，兔年大吉！ <a href="http://twitter.com/54chen/statuses/35165039052726272" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-02-06 <a href="http://goo.gl/fb/Wt4nW" rel="nofollow">http://goo.gl/fb/Wt4nW</a> <a href="http://twitter.com/54chen/statuses/34056329605812224" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-02-06 <a href="http://goo.gl/fb/CImSm" rel="nofollow">http://goo.gl/fb/CImSm</a> <a href="http://twitter.com/54chen/statuses/34056323507302400" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -571,57 +620,6 @@ client.getParams().setBooleanParameter( "http.protocol.expect-continue" , false 
 54chen Twitter memo 2011-01-02 <a href="http://goo.gl/fb/Cwyc7" rel="nofollow">http://goo.gl/fb/Cwyc7</a> <a href="http://twitter.com/54chen/statuses/21382971621646336" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/01/06/nginx-access-log-post/">[Nginx]如何在access Log中记录post请求的参数</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-06T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://wiki.nginx.org/local/nginx-logo.png" alt="nginx log post data" /></p>
-
-<p>移动互联网行业开发过程中，服务端经常会需要检查是否收到请求，收到什么样的请求，最简单的办法就是看nginx的access log，常见的nginx配置中access log一般都只有GET请求的参数，而POST请求的参数却不行。
-<a href="http://wiki.nginx.org/NginxHttpCoreModule#.24request_body">http://wiki.nginx.org/NginxHttpCoreModule#.24request_body</a></p>
-
-<p><blockquote>
-$request_body</blockquote></p>
-
-<p>This variable(0.7.58+) contains the body of the request. The significance of this variable appears in locations with directives proxy_pass or fastcgi_pass. </p>
-
-<p>正如上文件所示，只需要使用$request_body即可打出post的数据，在现存的server段加上下面的设置即可：
-<blockquote><code>
-   log_format  access  '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent $request_body  "$http_referer" "$http_user_agent" $http_x_forwarded_for';<br />
-   access_log  logs/test.access.log  access;</code></blockquote></p>
-
-<p></p>
 </div>
   
   
