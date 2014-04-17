@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java,akka | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/java-akka/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-04-16T17:20:46+08:00</updated>
+  <updated>2014-04-17T11:54:17+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,439 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java中使用akka手记三 Cluster详例]]></title>
+    <link href="http://2014.54chen.com/blog/2014/04/17/how-to-use-akka-in-java-3/"/>
+    <updated>2014-04-17T20:11:07+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/04/17/how-to-use-akka-in-java-3</id>
+    <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
+
+<h2>一个例子</h2>
+
+<ul>
+<li>同样是typesafe的经典例子。</li>
+<li>例子提供的服务是传输文本。当文本发给frontend节点，它会委派backend节点，backend执行转化任务，把结果返回给原来的客户端。</li>
+<li>新的backend节点和frontend节点，都可以动态地在cluster上增减。</li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>message</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>public interface TransformationMessages {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  public static class TransformationJob implements Serializable {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>private final String text;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>//&hellip;&hellip;
+</span><span class='line'>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  public static class TransformationResult implements Serializable {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>private final String text;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>//&hellip;..
+</span><span class='line'>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  public static class JobFailed implements Serializable {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>private final String reason;
+</span><span class='line'>private final TransformationJob job;
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>//&hellip;.
+</span><span class='line'>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  public static final String BACKEND_REGISTRATION = &ldquo;BackendRegistration&rdquo;;&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>}&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>backend处理逻辑</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>public class TransformationBackend extends UntypedActor {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  Cluster cluster = Cluster.get(getContext().system());
+</span><span class='line'>//&hellip;&lt;br/>
+</span><span class='line'>  @Override
+</span><span class='line'>  public void onReceive(Object message) {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>if (message instanceof TransformationJob) {
+</span><span class='line'>  TransformationJob job = (TransformationJob) message;
+</span><span class='line'>  getSender().tell(new TransformationResult(job.getText().toUpperCase()),
+</span><span class='line'>      getSelf());
+</span><span class='line'>
+</span><span class='line'>} else if (message instanceof CurrentClusterState) {
+</span><span class='line'>  CurrentClusterState state = (CurrentClusterState) message;
+</span><span class='line'>  for (Member member : state.getMembers()) {
+</span><span class='line'>    if (member.status().equals(MemberStatus.up())) {
+</span><span class='line'>      register(member);
+</span><span class='line'>    }
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>} else if (message instanceof MemberUp) {
+</span><span class='line'>  MemberUp mUp = (MemberUp) message;
+</span><span class='line'>  register(mUp.member());
+</span><span class='line'>
+</span><span class='line'>} else {
+</span><span class='line'>  unhandled(message);
+</span><span class='line'>}
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  void register(Member member) {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>if (member.hasRole("frontend"))
+</span><span class='line'>  getContext().actorSelection(member.address() + "/user/frontend").tell(
+</span><span class='line'>      BACKEND_REGISTRATION, getSelf());
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }
+</span><span class='line'>}&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>backend订阅了cluster的事件，检测frontend节点，还会发一条消息告诉fontend可以使用了。</li>
+<li>frontend节点接收用户的任务，扔给注册好的backend节点。</li>
+</ul>
+
+
+<h2>frontend节点</h2>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>public class TransformationFrontend extends UntypedActor {
+</span><span class='line'>  List&lt;ActorRef> backends = new ArrayList&lt;ActorRef>();
+</span><span class='line'>  int jobCounter = 0;
+</span><span class='line'>  @Override
+</span><span class='line'>  public void onReceive(Object message) {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>if ((message instanceof TransformationJob) &amp;&amp; backends.isEmpty()) {
+</span><span class='line'>  TransformationJob job = (TransformationJob) message;
+</span><span class='line'>  getSender().tell(
+</span><span class='line'>      new JobFailed("Service unavailable, try again later", job),
+</span><span class='line'>      getSender());
+</span><span class='line'>
+</span><span class='line'>} else if (message instanceof TransformationJob) {
+</span><span class='line'>  TransformationJob job = (TransformationJob) message;
+</span><span class='line'>  jobCounter++;
+</span><span class='line'>  backends.get(jobCounter % backends.size())
+</span><span class='line'>      .forward(job, getContext());
+</span><span class='line'>
+</span><span class='line'>} else if (message.equals(BACKEND_REGISTRATION)) {
+</span><span class='line'>  getContext().watch(getSender());
+</span><span class='line'>  backends.add(getSender());
+</span><span class='line'>
+</span><span class='line'>} else if (message instanceof Terminated) {
+</span><span class='line'>  Terminated terminated = (Terminated) message;
+</span><span class='line'>  backends.remove(terminated.getActor());
+</span><span class='line'>
+</span><span class='line'>} else {
+</span><span class='line'>  unhandled(message);
+</span><span class='line'>}
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }
+</span><span class='line'>}&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>frontend用List<ActorRef>保存了backend的actor位置，有需要的时候就轮循发给backend。</li>
+<li>getSender 本次收到消息的上游，一般用来回复消息。</li>
+<li>getContext 本actor的上下文。</li>
+<li>getContext().watch DeathWatch，相当于watch了谁，谁有啥公开动作就会告诉我，包括挂了之类的。</li>
+<li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在做路由、负载均衡、备份时非常有用。</li>
+</ul>
+
+
+<h2>运行TransformationApp</h2>
+
+<ul>
+<li>sample.cluster.transformation.TransformationApp 启动三个backend 2551 2552 0为一个cluster，启动一个fronend。</li>
+<li>frontend每5秒会收到一次任务，接收成功后print代码，代码如下：</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>system.scheduler().schedule(interval, interval, new Runnable() {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>  public void run() {
+</span><span class='line'>    ask(frontend,
+</span><span class='line'>        new TransformationJob("hello-" + counter.incrementAndGet()),
+</span><span class='line'>        timeout).onSuccess(new OnSuccess&lt;Object&gt;() {
+</span><span class='line'>      public void onSuccess(Object result) {
+</span><span class='line'>        System.out.println(result);
+</span><span class='line'>      }
+</span><span class='line'>    }, ec);
+</span><span class='line'>  }
+</span><span class='line'>
+</span><span class='line'>}, ec);
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>frontend节点中，收到job的时候会去检查backend注册数是否可用了，如果有可用的就forward任务。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>public void onReceive(Object message) {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>if ((message instanceof TransformationJob) &amp;&amp; backends.isEmpty()) {
+</span><span class='line'>  TransformationJob job = (TransformationJob) message;
+</span><span class='line'>  getSender().tell(
+</span><span class='line'>      new JobFailed("Service unavailable, try again later", job),
+</span><span class='line'>      getSender());
+</span><span class='line'>
+</span><span class='line'>} else if (message instanceof TransformationJob) {
+</span><span class='line'>  TransformationJob job = (TransformationJob) message;
+</span><span class='line'>  jobCounter++;
+</span><span class='line'>  backends.get(jobCounter % backends.size())
+</span><span class='line'>          .forward(job, getContext());
+</span><span class='line'>
+</span><span class='line'>} else if (message.equals(BACKEND_REGISTRATION)) {
+</span><span class='line'>  getContext().watch(getSender());
+</span><span class='line'>  backends.add(getSender());
+</span><span class='line'>
+</span><span class='line'>} else if (message instanceof Terminated) {
+</span><span class='line'>  Terminated terminated = (Terminated) message;
+</span><span class='line'>  backends.remove(terminated.getActor());
+</span><span class='line'>
+</span><span class='line'>} else {
+</span><span class='line'>  unhandled(message);
+</span><span class='line'>}
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>在backend中有一句代码如下：</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>void register(Member member) {&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>if (member.hasRole("frontend"))
+</span><span class='line'>  getContext().actorSelection(member.address() + "/user/frontend").tell(
+</span><span class='line'>      BACKEND_REGISTRATION, getSelf());
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>解析：backend订阅了memberUp事件，所以在cluster中如果有memberUp了，都会执行上述代码。</li>
+<li>actorSelection是根据地址进行lookup，返回一个ActorSelection，可以当成本地的actor一样tell。</li>
+</ul>
+
+
+<h2>代码</h2>
+
+<ul>
+<li>本文提及代码在 <a href="https://github.com/54chen/akka_cluster_learn">https://github.com/54chen/akka_cluster_learn</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java中使用akka手记二 Cluster]]></title>

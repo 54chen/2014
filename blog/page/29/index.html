@@ -9,7 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[纯水]庆祝数据开始注入nuclear系统和哥学社整装待发 二零一零年的五月二十五号，更确定一点来说是五月二十六号这一天，经过半年将近一年的折腾，人人网分步式no-sql系统nuclear正式导入了线上的大型数据（之前也有一些数据在工作了，这次是相当大一部分数据）。 &hellip;">
+  <meta name="description" content="分享一个批量扫描ip地址的shell内涵脚本 内涵前言
+假如您在维护上千台服务器，然后通过www.xxx.com发现打不开，然后有部分用户又说是可以打开的，现在要做的事情是找出来哪个机器可以用。
+内涵第一章 检查原理
+有许多DNS反查的网站，可以反查你的域名的相关ip地址， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +84,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/27/sharing-a-shell-script/">分享一个批量扫描ip地址的shell内涵脚本</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img01.taobaocdn.com/bao/uploaded/i1/T1IOXBXe8iXXbdtJjb_093433.jpg" alt="内涵人类" />
+<h2><strong>内涵前言</strong></h2>
+假如您在维护上千台服务器，然后通过www.xxx.com发现打不开，然后有部分用户又说是可以打开的，现在要做的事情是找出来哪个机器可以用。
+<h2><strong>内涵第一章 检查原理</strong></h2>
+有许多DNS反查的网站，可以反查你的域名的相关ip地址，然后把这些ip地址循环ping，有返回结果的说明那个服务器可用。比如说just-dnslookup等等网站。具体可以在网上找找。
+<h2><strong>内涵第二章 检查操作</strong></h2>
+在准备好数据后，将结果复制到脚本文件中的temp文件中，然后修改54chenPing.sh中的第二行，将awk中的$3修改为你的数据对应的列数。比如说你复制的内容的第三列的话就写$3，第四列就写$4。
+<h2><strong>内涵第三章 执行</strong></h2>
+#sh 54chenPing.sh<br />
+然后会有结果输出，持续输出返回结果的一个或者多个ip即是可用的服务器。
+<h2><strong>内涵第四章 代码</strong></h2>
+<blockquote>#!/bin/sh<br />
+cat temp | awk &#8216;{print $3}&#8217; &gt; ip.txt<br />
+FLIST=&#8221;`cat ip.txt|grep -v &#8220;#&#8221;`&#8221;<br />
+for FILE in `echo &#8220;${FLIST}&#8221;`<br />
+do<br />
+ping ${FILE}&gt; tmp/${FILE}.txt&amp;<br />
+done<br />
+tail -f tmp/*</blockquote>
+<h2><strong>内涵第五章 下载</strong></h2>
+<a href="http://www.54chen.com/54chenPing.tar.gz">点击下载&gt;&gt;&gt;</a>
+<h2><strong>内涵第六章 备注</strong></h2>
+要经常更新temp文件，参见第一章。要知道哪台服务器是可用的，参见第三章。
+<h2><strong>内涵作者</strong></h2>
+54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。个人技术站点:http://www.54chen.com/ 。可以通过电子邮件 czhttp@gmail.com 联系到他。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -666,126 +729,6 @@ MySQL需要额外的一次传递，以找出如何按排序顺序检索行。</p
 	<li><a href="http://is.gd/bZqsY" rel="nofollow">http://is.gd/bZqsY</a> 广州机场出现20起旅客因飞机延误打砸机场行为 最后一句话是亮点 <a href="http://twitter.com/54chen/statuses/13579875376">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/05/php-require-include/">从php核心代码看require和include的区别</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-05T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><strong>前言</strong>
-五一长假归来，休息长时间很有点不习惯，回到北京已经有些不适应了。<br />
-见到鸟哥的一文：深入理解PHP之require/include顺序 <a href="http://www.laruence.com/2010/05/04/1450.html">http://www.laruence.com/2010/05/04/1450.html</a>
-忍不住继续再深入了一下下，在此记录一下深入的过程，以供以后查阅。</p>
-
-<p><strong>普及</strong>
-在php手册中：
-<blockquote>require() is identical to include()  except upon failure it will also produce a fatal E_ERROR  level error. In other words, it will halt the script whereas include() only emits a warning (E_WARNING) which allows the script to continue.</blockquote>
-就是说在失败的时候，require是会中止php运行的，而include是可以继续运行的。<br />
-倒底有什么样的区别呢？我们带着这个疑问来一起进入PHP的核心代码。<br />
-下面是一个PHP运行过程的图（这个图是出自哪里的？鸟哥画的？）
-<img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1I1NzXa4xXXcL7xo6_062051.jpg" alt="php " /></p>
-
-<p><blockquote>补习一下：lex是代码扫描器，扫描代码用的，yacc是Yet Another Compiler Compiler，作用是把任何一种代码的语法转成yacc语法，yacc就是解析器（真TMD绕）。<br />
-lex在c下的后缀是*.l  yacc是*.y</blockquote></p>
-
-<p><strong>正题</strong>
-下面看操作记录：
-<blockquote>cc@cc-laptop:/opt/workspace$ svn checkout http://svn.php.net/repository/php/php-src/branches/PHP_5_3 php-src-5.3<br />
-从svn取最新的php源代码。
-</blockquote>
-开始深入：
-<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name &#8220;*.l&#8221; -exec grep -Hn &#8220;require_once&#8221; {} \;<br />
-./Zend/zend_language_scanner.l:1093:&#8221;require_once&#8221; {<br />
-寻找lex代码扫描器文件中出现require_once的地方，zend_language_scanner.l的1093行。<br />
-1093  &#8220;require_once&#8221; {<br />
-1094         return T_REQUIRE_ONCE;<br />
-1095 }</blockquote></p>
-
-<p>然后再搜一下T_REQUIRE_ONCE,
-<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name &#8220;*.y&#8221; -exec grep -Hn &#8220;T_INCLUDE&#8221; {} \;<br />
-./Zend/zend_language_parser.y:52:%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE<br />
-./Zend/zend_language_parser.y:985:	|	T_INCLUDE expr 			{ zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
-./Zend/zend_language_parser.y:986:	|	T_INCLUDE_ONCE expr 	{ zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }</blockquote></p>
-
-<p>在985行附近，有这样一群代码：
-<blockquote>internal_functions_in_yacc:<br />
-T_ISSET &#8216;(&#8217; isset_variables &#8216;)&#8217; { $$ = $3; }<br />
-|       T_EMPTY &#8216;(&#8217; variable &#8216;)&#8217;        { zend_do_isset_or_isempty(ZEND_ISEMPTY, &amp;$$, &amp;$3 TSRMLS_CC); }<br />
-|       T_INCLUDE expr                  { zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
-|       T_INCLUDE_ONCE expr     { zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
-|       T_EVAL &#8216;(&#8217; expr &#8216;)&#8217;     { zend_do_include_or_eval(ZEND_EVAL, &amp;$$, &amp;$3 TSRMLS_CC); }<br />
-|       T_REQUIRE expr                  { zend_do_include_or_eval(ZEND_REQUIRE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
-|       T_REQUIRE_ONCE expr             { zend_do_include_or_eval(ZEND_REQUIRE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
-;</blockquote></p>
-
-<p>于是乎，我们需要继续深入寻找zend_do_include_or_eval，
-<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name &#8220;*.c&#8221; -exec grep -Hn &#8220;zend_do_include_or_eval&#8221; {} \;<br />
-./Zend/zend_compile.c:4317:void zend_do_include_or_eval(int type, znode *result, const znode *op1 TSRMLS_DC) /*  */</blockquote></p>
-
-<p>zend_do_include_or_eval中组装了一个结构体，ZEND_INCLUDE_OR_EVAL。</p>
-
-<p>再在zend_vm_def.h中找到ZEND_VM_HANDLER(73, ZEND_INCLUDE_OR_EVAL, CONST|TMP|VAR|CV, ANY)：<br />
-switch (Z_LVAL(opline-&gt;op2.u.constant)) {代码略}</p>
-
-<p>中间关键的一句是：<br />
-new_op_array = compile_filename(Z_LVAL(opline-&gt;op2.u.constant), inc_filename TSRMLS_CC);</p>
-
-<p>在zend_complie.h文件中:<br />
-ZEND_API zend_op_array *compile_filename(int type, zval *filename TSRMLS_DC);</p>
-
-<p>这个函数定义在zend_language_scaner.l文件中，找出最核心的代码：
-<blockquote>if (open_file_for_scanning(file_handle TSRMLS_CC)==FAILURE) {<br />
-// require与include的差别：错误信息的显示级别（有bailout和无bailout）<br />
-if (type==ZEND_REQUIRE) {   //require时<br />
-zend_message_dispatcher(ZMSG_FAILED_REQUIRE_FOPEN, file_handle-&gt;filename TSRMLS_CC);<br />
-zend_bailout();<br />
-} else {<br />
-zend_message_dispatcher(ZMSG_FAILED_INCLUDE_FOPEN, file_handle-&gt;filename TSRMLS_CC);<br />
-}
-compilation_successful=0;<br />
-} else {代码略}</blockquote></p>
-
-<p>继续追踪zend_message_dispatcher可以在main/main.c文件中找到php_message_handler_for_zend函数：</p>
-
-<p><blockquote>//include输出错误信息时的级别为：E_WARNING<br />
-		case ZMSG_FAILED_INCLUDE_FOPEN:<br />
-			php_error_docref(&#8220;function.include&#8221; TSRMLS_CC, E_WARNING, &#8220;Failed opening &#8216;%s&#8217; for inclusion (include_path=&#8217;%s&#8217;)&#8221;, php_strip_url_passwd((char *) data), STR_PRINT(PG(include_path)));<br />
-			break;<br />
-		//require输出错误信息时的级别为：E_COMPILE_ERROR<br />
-代码略
-</blockquote></p>
-
-<p><strong>总结</strong>
-和开头PHP手册所说完全一致，require和include的区别在于，出现错误时，一个是error一个是warning。</p>
 </div>
   
   

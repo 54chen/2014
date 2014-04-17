@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-01-01 水煮鱼杯2011年度不得不总结的十件事 http://t.co/J1l7Vusw #
-人肉构造打到php，php立马100%，转到java（resin+spring+rose），轻松化解，没有反应。(java数据本地亲测hash &hellip;">
+  <meta name="description" content="Nginx防hashdos模块释出 2012.1.7 更新
+编译的时候推荐使用nginx-1.0以上版本，不要加&#8211;with-debug参数编译，（感谢agentzh指出）。 hashdos这个事，严格意义上不是各种语言的错了（不过perl的确处理得很好）， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,80 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/06/nginx-hashdos-module/">Nginx防hashdos模块释出</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://wiki.nginx.org/local/nginx-logo.png" alt="nginx hashdos" />
+<font color="blue">2012.1.7 更新<br />
+编译的时候推荐使用nginx-1.0以上版本，不要加&#8211;with-debug参数编译，（感谢agentzh指出）。</font></p>
+
+<p>hashdos这个事，严格意义上不是各种语言的错了（不过perl的确处理得很好），但是用nginx来擦屁股要干净些。<br />
+借鉴tomcat的作法，实现了下面这个nginx-http-hashdos-module，通过设置hashdos（默认on）的开关和body_max_count(默认值1000)，对nginx后面的服务进行安全防护，相比对php或者java进行patch，这或许是最好的办法了。</p>
+
+<p><strong>nginx-http-hashdos-module项目地址</strong>
+<a href="https://github.com/54chen/nginx-http-hashdos-module">https://github.com/54chen/nginx-http-hashdos-module</a></p>
+
+<p><strong>如何使用</strong>
+1.下载zip后保存到一个目录，如~/nginx-http-hashdos-module。<br />
+2.cd nginx-1.0.9/<br />
+3.重新编译和安装nginx<br />
+./configure &#8211;prefix=/opt/soft/nginx &#8211;with-pcre &#8211;user=www &#8211;group=www &#8211;with-http_stub_status_module &#8211;with-http_ssl_module &#8211;add-module=/path_to/nginx-http-hashdos-module/ && make && make install<br />
+4.配置打开：<br />
+        hashdos on;<br />
+	body_max_count 1000;<br />
+	location ~ &#46;php$ {<br />
+          fastcgi_pass 127.0.0.1:9000;<br />
+          fastcgi_index index.php;<br />
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;<br />
+          include /opt/soft/nginx/conf/fastcgi_params;<br />
+	  client_body_buffer_size  2m;<br />
+	  client_max_body_size     2m;<br />
+        }</p>
+
+<p><strong>注意事项</strong>
+因为计算参数都在内存中进行，所以client_body_buffer_size 与 client_max_body_size 的值一定要相等。推荐2m。</p>
+
+<p><strong>TODO</strong>
+改进in-file时的post分析。</p>
+
+<p><strong>原理</strong>
+介于微博上有网友对此文扫一眼之后以为是简单通过client_body_buffer_size和client_max_body_size来做的判断，特加此节。<br />
+nginx-reqeust-body在接到请求时，根据header中的声明，判断是保存在内存还是在硬盘中，当大小超过两个buf和client_body_buffer_size大小时，会写入临时文件。<br />
+防止hashdos的终极目标是filter用户的输入，所以对用户的输入参数数量进行计数。超过1000（body_max_count的默认数量）时，返回一个413给攻击者。希望不要再渔到各种高级工程师。</p>
+
+<p><a href="https://github.com/54chen/nginx-http-hashdos-module">https://github.com/54chen/nginx-http-hashdos-module</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -612,64 +686,6 @@ velocity2011讲师经验总结及velocity2011的ppt下载 </ul><a href="http://t
 3）会上遇到了douban强宁大侠、安全宝的冯大侠、还有一位来自清华的主任、以及各位一线的朋友恕不能一一列出，深感荣幸。</p>
 
 <p><div style="width:425px" id="__ss_10490088"><strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/54chen/ss-10490088" title="互联网创业服务器运维工具集">互联网创业服务器运维工具集</a></strong><object id="__sse10490088" width="425" height="355"><param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-111206183925-phpapp01&stripped_title=ss-10490088&userName=54chen" /><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="wmode" value="transparent" /><embed name="__sse10490088" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-111206183925-phpapp01&stripped_title=ss-10490088&userName=54chen" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="transparent" width="425" height="355"></embed></object><div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/54chen">zhen chen</a>.</div></div></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/12/05/mobile-net-api-design/">移动互联网api设计实践</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-05T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/13078490/T28EicXgtXXXXXXXXX_!!13078490.jpg" alt="api quota perf design" />
-过去一年时间里，都在做中国移动互联网下的API设计工作，所面对的情况可能是最具中国特色的了。如果你在尝试构架一整套的新的API供你的客户端使用，可以尝试以下的几点：
-<strong>1）api所使用协议，要能够不怕被加js、加广告和各种代码。</strong>
-全国各地的运营商，有习惯挂广告、加代码等等，要做的事情就是在客户端做各种解析判断。实践证明，这帮孙子的设备是检测http协议的head头里的content-type，如果是html/text则会加，如果是text/json就不加了，所以，你懂的。</p>
-
-<p><strong>2）api可视化</strong>
-你的app上架了，后端也布好了。然后呢，就天天看下载量。但后端好坏一问三不知。所以在设计api时，要提前回答以下问题：<br />
-1.此时此刻，有多少个app正在调用这些api，每分钟多少个？<br />
-2.他们（api）有快？<br />
-3.能否很简单地通过浏览器快速debug？<br />
-4.能否快速禁止单个用户？</p>
-
-<p><strong>3）链路</strong>
-在幅员辽阔的我国，总是一个地方到一个地方的IDC直接就ping不通（移动互联网下更甚）。于是需要花钱自己打通这些地方，没有专线，只有代理再代理。</p>
-
-<p><strong>4）api quota与perfcounter</strong>
-对api进行quota限制，针对每个api每个人，都有限额。<br />
-这个限制的传统做法：<br />
-1.每天的上限调用次数。每天半夜清空，一天一个量累计。<br />
-2.每分钟的频度。这个防止有恶性的突发情况。<br />
-上述二者，缺一不可。<br />
-perfcounter用于对api的监控设计指标，如果一个api有异常，应当十分灵敏地得出结论，而不是误报连连。
-</p>
 </div>
   
   

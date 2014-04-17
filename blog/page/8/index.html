@@ -9,8 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-06-10 移动互联网必备：各平台自助渠道打包手段公开 http://t.co/L5wXmdMX #
-rose手册第三章七节：controller层：门户必备portal支持 http://t.co/104PdX8K # &hellip;">
+  <meta name="description" content="Rose手册第三章八节：controller层：门户必备pipe支持 3.8.1 什么是pipe?
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;
+* pipe起源于facebook的工程师对他们网页提速的方案：将网页分解为Pagelets的小块（ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +83,84 @@ rose手册第三章七节：controller层：门户必备portal支持 http://t.co
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/15/rose-3-8/">Rose手册第三章八节：controller层：门户必备pipe支持</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" /></p>
+
+<p><strong>3.8.1 什么是pipe?</strong>
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;<br />
+* pipe起源于facebook的工程师对他们网页提速的方案：将网页分解为Pagelets的小块（在rose叫做window的小块），然后通过后端多重管道运行，以达到性能的最佳。<br />
+* pipe巧妙使用了http 1.1连接有timeout的机制，充分使用一次http连接来传递数据。<br />
+* pipe可使用户在大多数浏览器中感受到延迟减少了一半。</p>
+
+<p><strong>3.8.2 与facebook的bigpipe相比rose pipe如何？</strong>
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+* fb并未在开源项目中公布过使用方法<br />
+* bigpipe神似是php+js搞定的<br />
+* rose pipe可以自由选择线程池大小，完全出自上一节的portal的基础<br />
+* 完全实现bigpipe功能，天然的对业务开发者透明</p>
+
+<p><strong>3.8.3 看实例</strong>
+&#8212;&#8212;&#8212;&#8212;</p>
+
+<p>HelloController.java</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Get</span><span>(</span><span class="string">&#8220;/3.8&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;String&nbsp;pipe(Pipe&nbsp;pipe)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;pipe.addWindow(<span class="string">&#8220;p1&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;/wp1&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;pipe.addWindow(<span class="string">&#8220;p2&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;/wp2&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;pipe&#8221;</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p> * 长得是不是很像上一节里提供的action？<br />
+ * 不同在于jsp文件中：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-rb" start="1"><li class="alt"><span><span>&lt;%@&nbsp;page&nbsp;contentType=</span><span class="string">&#8220;text/html;charset=UTF-8&#8221;</span><span>%&gt;&nbsp;&nbsp;</span></span></li><li class=""><span>&lt;%@&nbsp;taglib&nbsp;uri=<span class="string">&#8220;http://paoding.net/rose/pipe&#8221;</span><span>&nbsp;prefix=</span><span class="string">&#8220;rosepipe&#8221;</span><span>%&gt;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&lt;!DOCTYPE&nbsp;html&nbsp;PUBLIC&nbsp;<span class="string">&#8221;-//W3C//DTD&nbsp;HTML&nbsp;4.01&nbsp;Transitional//EN&#8221;</span><span>&nbsp;</span><span class="string">&#8220;http://www.w3.org/TR/html4/loose.dtd&#8221;</span><span>&gt;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&lt;html&gt;&nbsp;&nbsp;</span></li><li class=""><span>&lt;head&gt;&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;meta&nbsp;http-equiv=<span class="string">&#8220;Content-Type&#8221;</span><span>&nbsp;content=</span><span class="string">&#8220;text/html;&nbsp;charset=UTF-8&#8221;</span><span>&gt;&nbsp;&nbsp;</span></span></li><li class=""><span>&lt;title&gt;portal/pipe演示信息&lt;/title&gt;&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;script&nbsp;type=&#8217;text/javascript&#8217;&nbsp;src=&#8217;/js/rosepipe.js&#8217;&gt;&lt;/script&gt;&nbsp;&nbsp;</span></li><li class=""><span>&lt;/head&gt;&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;body&gt;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>portal/pipe演示信息：&nbsp;&nbsp;</span></li><li class=""><span>&lt;br&gt;&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;div&nbsp;id=<span class="string">&#8220;p1&#8221;</span><span>&gt;&lt;/div&gt;&nbsp;&nbsp;</span></span></li><li class=""><span>&lt;br&gt;&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;div&nbsp;id=<span class="string">&#8220;p2&#8221;</span><span>&gt;&lt;/div&gt;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;/body&gt;&nbsp;&nbsp;</span></li><li class=""><span>&lt;/html&gt;&nbsp;&nbsp;</span></li><li class="alt"><span>&lt;rosepipe<span class="symbol">:write</span><span>&gt;${p1}&lt;/rosepipe</span><span class="symbol">:write</span><span>&gt;&nbsp;&nbsp;</span></span></li><li class=""><span>&lt;rosepipe<span class="symbol">:write</span><span>&gt;${p2}&lt;/rosepipe</span><span class="symbol">:write</span><span>&gt;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>* 当使用jsp文件时，需要在尾部使用rosepipe:write标签<br />
+* 如果是使用vm文件，可以不写这个标签</p>
+
+<p><strong>3.8.4 总结</strong>
+&#8212;&#8212;&#8212;-</p>
+
+<p>* 上述代码中p1 p2两个window会同时在多个线程中执行，如果是portal，那会多个线程执行完成一起返回，而pipe则会用js反写的方式，一个线程一个线程地返回给用户。<br />
+* pipe是个好物件<br />
+* 使用时jsp一定不要忘记尾部的标签<br />
+* 使用时web.xml一定不要忘记声明使用的线程池大小<br />
+* 久经考验</p>
+
+<p> 文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
+ 常期更新版本在：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_8">https://github.com/XiaoMi/rose/tree/master/chapter_3_8</a></p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -600,113 +679,6 @@ rose手册第三章三节：controller层：ErrorHandler支持 <a href="http://t
 
 <p>文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
 文档持续修改版本在 <a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_4">https://github.com/XiaoMi/rose/tree/master/chapter_3_4</a>。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/16/rose-3-3/">rose手册第三章三节：controller层：ErrorHandler支持</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-16T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" />
-<strong>
-3.3.1 ErrorHandler的作用</strong>
-一般来说传统的编程都会到处去try，特别是java里，try来try去的（如果你用erlang一定就知道，已经知道的可能性，怎么能叫异常？都try了还是让它崩了算了。。。）。<br />
-如果打开你的项目，每个java文件中的代码都有一堆的try，那这时候就是ErrorHandle上阵的时候了。<br />
-ErrorHanle致力于：统一捕捉和处理各种异常，可区分对待和返回；统一的出错体验。<br />
-非常类似做web开发时的500统一出错页面这样的东东。
-<strong>3.3.2 示例</strong></p>
-
-<p><blockquote>/**<br />
- * @author chenzhen@xiaomi.com<br />
- * 2010-12-1 <br />
- */</blockquote></p>
-
-<p>package com.chen.controllers;</p>
-
-<p>import net.paoding.rose.web.ControllerErrorHandler;<br />
-import net.paoding.rose.web.Invocation;</p>
-
-<p>public class ErrorHandler implements ControllerErrorHandler {</p>
-
-<p>    public Object onError(Invocation inv, Throwable ex) throws Throwable {</p>
-
-<p>        // TODO logger.error(&#8220;handle err:&#8221;, ex);</p>
-
-<p>        return &#8220;@error&#8221;;<br />
-    }<br />
-}</p>
-
-<p>这是这么简单，不用怀疑！</p>
-
-<p><strong>3.3.3 放在哪里才能生效？</strong>
-放在controllers目录下，和controller们在一起（幸福快乐地生活）。<br />
-一般来讲，ErrorHandler都是用在web项目里，在最快层起作用。<br />
-所有的方法都可以尽情地向处throws Exception了。<br />
-不需要再try了。</p>
-
-<p><blockquote>@Path(&#8220;&#8221;)<br />
-public class HelloController {<br />
-    @Get(&#8220;&#8221;)<br />
-    public String index2() throws Exception {<br />
-        return &#8220;@hello world&#8221;;<br />
-    }<br />
-}</blockquote></p>
-
-<p><strong>
-3.3.3 有用的例子: 不同的异常类型做不用的事情</strong></p>
-
-<p><blockquote>/**<br />
- * @author chenzhen@xiaomi.com<br />
- * 2010-12-1 <br />
- */</blockquote></p>
-
-<p>package com.chen.controllers;</p>
-
-<p>import net.paoding.rose.web.ControllerErrorHandler;<br />
-import net.paoding.rose.web.Invocation;</p>
-
-<p>public class ErrorHandler implements ControllerErrorHandler {</p>
-
-<p>    public Object onError(Invocation inv, Throwable ex) throws Throwable {</p>
-
-<p>        // TODO logger.error(&#8220;handle err:&#8221;, ex);<br />
-        if (ex instanceof RuntimeException) {<br />
-            return &#8220;@runtime&#8221;;<br />
-        }<br />
-        return &#8220;@error&#8221;;<br />
-    }<br />
-}</p>
-
-<p>文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
-文档持续修改版本在 <a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_3">https://github.com/XiaoMi/rose/tree/master/chapter_3_3</a>。</p>
 </div>
   
   

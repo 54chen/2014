@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Scp和rsync的限制流量（速度）方法 有些机房会限制机器的流量，为了不触及底线，在使用scp和rsync的时候都要注意。 为了避免你的scp或者rsync因为无良＆懒惰的OPS设置防火墙的偷懒而造成的断流现象，我们必须对自己的数据传输进行一定的限流措施，慢一点总比被掐了的好。因此（限制为 &hellip;">
+  <meta name="description" content="[原创]Discuz! BBS缓存整体方案 [ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.6.22 转载请注明原文链接：http://www.54chen.com/c/611 ]
+DZ的缓存方案是经典之作，不论是系统的主动缓存还是帖子内容的被动缓存。在我前面的博文【[原创] &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +82,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/06/22/%E5%8E%9F%E5%88%9Bdiscuz-bbs%E7%BC%93%E5%AD%98%E6%95%B4%E4%BD%93%E6%96%B9%E6%A1%88/">[原创]Discuz! BBS缓存整体方案</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-06-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span lang="EN-US"><span style="font-family: Times New Roman;">[ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.6.22 转载请注明原文链接：<a href="http://www.54chen.com/c/611">http://www.54chen.com/c/611</a> ]</span></span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span lang="EN-US"><span style="font-family: Times New Roman;"><a href="http://www.54chen.com/c/505"><span style="font-size: small;"><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的缓存方案</span></span></a></span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">是经典之作，不论是系统的主动缓存还是帖子内容的被动缓存。在我前面的博文【<a href="http://www.54chen.com/c/505">[原创]Discuz! BBS的主动缓存和被动缓存</a>】里所讲述的是</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的缓存常用的一种方法，下面再说在</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">系统里如何决定一个内容是不是要缓存。</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">所有的数据全都缓存，不失为一个好办法。但是，在数据更新要求及时的环境下，例如帖子回复的内容要求立即显示等地，又不得不对其缓存进行更新。所以，基本上每一个成熟的系统，都不会去把所有的东西缓存起来。这时是不是让各位很困惑，缓存就是一把双刃剑，用好了系统效率事半功倍，用得不好，产品功能将受到严重影响。</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">就是一个缓存与不缓存选取得当的系统。</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">我们一起进入</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">，也就是负责显示帖子内容的一个文件。代码一开始有这样一个判断：</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-size: small; font-family: Times New Roman;">$page = max($page, 1);</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-size: small; font-family: Times New Roman;">if($cachethreadlife &amp;&amp; $forum[&#8216;threadcaches&#8217;] &amp;&amp; !$discuz_uid &amp;&amp; $page == 1 &amp;&amp; !$forum[&#8216;special&#8217;]) {</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-family: Times New Roman;"><span style="font-size: small;"><span style="mso-tab-count: 1;">       </span>viewthread_loadcache();</span></span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-size: small; font-family: Times New Roman;">}</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">这是什么意思呢？基本上就是在说，当一些系统的设置都满足的时候，只要是第一页就去执行</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread_<a href="http://www.54chen.com/c/516">load</a>cache()</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">，各位已经等不及看这个函数的意思了吧，且慢，先说说为什么选中了第一页。在经过大家长期的总结下，发现一个成熟论坛大多数时间会员都会停留在帖子的第一页，所以，</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">大胆地只将第一页进行缓存。</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">真的是只将第一页进行缓存吗？答案是否定的，下面我们来看</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread_loadcache()</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">这个函数里的内容。</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">这个函数写在了</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的</span><span lang="EN-US"><span style="font-family: Times New Roman;">538</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">行，看到这个函数的第一感觉，是专业。</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的多年开发，已经将论坛的行为研究深深刻在了代码里。如下这段代码，这个函数里的</span><span lang="EN-US"><span style="font-family: Times New Roman;">$threadcachemark</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">这个变量，被定义为与帖子的显示顺序、是否加精、此版最后回复天数、帖子浏览数、回复数、每页显示条数进行运算得到的一个值，如果这个值小于了版块的设置，这个帖子的内容才会生效。就也是说，</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">甚至还不是但凡第一页就缓存！</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-size: small; font-family: Times New Roman;">$threadcachemark = 100 - (</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-family: Times New Roman;"><span style="font-size: small;"><span style="mso-tab-count: 2;">              </span>$forum[&#8216;displayorder&#8217;] * 15 +</span></span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-family: Times New Roman;"><span style="font-size: small;"><span style="mso-tab-count: 2;">              </span>$forum[&#8216;digest&#8217;] * 10 +</span></span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-family: Times New Roman;"><span style="font-size: small;"><span style="mso-tab-count: 2;">              </span>min($forum[&#8216;views&#8217;] / max($forum[&#8216;livedays&#8217;], 10) * 2, 50) +</span></span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-family: Times New Roman;"><span style="font-size: small;"><span style="mso-tab-count: 2;">              </span>max(-10, (15 - $forum[&#8216;lastpostdays&#8217;])) +</span></span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span lang="EN-US"><span style="font-family: Times New Roman;"><span style="font-size: small;"><span style="mso-tab-count: 2;">              </span>min($forum[&#8216;replies&#8217;] / $_DCACHE[&#8216;settings&#8217;][&#8216;postperpage&#8217;] * 1.5, 15));</span></span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">这个经典的公式从何而来？由笔者有幸参加的一次</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的培训得知，这个公式是多年来长期的积累，不断的尝试，才总结所得。至于更多的细节，大概只有</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的总设计师才能得知。不过我们也可以从代码里得到一些提示，帖子的属性是可以作为是否缓存的权值的，而这个权值，直接决定了缓存与否。</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">这样的选取在</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">里到处可见，在存在分页的地方，只需要记住，前两页或者前一页，以及最后两页或最后一页，永远比中间的更值得缓存。如果读者的系统需要一个缓存方案，建议全局统计一下所有的用户关注的点，学习</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的<a href="http://www.54chen.com/c/531">思想</a>，将这些关键的点数值化，就一定也能得出一个合适的公式。</span></span></p>
+<p class="MsoNormal" style="margin: 0cm 0cm 0pt; text-indent: 21.75pt;"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">一个简约的缓存，每个细节的方案，筑成了</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">整体的坚实。</span></span></p></p>
+
+<p><blockquote><span style="font-size: 10.5pt; font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman'; mso-bidi-font-size: 10.0pt; mso-bidi-font-family: 'Times New Roman'; mso-ansi-language: EN-US; mso-fareast-language: ZH-CN; mso-bidi-language: AR-SA;">提示：平时在设计系统的时候，也许并不能考虑到这么细，如果不是受到磁盘空间的限制，您并不需要担心按照什么方案来缓存，用一刀切的方案也不错，也就是把大部分看上去很常用的数据都缓存了，但你需要更多考虑去对比是否需要更新缓存了，比如用最后回复的时间去对比，很多开源系统就都是这样干的。</span></blockquote></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -790,55 +848,6 @@ Todd从定义BigTable的适用范围开始论述。由于BigTable引入的各种
 <p><a href="http://code.google.com/campfire/" target="_blank">Google  Campfire首页介绍GAE JAVA</a></p>
 
 <p><a href="http://code.google.com/appengine/docs/java/gettingstarted/" target="_blank">GAE JAVA的入门指南</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/06/%E7%A7%91%E5%AD%A6%E9%99%A2%E6%96%B0%E9%97%BB%E7%8F%8D%E6%83%9C%E5%8A%A8%E7%89%A9%E9%A2%86%E5%85%BB%E5%9F%BA%E5%9C%B0%E5%86%85%E6%B5%8B%E7%89%88%E4%B8%8A%E7%BA%BF/">[科学院新闻]珍惜动物领养基地内测版上线</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-04-06T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><h1 style="text-align: center;">新闻</h1>
-<p style="text-align: left;">     为期三天的假期结束，科学院山寨新产品-珍惜动物领养基地上线内测，欢迎参与。<br />
-进入地址：
-<a href="http://www.54chen.com/2/">http://www.54chen.com/2/</a></p>
-
-<p><p style="text-align: left;">特点：<br />
-1.此珍惜动物非珍稀动物，意在申请了要珍惜，不然此种动物会慢慢由大变小直到挂掉。<br />
-2.对于此动物的其他意义54chen不发表任何额外意见，提供在此仅供学习和娱乐。<br />
-3.欢迎抢短数字的ID（还有大量1-9的ID，一共9个&#8230;）。</p>
-
-<p><p style="text-align: left;">3.5.里面的天气预报是山寨的，不过是非常准确的，判断了来访者的地域显示，和cctv的一样准。 <br />
-4.路过帮我喂。
-<div style="width: 250px; padding: 0; margin: 0; border: 1px solid #000; text-align: center;"><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="250" height="300" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="bgcolor" value="#ffffff" /><param name="flashvars" value="cn=零蛋坐骑&amp;an=零蛋&amp;clr=0xedd177&amp;uid=1" /><param name="src" value="http://www.54chen.com/2/f/ma2.swf" /><embed type="application/x-shockwave-flash" width="250" height="300" src="http://www.54chen.com/2/f/ma2.swf" flashvars="cn=零蛋坐骑&amp;an=零蛋&amp;clr=0xedd177&amp;uid=1" bgcolor="#ffffff"></embed></object></div>
-<a href="http://www.54chen.com/2/">领养一个珍惜动物!</a></p></p></p></p>
 </div>
   
   
