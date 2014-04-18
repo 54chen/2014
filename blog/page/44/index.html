@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="西单女孩 Java关于夏令时的神来之笔 夏令时简介： Daylight Saving Time：DST
-    夏令时，又称“日光节约时制”或“夏时制”，是一种为节约能源而人为规定地方时间的制度，在这一制度实行期间所采用的统一时间称为“夏令时间”。一般在天亮早的夏季人为将时间提前一小时， &hellip;">
+  <meta name="description" content="如何用php代码清空squid缓存下的指定文件 [文章作者：陈臻 本文版本：v1.0 最后修改：2009.3.5 转载请注明原文链接：http://www.54chen.com/c/490]     PURGE 是一个特殊的HTTP请求方法。它是Squid 的专有方法，没有在任何RFC 里定义。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +81,78 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/03/05/%E5%A6%82%E4%BD%95%E7%94%A8php%E4%BB%A3%E7%A0%81%E6%B8%85%E7%A9%BAsquid%E7%BC%93%E5%AD%98%E4%B8%8B%E7%9A%84%E6%8C%87%E5%AE%9A%E6%96%87%E4%BB%B6/">如何用php代码清空squid缓存下的指定文件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-05T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.3.5 转载请注明原文链接：http://www.54chen.com/c/490]</p>
+
+<p>    PURGE 是一个特殊的<a href="http://www.54chen.com/c/417">HTTP</a>请求方法。它是Squid 的专有方法，没有在任何RFC 里定义。它让管理员能强制删除缓存对象。既然该方法有些危险，squid 默认拒绝PURGE 请求，除非你定义了ACL 引用了该方法。否则，任何能访问cache 者也许能够删除任意缓存对象。我推荐仅仅允许来自localhost 的PURGE:<br />
+acl Purge method PURGE<br />
+acl Localhost src 127.0.0.1<br />
+http_access allow Purge Localhost<br />
+http_access deny Purge  （squid.conf摘要）</p>
+
+<p>以下是使用purge删除指定文件的两个函数：</p>
+
+<p>    //发送socket数据<br />
+function socket_service($ip, $port=&#8217;80&#8217;, $out=&#8221;&#8220;)<br />
+{
+ if(trim($ip)==&#8221;&#8220;)return &#8220;Error: without dest host!&#8221;;<br />
+ if($out==&#8221;) $out=&#8221;GET / HTTP/1.1\r\nHost: $ip\r\n\r\n&#8221;;<br />
+ $sock = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);<br />
+ $sourceips[&#8216;internal&#8217;] = &#8216;6.4.10.9&#8217;;<br />
+ $sourceips[&#8216;external&#8217;] = &#8216;6.4.10.9&#8217;;<br />
+ socket_bind($sock, $sourceips[&#8216;internal&#8217;]);<br />
+ socket_connect($sock, $ip, $port);<br />
+ socket_write($sock, $out);<br />
+ $return=socket_read($sock,100000);<br />
+ socket_close($sock);<br />
+ return $return;<br />
+}
+//更新url指定的文件cache<br />
+function purgeFile($url)<br />
+{
+  $squid_dv=array(&#8220;1.5.5.6&#8221;,&#8221;6.6.8.8&#8221;);//两个前端squid<br />
+  $request=&#8221;PURGE $url \n&#8221;;<br />
+  foreach($squid_dv as $key =&gt; $ip)<br />
+  {<br />
+   $result=socket_service($ip,80,$request);<br />
+  }<br />
+}</p>
+
+<p>  这样只需要在代码里使用 purgeFile(&#8216;/xxx.gif&#8217;);即可将上述两个服务器中指定的路径文件缓存删除。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -776,84 +847,6 @@ connection_reset_<br />
 <p>所以是两个戒指．看有网友说是提前放到盘子里的，其实不是，蛋黄打开是散的，这在我们那边是叫＂寡鸡蛋＂，是不能吃的，有硬物在蛋黄里把蛋黄搅坏了．</p>
 
 <p>综上，２３都没意思，过个<a href="http://www.54chen.com/c/428">年</a>不容易，主持人也是拖儿．</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/01/26/%E7%A7%BB%E6%B0%91%E7%AD%BE%E8%AF%81%E7%BB%BF%E5%8D%A1%E6%8A%95%E8%B5%84%E7%A7%BB%E6%B0%91%E4%B8%8E%E6%8A%80%E6%9C%AF%E7%A7%BB%E6%B0%91/">移民,签证,绿卡,投资移民与技术移民</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-01-26T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><strong>移民</strong>是到外国定居，包括做华侨或成为外籍华人。</p>
-
-<p>办<strong>绿卡</strong>也是移民，得到绿卡，你就成为那里的华侨，但是<strong>移民</strong>还可以进一步，申请成为当地公民，变成外籍华人。</p>
-
-<p>你一直保有绿卡也可以,那样你就一直是华侨，但是如果申请成为公民成功，绿卡就需要被注销。</p>
-
-<p>&#8211;</p>
-
-<p> <span style="color: #0938f7;"><strong>工作签证与绿卡的区别</strong></span> (欧美国家举例)</p>
-
-<p><span style="color: #0033ff;">费用及续签:</span>
-Working visa ：2年100 euro,每2年续签一次，第一次的working visa会附带有2年的re-entry visa.<br />
-Green card ：第一个2年是1000 euro,2年之后续签的时候是1500 euro，之后可以转成5 年的long term residency（stamp4）or permanent residency (stamp 6)</p>
-
-<p><span style="color: #0938f7;">国籍申请:
-</span>Working visa：5年的<a href="http://www.54chen.com/c/17">working </a>visa 之后可以申请，办理周期为24月 – 36 月。等待的时间和green card 一样，是5年。<br />
-Green card ：5 年的 green card 之后可以申请，周期为24月 – 36 月。等待的时间和<a href="http://www.54chen.com/c/49">working </a>visa 一样，是5年。
-<span style="color: #0938f7;">
-长期居留签证:
-</span>Working visa：5年的工作签证之后，到第六年的时候可以申请 5 年的long term residency.，办理周期为45 周 左右<br />
-Green card ：在green card 第一次续签的时候就可以申请long term residency or permanent residency
-<span style="color: #0968f7;">
-</span><span style="color: #0938f7;">永住签证 :
-</span><a href="http://www.54chen.com/c/79">Working </a>visa：持有8年的<a href="http://www.54chen.com/c/79">work </a>visa 可以申请永住签证。<br />
-Green card ：如上
-<span style="color: #0938f7;">
-工作与签证的捆绑程度:</span>
-working visa ：随人走，如果你在working visa 持有期间想换个new company, 只要提前4周告诉current company一下就行了，跟在current company 工作的长短没有关系<br />
-Green card ：它是和company绑定的，而且一旦这个 company给你申请了green card, 你必须至少要在这个company工作12个月，才可以跳到其他的公司，然而你的current green card就会失效了，因为你的current green card 是和上一个公司绑定的，你的新公司还必须再给你申请个new green card.</p>
-
-<p><span style="color: #0938f7;">优点和缺点:
-</span>Working visa：费用低，续签容易（只需要上一年的p60和current company的一封证明你在其中的信,那怕是3个月的contract work也可以）签证很灵活是随人走，想换公司很容易。 但是对于那些不想拿国籍的，只想拿永住的同胞是不太好的，必须要持有8年的working visa才可以申请, 等待时间过长。<br />
-Green card ：费用高，与公司绑定 （如上），换个新公司，比较麻烦，需要申请新的green card. 但是2年后可以直接申请long term residency or 永住。</p>
-
-<p> </p>
-
-<p>&#8211;</p>
-
-<p><strong><span style="color: #3366ff;"> 技术移民与投资移民</span></strong></p>
-
-<p>技术移民是指不依靠别人担保，靠自己的技术和才能移民。</p>
-
-<p><span style="font-size: x-small;">投资移民是指具有一定资产,并具有一定程度的工商业经营或管理经验的人士,以投资的方式取得外国永久居留权。</span></p>
 </div>
   
   

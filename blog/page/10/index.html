@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-04-01 Introducing Spring for Apache Hadoop | SpringSource Team Blog http://t.co/IEiB3DBS #
-https://t.co/jJ2osdy4 rose手册计划 &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2012-04-08 sonatype维护权限比较有意思，使用jira来管理权限申请过程，rose的jar包很快提交到maven中央仓库，这样在写rose教程第二章的时候不那么费口舌去说什么是maven了。https://t.co/jJ2osdy4 # &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +81,45 @@ https://t.co/jJ2osdy4 rose手册计划 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/08/54chen-twitter-memo-2012-04-08/">54chen Twitter Memo 2012-04-08</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-08T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+sonatype维护权限比较有意思，使用jira来管理权限申请过程，rose的jar包很快提交到maven中央仓库，这样在写rose教程第二章的时候不那么费口舌去说什么是maven了。https://t.co/jJ2osdy4 </ul><a href="http://twitter.com/54chen/statuses/188104863153008640" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -618,46 +656,6 @@ bin/kafka-server-start.sh config/server.properties<br />
 
 <p><strong>consumer的代码</strong>
 <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">//&nbsp;specify&nbsp;some&nbsp;consumer&nbsp;properties</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>Properties&nbsp;props&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Properties();&nbsp;&nbsp;</span></span></li><li class="alt"><span>props.put(<span class="string">&#8220;zk.connect&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;localhost:2181&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>props.put(<span class="string">&#8220;zk.connectiontimeout.ms&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;1000000&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>props.put(<span class="string">&#8220;groupid&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;test_group&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="comment">//&nbsp;Create&nbsp;the&nbsp;connection&nbsp;to&nbsp;the&nbsp;cluster</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>ConsumerConfig&nbsp;consumerConfig&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;ConsumerConfig(props);&nbsp;&nbsp;</span></span></li><li class="alt"><span>ConsumerConnector&nbsp;consumerConnector&nbsp;=&nbsp;Consumer.createJavaConsumerConnector(consumerConfig);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="comment">//&nbsp;create&nbsp;4&nbsp;partitions&nbsp;of&nbsp;the&nbsp;stream&nbsp;for&nbsp;topic&nbsp;“test”,&nbsp;to&nbsp;allow&nbsp;4&nbsp;threads&nbsp;to&nbsp;consume</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>Map&lt;String,&nbsp;List&lt;KafkaMessageStream&lt;Message&gt;&gt;&gt;&nbsp;topicMessageStreams&nbsp;=&nbsp;&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;consumerConnector.createMessageStreams(ImmutableMap.of(<span class="string">&#8220;test&#8221;</span><span>,&nbsp;</span><span class="number">4</span><span>));&nbsp;&nbsp;</span></span></li><li class=""><span>List&lt;KafkaMessageStream&lt;Message&gt;&gt;&nbsp;streams&nbsp;=&nbsp;topicMessageStreams.get(<span class="string">&#8220;test&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span><span class="comment">//&nbsp;create&nbsp;list&nbsp;of&nbsp;4&nbsp;threads&nbsp;to&nbsp;consume&nbsp;from&nbsp;each&nbsp;of&nbsp;the&nbsp;partitions&nbsp;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>ExecutorService&nbsp;executor&nbsp;=&nbsp;Executors.newFixedThreadPool(<span class="number">4</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="comment">//&nbsp;consume&nbsp;the&nbsp;messages&nbsp;in&nbsp;the&nbsp;threads</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">for</span><span>(</span><span class="keyword">final</span><span>&nbsp;KafkaMessageStream&lt;Message&gt;&nbsp;stream:&nbsp;streams)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;executor.submit(<span class="keyword">new</span><span>&nbsp;Runnable()&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;run()&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>(Message&nbsp;message:&nbsp;stream)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;process&nbsp;message</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;});&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/19/54chen-twitter-memo-2012-02-19/">54chen Twitter Memo 2012-02-19</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-19T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-预计在未来近期内发布rose-thrift、rose-zookeeper，基于spring/thrift/zk的高可用SOA解决方案。 </ul><a href="http://twitter.com/54chen/statuses/169059656172445696" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2012-02-12 <a href="http://t.co/k0nAJfnO" rel="nofollow">http://t.co/k0nAJfnO</a> <a href="http://twitter.com/54chen/statuses/168513887463931904" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   

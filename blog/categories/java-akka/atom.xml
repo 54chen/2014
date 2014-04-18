@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java,akka | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/java-akka/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-04-17T11:54:17+08:00</updated>
+  <updated>2014-04-18T18:00:12+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java中使用akka手记四 用法速查]]></title>
+    <link href="http://2014.54chen.com/blog/2014/04/18/how-to-use-akka-in-java-4/"/>
+    <updated>2014-04-18T15:37:25+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/04/18/how-to-use-akka-in-java-4</id>
+    <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
+
+<h2>Actor</h2>
+
+<ul>
+<li>UntypedActor actor的基类，继承并实现onReceive方法就可以得到一个Actor。</li>
+<li>Props 配置类，用Props.create可以创建一个按指定配置生成的Actor。</li>
+<li>Props的推荐实践，创建Actor时，搞一个static的Props.create方法。可以少写不少重复代码。</li>
+<li>system.actorOf 会创建顶级的actor，将被系统监控。</li>
+<li>getContext().acrtorOf 会创建子actor。</li>
+<li>ActorRef 由actorOf产生，可以是一个网络actor。</li>
+<li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在>做路由、负载均衡、备份时非常有用。ask会拦住reply消息直接给onsuccess等，sender不会再得到reply。</li>
+<li>Inbox 当actor不能满足需要时，可以使用inbox，比如收多个回复，watch其他actor的生命周期。</li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>spring集成</h2>
+
+<ul>
+<li>实现SpringExtProvider在spring context中去寻找actor class，实现akka.actor.Extension和akka.actor.IndirectActorProducer。</li>
+<li>system.actorOf(SpringExtProvider.get(system).props(&ldquo;CountingActor&rdquo;), &ldquo;counter&rdquo;);即可取到bean为CountingActor的class。</li>
+</ul>
+
+
+<h2>else</h2>
+
+<ul>
+<li>PoisonPill 这毒药，给哪个actor一发就挂。myActor.tell(akka.actor.PoisonPill.getInstance(), sender);</li>
+<li>TypedActor 是比较好的连接actor系统与非actor内容的东东。</li>
+<li>mailbox 每个actor的消息存放处，默认为java.util.concurrent.ConcurrentLinkedQueue，akka.dispatch.SingleConsumerOnlyUnboundedMailbox为更高效的一个box，但不能用在BalancingDispatcher时。还可以自已定义mailbox的细节。</li>
+<li>UntypedProcessor 继承它可得到一个processor。用来做persistence用的。</li>
+<li>SupervisorStrategy 定义出错处理。</li>
+<li>routing 定义路由选择机制。cluster中使用。</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Java中使用akka手记三 Cluster详例]]></title>

@@ -9,7 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="TCP连接:SYN ACK RST UTG PSH FIN TCP的三次握手是怎么进行的：发送端发送一个SYN=1，ACK=0标志的数据包给接收端，请求进行连接，这是第一次握手；接收端收到请求并且允许连接的话，就会发送一个SYN=1，ACK=1标志的数据包给发送端，告诉它，可以通讯了， &hellip;">
+  <meta name="description" content="LiteIM/FreePlus的取IP代码 这是LiteIM/FreePlus的取IP代码,感兴趣的朋友看看吧.
+runjin的是汇编版本,这是c版本,希望有更多的人能读懂.后来者,愿它对你有益.闪了.
+源码：
+static const DWORD UnknownSig=0x1E3A86BA; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +84,122 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2007/10/29/liteim-freeplusu002639s-get-ip-code/">LiteIM/FreePlus的取IP代码</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2007-10-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><pre>这是LiteIM/FreePlus的取IP代码,感兴趣的朋友看看吧.
+runjin的是汇编版本,这是c版本,希望有更多的人能读懂.后来者,愿它对你有益.闪了.
+源码：
+static const DWORD UnknownSig=0x1E3A86BA;
+static const LPSTR  szQQUSER_DYNAMIC_DATA="QQUSER_DYNAMIC_DATA";
+typedef void( *pPrepareDynData)(LPVOID IQQData,LPSTR szCmd,const DWORD* szSig,LPVOID* pDynamicData);
+VOID PrepareData(LPVOID IQQData,LPVOID* pDynamicData)
+{
+    pPrepareDynData PrepareDynData=(pPrepareDynData)*(LONG *)(*(LONG *)IQQData+0x54);
+    PrepareDynData(IQQData,szQQUSER_DYNAMIC_DATA,&amp;UnknownSig,pDynamicData);
+}</pre></p>
+
+<p>DWORD GetDyncDWORD(LPVOID DynamicData, int iOffset,LPCSTR szCmd)<br />
+{
+    DWORD dwRet=0;<br />
+    __asm<br />
+    {<br />
+        lea eax,dwRet<br />
+        push eax<br />
+        push szCmd<br />
+        mov eax, DynamicData<br />
+        push eax<br />
+        mov ecx,[eax]<br />
+        mov eax,ecx<br />
+        add eax,iOffset<br />
+        call [eax]<br />
+    }<br />
+    return dwRet;<br />
+}</p>
+
+<p>static const LPSTR  szdwRecentIP=&#8221;dwRecentIP&#8221;;<br />
+static const LPSTR  szdwIP=&#8221;dwIP&#8221;;<br />
+static const LPSTR  szdwC2CIP=&#8221;dwC2CIP&#8221;;<br />
+DWORD GetIP(DWORD Uin)<br />
+{
+    DWORD dwRet=0;<br />
+    LPVOID IQQData=NULL;<br />
+    if (!GetFriendQQData(g_IQQCore,Uin,&amp;IQQData)) return dwRet;<br />
+    LPVOID DynamicData=NULL;<br />
+    PrepareData(IQQData,&amp;DynamicData);<br />
+    if (NULL==DynamicData) return dwRet;<br />
+    dwRet=GetDyncDWORD(DynamicData,0x34,szdwC2CIP);//ecx+18<br />
+    if (dwRet) return dwRet;<br />
+    dwRet=GetDyncDWORD(DynamicData,0x34,szdwIP);<br />
+    if (dwRet) return dwRet;<br />
+    dwRet=GetDyncDWORD(DynamicData,0x34,szdwRecentIP);<br />
+    return dwRet;<br />
+}</p>
+
+<p>static const LPSTR  szwRecentPort=&#8221;wRecentPort&#8221;;<br />
+static const LPSTR  szwPort= &#8220;wPort&#8221;;<br />
+static const LPSTR  szwC2CPort= &#8220;wC2CPort&#8221;;<br />
+DWORD GetPort(DWORD Uin)<br />
+{
+    DWORD dwRet=0;<br />
+    LPVOID IQQData=NULL;<br />
+    if (!GetFriendQQData(g_IQQCore,Uin,&amp;IQQData)) return dwRet;<br />
+    LPVOID DynamicData=NULL;<br />
+    PrepareData(IQQData,&amp;DynamicData);<br />
+    if (NULL==DynamicData) return dwRet;<br />
+    dwRet=GetDyncDWORD(DynamicData,0x30,szwC2CPort);//ecx+14<br />
+    if (dwRet) return dwRet;<br />
+    dwRet=GetDyncDWORD(DynamicData,0x30,szwPort);<br />
+    if (dwRet) return dwRet;<br />
+    dwRet=GetDyncDWORD(DynamicData,0x30,szwRecentPort);<br />
+    return dwRet;<br />
+}</p>
+
+<p>static const LPSTR  szwProcotol = &#8220;wProcotol&#8221;;<br />
+DWORD GetVer(DWORD Uin)<br />
+{
+    DWORD dwRet=0;<br />
+    LPVOID IQQData=NULL;<br />
+    if (!GetFriendQQData(g_IQQCore,Uin,&amp;IQQData)) return dwRet;<br />
+    LPVOID DynamicData=NULL;<br />
+    PrepareData(IQQData,&amp;DynamicData);<br />
+    if (NULL==DynamicData) return dwRet;<br />
+    dwRet=GetDyncDWORD(DynamicData,0x30,szwProcotol);<br />
+    return dwRet;<br />
+}
+出处：ye-soft 作者：asaki</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

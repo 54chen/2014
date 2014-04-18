@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-09-18 riak源码阅读手记 压力测试 http://t.co/WxuWVpQi #
-riak源码阅读手记 与Cassandra相比 http://t.co/iNidnsc #
-@Fenng 汗颜呀哥，帮我在大众之下自嘲一下，并非有意为之， &hellip;">
+  <meta name="description" content="用supervisord管理杂乱的服务 Supervisord是用Python实现的一款非常实用的进程管理工具，在批量服务化管理时特别有效。 环境 centos
+python2.4 安装 wget http://pypi.python.org/packages/source/s/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +82,206 @@ riak源码阅读手记 与Cassandra相比 http://t.co/iNidnsc #
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/21/supervisord-manage-service/">用supervisord管理杂乱的服务</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-21T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://supervisord.org/_static/logo_hi.gif" alt="supervisord" /></p>
+
+<p>Supervisord是用Python实现的一款非常实用的进程管理工具，在批量服务化管理时特别有效。</p>
+
+<p><strong>环境</strong></p>
+
+<p>centos<br />
+python2.4</p>
+
+<p><strong>安装 </strong></p>
+
+<p>wget http://pypi.python.org/packages/source/s/supervisor/supervisor-3.0a10.tar.gz#md5=99c6fbd45bade87301296b7a597fb68e</p>
+
+<p>tar zxvf supervisor-3.0a10.tar.gz<br />
+cd supervisor-3.0a10<br />
+python setup.py install<br />
+如果上述遇到问题，请按如下操作。</p>
+
+<p><strong>依赖setuptools安装</strong></p>
+
+<p>wget http://pypi.python.org/packages/2.4/s/setuptools/setuptools-0.6c11-py2.4.egg#md5=bd639f9b0eac4c42497034dec2ec0c2b<br />
+sh setuptools-0.6c11-py2.4.egg</p>
+
+<p><strong>产生基础配置文件</strong></p>
+
+<p>echo_supervisord_conf > /etc/supervisord.conf</p>
+
+<p><strong>配置</strong></p>
+
+<p>[inet_http_server]前面的分号去掉;<br />
+定义port=192.168.1.1:8888</p>
+
+<p><strong>启动</strong></p>
+
+<p>supervisord -c /etc/supervisord.conf</p>
+
+<p><strong>查看</strong></p>
+
+<p>浏览器打开 http://192.168.1.1:8888
+<strong>
+深入配置</strong></p>
+
+<p><blockquote>[program:service]<br />
+command=sh /opt/soft/service/run.sh  ; the program (relative uses PATH, can take args)<br />
+process_name=%(program_name)s ; process_name expr (default %(program_name)s)<br />
+numprocs=1                    ; number of processes copies to start (def 1)<br />
+directory=/opt/soft/service/                ; directory to cwd to before exec (def no cwd)<br />
+autostart=true                ; start at supervisord start (default: true) <br />
+autorestart=true              ; retstart at unexpected quit (default: true)<br />
+stopsignal=QUIT               ; signal used to kill process (default TERM)<br />
+stopwaitsecs=10               ; max num secs to wait b4 SIGKILL (default 10)</blockquote></p>
+
+<p>以上配置了一个shell脚本的启动和stop过程。<br />
+一般java程序都喜欢在一个shell脚本内初始化classpath，再执行java main。<br />
+直接在shell中run java会出现stop失败的情况，在启动前添加 exec即可。</p>
+
+<p><blockquote>#!/bin/sh<br />
+export CLASSPATH=.<br />
+for jarpath in `ls library/*.jar`<br />
+do<br />
+    CLASSPATH=$CLASSPATH:$jarpath<br />
+done<br />
+export CLASSPATH=$CLASSPATH<br />
+exec java com.chen.main;
+</blockquote></p>
+
+<p><strong>
+帮助</strong></p>
+
+<p><blockquote>supervisord，初始启动Supervisord，启动、管理配置中设置的进程。<br />
+supervisorctl stop programxxx，停止某一个进程(programxxx)，programxxx为[program:chatdemon]里配置的值，这个示例就是chatdemon。<br />
+supervisorctl start programxxx，启动某个进程<br />
+supervisorctl restart programxxx，重启某个进程<br />
+supervisorctl stop all，停止全部进程，注：start、restart、stop都不会载入最新的配置文件。<br />
+supervisorctl reload，载入最新的配置文件，并按新的配置启动、管理所有进程。<br />
+supervisorctl  reread，当一个服务由自动启动修改为手动启动时执行一下就ok</blockquote></p>
+
+<p><strong>如何添加进程不启动所有的服务进程</strong>
+<blockquote>1）修改/etc/supervisord.conf<br />
+2）supervisorctl  reread<br />
+3）supervisorctl  add xxservice
+</blockquote></p>
+
+<p><strong>如何删除进程不启动所有的服务进程</strong>
+<blockquote>1）修改/etc/supervisord.conf<br />
+2）supervisorctl  reread<br />
+3）supervisorctl  update
+</blockquote>
+http://smarden.org/runit/runscripts.html 一些可参考的启动配置</p>
+
+<p><strong>supervisord开机自启动</strong>
+chkconfig &#8211;add supervisord #加为服务<br />
+运行ntsysv，选中supervisord启动系统时跟着启动。<br />
+[/etc/rc.d/init.d/supervisord]
+<blockquote>#!/bin/sh<br />
+#
+# /etc/rc.d/init.d/supervisord<br />
+#
+# Supervisor is a client/server system that<br />
+# allows its users to monitor and control a<br />
+# number of processes on UNIX-like operating<br />
+# systems.<br />
+#
+# chkconfig: - 64 36<br />
+# description: Supervisor Server<br />
+# processname: supervisord</blockquote></p>
+
+<p># Source init functions<br />
+. /etc/rc.d/init.d/functions</p>
+
+<p>prog=&#8221;supervisord&#8221;</p>
+
+<p>prefix=&#8221;/usr/&#8221;<br />
+exec_prefix=&#8221;${prefix}&#8221;<br />
+prog_bin=&#8221;${exec_prefix}/bin/supervisord&#8221;<br />
+PIDFILE=&#8221;/var/run/$prog.pid&#8221;</p>
+
+<p>start()<br />
+{
+        echo -n $&#8221;Starting $prog: &#8221;<br />
+        daemon $prog_bin &#8211;pidfile $PIDFILE<br />
+        [ -f $PIDFILE ] && success $&#8221;$prog startup&#8221; || failure $&#8221;$prog startup&#8221;<br />
+        echo<br />
+}</p>
+
+<p>stop()<br />
+{
+        echo -n $&#8221;Shutting down $prog: &#8221;<br />
+        [ -f $PIDFILE ] && killproc $prog || success $&#8221;$prog shutdown&#8221;<br />
+        echo<br />
+}</p>
+
+<p>case &#8220;$1&#8221; in</p>
+
+<p>  start)<br />
+    start<br />
+  ;;</p>
+
+<p>  stop)<br />
+    stop<br />
+  ;;</p>
+
+<p>  status)<br />
+        status $prog<br />
+  ;;</p>
+
+<p>  restart)<br />
+    stop<br />
+    start<br />
+  ;;</p>
+
+<p>  *)<br />
+    echo &#8220;Usage: $0 {start|stop|restart|status}&#8221;<br />
+  ;;</p>
+
+<p>esac
+</p>
+
+<p><strong>注意 </strong>
+不带参数运行supervisord是以daemon方式运行。<br />
+把supervisord加入到开机启动项里就可以完成监控进程的功能了。<br />
+当supervisord以非daemon方式运行时，杀掉supervisord后，被监控的进程也退出了。<br />
+而以daemon方式运行，杀掉supervisord对被监控进程无影响。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -697,70 +896,6 @@ behaviour_info(_Other) ->
 &#8230;</blockquote></p>
 
 <p>有点类似java的interface.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/22/riak-source/">Riak源码阅读手记一 初出茅庐 项目入口</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-22T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" /></p>
-
-<p><strong>简介</strong>
-basho（相扑）是一家美国的技术公司，专营数据存储和管理软件，11年6月30日获得了750万美元的融资。basho将riak开源，通过收取riak的维护和管理界面软件的使用费用来赚钱，和resin的公司类似。<br />
-今天主要研究的是，basho旗下的riak:一个类dynamo系统的kv存储。riak使用了erlang进行开发，将代码精简到极致。</p>
-
-<p><strong>rebar</strong>
-riak的代码使用了一个叫做rebar（钢筋）的erlang构建工具，使用起来真的很方便，其使用方法建议参考这篇文章：http://www.linezing.com/blog/?p=347。每个项目下，都有一个叫做rebar.config的文件，里面用erlang语法记录了这个项目需要的目录、环境、版本、以及依赖的包在github上的位置。真的很方便。riak项目中，rebar和reltool被大量使用。reltool使用方法参见 http://erlangdisplay.iteye.com/blog/508944</p>
-
-<p>riak的总控工程：https://github.com/basho/riak。<br />
-看rebar.config定义的依赖部分:</p>
-
-<p><blockquote>{deps, [<br />
-       {cluster_info, &#8220;1.1.*&#8221;, {git, &#8220;git://github.com/basho/cluster_info&#8221;, {branch, &#8220;master&#8221;}}}, %% 这个模块提供了一个松散易扩展的导出集群节点状态的办法。可以收集的信息包括：时间、所有的erlang进程的静态统计、网络连接情况、cpu和内存、大队列进程、内部内存调用统计、ETS、各节点的名字版本等<br />
-       {luwak, &#8220;1.*&#8221;, {git, &#8220;git://github.com/basho/luwak&#8221;, {branch, &#8220;master&#8221;}}}, %% 大对象存储。用来存音频视频啥的。<br />
-       {riak_kv, &#8220;0.14.*&#8221;, {git, &#8220;git://github.com/basho/riak_kv&#8221;, {branch, &#8220;master&#8221;}}}, %% 这个模块依赖riak_core，在这一层里，封装了给各种client调用的接口，处理具体存储、M/R等。<br />
-       {riak_search, &#8220;0.14.*&#8221;, {git, &#8220;git://github.com/basho/riak_search&#8221;,<br />
-                                {branch, &#8220;master&#8221;}}} %% 基于riak的全文检索实现<br />
-       ]}.</blockquote></p>
-
-<p><strong>构建过程</strong>
-通过rebar的reltool支持，在riak项目中，rebar.conf中定义了{sub_dirs,[&#8220;rel&#8221;]}，表示在rel目录下使用reltool创建一个发行版本。<br />
-在rel目录的rel.config中，{lib_dirs, [&#8220;../deps&#8221;]}，定义了所有的子模块都放在了deps目录下。很长的一个config文件，有点像ant脚本。</p>
-
-<p><strong>函数规范定义：spec</strong>
--spec Module:Function(ArgType1, &#8230;, ArgTypeN) -> ReturnType.<br />
-函数的参数数目必须与函数规范定义相同，否则编译出错。定义了type及spec，我们可以使用 dialyzer 对代码进行静态分析，在运行之前发现很多低级或者隐藏的错误。</p>
-
-<p></p>
 </div>
   
   

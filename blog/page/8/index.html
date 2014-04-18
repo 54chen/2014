@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Rose手册第三章八节：controller层：门户必备pipe支持 3.8.1 什么是pipe?
-&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;
-* pipe起源于facebook的工程师对他们网页提速的方案：将网页分解为Pagelets的小块（ &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2012-06-17 现代中国互联网产品的拼杀到技术上最终都到了sql的拼杀，抛开框架层面的东西，大面上来说，还需要大量的写sql的人员，新的职业，就叫做SQLer吧。肯定有人不愿意了叫SQLer，工作多年还能写出二分查找、双向链表反序的不在此列。 #
+@ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +82,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/17/54chen-twitter-memo-2012-06-17/">54chen Twitter Memo 2012-06-17</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-17T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+现代中国互联网产品的拼杀到技术上最终都到了sql的拼杀，抛开框架层面的东西，大面上来说，还需要大量的写sql的人员，新的职业，就叫做SQLer吧。肯定有人不愿意了叫SQLer，工作多年还能写出二分查找、双向链表反序的不在此列。 </ul><a href="http://twitter.com/54chen/statuses/213888569226444802" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/javasoze" class="aktt_username">javasoze</a> we too, haha <a href="http://twitter.com/54chen/statuses/213860061020303361" class="aktt_tweet_time">#</a>
+搞后台的遇到的最苦逼的事情No.1：线上挂了，N多用户等着，经理老板在屁股后头问怎么回事，MD技术选型时图新鲜，觉得不会挂，这下SB了，从源代码开始解起。 [所幸这事工作中还没遇到过，在大学里搞BBS时天天干这事] <a href="http://twitter.com/54chen/statuses/213555037253804032" class="aktt_tweet_time">#</a>
+rose手册第三章八节：controller层：门户必备pipe支持 <a href="http://t.co/A0T2v2f3" rel="nofollow">http://t.co/A0T2v2f3</a> <a href="http://twitter.com/54chen/statuses/213543614226247681" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/javasoze" class="aktt_username">javasoze</a> Derby doesn&#039;t support auto_increament.H2Database is better than it. <a href="http://twitter.com/54chen/statuses/213169813982429185" class="aktt_tweet_time">#</a>
+看你的右手中指第一个关节近食指的一面，是不是茧要厚些，这是你好好学习的象征。 <a href="http://twitter.com/54chen/statuses/213166295917658112" class="aktt_tweet_time">#</a>
+mysql要是能够提供一个纯java的内存数据库，那对写test case会提供巨大的帮助。 <a href="http://twitter.com/54chen/statuses/213130547990499329" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-06-10 <a href="http://t.co/VQwbDOst" rel="nofollow">http://t.co/VQwbDOst</a> <a href="http://twitter.com/54chen/statuses/211638344310992896" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -603,82 +648,6 @@ rose手册第三章三节：controller层：ErrorHandler支持 <a href="http://t
 54chen Twitter memo 2012-05-13 <a href="http://t.co/2YPpChAl" rel="nofollow">http://t.co/2YPpChAl</a> <a href="http://twitter.com/54chen/statuses/201487956568055809" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/19/rose-3-4/">Rose手册第三章四节：controller层：自定义http参数支持</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-19T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" />
-<strong>3.4.1 http参数支持的一些前言</strong>
-&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
-* 我们把一个controller的类里的一个方法叫做action，它实际对应用户看到的一个url。<br />
-* 在action里可以接收各种各样的参数，也可以自己定义需要的参数。<br />
-* rose自己定义了一些常见的类型，基本上很有机会会用到自己定义，但是在某些情况下，也是个不错的选择：<br />
- * 用来对指定的参数类型的值进行固定的修改和赋值。</p>
-
-<p><strong>3.4.2 看一个例子</strong>
-&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
-
-<p>ChenBeanResolver.java放在controllers目录下：</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;ChenBeanResolver&nbsp;</span><span class="keyword">implements</span><span>&nbsp;ParamResolver&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;Object&nbsp;resolve(Invocation&nbsp;inv,&nbsp;ParamMetaData&nbsp;metaData)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;Exception&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(String&nbsp;paramName&nbsp;:&nbsp;metaData.getParamNames())&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(paramName&nbsp;!=&nbsp;</span><span class="keyword">null</span><span>)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Chen&nbsp;chen&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Chen();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;value1&nbsp;=&nbsp;inv.getParameter(<span class="string">&#8220;chen1&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;value2&nbsp;=&nbsp;inv.getParameter(<span class="string">&#8220;chen2&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chen.setChen1(value1);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chen.setChen2(value2);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;chen;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">boolean</span><span>&nbsp;supports(ParamMetaData&nbsp;metaData)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;Chen.</span><span class="keyword">class</span><span>&nbsp;==&nbsp;metaData.getParamType();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p>* 上述代码的意思：<br />
- * 如果在action里一个参数的类型是Chen(com.chen.model.Chen)，就会走这个resolver，这里对两个参数进行了组装。<br />
- * 用户如果访问的参数里传入了chen1和chen2的值，则会直接组装出来一个Chen对象。</p>
-
-<p>* 配合上述resolver的action代码为：</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Get</span><span>(</span><span class="string">&#8220;/param&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;param(Chen&nbsp;chen)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;Exception&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;@hello&nbsp;world:&#8221;</span><span>&nbsp;+&nbsp;chen.getChen1()&nbsp;+&nbsp;</span><span class="string">&#8221;:&#8221;</span><span>&nbsp;+&nbsp;chen.getChen2();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p>* 用户访问：http://127.0.0.1/param?chen1=1&chen2=2 将会返回：<br />
-** hello world:1:2</p>
-
-<p><strong>3.4.2 rose内置的参数支持</strong>
-&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;<br />
-除了上述的自定义resolver外，rose还内置了丰富的resolver，都是大家的经验总结，使用起来会非常方便，它们是：<br />
-* 所有的基础java类型，都可以直接使用，rose进行自动转换，比如在action中的类型为long id，则id可以转为数字，不再需要从string转为long。<br />
-* array/map/bean同样可用，它们的接收参数规则为：<br />
- * ?id=1,2,3,4 或者 ?id=1&id=2&id=3  对应 @Param(&#8220;id&#8221;) int[] idArray<br />
- * ?map:1=paoding&map:2=rose 对应 @Param(&#8220;map&#8221;) Map<Integer, String> map<br />
- * POST http://127.0.0.1/user?id=1&name=rose&level.id=3 对应接收代码：</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Post</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;post(User&nbsp;user)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8221;@&#8221;</span><span>&nbsp;+&nbsp;user.getId()&nbsp;+&nbsp;</span><span class="string">&#8221;;&nbsp;level.id=&#8221;</span><span>&nbsp;+&nbsp;user.getLevel().getId();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p>  * 代码中User是一个自定义的bean，有属性id,name,level等。</p>
-
-<p>文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
-文档持续修改版本在 <a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_4">https://github.com/XiaoMi/rose/tree/master/chapter_3_4</a>。</p>
 </div>
   
   

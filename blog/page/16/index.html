@@ -9,9 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-08-21 basho的产能：23个代码提供者，46个项目。这就是erlang的产能。 #
-今天挺多人上不了gtalk，神马情况 #
-Rebar是一款Erlang的构建工具，使用它可以方便的编译、测试erlang程序、 &hellip;">
+  <meta name="description" content="Riak源码阅读手记一 初出茅庐 项目入口 简介
+basho（相扑）是一家美国的技术公司，专营数据存储和管理软件，11年6月30日获得了750万美元的融资。basho将riak开源，通过收取riak的维护和管理界面软件的使用费用来赚钱，和resin的公司类似。
+今天主要研究的是， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +83,70 @@ Rebar是一款Erlang的构建工具，使用它可以方便的编译、测试erl
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/22/riak-source/">Riak源码阅读手记一 初出茅庐 项目入口</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" /></p>
+
+<p><strong>简介</strong>
+basho（相扑）是一家美国的技术公司，专营数据存储和管理软件，11年6月30日获得了750万美元的融资。basho将riak开源，通过收取riak的维护和管理界面软件的使用费用来赚钱，和resin的公司类似。<br />
+今天主要研究的是，basho旗下的riak:一个类dynamo系统的kv存储。riak使用了erlang进行开发，将代码精简到极致。</p>
+
+<p><strong>rebar</strong>
+riak的代码使用了一个叫做rebar（钢筋）的erlang构建工具，使用起来真的很方便，其使用方法建议参考这篇文章：http://www.linezing.com/blog/?p=347。每个项目下，都有一个叫做rebar.config的文件，里面用erlang语法记录了这个项目需要的目录、环境、版本、以及依赖的包在github上的位置。真的很方便。riak项目中，rebar和reltool被大量使用。reltool使用方法参见 http://erlangdisplay.iteye.com/blog/508944</p>
+
+<p>riak的总控工程：https://github.com/basho/riak。<br />
+看rebar.config定义的依赖部分:</p>
+
+<p><blockquote>{deps, [<br />
+       {cluster_info, &#8220;1.1.*&#8221;, {git, &#8220;git://github.com/basho/cluster_info&#8221;, {branch, &#8220;master&#8221;}}}, %% 这个模块提供了一个松散易扩展的导出集群节点状态的办法。可以收集的信息包括：时间、所有的erlang进程的静态统计、网络连接情况、cpu和内存、大队列进程、内部内存调用统计、ETS、各节点的名字版本等<br />
+       {luwak, &#8220;1.*&#8221;, {git, &#8220;git://github.com/basho/luwak&#8221;, {branch, &#8220;master&#8221;}}}, %% 大对象存储。用来存音频视频啥的。<br />
+       {riak_kv, &#8220;0.14.*&#8221;, {git, &#8220;git://github.com/basho/riak_kv&#8221;, {branch, &#8220;master&#8221;}}}, %% 这个模块依赖riak_core，在这一层里，封装了给各种client调用的接口，处理具体存储、M/R等。<br />
+       {riak_search, &#8220;0.14.*&#8221;, {git, &#8220;git://github.com/basho/riak_search&#8221;,<br />
+                                {branch, &#8220;master&#8221;}}} %% 基于riak的全文检索实现<br />
+       ]}.</blockquote></p>
+
+<p><strong>构建过程</strong>
+通过rebar的reltool支持，在riak项目中，rebar.conf中定义了{sub_dirs,[&#8220;rel&#8221;]}，表示在rel目录下使用reltool创建一个发行版本。<br />
+在rel目录的rel.config中，{lib_dirs, [&#8220;../deps&#8221;]}，定义了所有的子模块都放在了deps目录下。很长的一个config文件，有点像ant脚本。</p>
+
+<p><strong>函数规范定义：spec</strong>
+-spec Module:Function(ArgType1, &#8230;, ArgTypeN) -> ReturnType.<br />
+函数的参数数目必须与函数规范定义相同，否则编译出错。定义了type及spec，我们可以使用 dialyzer 对代码进行静态分析，在运行之前发现很多低级或者隐藏的错误。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -555,86 +619,6 @@ spring配合easymock搞定不依赖环境的测试用例 </ul><a href="http://go
 小米米聊的技术小会天天在进行，先后来的嘉宾有陈飞舟，张宴，盛大Mongodb牛人，网易架构师，还有来自Facebook总部的牛人，他们都是大家或者老板利用私人关系邀请而来，谈论都是面对面的，相比之下许多技术大会就成了认识人或者招聘的过场。 <a href="http://twitter.com/54chen/statuses/89878538672537601" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/07/14/spring-easymock-tutorial/">Spring配合easymock搞定不依赖环境的测试用例</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-07-14T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1LbWjXndsXXccfjjX_085624.jpg" alt="spring easymock tutorial" /></p>
-
-<p>在写java的test case的时候，往往有太多依赖环境的情况，WEB项目更甚，如果每次测试都要准备数据库或者其他环境，相当麻烦，换一个人就入手困难，在这种情况下，mock就是最好的选择。<br />
-Mock 对象能够模拟领域对象的部分行为，并且能够检验运行结果是否和预期的一致。领域类将通过与 Mock 对象的交互，来获得一个独立的测试环境。</p>
-
-<p><strong> 入门</strong>
-<blockquote>//准备一个mock<br />
-IMocksControl mocksControl = EasyMock.createStrictControl();<br />
-//创建录像<br />
-aDAO = mocksControl.createMock(AnalyzeResultDAO.class);<br />
-//录制 输入 期望输出<br />
-EasyMock.expect(aDAO.getARByLimit(type)).andReturn(ar);<br />
-//重放 表示录制结束<br />
-EasyMock.replay(aDAO);</blockquote></p>
-
-<p>//调用相关的类 验证结果是否正常<br />
-Assert.assertNotNull(analyzeResultBiz.getLastAR(type));</p>
-
-<p>//验证是否使用了上面录制的DAO<br />
-EasyMock.verify(aDAO);
-<strong>提高</strong>
-<blockquote>* 配合spring如何做？</blockquote></p>
-
-<p>int type = 1;<br />
-AnalyzeResult ar = new AnalyzeResult();<br />
-ar.setName(&#8220;123&#8221;);<br />
-IMocksControl mocksControl = EasyMock.createStrictControl();<br />
-analyzeResultBiz = new AnalyzeResultBiz();<br />
-aDAO = mocksControl.createMock(AnalyzeResultDAO.class);<br />
-EasyMock.expect(aDAO.getARByLimit(type)).andReturn(ar);<br />
-EasyMock.replay(aDAO);<br />
-// 用spring提供的方法注入aurowired的字段<br />
-ReflectionTestUtils.setField(analyzeResultBiz, &#8220;analyzeResultDAO&#8221;, aDAO, AnalyzeResultDAO.class);<br />
-Assert.assertNotNull(analyzeResultBiz.getLastAR(type));<br />
-EasyMock.verify(aDAO);
-这样一录一用，看起来简单方便，实用美观大方，54chen强力推荐。</p>
-
-<p>Ps:<br />
-所使用的包：</p>
-
-<p>&lt;dependency&gt;<br />
-&lt;groupId&gt;org.easymock&lt;/groupId&gt;<br />
-&lt;artifactId&gt;easymock&lt;/artifactId&gt;<br />
-&lt;version&gt;2.4&lt;/version&gt;<br />
-&lt;/dependency&gt;</p>
 </div>
   
   
