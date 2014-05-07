@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="人人网精彩视频展播：艾薇儿2010冬奥会闭幕式等 这几天重感冒，娱乐项目成了重点，这才缓过劲来，感冒中间想到了这个大展播，以后每天分享来自中国元老的SNS内部的精彩内容，以下是今天的精彩内容： 艾薇儿2010冬奥会闭幕式现场 You&#8230; 【百事可乐最新创意广告】亨利、卡卡、梅&# &hellip;">
+  <meta name="description" content="五四陈透过PHP看JAVA系列：strtotime 本系列主要总结PHP与JAVA之间的一些异同，给从PHP学JAVA或者是从JAVA学PHP的同学一点启发，五四陈科学院出品。 第一部分，先看PHP的Date/Tme函数 详细见：http://www.54chen.com/p/ref. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -81,6 +81,82 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/03/04/54-chen-through-php-to-see-java-series-strtotime/">五四陈透过PHP看JAVA系列：strtotime</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>本系列主要总结PHP与JAVA之间的一些异同，给从PHP学JAVA或者是从JAVA学PHP的同学一点启发，五四陈科学院出品。</p>
+
+<p><strong>第一部分，先看PHP的Date/Tme函数</strong></p>
+
+<p>详细见：<a href="http://www.54chen.com/p/ref.datetime.html">http://www.54chen.com/p/ref.datetime.html</a></p>
+
+<p>今天要说的是其中的strtotime函数</p>
+
+<p><a href="http://www.54chen.com/p/function.strtotime.html">http://www.54chen.com/p/function.strtotime.html</a></p>
+
+<p>函数的功能：接受一个包含美国英语日期格式的字符串并尝试将其解析为    Unix 时间戳（自 January 1 1970 00:00:00 GMT 起的秒数）。</p>
+
+<p>例子：
+<blockquote>&lt;?php<br />
+echo strtotime(&#8220;2010-3-3 3:3:3&#8221;);<br />
+?&gt;</blockquote></p>
+
+<p>将得到结果：</p>
+
+<p>1267585383
+在PHP应用中，经常在需要记录时间的时候，使用Mysql的int(10)来保存这个   Unix 时间戳，并且时间的比较查找等操作，都用大于小于来进行。</p>
+
+<p><strong>第二部分，看JAVA对应的方法</strong>
+<blockquote>try {<br />
+fromUnixTime = <span style="color: #ff0000;"><strong>new java.text.SimpleDateFormat(&#8220;dd/MM/yyyy HH:mm:ss&#8221;).parse(&#8220;01/03/2010 08:00:00&#8221;).getTime();</strong></span>
+fromUnixTime /= 1000;<br />
+} catch (ParseException e1) {<br />
+e1.printStackTrace();<br />
+}</blockquote>
+看上去有点麻烦，不过因为java中操作mysql的<a href="http://www.54chen.com/java-ee/jdbc-socketread0-locked-in-mind-a-mysql-unknown-bug.html">jdbc</a>对类型的要求是非常严格的，所以一般在java项目中，不使用int来代替datetime类型的字段。</p>
+
+<p><strong>第三部分，提升部分，反过来咋整（从Unix时间戳格式化为datetime）？</strong></p>
+
+<p>先说PHP：
+<blockquote>&lt;?php<br />
+echo date(&#8220;Y-m-d H:i:s&#8221;,1267585383);<br />
+?&gt;</blockquote>
+再说JAVA：
+<blockquote>String date2 = new java.text.SimpleDateFormat(&#8220;dd/MM/yyyy HH:mm:ss&#8221;).format(new Date ((<span style="color: #ff6600;">long</span>)1267585383*1000));<br />
+System.out.println(date2);</blockquote>
+注意java中的强转为<a href="http://www.54chen.com/java-ee/java-using-the-bdb-notes-from-berkeley-db-java-api-records.html">long</a>不能丢，否则计算后结果不正确。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -799,372 +875,6 @@ mixed <strong class="methodname">call_user_func_array</strong> ( callback functi
 	<li>哥还是有先见之明，早在上周就上年了虎年新版，上级部门通知大家喜庆更新的时候，乐了。http://news.163.com   <a href="http://www.54chen.com" rel="nofollow">http://www.54chen.com</a> 这虎头咋长一个样 <a href="http://twitter.com/54chen/statuses/8671339408">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/02/java-thread-controller-code-sharing-according-to-cpu-circumstances-decide-the-number-and-circumstances-of-the-threads-running/">Java线程控制器代码分享-根据cpu情况决定线程运行数量和情况</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-02-02T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>在<a href="http://www.54chen.com/_linux_/nuclear-mass-storage-system-for-all-network-description.html">人人网海量存储系统</a>的存储引擎部分，为了提高CPU和网络的使用情况，使用了java多线程管理并行操作的方式。</p>
-
-<p>在java中控制线程是一件很简单的事情，jdk提供了诸多的方法，其中比常用的两个是notify()和wait()，一个是唤醒，一个等待线程，在下面的代码中，将看到一个线程分配器，根据cpu的负载情况，自动完成对应线程的唤醒或者是等待操作。整个过程是一个平滑的过程，不会因为线程的切换而导致机器负载出线锯齿。</p>
-
-<p>先看一个类，读取Linux系统TOP等指令拿到系统当前负载：
-<blockquote>import java.io.BufferedReader;<br />
-import java.io.InputStreamReader;</blockquote></p>
-
-<p>/**<br />
-* 节点的cpu 内存 磁盘空间 情况<br />
-*
-* @author zhen.chen<br />
-*
-*/<br />
-public class NodeLoadView {</p>
-
-<p>/**<br />
-* 获取cpu使用情况<br />
-*
-* @return<br />
-* @throws Exception<br />
-*/<br />
-public double getCpuUsage() throws Exception {<br />
-double cpuUsed = 0;</p>
-
-<p>Runtime rt = Runtime.getRuntime();<br />
-Process p = rt.exec(&#8220;/usr/bin/uptime&#8221;);// 调用系统的“top&#8221;命令<br />
-String[] strArray = null;<br />
-BufferedReader in = null;<br />
-try {<br />
-in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br />
-String str = null;<br />
-while ((str = in.readLine()) != null) {<br />
-strArray = str.split(&#8220;load average: &#8220;);<br />
-strArray = strArray[1].split(&#8220;,&#8221;);<br />
-cpuUsed = Double.parseDouble(strArray[0]);<br />
-}
-} catch (Exception e) {<br />
-e.printStackTrace();<br />
-} finally {<br />
-in.close();<br />
-}
-return cpuUsed;<br />
-}</p>
-
-<p>/**<br />
-* 内存监控<br />
-*
-* @return<br />
-* @throws Exception<br />
-*/<br />
-public double getMemUsage() throws Exception {</p>
-
-<p>double menUsed = 0;<br />
-Runtime rt = Runtime.getRuntime();<br />
-Process p = rt.exec(&#8220;top -b -n 1&#8221;);// 调用系统的“top&#8221;命令</p>
-
-<p>BufferedReader in = null;<br />
-try {<br />
-in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br />
-String str = null;<br />
-String[] strArray = null;</p>
-
-<p>while ((str = in.readLine()) != null) {<br />
-int m = 0;</p>
-
-<p>if (str.indexOf(&#8221; R &#8220;) != -1) {// 只<a href="http://www.54chen.com/internetops/51ditu%e7%ad%89%e7%bd%91%e7%ab%99%e6%8a%80%e6%9c%af%e6%8f%ad%e7%a7%98-%e5%88%a9%e7%94%a8%e5%bc%80%e6%ba%90%e6%a1%86%e6%9e%b6%e6%90%ad%e5%bb%ba%e4%b8%80%e6%95%b4%e5%a5%97%e7%9a%84webgis.html">分析</a>正在运行的进程，top进程本身除外 &amp;&amp;<br />
-//<br />
-// System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;3&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;&#8221;);<br />
-strArray = str.split(&#8221; &#8220;);<br />
-for (String tmp : strArray) {<br />
-if (tmp.trim().length() == 0)<br />
-continue;</p>
-
-<p>if (++m == 10) {<br />
-// 9)&#8211;第10列为mem的使用百分比(RedHat 9)</p>
-
-<p>menUsed += Double.parseDouble(tmp);</p>
-
-<p>}<br />
-}</p>
-
-<p>}<br />
-}
-} catch (Exception e) {<br />
-e.printStackTrace();<br />
-} finally {<br />
-in.close();<br />
-}
-return menUsed;<br />
-}</p>
-
-<p>/**<br />
-* 获取磁盘空间大小<br />
-*
-* @return<br />
-* @throws Exception<br />
-*/<br />
-public double getDeskUsage() throws Exception {<br />
-double totalHD = 0;<br />
-double usedHD = 0;<br />
-Runtime rt = Runtime.getRuntime();<br />
-Process p = rt.exec(&#8220;df -hl&#8221;);// df -hl 查看<a href="http://www.54chen.com/_linux_/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles.html">硬盘</a>空间</p>
-
-<p>BufferedReader in = null;<br />
-try {<br />
-in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br />
-String str = null;<br />
-String[] strArray = null;<br />
-while ((str = in.readLine()) != null) {<br />
-int m = 0;<br />
-// if (flag &gt; 0) {<br />
-// flag++;<br />
-strArray = str.split(&#8221; &#8220;);<br />
-for (String tmp : strArray) {<br />
-if (tmp.trim().length() == 0)<br />
-continue;<br />
-++m;<br />
-// System.out.println(&#8220;&#8212;-tmp&#8212;-&#8221; + tmp);<br />
-if (tmp.indexOf(&#8220;G&#8221;) != -1) {<br />
-if (m == 2) {<br />
-// System.out.println(&#8220;&#8212;G&#8212;-&#8221; + tmp);<br />
-if (!tmp.equals(&#8220;&#8221;) &amp;&amp; !tmp.equals(&#8220;0&#8221;))<br />
-totalHD += Double.parseDouble(tmp.substring(0,<br />
-tmp.length() - 1)) * 1024;</p>
-
-<p>}<br />
-if (m == 3) {<br />
-// System.out.println(&#8220;&#8212;G&#8212;-&#8221; + tmp);<br />
-if (!tmp.equals(&#8220;none&#8221;) &amp;&amp; !tmp.equals(&#8220;0&#8221;))<br />
-usedHD += Double.parseDouble(tmp.substring(0,<br />
-tmp.length() - 1)) * 1024;</p>
-
-<p>}<br />
-}
-if (tmp.indexOf(&#8220;M&#8221;) != -1) {<br />
-if (m == 2) {<br />
-// System.out.println(&#8220;&#8212;M&#8212;&#8221; + tmp);<br />
-if (!tmp.equals(&#8220;&#8221;) &amp;&amp; !tmp.equals(&#8220;0&#8221;))<br />
-totalHD += Double.parseDouble(tmp.substring(0,<br />
-tmp.length() - 1));</p>
-
-<p>}<br />
-if (m == 3) {<br />
-// System.out.println(&#8220;&#8212;M&#8212;&#8221; + tmp);<br />
-if (!tmp.equals(&#8220;none&#8221;) &amp;&amp; !tmp.equals(&#8220;0&#8221;))<br />
-usedHD += Double.parseDouble(tmp.substring(0,<br />
-tmp.length() - 1));<br />
-// System.out.println(&#8220;&#8212;-3&#8212;-&#8221; + usedHD);<br />
-}
-}</p>
-
-<p>}</p>
-
-<p>// }<br />
-}
-} catch (Exception e) {<br />
-e.printStackTrace();<br />
-} finally {<br />
-in.close();<br />
-}
-return (usedHD / totalHD) * 100;<br />
-}
-//<br />
-//    public static void main(String[] args) throws Exception {<br />
-//        NodeLoadView cpu = new NodeLoadView();<br />
-//        System.out<br />
-//                .println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;cpu used:&#8221; + cpu.getCpuUsage() + &#8220;%&#8221;);<br />
-//        System.out<br />
-//                .println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;mem used:&#8221; + cpu.getMemUsage() + &#8220;%&#8221;);<br />
-//        System.out<br />
-//                .println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;HD used:&#8221; + cpu.getDeskUsage() + &#8220;%&#8221;);<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;jvm监控&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-&#8220;);<br />
-//        Runtime lRuntime = Runtime.getRuntime();<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8211;Free Momery:&#8221; + lRuntime.freeMemory()<br />
-//                + &#8220;K&#8221;);<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8211;Max Momery:&#8221; + lRuntime.maxMemory()<br />
-//                + &#8220;K&#8221;);<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8211;Total Momery:&#8221;<br />
-//                + lRuntime.totalMemory() + &#8220;K&#8221;);<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;Available Processors :&#8221;<br />
-//                + lRuntime.availableProcessors());<br />
-//    }<br />
-}
-再来看关键的一个类，THreadScheduler：
-<blockquote>import java.util.Map;</blockquote></p>
-
-<p>import org.apache.log4j.Logger;</p>
-
-<p>import test.NodeLoadView;<br />
-public class ThreadScheduler {<br />
-private static Logger logger = Logger.getLogger(ThreadScheduler.class.getName());<br />
-private Map&lt;String, Thread&gt; runningThreadMap;<br />
-private Map&lt;String, Thread&gt; waitingThreadMap;<br />
-private boolean isFinished = false;<br />
-private int runningSize;</p>
-
-<p>public ThreadScheduler (Map&lt;String, Thread&gt; runningThreadMap, Map&lt;String, Thread&gt; waitingThreadMap) {<br />
-this.runningThreadMap = runningThreadMap;<br />
-this.waitingThreadMap = waitingThreadMap;<br />
-this.runningSize = waitingThreadMap.size();<br />
-}</p>
-
-<p>/**<br />
-* 开始调度线程<br />
-* @author zhen.chen<br />
-* @createTime 2010-1-28 上午11:04:52<br />
-*/<br />
-public void schedule(){<br />
-long sleepMilliSecond = 1 * 1000;<br />
-int allowRunThreads = 15;<br />
-// 一次启动的线程数，cpuLoad变大时以此值为参考递减<br />
-int allowRunThreadsRef = 15;<br />
-double cpuLoad = 0;// 0-15<br />
-NodeLoadView load = new NodeLoadView();</p>
-
-<p>while (true) {<br />
-try {<br />
-cpuLoad = load.getCpuUsage();<br />
-} catch (Exception e1) {<br />
-e1.printStackTrace();<br />
-}
-// cpuLoad低 启动的线程多<br />
-allowRunThreads = (int) Math.floor(allowRunThreadsRef - cpuLoad);<br />
-// threads不能为0<br />
-if (allowRunThreads &lt; 1) {<br />
-allowRunThreads = 1;<br />
-}
-if (allowRunThreads &gt; allowRunThreadsRef) {<br />
-allowRunThreads = allowRunThreadsRef;<br />
-}
-if (logger.isDebugEnabled()) {<br />
-logger.debug(&#8220;[ThreadScheduler]running Thread:&#8221; + runningThreadMap.size() + &#8220;; waiting Thread:&#8221; + waitingThreadMap.size() + &#8220;; cpu:&#8221; + cpuLoad + &#8221; allowRunThreads:&#8221; + allowRunThreads);<br />
-}</p>
-
-<p>// 检查runningSize个线程的情况，满足条件则启动<br />
-for (int x = 0; x &lt; runningSize; x++) {<br />
-if (waitingThreadMap.get(x+&#8221;&#8220;) != null) {<br />
-if (allowRunThreadsRef &lt;= runningThreadMap.size()) {<br />
-break;<br />
-}
-synchronized (waitingThreadMap.get(x+&#8221;&#8220;)) {<br />
-if (!waitingThreadMap.get(x+&#8221;&#8220;).isAlive()) {<br />
-waitingThreadMap.get(x+&#8221;&#8220;).start();<br />
-}else{<br />
-waitingThreadMap.get(x+&#8221;&#8220;).notify();<br />
-}
-}<br />
-runningThreadMap.put(x+&#8221;&#8220;, waitingThreadMap.get(x+&#8221;&#8220;));<br />
-waitingThreadMap.remove(x+&#8221;&#8220;);<br />
-}
-}<br />
-// 检查runningSize个线程的情况，满足条件则暂停<br />
-for (int x = 0; x &lt; runningSize; x++) {<br />
-if (runningThreadMap.size() &lt;= allowRunThreads) {<br />
-break;<br />
-}
-if (runningThreadMap.get(x+&#8221;&#8220;) != null) {<br />
-synchronized (runningThreadMap.get(x+&#8221;&#8220;)) {<br />
-try {<br />
-if (runningThreadMap.get(x+&#8221;&#8220;).isAlive()) {<br />
-runningThreadMap.get(x+&#8221;&#8220;).wait();<br />
-}else{<br />
-continue;<br />
-}
-} catch (InterruptedException e) {<br />
-e.printStackTrace();<br />
-}
-}<br />
-waitingThreadMap.put(x+&#8221;&#8220;, runningThreadMap.get(x));<br />
-runningThreadMap.remove(x+&#8221;&#8220;);<br />
-}
-}<br />
-// 全部跑完，返回<br />
-if (waitingThreadMap.size() == 0 &amp;&amp; runningThreadMap.size() == 0) {<br />
-if (logger.isDebugEnabled()) {<br />
-logger.debug(&#8220;[ThreadScheduler] over.total Threads size:&#8221; + runningSize);<br />
-}
-this.isFinished = true;<br />
-return;<br />
-}
-// 使主while循环慢一点<br />
-try {<br />
-Thread.sleep(sleepMilliSecond);<br />
-} catch (InterruptedException e1) {<br />
-e1.printStackTrace();<br />
-}
-}</p>
-
-<p>}</p>
-
-<p>public boolean isFinished() {<br />
-return isFinished;<br />
-}
-}
-<strong>这个类的作用：</strong></p>
-
-<p>1.接收runningThreadMap和waitingThreadMap两个<a href="http://www.54chen.com/_linux_/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles.html">map</a>，里面对应存了运行中的线程实例和等待中的<a href="http://www.54chen.com/_linux_/yahoo%e3%80%81tao%e4%ba%91%e8%ae%a1%e7%ae%97%e5%88%a9%e5%99%a8%e4%b9%8b%e2%80%9c%e4%ba%91%e2%80%9d%e7%ab%af%e7%9a%84%e5%b0%8f%e9%a3%9e%e8%b1%a1%e2%80%94hadoop.html">线程</a>实例。</p>
-
-<p>2.读cpu情况，自动判断要notify等待中的线程还是wait运行中的线程。</p>
-
-<p>3.两个map都结束，退出。（必须runningThreadMap内部的Thread自己将runningThreadMap对应的Thread remove掉）</p>
-
-<p><strong>如何使用：</strong>
-<blockquote>public class TestThread {<br />
-public static class Runner extends Thread {<br />
-public Runner(int j, Map&lt;String, Thread&gt; threadMap) {</blockquote></p>
-
-<p>}<br />
-public void run() {<br />
-// TODO 你的逻辑 完成后需要从threadMap中remove掉<br />
-}
-}</p>
-
-<p>public static void main(String[] args) {<br />
-// 运行中的线程<br />
-Map&lt;String, Thread&gt; threadMap = new HashMap&lt;String, Thread&gt;();<br />
-// 正在<a href="http://www.54chen.com/cc/php-java-c-upload-files-how-to-accurately-determine-the-file-type-mime-literacy.html">等待</a>中的线程<br />
-Map&lt;String, Thread&gt; waitThreadMap = new HashMap&lt;String, Thread&gt;();<br />
-for (int j = 0; j &lt; args.length; j++) {<br />
-Thread t = new Runner(j, threadMap);<br />
-waitThreadMap.put(j + &#8220;&#8221;, t);<br />
-}</p>
-
-<p>ThreadScheduler threadScheduler = new ThreadScheduler(threadMap, waitThreadMap);<br />
-threadScheduler.schedule();<br />
-if (threadScheduler.isFinished() == false) {<br />
-//没能正常结束<br />
-}
-}<br />
-}</p>
 </div>
   
   

@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="用supervisord管理杂乱的服务 Supervisord是用Python实现的一款非常实用的进程管理工具，在批量服务化管理时特别有效。 环境 centos
-python2.4 安装 wget http://pypi.python.org/packages/source/s/ &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2011-09-25 riak的开发很细致,test很全,我提的bug确认就修改了,还不忘邮件告诉我已经merge了代码：http://t.co/s1HZVaoG #
+小数一下，我们已经使用了十多项开源系统或者技术了，包括的范围有网络框架、存储系统、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +82,51 @@ python2.4 安装 wget http://pypi.python.org/packages/source/s/ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/25/54chen-twitter-memo-2011-09-25/">54chen Twitter Memo 2011-09-25</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-25T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+riak的开发很细致,test很全,我提的bug确认就修改了,还不忘邮件告诉我已经merge了代码：http://t.co/s1HZVaoG </ul><a href="http://twitter.com/54chen/statuses/117536787185930240" class="aktt_tweet_time">#</a>
+小数一下，我们已经使用了十多项开源系统或者技术了，包括的范围有网络框架、存储系统、项目管理、分布式计算、持续构建、代码质量、包管理、监控、服务管理&#8230; <a href="http://twitter.com/54chen/statuses/117080372575092736" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/arthur369" class="aktt_username">arthur369</a> @virushuo 汗死了。。。 <a href="http://twitter.com/54chen/statuses/117076884713512960" class="aktt_tweet_time">#</a>
+<a href="http://t.co/Z9t3ESH5" rel="nofollow">http://t.co/Z9t3ESH5</a>  riak1.0.0 rc1放出来了，亮点:Secondary Indexes;LevelDB;Search。修复了许多bug。 <a href="http://twitter.com/54chen/statuses/116698769457811456" class="aktt_tweet_time">#</a>
+用supervisord管理杂乱的服务 <a href="http://t.co/3TY9Ubwj" rel="nofollow">http://t.co/3TY9Ubwj</a> <a href="http://twitter.com/54chen/statuses/116406177448996864" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-09-18 <a href="http://t.co/tbb4VqGM" rel="nofollow">http://t.co/tbb4VqGM</a> <a href="http://twitter.com/54chen/statuses/115234000032903168" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-09-18 <a href="http://t.co/IXhzMo9s" rel="nofollow">http://t.co/IXhzMo9s</a> <a href="http://twitter.com/54chen/statuses/115233997608591361" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -809,93 +854,6 @@ riak源码阅读手记一 初出茅庐 项目入口 <a href="http://t.co/aA32hlp
 54chen Twitter memo 2011-08-21 <a href="http://t.co/9K4IoNr" rel="nofollow">http://t.co/9K4IoNr</a> <a href="http://twitter.com/54chen/statuses/105099916141010944" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/24/riak-cource-code/">Riak源码阅读手记二 左右开弓 启动</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-24T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_EN.XadjXXbk3DE3_051340.jpg" alt="erlang riak 54chen" />
-<strong>目标系统(target system)</strong>
-OTP系统定义里有这么一个东西：<br />
-可以被一般的erl脚本启动的系统叫基础目标系统；<br />
-除此之外还可以做运行时代码替换的系统叫简单目标系统；<br />
-如果还支持日志输出到文件、自动定时启动的话就叫做内嵌目标系统。</p>
-
-<p><strong>启动目标系统的方式</strong>
-通过erlang/OTP标准的reltool工具生成的目标系统，可以用多种方式灵活启动。<br />
-第一种：</p>
-
-<p><blockquote>os> /usr/local/erl-target/bin/erl</blockquote></p>
-
-<p>这只启动了一个基础目标系统。基本没什么具体功能。</p>
-
-<p>第二种：</p>
-
-<p><blockquote>os> /usr/local/erl-target/bin/erl -boot /usr/local/erl-target/releases/FIRST/start</blockquote></p>
-
-<p>用-boot参数，这可以启动一个简单目标系统。releases/RELEASES文件可用来做热替换。</p>
-
-<p>第三种：</p>
-
-<p><blockquote>bin/start
-</blockquote></p>
-
-<p>这个脚本会去调用 bin/run_erl ，最终调用 bin/start_erl启动。run_erl是一个提供运行时日志输出到文件的封装。还提供了简单的机制attach到一个erlang shell。</p>
-
-<p><strong>自定义behaviour</strong></p>
-
-<p><blockquote>-spec behaviour_info(atom()) -> &#8216;undefined&#8217; | [{atom(), arity()}].<br />
-behaviour_info(callbacks) ->
-    [{start,2},       % (Partition, Config)<br />
-     {stop,1},        % (State) <br />
-     {get,2},         % (State, BKey)<br />
-     {put,3},         % (State, BKey, Val)<br />
-     {list,1},        % (State)<br />
-     {list_bucket,2}, % (State, Bucket)<br />
-     {delete,2},      % (State, BKey)<br />
-     {drop,1},        % (State)<br />
-     {fold,3},        % (State, Folder, Acc), Folder({B,K},V,Acc)<br />
-     {is_empty,1},    % (State)<br />
-     {callback,3}];   % (State, Ref, Msg) ->
-behaviour_info(_Other) ->
-    undefined.</blockquote></p>
-
-<p>上述就是一个自定义的behaviour，使用的时候：</p>
-
-<p><blockquote>-behaviour(xxx).<br />
-&#8230;</blockquote></p>
-
-<p>有点类似java的interface.</p>
 </div>
   
   

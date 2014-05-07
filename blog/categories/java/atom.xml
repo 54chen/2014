@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-04-18T18:00:12+08:00</updated>
+  <updated>2014-05-07T17:19:13+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[线上JVM调查工具:JCPU和JMEM]]></title>
+    <link href="http://2014.54chen.com/blog/2014/05/07/jvm-cpu-mem-tools/"/>
+    <updated>2014-05-07T17:05:13+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/05/07/jvm-cpu-mem-tools</id>
+    <content type="html"><![CDATA[<p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
+
+<p>之前的jkiller改名为jcpu，然后再加上jmem，齐活了，线上要再遇到问题，内存和CPU之外的也没啥其他办法了。</p>
+
+<h2>JMEM</h2>
+
+<p><a href="https://github.com/54chen/jmem">https://github.com/54chen/jmem</a></p>
+
+<p>用来定位莫名其妙的堆外内存问题。首先还是要先用jmap之类的看清楚是否是JVM堆内问题了再用此神物。</p>
+
+<!--more-->
+
+
+<p> jmem.sh 用来靠gdb找到够大的内存块，直接dump到文件里。然后肉眼看吧。。。反正我没看出来，祝你好运。</p>
+
+<p> pmap2stack.sh 弄出来大块的内存地址后，尝试在各种stack中帮你grep出来可以读懂的东东。</p>
+
+<h2>JCPU</h2>
+
+<p><a href="https://github.com/54chen/jcpu">https://github.com/54chen/jcpu</a></p>
+
+<p>这个之前有介绍过，就是cpu占得比较猛的进程，直接打出来里面最费CPU的前五个堆栈。</p>
+
+<p>具体用法都在项目的README上。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Disruptor Thrift Server连接参数与rps数值影响记录]]></title>
@@ -465,156 +497,6 @@ E是Eden区，E＋S0＋S1＝Y。<br />
 
 
 <p>*centos系统下测试通过。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Testing and Mocking in spring2.5: Static Class、maven Site、cobertura]]></title>
-    <link href="http://2014.54chen.com/blog/2012/08/11/spring-static-class-maven-cobertura-site/"/>
-    <updated>2012-08-11T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2012/08/11/spring-static-class-maven-cobertura-site</id>
-    <content type="html"><![CDATA[<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="mock spring static class cobertura" />
-<strong>spring 2.5 与 junit 4.4</strong>
-Spring 2.5.x不能用JUnit 4.5+.如果把使用了spring-test 2.5 的testcase升级到 junit 4.5会得到NoClassDefFoundError:</p>
-
-
-
-
-<p><blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br />
-org/junit/Assume$AssumptionViolatedException<br />
-java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException 
-</blockquote></p>
-
-
-
-
-<p>这是spring-test 2.5.x的一个bug. 其与JUnit 4.5不一致. 只能使用4.0-4.4.<br />
-或者就是自己打patch.
-<a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
-
-
-
-
-<p><strong>EasyMock 与 static Class</strong>
-EasyMock未提到是否支持static methods.功能类经常是static的，是因为没有上下文环境依赖，但如果一定要mock他们，可以选择powerMock.</p>
-
-
-
-
-<p><strong>PowerMock、static Class、junit、spring</strong>
-PowerMock 需要你添加 '@RunWith(PowerMockRunner.class)'.但 sping-test 需要你添加 '@RunWith(SpringJUnit4ClassRunner.class)'.
-<a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
-如果junit 4.7,PowerMock将RunWith替换为:<br />
-    @Rule<br />
-    public PowerMockRule rule = new PowerMockRule();<br />
-http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
-
-
-
-
-<p><strong>冲突</strong>
-Spring 2.5.x不能用JUnit 4.5+, 而PowerMockRule 只能用 JUnit 4.7.<br />
-基本上在Java + Spring 2.5 & JUnit 4.4环境下没啥简单的办法去mock static class了.</p>
-
-
-
-
-<p><strong>maven site 与 cobertura</strong>
-当你运行 'mvn site' or  'mvn sonar:sonar', 在spring项目中你可能会得到:<br />
-NoSuchBeanDefinitionException</p>
-
-
-
-
-<p>第一个答案:<br />
-在test的application文件中添加:</p>
-
-
-
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-
-
-
-<p>第二个答案:<br />
-'mvn site' 与 'mvn sonar:sonar' 会生成类在目录 ./generated-classes/cobertura 中.确保你想autowire的类都在正确的目录下扫描.</p>
-
-
-
-
-<p>-----------</p>
-
-
-
-
-<p><strong>spring 2.5 and junit 4.4</strong>
-Spring 2.5.x is incompatible with JUnit 4.5+.If you upgrade to junit 4.5,all of your test case which uses the SpringJUnit4ClassRunner will get a NoClassDefFoundError:</p>
-
-
-
-
-<p><blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br />
-org/junit/Assume$AssumptionViolatedException<br />
-java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException<br />
- </blockquote></p>
-
-
-
-
-<p>It is an known issue with spring-test 2.5.x. It is incompatible with JUnit 4.5. Use 4.0-4.4.<br />
-Or you can try the patch in the issue tracker.
-<a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
-
-
-
-
-<p><strong>EasyMock and static Class</strong>
-EasyMock doesn't mention static methods.Utility methods should be most of the time static as they have no context and no dependencies.But when you need to mock it,you can you choose PowerMock.</p>
-
-
-
-
-<p><strong>PowerMock、static Class、junit、spring</strong>
-PowerMock need you add '@RunWith(PowerMockRunner.class)' to your test code.But sping-test need you add '@RunWith(SpringJUnit4ClassRunner.class)'.
-<a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
-With junit 4.7,PowerMock can replace RunWith to:<br />
-    @Rule<br />
-    public PowerMockRule rule = new PowerMockRule();<br />
-http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
-
-
-
-
-<p><strong>conflict</strong>
-Spring 2.5.x is incompatible with JUnit 4.5+, and that PowerMockRule is compatible with JUnit 4.7.<br />
-Basically, There isn't an easy way to do this in Java + Spring 2.5 & JUnit 4.4 at the moment.</p>
-
-
-
-
-<p><strong>maven site and cobertura</strong>
-When you run 'mvn site' or  'mvn sonar:sonar' with spring project,you may get the error:<br />
-NoSuchBeanDefinitionException</p>
-
-
-
-
-<p>The first answer:<br />
-In your test application context add the line:</p>
-
-
-
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-
-
-
-<p>The second answer:<br />
-The 'mvn site' or 'mvn sonar:sonar' will generates class in ./generated-classes/cobertura.Make sure the classes that you want to autowire is all scan in right folder.
-</p>
 
 ]]></content>
   </entry>

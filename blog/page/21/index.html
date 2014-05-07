@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-02-20 Open Flash Chart搭配JOFC，是展示变化多端的统计日志数据不错的选择。 #
-【Facebook 这五条管理技术团队的经验总结】1、招聘很紧急，而且要找牛人 2 流程由实践者确立 3 内部晋升，不找空降的管理人员 4、 &hellip;">
+  <meta name="description" content="分布式日志系统scribe使用手记 scribe 是facebook 开源的分布式日志系统 。其使用了thrift传输log，由于使用thrift，所以不论是什么语言的项目都可以实现日志收集，可达到远程或者是本地同步远程的分布式日志收集效果，在其示例配置中， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -82,6 +81,103 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/02/24/log-server-scribe-helper/">分布式日志系统scribe使用手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-02-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="java,scribe" width="400/" />
+scribe 是facebook 开源的分布式日志系统 。其使用了thrift传输log，由于使用thrift，所以不论是什么语言的项目都可以实现日志收集，可达到远程或者是本地同步远程的分布式日志收集效果，在其示例配置中，并发量可达到max_msg_per_second=2000000，对普通的应用来说，每秒上百万的访问量可能性很小，因此基本上即使最简单的配置，远程收集所有项目的log也是可靠的，如果压力大的话，可以采取主从的配置，将日志打到本地后由scribe的主从配置来自动同步。下面讲述如何安装和使用scribe。</p>
+
+<p><strong>下载boost、thrift、scribe</strong>
+<blockquote>boost_1_45_0.tar.gz<br />
+thrift-0.5.0.tar.gz<br />
+facebook-scribe-2ee14d3.zip</blockquote></p>
+
+<p><strong>通过yum安装需要的依赖</strong>
+<blockquote>yum install libevent libevent-devel python-devel<br />
+yum install gcc-c++<br />
+yum install automake<br />
+yum install byacc flex
+</blockquote></p>
+
+<p><strong>安装boost</strong>
+<blockquote>tar -zxvf boost_1_45_0.tar.gz <br />
+cd boost_1_45_0<br />
+./bootstrap.sh<br />
+./bjam install &#8211;prefix=/opt/soft/bootstrap</blockquote></p>
+
+<p><strong>安装thrift-0.5.0</strong>
+<blockquote>tar zxvf thrift-0.5.0.tar.gz<br />
+./configure &#8211;with-php-config=/opt/soft/php/bin/php-config  &#8211;with-boost=/opt/soft/boost/ &#8211;with-java &#8211;prefix=/opt/soft/thrift<br />
+make<br />
+make install</blockquote></p>
+
+<p><strong>安装fb303</strong>
+<blockquote>cd contrib/fb303<br />
+./bootstrap.sh &#8211;prefix=/opt/soft/thrift/fb303 &#8211;with-boost=/opt/soft/boost/ &#8211;with-thriftpath=/opt/soft/thrift/<br />
+make<br />
+make install</blockquote></p>
+
+<p><strong>安装scribe</strong>
+<blockquote>unzip facebook-scribe-2ee14d3.zip<br />
+cd facebook-scribe-2ee14d3</blockquote></p>
+
+<p>export BOOST_ROOT=/opt/soft/boost/<br />
+export LD_LIBRARY_PATH=/opt/soft/thrift/lib:/usr/lib:/usr/local/lib:/opt/soft/boost/lib/<br />
+./bootstrap.sh &#8211;prefix=/opt/soft/scribe &#8211;with-boost=/opt/soft/boost/ &#8211;with-thriftpath=/opt/soft/thrift/<br />
+make<br />
+make install</p>
+
+<p><strong>启动scribe服务</strong>
+<blockquote>cd facebook-scribe-2ee14d3<br />
+cp example/exmaple1.conf /opt/soft/scribe/bin<br />
+cd /opt/soft/scribe/bin/<br />
+export BOOST_ROOT=/opt/soft/boost/<br />
+export LD_LIBRARY_PATH=/opt/soft/thrift/lib:/usr/lib:/usr/local/lib:/opt/soft/boost/lib/<br />
+./scibed example1.conf</blockquote></p>
+
+<p><strong>生成客户端使用scribe</strong></p>
+
+<p><blockquote>先产生java的thrift代码:<br />
+cd facebook-scribe-2ee14d3/if/<br />
+thrift -r -I ../../thrift-0.5.0/contrib/（这里需要指到你的thrift的源码目录） -gen java scribe.thrift</blockquote></p>
+
+<p> 
+<strong>使用</strong>
+<blockquote>gen-java目录下有thrift的客户端，即取即用。javaeye里有一篇写配置log4j使用scribe的不错：http://www.javaeye.com/topic/800208</blockquote></p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -564,67 +660,6 @@ ClassLoader.getResourceAsStream(), Class.getResourceAsStream(), ResourceBundle.g
 54chen Twitter memo 2011-01-09 <a href="http://goo.gl/fb/oOrkb" rel="nofollow">http://goo.gl/fb/oOrkb</a> <a href="http://twitter.com/54chen/statuses/23919203316662273" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/01/11/setting-up-a-socket-policy-file-server/">[Flash]建立socket安全策略文件服务器</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-01-11T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://www.adobe.com/content/dam/Adobe/en/devnet/authors/large/l/logo_flashplayer_lg.jpg.adimg.mw.138.png" alt="flash 安全" /></p>
-
-<p><strong>前因</strong>
-Flash被广泛应用于互联网各个方面，是因为它提供了各种各样的特性，其中很重要的一点就是，可以用flash建立TCP连接到服务器然后交换数据。从网络管理员的观点看，一个互联网的服务器能够连接进到内网里来，是一个很恐怖的事情，所以flash搞出来一个安全策略文件。</p>
-
-<p><strong>改变</strong>
-Flash Player 9,0,124,0 版本对这个策略文件进行了两个重大改变：一是所有的端口都需要在策略文件里声明了，以前的版本只需要1024以下的端口需要进行声明；二是可以集中到843端口进行集中式的托管了。Flash Player 9,0,124,0建立的socket连接，会先去请求843端口，如果这个端口没有策略文件，则会去你要连接的端口本身请求策略文件，如果二者都没有，则会被拒绝连接。</p>
-
-<p><strong>控制过程解读</strong>
-1.Flash Player先到请求的843端口请求策略文件，如果没有，进行第2步，如果site-control为none则拒绝掉，如果site-control为all则进行第2步。<br />
-2.如果在AS中写了Security.loadPolicyFile() ，（<font color="red">它并不是一定生效的，必须在843端口的声明中允许引用其他的策略文件后才能生效</font>），开始读取策略。<br />
-3.最后一步是检测要连接的端口是否有权限，这步检测要在843端口中声明需要检测端口才会去做，如果843声明了而策略文件里没有，则会被拒绝。</p>
-
-<p><code>庆亮哥小更正：请求843和你的指定端口后，会访问当前访问域名下是否有crossdomain.xml文件，如果你的端口不是80，那么请求最多可能三次。</code></p>
-
-<p><strong>万能脚本</strong>
-这个兄弟是adobe的开发人员吧，搞了两个脚本，一个perl的一个是python的，两个都好用，可以很简单地在服务器上搞起来843的守候进程。<br />
-像下面这样执行就OK了：
-<blockquote><code>./flashpolicyd.pl --file=../policyfile.xml --port=843 <br />
-./flashpolicyd.py --file=../policyfile.xml --port=843</code></blockquote></p>
-
-<p><strong>猛击哪里下载</strong>
-<a href="http://www.adobe.com/content/dotcom/en/devnet/flashplayer/articles/socket_policy_files/_jcr_content/articlePrerequistes/multiplefiles/node_1277808777771/file.res/flashpolicyd_v0.6%5B1%5D.zip">这里</a></p>
-
-<p><strong>参考文档：</strong>
-<a href="http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html">http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html</a></p>
 </div>
   
   
