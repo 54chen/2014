@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Git Svn使用手记 以下是一个淡疼的记录，因为从linkedin归来的宝秋叔大力推荐git，而我们现在的代码大多在svn中，所以就有了这一段故事。 一、同步回来svn $git svn clone https://miliaocode/repos/project -T trunk -b &hellip;">
+  <meta name="description" content="企业github之高仿选择－gitlab使用实录 自从上周使用git-svn以来（http://www.54chen.com/_linux_/git-svn.html），一发不可收拾，于是在偶然的机会发现了gitlab这个不错的选择（可以想象成是github的公司自己搭建的内部版本）， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/23/github-gitlab/">企业github之高仿选择－gitlab使用实录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-23T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1L56.XfNeXXasdY75_054835.jpg" alt="gitlab" />
+自从上周使用git-svn以来（<a href="http://www.54chen.com/_linux_/git-svn.html">http://www.54chen.com/_linux_/git-svn.html</a>），一发不可收拾，于是在偶然的机会发现了gitlab这个不错的选择（可以想象成是github的公司自己搭建的内部版本），还有什么理由继续使用svn+redmine+wiki!</p>
+
+<p><blockquote>@有个梨UGlee<br />
+一个人，20年，单枪匹马的干翻了整个计算工业。如果你是程序员，还没有在他写的操作系统上工作，或者还没有开始使用他缔造的版本管理系统，那么你还是趁早改行吧，你干这行是没希望的。</blockquote></p>
+
+<p><strong>安装</strong>
+用ubuntu，让生活更加轻松。
+<blockquote>root@ubuntu-chenzhen:/home/gitlab/gitlab# lsb_release -a<br />
+No LSB modules are available.<br />
+Distributor ID:	Ubuntu<br />
+Description:	Ubuntu 12.04 LTS<br />
+Release:	12.04<br />
+Codename:	precise</blockquote></p>
+
+<p>请打开以下地址并收藏：<a href="https://github.com/gitlabhq/gitlabhq/blob/stable/doc/install/installation.md">https://github.com/gitlabhq/gitlabhq/blob/stable/doc/install/installation.md</a></p>
+
+<p>所有的安装只需要一步一步按照说明做就可以完成。以下记录一些中国特色的安装过程。</p>
+
+<p><strong>中国特色</strong>
+1.安装ruby1.9.3p0<br />
+不要下了，打不开的（原因你懂的）。<br />
+直接 apt-get install ruby1.9.3</p>
+
+<p>2.补充安装bundler<br />
+装完ruby就有gem了，然后把源改在淘宝：<br />
+gem source -r http://rubygems.org/<br />
+gem source -a http://ruby.taobao.org</p>
+
+<p>gem install bundler &#8211;no-rdoc &#8211;no-ri<br />
+gem install rails &#8211;no-rdoc &#8211;no-ri</p>
+
+<p>3.所有有bundle命令的执行都要注意<br />
+在执行目录下，要修改Gemfile文件头的rubygems.org到ruby.taobao.org，否则是不工作的，原因都懂的。</p>
+
+<p><strong>LDAP登录gitlab</strong>
+vim config/gitlab.yml<br />
+配置在
+<blockquote># 2. Auth settings<br />
+# ==========================<br />
+ldap:</blockquote></p>
+
+<p>当你安装好打开的时候，一定会惊呼：还有什么理由继续使用svn+redmine+wiki!</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -832,48 +910,6 @@ shopt -s nullglob</blockquote>
 
 <p><blockquote>overlayfs</blockquote>
 另一种文件格式，在ubuntu 11.04后开始替代aufs作为官方livecd的文件格式。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/09/54chen-twitter-memo-2012-09-09/">54chen Twitter Memo 2012-09-09</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-09T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-cloud foundry之dea代码解读 </ul><a href="http://t.co/wr5cdwWA" rel="nofollow">http://t.co/wr5cdwWA</a> <a href="http://twitter.com/54chen/statuses/243964510463987712" class="aktt_tweet_time">#</a>
-在深入cf之后，感觉cloud foundry的不好的几点：1.模块间内网通讯基本全用http; 2.NATS严重的单点依赖; 3.低效的nginx router机制不能承载大应用。 <a href="http://twitter.com/54chen/statuses/243700970683498498" class="aktt_tweet_time">#</a>
-cloud foundry之router代码解读 <a href="http://t.co/ICavjNUs" rel="nofollow">http://t.co/ICavjNUs</a> <a href="http://twitter.com/54chen/statuses/243650530159783936" class="aktt_tweet_time">#</a>
-今天继续阅读cf代码，ruby的代码虽然简单，可惜不是虚拟机形式的，效率差了点。 <a href="http://twitter.com/54chen/statuses/243551429858582528" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   

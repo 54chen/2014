@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-07-17 spring配合easymock搞定不依赖环境的测试用例 http://goo.gl/fb/bxjjr #
-高铁和做服务器一样一样的：冗余，自动切换，灾备，必须小心翼翼，任何的不稳定都会让用户鄙视。 #
-54chen Twitter &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2011-07-24 推荐：google+使用的比spring更加高效的Guice框架 http://code.google.com/p/google-guice/ #
+riak&#8211;dynamo系统的erlang实现，有众多使用者，http:// &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +74,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/24/54chen-twitter-memo-2011-07-24/">54chen Twitter Memo 2011-07-24</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+推荐：google+使用的比spring更加高效的Guice框架  </ul><a href="http://code.google.com/p/google-guice/" rel="nofollow">http://code.google.com/p/google-guice/</a> <a href="http://twitter.com/54chen/statuses/94295360272478208" class="aktt_tweet_time">#</a>
+riak&#8211;dynamo系统的erlang实现，有众多使用者，http://wiki.basho.com/Who-is-Using-Riak.html，代码不足万行，惊叹erlang的gen_server。 <a href="http://twitter.com/54chen/statuses/93129754420576256" class="aktt_tweet_time">#</a>
+riak&#8211;dynamo系统的erlang实现，有众多使用者，代码不足万行，起个大早阅读，惊叹于erlang的gen_server实现，当年写nuclear的时候在这个地方浪费了太多时间。 <a href="http://twitter.com/54chen/statuses/93129217738412032" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-07-17 <a href="http://goo.gl/fb/2KO1x" rel="nofollow">http://goo.gl/fb/2KO1x</a> <a href="http://twitter.com/54chen/statuses/92412069307097088" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-07-17 <a href="http://goo.gl/fb/59Oe6" rel="nofollow">http://goo.gl/fb/59Oe6</a> <a href="http://twitter.com/54chen/statuses/92412066866020352" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -568,58 +610,6 @@ hive迁移hadoop namenode时遇到的问题 <a href="http://goo.gl/fb/Rs5sl" rel
 54chen Twitter memo 2011-06-12 <a href="http://goo.gl/fb/HuCN4" rel="nofollow">http://goo.gl/fb/HuCN4</a> <a href="http://twitter.com/54chen/statuses/79742649527046144" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/14/hive-hadoop-namenode-problem/">Hive迁移hadoop Namenode时遇到的问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-06-14T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_OqfXfNnXXbx.crb_093330.jpg" alt="hadoop hive namenode 迁移" /></p>
-
-<p>使用了一段时间的hive和hadoop，在迁移datanode时很容易，要迁移namenode，hive里就闹情绪了。更改namenode后，在hive中运行select 依旧指向之前的namenode地址。</p>
-
-<p>要如何解决呢，具体操作如下：<br />
-1.复制打包老的namenode<br />
-2.复制打包老的namenode的hdfs目录<br />
-3.到新机器准备好：修改master的值 复制到各节点 修改hive的定义<br />
-4.hive这里使用了mysql来保存metadata<br />
-因为这些信息会被写死在hive的DBS和SBS表里，下面是关键的一步：<br />
-进入mysql，执行下面的sql，
-<blockquote>update DBS set DB_LOCATION_URI=REPLACE(DB_LOCATION_URI,&#8217;old host&#8217;,&#8217;new host&#8217;);<br />
-update SDS set LOCATION=REPLACE(LOCATION,&#8217;old host&#8217;,&#8217;new host&#8217;);</blockquote></p>
-
-<p>启动，一切正常了！迁移hive namenode成功。</p>
-
-<p></p>
 </div>
   
   

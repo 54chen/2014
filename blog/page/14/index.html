@@ -9,9 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-10-30 http://t.co/JVU2aUe3 求防刷号终极办法 #
-quercus记录：php和java的混合型项目建立手记 http://t.co/4ecQkN2n #
-54chen Twitter memo 2011-10-23 &hellip;">
+  <meta name="description" content="Quercus记录：php使用连接池访问数据库 上周记录了如何用quercus建立混合型项目。
+http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html
+这里来说说与数据库的访问， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,72 @@ quercus记录：php和java的混合型项目建立手记 http://t.co/4ecQkN2n #
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/04/quercus-php-connect-pool/">Quercus记录：php使用连接池访问数据库</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://www.caucho.com/wp-content/themes/caucho/images/caucho-logo.png" alt="java php quercus" />
+上周记录了如何用quercus建立混合型项目。
+<a href="http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html">http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html</a>
+这里来说说与数据库的访问，使用jndi得到连接池的好处。</p>
+
+<p><strong>JNDI</strong>
+(Java Naming and Directory Interface)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI SPI的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互。</p>
+
+<p><strong>正题</strong>
+在quercus中可以随意使用mysql_connect与mysql_pconnect两个方法来连接数据库。<br />
+当在web.xml定义得有database相关的消息时，mysql_connect与mysql_pconnect都会自动忽略里面的参数设置，直接使用web.xml的定义。</p>
+
+<p><strong>添加jndi设置：</strong>
+vim WEB-INF/web.xml
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span>&nbsp;</span><span class="attribute">version</span><span>=</span><span class="attribute-value">&#8220;1.0&#8221;</span><span>&nbsp;</span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">&#8220;utf-8&#8221;</span><span class="tag">?&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">web-app</span><span>&nbsp;&nbsp;</span><span class="attribute">xmlns</span><span>=</span><span class="attribute-value">&#8220;http://caucho.com/ns/resin&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>truth&nbsp;application</span><span class="tag">&lt;/</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">database</span><span>&nbsp;</span><span class="attribute">jndi-name</span><span>=</span><span class="attribute-value">&#8220;jdbc/mysql&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;com.mysql.jdbc.Driver&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://192.168.1.5:3306/truth?</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">true</span><span>&amp;amp;</span><span class="attribute">characterEncoding</span><span>=</span><span class="attribute-value">utf</span><span>-8</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>你的用户名</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>你的密码</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">init-param</span><span>&nbsp;</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">&#8220;true&#8221;</span><span class="tag">/&gt;</span><span>&nbsp;</span><span class="comments">&lt;!&#8211;实践证明这个是不管用的，因为quercus写土了，全用的latin1字符集，后面再说&#8211;&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+使用的是resin4，需要继续在web.xml的servlet段里增加：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>database</span><span class="tag">&lt;/</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+这里注意，param-value与上面的jndi-name对应，mysql_connnect函数在web.xml里有这个init-param的定义的时候，将使用对应的jndi的设置。由此可得到连接池的好处。</p>
+
+<p>上面的例子只使用了jdbc的基础驱动，如果向下面的配置，自然就得到了pool:
+<strong>例子1:</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;</span><span class="tag">&lt;</span><span class="tag-name">type</span><span class="tag">&gt;</span><span>com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource</span><span class="tag">&lt;/</span><span class="tag-name">type</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://localhost:3306/dbname</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>username</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>password</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">init-param</span><span>&nbsp;</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">&#8220;true&#8221;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>例子2:</strong>
+    <div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;org.gjt.mm.mysql.Driver&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://localhost:3306/test</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prepared-statement-cache-size</span><span class="tag">&gt;</span><span>8</span><span class="tag">&lt;/</span><span class="tag-name">prepared-statement-cache-size</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">max-connections</span><span class="tag">&gt;</span><span>20</span><span class="tag">&lt;/</span><span class="tag-name">max-connections</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">max-idle-time</span><span class="tag">&gt;</span><span>30s</span><span class="tag">&lt;/</span><span class="tag-name">max-idle-time</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>这些简单的配置，都可以让php轻松跑在连接池上。
+<strong>问题所在：</strong>
+quercus写土了，没有在用户设置为unicode的时候来解析用户的输入，到处是hard code的latin1。（本来在GAE里使用这东西的人挺多的，可惜吧，AGE被盾了，然后quercus反馈latin1问题的人也不多，唉。）
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>com.caucho.quercus.lib.db.JdbcConnectionResource:&nbsp;</span><span class="number">94</span><span>&nbsp;&nbsp;</span><span class="number">348</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>com.caucho.quercus.lib.db.Mysqli:<span class="number">229</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+上面三处修改为utf8即可。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -979,72 +1045,6 @@ thrift最佳实践:版本与兼容 <a href="http://t.co/419R7gYk" rel="nofollow"
 riak坏处：不好debug,节点关系变化是危险的,默认使用的bitcask所有的key都维护在内存里,List-keys操作可能会搞死一个集群。 <a href="http://twitter.com/54chen/statuses/118619267276091392" class="aktt_tweet_time">#</a>
 54chen Twitter memo 2011-09-25 <a href="http://t.co/jIjRPKtr" rel="nofollow">http://t.co/jIjRPKtr</a> <a href="http://twitter.com/54chen/statuses/117776523532046336" class="aktt_tweet_time">#</a>
 
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/28/thrift-versioning-compatibility/">Thrift最佳实践:版本与兼容</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-09-28T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="facebook,thrift" /></p>
-
-<p>十分苦逼的api提供过程。一次提供，终身负责制。</p>
-
-<p><blockquote>&#8220;API design is like sex: Make one mistake and support it for the rest of your life.&#8221; - @joshbloch
-</blockquote></p>
-
-<p><strong>Structs：</strong>
-在许多系统里面，被称做message.</p>
-
-<p>协议随着岁月而演变，如果一个已经存在的消息类型不再满足需求，但是你仍然想使用原来使用thrift文件生成的代码，比如你想在现在的消息类型上增加一个额外的字段。                          </p>
-
-<p>不用担心人，不搞坏原来的任何代码而更新消息类型，是非常简单的，只需要时刻记录以下的<strong>规则</strong>：</p>
-
-<p><blockquote>
-1.不要修改现存的任何已经存在字段的数字标签</blockquote></p>
-
-<p><blockquote>2.任何新增的字段应该是optional的，这就意味着，所有新定义产生的代码都能解析新老的格式，因为一定会有任何一个标上required的元素。你应该设置可能的默认值给这个元素，让新代码与老数据也能正常协作。与此类似，新数据也能被老代码解析，老的实现解析时会忽略新的字段。尽管如此，未知的字段不能被丢弃，并且如果消息被延迟序列化，未知的字段也会被一起序列化，因此当消息到达新代码的时候，新字段依旧可用。</blockquote></p>
-
-<p><blockquote>3.当你更新的消息类型里不再包括相关的标签数字时，非required字段可以删除。（把这个废字段改名，比如说加个前缀OBSOLETE_ ，可以防止未来维护.thrift文件人误用原来的数字，这做法可能更好。)</blockquote></p>
-
-<p><blockquote>4.修改默认值基本上是OK的，但是你记得这个默认值永远不会“串线”。比如，如果程序收到一个在某个字段没有值的消息，程序会看那个版本里定义的默认值。这可能会导致得不到正确的默认值。
-</blockquote></p>
-
-<p>cassandra的thrift定义：http://svn.apache.org/viewvc/cassandra/trunk/interface/cassandra.thrift?view=co<br />
-fb303的定义：http://svn.apache.org/repos/asf/thrift/trunk/contrib/fb303/if/fb303.thrift<br />
-scribe的定义：https://github.com/facebook/scribe/blob/master/if/scribe.thrift</p>
-
-<p><em>from:ThriftThe Missing Guide</em>
- 
 </p>
 </div>
   
