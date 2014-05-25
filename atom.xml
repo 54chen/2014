@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-05-25T16:07:06+08:00</updated>
+  <updated>2014-05-25T16:10:23+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[安全无小事－－安全防守一二三]]></title>
+    <title type="html"><![CDATA[安全无小事－－技术团队防守一二三]]></title>
     <link href="http://2014.54chen.com/blog/2014/05/25/security/"/>
     <updated>2014-05-25T13:56:31+08:00</updated>
     <id>http://2014.54chen.com/blog/2014/05/25/security</id>
@@ -24,7 +24,7 @@
 
 <p><img width="450" src=http://chen54.b0.upaiyun.com/20140525/1.png></p>
 
-<p>然后就有人@我是不是在说被脱库的事。。。呵呵！</p>
+<p>然后就有人@我是不是在说小米被脱库的事。。。呵呵！</p>
 
 <p>这里要讨论的是，如何让数千计的开发人员在安全防守安全编程上，得到有效的效果。有人说，我干了xx年，手上从来没有一个项目出过安全漏洞; 还有人说，我一个人做的x项目，也从来没有出现过安全漏洞; 呵呵，集体的智慧不由个人意志来控制，木桶漏水取决于最短的一块。</p>
 
