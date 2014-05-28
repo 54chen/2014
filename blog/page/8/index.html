@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-06-24 有写ansi C的人吗，都用tclsh做测试吗？ #
-rose手册第三章七节：controller层：上传文件 http://t.co/AhYPKs9o #
-一群人揉吧揉吧出来的产品与一个霸权主义老大整出来的产品哪个更靠谱？ # &hellip;">
+  <meta name="description" content="rose手册第三章A节：DAO层：DAO的基本配置与使用 本章开始进入对DB层的支持，同进也是日常开发用得最多的章节。
+3.A.1 什么是jade？ jade大概是java access data layer的意思吧，具体的来由，在章节写到末尾的时候， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +74,98 @@ rose手册第三章七节：controller层：上传文件 http://t.co/AhYPKs9o #
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/27/rose-3-a/">rose手册第三章A节：DAO层：DAO的基本配置与使用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" />
+本章开始进入对DB层的支持，同进也是日常开发用得最多的章节。
+<strong>3.A.1 什么是jade？</strong></p>
+
+<p>    jade大概是java access data layer的意思吧，具体的来由，在章节写到末尾的时候，我再找qieqie和liaohan大侠们写一写编年史。<br />
+    用jade的好处在于，尽可能减少重复的从db把数据对bean进行装配的过程，统一入口，隔离业务逻辑，方便review。<br />
+    jade是在spring完成的数据层的良好实践总结，无缝接入rose中，可以算得上是rose亲密无间的好模块。</p>
+
+<p><strong>3.A.2 引入基础配置</strong></p>
+
+<p>    要开始使用jade，一定要先引用jade的基础包：</p>
+
+<p>pom.xml
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.54chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-jade</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.1</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>除了需要jade的包外，还需要引入数据源连接池的jar，这里使用了dbcp，还是在pom.xml中：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>commons-dbcp</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>commons-dbcp</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.2.2</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>mysql</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>mysql-connector-java</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>5.1.10</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    在pom中引入了依赖之后，需要定义一个数据源，这里先不考虑多个数据源的情况。</p>
+
+<p>在war项目的applicationContext.xml中增加数据源定义：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span>&nbsp;</span><span class="comments">&lt;!&#8211;&nbsp;数据源配置&nbsp;dbcp&nbsp;&#8211;&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">&#8220;jade.dataSource.com.chen.dao&#8221;</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">&#8220;org.apache.commons.dbcp.BasicDataSource&#8221;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">destroy-method</span><span>=</span><span class="attribute-value">&#8220;close&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;driverClassName&#8221;</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">&#8220;com.mysql.jdbc.Driver&#8221;</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;url&#8221;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">value</span><span>=</span><span class="attribute-value">&#8220;jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;amp;characterEncoding=utf-8&#8221;</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;username&#8221;</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">&#8220;test&#8221;</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;password&#8221;</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">&#8220;test&#8221;</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!&#8211;&nbsp;运行判断连接超时任务的时间间隔，单位为毫秒，默认为-1，即不执行任务。&nbsp;&#8211;&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;timeBetweenEvictionRunsMillis&#8221;</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">&#8220;3600000&#8221;</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!&#8211;&nbsp;连接的超时时间，默认为半小时。&nbsp;&#8211;&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;minEvictableIdleTimeMillis&#8221;</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">&#8220;3600000&#8221;</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    这里假设了mysql已经安装在本地了，用户名为test，密码为test。<br />
+    jade约定了bean的id为jade.dataSource.classPackageName。<br />
+    jade约定了这个bean的有效范围为classPackageName所有的DAO。<br />
+    jade约定了除非有专门的定义，所有的子目录也受bean上的classpackageName所影响。</p>
+
+<p><strong>3.A.3 第一个读取数据库的实例</strong></p>
+
+<p>    先需要准备一下数据库：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-sql" start="1"><li class="alt"><span><span class="keyword">create</span><span>&nbsp;</span><span class="keyword">table</span><span>&nbsp;test&nbsp;(</span><span class="keyword">int</span><span>&nbsp;id,&nbsp;</span><span class="keyword">varchar</span><span>(200)&nbsp;msg);&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">insert</span><span>&nbsp;</span><span class="keyword">into</span><span>&nbsp;test&nbsp;</span><span class="keyword">values</span><span>(111,&#8217;adfafafasdf&#8217;);&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    然后准备简练的DAO声明：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@DAO</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">interface</span><span>&nbsp;TestDAO&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@SQL</span><span>(</span><span class="string">&#8220;select&nbsp;id,msg&nbsp;from&nbsp;test&nbsp;limit&nbsp;1&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;Test&nbsp;getTest();&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>    Test是一个class，里面有标准的getter和setter。</p>
+
+<p>    然后从一个类去调用它：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Service</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;TestService&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Autowired</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">private</span><span>&nbsp;TestDAO&nbsp;testDAO;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;Test&nbsp;getTest()&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;testDAO.getTest();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>    当然也可以直接用controller就调用它显示了，当然这不是一个大型项目良好的架构，架构问题在最后的章节里讲述。
+<strong>
+3.A.4 查看演示代码</strong></p>
+
+<p>    rose-example项目的HelloController已经准备好了一个action做为此节的总结。</p>
+
+<p>    你可以将此节发布到resin或者tomcat后访问：http://127.0.0.1/3.10 查看结果。</p>
+
+<p>    文中所提及代码均在<a href=" https://github.com/XiaoMi/rose/tree/master/rose-example"> https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。</p>
+
+<p>    常期更新版：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_A">https://github.com/XiaoMi/rose/tree/master/chapter_3_A</a></p>
+
+<p>    ×××小米C轮融资成功，不经意间过去的两年已经翻了数十倍，需要你加入，继续创造翻N倍的价值。chenzhen at xiaomi dot com。×××
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -582,46 +673,6 @@ rose手册第三章六节：controller层：一闪而过的信息，flash支持 
 
 <p>文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
 文档持续修改版本在 <a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_6">https://github.com/XiaoMi/rose/tree/master/chapter_3_6</a>。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/27/54chen-twitter-memo-2012-05-27/">54chen Twitter Memo 2012-05-27</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-05-27T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-rose手册第三章五节：controller层：统一的参数验证办法 </ul><a href="http://t.co/XTmsNVQC" rel="nofollow">http://t.co/XTmsNVQC</a> <a href="http://twitter.com/54chen/statuses/205483092880793600" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2012-05-20 <a href="http://t.co/Um4HFvQT" rel="nofollow">http://t.co/Um4HFvQT</a> <a href="http://twitter.com/54chen/statuses/204034287710904321" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   

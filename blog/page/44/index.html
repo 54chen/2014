@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[原创][收集]各种语言版本的变量值作变量名的方法 [文章作者：陈臻 本文版本：v1.1 最后修改：2009.3.11 转载请注明原文链接：http://www.54chen.com/c/498] 在写代码的过程中，不可避免经常遇到的一个问题是，如何将上下文中的变量值当变量名。 &hellip;">
+  <meta name="description" content="[原创]Discuz! BBS的主动缓存和被动缓存 [文章作者：陈臻 本文版本：v1.1 最后修改：2009.3.16 转载请注明原文链接：http://www.54chen.com/c/505]
+DZ的缓存同样分了主动缓存和被动缓存。从功能上来说，主动缓存一般用到管理员对全站的设置， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/03/16/discuz-bbs-active-and-passive-cache/">[原创]Discuz! BBS的主动缓存和被动缓存</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-03-16T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.1 最后修改：2009.3.16 转载请注明原文链接：<a href="http://www.54chen.com/c/505">http://www.54chen.com/c/505</a>]
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的缓存同样分了主动缓存和被动缓存。从功能上来说，主动缓存一般用到管理员对全站的设置，等等需要手动更新的地方，这些地方的数据都有一个特点，那就是它们的更新可能性很小，平时不需要自动更新；</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的被动缓存，一般分布在诸如帖子内容显示，用户信息更新这些地方，这些地方的更新基本上都是因为用户使用了某一特定的功能时所激发的。</span></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">在正常运行的</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">系统文件夹里面会有一个</span><span lang="EN-US"><span style="font-family: Times New Roman;">forum<a href="http://www.54chen.com/c/399">data</a></span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">文件夹，这个是论坛记录和缓存文件的存放目录，一般这些文件都是自动生成的，在</span><span lang="EN-US"><span style="font-family: Times New Roman;">forumdata/cache/</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">里面存储的都是一些</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的基本设置和一些常使用的值，这些值一般在系统初始化的时候就保存在</span><span lang="EN-US"><span style="font-family: Times New Roman;">$_DCACHE</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">全局变量中，在后面的操作中将可以简单地使用它们进行功能上的判断。</span></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">（</span><span lang="EN-US"><span style="font-family: Times New Roman;">1</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">）主动缓存，也就是只在用户操作后台时，由</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">系统去删除原有缓存进行更新的缓存。它们普遍存在于</span><span lang="EN-US"><span style="font-family: Times New Roman;">forumdata/cache/</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">目录中，比如说</span><span lang="EN-US"><span style="font-family: Times New Roman;">/forumdata/cache/cache_settings.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">保存了整个系统的核心设置，一般情况是不会更新的，只有后台修改了比如站点名称等关键信息的时候才会去主动更新这个缓存文件。还有用于保存用户组和管理员组相关信息的两类缓存文件：</span></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span lang="EN-US"><span style="font-size: small; font-family: Times New Roman;">/forumdata/cache/usergroup_&#8217;.intval($groupid).&#8217;.php</span></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span lang="EN-US"><span style="font-size: small; font-family: Times New Roman;">/forumdata/cache/admingroup_&#8217;.intval($adminid).&#8217;.php</span></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">另外还有在</span><span lang="EN-US"><span style="font-family: Times New Roman;">index</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">forumdisplay</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">post</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">blog</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">topicadmin</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">register</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">、</span><span lang="EN-US"><span style="font-family: Times New Roman;">archiver</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">几个模块中的时候分别会使用的</span><span lang="EN-US"><span style="font-family: Times New Roman;">cache_&#8217;</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">模块名</span><span lang="EN-US"><span style="font-family: Times New Roman;">&#8216;.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的缓存。在</span><span lang="EN-US"><span style="font-family: Times New Roman;">include/common.inc.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">中的流程可以看到，这些类似的主动缓存都有一个特点：统一进行引用（</span><span lang="EN-US"><span style="font-family: Times New Roman;">include</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">），最后进行失败检测，最后再对失败的缓存（比如说文件丢失或者是上次更新还没生成这样的情况下）统一进行重新生成的操作，具体的生成方法见</span><span lang="EN-US"><span style="font-family: Times New Roman;">/include/cache.func.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">中的</span><span lang="EN-US"><span style="font-family: Times New Roman;">updatecache</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">函数。</span></span></p>
+<p class="MsoNormal" style="MARGIN: 0cm 0cm 0pt; TEXT-INDENT: 21.75pt"><span style="font-size: small;"><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">（</span><span lang="EN-US"><span style="font-family: Times New Roman;">2</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">）被动缓存，也就是缓存的生成并非是由用户手动更新的，而是在系统里判断是否需要生成缓存，需要缓存多长时间，由系统自身来完成整个过程。很典型的代表有帖子内容的缓存生成过程。帖子内容的缓存路径被</span><span lang="EN-US"><span style="font-family: Times New Roman;">cache_setting.<a href="http://www.54chen.com/c/157">php</a></span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">里定义为一个可以由用户修改的值，默认是在</span><span lang="EN-US"><span style="font-family: Times New Roman;">forumdata/threadcaches</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">下，由</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">里的逻辑可以看到，当满足使用缓存条件的时候（一般情况是第一页的内容），系统会执行</span><span lang="EN-US"><span style="font-family: Times New Roman;">viewthread_loadcache</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">函数，此函数会判断缓存是否过期，如果不过期就执行函数中间读取缓存的操作，最后</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">直接巧妙地在函数中</span><span lang="EN-US"><span style="font-family: Times New Roman;">die</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">出一段</span><span lang="EN-US"><span style="font-family: Times New Roman;">javaScript</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">，结束访问。专研</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">代码的你可能会很疑惑，究竟是什么时候生成的缓存呢？</span><span lang="EN-US"><span style="font-family: Times New Roman;">include</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">文件夹里有一个</span><span lang="EN-US"><span style="font-family: Times New Roman;">global.func.php</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">，这个文件包括了整个</span><span lang="EN-US"><span style="font-family: Times New Roman;">DZ</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">系统使用到的全局方法，其中有一个叫</span><span lang="EN-US"><span style="font-family: Times New Roman;">output</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">的函数，在函数里判断了是否可以缓存当前的页面，并且使用</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_get_contents</span></span><span style="font-family: 宋体; mso-ascii-font-family: 'Times New Roman'; mso-hansi-font-family: 'Times New Roman';">函数直接缓存页面。</span></span></p>
+<p class="MsoList" style="MARGIN: 0cm 0cm 0pt 63.8pt"><span style="font-size: small;"><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">提示：</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_start()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">在服务器打开一个缓冲区来保存所有的输出。所以在任何时候使用</span><span lang="EN-US"><span style="font-family: Times New Roman;">echo </span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">，输出都将被加入缓冲区中，直到程序运行结束或者使用</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_flush()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">来结束。然后在服务器中缓冲区的内容才会发送到浏览器，由浏览器来解析显示。函数</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_end_clean </span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">会清除缓冲区的内容，并将缓冲区关闭，但不会输出内容。此时得用一个函数</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_get_contents()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">在</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_end_clean()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">前面来获得缓冲区的内容。这样的话，</span><span style="font-family: Times New Roman;"> </span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">能将在执行</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_end_clean()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">前把内容保存到一个变量中，然后在</span><span lang="EN-US"><span style="font-family: Times New Roman;">ob_end_clean()</span></span><span style="font-family: 楷体_GB2312; mso-ascii-font-family: 'Times New Roman';">后面对这个变量做操作。</span></span></p></p>
+
+<p>关于哥学社：
+<a title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个自由博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。</p>
+
+<p>关于五四陈：<br />
+54chen(陈臻)，人人网海量存储NuClear核心开发人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br />
+个人技术站点:<a href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 czhttp@gmail.com 联系到他。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -767,113 +819,6 @@ handle_joblist_<br />
   internal handles have to be called<br />
 connection_reset_<br />
   called if the connection structure has to be cleaned up</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/02/06/php%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%B8%B8%E8%A7%81-regex-%E6%93%8D%E4%BD%9C%E7%AC%A6%E6%B8%85%E5%8D%95/">Php正则表达式常见 Regex 操作符清单</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-02-06T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>php的正则<a href="http://www.54chen.com/c/75">表达式</a>反馈了<a href="http://www.54chen.com/c/157">php</a>的功力，下面是操作符的清单，常备重要哦。。。
-<table class="data-table-2" border="0" cellspacing="0" cellpadding="0" summary="Common regex operators">
-<tbody>
-<tr>
-<th scope="col">操作符</th>
-<th scope="col">用途</th>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">.（句点）</th>
-<td>匹配所有单个字符</td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">^（脱字符号）</th>
-<td>匹配出现在行或字符串开头的空字符串</td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">$（美元符号）</th>
-<td>匹配出现在行尾的空字符串</td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">A</th>
-<td>匹配大写字母 <em>A</em></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">a</th>
-<td>匹配小写字母 <em>a</em></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">\d</th>
-<td>匹配所有一位数字</td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">\D</th>
-<td>匹配所有单个非数字字符</td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">\w</th>
-<td>匹配所有单个字母或数字字符；同义词是 <code>[:alnum:]</code></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">[A-E]</th>
-<td>匹配所有大写的 <em>A、B、C、D</em> 或 <em>E</em></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">[^A-E]</th>
-<td>匹配<strong>除</strong>大写 <em>A、B、C、D</em> 或 <em>E</em> 之外的任何字符</td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">X?</th>
-<td>匹配出现零次或一次的大写字母 <em>X</em></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">X*</th>
-<td>匹配零个或多个大写字母 <em>X</em></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">X+</th>
-<td>匹配一个或多个大写字母 <em>X</em></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">X{n}</th>
-<td>精确匹配 <em>n</em> 个大写字母 <em>X</em></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">X{n,m}</th>
-<td>至少匹配 <em>n</em> 个且不多于 <em>m</em> 个大写字母 <em>X</em>；如果忽略 <em>m</em>，则表达式将尝试匹配至少 <em>n</em> 个 <em>X</em></td>
-</tr>
-<tr>
-<th class="tb-row" align="left" scope="row">(abc|def)+</th>
-<td>匹配一连串的（最少一个）<em>abc</em> 和 <em>def</em>；<em>abc</em> 和 <em>def</em> 将<a href="http://www.54chen.com/c/19">匹配</a></td>
-</tr>
-</tbody></table></p>
 </div>
   
   
