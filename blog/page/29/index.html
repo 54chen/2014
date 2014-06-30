@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-06-06 行走江湖，需讲人品 # 经典：天朝的法律很完善，不过都是txt文件，不是exe文件。 # http://mirrors.sohu.com/ebook/ sohu这个镜像很赞。 # 跟风跟风求交往 RT @blogkid:跟风求交往 &hellip;">
+  <meta name="description" content="一场技术的圣战：rose开源框架之portal 作者：人人网架构师 王志亮 （54chen按：此文为客座博文，王志亮大侠，人人网架构师，疱丁分词创始人，rose是他的另一开源大作。关于69圣战，请看http://zhidao.baidu.com/question/158643718.html? &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,101 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/10/rose-open-source-portal-framework/">一场技术的圣战：rose开源框架之portal</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-10T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;">作者：人人网架构师 王志亮</p></p>
+
+<p><blockquote>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><strong>（54chen按：此文为客座博文，王志亮大侠，人人网架构师，疱丁分词创始人，rose是他的另一开源大作。关于69圣战，请看<a href="http://zhidao.baidu.com/question/158643718.html?si=2&amp;wtp=wk">http://zhidao.baidu.com/question/158643718.html?si=2&amp;wtp=wk</a>）</strong></p>
+</blockquote>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;">
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">2010</span><span style="padding: 0px; margin: 0px;">年的</span><span style="padding: 0px; margin: 0px;">6</span><span style="padding: 0px; margin: 0px;">月</span><span style="padding: 0px; margin: 0px;">9</span><span style="padding: 0px; margin: 0px;">日是一个圣战的日子，零点一到就有人开始，好戏也如约在晚上7点发生。人人网战场是</span><span style="padding: 0px; margin: 0px;">SJ</span><span style="padding: 0px; margin: 0px;">的公共主页：</span><span style="padding: 0px; margin: 0px;"><a style="color: #005eac; cursor: pointer; text-decoration: none; padding: 0px; margin: 0px;" href="http://page.renren.com/sj">http://page.renren.com/sj</a></span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"> </p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">对不同人，这个日子意味着不同，滋味也不同。作为人人网技术团队，我们要保证服务能力、用户体验能够应付得了这个挑战。</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"> </p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">某一个服务器的能力总有限，为了应付突然增长的读写量，</span><span style="padding: 0px; margin: 0px;">web</span><span style="padding: 0px; margin: 0px;">服务架构、内部服务架构、数据库架构等要能够轻松通过服务器调配来满足。就</span><span style="padding: 0px; margin: 0px;">web</span><span style="padding: 0px; margin: 0px;">服务器而言，我们增加了</span><span style="padding: 0px; margin: 0px;">1</span><span style="padding: 0px; margin: 0px;">倍的机器。现在再回头来看监控的数据，一切显得美好。这个期间整个服务做到了服务能力没有中断。除此之外，在这次圣战中，其中还有一项我们<strong>独有的</strong>技术起到了重要的作用：</span><span style="padding: 0px; margin: 0px;"><a style="color: #005eac; cursor: pointer; text-decoration: none; padding: 0px; margin: 0px;" href="http://code.google.com/p/paoding-rose/">rose portal</a> </span><span style="padding: 0px; margin: 0px;">，下面作一个介绍：</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"> </p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">图1是</span><span style="padding: 0px; margin: 0px;">sj</span><span style="padding: 0px; margin: 0px;">的主页：</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"> </p></p>
+
+<p><img style="max-width: 550px; padding: 0px; margin: 0px;" src="http://img05.taobaocdn.com/bao/uploaded/i5/T1RDFCXcdeXXcmuYvb_123212.jpg" alt="" width="558" height="418" /></p>
+
+<p>图1 sj在人人网的公共主页
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">这个页面分为三列：</span></p></p>
+
+<p><ul style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 30px; list-style-type: disc; list-style-position: outside; list-style-image: initial; margin: 0px;">
+	<li style="padding: 0px; margin: 0px;"><span style="padding: 0px; margin: 0px;">左边有</span> <span style="padding: 0px; margin: 0px;">“推荐给好友”、“基本信息”、“相册”</span><span style="padding: 0px; margin: 0px;">;</span></li>
+	<li style="padding: 0px; margin: 0px;"><span style="padding: 0px; margin: 0px;">中间有“给</span><span style="padding: 0px; margin: 0px;">SJ</span><span style="padding: 0px; margin: 0px;">留言”、“好友留言”</span><span style="padding: 0px; margin: 0px;">;</span></li>
+	<li style="padding: 0px; margin: 0px;">右边有“好友”，“人人的用户还关注”等。</li>
+</ul>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;">
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">在后台，这些被分解为不同的模块，我们称之为</span><span style="padding: 0px; margin: 0px;">”window”</span><span style="padding: 0px; margin: 0px;">。这每一个</span><span style="padding: 0px; margin: 0px;">window</span><span style="padding: 0px; margin: 0px;">都意味着可能连接一个独立的服务集群，比如基本信息服务、留言服务、好友服务、相册服务等等。这样，一个公共主页就等于多个独立的、可配置的</span><span style="padding: 0px; margin: 0px;">window</span><span style="padding: 0px; margin: 0px;">模块组成，如图2所示 ：</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><img style="max-width: 550px; padding: 0px; margin: 0px;" src="http://img07.taobaocdn.com/bao/uploaded/i7/T1M_hCXiplXXXZgsbb_123302.jpg" alt="" width="557" height="417" /></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;">图2 公共主页的<span style="padding: 0px; margin: 0px;">window</span><span style="padding: 0px; margin: 0px;">模块组成</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">随着伟大圣战的深入，这个页面就变成这样</span><span style="padding: 0px; margin: 0px;">(</span><span style="padding: 0px; margin: 0px;">右边的栏目不见了</span><span style="padding: 0px; margin: 0px;">)，如图3所示</span><span style="padding: 0px; margin: 0px;">：</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><img style="max-width: 550px; padding: 0px; margin: 0px;" src="http://img06.taobaocdn.com/bao/uploaded/i6/T1WmpCXntyXXcpbsDb_123341.jpg" alt="" width="353" height="250" /></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;">图3 圣战进行中时模块的自动保护</p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">产品同学看到此情此景，仍然很开心：“只要留言的</span><span style="padding: 0px; margin: 0px;">window</span><span style="padding: 0px; margin: 0px;">能在，其它的没在不要紧”</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">但是不一会，继续恶化，如图4所示：</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><img style="max-width: 550px; padding: 0px; margin: 0px;" src="http://img06.taobaocdn.com/bao/uploaded/i6/T1qCJCXaRuXXXtnc6b_123408.jpg" alt="" width="310" height="247" /></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;">图4 圣战进行中压力进一步增加</p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">甚至到了图5的情形：</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"> </p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><img style="max-width: 550px; padding: 0px; margin: 0px;" src="http://img08.taobaocdn.com/bao/uploaded/i8/T1WnpCXdBjXXa5e0nb_123436.jpg" alt="" width="321" height="237" /></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;">图5 圣战进行中压力进一步增加</p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><a style="color: #005eac; cursor: pointer; text-decoration: none; padding: 0px; margin: 0px;" href="http://topaz.renren.com/" target="_blank">黄晶</a><span style="padding: 0px; margin: 0px;">看着公共主页呈现出这种状况时，笑着形容这样的图“缺胳膊少腿”：“怎么还没加机器”。当公共主页技术团队把机器逐步增加一倍的时候，这种情况变少了，甚至就没有了。</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">虽然这些页面看起来“缺胳膊少腿”，<strong>但要知道在以前，这种情况，我们整个页面的某个模块堵了可会导致用户浏览器长期空白，直至最后提示网页不可显示。这给用户带来很不好的体验，同时因为网页一直不释放连接，恶性循环导致</strong></span><strong><span style="padding: 0px; margin: 0px;">web</span></strong><strong><span style="padding: 0px; margin: 0px;">服务器最后全哑了。</span></strong></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">好在，早在半年前我们开发了</span><span style="padding: 0px; margin: 0px;">rose portal</span><span style="padding: 0px; margin: 0px;">框架，解决了此问题，</span><span style="padding: 0px; margin: 0px;">rose portal</span><span style="padding: 0px; margin: 0px;">是一个<strong>服务端</strong></span><strong><span style="padding: 0px; margin: 0px;">portal</span></strong><span style="padding: 0px; margin: 0px;">技术，基于</span><span style="padding: 0px; margin: 0px;">rose</span><span style="padding: 0px; margin: 0px;">框架</span> <span style="padding: 0px; margin: 0px;">(</span><span style="padding: 0px; margin: 0px;">也就是</span><span style="padding: 0px; margin: 0px;">servlet</span><span style="padding: 0px; margin: 0px;">容器</span><span style="padding: 0px; margin: 0px;">) </span><span style="padding: 0px; margin: 0px;">下的服务端</span><span style="padding: 0px; margin: 0px;">portal</span><span style="padding: 0px; margin: 0px;">技术，</span><span style="padding: 0px; margin: 0px;">rose portal</span><span style="padding: 0px; margin: 0px;">不是</span><span style="padding: 0px; margin: 0px;">Java</span><span style="padding: 0px; margin: 0px;">常说的</span><span style="padding: 0px; margin: 0px;">portlet</span><span style="padding: 0px; margin: 0px;">技术，也不是基于</span><span style="padding: 0px; margin: 0px;">ajax</span><span style="padding: 0px; margin: 0px;">的客户端</span><span style="padding: 0px; margin: 0px;">portal</span><span style="padding: 0px; margin: 0px;">技术。</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">rose poral</span><span style="padding: 0px; margin: 0px;">提供这些特性；</span></p></p>
+
+<p><ol style="padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 30px; list-style-position: outside; list-style-type: decimal; list-style-image: initial; margin: 0px;">
+	<li style="padding: 0px; margin: 0px;"><span style="padding: 0px; margin: 0px;">能够将一个页面分为多个窗口；</span></li>
+	<li style="padding: 0px; margin: 0px;"><span style="padding: 0px; margin: 0px;">开发者使用一个主控制器，在主控制器中不断通过</span><span style="padding: 0px; margin: 0px;">portal.addWindow</span><span style="padding: 0px; margin: 0px;">方法，将请求<strong>并发</strong>转发给多个窗口；</span></li>
+	<li style="padding: 0px; margin: 0px;"><span style="padding: 0px; margin: 0px;">每个窗口有单独的控制器处理逻辑、可以返回独立视图就像一个</span><span style="padding: 0px; margin: 0px;">web</span><span style="padding: 0px; margin: 0px;">请求一样；</span></li>
+	<li style="padding: 0px; margin: 0px;"><span style="padding: 0px; margin: 0px;">框架能够处理<strong>并发转发</strong>、<strong>并发逻辑处理</strong>、<strong>并发渲染</strong>，并最后统一返回把</span><span style="padding: 0px; margin: 0px;">html</span><span style="padding: 0px; margin: 0px;">输出给浏览器；</span></li>
+	<li style="padding: 0px; margin: 0px;"><span style="padding: 0px; margin: 0px;">提供了“整体超时控制”手段，使得某个窗口因一时服务能力下降时不影响整个页面的输出；</span></li>
+</ol>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"> </p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">这里有一个</span><span style="padding: 0px; margin: 0px;">portal</span><span style="padding: 0px; margin: 0px;">开发示例：</span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;"><a style="color: #005eac; cursor: pointer; text-decoration: none; padding: 0px; margin: 0px;" href="http://code.google.com/p/paoding-rose/wiki/Rose_Portal_Demo">http://code.google.com/p/paoding-rose/wiki/Rose_Portal_Demo</a></span></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"> </p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><span style="padding: 0px; margin: 0px;">献上现在最新的</span><span style="padding: 0px; margin: 0px;">sj</span><span style="padding: 0px; margin: 0px;">主页（</span><span style="padding: 0px; margin: 0px;">2010/6/10 10:46</span><span style="padding: 0px; margin: 0px;">）</span>作为结束，如图6<span style="padding: 0px; margin: 0px;">，目前粉丝 </span>粉丝 21w+、留言146w+，谢谢<span style="padding: 0px; margin: 0px;">（另感谢</span><a style="color: #005eac; cursor: pointer; text-decoration: none; padding: 0px; margin: 0px;" href="http://www.renren.com/profile.do?id=68464" target="_blank">李伟博</a><span style="padding: 0px; margin: 0px;">同学，以上图片均是他收集的）</span>：</p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"> </p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;"><img style="max-width: 550px; padding: 0px; margin: 0px;" src="http://img04.taobaocdn.com/bao/uploaded/i4/T1ITtCXfJiXXa6.tHb_123501.jpg" alt="" width="557" height="402" /></p>
+<p style="margin-top: 0px; margin-right: 0px; margin-bottom: 0.8em; margin-left: 0px; padding: 0px;">图6 最新的sj主页</p></p></p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -664,131 +759,6 @@ return 403;<br />
 }</p>
 
 <p>鸟哥在<a href="http://www.laruence.com/2010/05/20/1495.html">http://www.laruence.com/2010/05/20/1495.html</a>一文中提及此事。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/05/19/mysql-explain/">Mysql Explain详解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-05-19T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><p style="text-align: center;"><img class="aligncenter" src="http://img07.taobaocdn.com/bao/uploaded/i7/T1cRdAXeVlXXbDaB72_044910.jpg" alt="mysql explain" /></p></p>
-
-<p><span style="color: #ffffff;">doubanclaimed89ad216b01beaf</span>
-题注：感谢suchasplus兄弟在第一时间提示explain拼写错误~~~:)</p>
-
-<p>对于经常使用mysql的兄弟们，对explain一定不会陌生。当你在一条SELECT语句前放上关键词EXPLAIN，MySQL解释它将如何处理SELECT，提供有关表如何联合和以什么次序的信息。<br />
-借助于EXPLAIN，你可以知道<br />
-1)你什么时候必须为表加入索引以得到一个使用索引找到记录的更快的SELECT。<br />
-2)你也能知道优化器是否以一个最佳次序联结表。为了强制优化器对一个SELECT语句使用一个特定联结次序，增加一个STRAIGHT_JOIN子句。<br />
-官方的关于explain的文档在http://dev.mysql.com/doc/refman/5.1/en/using-explain.html（英文），本文可作为官方文献的不完整通俗读物。
-<h2><strong>使用的方法</strong></h2>
-EXPLAIN tbl_name<br />
-或：<br />
-EXPLAIN [EXTENDED] SELECT select_options</p>
-
-<p>前者可以得出一个表的字段结构等等，后者主要是给出相关的一些索引信息，而今天要讲述的重点是后者。
-<h2>举例</h2>
-mysql&gt; explain select * from event;<br />
-+&#8212;-+&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;-+&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;-+<br />
-| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra |<br />
-+&#8212;-+&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;-+&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;-+<br />
-|  1 | SIMPLE      | event | ALL  | NULL          | NULL | NULL    | NULL |   13 |       |<br />
-+&#8212;-+&#8212;&#8212;&#8212;&#8212;-+&#8212;&#8212;-+&#8212;&#8212;+&#8212;&#8212;&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;+&#8212;&#8212;-+<br />
-1 row in set (0.00 sec)
-<h2><strong>各个属性的含义</strong></h2>
-id<br />
-select查询的序列号</p>
-
-<p>select_type<br />
-select查询的类型，主要是区别普通查询和联合查询、子查询之类的复杂查询。</p>
-
-<p>table<br />
-输出的行所引用的表。</p>
-
-<p>type<br />
-联合查询所使用的类型。<br />
-type显示的是访问类型，是较为重要的一个指标，结果值从好到坏依次是：<br />
-system &gt; const &gt; eq_ref &gt; ref &gt; fulltext &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; index &gt; ALL<br />
-一般来说，得保证查询至少达到range级别，最好能达到ref。</p>
-
-<p>possible_keys<br />
-指出MySQL能使用哪个索引在该表中找到行。如果是空的，没有相关的索引。这时要提高性能，可通过检验WHERE子句，看是否引用某些字段，或者检查字段不是适合索引。</p>
-
-<p>key<br />
-显示MySQL实际决定使用的键。如果没有索引被选择，键是NULL。</p>
-
-<p>key_len<br />
-显示MySQL决定使用的键长度。如果键是NULL，长度就是NULL。文档提示特别注意这个值可以得出一个多重主键里mysql实际使用了哪一部分。</p>
-
-<p>ref<br />
-显示哪个字段或常数与key一起被使用。</p>
-
-<p>rows<br />
-这个数表示mysql要遍历多少数据才能找到，在innodb上是不准确的。</p>
-
-<p>Extra<br />
-如果是Only index，这意味着信息只用索引树中的信息检索出的，这比扫描整个表要快。<br />
-如果是where used，就是使用上了where限制。<br />
-如果是impossible where 表示用不着where，一般就是没查出来啥。<br />
-如果此信息显示Using filesort或者Using temporary的话会很吃力，WHERE和ORDER BY的索引经常无法兼顾，如果按照WHERE来确定索引，那么在ORDER BY时，就必然会引起Using filesort，这就要看是先过滤再排序划算，还是先排序再过滤划算。
-<h2><strong>常见的一些名词解释</strong></h2>
-Using filesort<br />
-MySQL需要额外的一次传递，以找出如何按排序顺序检索行。</p>
-
-<p>Using index<br />
-从只使用索引树中的信息而不需要进一步搜索读取实际的行来检索表中的列信息。</p>
-
-<p>Using temporary<br />
-为了解决查询，MySQL需要创建一个临时表来容纳结果。</p>
-
-<p>ref<br />
-对于每个来自于前面的表的行组合，所有有匹配索引值的行将从这张表中读取</p>
-
-<p>ALL<br />
-完全没有索引的情况，性能非常地差劲。</p>
-
-<p>index<br />
-与ALL相同，除了只有索引树被扫描。这通常比ALL快，因为索引文件通常比数据文件小。</p>
-
-<p>SIMPLE<br />
-简单SELECT(不使用UNION或子查询)
-<h2><strong>关于哥学社</strong></h2>
-<a style="color: #0b3b8c; text-decoration: none;" title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个自由博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。
-<h2><strong>关于五四陈</strong></h2>
-54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br />
-个人技术站点:<a style="color: #0b3b8c; text-decoration: none;" href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 czhttp@gmail.com 联系到他。
-<h2><strong>本文提及的文章</strong></h2>
-<a href="http://dev.mysql.com/doc/refman/5.1/en/using-explain.html">http://dev.mysql.com/doc/refman/5.1/en/using-explain.html</a></p>
-
-<p><a href="http://dev.mysql.com/doc/refman/5.1/zh/optimization.html#explain">http://dev.mysql.com/doc/refman/5.1/zh/optimization.html#explain</a></p>
 </div>
   
   

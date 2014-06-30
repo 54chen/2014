@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Thrift版本升级调查记录 May 28th, 2014 自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。 &hellip;">
+  <meta name="description" content="Bosh vs Comet vs Long Polling vs Polling Jun 30th, 2014 最近在研究在中国特色移动互联网下通过性最好的应用层协议办法，看到很多混乱的概念和实现，54chen在对各种名词的历史进行了深度考察，特作记录以做区分。 HTTP协议历史 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,69 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Bosh vs Comet vs Long Polling vs Polling</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-30T11:41:42+08:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
+
+<p>最近在研究在中国特色移动互联网下通过性最好的应用层协议办法，看到很多混乱的概念和实现，54chen在对各种名词的历史进行了深度考察，特作记录以做区分。</p>
+
+<h2>HTTP协议历史</h2>
+
+<ul>
+<li>第一个HTTP协议诞生于1989年3月。</li>
+<li>第一个HTTP协议的版本是HTTP 0.9，它的组成极其简单，因为它只允许客户端发送GET这一种请求。</li>
+<li>HTTP协议的第二个版本是HTTP 1.0，直到HTTP 1.0成为最重要的面向事务的应用层协议。该协议对每一次请求/响应，同样是建立并关闭一次连接。</li>
+<li>HTTP协议的第三个版本是HTTP 1.1，它就是目前使用最广泛的协议版本。从HTTP 1.1开始，客户端默认与Web 服务器建立长连接。</li>
+</ul>
+
+
+<h2>原始阶段polling</h2>
+
+<p>最早期的时候，因为没有可以依赖的东西，能用的只有javascript的setInterval，定时循环向服务器发起请求。</p>
+
+<p>优点是：服务器端啥特别的东西都不用准备，直接当http请求处理即可。缺点是：白白浪费大量的请求。</p>
+
+<h2>什么是Comet?</h2>
+
+<p>中文意思彗星，大概是想表示这是一次尾巴会拖很长的请求。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -526,61 +589,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/03/12/io-demystified/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/05/ihaveadream/">中大型移动互联网公司技术架构选择</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-05T16:09:52+08:00" pubdate data-updated="true">Mar 5<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><h2>总体思考</h2>
-
-<p>总结这些年经验，进行构架演进的方向选择时，大致要做到下面的目标：</p>
-
-<ul>
-<li>可快速开发部署 （五分钟写出来一个经过测试的hello world并可访问/调用，并可在公网访问）</li>
-<li>天然可扩展（业务层无状态，尽可能全部放到最后）</li>
-<li>自动化（内存不足了，除了报警，应该自动加点机器进去; 新的项目，基础代码应该都不用写，自动生成即可）</li>
-<li>框架化（公共层面的东西尽可能框架化，一层类似日志、counter、trace，应该不需要开发再写一行代码即默认打开）</li>
-<li>量化（所有的调用都应该有percentile与rps，透明反馈服务质量，跟踪系统更是可以模拟用户进行系统内部）</li>
-<li>同构化（因为搞两套的成本巨大，整体应该越来越趋同于同一种语言）</li>
-<li>硬件虚拟化（整个平台应该对进程透明下面的硬件情况）</li>
-<li>版本化、灰度化（所有的软件都应该在线上有明确的版本，且上线过程是一点点灰度上）</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/05/ihaveadream/">Read on &rarr;</a>
     </footer>
   
 

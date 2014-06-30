@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-07-28】 大家围观miibeian网站出问题了 登录啥都是用户名密码不正确 # 一大早全是怪事 刚发的一推在网站上显示 3 weeks ago # 换了一个高级一点支持GPRS的手机，推一下，感受一下未来无线互联网 # 在马桶上发表言论， &hellip;">
+  <meta name="description" content="一个把TortoiseSVN转成命令行的svn的bat脚本 TortoiseSVN是windows里常用的svn客户端了，有些IDE（比如说Zend Studio）要设置svn.exe的地址才能绑上svn来用，一般情况下，他附带的都是很古老的版本。 把下面的脚本保存为svn.bat， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/15/%E4%B8%80%E4%B8%AA%E6%8A%8Atortoisesvn%E8%BD%AC%E6%88%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84svn%E7%9A%84bat%E8%84%9A%E6%9C%AC/">一个把TortoiseSVN转成命令行的svn的bat脚本</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-07-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>TortoiseSVN是windows里常用的svn客户端了，有些IDE（比如说Zend Studio）要设置svn.exe的地址才能绑上svn来用，一般情况下，他附带的都是很古老的版本。</p>
+
+<p>把下面的脚本保存为svn.bat，再在<a href="http://www.54chen.com/c/406">ide</a>里设置svn客户端为这个bat文件，很好用
+<blockquote>@ECHO OFF<br />
+rem This is a svn for IDE<br />
+rem from http://www.54chen.com<br />
+start &#8220;TortoiseSVN&#8221; &#8220;C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe&#8221; /notempfile /command:%1 /path:%2</blockquote></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -805,64 +847,6 @@ twitter api只允许客户端在一定时间里调用有限的次数。这两种
 <p>在此一并感谢dbanotes.net的Fenng同学和twitter上一帮有意思的朋友，你们的意见都将是hhhjob组织未来发展的强心剂。</p>
 
 <p>这次新版本还有一个特色是黑名单企业的提交，是来自guyu同学的奇思妙想。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/05/05/54%E9%99%88%E7%A7%91%E5%AD%A6%E9%99%A28021x%E6%BA%90%E4%BB%A3%E7%A0%81%E4%B8%8B%E8%BD%BD/">[54陈科学院]802.1x源代码下载</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-05-05T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>免责声明：</p>
-
-<p>本程序仅供学习编程使用，非商业用途，所有分析过程均遵循《中华人民共和国计算机软件保护条例》。</p>
-
-<p>功能：</p>
-
-<p>mynet是我在大学时期在xdkui老兄的vc源码参考下，完成的一套gnome程序，它解决了linux下802.1x拔号上网问题，同时友好的界面能使你轻松使用。</p>
-
-<p>截图：</p>
-
-<p><img class="alignnone size-full wp-image-570" title="2" src="http://www.54chen.com/wp-content/uploads/2009/05/2.gif" alt="" width="500" height="361" /></p>
-
-<p>代码分析：</p>
-
-<p><a href="http://www.54chen.com/c/65">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part1）</a></p>
-
-<p><a href="http://www.54chen.com/c/69">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part2）</a></p>
-
-<p><a href="http://www.54chen.com/c/71">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part3）关键逻辑</a></p>
-
-<p><a href="http://www.54chen.com/c/73">[中秋零献续集] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part4）getaccess线程内的故事</a></p>
-
-<p>索取代码，请猛击<a href="http://www.54chen.com/8021x">此处</a>进入此页面留下邮箱。</p>
 </div>
   
   

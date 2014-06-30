@@ -9,11 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-10-17 九九重阳节，今天天气不错，适合登高望远。 #
-明日牡丹园藏书馆，众英雄齐聚商议地方门户站点的发展和执行。 #
-试了一下xweibo的开源代码，有点屎。 #
-今天的评论员文章很有感觉哦，继续吹。 #
-drizzle 设计理念：1 异步 &hellip;">
+  <meta name="description" content="nginx.conf控制指定的代理ip和ip访问的设置手记 工作中有一次用到利用nginx的配置来让只有公司ip的访问才能打开指定的后台url，于是有了下面的记录。 在nginx中if很弱，http://www.nginxcn.com/doc/standard/httprewrite.html， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +73,85 @@ drizzle 设计理念：1 异步 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/18/nginx-conf-ip-setting/">nginx.conf控制指定的代理ip和ip访问的设置手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img01.taobaocdn.com/imgextra/i1/T1nZJOXfFJXXcYn1U9_103242.jpg" alt="nginx conf" /></p>
+
+<p>工作中有一次用到利用nginx的配置来让只有公司ip的访问才能打开指定的后台url，于是有了下面的记录。</p>
+
+<p>在nginx中if很弱，http://www.nginxcn.com/doc/standard/httprewrite.html，基本上不能写太复杂的条件或者是嵌套。</p>
+
+<p>因为公司我(<a href="http://www.54chen.com">54chen</a>)网络的设置，过去打到服务器的ip有可能是几个ip，同时也有可能是代理的ip，所以在if判断的时候，可能有多个条件。</p>
+
+<p><blockquote>
+location /administrator {<br />
+                #log_format  www_54chen_com  &#8216;$remote_addr - $remote_user [$time_local] $request &#8217;<br />
+                 #               &#8216;&#8221;$status&#8221; $body_bytes_sent &#8220;$http_referer&#8221; &#8217;<br />
+                  #              &#8216;&#8221;$http_user_agent&#8221; &#8220;$http_x_forwarded_for&#8221;&#8217;;<br />
+             # access_log  /data/www.log  www_54chen_com;<br />
+            set $fuck 0;<br />
+            if ($remote_addr = &#8216;1.1.1.1&#8217;){<br />
+                set $fuck 1;<br />
+            }<br />
+            if ($remote_addr = &#8216;1.1.1.2&#8217;){<br />
+                set $fuck 1;<br />
+            }<br />
+            if ($remote_addr = &#8216;1.1.1.3&#8217;){<br />
+                set $fuck 1;<br />
+            }<br />
+            if ($http_x_forwarded_for = &#8216;2.2.2.2&#8217;) {<br />
+                set $fuck 1;<br />
+            }<br />
+            if ($fuck = 0){<br />
+                return 404;<br />
+            }<br />
+         #此处还需要填写和其他location一样的以提供正常服务环境<br />
+        }
+</blockquote>
+1） 1.1.1.1 1.1.1.2 1.1.1.3都是直接ip地址<br />
+2)  2.2.2.2是代理之前的ip地址</p>
+
+<p>另外流行的另一种做法：
+<blockquote>            allow 1.1.1.1;<br />
+            allow 1.1.1.2;<br />
+            allow 1.1.1.3;<br />
+            deny all;</blockquote>
+但此方法我(<a href="http://www.54chen.com">54chen</a>)始终没找到支持代理的判断。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -644,75 +719,6 @@ cookies定时更换重新计算 <br />
 http://www.54chen.com/tqq.js里定义了按钮的onclick加密函数（绝无发起ajax请求）。
 <script type="text/javascript" src="/tqq.js"></script>
 <input type="text" value="请输入密码进行加密" id="pwd" size="50" /><input type="button" value="转换" onclick="trans(document.getElementById('pwd').value)" />
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/09/12/54chen-twitter-memo-2010-09-12/">54chen Twitter Memo 2010-09-12</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-12T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-最终搞定，同步到疼讯 </ul><a href="http://twitter.com/54chen/statuses/24018086782" class="aktt_tweet_time">#</a>
-这是一推发向腾讯微博的内容。 <a href="http://twitter.com/54chen/statuses/24008524756" class="aktt_tweet_time">#</a>
-王熙凤今天得了哮喘，说话声音怪怪的。 <a href="http://twitter.com/54chen/statuses/24007847908" class="aktt_tweet_time">#</a>
-今天的红楼梦，背景音乐很吓人 <a href="http://twitter.com/54chen/statuses/24006659215" class="aktt_tweet_time">#</a>
-大公司把多个子公司的产品简单地合成一个叫做“通行证”的做法显然是失败的，搜狐即是如此，看到那个登录，连找回密码的勇气都没有了。 <a href="http://twitter.com/54chen/statuses/23980573703" class="aktt_tweet_time">#</a>
-哈哈，有意思，看过的才明白。@blogkid:使用$SHLVL 可以知道当前在第几层的Shell。一下子想起盗梦空间 <a href="http://twitter.com/54chen/statuses/23977121332" class="aktt_tweet_time">#</a>
-一早就看到一篇人人网透露用户资料的博文，十分有意思，事情的起始我是知道的，看@yegle同学是阿里的，不像是使坏的，公司的公关，唉，有时候，诚恳地承认技术需要提高，比补墙要让人觉得可信，至于用“请使用真实姓名”来证明就是人人网资料的泄漏可能片面了点 <a href="http://twitter.com/54chen/statuses/23966105512" class="aktt_tweet_time">#</a>
-同赞袭人，王熙凤出来的时候背景的笑声太可怖了@juvenxu:新红楼中，黛玉的脸太胖了，宝钗的脸太瘦了，场景音乐太惊悚了，其他我觉得很好，尤喜宝玉和袭人 <a href="http://twitter.com/54chen/statuses/23895571336" class="aktt_tweet_time">#</a>
-和google的一位兄弟了解到他们的结构就是职责不同的扁平的@taiwen:这是一种文化，但不是一个组织，如果是一个组织，肯定是有一个架构的，即使是扁平的，也是有职责的不同的。RT @<a href="http://twitter.com/54chen" class="aktt_username">54chen</a>: 一个技术团队没有leader，扁平化的结构 <a href="http://twitter.com/54chen/statuses/23895335727" class="aktt_tweet_time">#</a>
-一个技术团队没有leader，扁平化的结构，每个人都是独立的contributor，非geek在这样的团队也会汗颜。 <a href="http://twitter.com/54chen/statuses/23893650318" class="aktt_tweet_time">#</a>
-休1上3、休3、上6、休7、上2、休1 <a href="http://twitter.com/54chen/statuses/23874527067" class="aktt_tweet_time">#</a>
-用sonar来提高java编程技巧，相当有效。 <a href="http://twitter.com/54chen/statuses/23220609227" class="aktt_tweet_time">#</a>
-很有意思，我在twitter叫54chen，新浪也叫54chen，随时能收到@54chen从twitter@到新浪去的，传说中的穿梭 <a href="http://twitter.com/54chen/statuses/23218715185" class="aktt_tweet_time">#</a>
-为什么团队博客写不起来？因为主管对团队总体的技术水平不自信，在大环境下怕出笑话，畏首畏尾，瞻前顾后，所以强调团队成员贡献文章时一定要如何如何，然后成员自然没有文章可献，所以团队博客一坛子死水。 <a href="http://twitter.com/54chen/statuses/23212157605" class="aktt_tweet_time">#</a>
-fuck，作为程序员这么需要创新与激情的行业，你TMD做事情积极主动一点会死啊。 <a href="http://twitter.com/54chen/statuses/23203373130" class="aktt_tweet_time">#</a>
-作为一名传说中的构架师，必须熟知一门解释型语言一门编译型语言的底层区别，并且能够熟练运用他们，比如php和java就是非常好的两个搭档。 <a href="http://twitter.com/54chen/statuses/23199510333" class="aktt_tweet_time">#</a>
-这一条是来自外太空的推 <a href="http://twitter.com/54chen/statuses/23197485020" class="aktt_tweet_time">#</a>
-LKJHGFDSA 不解释@taiwen:我们姓霍的招谁惹谁了了，还要灭三次呢~~~RT @<a href="http://twitter.com/arthur369" class="aktt_username">arthur369</a>: 灭霍霍霍，小攻小受的存在也是供我们欣赏的 RT @<a href="http://twitter.com/windyye" class="aktt_username">windyye</a> RT @<a href="http://twitter.com/FrankZhen" class="aktt_username">FrankZhen</a>: 再次印证我的男人认为les的存在&#8230; RT @<a href="http://twitter.com/virushuo" class="aktt_username">virushuo</a>: <a href="http://twitter.com/54chen/statuses/23196148546" class="aktt_tweet_time">#</a>
-用搜索的倒排轻松搞定“好友的文章”类相关推荐功能 <a href="http://goo.gl/fb/tNq5a" rel="nofollow">http://goo.gl/fb/tNq5a</a> <a href="http://twitter.com/54chen/statuses/23138227220" class="aktt_tweet_time">#</a>
-用搜索的倒排轻松搞定“好友的文章”类相关推荐功能 <a href="http://goo.gl/fb/69KHF" rel="nofollow">http://goo.gl/fb/69KHF</a> <a href="http://twitter.com/54chen/statuses/23136743664" class="aktt_tweet_time">#</a>
-看到了第9期的《程序员》我和冷昊的关于nuclear的文章鸟，这个头像在书上印出来原来很黑。。。 <a href="http://twitter.com/54chen/statuses/23130813608" class="aktt_tweet_time">#</a>
-早就已经是多难穿帮了@lixiaoshuan: RT @<a href="http://twitter.com/rtmeme" class="aktt_username">rtmeme</a>: RT @<a href="http://twitter.com/bafield" class="aktt_username">bafield</a> RT @<a href="http://twitter.com/ranyunfei" class="aktt_username">ranyunfei</a>: 新西兰七点二级地震只重伤了两个人，这也好叫地震，我呸！只有中国的地震才叫真正的地震，不死个成千上万，不符合官方“多难兴邦”的期待，那地震的党性原则到哪去了 <a href="http://twitter.com/54chen/statuses/23126862157" class="aktt_tweet_time">#</a>
-@<a href="http://twitter.com/juvenxu" class="aktt_username">juvenxu</a>: why why why? why not Nexus? RT @<a href="http://twitter.com/kiminotes" class="aktt_username">kiminotes</a> #<a href="http://search.twitter.com/search?q=%23maven" class="aktt_hashtag">maven</a> 考虑使用 svn 来做 maven repository 的 storage //还能切到svn上？mvn deploy还能用吗 <a href="http://twitter.com/54chen/statuses/23120386859" class="aktt_tweet_time">#</a>
-@<a href="http://twitter.com/telking" class="aktt_username">telking</a> chrome的是不是和firefox极其类似了？ <a href="http://twitter.com/telking/statuses/23113766109" class="aktt_tweet_reply">in reply to telking</a> <a href="http://twitter.com/54chen/statuses/23114492605" class="aktt_tweet_time">#</a>
-@<a href="http://twitter.com/long132" class="aktt_username">long132</a> <a href="http://fmn.xnimg.cn/fmn039/20100906/1100/p_large_nW4t_550b0004a6d82d0d.jpg" rel="nofollow">http://fmn.xnimg.cn/fmn039/20100906/1100/p_large_nW4t_550b0004a6d82d0d.jpg</a>  图在这里，多刷新下就出来了 <a href="http://twitter.com/long132/statuses/23113035406" class="aktt_tweet_reply">in reply to long132</a> <a href="http://twitter.com/54chen/statuses/23113102157" class="aktt_tweet_time">#</a>
-看到一个图：员工迟到懒散会是好人才。解释为情绪化的人创意高。。。 <a href="http://twitter.com/54chen/statuses/23112503016" class="aktt_tweet_time">#</a>
-在这个充满“连接被重置”的国度里，大周一的早上就要骂一句“操他大爷” <a href="http://twitter.com/54chen/statuses/23105017557" class="aktt_tweet_time">#</a>
-要是做一个firefox下新浪和腾讯两大微博的共同客户端，不知道有人用没 <a href="http://twitter.com/54chen/statuses/23103501146" class="aktt_tweet_time">#</a>
-受感冒和twitter的oauth全面启用的影响，本周更新颇为滞后。下午带老婆一行，到某花园试新到手的定焦镜头。 <a href="http://twitter.com/54chen/statuses/23031075667" class="aktt_tweet_time">#</a>
-just test <a href="http://twitter.com/54chen/statuses/23030239969" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2010-09-05 <a href="http://goo.gl/fb/6AKXb" rel="nofollow">http://goo.gl/fb/6AKXb</a> <a href="http://twitter.com/54chen/statuses/23022744132" class="aktt_tweet_time">#</a>
-
 </p>
 </div>
   

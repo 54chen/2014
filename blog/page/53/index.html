@@ -9,12 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="MySQL中各种字段的取值范围 TINYINT
--128 - 127   TINYINT UNSIGNED
-0 - 255 SMALLINT
--32768 - 32767 SMALLINT UNSIGNED
-0 - 65535 MEDIUMINT
--8388608 - 8388607 &hellip;">
+  <meta name="description" content="Linux下系统托盘的实现 [文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.13 转载请注明原文链接：http://www.54chen.com/c/24]
+在gnome中国的网页上找到这个内容，他们把它叫做“通知功能图标”。它是一个在未来版本中决定发布的已实现包。
+http &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +75,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/10/13/linux-system-tray-under-the-realization-of/">Linux下系统托盘的实现</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-13T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.13 转载请注明原文链接：<a href="http://www.54chen.com/c/24">http://www.54chen.com/c/24</a>]<br />
+在gnome中国的网页上找到这个内容，他们把它叫做“通知功能图标”。它是一个在未来版本中决定发布的已实现包。<br />
+http://www.gnome-cn.org/documents/tutorial/system-tray-icon-application/implement-your-tray<br />
+具体实现前需要在下载两个开发补丁源文件，然后包含头文件到你的文件中。<br />
+具体代码：<br />
+void<br />
+create_tray (tray_demo * tray)<br />
+{
+GtkWidget *image;<br />
+GtkWidget *event_box;<br />
+GtkTooltips *tooltips;<br />
+EggTrayIcon *tray_icon;<br />
+tooltips = gtk_tooltips_new ();<br />
+tray_icon = egg_tray_icon_new (&#8220;Tray icon demo&#8221;);<br />
+event_box = gtk_event_box_new ();<br />
+gtk_container_add (GTK_CONTAINER (tray_icon), event_box);<br />
+g_signal_connect (G_OBJECT (event_box), &#8220;button-press-event&#8221;,<br />
+G_CALLBACK (tray_button_press_event_cb), tray);<br />
+gtk_tooltips_set_tip (GTK_TOOLTIPS(tooltips), event_box, _(&#8220;Try a left/right click&#8221;), NULL);<br />
+image = load_image (GCN_ICON);<br />
+gtk_container_add (GTK_CONTAINER (event_box), image);<br />
+gtk_widget_show_all (GTK_WIDGET (tray_icon));<br />
+return;<br />
+}</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
