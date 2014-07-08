@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Bosh vs Comet vs Long Polling vs Polling Jun 30th, 2014 最近在研究在中国特色移动互联网下通过性最好的应用层协议办法，看到很多混乱的概念和实现，54chen在对各种名词的历史进行了深度考察，特作记录以做区分。 HTTP协议历史 &hellip;">
+  <meta name="description" content="Tigase代码框架解读 Jul 7th, 2014 在java下实现的xmpp开源实现，除了openfire外，tigase是另一个牛逼的项目。
+实际的实验室压力下，50万人同时在线的单机，tigase的gc情况要优于openfire，而且openfire的网络层代码借鉴了不少tigase的 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/07/explain-tigase/">Tigase代码框架解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-07T13:47:54+08:00" pubdate data-updated="true">Jul 7<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
+
+<ul>
+<li><p>在java下实现的xmpp开源实现，除了openfire外，tigase是另一个牛逼的项目。</p></li>
+<li><p>实际的实验室压力下，50万人同时在线的单机，tigase的gc情况要优于openfire，而且openfire的网络层代码借鉴了不少tigase的。</p></li>
+</ul>
+
+
+<p>下面的内容，在解剖tigase过程中所写，使用的版本是：5.2.1 (2014年7月份)。</p>
+
+<h2>组件</h2>
+
+<p>tigase就是一个大组件框，里面所有东西基本都是组件组成的。session manager、message router、c2s connection manager&hellip;全部是组件。</p>
+
+<p>ServerComponent接口是一个最小化接口，但是要去写很多代码，tigase提供了许多的现成的代码，减少去从零实现这个接口的过程。</p>
+
+<p>比如extends AbstractMessageReceiver可以直接生成一个处理消息的组件。只需要实现一个processPacket方法。实现getDefaults方法，可以对系统变量进行处理。实现setProperties方法，可以去设置一些要用的变量。</p>
+
+<h2>多线程</h2>
+
+<p>processPacket方法，可以把逻辑扔到不同的cpu上去运行，以发挥服务器多核的优势。processingThreads方法返回用多少个cpu来处理。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/07/explain-tigase/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -537,58 +599,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/03/19/how-to-use-phonegap/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/12/io-demystified/">Io不再神秘</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-03-12T10:27:15+08:00" pubdate data-updated="true">Mar 12<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><ul>
-<li>本文译自 <a href="http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/">http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/</a></li>
-<li>原作者：Buddhika Chamith</li>
-<li>译者：54chen</li>
-</ul>
-
-
-<p>随着所有的在高可用服务器设计上的炒作，以及nodejs背后的风行，我想关注一些IO的设计模式，却一起没有足够的时间。现在正在完成的一些研究，我想最好记下这些资料以备查。让我们跳上IO bus兜风去。</p>
-
-<h2>各种各样的I/O</h2>
-
-<p>根据操作的阻塞或非阻塞类型，以及IO的准备就绪、完成事件通知的同步和异步类型，一共有四种不同方式的IO。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/12/io-demystified/">Read on &rarr;</a>
     </footer>
   
 

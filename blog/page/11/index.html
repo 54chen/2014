@@ -9,9 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-03-04 http://t.co/r7nCokDj OpenStack三大平台之一的存储平台作者的开发心路历程。 #
-分布式实时搜索方案介绍-senseidb http://t.co/G3s9SzMW #
-54chen Twitter memo &hellip;">
+  <meta name="description" content="Senseidb使用手记 下载
+https://github.com/downloads/linkedin/sensei/sensei-1.0.0-release.tar.gz
+这个版本是2012年1月份发布的，如果您看到此文时时间太久，请到他们的官方网站去寻找：http://senseidb. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,112 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/03/13/senseidb-notes/">Senseidb使用手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-03-13T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://www.cgichina.com/uploads/allimg/c100706/12N3911E10-233O9.jpg" alt="linkedin, senseidb" />
+<strong>下载</strong>
+https://github.com/downloads/linkedin/sensei/sensei-1.0.0-release.tar.gz<br />
+这个版本是2012年1月份发布的，如果您看到此文时时间太久，请到他们的官方网站去寻找：http://senseidb.com</p>
+
+<p><strong>下载kafka</strong>
+kafka：由linkedin开源的高吞吐量的消息系统。<br />
+http://people.apache.org/~nehanarkhede/kafka-0.7.0-incubating/kafka-0.7.0-incubating-src.tar.gz</p>
+
+<p><strong>下载中文分词包IKAnalyzer</strong>
+http://code.google.com/p/ik-analyzer/downloads/list</p>
+
+<p><strong>编译sensei</strong>
+tar zxvf sensei-1.0.0-release.tar.gz<br />
+cd sensei-trunk<br />
+./bin/build.sh 或者 mvn package 要是没有maven客户端，需要自行安装（ubuntu下直接apt-get install maven）</p>
+
+<p><strong>编译kafka</strong>
+tar zxvf kafka-0.7.0-incubating-src.tar.gz <br />
+cd kafka-0.7.0-incubating-src/<br />
+./sbt<br />
+update<br />
+pacakge</p>
+
+<p><strong>编译IKA</strong>
+新建一个jar包，里面只有一个类，内容如下：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;IKAnalyzerFactory&nbsp;</span><span class="keyword">implements</span><span>&nbsp;SenseiPluginFactory&lt;IKAnalyzer&gt;&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;IKAnalyzer&nbsp;getBean(Map&lt;String,&nbsp;String&gt;&nbsp;initProperties,&nbsp;String&nbsp;fullPrefix,&nbsp;SenseiPluginRegistry&nbsp;pluginRegistry)&nbsp;{&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">new</span><span>&nbsp;IKAnalyzer();&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;&nbsp;&nbsp;</span></li></ol></div>
+<strong>
+配置sensei的sensei.properties</strong>
+重要的几点：<br />
+1）zookeeper的url:
+<em>sensei.cluster.url=zookeeper.n.miliao.com:2181</em>
+2）IKA的class设置:
+<em>sensei.index.analyzer.class = com.chen.IKA.IKAnalyzerFactory</em>
+3）kafka所使用的声明:
+<em>sensei.gateway.class=com.senseidb.gateway.kafka.KafkaDataProviderBuilder<br />
+sensei.gateway.kafka.zookeeperUrl=zookeeper.n.miliao.com</em>
+#下面的topic很关键，消息系统中用topic区别不同的消息
+<em>sensei.gateway.kafka.topic=<font color="orange">hotTopic</font></em>
+#ProducerData生成时，也应该叫hotTopic</p>
+
+<p><strong>启动sensei</strong>
+略去了设置schema，可参考<a href="http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html">http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html</a>.</p>
+
+<p><blockquote>cd sensei-trunk<br />
+bin/start-sensei-node.sh example/xxx/conf</blockquote></p>
+
+<p><blockquote>(所有的使用的jar，比如说kafka\IKA及其依赖的包，都扔到conf/ext下)</blockquote></p>
+
+<p><strong>配置kafka的server.properties</strong>
+关键的一点：<br />
+1）设置kafka使用的zookeeper地址：</p>
+
+<p><blockquote>zk.connect=zookeeper.n.miliao.com:2181</blockquote></p>
+
+<p><strong>启动kafka</strong></p>
+
+<p><blockquote>cd kafka-0.7.0-incubating-src<br />
+nohup bin/kafka-server-start.sh config/server.properties &</blockquote></p>
+
+<p><strong>
+[如果你的schema定义无误，那么到这里你就可以通知kafka有消息进入，sensei就会自动开始消费这些消息进行索引等过程]</strong></p>
+
+<p>在具体业务中传入数据参考前文：<a href="http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html">http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html</a></p>
+
+<p><strong>
+发起搜索</strong>
+ <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">static</span><span>&nbsp;JSONArray&nbsp;doSearch(String&nbsp;key,&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit,&nbsp;</span><span class="keyword">int</span><span>&nbsp;offset,&nbsp;String&nbsp;senseiServer)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;JSONException&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SenseiClientRequest&nbsp;senseiRequest&nbsp;=&nbsp;SenseiClientRequest.builder().query(Queries.stringQuery(key)).paging(limit,&nbsp;offset)&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.fetchStored(<span class="keyword">true</span><span>).build();&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SenseiResult&nbsp;senseiResult&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;SenseiServiceProxy(senseiServer,&nbsp;</span><span class="number">8080</span><span>).sendSearchRequest(senseiRequest);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;List&lt;SenseiHit&gt;&nbsp;list&nbsp;=&nbsp;senseiResult.getHits();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONArray&nbsp;l&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;JSONArray();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">for</span><span>&nbsp;(</span><span class="keyword">int</span><span>&nbsp;i&nbsp;=&nbsp;</span><span class="number">0</span><span>;&nbsp;i&nbsp;&lt;&nbsp;list.size();&nbsp;i++)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SenseiHit&nbsp;hit&nbsp;=&nbsp;list.get(i);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;l.put(<span class="keyword">new</span><span>&nbsp;JSONObject(hit.getSrcdata()));&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;l;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>____EOF____<br />
+2012.3.13 version 1</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -608,71 +714,6 @@ Riak Core说明 <a href="http://t.co/lvFrWhFK" rel="nofollow">http://t.co/lvFrWh
 maven库nexus拖不到jar包小记 <a href="http://t.co/ZKOAz3lG" rel="nofollow">http://t.co/ZKOAz3lG</a> <a href="http://twitter.com/54chen/statuses/163978749447114752" class="aktt_tweet_time">#</a>
 <a href="http://t.co/bxISwqBP" rel="nofollow">http://t.co/bxISwqBP</a>  riak工程团队，为啥老外都显老？ <a href="http://twitter.com/54chen/statuses/163904193348907008" class="aktt_tweet_time">#</a>
 
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/01/riak-core/">Riak Core说明</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-01T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2AT9jXolXXXXXXXXX_!!13078490.jpg" alt="riak" />
-<strong>什么是riak_core?</strong>
-riak_core是一个单独的OTP应用，提供了所有必须的服务，以完成一个现代化的、表现良好的分布式应用。riak_core开始于Riak的一部分。当代码在建立各种分布式应用普遍有用时，我们决定重构并且分离出来核心部分，使其便于使用。<br />
-分布式系统是复杂的，riak_core可以满足这些大量复杂的需求。在深入代码之前，我将分离这些需求为明显的分类，且给出每项的概况。<br />
-注：如果你是急性子，想跳过后面的直接读代码，你可以通过hg或者git检出riak_core的代码。
-<strong>
-节点存活 & 节点关系</strong>
-riak_core_node_watcher是负责反馈riak_core_cluster内部节点状态的进程。它使用net_kernel有效地监控了许多节点。riak_core_node_watcher也有能力将一个节点按程序预定踢出cluster。当一个主节点必须临时断电而又不想完全停服的情况，这十分有用。<br />
-riak_core_node_watcher还提供了在cluster内广播和定向服务的API。当节点提供了专门的服务，比如CUDA计算节点，这个服务被cluster中的其他的节点所使用，这些API很有用。<br />
-riak_core_node_watch_events配合riak_core_node_watcher产生以活跃节点为基础的events，比如说加入或者离开cluster等等。当事人可以注册callback方法，当events被触发时会被调到。</p>
-
-<p><strong>分区 & 分布式工作</strong>
-riak_core在每个节点上使用了master/worker配置，以管理工作单元的执行。一致性哈希被使用来决定哪一个目标节点用来发起请求，而且主进程在每个节点的farms公开对实际workers的请求。riak_core把工作进程叫做vnodes。相应的进程叫vnode_master。<br />
-在需要的时候，在riak_core里的分区和分布的逻辑同时掌控了hinted handoff。hinted handoff发生在一个节点失灵或者断电时。为了确保可用性，许多集群系统会使用可用节点代替挂掉的节点。当挂掉的节点恢复，集群需要从它代替节点的临时空间迁移数据去恢复节点的永久空间。这个进程被叫做hinted handoff，并且被riak_core里的组件管理。riak_core也掌控了迁移分区去新节点，当它加入到集群，集群能够持续地工作，并且平等地分给集群中所有成员。<br />
-riak_core_vnode_master在一个给定的节点启动所有的工作vnodes，并且当集群启动的时候把请求路由到vnodes。<br />
-riak_core_vnode是一个OTP behavior包装，所有的样板逻辑需要实现一个vnode。特殊的应用vnodes必须实现少量的回调函数，以参与handoff的session并且从master接收工作单元。</p>
-
-<p><strong>集群状态</strong>
-一个riak_core集群保存了在一个环状结构上的全局状态。这个状态信息在集群中的节点间传输，以一个可控的方法保证所有的集群成员同步。这个进程被叫做“gossiping”。<br />
-riak_core_ring是用来创建和控制环的状态信息的，并且会与集群中的所有节点共享。环状态信息包括像分区关系、特定集群环上的元数据等元素。比如Raik KV存储把桶的元数据保存在环元数据中。<br />
-riak_core_ring_manager帮助一个节点管理集群环信息。它是应用代码访问环的主入口点（通过riak_core_ring_manager:get_my_ring/1），并且还能保存从当前环的状态同步过来的环持久快照。<br />
-riak_core_gossip管理环的gossip进程，它要确保环在整个集群里全都一致。</p>
-
-<p><strong>下一步计划</strong>
-下面的几个月之后，我们将在这博客一系列的日志里覆盖建立一个真正的应用步骤，每篇都将覆盖使用riak_core建立某种系统。所有应用代码都将在apache2声明下共享到github。<br />
-那我们要建立哪种类型的应用？因为这个系列的目标是为了举例如何使用riak_core建立一个分布式系统，同时也是为了满足我自己的技术好奇心，我决定建立一个分布式图片数据库。为了真正练习riak_core，一个图形库应该提供足够的用例，与此同时，不能把核心学习体验搞得十分复杂。<br />
-感谢Sean Cribbs和Andy Gross提供有用的review和feedback。</p>
-
-<p>[from http://basho.com/blog/technical/2010/07/30/introducing-riak-core/]
 </p>
 </div>
   

@@ -4,8 +4,131 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2014-06-30T23:11:47+08:00</pubDate>
+        <pubDate>2014-07-08T21:46:34+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
+
+<ul>
+<li><p>在java下实现的xmpp开源实现，除了openfire外，tigase是另一个牛逼的项目。</p></li>
+<li><p>实际的实验室压力下，50万人同时在线的单机，tigase的gc情况要优于openfire，而且openfire的网络层代码借鉴了不少tigase的。</p></li>
+</ul>
+
+
+<p>下面的内容，在解剖tigase过程中所写，使用的版本是：5.2.1 (2014年7月份)。</p>
+
+<h2>组件</h2>
+
+<p>tigase就是一个大组件框，里面所有东西基本都是组件组成的。session manager、message router、c2s connection manager&hellip;全部是组件。</p>
+
+<p>ServerComponent接口是一个最小化接口，但是要去写很多代码，tigase提供了许多的现成的代码，减少去从零实现这个接口的过程。</p>
+
+<p>比如extends AbstractMessageReceiver可以直接生成一个处理消息的组件。只需要实现一个processPacket方法。实现getDefaults方法，可以对系统变量进行处理。实现setProperties方法，可以去设置一些要用的变量。</p>
+
+<h2>多线程</h2>
+
+<p>processPacket方法，可以把逻辑扔到不同的cpu上去运行，以发挥服务器多核的优势。processingThreads方法返回用多少个cpu来处理。</p>
+
+<!--more-->
+
+
+<p>在重写processingThreads的同时，需要重写hashCodeForPacket方法，确保同一个用户的数据，在同一个cpu上处理，以确保不出现消息乱序。</p>
+
+<h2>定时器</h2>
+
+<p>可以重写everySecond everyMinute everyHour的逻辑，以达到定时器的作用。</p>
+
+<p>还可以重写另外两个方法来指定固定时间完成的任务：</p>
+
+<p>addTimerTask(TimerTask task, long delay, TimeUnit unit);</p>
+
+<p>addTimerTask(TimerTask task, long delay);</p>
+
+<p>重写initializationComplete方法，tigase会在特定的时间里来调用，具体说，就是在所有准备工作做完了后，多半这里用来启动连接之类的。</p>
+
+<h2>统计信息</h2>
+
+<p>复写getStatistics，用StatisticsList来保存统计信息。</p>
+
+<h2>组件的生命周期</h2>
+
+<p>一个组件按照下面的过程被调用：</p>
+
+<ul>
+<li>组件被加载，使用无参的public构造函数创建一个实例。</li>
+<li>setName</li>
+<li>start</li>
+<li>getDefaults</li>
+<li>setProperties</li>
+<li>initializationCompleted 最后被调用，一般用来启动socket连接。</li>
+</ul>
+
+
+<h2>ConnectionManager</h2>
+
+<p>ConnectionManager是继承自AbstractMessageReceiver（前面的可以省去代码的组件实现方式）的抽象类，比如c2s组件就是继承了它。</p>
+
+<p>如果你extend这个类，你需要知道数据来源于哪里：如果来源于MessageRouter，那么abstract void processPacket(Packet packet)方法会被调用; 如果来源于网络连接，那么abstract Queue processSocketData(XMPPIOService serv)方法会被调用。</p>
+
+<h2>架子</h2>
+
+<ul>
+<li>ComponentRegistrator:本身是一种组件，专用于注册各种组件。registr &ndash;> addComponent</li>
+<li>MessageReceiver:本身是一种组件，专用于收消息。也叫Router，因为消息内容在此类组件中流动。</li>
+<li><p>XMPPService:本身是一种组件，专用于显示serviceDiscovery时的名称啥的。大作用没有。</p></li>
+<li><p>AbstractMessageReceiver:高级一点的组件，基于MessageReceiver、XMPPService，同时实现了很多细节，还搞了多个线程搞收和发。</p></li>
+</ul>
+
+
+<h2>启动</h2>
+
+<ul>
+<li>messageRouter的setConfig，进入ConfiguratorAbstract-AbstractComponentRegistrator的addComponent。</li>
+<li>再回到ConfiguratorAbstract的componentAdded，然后是setup(component)。</li>
+<li>component.setProperties进入messageRouter的setProperties。</li>
+<li>comp.initializationCompleted()启动了connectionManager的各种socket。</li>
+</ul>
+
+
+<h2>网络</h2>
+
+<ul>
+<li>connectionManager同时协调ConnectionOpenThread与SocketThread。</li>
+<li>ConnectionOpenThread脱离上述组件，属于网络层实现，操作selector。它负责Selector.open。</li>
+<li>IOService提供线程安全的call方法，XMPPIOService继承它，保存了连接信息，每个连接一个IOService。</li>
+<li>SocketThread在实例化时，会启动多个线程，同时盯住selector。负责将每个确定的IOService进行数据处理。</li>
+<li>实现ConnectionOpenListener接口accept方法接收SocketChannel，组装IOService，交由SocketThread处理。</li>
+<li>ConnectionManager用ConcurrentHashMap记录了所有的连接。</li>
+</ul>
+
+
+<h2>零碎</h2>
+
+<ul>
+<li>AbstractMessageReceiver.addPacket 往自己的in_queue里加数据，是阻塞的，如果满了会出事。</li>
+<li>AbstractMessageReceiver.addPacketNB 往自己的in_queue里加数据，非阻塞的，和上一个的区别在于，一个是put一个是offer到queue。</li>
+<li>AbstractMessageReceiver.addPackets 来一堆数据。</li>
+<li>所有in_queue里的数据，会被processPacket方法所处理。</li>
+<li>对应有addOutPacket。</li>
+<li>所有out_queue里的数据，都默认扔给parent的in_queue，没有parent就扔到自己的in_queue。</li>
+<li>所有in_queue的数据，都由processPacket具体的实现来处理。</li>
+</ul>
+
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[tigase代码框架解读]]></title>
+            <link>http://2014.54chen.com/blog/2014/07/07/explain-tigase/</link>
+            <pubDate>2014-07-07T13:47:54+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/07/07/explain-tigase</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -3449,130 +3572,6 @@ E是Eden区，E＋S0＋S1＝Y。<br />
             <link>http://2014.54chen.com/blog/2013/11/18/ssdc2013/</link>
             <pubDate>2013-11-18T00:00:00+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2013/11/18/ssdc2013</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p><img class="alignnone" title="nexus" src="http://chen54.b0.upaiyun.com/1101/nexus200x50.png" alt="nexus" width="200" height="55" /></p>
-
-<p>三年前，小米的第一个nexus（版本1.8.0）在一台dell的办公机上安装完成。域名为http://www.a.com。</p>
-
-<p>三年后，a.com时不时已经慢得不行了。特别一到周一，大家都在update snapshot的时候，完全陷入一种无尽的痛苦中。</p>
-
-<p>然后弄来了一台专业server做这事情，域名为http://www.b.com。版本到官网一看，已经2.64了。日新月异！</p>
-
-<p>看升级文档顿时没了兴趣考虑升级，全新从零安装。</p>
-<!-- more -->
-<p>最后的办法是，在新机器上安装新的，把老的仓库挑出来设置为proxy类型。然后启用了ldap，同时保障大家都有deploy权限的同时，最大保障大家的密码不明文出现，同时通过代理ngx来限制最大上传的包，同时规定了snapshot的使用规则，防止在线上使用snapshot。以下是详细记录：</p>
-
-<p><strong>一、下载安装nexus和配置nginx</strong></p>
-
-<p>找个磁盘分区不小的：</p>
-
-<p>wget http://sxrelease.n.miliao.com/nexus-2.6.4-02-bundle.zip</p>
-
-<p>unzip nexus-2.6.4-02-bundle.zip</p>
-
-<p>bin/nexus start</p>
-
-<p>然后就能用了。http://www.a.com:8081已经启动了。当然了，如果还不能访问，应该是iptables在捣乱，试一下iptables -F。</p>
-
-<p>［nginx安装忽略］</p>
-
-<p>然后再在此机器上配置一个nginx代理到8081端口上。只举是为了：1.分担jetty的访问压力，毕竟公司人已经越来越多了。2.好做后续更多的事情。
-<div id="_mcePaste">server {</div>
-<div id="_mcePaste">listen       80;</div>
-<div id="_mcePaste">server_name  b.com;</div>
-<div id="_mcePaste">location / {</div>
-<div id="_mcePaste">rewrite ^/(.*)$  http://www.b.com/nexus/$1  permanent;</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">access_log  logs/nexus.access.log  main;</div>
-<div id="_mcePaste">location /nexus {</div>
-<div id="_mcePaste">proxy_pass         http://127.0.0.1:8081;</div>
-<div id="_mcePaste">proxy_redirect     off;</div>
-<div id="_mcePaste">proxy_set_header   Host             $host;</div>
-<div id="_mcePaste">proxy_set_header   X-Real-IP        $remote_addr;</div>
-<div id="_mcePaste">proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;</div>
-<div id="_mcePaste">proxy_read_timeout  5m;</div>
-<div id="_mcePaste">client_max_body_size       30m;</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">}</div>
-<div id="_mcePaste">server {</div>
-<div id="_mcePaste">listen       443;</div>
-<div id="_mcePaste">server_name  b.com;</div>
-<div id="_mcePaste">ssl on;</div>
-<div id="_mcePaste">ssl_certificate ../ssl/b.com.crt;</div>
-<div id="_mcePaste">ssl_certificate_key ../ssl/b.com.key;</div>
-<div id="_mcePaste">&#8230;.</div>
-配置中，启用了443的https代理，有安全意识的工程师使用ldap的时候传输密码要安全一点。</p>
-
-<p>proxy_read_timeout设置5分钟，是因为在下载包时，有可能需要去国外拉一些没见过的包，设长一点以防出现504。</p>
-
-<p>client_max_body_size设置30m，如果再有巨大的奇怪包要deploy，不这么容易了，用来防止不明真相的群众往maven库里传乱七八糟的东西。</p>
-
-<p><strong>二、设置nexus</strong></p>
-
-<p>第一个设置，为了防止仓库爆仓。</p>
-
-<p>login-&gt;scheduled tasks-&gt;add，添加一个定时清理目录的计划任务即可。最后一个选项“remove if released”需要慎重，平时开发可能不是特别正规的时候可能会snapshot和release都需要。</p>
-
-<p>第二个设置，打开LDAP支持，让每个人都有权限。</p>
-
-<p>login-&gt;security-&gt;ldap configuration，填写各种惨无人道的ldap参数，［此处需要求助IT部门］，然后security-&gt;roles-&gt;add-&gt;External Role Mapping，Realm选择LDAP，Role里如果没有数据，说明ldap没设置好，Role里选择一个组，点击create mapping。</p>
-
-<p>然后在configuration中选择add，添加两个权限，一个是Nexus deployment role，一个是All maven repositories (Full control)。</p>
-
-<p>然后在对应组的小伙伴们就有权限了。</p>
-
-<p><strong>三、设置本地settings.xml</strong></p>
-
-<p>把原来的settings文件的url从a.com改为b.com，普通的小伙伴即可使用新的仓库了。</p>
-
-<p>要发包的小伙伴，因为ldap用户名密码明文写在文件里不好，于是就用下面的办法：
-<h2 style="background-image: none; margin-bottom: 0.6em; padding-top: 0.5em; padding-bottom: 0.17em; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #aaaaaa; font-size: 19px; font-family: sans-serif; line-height: 19px;"><span class="mw-headline">step 1.先随意定义一个种子</span></h2>
-<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> localhost:54chen 54chen$ mvn --encrypt-master-password 123asdadfafdadf
- {BHe/qKN8q30HBG3bAGbYLOVLnAqVRkzjb9/7yWs+Ks0=}</pre>
-<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> vim ~/.m2/settings-security.xml</pre>
-<p style="margin: 0.4em 0px 0.5em; line-height: 19px; color: #000000; font-family: sans-serif; font-size: 13px;">写入内容：</p></p>
-
-<p><pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;settingsSecurity&gt;
-   &lt;master&gt;{BHe/qKN8q30HBG3bAGbYLOVLnAqVRkzjb9/7yWs+Ks0=}&lt;/master&gt;
-&lt;/settingsSecurity&gt;</pre>
-<h2 style="background-image: none; margin-bottom: 0.6em; padding-top: 0.5em; padding-bottom: 0.17em; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #aaaaaa; font-size: 19px; font-family: sans-serif; line-height: 19px;"><span class="mw-headline">step 2.最终生成</span></h2>
-<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">mvn --encrypt-password 你的邮箱密码
-{RxLx1asdfiafrjIHfXZDadfwveda23avsdv=}</pre>
-<p style="margin: 0.4em 0px 0.5em; line-height: 19px; color: #000000; font-family: sans-serif; font-size: 13px;">然后修改：</p></p>
-
-<p><pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">vim ~/.m2/settings.xml</pre>
-<pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">&lt;server&gt;
-     &lt;id&gt;internal&lt;/id&gt;
-     &lt;username&gt;54chen&lt;/username&gt;
-     &lt;password&gt;{RxLx1asdfiafrjIHfXZDadfwveda23avsdv=}&lt;/password&gt;
-&lt;/server&gt;</pre>
-当然了，mvn的版本要在2.1.0以上才行。</p>
-
-<p>然后对deploy过程中明文传输有顾虑的小伙伴，直接上https即可。</p>
-
-<p><strong>四、在a.com中存在的包，在b.com中没有怎么办？</strong></p>
-
-<p>其实很简单，先在a.com中定位404的包在什么repo中，复制下来在a中的repo位置，在b.com中新加一个repo，类型为proxy，同时将remote storage location写成a的。同时， 单击public repositories，调整刚加的repo到ordered repo中去，即可。</p>
-
-<p>［后记］</p>
-
-<p>标题有点大，解释一下，百人共用的保障，主要还是在nginx上，挡这一层之后，可以做很多事情，比如再加点cache之类的，实际情况下，所有用户减少过度的snapshot使用，也有一定帮助。</p>
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[百人共用企业maven私服nexus迁移搭建手记]]></title>
-            <link>http://2014.54chen.com/blog/2013/11/01/maven-nexus-notes/</link>
-            <pubDate>2013-11-01T00:00:00+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/11/01/maven-nexus-notes</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>
