@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[54陈新闻]hhhjob新版(2.0)正式发布了！ hhhjob简介：http://www.hhhjob.com hhhjob是两年前在学校里开始筹划的一个公益组织，正式上线应该是在08年初的时候，上线后受到了来自各大高校同学的支持， &hellip;">
+  <meta name="description" content="内部培训&#8211;memcached协议详解[原创][总结] [ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.5.12 转载请注明原文链接：http://www.54chen.com/c/584 ] 本次讲座讲师是校内网高手张洁同学，主题是“memcached协议详解及java &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,148 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/12/%E5%86%85%E9%83%A8%E5%9F%B9%E8%AE%AD-memcached%E5%8D%8F%E8%AE%AE%E8%AF%A6%E8%A7%A3%E5%8E%9F%E5%88%9B%E6%80%BB%E7%BB%93/">内部培训&#8211;memcached协议详解[原创][总结]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-12T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><span style="font-weight: normal;">[ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.5.12 转载请注明原文链接：</span><a href="http://www.54chen.com/c/584"><span style="color: #000000; text-decoration: none;"><span style="font-weight: normal;"><span style="color: #000000; text-decoration: none;"><span style="color: #000000; text-decoration: none;">http://www.54chen.com/c/584</span></span></span></span></a><span style="font-weight: normal;"> ]</span></p>
+
+<p>本次讲座讲师是校内网高手张洁同学，主题是“memcached协议详解及java client分析比较”，java client分析比较线条化，只有在现场才能明白，此处只回顾memcached协议详解，为易于理解，标题段落有调整。</p>
+
+<p><strong>一.连接</strong></p>
+
+<p>安装好memcached，直接通过telnet localhost 11211连接。11211是memcache默认的端口。</p>
+
+<p><strong>二.协议</strong>
+<div class="O" /></p>
+
+<p><span style="font-weight: normal;"><span style="text-decoration: underline;">2.1</span></span><span lang="EN-GB"><span style="font-weight: normal;"><span style="text-decoration: underline;">store (存储)</span></span></span>
+<div>
+<div /></div></p>
+
+<p>（可用命令）set/add/replace/prepend/append</p>
+
+<p><span lang="EN-GB"><span style="font-weight: normal;">&lt;command name&gt; &lt;key&gt; &lt;flags&gt; &lt;exptime&gt; </span></span><span lang="EN-GB"><span style="font-weight: normal;">&lt;bytes&gt; [noreply]\r\n</span></span></p>
+
+<p>exptime 只能精确到秒
+
+例如：
+<div>
+<div /></div></p>
+
+<p>set name 0 0 5&lt;回车&gt;</p>
+
+<p>zhangjie&lt;回车&gt;</p>
+
+<p>STORED
+
+<span style="font-weight: normal;">区别：set可能</span><a href="http://www.54chen.com/c/356"><span style="color: #000000; text-decoration: none;"><span style="font-weight: normal;"><span style="color: #000000; text-decoration: none;"><span style="color: #000000; text-decoration: none;">覆盖</span></span></span></span></a><span style="font-weight: normal;">，add不能覆盖，prepend是续在前面，append是续在后面。</span></p>
+
+<p>另：[noreply] 是新版中增加的标志，可以让服务器端不用返回。</p>
+
+<p><span style="text-decoration: underline;">2.2 cas（compare and set）</span></p>
+
+<p>最新版的命令。目的保证执行的原子性。</p>
+
+<p>例如：</p>
+
+<p>cas some 0 0 10 2</p>
+
+<p><span style="font-weight: normal;">意思是：</span><a href="http://www.54chen.com/c/49"><span style="color: #000000; text-decoration: none;"><span style="font-weight: normal;"><span style="color: #000000; text-decoration: none;"><span style="color: #000000; text-decoration: none;">检查</span></span></span></span></a><span style="font-weight: normal;">some的值的版本是不是2，是2才把10存进去，</span></p>
+
+<p><span style="text-decoration: underline;">2.3 get/gets</span>
+<div>
+<div /></div></p>
+
+<p>get &lt;key&gt;*</p>
+
+<p>get key1\r\n</p>
+
+<p>get key1 key2 key3\r\n
+
+<span style="font-weight: normal;">gets与get相比，返回</span><a href="http://www.54chen.com/c/11"><span style="color: #000000; text-decoration: none;"><span style="font-weight: normal;"><span style="color: #000000; text-decoration: none;"><span style="color: #000000; text-decoration: none;">结果</span></span></span></span></a><span style="font-weight: normal;">会多一个版本号：</span>
+<div /></p>
+
+<p>gets some</p>
+
+<p>VALUE some 0 10 2</p>
+
+<p>2008-03-20</p>
+
+<p>END
+<span style="text-decoration: underline;">2.4 delete（没得说的）</span></p>
+
+<p><span><span><span style="font-weight: normal;"><span style="text-decoration: underline;">2.5 </span></span></span></span><span lang="EN-GB"><span style="font-weight: normal;"><span style="text-decoration: underline;">incr/decr（自增和自减）</span></span></span></p>
+
+<p><span style="text-decoration: underline;">2.6 stats（运行状态）</span>
+<div>
+<div /></div></p>
+
+<p>STAT curr_items 1</p>
+
+<p>STAT total_items 7</p>
+
+<p>STAT bytes 58</p>
+
+<p>STAT curr_connections 5</p>
+
+<p>STAT total_connections 6</p>
+
+<p>STAT connection_structures 6</p>
+
+<p>STAT cmd_get 12</p>
+
+<p>STAT cmd_set 11</p>
+
+<p>STAT get_hits 8</p>
+
+<p>STAT get_misses 4
+
+
+<div class="O" /></p>
+
+<p><strong>三.两个java client</strong></p>
+
+<p>spymemcached</p>
+
+<p><span><span style="font-weight: normal;">  </span></span><span style="font-weight: normal;">http://code.google.com/p/spymemcached</span></p>
+
+<p>Java memcached client</p>
+
+<p>  http://www.whalin.com/memcached</p>
+
+<p>关于环状的一致性hash很有意思，有时间研究研究。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -645,44 +787,6 @@ END</p>
 <p>1.DAL能解决多维度的数据在高负载下的瓶颈吗？有什么方案？多维度：比如说豆瓣的群组，假设一个人有10W个组，每个组里有100w个人，如果应用要求列出每个组的人和每个人的组，只用一份数据，DAL+缓存能搞定吗？</p>
 
 <p>2.如果只是靠硬件来撑DB的访问量，那DAL和DBproxy或主从DB的优势在哪里？</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/03/28/54chen-has-joined-in-one-earth-hour/">54chen Has Joined in One Earth Hour</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-03-28T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="310" height="258" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="http://swf.ws.126.net/flvplayer081128/~false~0001_V548PN0LL~vimg2.ws.126.net/image/snapshot/2009/3/L/M/V548PN0LM~.swf" /><embed type="application/x-shockwave-flash" width="310" height="258" src="http://swf.ws.126.net/flvplayer081128/~false~0001_V548PN0LL~vimg2.ws.126.net/image/snapshot/2009/3/L/M/V548PN0LM~.swf"></embed></object></p>
-
-<p>“地球一小时”是WWF（世界自然基金会）应对全球气候变化所提出的一项倡议，希望参与到活动中的个人、社区、企业或政府可以在特定的时间熄灯一小时，以此来激发人们对保护地球的责任感。今年的3月28日的20:30至21:30之间，预计全球将会有超过80个国家的千余个城市和约为10亿人参与到“地球一小时”活动当中。</p>
 </div>
   
   

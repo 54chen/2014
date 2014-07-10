@@ -9,10 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-12-26 井岗山市人才多。从革命开始就是。 #
-凤凰传奇和Hao123一样，有一种特质，导致在大城市办公室的白领们还在嘲笑他们的时候，他们已经红遍大江南北。 #
-好记性对一个好程序员很重要。 #
-介绍一个基于NIO的异步框架Cindy - &hellip;">
+  <meta name="description" content="ubuntu10.04 下通过usb在G7（desire）上真机调试android程序的设置 本文为android开发入门系列，以下是各节传送门：
+android 开发入门
+http://www.54chen.com/_linux_/androiddev.html
+android开发入门2： &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,89 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/27/ubuntu10-04-g7-desire-android-dev/">ubuntu10.04 下通过usb在G7（desire）上真机调试android程序的设置</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-12-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1XlxVXeByXXbYuqZW_022510.jpg" alt="android" width="250" /></p>
+
+<p>本文为android开发入门系列，以下是各节传送门：<br />
+android 开发入门
+<a href="http://www.54chen.com/_linux_/androiddev.html">http://www.54chen.com/_linux_/androiddev.html</a>
+android开发入门2：概念建立
+<a href="http://www.54chen.com/_linux_/androiddev2.html">http://www.54chen.com/_linux_/androiddev2.html</a></p>
+
+<p>一、工具介绍<br />
+android-sdk-linux_x86/tools下有一堆工具，今天要用的是：Android Debug Bridge，在android开发过程中，这个工具是使用得最多的。（缩写adb，有点像gcc的gdb似的）
+<blockquote>  adb start-server             - 实际上它会启动一个 adb fork-server server<br />
+  adb kill-server              - kill掉<br />
+  adb devices                       - 列出所有的设备</blockquote></p>
+
+<p>二、设置usb权限<br />
+因为ubuntu这样的系统都是默认以非root身份在运行的，要使用usb调试，需要sudo支持。
+<blockquote>$ lsusb<br />
+Bus 005 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub<br />
+Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub<br />
+Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub<br />
+Bus 002 Device 003: ID 413c:2106 Dell Computer Corp. <br />
+Bus 002 Device 002: ID 0461:4d81 Primax Electronics, Ltd <br />
+Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub<br />
+Bus 001 Device 010: ID 0bb4:0c87 High Tech Computer Corp. <br />
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</blockquote>
+列表中，Bus 001 Device 010: ID 0bb4:0c87 High Tech Computer Corp. 这一行为htc手机的usb使用端口，记录一下，id为0bb4（基于上所有的htc都是这个ID）。</p>
+
+<p><blockquote>$sudo vim /etc/udev/rules.d/70-android.rules</blockquote></p>
+
+<p>加入以下内容：
+<blockquote>SUBSYSTEM==&#8221;usb&#8221;, SYSFS{idVendor}==&#8221;0bb4&#8221;, MODE=&#8221;0666&#8221;
+</blockquote></p>
+
+<p>运行命令，重启udev：
+<blockquote>$sudo chmod a+rx /etc/udev/rules.d/70-android.rules<br />
+$sudo service udev restart
+</blockquote></p>
+
+<p>三、重新启动adb server<br />
+(很重要)拔掉usb重新连上再执行：
+<blockquote>sudo ./adb kill-server<br />
+./adb devices<br />
+./adb root (这一步很重要 感谢小米科技小军献策)</blockquote></p>
+
+<p>四、使用usb进行调试<br />
+eclispe>run as>android application 选择真实机器。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -653,80 +736,6 @@ RT坦克：打北边来了个胖子，手里拿着个炮子，打南边来了个
 54chen Twitter memo 2010-11-21 <a href="http://goo.gl/fb/6vtuq" rel="nofollow">http://goo.gl/fb/6vtuq</a> <a href="http://twitter.com/54chen/statuses/6167154399383552" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/11/24/venture-company-tech-ref/">创业公司技术选型参考</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-11-24T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg" alt="54chen-创业公司选择技术" />
-<strong>java推荐框架</strong>
-web项目来说，spring、struts是必选，当然有更加好用的，推荐来自疱丁分词作者王志亮在人人网的rose框架，使用上手快，配置少，是创业公司java必备。</p>
-
-<p><strong>php框架推荐</strong>
-zend framework，或者直接写个简单的框架，php的框架更加倾向去规范代码，让所有项目在新人加入时快速上手。</p>
-
-<p><strong>代码版本控制</strong>
-subversion是必选工具，简单易学，git也开始流行，也是可选方案。</p>
-
-<p><strong>jar包依赖管理</strong>
-这是针对java项目，还在使用ant的朋友，可以考虑换换了，特别的，如果你的公司在很快扩张的时候，这个选择能让未来避开依赖混乱，遇事集体更新困难的困境。</p>
-
-<p><strong>公共代码建立</strong>
-长期可遇见的公共部分，比如用户信息获取，memcache管理，毋庸置疑地需要提供公共的方法，越早越好。</p>
-
-<p><strong>代码可扩展</strong>
-这就考量上面选择框架的气候是不是合理了，这里可扩展是指，在负载越来越大的时候，要能很轻易配置读写分离，rose在这方面做得很优雅，只需要简单配置就梦把看的代码用上新的数据源。</p>
-
-<p><strong>code review</strong>
-有许多好用的系统，比如Review Board等，让参与者都知道修改，并且在最早期发现问题。</p>
-
-<p><strong>bug系统</strong>
-jira、Bugfree等等，用系统控制流程。</p>
-
-<p><strong>培训体系</strong>
-技术需要交流才会有进步，团体的进步才是真的进步。所以尽早建立起内部的培训体系非常有必要，同时也是活跃团体气氛的很好方法，其频度控制在两周一次最好。</p>
-
-<p><strong>知识管理</strong>
-php+mysql的mediawiki是首选，每个优秀的工程师，都必须首先是一个完全熟悉wiki语法擅长写wiki的工程师。早年搞了一个把mysql换成postgresql的方案见　<a href="http://www.54chen.com/php-tech/mediawiki-pgsql.html">http://www.54chen.com/php-tech/mediawiki-pgsql.html</a></p>
-
-<p><strong>项目管理</strong>
-从项目初期的demo设计>产品设计>技术架构>技术方案>技术实施>测试>理程碑>上线，每一环都需要详细控制，实施Scrum或者是Scrum变体，都是不错的方案。任由团队想到哪里做到哪里的结果是无法预估商业产品的出炉。</p>
-
-<p><strong>流量监控</strong>
-流量监控比较出名的有Cacti、ganglia，安装上ganglia要复杂一点点，尽量用yum安装，ganglia的集群和数据功能相对cacti要强大一点。</p>
-
-<p><strong>服务器操作系统</strong>
-daxuxu同学推荐debian，不过我的工作环境基本都是centOS，用习惯了一个很难改变，个人感觉debian系统的环境相对复杂一些。</p>
 </div>
   
   

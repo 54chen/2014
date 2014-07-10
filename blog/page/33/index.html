@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="如何让squid 2.6.STABLE21输出Content-Encoding: Gzip 问题描述： 一个WEB服务器，跑nginx 0.6。前端一squid 2.6代理。用户访问先经过squid。 现需要squid服务器输出gzip压缩。 问题解决方案： 原来的nginx已经支持gzip， &hellip;">
+  <meta name="description" content="五四陈透过PHP看JAVA系列:fsockopen 本系列主要总结PHP与JAVA之间的一些异同，给从PHP学JAVA或者是从JAVA学PHP的同学一点启发，五四陈科学院出品。 第一部分，先看PHP的fsockopen 先来看PHP手册中的定义http://www.54chen.com/p/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,93 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/03/09/54-chen-through-php-to-see-java-series-fsockopen/">五四陈透过PHP看JAVA系列:fsockopen</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-03-09T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>本系列主要总结PHP与JAVA之间的一些异同，给从PHP学JAVA或者是从JAVA学PHP的同学一点启发，五四陈科学院出品。</p>
+
+<p><strong>第一部分，先看PHP的fsockopen</strong></p>
+
+<p>先来看PHP手册中的定义<a href="http://www.54chen.com/p/function.fsockopen.html">http://www.54chen.com/p/function.fsockopen.html</a></p>
+
+<p>看完定义后，来看一段代码，利用PHP去更新squid的缓存：
+<blockquote>&lt;?php<br />
+function updateCache($myUrl) {<br />
+global $vSquidConfig;<br />
+foreach ( $vSquidConfig [&#8216;host&#8217;] as $mySquid ) {<br />
+$myHandle = @fsockopen ( &#8220;127.0.0.1&#8221;, 80, $myErrNo, $myErrStr, 30 );<br />
+if ($myHandle) {<br />
+$myResult = &#8221;;<br />
+@fputs ( $myHandle, &#8220;PURGE &#8221; . $myFileName . &#8221; HTTP/1.0\r\n&#8221; );<br />
+@fputs ( $myHandle, &#8220;Accept: */*\r\n&#8221; );<br />
+@fputs ( $myHandle, &#8220;\r\n\r\n&#8221; );<br />
+while ( ! feof ( $myHandle ) ) {<br />
+$myResult .= fgets ( $myHandle, 128 );<br />
+}
+@fclose ( $myHandle );<br />
+}
+}<br />
+}
+?&gt;</blockquote>
+<strong>第二部分，再看JAVA如何达到这个目的</strong>
+<blockquote>public void flush<a href="http://www.54chen.com/php-tech/%e5%a6%82%e4%bd%95%e7%94%a8php%e4%bb%a3%e7%a0%81%e6%b8%85%e7%a9%basquid%e7%bc%93%e5%ad%98%e4%b8%8b%e7%9a%84%e6%8c%87%e5%ae%9a%e6%96%87%e4%bb%b6.html">Squid</a>() {<br />
+try {<br />
+int port = 80;<br />
+Socket socket = new Socket(&#8220;127.0.0.1&#8221;, port);<br />
+String path = http://test.com/test.html&#8221;;<br />
+BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), &#8220;UTF-8&#8221;));<br />
+wr.write(&#8220;PURGE &#8221; + path + &#8221; HTTP/1.0\r\n&#8221;);<br />
+wr.write(&#8220;Accept: */*\r\n&#8221;);<br />
+wr.write(&#8220;\r\n\r\n&#8221;);</blockquote></p>
+
+<p>wr.flush();</p>
+
+<p>// Get response<br />
+BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream()));<br />
+String line;<br />
+while ((line = rd.readLine()) != null) {<br />
+// Process line&#8230;<br />
+System.out.println(line);<br />
+}
+wr.close();<br />
+rd.close();<br />
+} catch (Exception e) {<br />
+}
+}</p>
+
+<p>亲爱的读者，您喜欢用PHP还是JAVA？</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -630,52 +717,6 @@ do<br />
 sleep 5<br />
 done</blockquote>
 原理很简单，利用shell中sleep的单位为秒作自动执行，如果要更加小的精度，估计可以利用这个基础之上多个同时执行:) 仅猜想，标准一些的作法还是用java或者是php的sleep（毫秒级的）。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/21/54chen-twitter-memo-2010-02-21-2/">54chen Twitter Memo 2010-02-21</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-02-21T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-	<li>虎年正式开工！ <a href="http://twitter.com/54chen/statuses/9363618850">#</a></li>
-	<li>大致了解了一下，南方公司大多有新年开工红包的习俗，这个习俗好！ <a href="http://twitter.com/54chen/statuses/9364276253">#</a></li>
-	<li>［RT计划］状态帝 : 用网络流行词和段子来填充小品，只有两个结果：经常上网的觉得烂俗，不经常上网的根本听不懂这群孙子在说什么。 <a href="http://twitter.com/54chen/statuses/9364340174">#</a></li>
-	<li>［RT计划］状态帝 : 麦迪去了麦迪逊，休斯没来休斯顿。 <a href="http://twitter.com/54chen/statuses/9367056147">#</a></li>
-	<li><a href="http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html" rel="nofollow">http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html</a>  分享一下，最简单的翻墙方式，参数 －D <a href="http://twitter.com/54chen/statuses/9374573972">#</a></li>
-	<li>［RT计划］康伟.kw: 弟弟拉裤子了——打两位美国政坛名人！奥！爸，妈！稀拉里！ <a href="http://twitter.com/54chen/statuses/9377551272">#</a></li>
-	<li>@<a href="http://twitter.com/wang_tai">wang_tai</a> 弟弟你肯定知道的。。。 <a href="http://twitter.com/54chen/statuses/9377896882">#</a></li>
-	<li>用java操作bdb的方法记录二 <a href="http://www.54chen.com/java-ee/bdb-method-of-operation-with-the-java-record-2.html" rel="nofollow">http://www.54chen.com/java-ee/bdb-method-of-operation-with-the-java-record-2.html</a> 优化后的BDB参数读取和写入的速度都在1.5W/s左右 <a href="http://twitter.com/54chen/statuses/9379170469">#</a></li>
-</ul>
-</p>
 </div>
   
   

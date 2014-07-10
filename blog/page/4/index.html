@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Arduino学习手记二：写程序控制灯控制蜂鸣器红外 在上一节中，初步领会了基础精神，对电路板和ide有了一点感觉。
-这里的目标是完成一个电路，通过红外传感头，用摇控器控制LED灯和蜂鸣器。 Arduino Libraries
-arduino库函数，是一堆c/c++写的代码库， &hellip;">
+  <meta name="description" content="Arduino学习手记三：八位数码管 上图是八位数码管里各二极管和引脚的关系。 一共两个正极（接＋5v），剩下的8个脚，哪个是低电平时管就亮，于是就可以凑出来数字。这个小数点可以用来区分正反。 数字0数字1引脚对程序upload的影响
+如果你将数码管接到了数字0和数字1上，那很遗憾， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +74,303 @@ arduino库函数，是一堆c/c++写的代码库， &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/04/arduino-starter-3/">Arduino学习手记三：八位数码管</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e69op40p20j205308daa0.jpg" alt="8位数码管" /></p>
+
+<p>上图是八位数码管里各二极管和引脚的关系。</p>
+
+<p>一共两个正极（接＋5v），剩下的8个脚，哪个是低电平时管就亮，于是就可以凑出来数字。这个小数点可以用来区分正反。</p>
+
+<p><strong>数字0数字1引脚对程序upload的影响</strong>
+如果你将数码管接到了数字0和数字1上，那很遗憾，每次upload的时候，你都要拔下来才行。因为数据交互借用了这两个脚做事情。</p>
+
+<p>如果你的IDE出现avrdude: stk500_recv(): programmer is not responding的提示的时候，注意看看你的数字0和数字1是不是插着东西。</p>
+
+<p><strong>八位数码管的连线</strong>
+数字：<br />
+a-12<br />
+b-13<br />
+c-2<br />
+d-3<br />
+e-4<br />
+f-5<br />
+g-6<br />
+DP-7</p>
+
+<p>剩下的两个正极同时接到＋5v上。</p>
+
+<p>这里a和b故意让开0和1，方便开发过程，不需要拔来拔去的。</p>
+
+<p><strong>显示的代码</strong>
+<blockquote>void num9()<br />
+{
+  digitalWrite(pin0,LOW);     //显示9<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,LOW);<br />
+  digitalWrite(pin4,HIGH);<br />
+  digitalWrite(pin5,LOW);<br />
+  digitalWrite(pin6,LOW);<br />
+  digitalWrite(pin7,HIGH);<br />
+} </blockquote></p>
+
+<p>以上是一个数字9的显示。</p>
+
+<p><strong>完整的代码</strong>
+以下是在第二节里的代码和连线基础上的加强版本 <a href="http://www.54chen.com/_linux_/arduino-starter-2-led.html">http://www.54chen.com/_linux_/arduino-starter-2-led.html</a>。<br />
+代码完成了在摇控器上按数字几，在八位管上显示数字几。</p>
+
+<p>连线需要先按照第二节中的连线之后，再加上本节的连线。</p>
+
+<p>效果图：
+<img src="http://ww1.sinaimg.cn/bmiddle/663fba41jw1e6alqahzl5j20p118gjw7.jpg" alt="八位数码管" /></p>
+
+<p><blockquote>#include <irremote.h /></blockquote></p>
+
+<p>#define LED 11<br />
+#define BIZZER 10<br />
+#define IR_IN 8 //红外接收</p>
+
+<p>IRrecv irrecv(IR_IN);   // 定义IRrecv 对象来接收红外线信号<br />
+decode_results results;   //解码结果放在decode_results构造的对象results里</p>
+
+<p>int pin0=12;  //设置蜂鸣器数字接口<br />
+int pin1=13;<br />
+int pin2=2; <br />
+int pin3=3; <br />
+int pin4=4; <br />
+int pin5=5; <br />
+int pin6=6; <br />
+int pin7=7; <br />
+void setup()<br />
+{
+  pinMode(BIZZER,OUTPUT); <br />
+  pinMode(LED,OUTPUT); <br />
+  pinMode(pin0,OUTPUT);<br />
+  pinMode(pin1,OUTPUT);<br />
+  pinMode(pin2,OUTPUT);<br />
+  pinMode(pin3,OUTPUT);<br />
+  pinMode(pin4,OUTPUT);<br />
+  pinMode(pin5,OUTPUT);<br />
+  pinMode(pin6,OUTPUT);<br />
+  pinMode(pin7,OUTPUT);<br />
+  Serial.begin(9600);<br />
+  irrecv.enableIRIn(); // Start the receiver<br />
+  numd();<br />
+}</p>
+
+<p>void loop()<br />
+{ <br />
+  if (irrecv.decode(&results)) <br />
+  {<br />
+    switch(results.value)<br />
+    {<br />
+    case 0xFD00FF:<br />
+      numd();<br />
+      break;<br />
+    case 0xFD30CF:<br />
+      num0();<br />
+      break;<br />
+    case 0xFD08F7:<br />
+      num1();<br />
+      break;<br />
+    case 0xFD8877:<br />
+      num2();<br />
+      break;  <br />
+    case 0xFD48B7:<br />
+      num3();<br />
+      break;<br />
+    case 0xFD28D7:<br />
+      num4();<br />
+      break;<br />
+    case 0xFDA857:<br />
+      num5();<br />
+      break;<br />
+    case 0xFD6897:<br />
+      num6();<br />
+      break;<br />
+    case 0xFD18E7:<br />
+      num7();<br />
+      break;<br />
+    case 0xFD9867:<br />
+      num8();<br />
+      break;<br />
+    case 0xFD58A7:<br />
+      num9();<br />
+      break;<br />
+    case 0xFD40BF:<br />
+      digitalWrite(BIZZER,HIGH);<br />
+      delay(50);<br />
+      digitalWrite(BIZZER,LOW);   <br />
+      break;<br />
+    default:<br />
+      Serial.println(results.value, HEX);   <br />
+      digitalWrite(LED,HIGH);<br />
+      delay(50);<br />
+      digitalWrite(LED,LOW);<br />
+    }<br />
+    irrecv.resume(); // Receive the next value<br />
+  }<br />
+}</p>
+
+<p>void num0()<br />
+{
+  digitalWrite(pin0,LOW); //显示0<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,LOW);<br />
+  digitalWrite(pin4,LOW);<br />
+  digitalWrite(pin5,LOW);<br />
+  digitalWrite(pin6,HIGH);<br />
+  digitalWrite(pin7,HIGH);<br />
+}
+void num1()<br />
+{
+  digitalWrite(pin0,HIGH);     //显示1<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,HIGH);<br />
+  digitalWrite(pin4,HIGH);<br />
+  digitalWrite(pin5,HIGH);<br />
+  digitalWrite(pin6,HIGH);<br />
+  digitalWrite(pin7,HIGH);<br />
+  digitalWrite(pin0,HIGH);<br />
+}
+void num2()<br />
+{
+  digitalWrite(pin0,LOW);        //显示2<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,HIGH);<br />
+  digitalWrite(pin3,LOW);<br />
+  digitalWrite(pin4,LOW);<br />
+  digitalWrite(pin5,HIGH);<br />
+  digitalWrite(pin6,LOW);<br />
+  digitalWrite(pin7,HIGH);<br />
+}
+void num3()<br />
+{
+  digitalWrite(pin0,LOW);     //显示3<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,LOW);<br />
+  digitalWrite(pin4,HIGH);<br />
+  digitalWrite(pin5,HIGH);<br />
+  digitalWrite(pin6,LOW);<br />
+  digitalWrite(pin7,HIGH);<br />
+}
+void num4()<br />
+{
+  digitalWrite(pin0,HIGH);    //显示4<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,HIGH);<br />
+  digitalWrite(pin4,HIGH);<br />
+  digitalWrite(pin5,LOW);<br />
+  digitalWrite(pin6,LOW);<br />
+  digitalWrite(pin7,HIGH);<br />
+} <br />
+void num5()<br />
+{
+  digitalWrite(pin0,LOW);      //显示5<br />
+  digitalWrite(pin1,HIGH);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,LOW);<br />
+  digitalWrite(pin4,HIGH);<br />
+  digitalWrite(pin5,LOW);<br />
+  digitalWrite(pin6,LOW);<br />
+  digitalWrite(pin7,HIGH);<br />
+} <br />
+void num6()<br />
+{
+  digitalWrite(pin0,LOW);     //显示6<br />
+  digitalWrite(pin1,HIGH);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,LOW);<br />
+  digitalWrite(pin4,LOW);<br />
+  digitalWrite(pin5,LOW);<br />
+  digitalWrite(pin6,LOW);<br />
+  digitalWrite(pin7,HIGH);<br />
+} <br />
+void num7()<br />
+{
+  digitalWrite(pin0,LOW);     //显示7<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,HIGH);<br />
+  digitalWrite(pin4,HIGH);<br />
+  digitalWrite(pin5,HIGH);<br />
+  digitalWrite(pin6,HIGH);<br />
+  digitalWrite(pin7,HIGH);<br />
+} <br />
+void num8()<br />
+{
+  digitalWrite(pin0,LOW);     //显示8<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,LOW);<br />
+  digitalWrite(pin4,LOW);<br />
+  digitalWrite(pin5,LOW);<br />
+  digitalWrite(pin6,LOW);<br />
+  digitalWrite(pin7,HIGH);<br />
+} <br />
+void num9()<br />
+{
+  digitalWrite(pin0,LOW);     //显示9<br />
+  digitalWrite(pin1,LOW);<br />
+  digitalWrite(pin2,LOW);<br />
+  digitalWrite(pin3,LOW);<br />
+  digitalWrite(pin4,HIGH);<br />
+  digitalWrite(pin5,LOW);<br />
+  digitalWrite(pin6,LOW);<br />
+  digitalWrite(pin7,HIGH);<br />
+} <br />
+void numd()<br />
+{
+  digitalWrite(pin0,HIGH);     //显示点DP<br />
+  digitalWrite(pin1,HIGH);<br />
+  digitalWrite(pin2,HIGH);<br />
+  digitalWrite(pin3,HIGH);<br />
+  digitalWrite(pin4,HIGH);<br />
+  digitalWrite(pin5,HIGH);<br />
+  digitalWrite(pin6,HIGH);<br />
+  digitalWrite(pin7,LOW);<br />
+} </p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -781,82 +1077,6 @@ Failed requests:        45656
 5.resin4的rose框架代码表现在最多4020左右的并发，多于的将会拒绝，类似apache的max-keepalive-connections。<br />
 6.tomcat7的同一份代码表现最多在300（未经任何优化）。
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/14/scala-notes/">Scala入门手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-01-14T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg" alt="scala" />
-<strong>一、安装环境</strong>
-<blockquote>localhost:~ chenzhen$ java -version<br />
-java version &#8220;1.6.0_37&#8221;<br />
-Java(TM) SE Runtime Environment (build 1.6.0_37-b06-434-11M3909)<br />
-Java HotSpot(TM) 64-Bit Server VM (build 20.12-b01-434, mixed mode)</blockquote>
-如果java没有安装，需要先安装。此处略去N字。
-<a href="http://www.scala-lang.org/downloads">http://www.scala-lang.org/downloads</a>
-下载最新的版本。翻墙自理。</p>
-
-<p>$tar zxvf scala-2.10.0.tgz<br />
-解压后，添加环境变量到配置文件中。
-<blockquote>vim ~/.profile  (or .bashrc)<br />
-export PATH=/Users/chenzhen/scala-2.10.0/bin:$PATH</blockquote></p>
-
-<p><blockquote>localhost:~ chenzhen$ scala -version<br />
-Scala code runner version 2.10.0 &#8211; Copyright 2002-2012, LAMP/EPFL
-</blockquote></p>
-
-<p><strong>二、安装eclipse（4.2）插件</strong>
-site url:
-<blockquote>http://download.scala-ide.org/sdk/e38/scala210/dev/site/</blockquote>
-一路install。</p>
-
-<p><strong>三、hello world</strong>
-跟java项目有点像。
-<blockquote>package com.hello<br />
-object Cz {<br />
-  def main(args: Array[String]) {<br />
-    println(&#8220;hello world&#8221;);<br />
-  }<br />
-}</blockquote></p>
-
-<p><strong>四、语法对比速记</strong>
-1.scala的数组与java相比是可变的数据结构。<br />
-2.for(i <- 0 to 2) 这里的向左箭头是指i的范围，两头是闭区间。<br />
-3.list是不可变的，不需要new，list与list之间用:::（三个冒号）可以做连接,::(两个冒号)会产生新的维度的list。<br />
-4.var可变，val不可变。崇尚val，不可变对象和没有副作用的方法。<br />
-5.Unit类似java的void。<br />
-6.object是特殊的class，是单例。<br />
-7.maven也可以搞定scala，但是更好用的是sbt。</p>
 </div>
   
   

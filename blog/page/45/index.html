@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Tomcat,resin,oc4j,jboss大比拼 本文是山寨比较方法，全凭个人感觉，高手和自认为高手略过。 老资格tomcat，但只是web容器，不支持ejb；resin比起tomcat更加优秀在于中文的支持，性能更好，校内网用；oc4j师出名门oracle，明声好，没有别的特别的， &hellip;">
+  <meta name="description" content="用iptables做两机之间的端口转发  [文章作者：陈臻 本文版本：v1.0 最后修改：2009.2.19 转载请注明原文链接：http://www.54chen.com/c/264] 以前发过一篇利用iptables做本机的端口转发的文章，利用简单的地址转换的原理， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,75 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/02/19/%E7%94%A8iptables%E5%81%9A%E4%B8%A4%E6%9C%BA%E4%B9%8B%E9%97%B4%E7%9A%84%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/">用iptables做两机之间的端口转发</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-19T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p> [文章作者：陈臻 本文版本：v1.0 最后修改：2009.2.19 转载请注明原文链接：<a href="http://www.54chen.com/c/264">http://www.54chen.com/c/264</a>]</p>
+
+<p>以前发过一篇利用<a href="http://www.54chen.com/c/262">iptables做本机的端口转发的文章</a>，利用简单的地址转换的原理，可以将两台互相可访问的机器利用iptables转发，这样很容易实现类似透明代理的功能，当然，这个代理不会有缓存的。：）</p>
+
+<p>假如我希望把对 1.2.4.5:8080的访问都转向 1.2.6.9:80：</p>
+
+<p>IP包来到之后，修改目的地址，使之转向目标机器的目标<a href="http://www.54chen.com/c/262">端口</a>，在.5这个机器上：</p>
+
+<p><span style="font-family: 'Courier New'; line-height: 18px; white-space: pre; "> </span> iptables -t nat -A PREROUTING -d 1.2.4.5 -p tcp &#8211;dport 8080 -j DNAT &#8211;to 1.2.6.9:80</p>
+
+<p>IP包返回的时候，修改源地址（源端口），使之符合IP协议，正确返回，还是在.5这个机器上：</p>
+
+<p><span style="font-family: 'Courier New'; line-height: 18px; white-space: pre; "> </span> iptables -t nat -A POSTROUTING -d 1.2.6.9 -p tcp &#8211;dport 80 -j SNAT &#8211;to 1.2.4.5:8080</p>
+
+<p>然后我们需要在.5操作系统上打开IP转发：</p>
+
+<p>echo &#8216;1&#8217; &gt; /proc/sys/net/ipv4/ip_forward</p>
+
+<p>最后再设置.5的连接状态
+<pre>  iptables -A FORWARD -o eth0 -d 1.2.4.5 -p tcp --dport 8080 -j ACCEPT</pre></p>
+
+<p>  iptables -A FORWARD -i eth0 -s 1.2.6.9 -p tcp &#8211;sport 80 -m state &#8211;state ESTABLISHED -j ACCEPT
+ </p>
+
+<p>附全部<a href="http://www.54chen.com/c/379">脚本</a>（不关.9的事，全是在.5上）
+<pre>iptables -t nat -A POSTROUTING -d 1.2.4.5 -p tcp --dport 8080 -j DNAT --to 1.2.6.9:80</pre></p>
+
+<p>iptables -t nat -A PREROUTING -d 1.2.4.5 -p tcp &#8211;dport 8080 -j DNAT &#8211;to 1.2.6.9:80</p>
+
+<p>iptables -t nat -A POSTROUTING -d 1.2.6.9 -p tcp &#8211;dport 80 -j SNAT &#8211;to 1.2.4.5:8080</p>
+
+<p>iptables -A FORWARD -i eth0 -s 1.2.6.9 -p tcp &#8211;sport 80 -m state &#8211;state ESTABLISHED -j ACCEPT</p>
+
+<p>iptables -A FORWARD -o eth0 -d 1.2.4.5 -p tcp &#8211;dport 8080 -j ACCEPT</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -727,74 +796,6 @@ apachectl restart<br />
 [Tue Mar 31 11:27:55 1998] [debug] mod_so.c(303): loaded module foo_module<br />
 /path/to/apache/sbin/apachectl restart: httpd started<br />
 $ _</code></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/01/17/%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3%E6%97%B6%E9%97%B4%E5%90%8C%E6%AD%A5%E5%BC%95%E8%B5%B7oracle-%E4%B8%8D%E7%A8%B3%E5%AE%9A%E7%9A%84%E9%97%AE%E9%A2%98/">如何解决时间同步引起oracle 不稳定的问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-01-17T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>数据库服务器的时间与真实时间一旦出现差异，就要对数据库服务器进行时间同步。很多地方都把ntpdate放到cron中，5分钟自动同步一次。然而，这么做，常常会引会数据库ORA-01555，甚至db crash。</p>
-
-<p>找到一种方法据说可以解决这个问题。即使用ntpd -x来同步时间 instead of　ntpdate。<br />
-实际上ntpd，不只是一种时间服务器的server端，同时也可以做client端，相当于ntpdate。当它做client时，与ntpdate的差别是，ntpdate已近淘汰，ntpd则可看作是它升级版。<br />
-　
-下面的方法是讲如何在linux的环境中设置ntpd：</p>
-
-<p>1. 修改/etc/ntp.conf</p>
-
-<p>2. 加入time server。每个数据库中心都应用会有一组时间服务器，可以找sa要， 比如国际站，加入：</p>
-
-<p>server ntp1.alibaba.com<br />
-server ntp2.alibaba.com<br />
-server ntp3.alibaba.com</p>
-
-<p>ntp.conf有很多参数，都忽略就行。</p>
-
-<p>3. 修改/etc/sysconfig/ntpd， 加入-x参数，变成：</p>
-
-<p>OPTIONS=&#8221;-U ntp -x -p /var/run/ntpd.pid&#8221;</p>
-
-<p>这据说是为db同步所要求的。</p>
-
-<p>4. 首先同步一次时间：<br />
-ntpdate time.nist.gov; hwclock &#8211;systohc</p>
-
-<p>如果数据库还要在运行，建议不要这么做。待例行维护时再处理。</p>
-
-<p>5. 然后启动ntpd：<br />
-/etc/init.d/ntpd start</p>
-
-<p>6. 最后加入到自动启动列表：<br />
-chkconfig &#8211;level 2345 ntpd on</p>
 </div>
   
   
