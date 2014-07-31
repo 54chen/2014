@@ -9,8 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-09-11 riak源码阅读手记 运行安装 http://t.co/L5ocH6k #
-在享受流量冲击带来的兴奋之余，是不是应该考虑，是根据10%的用户建议去做损害100%用户体验的事情，还是让100%的用户可以平滑地享受整个操作过程。 &hellip;">
+  <meta name="description" content="Riak源码阅读手记 与Cassandra相比 riak源码阅读手记一 初出茅庐 项目入口
+http://www.54chen.com/_linux_/riak-source.html riak源码阅读手记二 左右开弓 启动
+http://www.54chen.com/_linux_/riak- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,82 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/14/riak-vs-cassandra/">Riak源码阅读手记 与Cassandra相比</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" /></p>
+
+<p>riak源码阅读手记一 初出茅庐 项目入口<br />
+http://www.54chen.com/_linux_/riak-source.html</p>
+
+<p>riak源码阅读手记二 左右开弓 启动<br />
+http://www.54chen.com/_linux_/riak-cource-code.html</p>
+
+<p>riak源码阅读手记 运行安装<br />
+http://www.54chen.com/_linux_/riak-source-install-run.html</p>
+
+<p>一些常用的指令：<br />
+http://wiki.basho.com/Command-Line-Tools.html#riak-admin
+<strong>
+实现上：</strong>
+1）虽然二者都是dynamo的实现，具体方法还是不一样的，riak更忠于dynamo的原文档，实现了所有文档提到的关键点。同时还增加了map reduce和links等功能。<br />
+2）Cassandra略去了一些文档里的关键点：向量时钟、按照key范围的大分区等。增加了一些方法如：范围查询、固定分区。</p>
+
+<p><strong>扩展：</strong>
+1） riak提供了bin/riak join这样的命令来加入新的节点，基本完全按照dynamo文档所说的一样来实现了，从多个节点去获取原来的负载和数据回来，每个节点的压力都可以得到平衡。<br />
+2）相比之下，Cassandra集群的节点需要计算数据的一个范围。当加入节点时，Cassandra的策略是分出来相应分区上一半的范围去新节点。这点在一个Cassandra集群需要加节点时会很痛苦，可能会存在两个节点之间大规模的数据转移。</p>
+
+<p><strong>查询和分布：</strong>
+1）riak有map reduce。<br />
+2）Cassandra可以接hadoop达到M/R的效果。</p>
+
+<p><strong>写冲突检查：</strong>
+1）riak使用了向量时钟。<br />
+2）Cassandra使用了timestamp。如果时间有问题，可能会丢。</p>
+
+<p><strong>数据模型：</strong>
+1）riak有bucket的概念，每个buckect可动态建立，每个buckect的数据模型都不一样。<br />
+2）Cassandra的keyspace与列簇都是依赖xml定义的，如果要修改，需要重启。</p>
+
+<p><strong>API：</strong>
+1）riak提供了http与protocol buffers两种<br />
+2）Cassandra使用thrift</p>
+
+<p><strong>可配置的存储：</strong>
+1）riak默认是bitcast存储，还有innodb，开发者很勤快，甚至还有leveldb。<br />
+2）Cassandra一直就是SSTable。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -620,47 +697,6 @@ ulimit -SHn 18912</p>
 http://www.cloudera.com/blog/2009/03/configuration-parameters-what-can-you-just-ignore/<br />
 http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/<br />
 http://sudhirvn.blogspot.com/2010/07/hadoop-error-logs-orgapachehadoophdfsse.html
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/14/54chen-twitter-memo-2011-08-14/">54chen Twitter Memo 2011-08-14</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-14T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-祝贺@laruence php开发组中唯一的中国人，哥学社的骄傲！ </ul><a href="http://www.blog-brother.com/" rel="nofollow">http://www.blog-brother.com/</a> <a href="http://twitter.com/54chen/statuses/101629857879965696" class="aktt_tweet_time">#</a>
-早上学习了@淘宝褚霸 的erlang心得，一起吃完中饭，现在在听多玩cto通礼分享经验。 <a href="http://twitter.com/54chen/statuses/100813570069106688" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-08-07 <a href="http://goo.gl/fb/8jERf" rel="nofollow">http://goo.gl/fb/8jERf</a> <a href="http://twitter.com/54chen/statuses/100033001517363201" class="aktt_tweet_time">#</a>
-
 </p>
 </div>
   
