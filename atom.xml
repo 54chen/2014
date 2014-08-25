@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-07-31T21:28:53+08:00</updated>
+  <updated>2014-08-25T21:51:53+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[小米互娱招java工程师]]></title>
+    <link href="http://2014.54chen.com/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/"/>
+    <updated>2014-08-25T21:17:53+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi</id>
+    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png></p>
+
+<h2>序</h2>
+
+<ul>
+<li>这是一个新的时代。</li>
+<li>小米互娱作为一个真正意义上的小米互联网部门，开启小米“铁人三项”中互联网征途。</li>
+<li>这里有众多靠谱的兄弟。</li>
+<li>这里缺更加强大的你的加入。</li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>寻</h2>
+
+<ul>
+<li>java工程师 1－5年工作经验。</li>
+</ul>
+
+
+<h2>项目</h2>
+
+<ul>
+<li>你可能需要理解Big-endian、Little-endian这种细节。</li>
+<li>你可能需要掌握amqp协议细节。</li>
+<li>你可能需要了解移动网络下出现的异常。</li>
+<li>你可能需要清楚http CONNECT方法的作用。</li>
+<li>你可能需要明白restful的道理。</li>
+<li>你可能应该更加主动地联系54chen at xiaomi dot com。</li>
+</ul>
+
+
+<h2>待遇</h2>
+
+<ul>
+<li>过了技术关，剩下的事情全部和老板直接谈，请畅所欲言。</li>
+<li>欲大展拳脚的同学，是不错的机会。</li>
+<li>抽空过来聊一聊，多次机会多条路。</li>
+</ul>
+
+
+<p> 一些实在的码，麻烦看到的兄弟帮我转：</p>
+
+<ul>
+<li>红米手机1S 电信版 8GB 金属灰HMDX96763527807262227 8.1前</li>
+<li>红米手机1S 移动版 8GB 金属灰HMSY86526398236552885 8.1前</li>
+<li>小米电视2                   MTV240078896615240317 8.1前</li>
+<li>小米平板 16GB 纯白色MPAD59271074707309411         8.1前</li>
+<li>欲要更多，请来简历54chen at xiaomi dot com。</li>
+</ul>
+
+ <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[中国移动网络下连接的秘密]]></title>
@@ -3360,59 +3421,6 @@ THsHaDisruptorServer is use TCustomNonblockingServerSocket to socket.The TDisrup
 __EOF__</p>
 
 <p>Happy New Year!</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[BLUNO试用手记]]></title>
-    <link href="http://2014.54chen.com/blog/2013/11/30/bluno/"/>
-    <updated>2013-11-30T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/11/30/bluno</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
-<strong>准备工作</strong>
-rmbp<br />
-BLUNO ×1<br />
-Android 4.3+ Devices with BLE or IOS 7.0+ Devices<br />
-Accessory Shield with Arduino ×1<br />
-Micro USB cable x1<br />
-http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。</p>
-<!-- more -->
-<p><strong>通过AT指令配置BLUNO的蓝牙属性</strong>
-1.把BLUNO上的AT开关，从NORMAL拔到AT<br />
-2.连接BLUNO到电脑，打开CoolTerm<br />
-3.CoolTerm -> Options -> baud rate -> 115200 -> ok<br />
-4. Connect<br />
-5. Connection -> send String<br />
-6.弹出来的框框可以输入AT指令了<br />
-注意：Port要选择USBmodem***，因为电脑有延迟，如果没出来，可以拔了重新插入micro usb线，然后点下面的Re-scan。<br />
-7.（注意每个指令末尾要加回车）send之后，后面如果提示OK，表示发送成功，其他的提示或者没有提示，回到3。</p>
-
-<p><strong>常见AT指令集</strong>
-AT+NAME=?   －  你叫啥名字<br />
-AT+NAME=54CHEN_110005  － 把你的名字改为54CHEN_110005<br />
-AT+MAC=? - 你的mac地址是多少<br />
-AT+RESTART －去死吧<br />
-AT+CONN_INTERVAL=? －多少秒搞一次尝试连接？</p>
-
-<p><strong>设置好BLUNO</strong>
-Input : AT+ROLE=ROLE_PERIPHERAL<CR+LF>	Answer(Return):OK  // 角色调整为周边设备，相对于中央设备，从机的概念？<br />
-Input : AT+FSM=FSM_TRANS_USB_COM_BLE<CR+LF>	Answer(Return):OK //通过usb传输</p>
-
-<p>然后把AT开关从AT转为NORMAL，断电。</p>
-
-<p><strong>上传代码</strong>
-1.Accessory Shield插到BLUNO上，通电。<br />
-2.下载PlainProtocol：http://www.dfrobot.com.cn/download/PlainProtocol.zip<br />
-3.打开arduino IDE -> sketch->import library->add library，选择刚刚下载的包<br />
-4.在arduino IDE中写代码。</p>
-
-<p><strong>板子介绍</strong>
-BLUNO<br />
-内置BLE（低功耗蓝牙）模块的arduino板子。<br />
-Accessory Shield with Arduino <br />
-不知道哪位神仙想出来的大杂烩板子，上面有：128x64 OLED显示屏，喇叭一个，DHT11温度湿度传感器，1.5A继电器一枚，螺旋电位器一枚，RGB LED灯一颗。 </p>
-
-<p>__等再研究清楚点之后再续写arduino代码__</p>
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
   </entry>
   

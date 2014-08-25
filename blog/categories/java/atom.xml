@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-07-31T21:28:53+08:00</updated>
+  <updated>2014-08-25T21:51:53+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[小米互娱招java工程师]]></title>
+    <link href="http://2014.54chen.com/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/"/>
+    <updated>2014-08-25T21:17:53+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi</id>
+    <content type="html"><![CDATA[<p><img src=http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png></p>
+
+<h2>序</h2>
+
+<ul>
+<li>这是一个新的时代。</li>
+<li>小米互娱作为一个真正意义上的小米互联网部门，开启小米“铁人三项”中互联网征途。</li>
+<li>这里有众多靠谱的兄弟。</li>
+<li>这里缺更加强大的你的加入。</li>
+</ul>
+
+
+<!--more-->
+
+
+<h2>寻</h2>
+
+<ul>
+<li>java工程师 1－5年工作经验。</li>
+</ul>
+
+
+<h2>项目</h2>
+
+<ul>
+<li>你可能需要理解Big-endian、Little-endian这种细节。</li>
+<li>你可能需要掌握amqp协议细节。</li>
+<li>你可能需要了解移动网络下出现的异常。</li>
+<li>你可能需要清楚http CONNECT方法的作用。</li>
+<li>你可能需要明白restful的道理。</li>
+<li>你可能应该更加主动地联系54chen at xiaomi dot com。</li>
+</ul>
+
+
+<h2>待遇</h2>
+
+<ul>
+<li>过了技术关，剩下的事情全部和老板直接谈，请畅所欲言。</li>
+<li>欲大展拳脚的同学，是不错的机会。</li>
+<li>抽空过来聊一聊，多次机会多条路。</li>
+</ul>
+
+
+<p> 一些实在的码，麻烦看到的兄弟帮我转：</p>
+
+<ul>
+<li>红米手机1S 电信版 8GB 金属灰HMDX96763527807262227 8.1前</li>
+<li>红米手机1S 移动版 8GB 金属灰HMSY86526398236552885 8.1前</li>
+<li>小米电视2                   MTV240078896615240317 8.1前</li>
+<li>小米平板 16GB 纯白色MPAD59271074707309411         8.1前</li>
+<li>欲要更多，请来简历54chen at xiaomi dot com。</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[线上JVM调查工具:JCPU和JMEM]]></title>
@@ -453,50 +514,6 @@ E是Eden区，E＋S0＋S1＝Y。<br />
 
 
 <p><strong>GC优化永远是最后一项任务。</strong></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[线上jvm进程CPU Load高排查脚本-jkiller]]></title>
-    <link href="http://2014.54chen.com/blog/2013/07/25/jvm-cpu-load-high-script/"/>
-    <updated>2013-07-25T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/07/25/jvm-cpu-load-high-script</id>
-    <content type="html"><![CDATA[<p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png" alt="java" />
-<strong>jkiller</strong>
-如果遇到线上java进程占用过多的cpu，可以用这个脚本来帮助你快速找到代码的问题。</p>
-
-
-
-
-<p><a href="https://github.com/54chen/jkiller">https://github.com/54chen/jkiller</a></p>
-
-
-
-
-<p><strong>使用过程</strong></p>
-
-
-
-
-<p>先用top或者是jps定位占用cpu过多的java进程的pid是多少。</p>
-
-
-
-
-<p>然后执行如下过程即可得到结论：</p>
-
-
-
-
-<p><blockquote>#wget https://raw.github.com/54chen/jkiller/master/jkiller.sh && chmod +x jkiller.sh<br />
-#sh jkiller.sh [pid]
-</blockquote></p>
-
-
-
-
-<p>*centos系统下测试通过。</p>
 
 ]]></content>
   </entry>
