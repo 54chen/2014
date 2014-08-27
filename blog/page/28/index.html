@@ -9,7 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-07-18 54chen Twitter memo 2010-07-11 http://goo.gl/fb/mUvUc # 西班牙的年轻人活得很轻松，一般年轻人用自己三至四年的收入就可以买一套房子，没有什么供房压力，而且，房价持续下跌， &hellip;">
+  <meta name="description" content="由php的call_user_func传reference引发的思考 问题的提出
+网友bercmisir在院内留言，针对php手册中的call_user_func函数的文档一事，大致如下：
+http://php.net/manual/en/function.call-user-func.php &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +75,107 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/20/php-call_user_func-reference-thinking/">由php的call_user_func传reference引发的思考</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-20T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img06.taobaocdn.com/imgextra/i6/T1IytGXchrXXa_aivX_085522.jpg" alt="搞技术一定要深入到群众当中" /></p>
+
+<p><strong>问题的提出</strong>
+网友bercmisir在院内留言，针对php手册中的call_user_func函数的文档一事，大致如下：<br />
+http://php.net/manual/en/function.call-user-func.php<br />
+其中parameter下有这样一句话：<br />
+Note: Note that the parameters for call_user_func() are not passed by reference. <br />
+简单地翻译一下，是说这个函数的参数是不能依靠引用来传递的。<br />
+还有一个例子：
+<?php<br />
+error_reporting(E_ALL);<br />
+function increment(&$var)<br />
+{
+    $var++;<br />
+}</p>
+
+<p>$a = 0;<br />
+call_user_func(&#8216;increment&#8217;, $a);<br />
+echo $a.&#8221;\n&#8221;;</p>
+
+<p>call_user_func_array(&#8216;increment&#8217;, array(&$a)); // You can use this instead before PHP 5.3<br />
+echo $a.&#8221;\n&#8221;;<br />
+?>
+输出是：<br />
+0
+1<br />
+而网友bercmisir的问题在于：<br />
+call_user_func(&#8216;increment&#8217;, $a);输出是0,而call_user_func(&#8216;increment&#8217;, &$a);却输出是1，明明说不能依靠引用来传递。</p>
+
+<p><strong>寻根溯源</strong></p>
+
+<p>然后再进一步寻根溯源，这个Note的信息其实是http://bugs.php.net/bug.php?id=24931这个bug中最后处理的结果。<br />
+并且在call_user_func(&#8216;increment&#8217;, &$a);虽然输出了1的结果，但一般情况下，会有一个警告信息：Deprecated: Call-time pass-by-reference has been deprecated。</p>
+
+<p>这是什么原因呢？<br />
+先看一个例子：
+<?php<br />
+error_reporting(E_ALL);<br />
+function increment(&$var)<br />
+{
+    $var++;<br />
+}
+$x = 1;<br />
+increment($x);<br />
+echo $x;<br />
+?>
+结果为2，并且没有类似expected to be a reference, value given的警告信息，相反地，如果将第8行代码修改为&$x，将得到一个废除警告。从而得以验证，其实PHP在传递过程中，变量会根据形参需要的到底是引用还是值来自行决定传输的是引用还是值，并不需要显式地传递（相反显式传递是即将被废除的）。</p>
+
+<p><strong>继续深入</strong></p>
+
+<p>http://www.php.net/manual/en/language.references.pass.php<br />
+在php手册中，介绍引用的传递一节，在中间位置有一个Note说到：在函数调用时是不需要传引用的(也就是上节所说的显式调用)，在5.3中如果显式调用会出来一个废除警告。</p>
+
+<p><strong>分析源码</strong></p>
+
+<p>有人说：在php中写入，everything is a reference。<br />
+查阅php源码，在./Zend/zend_compile.c的1579行有函数定义zend_do_pass_param。（php5.2.13）<br />
+其中有这样一句判断：<br />
+ if (original_op == ZEND_SEND_REF && !CG(allow_call_time_pass_reference)) {打印废除警告。}<br />
+大概意思就是说，在传递的是引用，并且php.ini的allow_call_time_pass_reference为否的话，打印警告。<br />
+再看zend_do_pass_param使用的地方，可以发现是在parser阶段时，根据参数ZVAL结构体中元素的定义，来传递到底是var还是value还是reference。（php5.2.13 ./Zend/zend_language_parser.y/c 451/3593）</p>
+
+<p><strong>结论</strong></p>
+
+<p>引用其实类似linux里的文件硬链接一样，但和C语言中的指针是不相同的，在parser阶段php会根据上下文环境自行判断是传引用还是值。而本文所提到的call_user_function并不会自行判断传的是引用还是值。所以前面的例子call_user_function在传值的时候不管用，而在传引用的时候得出了正确结果（但其实还有一个废除警告）。
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -634,65 +737,6 @@ make后出现iconv错误，所以修改configure文件，查找到#define USE_LI
 <a href="http://www.nuomi.com/i/rSMnZnu" target="_blank"><img src="http://img03.taobaocdn.com/imgextra/i3/T1tXFEXlFoXXbiWc79_073023.jpg" border="0" /></a></p>
 
 <p>昨天哥去UME华星提前看了电影 80后 ，严格的说，这电影和80后没有太多关系，故事还是很感人的，适合带MM看。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/06/20/54chen-twitter-memo-2010-06-20/">54chen Twitter Memo 2010-06-20</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-06-20T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-	<li>54chen Twitter memo 2010-06-13 <a href="http://goo.gl/fb/eq2AY" rel="nofollow">http://goo.gl/fb/eq2AY</a> <a href="http://twitter.com/54chen/statuses/16041466713">#</a></li>
-	<li>RT张新泳 :哈佛有一个著名的理论：人的差别在于业余时间，而一个人的命运决定于晚上8点到10点之间。每晚抽出2个小时的时间用来阅读、进修、思考或参加有意的演讲、讨论，你会发现，你的人生正在发生改变，坚持数年之后，成功会向你招手。 <a href="http://twitter.com/54chen/statuses/16045879011">#</a></li>
-	<li>吉尼斯纪录：全世界最大的茶几面积为960万平方千米，可放置13亿杯具。 <a href="http://twitter.com/54chen/statuses/16046287524">#</a></li>
-	<li>@<a href="http://twitter.com/dcyhldcyhl">dcyhldcyhl</a> 梅西赛后采访：当地球迷很热情，不过吹喇叭的助威方式我还是不太适应。相对来说我更加怀念中国球迷，他们的加油口号我至今记忆犹新：谢亚龙，下课！ <a href="http://twitter.com/54chen/statuses/16053325931">#</a></li>
-	<li>看着桌子上公司发的两个粽子，我想起了元宵节公司发的四个汤圆。 <a href="http://twitter.com/54chen/statuses/16056127395">#</a></li>
-	<li>端午，北京，图 <a href="http://goo.gl/fb/S7uDR" rel="nofollow">http://goo.gl/fb/S7uDR</a> <a href="http://twitter.com/54chen/statuses/16276349395">#</a></li>
-	<li>功夫网发飙，全球最大的RSS托管服务网站feedburner全线被屏，各位blogger注意转换。 <a href="http://twitter.com/54chen/statuses/16357434192">#</a></li>
-	<li>今天事情不多，翻到墙外，把四百多个followers从头看到尾，选择一天内有发言的、头像帅的、牛X的，全follow上鸟。 <a href="http://twitter.com/54chen/statuses/16363756610">#</a></li>
-	<li>RT @blogkid: 接上推，没过多久，我那个同学辛苦拿回来的手机，掉在他母校北京理工的茅坑里了。//十分之杯具 <a href="http://twitter.com/54chen/statuses/16365843551">#</a></li>
-	<li>RT @wolfdeng: @<a href="http://twitter.com/54chen">54chen</a> 难怪看到你突然follow我，我还以为之前已经是相互follow的关系了 //对不住兄弟们啊，我是常年不翻墙的好人民，平时就靠个机器人发推，没学会怎么用机器人follow人，这回翻出来就一次性follow <a href="http://twitter.com/54chen/statuses/16367924989">#</a></li>
-	<li>RT @Fenng:很多人都把在达内的学习经历写成工作经验了。倒也没错。 //达内在培训行业还是比较不错的，但至于达内学生水平如何则很难评估了，主要是因为社会培训学校入学时学生往往良莠不齐 <a href="http://twitter.com/54chen/statuses/16368931866">#</a></li>
-	<li>给infoq写的一篇关于NoSQL-dynamo的文章，还躺在草稿箱内，霍师傅呀霍师傅，啥时候才可以发 <a href="http://twitter.com/54chen/statuses/16369061733">#</a></li>
-	<li>首都机场航班大面积取消，不知道有没有今天坐灰机的同志啊，遇到天气不好真是大杯具。 <a href="http://twitter.com/54chen/statuses/16372252206">#</a></li>
-	<li>RT @laihingkit: RT @flanklin_: RT @Showfom: 有团购cet6答案的推友吗？ //太牛B了 这也行 <a href="http://twitter.com/54chen/statuses/16375504262">#</a></li>
-	<li>RT_小C 韩国胜阿根廷。安全套销量猛增5倍 <a href="http://twitter.com/54chen/statuses/16376123560">#</a></li>
-	<li>有cnbeta的管理人员吗，首页因为一个静态域名的拖累，迟迟无法打开。 <a href="http://twitter.com/54chen/statuses/16377949394">#</a></li>
-	<li>跨系统共享键盘鼠标利器分享：synergy <a href="http://goo.gl/fb/eC7a5" rel="nofollow">http://goo.gl/fb/eC7a5</a> <a href="http://twitter.com/54chen/statuses/16378899025">#</a></li>
-	<li><a href="http://url.cn/1PVfdw" rel="nofollow">http://url.cn/1PVfdw</a> 承蒙霍总@taiwen看得上，将我的文章放在深度内容当中，分享与大家先 <a href="http://twitter.com/54chen/statuses/16434266800">#</a></li>
-	<li>54chen解读NoSQL代表Dynamo <a href="http://goo.gl/fb/gs23C" rel="nofollow">http://goo.gl/fb/gs23C</a> <a href="http://twitter.com/54chen/statuses/16437562581">#</a></li>
-	<li>RT @tinyfool: 豆瓣的抓取出了什么问题了？我的blog在9点新文章一直更新都没有出来过，而且手动点了“重抓”也没有任何反应。//哥你没用feedburner吧 被GFW给G没了 <a href="http://twitter.com/54chen/statuses/16458591036">#</a></li>
-	<li>RT @tinyfool: @<a href="http://twitter.com/54chen">54chen</a> 我是在用feedburner啊，不过那东西谁不知道怎么绕过去啊 // 豆瓣不敢私自绕出去吧，可以向@<a href="http://twitter.com/hongqn">hongqn</a> 求证下豆瓣抓RSS翻不翻墙。 <a href="http://twitter.com/54chen/statuses/16458784422">#</a></li>
-</ul>
-</p>
 </div>
   
   

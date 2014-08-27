@@ -4,8 +4,189 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2014-08-25T21:51:53+08:00</pubDate>
+        <pubDate>2014-08-27T21:56:25+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
+
+<h1>AMQP</h1>
+
+<ul>
+<li>AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。</li>
+</ul>
+
+
+<h1>基础概念快速入门</h1>
+
+<ul>
+<li>每个rabbitmq-server叫做一个Broker，等着tcp连接进入。</li>
+<li>在rabbitmq-server进程内有Exchange，定义了这个消息的发送类型。（一对多、直连、多对多等等）</li>
+<li>Queue是进程内的逻辑队列，有多个，有名字。</li>
+<li>Binding联系Exchane与Queue。</li>
+<li>Routing key由生产者指定。Binding key由消费者指定。二者联合决定一条消息的来去。</li>
+</ul>
+
+
+<!--more-->
+
+
+<h1>java client api</h1>
+
+<h2>连接</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ConnectionFactory factory = new ConnectionFactory();
+</span><span class='line'>factory.setHost(hostName);
+</span><span class='line'>Connection conn = factory.newConnection();
+</span><span class='line'>Channel channel = conn.createChannel();</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>以上是得到一个rabbitmq连接最最基础的代码，当然了，还可以设置一些诸如用户名密码的事情。</li>
+<li>最后这个channel就可以用来收和发消息了。</li>
+</ul>
+
+
+<h2>消息者线程池</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ExecutorService es = Executors.newFixedThreadPool(20);
+</span><span class='line'>Connection conn = factory.newConnection(es);</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>消费者时使用，上述自动开了一20个线程的池来搞。</li>
+</ul>
+
+
+<h2>地址数组</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Address[] addrArr = new Address[]{ new Address(hostname1, portnumber1)
+</span><span class='line'>                                 , new Address(hostname2, portnumber2)};
+</span><span class='line'>Connection conn = factory.newConnection(addrArr);</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>上述代码如果连hostname1失败了就去hostname2。</li>
+<li>factory.newConnection()会触发这个检测。</li>
+</ul>
+
+
+<h2>声明exchange与queue</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>channel.exchangeDeclare(exchangeName, "direct", true);
+</span><span class='line'>String queueName = channel.queueDeclare().getQueue();
+</span><span class='line'>channel.queueBind(queueName, exchangeName, routingKey);</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>channel.exchangeDeclare 参数有 交换机名字  类型  是否持久化  不使用时是否自动删除 是否是内部的（不能被客户端使用） 其他参数</li>
+<li>channel.queueDeclare 参数有 queue名字 是否持久化 独占的queue（仅供此连接） 不使用时是否自动删除 其他参数</li>
+<li>channel.queueBind 参数有 queue名字 交换机名字 此次绑定使用的路由关键字  其他参数</li>
+</ul>
+
+
+<h2>发出消息</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>byte[] messageBodyBytes = "Hello, world!".getBytes();
+</span><span class='line'>channel.basicPublish(exchangeName, routingKey, null, messageBodyBytes);</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>channel.basicPublish 参数有 要发出的交换机名字  路由关键字 是否强制（设置为true时，找不到收的人时可以通过returnListener返回）  是否立即（其实rabbitmq不支持） 其他属性 消息主体</li>
+</ul>
+
+
+<h2>线程安全</h2>
+
+<ul>
+<li>Channel是线程好全的，但是最好是每个线程里用自己的Channel，因为在单个Channel里排队是有可能慢一些的。</li>
+</ul>
+
+
+<h2>最简单的办法消费消息</h2>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>boolean autoAck = false;
+</span><span class='line'>channel.basicConsume(queueName, autoAck, "myConsumerTag",
+</span><span class='line'>     new DefaultConsumer(channel) {
+</span><span class='line'>         @Override
+</span><span class='line'>         public void handleDelivery(String consumerTag,
+</span><span class='line'>                                    Envelope envelope,
+</span><span class='line'>                                    AMQP.BasicProperties properties,
+</span><span class='line'>                                    byte[] body)
+</span><span class='line'>             throws IOException
+</span><span class='line'>         {
+</span><span class='line'>             String routingKey = envelope.getRoutingKey();
+</span><span class='line'>             String contentType = properties.contentType;
+</span><span class='line'>             long deliveryTag = envelope.getDeliveryTag();
+</span><span class='line'>             // (process the message components here ...)
+</span><span class='line'>             channel.basicAck(deliveryTag, false);
+</span><span class='line'>         }
+</span><span class='line'>     });</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>一个Channel一个Consumer。</li>
+<li>channel.basicAck 回发ACK 参数 tag 是否多个。</li>
+</ul>
+
+
+<h2>零碎</h2>
+
+<ul>
+<li>channel.basicQos 指定服务质量设置 参数 最大的投送字节数  最大的投送消息数量  设置是否要应用到整个channel（而不是一个消费者）。</li>
+<li>factory.setAutomaticRecoveryEnabled(true) 网络有问题时，好后可自动恢复设置。</li>
+<li>cf.setRequestedHeartbeat(5) 设置心跳时间。</li>
+<li>exchange type可用的值：direct topic headers fanout。</li>
+<li>exchange的类型有一个default，basicPublish没有指定时使用，而且，如果routingKey在指定绑定的时候，会去到绑定的exchange。</li>
+<li>channel.queueDeclare().getQueue() 得到的是一个随机queue，断开连接后即删除。</li>
+<li>当exchange为direct的时候routingKey与bindingKey必须完全一致才能消费消息。</li>
+</ul>
+
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[rabbitmq java client api详解]]></title>
+            <link>http://2014.54chen.com/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/</link>
+            <pubDate>2014-08-27T15:33:38+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/08/27/rabbitmq-java-client-apixiang-jie</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -3478,102 +3659,6 @@ cpu:50%  线程数:763<br />
             <link>http://2014.54chen.com/blog/2014/01/22/disruptor-thrift-server-link-param-rps/</link>
             <pubDate>2014-01-22T00:00:00+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2014/01/22/disruptor-thrift-server-link-param-rps</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="thrift" />
-<a href="#en">__English Version__The notes about the usage of Thrift in Cassandra</a></p>
-
-<p>Cassandra在client访问server cluster的时候使用了thrift，在cluster node间的通讯，依旧是自己实现的二进制协议。</p>
-
-<p><strong>先决条件</strong>
-thrift 0.9.1<br />
-mac<br />
-libthrift-0.9.1<br />
-Cassandra 2.0.3</p>
-
-<p>本文所涉及的代码：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
-<!-- more -->
-<p><strong>看代码</strong>
-thrift的定义：server的逻辑实现代码叫做Processor，创建的等待socket代码里叫做Transport，最后启动的进程叫做Server，大致就会有要启动一个thrift server，需要有一个socket（Transport）和一堆逻辑（Processor）。</p>
-
-<p>这里有一篇2011年写的thrift入门手记：<a href="http://www.54chen.com/java-ee/thrift-quick-start.html">http://www.54chen.com/java-ee/thrift-quick-start.html</a></p>
-
-<p>示例代码中以TNonBlockingServer来举例。TNonBlockingServer是采用libevent lib实现的一种thrift内置的server类型，理论上是最快的一种。</p>
-
-<p><strong>CustomTNonBlockingServer</strong>
-Cassandra并没有默认使用这种类型的server，默认的是基于TServerTransport连接完成的CustomTThreadPoolServer（自行实现了连接池）。</p>
-
-<p>以示例代码为例：<br />
-CassandraTestServer －> CustomTNonBlockingServer.Factory().buildTServer -> new CustomTNonBlockingServer -> new TCustomNonblockingServerSocket.</p>
-
-<p>这个调用传递中，在接入客户端连接时，可以插入一定的代码（比如说来来保存session之类的）。</p>
-
-<p>代码中被插入的代码和阶段有：<br />
-TCustomNonblockingServerSocket->acceptImpl  一次客户端请求进入时，可用来设置服务器端的超时设置之类的数值。<br />
-CustomTNonBlockingServer->requestInvoke   紧接着上面的执行后具体的调用会打到这里来，这里看上去Cassandra把一个父类强转为子类，为了取当时的socket信息，有点小bug。</p>
-
-<p><strong>其他server</strong>
-Cassandra默认的CustomTThreadPoolServer也有类似前文提到的插入代码的地方，主要目的也是超时设置buffer设置等，而且因为使用的是普通TServerTransport，设置的点更加灵活。<br />
-不得不提的是另一个的实现，THsHaDisruptorServer，大有来头。<br />
-THsHaDisruptorServer使用TCustomNonblockingServerSocket当socket，上层TDisruptorServer使用的是基于LMAX（一家牛B的金融平台公司）开源的Disruptor（一个巨牛B的高吞吐低延迟的并发处理机制）来实现的TDisruptorServer，TDisruptorServer的代码在：<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> 可以理解为一个经过队列改造的TNonBlockingServer。</p>
-
-<p>以后再找机会分析这个disruptor_thrift_server。<br />
-__EOF__</p>
-
-<p><a name="en">__English Version__</a>
-Cassandra uses thrift when the client visits the server, but it still uses binary protocol between the cluster nodes. </p>
-
-<p><strong>Prerequisite</strong>
-thrift 0.9.1<br />
-mac<br />
-libthrift-0.9.1<br />
-Cassandra 2.0.3</p>
-
-<p>The codes mentioned in this blog：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
-
-<p><strong>See Codes</strong>
-The definition of Thrift: The codes which implements the server is named Processor. The codes which implements the socket for waiting is named Transport. At last, the codes which starts all logic is named Server. All of this, we need a thrift server,a socket(Transport) and a Processor.</p>
-
-<p>This is a blog link about thrift written in 2011:<a href="http://www.54chen.com/java-ee/thrift-quick-start.html">http://www.54chen.com/java-ee/thrift-quick-start.html</a></p>
-
-<p>The example codes take TNonBlockingServer for example.TNonBlockingServer is a built-in type server designed by lib-event.It is the fast type  in theory.</p>
-
-<p><strong>CustomTNonBlockingServer</strong>
-Cassandra does not use this type by default.The default type is based on TServerTransport named CustomTThreadPoolServer(implements the thread pool).</p>
-
-<p>For example:<br />
-CassandraTestServer －> CustomTNonBlockingServer.Factory().buildTServer -> new CustomTNonBlockingServer -> new TCustomNonblockingServerSocket.</p>
-
-<p>In this link,when client is come,we can plug in some codes(for saving session, etc.）。</p>
-
-<p>the codes and the stages which plugged in:<br />
-TCustomNonblockingServerSocket->acceptImpl  When the client is comming,we can set the configuration like the value of timeout,etc.<br />
-CustomTNonBlockingServer->requestInvoke   And then it will be called here.It seems that Cassandra&#8217;s codes cast a parent class to children one.It is maybe a bug。</p>
-
-<p><strong>Else Server</strong>
-Cassandra&#8217;s default server CustomTThreadPoolServer is also can be plugged in like above talked.The plugin main target is set timeout,buffer,etc.And the TServerTransport it used is more flexible to setting values。</p>
-
-<p>It&#8217;s hard to ignore the another type,THsHaDisruptorServer,is not normaI。<br />
-THsHaDisruptorServer is use TCustomNonblockingServerSocket to socket.The TDisruptorServer is based on LMAX Disruptor.The TDisruptorServer&#8217;s codes is here:<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> Can be understood as,a queue-improved TNonBlockingServer。</p>
-
-<p>I&#8217;ll write a blog about disruptor_thrift_server later.<br />
-__EOF__</p>
-
-<p>Happy New Year!</p>
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[Cassandra的thrift用法学习手记]]></title>
-            <link>http://2014.54chen.com/blog/2013/12/30/cassandra-thrift/</link>
-            <pubDate>2013-12-30T00:00:00+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2013/12/30/cassandra-thrift</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>

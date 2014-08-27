@@ -9,7 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-10-14 cloud foundry之warden代码解读-part2 http://t.co/czkUa5m0 # Cloud Foundry之warden代码解读-part3 简介 &hellip;">
+  <meta name="description" content="Cloud Foundry - How to Bootstrap a System in Centos6 1)install febootstrap
+Febootstrap is a tool like debootstrap in ubuntu.
+#yum -y install &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +75,105 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/10/25/cloud-foundry-how-to-bootstrap-a-system-in-centos6/">Cloud Foundry - How to Bootstrap a System in Centos6</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-10-25T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="bootstrap" /></p>
+
+<p><strong>1)install febootstrap</strong>
+Febootstrap is a tool like debootstrap in ubuntu.<br />
+#yum -y install febootstrap<br />
+#febootstrap centos6 rootfs http://mirror.neu.edu.cn/centos/6.3/os/x86_64/<br />
+Threre is a basic centos system in rootfs dir.</p>
+
+<p><strong>2)install ruby 1.9 (optional)</strong>
+yum -y groupinstall &#8220;Development Tools&#8221;<br />
+yum -y install openssl-devel zlib-devel gcc gcc-c++ make autoconf readline-devel curl-devel expat-devel gettext-devel readline-devel</p>
+
+<p>wget http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz<br />
+tar xzvf yaml-0.1.4.tar.gz<br />
+cd yaml-0.1.4<br />
+./configure &#8211;prefix=/opt/soft/yaml<br />
+make && make install</p>
+
+<p>wget http://ruby.taobao.org/mirrors/ruby/ruby-1.9.3-p286.tar.gz<br />
+tar xzvf ruby-1.9.3-p286.tar.gz<br />
+cd ruby-1.9.3-p286<br />
+./configure &#8211;prefix=/opt/soft/ruby  &#8211;enable-shared &#8211;disable-install-doc &#8211;with-opt-dir=/opt/soft/yaml<br />
+make && make install<br />
+ln -s /opt/soft/ruby/bin/* /usr/bin/</p>
+
+<p>gem source -r http://rubygems.org/<br />
+gem source -a http://ruby.taobao.org</p>
+
+<p>gem install bundler &#8211;no-rdoc &#8211;no-ri <br />
+gem install rails &#8211;no-rdoc &#8211;no-ri <br />
+ln -s /opt/soft/ruby/bin/* /usr/bin/</p>
+
+<p><strong>3)install and start cgroups (optional)</strong>
+ All of the configuration is here:<br />
+ vi /etc/cgconfig.conf <br />
+ Turn it on:<br />
+ chkconfig &#8211;level 3 cgconfig on<br />
+ chkconfig &#8211;list<br />
+ service cgconfig start</p>
+
+<p><strong>4)turn off selinux</strong>
+vi /etc/selinux/config<br />
+Change  SELINUX=enforcing to SELINUX=disabled</p>
+
+<p>Reboot or  run: setenforce 0</p>
+
+<p><strong>5)supper tool: ip</strong>
+in ssh1:<br />
+ip link add name FOO type veth peer name BAR<br />
+ip link set FOO netns 1<br />
+ifconfig FOO 10.254.0.222 netmask 255.255.255.252 up<br />
+ip link set BAR netns <ssh2 pid>
+route add -host 10.254.0.221 dev FOO</ssh2></p>
+
+<p>in ssh2:<br />
+unshare -n /bin/bash<br />
+ifconfig BAR 10.254.0.221 netmask 255.255.255.252 up<br />
+ifconfig lo up</p>
+
+<p>in ssh1:<br />
+ping 10.254.0.221</p>
+
+<p>&#8212;&#8212;&#8212;&#8212;&#8211;EOF&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;<br />
+Ha ha, expect my next time write again, write here today, very tired of. </p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -776,54 +877,6 @@ nginx对接的配置在https://github.com/cloudfoundry/vcap/blob/master/dev_setu
 <p><strong>学到什么</strong>
 1.nginx_lua相当好用，还得感谢之前的老同事agentzh他们的贡献;<br />
 2.router用http这么来回的搞感觉不如tcp来得靠谱。
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/02/54chen-twitter-memo-2012-09-02/">54chen Twitter Memo 2012-09-02</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-02T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-在小米写服务端java代码，你只需要知道java语法，其他maven呀、nginx配置呀、高可用呀、负载均衡呀，统统都可以忽略，天然就是支持的，嗯，我说的是下一年的事情。 </ul><a href="http://twitter.com/54chen/statuses/241511264084443136" class="aktt_tweet_time">#</a>
-cloud foundry之cloud_controller代码解读 <a href="http://t.co/5um7YuL8" rel="nofollow">http://t.co/5um7YuL8</a> <a href="http://twitter.com/54chen/statuses/241103911606431744" class="aktt_tweet_time">#</a>
-随着gfw越来越凶残，后来的再搞技术的朋友啊，你们将会连eclipse插件都下不全，所以说，趁早改行吧。 <a href="http://twitter.com/54chen/statuses/241032121408450561" class="aktt_tweet_time">#</a>
-@<a href="http://twitter.com/hongqn" class="aktt_username">hongqn</a> 两个显示双屏也是一种重构思路。 <a href="http://twitter.com/54chen/statuses/240698514127060992" class="aktt_tweet_time">#</a>
-谁知道为什么cloud foundry采用了大量的ruby，而不是其他什么语言？ <a href="http://twitter.com/54chen/statuses/240698420543762432" class="aktt_tweet_time">#</a>
-cloud foundry之vmc代码解读 <a href="http://t.co/fm1U34u0" rel="nofollow">http://t.co/fm1U34u0</a> <a href="http://twitter.com/54chen/statuses/240667502982610944" class="aktt_tweet_time">#</a>
-clound foundry之vmc代码解读 <a href="http://t.co/9fx5HaQS" rel="nofollow">http://t.co/9fx5HaQS</a> <a href="http://twitter.com/54chen/statuses/240659819873329152" class="aktt_tweet_time">#</a>
-ruby快速学习手记(ubuntu) <a href="http://t.co/Aas2KH3J" rel="nofollow">http://t.co/Aas2KH3J</a> <a href="http://twitter.com/54chen/statuses/240400757344587777" class="aktt_tweet_time">#</a>
-ruby得用一天时间学一下，看看有没有实际用处。 <a href="http://twitter.com/54chen/statuses/240289018850459650" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2012-08-26 <a href="http://t.co/J16AmMdc" rel="nofollow">http://t.co/J16AmMdc</a> <a href="http://twitter.com/54chen/statuses/239545198609326082" class="aktt_tweet_time">#</a>
-
 </p>
 </div>
   
