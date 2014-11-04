@@ -9,12 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="人人网－英特尔技术专题讨论会实录 Intel/Qianxiang server workshop
-（这横幅很搞 叫Qianxiang不如叫RenRen，千橡的英文：Oak Pacific）
-intel技术专家
-互联网大客户技术技术服务内容
-1.idc机房相关
-2.性能优化：调试、锁等基础知识 &hellip;">
+  <meta name="description" content="［零九零献］献出服务器批量操作shell脚本 现在是北京时间零九年最后一天的下午五点 值此年末岁初的佳节时期 54chen祝订阅没订阅科学院日志的朋友们 元旦快乐！ 特地送出shell脚本一个，适合用于经常性的和十台以上服务器打交道的同志们，解放双手。看码: 第一个文件 run.sh 功能 总控 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +73,78 @@ intel技术专家
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/31/zero-90-xian-shell-script-sacrificed-server-batch-operations/">［零九零献］献出服务器批量操作shell脚本</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-12-31T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>现在是北京时间零九年最后一天的下午五点</p>
+
+<p>值此年末岁初的佳节时期</p>
+
+<p>54chen祝订阅没订阅科学院日志的朋友们 元旦快乐！</p>
+
+<p>特地送出<a href="http://www.54chen.com/_linux_/linux-system-replacement-method-sshd-notes-from-from-academy-of-sciences.html">shell</a>脚本一个，适合用于经常性的和十台以上服务器打交道的同志们，解放双手。看码:</p>
+
+<p>第一个文件 run.sh 功能 总控 运行的文件 是操作时的入口</p>
+
+<p>#!/bin/sh<br />
+SERVER_FILE=server</p>
+
+<p>SERVER_LIST=&#8221;`cat ${SERVER_FILE}|grep -v &#8220;#&#8221;`&#8221;</p>
+
+<p>for SERVER in `echo &#8220;${SERVER_LIST}&#8221;`<br />
+do<br />
+echo ${SERVER}<br />
+sh runOne.sh ${SERVER};<br />
+done;</p>
+
+<p>第二个文件 runOne.sh 功能 自定义每个服务器要进行的操作的步骤</p>
+
+<p>#!/bin/sh<br />
+host=$1<br />
+ssh root@$host &#8220;yum -y install mysql-server&#8221; #上传<br />
+scp my.cnf root@$host:/etc/my.cnf #操作</p>
+
+<p>第三个文件 server 功能 记录有哪些服务器要操作 ＃号可以<a href="http://www.54chen.com/_linux_/intelligent-dns-configuration-process.html">注释</a>不想操作的机器</p>
+
+<p>#10.22.206.21<br />
+10.22.206.22<br />
+10.22.206.23<br />
+10.22.206.24<br />
+10.22.206.25</p>
+
+<p>使用的时候，先设置<a href="http://www.54chen.com/memo/%e7%94%a8ssh-tunnel%e4%b8%b4%e6%97%b6%e7%aa%81%e7%a0%b4%e8%b7%a8%e6%9c%ba%e6%88%bf%e7%9a%84%e9%99%90%e5%88%b6.html">server</a>文件，直接./run.sh 就开始执行，灵活鸡动，方便快捷。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -876,52 +943,6 @@ b[2] = (byte) ((val &lt;&lt; 16) &gt;&gt; 24);<br />
 b[3] = (byte) ((val &lt;&lt; 24) &gt;&gt; 24);<br />
 return b;<br />
 }</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/12/06/54chen-twitter-2009-12-06/">一周废话汇总【54chen Twitter 2009-12-06】</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-12-06T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-	<li><a href="http://www.baidu.com/s?wd=%B7%B9%B7%F1" rel="nofollow">http://www.baidu.com/s?wd=%B7%B9%B7%F1</a> 百度搜“饭否” 你可以看到两个竞价排名欺压着可怜的饭否。 <a href="http://twitter.com/54chen/statuses/6193332845">#</a></li>
-	<li>nuclear - 人人网海量数据储存系统 吹风中 <a href="http://twitter.com/54chen/statuses/6259002387">#</a></li>
-	<li>人人网新鲜事架构分享现场直播进行中 <a href="http://www.54chen.com/844-net-new-to-live-for-all-to-share/" rel="nofollow">http://www.54chen.com/844-net-new-to-live-for-all-to-share/</a> <a href="http://twitter.com/54chen/statuses/6263794154">#</a></li>
-	<li>人固有一死，或死于甲流，或死于甲流疫苗~ <a href="http://twitter.com/54chen/statuses/6265347761">#</a></li>
-	<li>转自侯 少 亭: 在星巴克，我点着一杯卡布基诺，在这群安静的装逼侠对我侧目的时候华丽的打开我的橘子iphone， 刹那间整个星巴克被一首高亢而又悲凉的《月亮之上》所笼罩 <a href="http://twitter.com/54chen/statuses/6295197417">#</a></li>
-	<li>@ is_llei 缺图 实说那个图也不咋样 <a href="http://twitter.com/54chen/statuses/6300342870">#</a></li>
-	<li>转自杨钞浇: 毛主席语录第三十八章 第五节 第二十七句： 不以结婚为目的的谈恋爱 都是耍流氓！ 毛主席万岁。:- <a href="http://twitter.com/54chen/statuses/6327120259">#</a></li>
-	<li>基于自动化原理的信号负反馈拟合最相关内容推荐 绝对有搞头的东西 <a href="http://twitter.com/54chen/statuses/6328956499">#</a></li>
-</ul>
-</p>
 </div>
   
   

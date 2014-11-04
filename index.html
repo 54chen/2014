@@ -9,8 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Rabbitmq Java Client Api详解 Aug 27th, 2014 AMQP AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。 基础概念快速入门 每个rabbitmq-server叫做一个Broker，等着tcp连接进入。
-在rabbitmq- &hellip;">
+  <meta name="description" content="网络IO型程序压力测试要点 Nov 4th, 2014 一.突破客户端端口数限制 这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。
+现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（216=65536）
+但是从计算机网络的发展来看， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,117 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/04/network-load-test/">网络IO型程序压力测试要点</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-04T18:23:05+08:00" pubdate data-updated="true">Nov 4<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20141104/20141104.jpg></p>
+
+<h1>一.突破客户端端口数限制</h1>
+
+<ul>
+<li>这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。</li>
+<li>现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（2<sup>16</sup>=65536）</li>
+<li>但是从计算机网络的发展来看，端口长度定义同IPv4定义一样，都是当时的同志们拍脑袋的结果。</li>
+</ul>
+
+
+<h2>突破的办法</h2>
+
+<ul>
+<li>一个机器绑定多个IP地址。</li>
+<li>搞无数机器或者虚拟机。</li>
+</ul>
+
+
+<h1>二.防止gc影响测试结论</h1>
+
+<ul>
+<li>如果压力程序为java，要小心full gc导致单次请求时间加长。</li>
+<li>从java角度，随时jstat -gcutil跟踪client的情况，很有必要。</li>
+</ul>
+
+
+<h2>一些推荐的参数</h2>
+
+<ul>
+<li>24G的机器: -XX:ParallelCMSThreads=8 -Xms12G -Xmx12G -XX:PermSize=128m -XX:MaxPermSize=512m -XX:MaxDirectMemorySize=1280m</li>
+<li>细节慢慢调。</li>
+<li>如果业务逻辑不重的情况，gc未必有这么明显的影响。</li>
+</ul>
+
+
+<h1>三.防止客户端性能问题影响结论</h1>
+
+<ul>
+<li>随时关注client的cpu load mem的情况。</li>
+<li>loading test过程中由于client的性能问题，经常会影响结论。</li>
+</ul>
+
+
+<h2>推荐的办法</h2>
+
+<ul>
+<li>定时记录各项数据，对比观察。</li>
+</ul>
+
+
+<h1>四.防止客户端线程数过多</h1>
+
+<ul>
+<li>因为要模拟大量用户，很有可能去启动大量的线程。</li>
+<li>线程的数量太多后基本都是自己先挂了。</li>
+</ul>
+
+
+<h2>解决</h2>
+
+<ul>
+<li>用循环来近似模拟多用户。</li>
+<li>使用scala akka erlang这样的并发模型。</li>
+</ul>
+
+
+<h1>五.其他一些细节</h1>
+
+<ul>
+<li>同时连接数与同时发数据人数是两个天壤之别的数，前者对系统影响很小，后者的增长才是系统的压力所在。</li>
+<li>尽可能模拟连接数与发数据人数目标比例。</li>
+<li>平衡压力尽可能长的时间去压有可能会发现累积性问题。</li>
+<li>机器越多越方便。</li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -558,61 +670,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/05/07/jvm-cpu-mem-tools/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/18/how-to-use-akka-in-java-4/">Java中使用akka手记四 用法速查</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-18T15:37:25+08:00" pubdate data-updated="true">Apr 18<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
-
-<h2>Actor</h2>
-
-<ul>
-<li>UntypedActor actor的基类，继承并实现onReceive方法就可以得到一个Actor。</li>
-<li>Props 配置类，用Props.create可以创建一个按指定配置生成的Actor。</li>
-<li>Props的推荐实践，创建Actor时，搞一个static的Props.create方法。可以少写不少重复代码。</li>
-<li>system.actorOf 会创建顶级的actor，将被系统监控。</li>
-<li>getContext().acrtorOf 会创建子actor。</li>
-<li>ActorRef 由actorOf产生，可以是一个网络actor。</li>
-<li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在>做路由、负载均衡、备份时非常有用。ask会拦住reply消息直接给onsuccess等，sender不会再得到reply。</li>
-<li>Inbox 当actor不能满足需要时，可以使用inbox，比如收多个回复，watch其他actor的生命周期。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/18/how-to-use-akka-in-java-4/">Read on &rarr;</a>
     </footer>
   
 

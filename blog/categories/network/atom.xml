@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Network | 五四陈科学院]]></title>
+  <link href="http://2014.54chen.com/blog/categories/network/atom.xml" rel="self"/>
+  <link href="http://2014.54chen.com/"/>
+  <updated>2014-11-04T20:51:56+08:00</updated>
+  <id>http://2014.54chen.com/</id>
+  <author>
+    <name><![CDATA[54chen]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[网络IO型程序压力测试要点]]></title>
+    <link href="http://2014.54chen.com/blog/2014/11/04/network-load-test/"/>
+    <updated>2014-11-04T18:23:05+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/11/04/network-load-test</id>
+    <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20141104/20141104.jpg></p>
+
+<h1>一.突破客户端端口数限制</h1>
+
+<ul>
+<li>这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。</li>
+<li>现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（2<sup>16</sup>=65536）</li>
+<li>但是从计算机网络的发展来看，端口长度定义同IPv4定义一样，都是当时的同志们拍脑袋的结果。</li>
+</ul>
+
+
+<h2>突破的办法</h2>
+
+<ul>
+<li>一个机器绑定多个IP地址。</li>
+<li>搞无数机器或者虚拟机。</li>
+</ul>
+
+
+<h1>二.防止gc影响测试结论</h1>
+
+<ul>
+<li>如果压力程序为java，要小心full gc导致单次请求时间加长。</li>
+<li>从java角度，随时jstat -gcutil跟踪client的情况，很有必要。</li>
+</ul>
+
+
+<h2>一些推荐的参数</h2>
+
+<ul>
+<li>24G的机器: -XX:ParallelCMSThreads=8 -Xms12G -Xmx12G -XX:PermSize=128m -XX:MaxPermSize=512m -XX:MaxDirectMemorySize=1280m</li>
+<li>细节慢慢调。</li>
+<li>如果业务逻辑不重的情况，gc未必有这么明显的影响。</li>
+</ul>
+
+
+<h1>三.防止客户端性能问题影响结论</h1>
+
+<ul>
+<li>随时关注client的cpu load mem的情况。</li>
+<li>loading test过程中由于client的性能问题，经常会影响结论。</li>
+</ul>
+
+
+<h2>推荐的办法</h2>
+
+<ul>
+<li>定时记录各项数据，对比观察。</li>
+</ul>
+
+
+<h1>四.防止客户端线程数过多</h1>
+
+<ul>
+<li>因为要模拟大量用户，很有可能去启动大量的线程。</li>
+<li>线程的数量太多后基本都是自己先挂了。</li>
+</ul>
+
+
+<h2>解决</h2>
+
+<ul>
+<li>用循环来近似模拟多用户。</li>
+<li>使用scala akka erlang这样的并发模型。</li>
+</ul>
+
+
+<h1>五.其他一些细节</h1>
+
+<ul>
+<li>同时连接数与同时发数据人数是两个天壤之别的数，前者对系统影响很小，后者的增长才是系统的压力所在。</li>
+<li>尽可能模拟连接数与发数据人数目标比例。</li>
+<li>平衡压力尽可能长的时间去压有可能会发现累积性问题。</li>
+<li>机器越多越方便。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

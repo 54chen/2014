@@ -9,8 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-09-02 在小米写服务端java代码，你只需要知道java语法，其他maven呀、nginx配置呀、高可用呀、负载均衡呀，统统都可以忽略，天然就是支持的，嗯，我说的是下一年的事情。 #
-cloud &hellip;">
+  <meta name="description" content="Cloud Foundry之router代码解读 简介
+cloudfoundry是vmvare推出来的开源PaaS平台，router是其所有请求的入口路由，其与nginx进行配合完成各种情况情况下的转发。
+代码位置在：https://github.com/cloudfoundry/router &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,108 @@ cloud &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/06/cloud-foundry-router/">Cloud Foundry之router代码解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloudfoundry" />
+<strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，router是其所有请求的入口路由，其与nginx进行配合完成各种情况情况下的转发。<br />
+代码位置在：https://github.com/cloudfoundry/router</p>
+
+<p><strong>历史</strong>
+第一版的router直接通过unix sock将http request通过nginx的proxy 发到了router.rb中处理，第二版的时候，因为ruby直接处理请求性能不行，换成了lua脚本来接收请求，再由ruby程序将结果返回。</p>
+
+<p><strong>目录结构</strong>
+router代码不多，共有下面的一些主要目录。</p>
+
+<p>.<br />
+├── bin<br />
+│   └── router  （启用router server的脚本）<br />
+├── config<br />
+│   ├── router2.yml<br />
+│   └── router.yml （配置文件，指定了服务的端口和消息队列pid等）<br />
+├── ext<br />
+│   └── nginx<br />
+│       ├── tablesave.lua<br />
+│       └── uls.lua （这两个lua脚本供nginx conf使用，实现用户第一次访问时生成一个cookies，lua让其去同一个地方）<br />
+├── Gemfile<br />
+├── Gemfile.lock<br />
+├── lib<br />
+│   ├── router<br />
+│   │   ├── const.rb<br />
+│   │   ├── router.rb<br />
+│   │   └── router_uls_server.rb  （基于一个简单的web框架(Sinatra)开发的一些http api）<br />
+│   └── router.rb（负责整体启动router的http server）<br />
+├── LICENSE<br />
+├── NOTICE<br />
+├── Rakefile<br />
+├── README<br />
+└── spec<br />
+    ├── functional<br />
+    │   ├── router_spec.rb<br />
+    │   └── spec_helper.rb<br />
+    ├── integration<br />
+    │   ├── router_spec.rb<br />
+    │   └── spec_helper.rb<br />
+    ├── lib<br />
+    │   ├── nats_timeout.rb<br />
+    │   └── spec_helper.rb<br />
+    ├── Rakefile<br />
+    ├── spec_helper.rb<br />
+    └── unit<br />
+        └── router_spec.rb</p>
+
+<p><strong>nginx的关键配置</strong>
+nginx对接的配置在https://github.com/cloudfoundry/vcap/blob/master/dev_setup/cookbooks/nginx/templates/default/router-nginx.conf.erb，是动态生成的，在安装时决定。<br />
+其中，关键的内容是：<br />
+#定义lua运行的环境<br />
+  lua_package_path &#8221;<%= node[:lua][:module_path] %>/?.lua;;&#8221;;<br />
+  lua_package_cpath &#8221;<%= node[:lua][:module_path] %>/?.so;;&#8221;;<br />
+#upstream定义到nls服务上<br />
+  upstream router_status {<br />
+    server <%= node[:nginx][:uls_ip] %>:<%= node[:nginx][:uls_port] %>;<br />
+  }</p>
+
+<p>其中，根据 health_monitor的值穿插了subrequest去query /vcapuls的subrequest，而 /vcapuls是接到router.sock的。</p>
+
+<p>简单地说，第二版的变化在于，大量的业务请求在health_moniter确定之后，变成了nginx直连下属业务，而不再经过router了。</p>
+
+<p><strong>学到什么</strong>
+1.nginx_lua相当好用，还得感谢之前的老同事agentzh他们的贡献;<br />
+2.router用http这么来回的搞感觉不如tcp来得靠谱。
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -712,50 +815,6 @@ zookeeper客户端curator使用手记 </ul><a href="http://t.co/mWAGu1il" rel="n
 <p><strong>五、五四陈点评</strong></p>
 
 <p>相比zookeeper常用的zkClient的确是平易近人了，上手容易，理解轻松，语法优美，至于是不是各种情况都处理了，还得靠实践检验。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/22/54chen-twitter-memo-2012-07-22/">54chen Twitter Memo 2012-07-22</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-22T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-看来还需要一章写rose单元测试的，漏了。 </ul><a href="http://twitter.com/54chen/statuses/225888028277751808" class="aktt_tweet_time">#</a>
-夏天的下午听张楚的歌写代码是很爽的事情。 <a href="http://twitter.com/54chen/statuses/225874131822972928" class="aktt_tweet_time">#</a>
-创业公司的工程师一定要有“野性”，敢于对自己的代码负责，我在上一家公司任职的时候，大量的工程师写完代码之后，基本不会保障自测，直接扔给测试组，轮子就是这么越转越慢，甚至他们养成习惯之后很难改掉，所有的代码都十分依赖另一个人来查问题。 <a href="http://twitter.com/54chen/statuses/225072923852013568" class="aktt_tweet_time">#</a>
-redis 测试办法tclsh入门手记 <a href="http://t.co/uARTrrla" rel="nofollow">http://t.co/uARTrrla</a> <a href="http://twitter.com/54chen/statuses/224796453900517377" class="aktt_tweet_time">#</a>
-逐渐收到来自各处的mail询问rose的各种看似古怪的问题，典型的：1.很久不升级了？ 升级说明在开发，现在很稳定。 2.使用sql拼接容易造成sql注入等问题，尽量使用规范的preparestatement。3.只内置了velocity和jsp，通过后缀是vm还是jsp来区别。 <a href="http://twitter.com/54chen/statuses/224749739902640128" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2012-07-15 <a href="http://t.co/M36ripIz" rel="nofollow">http://t.co/M36ripIz</a> <a href="http://twitter.com/54chen/statuses/224316774945005569" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   
