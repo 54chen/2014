@@ -123,65 +123,12 @@
 </ul>
 
 
-<h1>二.防止gc影响测试结论</h1>
-
-<ul>
-<li>如果压力程序为java，要小心full gc导致单次请求时间加长。</li>
-<li>从java角度，随时jstat -gcutil跟踪client的情况，很有必要。</li>
-</ul>
-
-
-<h2>一些推荐的参数</h2>
-
-<ul>
-<li>24G的机器: -XX:ParallelCMSThreads=8 -Xms12G -Xmx12G -XX:PermSize=128m -XX:MaxPermSize=512m -XX:MaxDirectMemorySize=1280m</li>
-<li>细节慢慢调。</li>
-<li>如果业务逻辑不重的情况，gc未必有这么明显的影响。</li>
-</ul>
-
-
-<h1>三.防止客户端性能问题影响结论</h1>
-
-<ul>
-<li>随时关注client的cpu load mem的情况。</li>
-<li>loading test过程中由于client的性能问题，经常会影响结论。</li>
-</ul>
-
-
-<h2>推荐的办法</h2>
-
-<ul>
-<li>定时记录各项数据，对比观察。</li>
-</ul>
-
-
-<h1>四.防止客户端线程数过多</h1>
-
-<ul>
-<li>因为要模拟大量用户，很有可能去启动大量的线程。</li>
-<li>线程的数量太多后基本都是自己先挂了。</li>
-</ul>
-
-
-<h2>解决</h2>
-
-<ul>
-<li>用循环来近似模拟多用户。</li>
-<li>使用scala akka erlang这样的并发模型。</li>
-</ul>
-
-
-<h1>五.其他一些细节</h1>
-
-<ul>
-<li>同时连接数与同时发数据人数是两个天壤之别的数，前者对系统影响很小，后者的增长才是系统的压力所在。</li>
-<li>尽可能模拟连接数与发数据人数目标比例。</li>
-<li>平衡压力尽可能长的时间去压有可能会发现累积性问题。</li>
-<li>机器越多越方便。</li>
-</ul>
-
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/04/network-load-test/">Read on &rarr;</a>
+    </footer>
   
 
 
