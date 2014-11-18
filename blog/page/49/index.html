@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Md5在线破解 MD5 Crack 本站400PB硬盘已经上线,共有md5记录约40P(1P=1000*1000*1000*1000*1000)条，宇宙第一，且还在不断增长中，包括所有组合，本站数据量大，查询速度快，同时支持16位及32位密码查询。通过对10万会员的真实动网论坛样本数据的测试， &hellip;">
+  <meta name="description" content="Web压力测试工具介绍 1.http_load 下载地址：http://www.acme.com/software/http_load/ 实际运行： bash# http_load -rate 5 -seconds 10 urls -parallel 简写-p ：含义是并发的用户进程数。 - &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,119 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/26/web%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/">Web压力测试工具介绍</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-26T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><strong>1.http_load</strong></p>
+
+<p>下载地址：<a href="http://www.acme.com/software/http_load/" target="_top">http://www.acme.com/software/http_load/</a></p>
+
+<p>实际运行：</p>
+
+<p>bash# http_load -rate 5 -seconds 10 urls
+<ul>
+	<li>-parallel 简写-p ：含义是并发的用户进程数。</li>
+	<li>-fetches 简写-f ：含义是总计的访问次数</li>
+	<li>-rate 简写-r ：含义是每秒的访问频率</li>
+	<li>-seconds简写-s ：含义是总计的访问时间</li>
+	<li>urls.txt 是一个url 列表，每个url 单独的一行；不可以直接跟一个url，有些博客主说的可以跟一个url是错误的说法。</li>
+</ul>
+<pre>49 fetches, 2 max parallel, 289880 bytes, in 10.0145 seconds
+5916 mean bytes/connection
+4.89274 fetches/sec, 28945.1 bytes/sec
+msecs/connect: 28.8932 mean, 44.243 max, 24.488 min
+msecs/first-response: 63.5362 mean, 81.624 max, 57.803 min
+HTTP response codes:
+code 200 -- 49</pre>
+<pre>解释：</pre>
+<pre>
+<ul>
+	<li>49 fetches, 2 max parallel, 289880 bytes, in 10.0145 seconds</li>
+	<li>说明在上面的测试中运行了49个请求，最大的并发进程数是2，总计传输的数据是289880bytes，运行的时间是10.0145秒</li>
+</ul>
+<div>
+<ul>
+	<li>5916 mean bytes/connection</li>
+	<li>说明每一连接平均传输的数据量289880/49=5916</li>
+</ul>
+<div>
+<ul>
+	<li>4.89274 fetches/sec, 28945.1 bytes/sec</li>
+	<li>说明每秒的响应请求为4.89274，每秒传递的数据为28945.1 bytes/sec</li>
+</ul>
+<div>
+<ul>
+	<li>msecs/connect: 28.8932 mean, 44.243 max, 24.488 min</li>
+	<li>说明每连接的平均响应时间是28.8932 msecs，最大的响应时间44.243 msecs，最小的响应时间24.488 msecs</li>
+</ul>
+<div></div>
+<ul>
+	<li>msecs/first-response: 63.5362 mean, 81.624 max, 57.803 min</li>
+</ul>
+<div>
+<ul>
+	<li>HTTP response codes: code 200 — 49</li>
+	<li>说明打开响应页面的类型，如果403的类型过多，那可能要注意是否系统遇到了瓶颈。</li>
+</ul>
+<div>
+<ul>
+	<li>一般会关注到的指标是fetches/sec、msecs/connect，它们分别对应的常用性能指标参数QPS-每秒响应用户数和response time，每连接响应用户时间。测试的结果主要也是看这两个值。当然仅有这两个指标并不能完成对性能的分析，我们还需要对服务器的cpu、men进行分析，才能得出结论；</li>
+	<li>如果要测试HTTPS，需要在编译前指定Makefile中 <strong>SSL_TREE</strong> 的路径：一般为 <em>/usr</em> 或<em>/usr/local</em> 。</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div></pre>
+ </p>
+
+<p><strong>2.ab</strong>
+<pre>ab -n 1000 -c 50 http://www.domain.com/test.php</pre>
+<pre>ab将同时向http://www.domain.com/test.php发出50个并发请求，共发出1000次。</pre>
+<pre>有用的信息：</pre>
+<pre>
+<pre>Requests per second:    75.45 [#/sec] (mean)</pre>
+</pre>
+<pre>每秒钟可以处理的请求数为75.45个</pre>
+<pre>
+<ul>
+	<li>若将请求数增加，看看服务器能否处理更大的压力，需要调节Apache的 <strong>MaxClients、ThreadsPerChild、MaxThreadsPerChild</strong> 等参数，基于httpd.conf中的MPM模块选择。</li>
+	<li>若本地服务器不是Apache，请使用其它测试方法。</li>
+</ul>
+</pre>
+<pre></pre></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -637,74 +750,6 @@ A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不
 	<li>在pg_hba.conf中加入访问<a href="http://www.54chen.com/c/89">数据库</a>的服务器的IP。如，IP=10.62.130.136，在pg_hba.conf的最后加入 host all  all 10.62.130.136/32 trust</li>
 </ul>
 <!-- end content --></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/21/pgpool%E5%AE%89%E8%A3%85/">Pgpool安装</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><pre class="cmd">下载地址：http://pgfoundry.org/projects/pgpool/
-文件为：pgpool-II-2.0.1.tar，tar xvfj pgpool-II-2.0.1.tar
-在pgpool-II-2.0.1目录下，执行./configure --prefix=/home/y/share/pgsql ----with-pgsql=/home/y/share/pgsql,
-要求with-pgsql目录必须为<a href="http://www.54chen.com/c/101">pgsql</a>安装目录。
-之后执行gmake,sudo gmake install;
-pgpool需要用PCP命令来连接数据库检索数据，其用户名、密码是在pcp.conf文件中保存的。密码是经过md5加密的，需要用户手工输入。
-cp /home/y/share/pgsql/etc/pcp.conf.sample /home/y/share/pgsql/etc/pcp.conf
-md5加密码可以用/home/y/share/pgsql/bin/pg_md5直接生成 ：例/home/y/share/pgsql/bin/pg_md5 postgres 
-结果为e8a48653851e28c69d0506508fb27fc5
-将用户名，密码记入到pcp.conf文件中。
-pcp默认端口为pcp_port = 9898。可以在pgpool.conf文件内修改
-cp /home/y/share/pgsql/etc/pgpool.conf.sample /home/y/share/pgsql/etc/pgpool.conf,默认连接端口为port = 9999，
-默认只允许本地连接，listen_addresses = 'localhost'，
-如果需要所有ip可连接，可改为listen_addresses = '*'。
-cp /home/y/share/pgsql/etc/pool_hba.conf.sample /home/y/share/pgsql/etc/pool_hba.conf,</pre></p>
-
-<p>添加远端连接 host    all    all     0.0.0.0/0   trust.</p>
-
-<p>添加pgsql节点<br />
-backend_hostname0 = &#8216;phx6.sds.cnb.yahoo.com&#8217;<br />
-backend_port0 = 5432<br />
-backend_weight0 = 1<br />
-backend_hostname1 = &#8216;phx7.sds.cnb.yahoo.com&#8217;<br />
-backend_port1 = 5432<br />
-backend_weight1 = 1</p>
-
-<p>如果需要开启多级拷贝功能需要设置replication_mode = true<br />
-如果需要开启负载均衡功能需要设置load_balance_mode = true</p>
-
-<p>启动pgpool<br />
-pgpool -n -d &gt; /tmp/pgpool.log 2&gt;&amp;1 &amp;<br />
-关闭pgpool<br />
-pgpool stop</p>
 </div>
   
   
