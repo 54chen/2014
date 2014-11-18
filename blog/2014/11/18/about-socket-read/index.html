@@ -121,9 +121,9 @@
 <li>read函数是负责从fd中读取内容.</li>
 <li>当读成功时, read返回实际所读的字节数</li>
 <li><p>如果返回的值是0 表示已经读到文件的结束了,小于0表示出现了错误。</p></li>
-<li><p>可以同时检查errno:     <br/>
-<strong> 如果错误为EINTR(值为4)说明读是由中断引起的
-</strong> 如果是ECONNREST表示网络连接出了问题</p></li>
+<li><p>可以同时检查errno:</p></li>
+<li>如果错误为EINTR(值为4)说明读是由中断引起的</li>
+<li>如果是ECONNREST表示网络连接出了问题</li>
 </ul>
 
 
