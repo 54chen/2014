@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-12-11 velocity2011讲师经验总结及velocity2011的ppt下载 http://t.co/92LBh44l #
-移动互联网api设计实践 http://t.co/D7ARuqWo #
-明天参加velocity的朋友， &hellip;">
+  <meta name="description" content="Maven插件编写实例 概况
+实现一个自定义的类，必须要继承自 org.apache.maven.plugin.AbstractMojo，同时实现execute方法。
+maven使用了在注释中写代码，BT的写法，所以注释里的@goal @parameter都是有含义的。 实例
+mvn&nbsp; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +76,76 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/14/maven-plugin/">Maven插件编写实例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://maven.apache.org/images/maventxt_logo_200.gif" alt="apache maven" /></p>
+
+<p><strong>概况</strong>
+实现一个自定义的类，必须要继承自 org.apache.maven.plugin.AbstractMojo，同时实现execute方法。<br />
+maven使用了在注释中写代码，BT的写法，所以注释里的@goal @parameter都是有含义的。</p>
+
+<p><strong>实例</strong>
+<div class="chen-hl"><ol class="dp-j" start="1"><li class="alt"><span><span>mvn&nbsp;hello:gogo&nbsp;&nbsp;</span></span></li></ol></div>
+这样的一个命令，到代码里，应该是如下过程</p>
+
+<p><strong>进入</strong>
+hello被叫做plugin的prefix，maven会去寻找以hello开头的插件。<br />
+在插件的pom里必须定义其名字为hello开头的，例如：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>hello-maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>goal目标</strong>
+hello后面的gogo叫做goal，目标，则以注释中写代码的方式来完成：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">*@goal&nbsp;gogo</span>&nbsp;</span></li><li class="alt"><span><span class="comment">**/</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>HelloMojo&nbsp;<span class="keyword">extends</span><span>&nbsp;AbstractMojo&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>需要的依赖</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.apache.maven</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>maven-plugin-api</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>3.0.3</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>必需的选项</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">packaging</span><span class="tag">&gt;</span><span>maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">packaging</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+必需要是maven-plugin才能成功。</p>
+
+<p><strong>参数</strong>
+如果要传什么参数给插件，应该是
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">*&nbsp;if&nbsp;false&nbsp;all&nbsp;compression&nbsp;is&nbsp;off&nbsp;(default&nbsp;is&nbsp;true)</span>&nbsp;</span></li><li class="alt"><span><span class="comment">*</span>&nbsp;</span></li><li class=""><span><span class="comment">*&nbsp;@parameter&nbsp;expression=&#8221;${hello.enabled}&#8221;&nbsp;default-value=&#8221;true&#8221;</span>&nbsp;</span></li><li class="alt"><span><span class="comment">*/</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">private</span><span>&nbsp;Boolean&nbsp;enabled=</span><span class="keyword">true</span><span>;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>使用时项目定义</strong>
+然后在使用的项目里，需要定义的有
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">plugin</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>demo-maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">configuration</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">goalPrefix</span><span class="tag">&gt;</span><span>hello</span><span class="tag">&lt;/</span><span class="tag-name">goalPrefix</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">enabled</span><span class="tag">&gt;</span><span>false</span><span class="tag">&lt;/</span><span class="tag-name">enabled</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">configuration</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">plugin</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>然后执行上述命令时自然可以执行HelloMojo的execute方法。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -516,72 +587,6 @@ quercus记录：php使用连接池访问数据库 </ul><a href="http://t.co/KhR0
 54chen Twitter memo 2011-10-30 <a href="http://t.co/AddQugsn" rel="nofollow">http://t.co/AddQugsn</a> <a href="http://twitter.com/54chen/statuses/130462815726211072" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/04/quercus-php-connect-pool/">Quercus记录：php使用连接池访问数据库</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-04T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://www.caucho.com/wp-content/themes/caucho/images/caucho-logo.png" alt="java php quercus" />
-上周记录了如何用quercus建立混合型项目。
-<a href="http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html">http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html</a>
-这里来说说与数据库的访问，使用jndi得到连接池的好处。</p>
-
-<p><strong>JNDI</strong>
-(Java Naming and Directory Interface)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI SPI的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互。</p>
-
-<p><strong>正题</strong>
-在quercus中可以随意使用mysql_connect与mysql_pconnect两个方法来连接数据库。<br />
-当在web.xml定义得有database相关的消息时，mysql_connect与mysql_pconnect都会自动忽略里面的参数设置，直接使用web.xml的定义。</p>
-
-<p><strong>添加jndi设置：</strong>
-vim WEB-INF/web.xml
-<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span>&nbsp;</span><span class="attribute">version</span><span>=</span><span class="attribute-value">&#8220;1.0&#8221;</span><span>&nbsp;</span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">&#8220;utf-8&#8221;</span><span class="tag">?&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">web-app</span><span>&nbsp;&nbsp;</span><span class="attribute">xmlns</span><span>=</span><span class="attribute-value">&#8220;http://caucho.com/ns/resin&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>truth&nbsp;application</span><span class="tag">&lt;/</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">database</span><span>&nbsp;</span><span class="attribute">jndi-name</span><span>=</span><span class="attribute-value">&#8220;jdbc/mysql&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;com.mysql.jdbc.Driver&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://192.168.1.5:3306/truth?</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">true</span><span>&amp;amp;</span><span class="attribute">characterEncoding</span><span>=</span><span class="attribute-value">utf</span><span>-8</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>你的用户名</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>你的密码</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">init-param</span><span>&nbsp;</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">&#8220;true&#8221;</span><span class="tag">/&gt;</span><span>&nbsp;</span><span class="comments">&lt;!&#8211;实践证明这个是不管用的，因为quercus写土了，全用的latin1字符集，后面再说&#8211;&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
-使用的是resin4，需要继续在web.xml的servlet段里增加：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>database</span><span class="tag">&lt;/</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
-这里注意，param-value与上面的jndi-name对应，mysql_connnect函数在web.xml里有这个init-param的定义的时候，将使用对应的jndi的设置。由此可得到连接池的好处。</p>
-
-<p>上面的例子只使用了jdbc的基础驱动，如果向下面的配置，自然就得到了pool:
-<strong>例子1:</strong>
-<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;</span><span class="tag">&lt;</span><span class="tag-name">type</span><span class="tag">&gt;</span><span>com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource</span><span class="tag">&lt;/</span><span class="tag-name">type</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://localhost:3306/dbname</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>username</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>password</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">init-param</span><span>&nbsp;</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">&#8220;true&#8221;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p><strong>例子2:</strong>
-    <div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;org.gjt.mm.mysql.Driver&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://localhost:3306/test</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prepared-statement-cache-size</span><span class="tag">&gt;</span><span>8</span><span class="tag">&lt;/</span><span class="tag-name">prepared-statement-cache-size</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">max-connections</span><span class="tag">&gt;</span><span>20</span><span class="tag">&lt;/</span><span class="tag-name">max-connections</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">max-idle-time</span><span class="tag">&gt;</span><span>30s</span><span class="tag">&lt;/</span><span class="tag-name">max-idle-time</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>这些简单的配置，都可以让php轻松跑在连接池上。
-<strong>问题所在：</strong>
-quercus写土了，没有在用户设置为unicode的时候来解析用户的输入，到处是hard code的latin1。（本来在GAE里使用这东西的人挺多的，可惜吧，AGE被盾了，然后quercus反馈latin1问题的人也不多，唉。）
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>com.caucho.quercus.lib.db.JdbcConnectionResource:&nbsp;</span><span class="number">94</span><span>&nbsp;&nbsp;</span><span class="number">348</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>com.caucho.quercus.lib.db.Mysqli:<span class="number">229</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
-上面三处修改为utf8即可。</p>
 </div>
   
   
