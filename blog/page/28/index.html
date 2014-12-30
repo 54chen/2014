@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-08-01 54chen Twitter memo 2010-07-25 http://goo.gl/fb/HIrSu # 关掉所有的im 只留下twitter 如何？ # 不断加大的长江洪涝，犹如不断增长的业务访问量，偷工减料弄出来的各种工程， &hellip;">
+  <meta name="description" content="使用maven的profiles自动设置log4j线上环境和测试环境区别 前言
+Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具. 　　如果你已经有十次输入同样的Ant targets来编译你的代码、jar或者war、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,92 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/04/maven-profiles-log4j/">使用maven的profiles自动设置log4j线上环境和测试环境区别</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img06.taobaocdn.com/imgextra/i6/T12CBHXXpLXXcRqLZ7_064514.jpg" alt="程序猿" /></p>
+
+<p><strong>前言</strong>
+Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具. 　　如果你已经有十次输入同样的Ant  targets来编译你的代码、jar或者war、生成javadocs，你一定会自问，是否有一个重复性更少却能同样完成该工作的方法。Maven便提 供了这样一种选择，将你的注意力从作业层转移到项目管理层。Maven项目已经能够知道如何构建和捆绑代码，运行测试，生成文档并宿主项目网页.<br />
+项目的主页地址为：http://maven.apache.org/</p>
+
+<p><strong>深入</strong>
+Profiles是maven的一个很关键的术语：profile是用来定义一些在build lifecycle中使用的environmental variations，profile可以设置成在不同的环境下激活不同的profile（例如：不同的OS激活不同的profile，不同的JVM激活不同的profile，不同的dabase激活不同的profile等等）。</p>
+
+<p><strong>实例</strong>
+测试机环境，搞一个文件，比如说/data/test。<br />
+线上环境，不搞这个文件。<br />
+然后pom在project下如下写法：
+<blockquote>&lt;profiles&gt;<br />
+&lt;profile&gt;<br />
+&lt;id&gt;produce&lt;/id&gt;<br />
+&lt;activation&gt;<br />
+&lt;activeByDefault&gt;false&lt;/activeByDefault&gt;<br />
+&lt;file&gt;<br />
+&lt;missing&gt;/data/test&lt;/missing&gt;<br />
+&lt;/file&gt;<br />
+&lt;/activation&gt;<br />
+&lt;properties&gt;<br />
+&lt;log4j.log.path&gt;/opt/logs/xxx.log&lt;/log4j.log.path&gt;<br />
+&lt;log4j.debug.level&gt;error&lt;/log4j.debug.level&gt;<br />
+&lt;/properties&gt;<br />
+&lt;/profile&gt;<br />
+&lt;profile&gt;<br />
+&lt;id&gt;dev&lt;/id&gt;<br />
+&lt;activation&gt;<br />
+&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;<br />
+&lt;/activation&gt;<br />
+&lt;properties&gt;<br />
+&lt;log4j.log.path&gt;/opt/logs/xxx.log&lt;/log4j.log.path&gt;<br />
+&lt;log4j.debug.level&gt;debug&lt;/log4j.debug.level&gt;<br />
+&lt;/properties&gt;<br />
+&lt;/profile&gt;<br />
+&lt;/profiles&gt;</blockquote>
+<strong>log4j.xml文件设置</strong>
+为了配合maven的设置属性，需要将log4j中使用的声明用成变量，片段举例：
+<blockquote>﻿&lt;logger name=&#8221;com.xx.xx.xx.xx&#8221; additivity=&#8221;false&#8221;&gt;<br />
+&lt;level value=&#8221;${log4j.debug.level}&#8221;/&gt;<br />
+&lt;appender-ref ref=&#8221;dao&#8221;/&gt;<br />
+&lt;/logger&gt;</blockquote></p>
+
+<p>&lt;root&gt;<br />
+&lt;level value=&#8221;${log4j.debug.level}&#8221;/&gt;<br />
+&lt;appender-ref ref=&#8221;service&#8221;/&gt;<br />
+&lt;/root&gt;
+<strong>解释</strong>
+这样，在运行mvn进行build项目的时候，如果线上环境，测试到/data/test文件是missing的，则会激活对应的设置，以此来达到线上环境改成error级别，而测试环境为debug级别。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -759,58 +846,6 @@ sql1的运行示意图如图2所示：
 <p><div id="__ss_4691046" style="width: 425px;"><strong style="display:block;margin:12px 0 4px"><a title="Ria的强力后盾：rest+海量存储 " href="http://www.slideshare.net/54chen/riarest-4691046">Ria的强力后盾：rest+海量存储 </a></strong><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="id" value="__sse4691046" /><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="src" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=riarest-100706024216-phpapp01&amp;stripped_title=riarest-4691046" /><embed id="__sse4691046" type="application/x-shockwave-flash" width="425" height="355" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=riarest-100706024216-phpapp01&amp;stripped_title=riarest-4691046" allowscriptaccess="always" allowfullscreen="true"></embed></object>
 <div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/54chen">zhen chen</a>.</div>
 </div></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/07/04/54chen-twitter-memo-2010-07-04/">54chen Twitter Memo 2010-07-04</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-07-04T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-	<li>54chen Twitter memo 2010-06-27 <a href="http://goo.gl/fb/COMLl" rel="nofollow">http://goo.gl/fb/COMLl</a> <a href="http://twitter.com/54chen/statuses/17129572339">#</a></li>
-	<li>@<a href="http://twitter.com/hongqn">hongqn</a> 这小子走穴去了 还是业务交流去了？ <a href="http://twitter.com/hongqn/statuses/17239313297">in reply to hongqn</a> <a href="http://twitter.com/54chen/statuses/17240648578">#</a></li>
-	<li>谁TM这么抠门 不开空调的 诅咒他。。。  就因为没开空调  一个makefile让我写了一天 <a href="http://twitter.com/54chen/statuses/17240688802">#</a></li>
-	<li><a href="http://www.infoq.com/cn/vendorcontent/show.action?vcr=1014" rel="nofollow">http://www.infoq.com/cn/vendorcontent/show.action?vcr=1014</a>  Qclub本周六在知春路京仪大酒店举行，我给沙龙参会者分享来自人人网nuclear的开发经验以及如何运用在RIA上 <a href="http://twitter.com/54chen/statuses/17241537658">#</a></li>
-	<li>@<a href="http://twitter.com/lixiaoshuan">lixiaoshuan</a> 哈哈，这次是去哪里了 <a href="http://twitter.com/lixiaoshuan/statuses/17320800627">in reply to lixiaoshuan</a> <a href="http://twitter.com/54chen/statuses/17321015430">#</a></li>
-	<li>有图有真相 <a href="http://url.cn/4aEKWk" rel="nofollow">http://url.cn/4aEKWk</a> <a href="http://twitter.com/54chen/statuses/17380088988">#</a></li>
-	<li>近期分布式相关文章汇总 <a href="http://goo.gl/fb/43yRz" rel="nofollow">http://goo.gl/fb/43yRz</a> <a href="http://twitter.com/54chen/statuses/17425470166">#</a></li>
-	<li>这个叫kanrss的网站十分讨厌，机器人发广告不说，又是垃圾邮件又是gtalk的，让人厌恶 <a href="http://twitter.com/54chen/statuses/17458089752">#</a></li>
-	<li>热烈庆祝中国共产党成立89周年和香港回归13周年和我24周年！ <a href="http://twitter.com/54chen/statuses/17458940358">#</a></li>
-	<li>@<a href="http://twitter.com/wolfdeng">wolfdeng</a> taobao不是有tair项目吗，为啥来测这个？ <a href="http://twitter.com/wolfdeng/statuses/17534793230">in reply to wolfdeng</a> <a href="http://twitter.com/54chen/statuses/17535288153">#</a></li>
-	<li>事实证明，在谷歌这样的公司写程序写久了，很容易成为同性恋  700 <a href="http://twitter.com/54chen/statuses/17536782649">#</a></li>
-	<li>@<a href="http://twitter.com/xmpp">xmpp</a> 还不知图老师@turingbook真身什么样子呢 <a href="http://twitter.com/xmpp/statuses/17550294934">in reply to xmpp</a> <a href="http://twitter.com/54chen/statuses/17550800605">#</a></li>
-	<li>长角的动物都不是食肉动物。一群人中最安静的人往往最有实力。“动如火掠，不动如山。” <a href="http://twitter.com/54chen/statuses/17550910054">#</a></li>
-	<li>@<a href="http://twitter.com/LeyonCN">LeyonCN</a> 舔 这个词用得何其精妙 <a href="http://twitter.com/LeyonCN/statuses/17557914584">in reply to LeyonCN</a> <a href="http://twitter.com/54chen/statuses/17557982551">#</a></li>
-</ul>
-</p>
 </div>
   
   

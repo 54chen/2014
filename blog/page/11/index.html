@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-04-15 看来小米做得还不错，一没弄清楚情况的猎头哥们，还以为我还在人人网，一说我在移动互联网公司，就问是不是小米。 #
-如果被疼讯抄袭可以用来做为融资时证明价值的一个条目，还是不错的。 #
-http://t.co/d8udrNbQ 呸，丢人 &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2012-04-22 收集最佳实践：在SOA框架（非msgQ）固定的情况下，messageQueue的位置应该是同SOA框架还是应该在各个service内部？ #
+54chen Twitter memo 2012-04-15 http://t.co/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +74,46 @@ http://t.co/d8udrNbQ 呸，丢人 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/04/22/54chen-twitter-memo-2012-04-22/">54chen Twitter Memo 2012-04-22</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-04-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+收集最佳实践：在SOA框架（非msgQ）固定的情况下，messageQueue的位置应该是同SOA框架还是应该在各个service内部？ </ul><a href="http://twitter.com/54chen/statuses/192954708309188609" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-04-15 <a href="http://t.co/BwRRIR44" rel="nofollow">http://t.co/BwRRIR44</a> <a href="http://twitter.com/54chen/statuses/191339414893502464" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -619,79 +658,6 @@ nohup bin/kafka-server-start.sh config/server.properties &</blockquote></p>
 54chen Twitter memo 2012-02-26 <a href="http://t.co/Yy27ICLV" rel="nofollow">http://t.co/Yy27ICLV</a> <a href="http://twitter.com/54chen/statuses/173608264712454144" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/02/27/scalable-reltime-search-senseidb/">分布式实时搜索方案介绍-senseidb</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-02-27T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://www.cgichina.com/uploads/allimg/c100706/12N3911E10-233O9.jpg" alt="linkedin senseidb" />
-<strong>名词解释</strong>
-zoie：由linkedin开源的建立在lucene之上提供实时索引的系统。它利用两 个内存索引一个硬盘索引来实现实时搜索。<br />
-bobo-browse：由linkedin开源的基于lucene的分类浏览搜索系统。<br />
-zookeeper：一个分布式的，开放源码的分布式应用程序协调服务，常用来做配置服务。<br />
-senseidb：开源，分布式，实时，半结构化的数据库（官方网站上如是说）。实际上是一个将zoie、bobo-browse、zookeeper整合起来，提供各种方便的使用办法的一个项目。项目目标是达到简单易用的分布式实时搜索系统。<br />
-kafka：由linkedin开源的高吞吐量的消息系统。<br />
-norbert：norbert是一个提供分布式集群服务的开发框架，具备集群管理功能，对开发简单的通信架构，易扩展能承受高吞吐量的框架。scala实现，java无缝使用。其原理是：netty+zookeeper+pb。<br />
-IKAnalyzer：中文分词较好用的一个。<br />
-lucene：这个不用说了。</p>
-
-<p><strong>使用senseidb</strong>
-1.解决中文分词问题<br />
-senseidb支持在配置上进行自定义analyzer。<br />
-要做的事情就是，建立一个jar包，里面只要一个类即可，依赖IKA的包。代码如下：
-<div class="chen-hl"><div class="bar"></div><ol start="1" class="dp-j"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;IKAnalyzerFactory&nbsp;</span><span class="keyword">implements</span><span>&nbsp;SenseiPluginFactory&lt;IKAnalyzer&gt;&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;IKAnalyzer&nbsp;getBean(Map&lt;String,&nbsp;String&gt;&nbsp;initProperties,&nbsp;String&nbsp;fullPrefix,&nbsp;SenseiPluginRegistry&nbsp;pluginRegistry)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">new</span><span>&nbsp;IKAnalyzer();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p>将此jar包放于sensei/conf/ext目录下，修改定义文件sensei.properties:<br />
-sensei.index.analyzer.class = 上述jar包的全packagename classname</p>
-
-<p>2.使用kafka数据源<br />
-在senseidb中有个叫gateway的概念，定义了数据源（实时的写入删除等）。<br />
-修改定义文件sensei.properties：<br />
-sensei.gateway.class=com.senseidb.gateway.kafka.KafkaDataProviderBuilder<br />
-这个class存在于sensei-trunk/sensei-gateway，打包扔进conf/ext即可。</p>
-
-<p>在具体业务中传入数据：
-<div class="chen-hl"><div class="bar"></div><ol start="1" class="dp-j"><li class="alt"><span><span>Properties&nbsp;props&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;Properties();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;props.put(<span class="string">&#8220;zk.connect&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;your&nbsp;zk&nbsp;server:2181&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;props.put(<span class="string">&#8220;serializer.class&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;kafka.serializer.StringEncoder&#8221;</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ProducerConfig&nbsp;config&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;ProducerConfig(props);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Producer&lt;String,&nbsp;String&gt;&nbsp;producer&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Producer&lt;String,&nbsp;String&gt;(config);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">int</span><span>&nbsp;i&nbsp;=&nbsp;(</span><span class="keyword">int</span><span>)&nbsp;(Math.random()&nbsp;*&nbsp;</span><span class="number">10000</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JSONObject&nbsp;jo&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;JSONObject();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jo.put(<span class="string">&#8220;thread_id&#8221;</span><span>,&nbsp;i);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jo.put(<span class="string">&#8220;hot_id&#8221;</span><span>,&nbsp;i&nbsp;+&nbsp;</span><span class="number">300</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jo.put(<span class="string">&#8220;user_id&#8221;</span><span>,&nbsp;i&nbsp;+&nbsp;</span><span class="number">1000</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jo.put(<span class="string">&#8220;type&#8221;</span><span>,&nbsp;i);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jo.put(<span class="string">&#8220;subject&#8221;</span><span>,&nbsp;</span><span class="string">&#8220;这是一个标题&#8221;</span><span>&nbsp;+&nbsp;index);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;jo.put(<span class="string">&#8220;contents&#8221;</span><span>,&nbsp;index);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(i);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;msg&nbsp;=&nbsp;jo.toString();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;The&nbsp;message&nbsp;is&nbsp;sent&nbsp;to&nbsp;a&nbsp;randomly&nbsp;selected&nbsp;partition&nbsp;registered&nbsp;in&nbsp;ZK</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ProducerData&lt;String,&nbsp;String&gt;&nbsp;data&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;ProducerData&lt;String,&nbsp;String&gt;(</span><span class="string">&#8220;hotTopic&#8221;</span><span>,&nbsp;msg);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producer.send(data);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;producer.close();&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p>3.索引配置<br />
-conf/schema.xml文件中定义了两种结构，一个是table一个是facets。<br />
-table的column定义了每个字段。<br />
-如下的一个定义，配合了2中的写入：
-<div class="chen-hl"><div class="bar"></div><ol start="1" class="dp-xml"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">table</span><span>&nbsp;</span><span class="attribute">uid</span><span>=</span><span class="attribute-value">&#8220;thread_id&#8221;</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">column</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;hot_id&#8221;</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;long&#8221;</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">column</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;user_id&#8221;</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;long&#8221;</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">column</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;type&#8221;</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;int&#8221;</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">column</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;subject&#8221;</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;sring&#8221;</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!&#8211;&nbsp;attributes:&nbsp;indexed,store,termvector&nbsp;are&nbsp;only&nbsp;used&nbsp;when&nbsp;type&nbsp;is&nbsp;text&nbsp;&#8211;&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">column</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">&#8220;contents&#8221;</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">&#8220;text&#8221;</span><span>&nbsp;</span><span class="attribute">index</span><span>=</span><span class="attribute-value">&#8220;ANALYZED&#8221;</span><span>&nbsp;</span><span class="attribute">store</span><span>=</span><span class="attribute-value">&#8220;YES&#8221;</span><span>&nbsp;</span><span class="attribute">termvector</span><span>=</span><span class="attribute-value">&#8220;YES&#8221;</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">table</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p><strong>可供选择的其他分布式实时搜索方案</strong>
-Katta：基于Lucene可伸缩分布式实时搜索方案，最早的方案。<br />
-Solandra：实时分布式搜索引擎，把solr与Cassandra集合在一起的一个方案。</p>
 </div>
   
   

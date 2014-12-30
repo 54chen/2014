@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-12-11T18:05:18+08:00</updated>
+  <updated>2014-12-30T16:18:31+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,74 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Vpn搭建及pptpd因mtu上传下载慢一例]]></title>
+    <link href="http://2014.54chen.com/blog/2014/12/30/pptpd-scp-slow/"/>
+    <updated>2014-12-30T14:31:30+08:00</updated>
+    <id>http://2014.54chen.com/blog/2014/12/30/pptpd-scp-slow</id>
+    <content type="html"><![CDATA[<p><img src=http://img04.taobaocdn.com/imgextra/i4/T1BgpOXhlKXXb04jU7_065317.jpg></p>
+
+<h2>一、环境及安装</h2>
+
+<ul>
+<li>server: centos 6.3 （kvm虚拟机）。</li>
+<li>client: ubuntu 10.04。</li>
+<li><p>server上yum install安装pptpd，常规设置好ip分配、用户名密码，添加iptables set mss的参数。</p>
+
+<blockquote><p>设置/etc/pptpd.conf中的localip与remoteip，分别表示虚拟出来的双方ip范围。
+<br>设置/etc/ppp/chap-secrets中的用户名密码和连接ip等。
+<br>service pptpd start
+<br>iptables -A FORWARD -p tcp &mdash;syn -s 172.16.36.0/24 -j TCPMSS &mdash;set-mss 1356</p></blockquote></li>
+<li><p>client上apt-get install安装的pptpsetup，设置好用户名密码，启动vpn连接。</p>
+
+<blockquote><p>/usr/sbin/pptpsetup &mdash;create vpn &mdash;server <em>.</em>.<em>.</em>(server ip) &mdash;username vpn &mdash;password ASDF &mdash;encrypt &mdash;start</p></blockquote></li>
+<li><p>pptpd v1.4.0</p></li>
+</ul>
+
+
+<h2>二、遇到困难</h2>
+
+<ul>
+<li>scp client_file server 时，速度先很快，级数变慢，最后不动了。</li>
+<li>scp server_file client 时，同上表现。</li>
+</ul>
+
+
+<!--more-->
+
+
+<ul>
+<li>因为server处在vm中（某云主机）。</li>
+<li>server最后的公网ip并不在eth0，而是由母机网卡决定。</li>
+<li>server的iptable看上去并不生效。</li>
+</ul>
+
+
+<h2>三、联想</h2>
+
+<ul>
+<li>vpn慢的原因，最大可能是虚拟出的网络mtu大过了中间的网络mtu值。</li>
+<li>猜测是双方的虚拟网卡上的mtu与实际的网络有差别。</li>
+<li>分别在server client执行netstat -i。</li>
+<li>可以看到ppp0默认的mtu值都在1496左右（真实网卡是1500），找到真凶。</li>
+</ul>
+
+
+<h2>四、解决</h2>
+
+<ul>
+<li>server: /etc/ppp/options.pptpd 最后一行添加 mtu 1300，解决下载慢。</li>
+<li><p>client: ifconfig ppp0 mtu 1300 解决上传慢的问题。</p></li>
+<li><p>MTU:Maximum Transmission Unit 网络上传送的最大数据包，单位字节，默认一般是1500。</p></li>
+<li>大于mtu的包，在系统层会被拆成多个来发。</li>
+<li>各层级的网络路由设备，会协商大家的mtu，选择一个最小的。</li>
+<li>协商mtu的时候要发送ICMP包，很多厂商的防火墙会关闭它的传输（防ddos等）。真凶在此。</li>
+<li>在无法实现协商mtu的时候，各种事件都会影响mtu的确定，实际表现为在传大文件的时候，寻找mtu的过程中，数据包丢了。原理在此。</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[BLUNO试用手记]]></title>
@@ -635,122 +703,6 @@ void numd()<br />
 
 
 <p></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Arduino学习手记二：写程序控制灯控制蜂鸣器红外]]></title>
-    <link href="http://2014.54chen.com/blog/2013/07/03/arduino-starter-2-led/"/>
-    <updated>2013-07-03T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/07/03/arduino-starter-2-led</id>
-    <content type="html"><![CDATA[<p><a href="http://www.54chen.com/_linux_/arduino-starter-1.html">在上一节中</a>，初步领会了基础精神，对电路板和ide有了一点感觉。<br />
-这里的目标是完成一个电路，通过红外传感头，用摇控器控制LED灯和蜂鸣器。</p>
-
-
-
-
-<p><strong>Arduino Libraries</strong>
-arduino库函数，是一堆c/c++写的代码库，一般用来做一些固定的事情，对arduino的能力进行扩展，有点像php里的各种扩展，当然你也可以实现自己的库。</p>
-
-
-
-
-<p>在arduino代码中要使用库的时候，依次选sketch->import Library->xxx，它会自动在代码头上加上#include的代码。</p>
-
-
-
-
-<p>同时，也可以下载一个library.zip包，依次选择sketch->import Library->add Library，然后就加入了新的库。</p>
-
-
-
-
-<p>要在arduino IDE环境中删除一个已经引入的库，1.0.5及以上版本的IDE需要去～/documents/arduino/libraries下删除对应的目录(相传windows在C:/.../我的文档/arduino/libraries)。</p>
-
-
-
-
-<p><strong>IRremote库简介</strong>
-官方网站：<a href="http://www.pjrc.com/teensy/td_libs_IRremote.html">http://www.pjrc.com/teensy/td_libs_IRremote.html</a>
-作者：Ken Shirriff<br />
-作用：接收和发送红外控制的代码库</p>
-
-
-
-
-<p><strong>接线</strong>
-GND接线略去不提，220欧电阻＋LED灯之后，将LED接数字11。<br />
-蜂鸣器接数字10。<br />
-红外OUT接数字8。</p>
-
-
-
-
-<p>这里要提一下，红外接收头的圆鼓包的一面面向自己，最左一脚为OUT，中间为GND，最右为5V。</p>
-
-
-
-
-<p>如图所示：
-<img src="http://ww3.sinaimg.cn/bmiddle/663fba41jw1e68t7z3gr6j20f10qodgt.jpg" alt="arduino" /></p>
-
-
-
-
-<p><strong>程序</strong>
-<blockquote>#include <irremote.h /></blockquote></p>
-
-
-
-
-<p>#define LED 11<br />
-#define BIZZER 10<br />
-#define IR_IN 8 //红外接收</p>
-
-
-
-
-<p>IRrecv irrecv(IR_IN);   // 定义IRrecv 对象来接收红外线信号<br />
-decode_results results;   //解码结果放在decode_results构造的对象results里</p>
-
-
-
-
-<p>void setup()<br />
-{
-  pinMode(BIZZER,OUTPUT); <br />
-  pinMode(LED,OUTPUT); <br />
-  Serial.begin(9600);<br />
-  irrecv.enableIRIn(); // Start the receiver<br />
-}</p>
-
-
-
-
-<p>void loop()<br />
-{
-  if (irrecv.decode(&results)) {<br />
-    Serial.println(results.value, HEX);<br />
-    irrecv.resume(); // Receive the next value<br />
-    digitalWrite(BIZZER,HIGH);<br />
-    digitalWrite(LED,HIGH);<br />
-    delay(50);</p>
-
-
-
-
-<p>    digitalWrite(BIZZER,LOW);<br />
-    digitalWrite(LED,LOW);<br />
-    delay(1050);<br />
-  } <br />
-}</p>
-
-
-
-
-<p><strong>效果</strong>
-按摇控器，蜂鸣器响一下同时灯闪一下。IRemote简化了大量的代码。</p>
 
 ]]></content>
   </entry>

@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="过年十天技术阅读推荐汇总 Feb 13th, 2014 春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。 @温高铁 各种数据库连接池性能对比 http://t.cn/zjVqSNg 结论:1) Druid是性能最好的数据库连接池， &hellip;">
+  <meta name="description" content="更新nginx版本upstream升级http1.1解决多TIME_WAIT问题 Feb 26th, 2014 前情提要 在使用java web container的时候，我们都在前面挡一层nginx，方便使用各种nginx的功能，设置成代理。
+访问特别多的时候发现， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/02/26/nginx-upstream-1-dot-0-to-1-dot-1/">更新nginx版本upstream升级http1.1解决多TIME_WAIT问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-02-26T10:27:02+08:00" pubdate data-updated="true">Feb 26<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><h2>前情提要</h2>
+
+<p>在使用java web container的时候，我们都在前面挡一层nginx，方便使用各种nginx的功能，设置成代理。
+访问特别多的时候发现，服务器上存在大量的TIME_WAIT状态的连接。
+经分析，可能是nginx早期版本的upstream还是使用的1.0的短连接代理，java container老是以1.0的方式主动断开进入TIME_WAIT状态，浪费了大量的连接。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/02/26/nginx-upstream-1-dot-0-to-1-dot-1/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -495,48 +541,6 @@ cmwap cmnet这样的词语以后应该都会消失在人世间。三年前，经
   
     <footer>
       <a rel="full-article" href="/blog/2013/10/17/mi-trap/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/08/upai-cdn-test/">又拍云cdn试用体验</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-10-08T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg" alt="54chen又拍云试用体验报告" /></p>
-
-<p><span style="font-size:33px;font-weight:bold">十</span>一之前，又拍云存储（upyun.com）市场部的谢静同学邮件我，让我试用又拍云的功能。之前在infoq或者是之类的技术讲座上有看到过又拍云的报道和技术架构讲解，印象还是不错的，本着支持创业提升期企业的态度，特写此文写下全部试用感受。</p>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/10/08/upai-cdn-test/">Read on &rarr;</a>
     </footer>
   
 

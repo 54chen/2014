@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="X200 ntfs硬盘安装ubuntu9.10正式版手记 09年10月31日，9.10发布了正式版本，科学院曾经出过两篇硬盘安装的手记，一个是8的一个是9.10测试版本的。地址是：
-[十一归来]ubuntu 9.10 硬盘安装手记
-ubuntu 8.10 desktop版本 硬盘安装手记 &hellip;">
+  <meta name="description" content="Ubuntu 9.10安装配置eclipse、subclipse、m2eclipse(svn插件和maven插件) ntfs硬盘安装ubuntu 9.10方案见：
+x200 ntfs硬盘安装ubuntu9.10正式版手记
+eclispe 3.51安装：
+sudo apt-get install &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +76,83 @@ ubuntu 8.10 desktop版本 硬盘安装手记 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/18/ubuntu-910-installation-to-configure-eclipse-subclipse-m2eclipse-svn-plug-ins-and-maven-plug-ins/">Ubuntu 9.10安装配置eclipse、subclipse、m2eclipse(svn插件和maven插件)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>ntfs硬盘安装ubuntu 9.10方案见：
+<a rel="bookmark" href="http://www.54chen.com/830-x200-ntfs-hard-disk-to-install-the-official-version-of-notes-from-ubuntu910/">x200 ntfs硬盘安装ubuntu9.10正式版手记</a>
+eclispe 3.51安装：
+<blockquote>sudo apt-get install eclipse</blockquote>
+整完会在应用程序中多出来一项“编程”。</p>
+
+<p>此时的eclipse是以自带的jre来运行的，后面的maven插件会要求eclipse在jdk里运行，而不是jre里，所以再安装一下jdk:
+<blockquote>sudo apt-get install sun-java6-jdk</blockquote>
+这样，jdk会安装到/usr/lib/jvm/java-6-sun</p>
+
+<p>然后修改eclipse.ini
+<blockquote>sudo vim /usr/lib/eclipse/eclipse.ini</blockquote>
+在-vmargs上一行加入：
+<blockquote>-vm<br />
+/usr/lib/jvm/java-6-sun-1.6.0.15/bin</blockquote></p>
+
+<p>(有回车)
+同时选择一下window-&gt;preferences-&gt;java-&gt;installed jres增加对应目录的jre</p>
+
+<p>然后开始 Help-&gt;install new software</p>
+
+<p>subclipse http://subclipse.tigris.org/update_1.2.x</p>
+
+<p>安装好subclipse。subclipse提供了svn的支持。</p>
+
+<p>然后同样安装m2eclipse插件：</p>
+
+<p>m2eclipse比较麻烦，需要依次安装的有：
+<blockquote>emf http://download.eclipse.org/modeling/emf/updates/releases/</blockquote></p>
+
+<p>cdt http://download.eclipse.org/tools/cdt/releases/new</p>
+
+<p>wtp http://download.eclipse.org/webtools/updates</p>
+
+<p>ajdt http://download.eclipse.org/tools/ajdt/34/update</p>
+
+<p>zest or GEF http://download.eclipse.org/tools/gef/updates/releases/</p>
+
+<p>mylyn http://download.eclipse.org/tools/mylyn/update/e3.4
+最后才是m2eclipse:
+<blockquote>http://m2eclipse.sonatype.org/update/</blockquote>
+注意，在安装过程中，有些update的url里有不止一个版本的选项，注意适当选取。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1080,137 +1158,6 @@ include fcgi.conf;<br />
 <p>官方发言的100W只需要0.4s，说的是写入的hash表，而且数据是纯线性的数字。</p>
 
 <p>提升速度和稳定的办法，和张宴兄弟商量，b+tree类型的数据稳定一些，设置tctdbsetxmsiz也能解决燃眉之急。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/10/24/tsinghua-huambo-fist-of-fury-review-environmental-elements-lamp/">清华万博-精武门 Lamp环境内容回顾</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-10-24T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>精武门版权所有，复制请标明：<a href="http://www.54chen.com/c/809">http://www.54chen.com/c/809</a></p>
-
-<p>第一部分：Linux基础</p>
-
-<p>因为大多数同学没有任何基础，此课程不得不放慢脚步，但不要担心，所涉及到的东西都会在课程中反复讲解。</p>
-
-<p>1.Linux指令：</p>
-
-<p>1.1 SecureCRT连Linux接服务器后，默认进入自己的用户目录下。&#8211;/home/xxxx/</p>
-
-<p>题外：</p>
-
-<p>目录的概念：.（一个点）当前目录 ..(两个点)上一级目录 &lt;以后不能再分不清楚这两个东西了哈&gt;</p>
-
-<p>相对目录和绝对目录：/home/zzz/相对于/home/来说就是zzz目录，就可以cd /home/后再cd zzz进入到/home/zzz （其中滋味要慢慢体会，只能体会，一定要体会清楚）</p>
-
-<p>1.2 Linux命令行</p>
-
-<p>命令[空格]参数1[空格]参数2[空格]。。。</p>
-
-<p>2.常用命令：</p>
-
-<p>cp a b &#8211;copy的简写 复制文件的意思，从a复制到b</p>
-
-<p>mkdir xxx &#8211;make directory的简写，新建文件夹的意思，建立一个叫xxx的文件夹</p>
-
-<p>ls &#8211;list的简写，显示当前文件夹下所有文件</p>
-
-<p>精武门版权所有，复制请标明：<a href="http://www.54chen.com/c/809">http://www.54chen.com/c/809</a></p>
-
-<p>第二部分：LAMP环境</p>
-
-<p>2.1 编译程序中的三板斧：</p>
-
-<p>configure 检测硬件，配置MakeFile文件</p>
-
-<p>make 编译</p>
-
-<p>make install 安装</p>
-
-<p>2.2 apache编译示例</p>
-
-<p>tar -zxvf 1.tar.gz  &#8211;解压源码包</p>
-
-<p>cd httpd-2.2/ &#8211;进入解压出来的目录</p>
-
-<p>./configure &#8211;prefix=/home/zz/apache</p>
-
-<p>make &amp;&amp; make install</p>
-
-<p>2.3 nginx + fast-cgi环境</p>
-
-<p>PHP编译安装：</p>
-
-<p>tar zxvf php-5.2.10.tar.gz<br />
-gzip -cd php-5.2.10-fpm-0.5.11.diff.gz | patch -d php-5.2.10 -p1<br />
-cd php-5.2.10<br />
-****<br />
-./configure &#8211;prefix=/home/zhen.chen/php &#8211;with-config-file-path=/home/zhen.chen/php/etc &#8211;with-iconv-dir=/usr/local &#8211;with-freetype-dir &#8211;with-jpeg-dir &#8211;with-png-dir &#8211;with-zlib &#8211;with-libxml-dir=/usr &#8211;enable-xml &#8211;disable-rpath &#8211;enable-discard-path &#8211;enable-safe-mode &#8211;enable-bcmath &#8211;enable-shmop &#8211;enable-sysvsem &#8211;enable-inline-optimization &#8211;with-curl &#8211;with-curlwrappers &#8211;enable-mbregex &#8211;enable-fastcgi &#8211;enable-fpm &#8211;enable-force-cgi-redirect &#8211;enable-mbstring &#8211;with-gd &#8211;enable-gd-native-ttf &#8211;with-openssl &#8211;enable-pcntl &#8211;enable-sockets &#8211;with-ldap &#8211;with-ldap-sasl &#8211;without-pear</p>
-
-<p>make &amp;&amp; make install<br />
-=========================================================================================================<br />
-nginx编译安装：</p>
-
-<p>tar -zxvf pcre-7.9.tar.gz<br />
-cd pcre-7.9<br />
-./configure<br />
-make &amp;&amp; make install<br />
-====================<br />
-cd ..<br />
-tar zxvf nginx-0.7.61.tar.gz<br />
-cd nginx-0.7.61<br />
-./configure &#8211;user=www &#8211;group=www &#8211;prefix=/home/xxx/nginx &#8211;with-http_stub_status_module &#8211;with-http_ssl_module<br />
-make &amp;&amp; make install<br />
-@@@@@@@@@@@@@@@@@@@@@@@@<br />
-增加www用户：<br />
-groupadd www<br />
-useradd -g www www</p>
-
-<p>=========================================<br />
-nginx+php fast cgi配置</p>
-
-<p>1. cp /home/zhen.chen/fcgi.conf /home/zzz/nginx/conf/<br />
-2. vi /home/zzzz/nginx/conf/nginx.conf<br />
-3.<br />
- location ~ .*&#46;(php|php5)?$<br />
-    {<br />
-      #fastcgi_pass  unix:/tmp/php-cgi.sock;<br />
-      fastcgi_pass  127.0.0.1:9000;<br />
-      fastcgi_index index.php;<br />
-      include fcgi.conf;<br />
-    }<br />
-4.<br />
-sudo /home/zzz/nginx/sbin/nginx</p>
-
-<p>精武门版权所有，复制请标明：<a href="http://www.54chen.com/c/809">http://www.54chen.com/c/809</a></p>
 </div>
   
   
