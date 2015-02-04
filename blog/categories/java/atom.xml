@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/java/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2014-12-30T16:18:31+08:00</updated>
+  <updated>2015-02-04T16:38:18+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,122 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Java IO在各版本中的提高]]></title>
+    <link href="http://2014.54chen.com/blog/2015/02/04/enhancements-in-java-io/"/>
+    <updated>2015-02-04T15:22:29+08:00</updated>
+    <id>http://2014.54chen.com/blog/2015/02/04/enhancements-in-java-io</id>
+    <content type="html"><![CDATA[<p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
+
+<h1>JDK8中的提高</h1>
+
+<p>在标准的（java.nio.charset.Charset）和扩展的charset实现方面，有许多改进。包括：</p>
+
+<ul>
+<li>SelectorProvider在Solaris上有新实现（基于Solaris事件端口机制）。这种SelectorProvider有可能在一些工作负荷下有可能会提升性能和扩展性。/dev/poll这种SelectorProvider依旧是默认的。要使用Solaris事件端口机制，启动的时候要设置系统属性java.nio.channels.spi.Selector为sun.nio.ch.EventPortSelectorProvider。</li>
+<li>将&lt;JDK_HOME>/jre/lib/charsets.jar文件大小减小。</li>
+<li>java.lang.String(byte[], *)构造函数和java.lang.String.getBytes()方法的性能改善。</li>
+</ul>
+
+
+<!--more-->
+
+
+<h1>JDK7中的提高</h1>
+
+<p>java.nio.file包和相关包，java.nio.file.attribute，提供了对文件I/O和进入文件系统全面的支持。Zip文件系统在JDK7也可用了。下面的资源提供了更多信息。</p>
+
+<ul>
+<li>手册中加入File I/O (NIO 2.0特性)。NIO是指non-blocking I/O。</li>
+<li>可以开发自定义的File System Provider。</li>
+<li>可直接使用的Zip File System Provider。</li>
+<li><Java home>/sample/nio/chatserver/目录下有些演示java.nio.file包的例子。</li>
+<li><Java home>/demo/nio/zipfs/目录下有些演示NIO.2 NFS的例子。</li>
+</ul>
+
+
+<p>另外，下面的改进也被引进：</p>
+
+<ul>
+<li>JDK7之前，要开direct buffer得使用java.nio.ByteBuffer.allocateDirect，会对齐在一页的范围里。JDK中，实现被修改了，申请到的direct buffer将不再是页对齐的。这样的好处是减少了内存的浪费，但会创建不少小的buffer。</li>
+</ul>
+
+
+<h1>JDK6中的提高</h1>
+
+<h2>java.io</h2>
+
+<p>一个新的类：</p>
+
+<ul>
+<li>Console</li>
+</ul>
+
+
+<p>为File提供了新的方法：</p>
+
+<ul>
+<li>为了解磁盘信息准备的方法：</li>
+<li>getTotalSpace()</li>
+<li>getFreeSpace()</li>
+<li>getUsableSpace()</li>
+<li>为设置权限准备的方法：</li>
+<li>setWritable</li>
+<li>setReadable</li>
+<li>setExecutable</li>
+<li><p>canExecute</p></li>
+<li><p>为IOException类增加了新的构造方法 IOException(String, Throwable) 和 IOException(Throwable)。</p></li>
+<li><p>File.isFile在windows的实现有变化。</p></li>
+</ul>
+
+
+<h2>java.nio</h2>
+
+<ul>
+<li><p>基于Linux epoll事件通知机制，有了 java.nio.channels.SelectorProvider的新实现。epoll在Linux2.6及以上的内核中才有。当有成千上万的SelectableChannels注册在一个Selector上时，基于epoll实现的SelectProvider比传统的能更可扩展。新的SelectorProvider实现会在2.6内核上默认使用。2.6以下的内核默认还是原来基于poll的实现。</p></li>
+<li><p>sun.nio.ch.disableSystemWideOverlappingFileLockCheck系统属性，设置了FileChannel要给一个文件加锁的时候，能不能多次加。</p></li>
+</ul>
+
+
+<h1>JDK5.0中的提高</h1>
+
+<h2>java.nio</h2>
+
+<ul>
+<li>新加javax.net.ssl.SSLEngine。之前只能用SSLSocket自己搞。</li>
+</ul>
+
+
+<h1>J2SDK1.4中的提高</h1>
+
+<h2>java.nio</h2>
+
+<ul>
+<li>在FileInputStream和FileOutputStream中添加了getChannel方法，返回FileChannel，添加了close方法。</li>
+<li>RadomAccessFile中也同上。</li>
+<li>为InputStreamReader和OutputstreamWriter类添加构造函数可传入Charset对象。添加了getEncoding方法。</li>
+</ul>
+
+
+<h2>java.nio</h2>
+
+<ul>
+<li>nio包被添加。</li>
+<li>JNI支持direct buffer添加了三个新方法。</li>
+</ul>
+
+
+<h1>过去的提高</h1>
+
+<ul>
+<li>java.io.File</li>
+<li>java.io包</li>
+<li>java.io charset相关</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[小米互娱招java工程师]]></title>
@@ -387,133 +503,6 @@ __EOF__</p>
 
 
 <p>Happy New Year!</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java 1.6.0_38-b05 Vm 20.13-b02优化手记]]></title>
-    <link href="http://2014.54chen.com/blog/2013/11/27/jvm/"/>
-    <updated>2013-11-27T00:00:00+08:00</updated>
-    <id>http://2014.54chen.com/blog/2013/11/27/jvm</id>
-    <content type="html"><![CDATA[<p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg" alt="jvm" /></p>
-
-
-
-
-<p><strong>基础：</strong>
-业务代码<br />
-rose框架（底层是spring）<br />
-resin4<br />
-java 1.6.0_38-b05<br />
-centos</p>
-
-
-<!-- more -->
-
-
-<p><strong>初始配置：</strong>
-只修改了以下三个值<br />
--Xmx5000M  // <font color="red">max的heap的大小。</font>
--Xms5000M  // <font color="red">min的heap的大小，就是一初始给的大小，不够先GC，还不够再加，直到max。</font>
--Xmn2000M  //<font color="red">young区的大小，一般来讲：heap=Y+O，P是额外的值。Sun推荐Y=heap*(3/8)。</font></p>
-
-
-
-
-<p><strong>gc情况解读：</strong>
-# jstat -gcutil 20538 1000 100<br />
-S0     S1     E      O      P     YGC     YGCT    FGC    FGCT     GCT<br />
-0.00  51.96  62.53  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
-0.00  51.96  69.83  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
-0.00  51.96  77.75  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
-0.00  51.96  85.79  73.42  99.93  35830 1554.778   185 1089.488 2644.266<br />
-0.00  51.96  92.35  73.42  99.93  35830 1554.778   185 1089.488 2644.266</p>
-
-
-
-
-<p>S0\S1是survivor区，就是没被gc掉的对象，在这两个survivor里来回导来导去，满足条件最后进行O区。<br />
-E是Eden区，E＋S0＋S1＝Y。<br />
-从jstat的数据看，这个机器大概15s发生一次YGC，很长时间没有FGC了（超过1天以上），而且P区已经99.93％使用了。</p>
-
-
-
-
-<p><strong>各区内存情况解读：</strong>
-<div id="_mcePaste">#jmap -heap 20538</div>
-<div id="_mcePaste">Attaching to process ID 20538, please wait...</div>
-<div id="_mcePaste">Debugger attached successfully.</div>
-<div id="_mcePaste">Server compiler detected.</div>
-<div id="_mcePaste">JVM version is 20.13-b02</div>
-<div id="_mcePaste">using thread-local object allocation.</div>
-<div id="_mcePaste">Parallel GC with 8 thread(s)</div>
-<div id="_mcePaste">Heap Configuration:</div>
-<div id="_mcePaste">MinHeapFreeRatio = 40 //<font color="red">如果连40％空闲都空不出来，就需要增加heap到xmx了。</font></div>
-<div id="_mcePaste">MaxHeapFreeRatio = 70 <span style="line-height: 19px;">//<font color="red">如果70％空闲了就别折腾了，减少去xms。</font></span></div>
-<div id="_mcePaste">MaxHeapSize      = 5242880000 (5000.0MB) -Xmx</div>
-<div id="_mcePaste">NewSize          = 2097152000 (2000.0MB)  // -Xmn</div>
-<div id="_mcePaste">MaxNewSize       = 2097152000 (2000.0MB)</div>
-<div id="_mcePaste">OldSize          = 5439488 (5.1875MB)  //<font color="red">old区的初始大小 此默认值在32位平台上是4M，在64位平台上是5M多。基本无用。</font></div>
-<div id="_mcePaste">NewRatio         = 2  // <font color="red">Y/O=1/2  表示Y区要占三分之一</font></div>
-<div id="_mcePaste">SurvivorRatio    = 8 //<font color="red"> Y区里的S与E的比例：S/E = 2/8，Y区里十分之一当S区（因为有两个S）。</font></div>
-<div id="_mcePaste">PermSize         = 21757952 (20.75MB)  //<font color="red">P区默认配置初始值</font></div>
-<div id="_mcePaste">MaxPermSize      = 85983232 (82.0MB) //<font color="red">P区默认配置最大值   32位的服务器时是64M，64位服务器时是64×(0.3*64) =82.2M左右。</font></div>
-<div id="_mcePaste">Heap Usage:</div>
-<div id="_mcePaste">PS Young Generation</div>
-<div id="_mcePaste">Eden Space:</div>
-<div id="_mcePaste">capacity = 1966604288 (1875.5MB)</div>
-<div id="_mcePaste">used     = 968355296 (923.4955749511719MB)</div>
-<div id="_mcePaste">free     = 998248992 (952.0044250488281MB)</div>
-<div id="_mcePaste">49.23996667294971% used</div>
-<div id="_mcePaste">From Space:</div>
-<div id="_mcePaste">capacity = 64880640 (61.875MB)</div>
-<div id="_mcePaste">used     = 32440384 (30.93756103515625MB)</div>
-<div id="_mcePaste">free     = 32440256 (30.93743896484375MB)</div>
-<div id="_mcePaste">50.00009864267677% used</div>
-<div id="_mcePaste">To Space:</div>
-<div id="_mcePaste">capacity = 65273856 (62.25MB)</div>
-<div id="_mcePaste">used     = 0 (0.0MB)</div>
-<div id="_mcePaste">free     = 65273856 (62.25MB)</div>
-<div id="_mcePaste">0.0% used</div>
-<div id="_mcePaste">PS Old Generation</div>
-<div id="_mcePaste">capacity = 3145728000 (3000.0MB)</div>
-<div id="_mcePaste">used     = 2375317280 (2265.279083251953MB)</div>
-<div id="_mcePaste">free     = 770410720 (734.7209167480469MB)</div>
-<div id="_mcePaste">75.50930277506511% used</div>
-<div id="_mcePaste">PS Perm Generation</div>
-<div id="_mcePaste">capacity = 80805888 (77.0625MB)</div>
-<div id="_mcePaste">used     = 80753328 (77.01237487792969MB)</div>
-<div id="_mcePaste">free     = 52560 (0.0501251220703125MB)</div>
-<div id="_mcePaste">99.93495523494525% used</div>
-<div>P区虽然显示的99％used，但是与max相比还有剩余，在spring AOP众多，一次性启动的特点下，相比82M的max，才使用到77M，还有上扬的空间。实测FGC的发生也只是一天一次。</div>
-<strong>是否需要优化判定：</strong></p>
-
-
-
-
-<p>YGCT/YGC=40ms  且十几秒才一次，健康</p>
-
-
-
-
-<p>FGCT/FGC=5s  但是一天也没几次，业务允许，一般健康可优化。未来可考虑优化为多次FGC减少FGCT的时长。</p>
-
-
-
-
-<p><strong>后续思考：</strong>
-虽然FGC并不频繁，但因为xmx值比较大，导致了O区相对变大，同时FGC缓慢，考虑从两个方向：1.调整Y区大小，让YGC去到O区的数据更少，让FGC频率更加慢（有可能很难有变化）2.调整整体的大小，让FGC频繁一点点但更加快一点  3.调整FGC的算法，让速度快一点到1秒内来。</p>
-
-
-
-
-<p>对照组结果后续有结论了再来续本文内容。</p>
-
-
-
-
-<p><strong>GC优化永远是最后一项任务。</strong></p>
 
 ]]></content>
   </entry>

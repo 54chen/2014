@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="清华万博-精武门 Lamp环境内容回顾 精武门版权所有，复制请标明：http://www.54chen.com/c/809 第一部分：Linux基础 因为大多数同学没有任何基础，此课程不得不放慢脚步，但不要担心，所涉及到的东西都会在课程中反复讲解。 1.Linux指令： 1.1 &hellip;">
+  <meta name="description" content="用java并发测试tokyo Cabinet的性能[重大更正篇] 在前面一篇文章
+用java并发测试tokyo cabinet的性能[五四陈手记] 提到了测试tc的效率问题，最后的结论是70W/s，由于当时的错误，导致了一些严重影响大家的结论，如今本着认真治学，谨慎小心的态度， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,403 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/10/27/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">用java并发测试tokyo Cabinet的性能[重大更正篇]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>在前面一篇文章
+<a rel="bookmark" href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">用java并发测试tokyo cabinet的性能[五四陈手记]</a></p>
+
+<p>提到了测试tc的效率问题，最后的结论是70W/s，由于当时的错误，导致了一些严重影响大家的结论，如今本着认真治学，谨慎小心的态度，重新公布最新的代码和结论，还望受影响的同志们不要发烧。。。</p>
+
+<p>首先，总结上一次为什么会犯错的原因：</p>
+
+<p>1. 测试代码有问题，TDB db = new TDB();不能放在线程中去new，也许是tc实现的问题，详细原因没有去研究。</p>
+
+<p>2.赶着时间测，把写入的时候的结果直接给屏了。</p>
+
+<p>重新公布新的测试代码：
+<blockquote>package test;</blockquote></p>
+
+<p>import java.util.ArrayList;</p>
+
+<p>import java.util.HashMap;</p>
+
+<p>import java.util.List;</p>
+
+<p>import java.util.Map;</p>
+
+<p>import java.util.Random;</p>
+
+<p>import java.util.concurrent.atomic.AtomicLong;</p>
+
+<p>import tokyocabinet.*;</p>
+
+<p>public class BenchMark {</p>
+
+<p><span> </span>private static List&lt;TDB&gt; dbList = new ArrayList&lt;TDB&gt;();</p>
+
+<p><span> </span>public static class Stat {</p>
+
+<p><span> </span>private AtomicLong _count = new AtomicLong(0);</p>
+
+<p><span> </span>private static Stat _instance = new Stat();</p>
+
+<p><span> </span>public static Stat getInstance() {</p>
+
+<p><span> </span>return _instance;</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>private Stat() {</p>
+
+<p><span> </span>_printer = new RatePrinter(_count);</p>
+
+<p><span> </span>_printer.setDaemon(true);</p>
+
+<p><span> </span>_printer.start();</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>public void inc() {</p>
+
+<p><span> </span>_count.incrementAndGet();</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>private RatePrinter _printer;</p>
+
+<p><span> </span>private static class RatePrinter extends Thread {</p>
+
+<p><span> </span>private long _last;</p>
+
+<p><span> </span>private AtomicLong _c;</p>
+
+<p><span> </span>public RatePrinter(AtomicLong c) {</p>
+
+<p><span> </span>_c = c;</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>@Override</p>
+
+<p><span> </span>public void run() {</p>
+
+<p><span> </span>while (true) {</p>
+
+<p><span> </span>try {</p>
+
+<p><span> </span>long current = _c.get();</p>
+
+<p><span> </span>System.out.println(&#8220;Rate: &#8221; + (current - _last) + &#8221; req/s&#8221;);</p>
+
+<p><span> </span>_last = current;</p>
+
+<p><span> </span>Thread.sleep(1000L);</p>
+
+<p><span> </span>} catch (Throwable e) {</p>
+
+<p><span> </span>e.printStackTrace();</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>public static class EchoThread extends Thread {</p>
+
+<p><span> </span>// private TDB tdb;</p>
+
+<p><span> </span>public EchoThread(String ip, String port, int in, ThreadGroup group) {</p>
+
+<p><span> </span>super(group, &#8220;EchoThread-&#8221; + in);</p>
+
+<p><span> </span>// // create the object</p>
+
+<p><span> </span>// TDB tdb = new TDB();</p>
+
+<p><span> </span>//</p>
+
+<p><span> </span>// // open the database</p>
+
+<p><span> </span>// if(!tdb.open(&#8220;casket&#8221;+in+&#8221;.tct&#8221;, TDB.OWRITER | TDB.OCREAT)){</p>
+
+<p><span> </span>// int ecode = tdb.ecode();</p>
+
+<p><span> </span>// System.err.println(&#8220;open error: &#8221; + tdb.errmsg(ecode));</p>
+
+<p><span> </span>// }</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>@Override</p>
+
+<p><span> </span>public void run() {</p>
+
+<p><span> </span>int index = 0;</p>
+
+<p><span> </span>// create the object</p>
+
+<p><span> </span>Random r = new Random();</p>
+
+<p><span> </span>// open the database</p>
+
+<p>//<span> </span>if (!tdb.open(&#8220;casket&#8221; + Thread.currentThread().getId() + &#8220;.tct&#8221;, TDB.OWRITER | TDB.OCREAT)) {</p>
+
+<p>//<span> </span>int ecode = tdb.ecode();</p>
+
+<p>//<span> </span>System.err.println(&#8220;open error: &#8221; + tdb.errmsg(ecode));</p>
+
+<p>//<span> </span>}</p>
+
+<p><span> </span>while (true) {</p>
+
+<p><span> </span>try {</p>
+
+<p><span> </span>TDB tdb = dbList.get(0);</p>
+
+<p><span> </span>String pkey = index + &#8220;asdf&#8221;;</p>
+
+<p><span> </span>Map&lt;String, String&gt; cols = new HashMap&lt;String, String&gt;();</p>
+
+<p><span> </span>cols.put(&#8220;name&#8221;, &#8220;mikio&#8221; + index);</p>
+
+<p><span> </span>cols.put(&#8220;age&#8221;, &#8220;30&#8221;);</p>
+
+<p><span> </span>cols.put(&#8220;lang&#8221;, &#8220;ja,en,c&#8221;);</p>
+
+<p><span> </span>if (!tdb.put(pkey, cols)) {</p>
+
+<p><span> </span>int ecode = tdb.ecode();</p>
+
+<p><span> </span>System.err.println(&#8220;put error: &#8221; + tdb.errmsg(ecode) + &#8221; key:&#8221; + pkey + &#8221;  value:&#8221; + cols);</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>// client.insert(&#8220;Table1&#8221;, &#8220;name&#8221;+index, &#8220;Standard1:name&#8221;,</p>
+
+<p><span> </span>// (&#8220;name&#8221;+index).getBytes(&#8220;UTF-8&#8221;),</p>
+
+<p><span> </span>// System.currentTimeMillis(), true);</p>
+
+<p><span> </span>// client.get_column(&#8220;Table1&#8221;, &#8220;name0&#8221;, &#8220;Standard1:name&#8221;);</p>
+
+<p><span> </span>index++;</p>
+
+<p><span> </span>Stat.getInstance().inc();<span> </span></p>
+
+<p><span> </span>} catch (Throwable e) {</p>
+
+<p><span> </span>e.printStackTrace();</p>
+
+<p><span> </span>break;</p>
+
+<p><span> </span>} finally {</p>
+
+<p><span> </span>// close the database</p>
+
+<p><span> </span>//if (!tdb.close()) {</p>
+
+<p><span> </span>//int ecode = tdb.ecode();</p>
+
+<p><span> </span>// System.err.println(&#8220;close error: &#8221; +</p>
+
+<p><span> </span>// tdb.errmsg(ecode));</p>
+
+<p><span> </span>//}</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>/**</p>
+
+<p><span> </span> * @param args</p>
+
+<p><span> </span> * @throws TTransportException</p>
+
+<p><span> </span> */</p>
+
+<p><span> </span>public static void main(String[] args) {</p>
+
+<p><span> </span>if (args.length != 1) {</p>
+
+<p><span> </span>System.out.println(&#8220;Usage: Benchmark &lt;concurrent&gt;&#8221;);</p>
+
+<p><span> </span>System.exit(1);</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>String ip = args[0];</p>
+
+<p><span> </span>String port = args[0];</p>
+
+<p><span> </span>Integer concurrent = Integer.valueOf(args[0]);</p>
+
+<p><span> </span>System.out.println(&#8220;ip = &#8221; + ip + &#8220;,port = &#8221; + port + &#8220;,concurrent = &#8221; + concurrent);</p>
+
+<p><span> </span>ThreadGroup group = new ThreadGroup(&#8220;Benchmark&#8221;);</p>
+
+<p><span> </span>List&lt;Thread&gt; threads = new ArrayList&lt;Thread&gt;();</p>
+
+<p><span> </span>for (int i = 0; i &lt; concurrent; i++) {</p>
+
+<p><span> </span>TDB db = new TDB();</p>
+
+<p><span> </span>//db.optimize();</p>
+
+<p><span> </span>if (!db.open(&#8220;./test&#8221; + i + &#8220;.tdb&#8221;, TDB.OCREAT | TDB.OWRITER)) {</p>
+
+<p><span> </span>int ecode = db.ecode();</p>
+
+<p><span> </span>System.err.println(&#8220;open error: &#8221; + TDB.errmsg(ecode));</p>
+
+<p><span> </span>continue;</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>dbList.add(db);</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>for (int x = 0; x &lt; concurrent; ++x) {</p>
+
+<p><span> </span>Thread t = new EchoThread(ip, port, x, group);</p>
+
+<p><span> </span>threads.add(t);</p>
+
+<p><span> </span>t.start();</p>
+
+<p><span> </span>}</p>
+
+<p><span> </span>}</p>
+
+<p>}
+对比上一次的代码，能够发现，1.new TDB的过程扔进了Thread.start之前；2.在thread中使用一个全局的变量来获取当前的对象。</p>
+
+<p>启十个进程，全往第一个里写：</p>
+
+<p>concurrent = 10</p>
+
+<p>Rate: 25 req/s</p>
+
+<p>Rate: 119617 req/s</p>
+
+<p>Rate: 130620 req/s</p>
+
+<p>Rate: 144202 req/s</p>
+
+<p>Rate: 120458 req/s</p>
+
+<p>Rate: 112809 req/s</p>
+
+<p>Rate: 120800 req/s</p>
+
+<p>Rate: 122290 req/s</p>
+
+<p>Rate: 119526 req/s</p>
+
+<p>Rate: 111189 req/s</p>
+
+<p>Rate: 112483 req/s</p>
+
+<p>Rate: 109138 req/s</p>
+
+<p>Rate: 115648 req/s</p>
+
+<p>Rate: 119419 req/s</p>
+
+<p>Rate: 105558 req/s</p>
+
+<p>Rate: 110230 req/s</p>
+
+<p>Rate: 116507 req/s</p>
+
+<p>Rate: 105367 req/s</p>
+
+<p>Rate: 103781 req/s</p>
+
+<p>Rate: 106618 req/s</p>
+
+<p>Rate: 107698 req/s</p>
+
+<p>Rate: 116768 req/s</p>
+
+<p>Rate: 107244 req/s</p>
+
+<p>保持在10w/s的写入速度，到达30s左右以后，数据急转直下：</p>
+
+<p>Rate: 48060 req/s</p>
+
+<p>Rate: 6901 req/s</p>
+
+<p>Rate: 4987 req/s</p>
+
+<p>Rate: 46229 req/s</p>
+
+<p>Rate: 46686 req/s</p>
+
+<p>Rate: 45402 req/s</p>
+
+<p>Rate: 6271 req/s</p>
+
+<p>Rate: 810 req/s</p>
+
+<p>Rate: 33895 req/s</p>
+
+<p>Rate: 46548 req/s</p>
+
+<p>Rate: 47025 req/s</p>
+
+<p>Rate: 6995 req/s</p>
+
+<p>Rate: 860 req/s</p>
+
+<p>这，就是tc的table表在写入一个<a href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">ArrayList</a>的真实速度（4核8G）。</p>
+
+<p>官方发言的100W只需要0.4s，说的是写入的hash表，而且数据是纯线性的数字。</p>
+
+<p>提升速度和稳定的办法，和张宴兄弟商量，b+tree类型的数据稳定一些，设置tctdbsetxmsiz也能解决燃眉之急。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -726,122 +1124,6 @@ initrd (hd0,0)/initrd.lz
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/09/27/the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/">“先进的互联互通技术”–使用ice联通php和java [Part 2 Client]</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-09-27T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>[信曾哥，转载的都给我保留原链接地址：<a href="http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/">http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/</a>]</p>
-
-<p>这一part的目标是建立起ice的php环境，以及写PHP代码调用上一part中的10000端口的java代码。</p>
-
-<p>在part 1中，我们建立了一个Server在10000端口等着我们，地址见 <a href="http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/">http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/</a></p>
-
-<p><strong>建立带ice的PHP环境</strong></p>
-
-<p>不管是nginx+php-cgi还是别的啥，这里只表述php编译过程。
-<blockquote><strong><span style="color: #ff0000;">本例以 Ice 3.2.1为例 下载的位置和参考的文档都在下面</span></strong></blockquote></p>
-
-<p><a href="http://www.zeroc.com/download_3_2_1.html">http://www.zeroc.com/download_3_2_1.html</a></p>
-
-<p><a href="http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592">http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592</a>
-1.下载IcePHP包，进行编译。在此之前，你还需要安装Ice，记好使用3.2.1版本，如果你是用的tar.gz包，在/opt/Ice-3.2.1/，如果是rpm包，在/usr/下。</p>
-
-<p>2.运行 export ICE_HOME=/opt/Ice-3.2.1</p>
-
-<p>设置好ICE_HOME后进IcePHP目录直接make  make install。</p>
-
-<p>此时在/opt/IcePHP-3.2.1/lib64下有产生IcePHP.so（也就是传说中的PHP扩展的so文件了）</p>
-
-<p>3.vi /etc/php.ini</p>
-
-<p>在任意位置增加两行：
-<blockquote>extension=IcePHP.so</blockquote></p>
-
-<p>ice.profiles = /etc/ice.prop
-4.准备/etc/ice.prop
-<blockquote>vi /etc/ice.prop</blockquote>
-加入以下两行：
-<blockquote>[profile_demo]</blockquote></p>
-
-<p>ice.slice=/root/zhen.chen/example/demo.ice
-这两行的意思就是，增加一个ice的配置，名字是profile_demo，slice文件是&#8230;demo.ice
-<blockquote><span style="color: #008000;">PHP不能在一个php进程中同时调用多个的ice slice，只能通过在prop文件中写义不同的段，然后在php文件中使用类似Ice_loadProfile(&#8216;profile_demo&#8217;)来告诉ice这次访问是使用的哪一个slice文件，当然，不能在一个文件里同时有两个Ice_loadProfile的，如果有两个接口的调用需求，只能是通过前端的js来发起两次请求才行了。</span></blockquote>
-5.把上一节提到的demo.ice文件放到对应的<a href="http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/">目录</a>下</p>
-
-<p>到此，带有ICE的PHP环境建立完成。</p>
-
-<p><strong>写PHP的客户端来调用 java里的Demo.test.excute方法</strong>
-<blockquote>vi Demo.php</blockquote></p>
-
-<p>&lt;?php</p>
-
-<p>ini_set(&#8220;display_errors&#8221;, &#8220;1&#8221;);</p>
-
-<p>global $ICE;</p>
-
-<p>Ice_loadProfile(&#8216;profile_demo&#8217;);</p>
-
-<p>try {</p>
-
-<p>$vBase = $ICE-&gt;stringToProxy ( &#8220;TestAdapter:default -p 10000&#8221; );</p>
-
-<p>$vManager = $vBase-&gt;ice_checkedCast ( &#8220;::Demo::test&#8221; );</p>
-
-<p>$vProperties = $vManager-&gt;execute(&#8220;Hello &#8220;,&#8221; world!&#8221;);</p>
-
-<p>echo $vProperties;</p>
-
-<p>} catch ( Exception $vError ) {</p>
-
-<p>print_r($vError);</p>
-
-<p>}</p>
-
-<p>?&gt;
-注意全角半角。</p>
-
-<p>通过浏览器访问<a href="http://www.54chen.com/469-dyang%e5%90%8c%e5%bf%97%e7%9a%84%e6%97%a0%e5%90%8d%e6%b0%8f%e7%9a%84%e4%bb%a3%e7%a0%81%e5%ad%a6%e4%b9%a0%e8%ae%b0%e5%bd%95-flex-2d-rpg%e6%b8%b8%e6%88%8fdemo/">Demo</a>.php</p>
-
-<p>你是不是看到了久违的Hello World!了呢？</p>
-
-<p>截图：</p>
-
-<p><img class="alignnone size-full wp-image-785" style="border: 1px solid black;" title="qqe688aae59bbee69caae591bde5908d" src="http://www.54chen.com/wp-content/uploads/2009/09/qqe688aae59bbee69caae591bde5908d.jpg" alt="" width="397" height="112" /></p>
-
-<p>ice、php和java的关系架构图：</p>
-
-<p><img class="alignnone size-full wp-image-786" style="border: 1px solid black;" title="qqe688aae59bbee69caae591bde5908d1" src="http://www.54chen.com/wp-content/uploads/2009/09/qqe688aae59bbee69caae591bde5908d1.jpg" alt="" width="435" height="233" /></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/40/">&larr; Older</a>
@@ -863,7 +1145,7 @@ initrd (hd0,0)/initrd.lz
   <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
   <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
   <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
-  Copyright &copy; 2014 - 54chen -
+  Copyright &copy; 2015 - 54chen -
 
 </footer>
   

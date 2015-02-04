@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Vpn搭建及pptpd因mtu上传下载慢一例 Dec 30th, 2014 一、环境及安装 server: centos 6.3 （kvm虚拟机）。
-client: ubuntu 10.04。
-server上yum install安装pptpd，常规设置好ip分配、用户名密码， &hellip;">
+  <meta name="description" content="Java IO在各版本中的提高 Feb 4th, 2015 JDK8中的提高 在标准的（java.nio.charset.Charset）和扩展的charset实现方面，有许多改进。包括： SelectorProvider在Solaris上有新实现（基于Solaris事件端口机制）。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +73,58 @@ server上yum install安装pptpd，常规设置好ip分配、用户名密码， &
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/02/04/enhancements-in-java-io/">Java IO在各版本中的提高</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-02-04T15:22:29+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
+
+<h1>JDK8中的提高</h1>
+
+<p>在标准的（java.nio.charset.Charset）和扩展的charset实现方面，有许多改进。包括：</p>
+
+<ul>
+<li>SelectorProvider在Solaris上有新实现（基于Solaris事件端口机制）。这种SelectorProvider有可能在一些工作负荷下有可能会提升性能和扩展性。/dev/poll这种SelectorProvider依旧是默认的。要使用Solaris事件端口机制，启动的时候要设置系统属性java.nio.channels.spi.Selector为sun.nio.ch.EventPortSelectorProvider。</li>
+<li>将&lt;JDK_HOME>/jre/lib/charsets.jar文件大小减小。</li>
+<li>java.lang.String(byte[], *)构造函数和java.lang.String.getBytes()方法的性能改善。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/02/04/enhancements-in-java-io/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -600,69 +650,6 @@ server上yum install安装pptpd，常规设置好ip分配、用户名密码， &
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Bosh vs Comet vs Long Polling vs Polling</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-06-30T11:41:42+08:00" pubdate data-updated="true">Jun 30<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
-
-<p>最近在研究在中国特色移动互联网下通过性最好的应用层协议办法，看到很多混乱的概念和实现，54chen在对各种名词的历史进行了深度考察，特作记录以做区分。</p>
-
-<h2>HTTP协议历史</h2>
-
-<ul>
-<li>第一个HTTP协议诞生于1989年3月。</li>
-<li>第一个HTTP协议的版本是HTTP 0.9，它的组成极其简单，因为它只允许客户端发送GET这一种请求。</li>
-<li>HTTP协议的第二个版本是HTTP 1.0，直到HTTP 1.0成为最重要的面向事务的应用层协议。该协议对每一次请求/响应，同样是建立并关闭一次连接。</li>
-<li>HTTP协议的第三个版本是HTTP 1.1，它就是目前使用最广泛的协议版本。从HTTP 1.1开始，客户端默认与Web 服务器建立长连接。</li>
-</ul>
-
-
-<h2>原始阶段polling</h2>
-
-<p>最早期的时候，因为没有可以依赖的东西，能用的只有javascript的setInterval，定时循环向服务器发起请求。</p>
-
-<p>优点是：服务器端啥特别的东西都不用准备，直接当http请求处理即可。缺点是：白白浪费大量的请求。</p>
-
-<h2>什么是Comet?</h2>
-
-<p>中文意思彗星，大概是想表示这是一次尾巴会拖很长的请求。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -682,7 +669,7 @@ server上yum install安装pptpd，常规设置好ip分配、用户名密码， &
   <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
   <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
   <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
-  Copyright &copy; 2014 - 54chen -
+  Copyright &copy; 2015 - 54chen -
 
 </footer>
   
