@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-08-08 54chen Twitter memo 2010-08-01 http://goo.gl/fb/HrggT # RT @162cm: 蛋蛋定 再搞两年技术管理 两年产品管理,我才能熟得跟路口卖得西瓜似的 这时创业才靠谱 @awguo &hellip;">
+  <meta name="description" content="Rose Pipe–一次对http技术的伟大革新实现（54chen乱弹版） 网站速度一直是互联网公司所关注的核心目标之一，作为SNS网站更是这样。来自世界第一大的打不开的SNS网站facebook的工程师日志中提到，BigPipe: Pipelining web pages for high &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,111 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/08/14/rose-pipe-http-54chen/">Rose Pipe–一次对http技术的伟大革新实现（54chen乱弹版）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-08-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img class="alignnone" src="http://img07.taobaocdn.com/imgextra/i7/T1cjJIXiJxXXaTrOk6_062158.jpg" alt="" width="450" height="335" /></p>
+
+<p>网站速度一直是互联网公司所关注的核心目标之一，作为SNS网站更是这样。来自世界第一大的打不开的SNS网站facebook的工程师日志中提到，BigPipe: Pipelining web pages for high performance。
+<blockquote>原文在墙外，豆瓣有存根，地址为<a href="http://9.douban.com/site/entry/139173635/">http://9.douban.com/site/entry/139173635/</a>。</blockquote></p>
+
+<p>来自infoq的一篇资料报道：<a href="http://www.infoq.com/cn/news/2010/08/bigpipe-facebook-optimize">http://www.infoq.com/cn/news/2010/08/bigpipe-facebook-optimize</a>
+它本意是充分利用http，将用户感受到的延迟时间降低<span style="color: #ff0000;">一半</span>，是如何做到的呢，下面由54chen流水记账一篇解释实现原理。院内曾经由人人网架构师王志亮大侠发表过一篇文章，地址是<a href="http://www.54chen.com/architecture/rose-open-source-portal-framework.html">http://www.54chen.com/architecture/rose-open-source-portal-framework.html</a>，本文将以此例中的项目举例。
+<strong>HTTP协议</strong>
+HTTP是一个客户端和服务器端请求和应答的标准，尽管TCP/IP协议是互联网上最流行的应用，HTTP协议并没有规定必须使用它和（基于）它支持的层。 事实上，HTTP可以在任何其他互联网协议上，或者在其他网络上实现。HTTP只假定（其下层协议提供）可靠的传输，任何能够提供这种保证的协议都可以被其使用。<br />
+在这里重新解释HTTP是为了后面做铺垫，一次http访问的过程如下：<br />
+1.打开一个连接后，客户机把请求消息送到服务器的停留端口上，完成提出请求动作；<br />
+2.服务器在处理完客户的请求之后，要向客户机发送响应消息；<br />
+3.客户和服务器双方都可以通过关闭套接字来结束TCP/IP对话。<br />
+在使用java的ServletResponse的时候，往往都是如下的操作返回结果到用户：
+<blockquote>out.write(sb.toString());<br />
+out.flush();<br />
+out.close();</blockquote>
+<strong>传统的WEB请求</strong></p>
+
+<p>以图1为例，一个WEB项目往往由不同的部分组成，不同的格局里往往代表需要从不同的数据表里去取不同的数据。
+<img src="http://img07.taobaocdn.com/bao/uploaded/i7/T1M_hCXiplXXXZgsbb_123302.jpg" alt="renren page" />
+图1 人人网公共主页页面</p>
+
+<p>一个用户来访问这个页面，按照传统的做法，其流程图可能是如图2这样的。
+<img src="http://img02.taobaocdn.com/imgextra/i2/T15jFIXbxsXXc0QmZW_024631.jpg" alt="54chen:rose pipe" />
+图2 一个传统的http请求过程<br />
+在图2中可以看到，一次打开网站页面的过程中，请求发到后端进行了处理（1和2步），只有当后端的取数据操作（2步）全部完成的时候，才可能进入第3步，向用户返回组装好的html页。如果说图1中一共有四个模块，对应后台有四条sql语句的话，那么，必须这四条sql语句全部返回了结果，才可能让用户看到页面。</p>
+
+<p><strong>pipe</strong>
+pipe技术充分利用了前后端技术。将一个页面里的多个模块分成不同的window，多线程取数据的操作，然后再充分利用http请求的连接，将原来的输出，从一次flush变成多次flush：
+<blockquote>out.write(“基础的dom”);<br />
+out.flush();<br />
+//数据一准备好时<br />
+out.write(“js带数据一”);<br />
+out.flush();<br />
+//数据十二准备好时<br />
+out.write(“js带数据二”);<br />
+out.flush();<br />
+out.close();</blockquote>
+其过程如图3所示：
+<img src="http://img05.taobaocdn.com/imgextra/i5/T13kJIXaNaXXatZfg2_044035.jpg" alt="54chen:rose pipe" />
+图3 pipe的请求过程<br />
+借用big pipe的代码，第一次是输出的：</p>
+
+<p><code>&lt;div&gt;<br />
+&lt;div id=”left_column”&gt;<br />
+&lt;div id=”pagelet_navigation”&gt;&lt;/div&gt;<br />
+&lt;/div&gt;<br />
+&lt;div id=”middle_column”&gt;<br />
+&lt;div id=”pagelet_composer”&gt;&lt;/div&gt;<br />
+&lt;div id=”pagelet_stream”&gt;&lt;/div&gt;<br />
+&lt;/div&gt;<br />
+&lt;div id=”right_column”&gt;<br />
+&lt;div id=”pagelet_pymk”&gt;&lt;/div&gt;<br />
+&lt;div id=”pagelet_ads”&gt;&lt;/div&gt;<br />
+&lt;div id=”pagelet_connect”&gt;&lt;/div&gt;<br />
+&lt;/div&gt;<br />
+&lt;/div&gt;</code></p>
+
+<p>当有了完整的dom结构时，浏览器就会开始显示没有数据的框架了。</p>
+
+<p>后面的数据每次都以js继续发送到页面中，浏览器收到即开始写入：
+<code>
+&lt;script type="text/javascript"&gt;<br />
+big_pipe.onPageletArrive({id: “pagelet_composer”, content=&lt;HTML&gt;, css=[..], js=[..], …})<br />
+&lt;/script&gt;</code></p>
+
+<p><strong>性能</strong>
+这种显示方式的性能，再借用facebook的图来表示之，如图4：
+<img src="http://sphotos.ak.fbcdn.net/hphotos-ak-snc3/hs539.snc3/30586_396772147199_9445547199_3988332_604391_n.jpg" alt="facebook:pipe" /></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -765,86 +870,6 @@ echo $x;<br />
 	<li>CCTV与北邮一向保持良好的合作关系，专家出来说了，美国的团购网站，要开办，必须提供个人身份证明、信用评级等等等等。。。。。。 <a href="http://twitter.com/54chen/statuses/18199111708">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/07/06/triggered-by-a-sql-order-by-the-thoughts-on/">一条SQL引发的对order By的思考</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-07-06T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T18I0FXoFCXXcVYX39_072328.jpg" alt="热" />
-==========尽职的安静的分隔线===========<br />
-在实际工作中遇到下面一个问题：<br />
-有一个表，存有2000万数据。<br />
-主键为ID bigint(20) NOT NULL auto_increment<br />
-另有一字段time timestamp NOT NULL default CURRENT_TIMESTAMP</p>
-
-<p>故事从这两个字段说起：<br />
-sql1需要从这个表中检索出来时间为2010-05-26 11:55:00之<font color="red">前</font>并且id号大于20000的前10条数据<br />
-sql2需要从这个表中检索出来时间为2010-05-26 11:55:00之<font color="red">后</font>并且id号大于20000的前10条数据</p>
-
-<p>两条sql写出来大概是这样子的：<br />
-sql1:select * from table where time <'2010-05-26 11:55:00' and id>20000 order by id limit 10;<br />
-sql2:select * from table where time >&#8217;2010-05-26 11:55:00&#8217; and id>20000 order by id limit 10;</p>
-
-<p>并且已经知道表中的数据，在上面所示时间之前的数据要远远多于所示时间之后的数据。如图1所示：
-<img src="http://img05.taobaocdn.com/imgextra/i5/T1AKhFXgdbXXaH.kQ3_051000.jpg" alt="54chen" />
-图1 数据在时间线上的示意图</p>
-
-<p>实测发现，sql1执行时间0.03s，sql2执行时间33s。</p>
-
-<p>为何大于小于运行的速度相比如何巨大？下面来解答。</p>
-
-<p><strong>第一，用explain来观察两条sql的区别</strong>
-结论：没什么区别</p>
-
-<p><strong>第二，研究order by</strong>
-将sql2的order by id修改为order by id desc(排序方向颠倒)后，发现速度马上提到了0.03s的水平。<br />
-同样修改sql1的时候，速度马上降到了30s的水平。</p>
-
-<p>进行多次测试，排除mysql本身的缓存干扰。</p>
-
-<p>结论：<br />
-sql1的运行示意图如图2所示：
-<img src="http://img06.taobaocdn.com/imgextra/i6/T1ouhFXgXdXXbLbqg6_060541.jpg" alt="54chen" />
-图2 第一条SQL语句快慢解释图</p>
-
-<p>sql2的运行示意图如图3所示：
-<img src="http://img02.taobaocdn.com/imgextra/i2/T14KdFXc0eXXc_k476_061836.jpg" alt="54chen" />
-图2 第二条SQL语句快慢解释图</p>
-
-<p>综合上面两个图，mySQL在where查询的时候，也许按照where的条件，按照主键的顺序，最后满足条件的，最后进到内存中去，再进行后面的order by时，asc如果在内存中比不在内存中的就要快得多。</p>
-
-<p>未研究真正实现的代码，仅凭感觉验证。<br />
-一句话概括是：按照使用的索引，最后满足条件的数据将留在内存里供进一步排序。</p>
 </div>
   
   

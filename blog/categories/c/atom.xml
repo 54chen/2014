@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: C | 五四陈科学院]]></title>
+  <link href="http://2014.54chen.com/blog/categories/c/atom.xml" rel="self"/>
+  <link href="http://2014.54chen.com/"/>
+  <updated>2015-03-04T16:35:32+08:00</updated>
+  <id>http://2014.54chen.com/</id>
+  <author>
+    <name><![CDATA[54chen]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Mac下更新gcc版本]]></title>
+    <link href="http://2014.54chen.com/blog/2015/03/04/update-gcc-version-in-mac/"/>
+    <updated>2015-03-04T14:51:29+08:00</updated>
+    <id>http://2014.54chen.com/blog/2015/03/04/update-gcc-version-in-mac</id>
+    <content type="html"><![CDATA[<p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
+
+<ul>
+<li>用ports升级，比较容易。</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>localhost:hello chenzhen$ port search gcc
+</span><span class='line'>apple-gcc40 @5494 (lang)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>Apple's version of gcc 4.0
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>apple-gcc42 @5666.3_14 (lang)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>Apple's version of gcc 4.2
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>arm-aout-gcc @3.3.6 (cross, devel)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>gcc cross-compilers for arm-aout, with newlib runtime library.
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>arm-elf-gcc @4.7.3 (cross, devel)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>gcc cross-compilers for arm-elf, with newlib runtime library.
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>arm-elf-gcc3 @3.4.6_2 (cross, devel)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>gcc 3.x cross-compilers for arm-elf, with newlib runtime library.
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>arm-none-eabi-gcc @4.7.3_1 (cross, devel)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>The GNU compiler collection for arm-none-eabi
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>arm-none-linux-gnueabi-gcc @2005q3-2 (cross, devel)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>gcc 3.x cross-compilers for arm-none-linux-gnueabi.
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>arm-rtems-gcc @4.2.3 (cross, devel)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>gcc cross-compilers for arm-rtems, with newlib runtime library.
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p>avr-gcc @4.9.1 (cross, devel)&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>The GNU compiler collection for avr
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<!--more-->
+
+
+<ul>
+<li>选中安装</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>localhost:hello chenzhen$ sudo port install gcc44&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>列出已有</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>localhost:hello chenzhen$ port select &mdash;list gcc
+</span><span class='line'>Available versions for gcc:&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;pre>&lt;code>apple-gcc42
+</span><span class='line'>llvm-gcc42
+</span><span class='line'>mp-gcc44 (active)
+</span><span class='line'>mp-gcc48
+</span><span class='line'>none
+</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>选中需要的版本</li>
+</ul>
+
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p>localhost:hello chenzhen$ sudo port select &mdash;set gcc mp-gcc44&lt;/p>
+</span><span class='line'>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<ul>
+<li>最后一步，重新开一个窗口，不要用现在这个。</li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="五步构建持续性部署(CD) 错误被发现的时间越迟，修复的难度越高，代价也最昂贵。如果工程师在敲下代码的时候就发现了问题，那修复的成本几 乎为零。如果编译器捕获了bug，它对开放时间造成的影响就是以分钟计的。如果bug进入了产品，而且在一段时间内没有被发现，找到bug、修复bug的 &hellip;">
+  <meta name="description" content="gitlab3.1升级4.0手记 在过去的几个星期，已经顺利在gitlab中开始了团队的代码合作。http://www.54chen.com/_linux_/github-gitlab.html 圣诞前后Gitlab发布了最新的4.0版本，感觉最大的改动有：
+1.merge &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/12/26/gitlab3-1-upto-4-notes/">gitlab3.1升级4.0手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-12-26T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>在过去的几个星期，已经顺利在gitlab中开始了团队的代码合作。<a href="http://www.54chen.com/_linux_/github-gitlab.html">http://www.54chen.com/_linux_/github-gitlab.html</a>
+<img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1L56.XfNeXXasdY75_054835.jpg" alt="gitlab" /></p>
+
+<p>圣诞前后Gitlab发布了最新的4.0版本，感觉最大的改动有：<br />
+1.merge request的diff上的comment好用了<br />
+2.支持namespace，看上去是未来用来按team划分权限的<br />
+3.network界面的bug修复</p>
+
+<p>以下记录了所有的升级过程：<br />
+所有过程完全按照https://github.com/gitlabhq/gitlabhq/wiki/From-3.1-to-4.0，任何一步都可以重复搞。</p>
+
+<p><strong>坑：</strong>
+因为在之前由于好奇用管理员账号在后台建立了几个Group，这回namespace支持就坏菜了。<br />
+sudo -u gitlab -H bundle exec rake gitlab:enable_namespaces RAILS_ENV=production<br />
+会出现一堆错误。由它去吧。<br />
+然后所有的原来加的Group的project重新生成push吧。</p>
+
+<p><blockquote>铁一般的事实说明：一定要先在3.1下把groups设置去掉之后再来打开namespace支持。</blockquote></p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -880,73 +936,6 @@ clone.c: parent_clone_child ->
 clone.c: run(&#8220;./hook-parent-after-clone.sh&#8221;); ->
 clone.c: barrier_signal(&h->barrier_parent); ->
 clone.c: barrier_wait(&h->barrier_child);  </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/20/travel/">丰宁坝上草原自驾游</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-20T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>秋高气爽，正直周末，我米东方时尚小分队一行十一人三辆车，浩浩荡荡二次出行。<br />
-目标：
-<img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1dPnNXjdiXXXIbL.8_100455.jpg" alt="target" /></p>
-
-<p>一出门在八高小堵：
-<img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1kcHOXehhXXXwm_38_101757.jpg" alt="堵车" /></p>
-
-<p>出了北京，一路都是这样的感觉：
-<img src="http://img01.taobaocdn.com/bao/uploaded/i1/T1mZTOXmNhXXb.wUo8_102123.jpg" alt="好天气" /></p>
-
-<p>当时有两个小时的土路它是这个样子的：
-<img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1yM2OXdlcXXbq.6I8_101230.jpg" alt="road" /></p>
-
-<p>七小时后到达目的地，马不停蹄，开骑：
-<img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1tGzPXmdbXXaA1p6a_120101.jpg" alt="马" /></p>
-
-<p>当地的养马的农民在山顶上休闲地抽烟：
-<img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1CpbOXc0kXXXZFrLa_120310.jpg" alt="赶马的大叔" /></p>
-
-<p>马到成功：
-<img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1tRLNXltkXXcapuTa_120705.jpg" alt="马到成功" /></p>
-
-<p>农民家看马的大黄，一只耳朵总是耷拉着：
-<img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_jHOXmVcXXbJjgva_120908.jpg" alt="大黄" /></p>
-
-<p>第二天，自行活动时摄影师拍摄：
-<img src="http://img04.taobaocdn.com/bao/uploaded/i4/T13sbOXa0hXXbqDU7._113723.jpg" alt="坝上" /></p>
-
-<p>随便都是桌面一张：
-<img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1fmbNXo0iXXXYpLva_120759.jpg" alt="桌面" /></p>
-
-<p>期待下次出行！</p>
 </div>
   
   
