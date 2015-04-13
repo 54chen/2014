@@ -4,8 +4,72 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2015-03-04T16:35:32+08:00</pubDate>
+        <pubDate>2015-04-13T11:47:11+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
+
+<h1>大比小好</h1>
+
+<p>开发阶段，服务不稳定，一个大服务不如一堆小服务; 运维阶段，服务都稳定了，一堆小服务又不如一个大服务。</p>
+
+<p>大规模的时候了，如果能够一个进程搞定的，尽量不要拆两个进程。</p>
+
+<!--more-->
+
+
+<h1>少比多好</h1>
+
+<p>如果都是大服务，自然而然地，服务数量就少。</p>
+
+<p>服务数量少，运维成本就相应低。</p>
+
+<h1>快比慢好</h1>
+
+<p>一个进程，跑得越快，qps越高，所能使用的资源越多，越能“物尽其用”。</p>
+
+<h1>直连比队列好</h1>
+
+<p>常见的进程间内网通讯，一般会使用直接的rpc或者是mq来中转。然而，在一般的情况下，引入mq会给服务化带来复杂度，使容量问题更加隐藏。</p>
+
+<h1>特例监控比共性监控好</h1>
+
+<p>强烈要报警的监控一定要是开发手工加到代码里去的，只要报警，一定是代表了可用性降低，不应该有二义性。共性监控如cpu、硬盘、内存等，只能算是知会性的报警，一般不会影响业务的可用性。</p>
+
+<h1>进程外负载均衡比进程内好</h1>
+
+<p>负载均衡逻辑放到一个独立进程的好处在于，这部分逻辑不常改动，同时不应该受经常上线的影响，最好是7<em>24</em>365全天候足够稳健的服务。进程内的问题在于，当业务代码与负载均衡代码改动频率完全不是一个量级时，双方都将在上线，同时任何一方的问题都将相互影响; 更大的一个问题是，推动所有服务一起更新负载均衡策略难度远大于更新一个专门的进程。</p>
+
+<h1>有层级的服务比普通SOA好</h1>
+
+<p>SOA要求我们把各业务逻辑服务化，没有层级的服务化就是噩梦。主要服务之间一定要有金字塔一样的规则，否则会对各种跨机房、迁移等带来麻烦。</p>
+
+<h1>kv存储比RDS好</h1>
+
+<p>只用kv，存储层维持状态，扩展、迁移都大大降低难度。使用rds，qps变化时延迟并不是线性变化，kv就能保证这点。维护状态的一层大多在db，以kv这样容易扩展的方式，更加利于未来的迁移和扩张。</p>
+
+<h1>无状态比有状态好</h1>
+
+<p>服务带上状态，以后迁移、扩容各种毛病，只要有一个理由可以不要状态，就一定要无状态。</p>
+
+<h1>闭源比开源好</h1>
+
+<p>开源项目都是解决共性需求，规模越大，越是有特性，越不可能开源，闭源可以省很多事。</p>
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[大规模业务服务器开发总结]]></title>
+            <link>http://2014.54chen.com/blog/2015/04/13/serivce-design/</link>
+            <pubDate>2015-04-13T10:00:00+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2015/04/13/serivce-design</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -2208,126 +2272,6 @@ int i = sc.read(buff)</p></blockquote>
             <link>http://2014.54chen.com/blog/2014/04/14/how-to-use-akka-in-java/</link>
             <pubDate>2014-04-14T21:38:24+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2014/04/14/how-to-use-akka-in-java</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p><img src=http://chen54.b0.upaiyun.com/20140318/chart.png></p>
-
-<h2>phoneGap是什么？</h2>
-
-<p>就是个壳子，方便原来做web开发的同学快速切入移动端开发。
-本手记最终将生成“五四陈科学院”android版本和ios版本。</p>
-
-<h2>安装</h2>
-
-<p>基础环境是rmbp，有java环境，有xcode环境。</p>
-
-<!--more-->
-
-
-<p>官方说明在<a href="http://phonegap.com/install/">http://phonegap.com/install/</a> ，居然没有被墙，怪不得不火。</p>
-
-<p>需要先安装nodejs。去<a href="http://nodejs.org">http://nodejs.org</a> 下载一个pkg包，双击运行安装，然后就会有npm这个命令了。</p>
-
-<p>然后运行sudo npm install -g phonegap完成安装。</p>
-
-<h2>使用</h2>
-
-<ul>
-<li>phonegap create chen</li>
-<li>cd chen</li>
-</ul>
-
-
-<p>创建一个app。</p>
-
-<ul>
-<li>phonegap run android</li>
-<li>phonegap run ios</li>
-</ul>
-
-
-<p>上述两个命令分别是启动android(其慢无比)和ios虚拟机，第一次运行可能会有需要安装anroid-sdk和ios的东西，照着安装。</p>
-
-<p>关键的两个目录www和platform。</p>
-
-<ul>
-<li>www下所有的html js css完成了交互</li>
-<li>platforms里是转化后的java/objectC代码</li>
-</ul>
-
-
-<h2>常见配置</h2>
-
-<ul>
-<li>vim www/config.xml</li>
-</ul>
-
-
-<p>修改核心定义文件：</p>
-
-<ul>
-<li>name description author信息可修改为想要的</li>
-<li>一堆icon的定义，是各种条件下使用图标</li>
-<li>&lt;gap:plugin name=&ldquo;ChildBrowser&rdquo; />  引用了插件ChildBrowser，用来打开常见的webview</li>
-</ul>
-
-
-<h2>写js/html</h2>
-
-<p>可以直接用上jquery之类的东西，省事。</p>
-
-<p>这里目标是读本博客的rss文件显示出来。</p>
-
-<ul>
-<li>var feed = new google.feeds.Feed(RSS);</li>
-</ul>
-
-
-<p>这里使用了google的api，在html里进行了js声明： <script type="text/javascript" src="https://www.google.com/jsapi"></script></p>
-
-<p>一切都变得很简单，插上usb线，phonegap run android，手机里有了这个app。</p>
-
-<p><a href="http://www.raymondcamden.com/index.cfm/2011/10/11/PhoneGap-RSS-Reader">http://www.raymondcamden.com/index.cfm/2011/10/11/PhoneGap-RSS-Reader</a>  这个老外很有耐心地完成了所有的代码，还提供下载。</p>
-
-<h2>icon的问题</h2>
-
-<ul>
-<li><p>www目录下的config.xml与res目录的图片文件，统统都是给phonegap线上的编译准备的，本地编译时，是没有意义的，要去platforms下找对应的文件修改，只能说这种商业模式直接导致了这项技术的不可传播。</p></li>
-<li><p>亲测在android4.2.1+三星galaxy s3+MIUI 4.3.14下icon会被cache，经过把packagename改成新的才起作用。</p></li>
-</ul>
-
-
-<h2>代码及demo下载</h2>
-
-<p><img src=http://chen54.b0.upaiyun.com/20140318/chart.png></p>
-
-<p>apk:<a href="http://chen54.b0.upaiyun.com/20140318/chen.apk" target=_blank><a href="http://chen54.b0.upaiyun.com/20140318/chen.apk">http://chen54.b0.upaiyun.com/20140318/chen.apk</a></a></p>
-
-<p>code:<a href="https://github.com/54chen/demo" target=_blank><a href="https://github.com/54chen/demo">https://github.com/54chen/demo</a></a></p>
-
-<h2>总结</h2>
-
-<ul>
-<li>适合用来做一些内部工具，比如服务器监控图之类的。</li>
-<li>不适合对native性能较高的场景。</li>
-<li>对于复杂的交互依旧有不方便的地方。</li>
-<li>算是对html5 app封装比较完整的方案。</li>
-</ul>
-
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[phonegap试用手记]]></title>
-            <link>http://2014.54chen.com/blog/2014/03/19/how-to-use-phonegap/</link>
-            <pubDate>2014-03-19T23:31:04+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/03/19/how-to-use-phonegap</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>

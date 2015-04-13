@@ -9,34 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Mac下更新gcc版本 Mar 4th, 2015 用ports升级，比较容易。 1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-localhost:hello chenzhen$ port &hellip;">
+  <meta name="description" content="大规模业务服务器开发总结 Apr 13th, 2015 大比小好 开发阶段，服务不稳定，一个大服务不如一堆小服务; 运维阶段，服务都稳定了，一堆小服务又不如一个大服务。 大规模的时候了，如果能够一个进程搞定的，尽量不要拆两个进程。 Read on &rarr; Mac下更新gcc版本 Mar &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -100,6 +73,53 @@ localhost:hello chenzhen$ port &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/04/13/serivce-design/">大规模业务服务器开发总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-04-13T10:00:00+08:00" pubdate data-updated="true">Apr 13<span>th</span>, 2015</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
+
+<h1>大比小好</h1>
+
+<p>开发阶段，服务不稳定，一个大服务不如一堆小服务; 运维阶段，服务都稳定了，一堆小服务又不如一个大服务。</p>
+
+<p>大规模的时候了，如果能够一个进程搞定的，尽量不要拆两个进程。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/04/13/serivce-design/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -660,60 +680,6 @@ localhost:hello chenzhen$ port &hellip;">
   
     <footer>
       <a rel="full-article" href="/blog/2014/07/31/connection-secret-in-mobile/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/09/tigase-sockthread/">tigase网络核心SockThread详解</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-07-09T16:03:33+08:00" pubdate data-updated="true">Jul 9<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140710/logo.png></p>
-
-<h2>总述</h2>
-
-<ul>
-<li>SocketThread类是一个很底层的类，在初始化时调用了Selector.open（clientsSel）。</li>
-<li>socketReadThread nThread个</li>
-<li>socketWriteThread nThread个</li>
-<li>ResultsListener nThread个</li>
-<li>completionService一个，池化线程nThread个，在sockThread.run里被submit，ResultsListener里进行completionService.take().get()取出执行结果。</li>
-<li>forCompletion有序队列一个，在socketThread.run里开始add，同一方法立即被从最小依次取出，然后submit给completionService。</li>
-<li>waiting有序队列一个，recreateSelector阶段存在add，最大来源是addSocketService静态方法，在socketThread.run最后阶段的addAllWaiting时注册Channel时把waiting里的IOService取出做为附加对象绑定。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/07/09/tigase-sockthread/">Read on &rarr;</a>
     </footer>
   
 

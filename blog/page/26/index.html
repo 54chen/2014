@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="国内互联网公司数据库访问层调查 在WEB开发中，数据库的数据读写和传输一向是瓶颈，在此基础上的解决方案基本都是数据库连接层的设计，一个公司数据库连接层的牛B与否可以标识这个公司的全局规划的“工艺水平”到达一个什么样了。下面的内容来自明查暗访，决无BS之意， &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2010-10-24 #Ugc Tech Talk#我们补了一个KATA的补丁，关于client的线程池的重复产生。 #
+#Ugc Tech Talk#分布式的评分、排序，请求分成三步，1.到每个节点发请求去算满足的数量和词频，在客户端临时换算 2. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/10/24/54chen-twitter-memo-2010-10-24/">54chen Twitter Memo 2010-10-24</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-10-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+#</ul><a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#我们补了一个KATA的补丁，关于client的线程池的重复产生。 <a href="http://twitter.com/54chen/statuses/28391579298" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#分布式的评分、排序，请求分成三步，1.到每个节点发请求去算满足的数量和词频，在客户端临时换算 2.第二次带上1的计算结果去各节点查后在客户端排序 3.第三次请求已经知道节点和shards的具体信息去请求详细内容 <a href="http://twitter.com/54chen/statuses/28390375741" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#在kata中搜数据时：先分词，索引逻辑或进行查询，客户端向zk拿到索引列表，每个索引维护一个索引，zk索引变化会通知客户端。 <a href="http://twitter.com/54chen/statuses/28390138745" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#整个集群共同管理整套虚拟目录，这是zk提供的牛B机制。 <a href="http://twitter.com/54chen/statuses/28389444211" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#kata有主节点，zoolkeeper维护终端 sh zkCli.sh -server 127.0.0.1:2182 <a href="http://twitter.com/54chen/statuses/28389280078" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#kata提供了不少的管理工具，比如：sh kata showStructure(在kata.java中定义) <a href="http://twitter.com/54chen/statuses/28388458817" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23Ugc" class="aktt_hashtag">Ugc</a> Tech Talk#Zookeeper在kata中作用巨大，是一个去中心化的系统。kata中有一个专门的包与其通信。 <a href="http://twitter.com/54chen/statuses/28387623579" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#搜索的缓存热点很少，缓存5分钟即可。 <a href="http://twitter.com/54chen/statuses/28387456332" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#kata提供现成的临时摘下某个小索引的api。 <a href="http://twitter.com/54chen/statuses/28387079714" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#单天的索引文件的重建只需要只秒左右。 <a href="http://twitter.com/54chen/statuses/28387017072" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#建立索引时会影响读的性能，如果索引文件比较大，相对去比较影响，如果读写分离，将要维护两份索引，将索引文件尽量小是一个不错的办法。 <a href="http://twitter.com/54chen/statuses/28386939695" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#hadoop负责本地索引和发布到kata的过程。 <a href="http://twitter.com/54chen/statuses/28386580607" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#小索引文件，增量增加索引文件，一个小时增加今天的索引。 <a href="http://twitter.com/54chen/statuses/28386467402" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk#环境准备：索引建立 1.定期查DB 2.新产生的存在队列中定期建 <a href="http://twitter.com/54chen/statuses/28386331006" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23UGC" class="aktt_hashtag">UGC</a> Tech Talk# UTT 讨论直播  分布式搜索kata的二次开发实战 <a href="http://twitter.com/54chen/statuses/28386150183" class="aktt_tweet_time">#</a>
+转自贾睿韬: 魔兽史上一大难题已被破解：whosyourdaddy 答：我爸是李刚 <a href="http://twitter.com/54chen/statuses/28383753911" class="aktt_tweet_time">#</a>
+从反馈到现在24小时去了，http://places.renren.com/web/PoiFeed，一个很容易被用户发现低级错误还在线上。 <a href="http://twitter.com/54chen/statuses/28378936061" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/bravetaoy" class="aktt_username">bravetaoy</a> 感谢兄弟提供，马上加上 <a href="http://twitter.com/bravetaoy/statuses/27996678518" class="aktt_tweet_reply">in reply to bravetaoy</a> <a href="http://twitter.com/54chen/statuses/28378559200" class="aktt_tweet_time">#</a>
+转自刘启荣: 毕业前，快乐是件简单的事；毕业后，简单是件快乐的事。 <a href="http://twitter.com/54chen/statuses/28365713181" class="aktt_tweet_time">#</a>
+百度知道赫然发现有窗口下的条，和人人网的神似，这难道是百度SNS的第二步？ <a href="http://twitter.com/54chen/statuses/28004847773" class="aktt_tweet_time">#</a>
+<a href="http://places.renren.com/web/PoiFeed?pid=B000A30D3A" rel="nofollow">http://places.renren.com/web/PoiFeed?pid=B000A30D3A</a> 人人网LBS <a href="http://twitter.com/54chen/statuses/28001820896" class="aktt_tweet_time">#</a>
+RT小Z：哥在erp上请假 半天也提交不了 后来才发现这玩意只支持IE6 // 这个现象存在于多家一流企业。 <a href="http://twitter.com/54chen/statuses/27996064594" class="aktt_tweet_time">#</a>
+<a href="http://www.54chen.com/_linux_/china-internet-db-report.html" rel="nofollow">http://www.54chen.com/_linux_/china-internet-db-report.html</a> 国内互联网公司数据库访问层调查，新增加了淘宝支付宝和腾讯的分析，感谢@fenng和胖子、呵呵哥提供线索支持。 <a href="http://twitter.com/54chen/statuses/27995739937" class="aktt_tweet_time">#</a>
+由于最近国际天气不好，科学院feed地址已经切回国内，如果用原来feedburner地址订阅的同志没有红杏，请将订阅地址转为http://www.54chen.com/feed，周知。 <a href="http://twitter.com/54chen/statuses/27986502180" class="aktt_tweet_time">#</a>
+国内互联网公司数据库访问层调查 <a href="http://goo.gl/fb/KrCcJ" rel="nofollow">http://goo.gl/fb/KrCcJ</a> <a href="http://twitter.com/54chen/statuses/27919812246" class="aktt_tweet_time">#</a>
+明显感觉到最近通胀压力，因为猎头在找上门的时候，都是以15k为单位的，几年前的时候10k都很多了，人民币和白纸似的了。 <a href="http://twitter.com/54chen/statuses/27911119936" class="aktt_tweet_time">#</a>
+以为涨的房价自己赚了，切不知一加息都让银行收去了。 <a href="http://twitter.com/54chen/statuses/27909056006" class="aktt_tweet_time">#</a>
+通过哥学社，统计了人人、百度、腾讯、金山、盛大、新浪（排名不分先后，想到哪个写哪个）等公司的数据库系统的中间件架构，近期放出分析报告。 <a href="http://twitter.com/54chen/statuses/27904919107" class="aktt_tweet_time">#</a>
+北京互联网创业团队招靠谱UI设计师，工作地点在海淀，团队和项目都很靠谱，不缺钱，其他资源不是问题，待遇从优，感兴趣的发送个人简历和作品到mynameisfung@gmail.com，需要的话邮件进一步沟通。 <a href="http://twitter.com/54chen/statuses/27812898876" class="aktt_tweet_time">#</a>
+转自·嫫__茉❤: 我同学恋爱啦，她的男友是在世博沙特馆排四个小时的队认识的，真是世博改变生活啊~！！！单身的同学抓紧了~ <a href="http://twitter.com/54chen/statuses/27719786570" class="aktt_tweet_time">#</a>
+“我愿化身石桥，愿受五百年风吹，五百年日晒，五百年雨打，只为你从桥上走过。”&#8211;走过之后用石灰画一个圈写一个字：拆 <a href="http://twitter.com/54chen/statuses/27703137532" class="aktt_tweet_time">#</a>
+化随机为顺序，如果有这样一种算法，算不算是对硬盘技术的提升呢？但是要怎么来实现呢？ <a href="http://twitter.com/54chen/statuses/27702608871" class="aktt_tweet_time">#</a>
+对于一个互联网公司，时断时续的网速，IT部门上班时间魔兽，我表示无语。 <a href="http://twitter.com/54chen/statuses/27697939045" class="aktt_tweet_time">#</a>
+nginx.conf控制指定的代理ip和ip访问的设置手记 <a href="http://goo.gl/fb/WNtQl" rel="nofollow">http://goo.gl/fb/WNtQl</a> <a href="http://twitter.com/54chen/statuses/27692588172" class="aktt_tweet_time">#</a>
+波兰科学家认为今冬北半球将迎“千年极寒”，不管这消息真假，nnd今天比昨天感觉又冷多了。 <a href="http://twitter.com/54chen/statuses/27686004681" class="aktt_tweet_time">#</a>
+淘宝的武侠文化一直是我所欣赏的文化，一种江湖气息贯穿工作，正如哥学社的哥文化，已然成为所有技术哥中坚定的信念。 <a href="http://twitter.com/54chen/statuses/27594611312" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2010-10-17 <a href="http://goo.gl/fb/Klbtg" rel="nofollow">http://goo.gl/fb/Klbtg</a> <a href="http://twitter.com/54chen/statuses/27594287389" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -631,76 +707,6 @@ RT 侯冲:-D :人人用户热门状态选登：其实我是一名盗梦者，我
 54chen Twitter memo 2010-09-12 <a href="http://goo.gl/fb/IPRbi" rel="nofollow">http://goo.gl/fb/IPRbi</a> <a href="http://twitter.com/54chen/statuses/24244320968" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/09/17/about-login-project/">大型网站登录项目的重要性</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-17T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>中国互联网最不缺少的就是复制，为什么美国一个行业的网站都是一家独大？有人说是因为他们上网的人少，先入为主的效果比较大，后面进入市场的网站基本都存活不久。</p>
-
-<p>而在国内，大家都在把皮毛抄来抄去，真正的核心却是抄不去的，比如说登录。</p>
-
-<p><strong>登录，垃圾广告的第一关</strong>
-网站大了，自然被一堆的spam盯上，少量的spam不会怎么样，但是到处是牛皮蘚一样的广告，给网站的正常用户的感觉可想而知。<br />
-大多数网站针对这些spam有着以下的一堆策略：<br />
-1.anti Spam项目针对各种各样的关键词一概禁止发 坏处：关键词越来越多性能越来越差。<br />
-2.举报项目让自觉的用户去举报  坏处：往往还没有举报用户就走掉了。<br />
-3.对发送次数过多的用户判断发送次数，次数过多的出验证码  坏处：正常用户也可能会被影响。</p>
-
-<p><strong>看国内网站的登录</strong>
-1）豆瓣：登录强度指数1<br />
-无https，无验证码，无加密，用代码模拟登录http://www.douban.com/login轻而易举，不知为何在豆瓣似乎看不到诸如淘宝商城之类的广告，看来另有人肉在？求验证。<br />
-2）人人网：登录强度指数1<br />
-薄弱原因，未统一入口，无加密，http://3g.renren.com/login.do?fx=0&autoLogin=true无https，无验证码，用代码模拟登录非常简单，淘宝小广告、陌生人加好友现象普遍存在（也可能是我经常用的缘故）。<br />
-3）百度：登录强度指数2<br />
-采用两次取票，https传送，比前两位稍强，但对于执意要模拟登录来说，丝毫没有增加难度，只是多发几次请求而已。<br />
-4）腾讯：登录强度指数4<br />
-这个最强，统一前后端，统一入口，虽未启用https，但传输有前端md5_3加密，传输密文，另有三次取cookies拼串过程，外搭地域、特定用户名出图形验证码（图形一出，卡死一片，经常登录QQ时出来的你的QQ号有异常，请输入验证码即是），要破此登录，限制相当多。美中不足之处，只要不达到出图形验证的阀门，要模拟也是易事，所以此阀门需要相当精妙。<br />
-（以上研究结果按照2010年9月16日线上研究得出）</p>
-
-<p><strong>搞一个什么样的登录是最有用的？</strong>
-这当然是充分想像，人在使用鼠标的时候会怎么用，程序肯定是还达不到人工智能的程度的。<br />
-用类似QQ的图形验证码，识别图形与写点模拟登录的代码档次就不一样了。<br />
-要做好登录，只需要做好跳出图形验证码的条件即可。<br />
-比如腾讯：外国IP跳图形（老毛子野广告多，肉机也多）、登录过多跳图形（一般人没事也不会登录退出登录退出地操作）、IP转换过大跳图形（你不可能一天当中一下子从北京去到美国）<br />
-还可以增加：<br />
-没有reffer跳图形（当然了，基本上只是防掉一小部分不法分子）<br />
-cookies定时更换重新计算 <br />
-曾经疑似机器人随机跳图形，一次未正确定义为机器人，三次正确后取消定义<br />
-！@#￥%￥#%……
-<font color="#ffffff">BANGCB3619347602D5A119E40D35XIANGUO</font></p>
-
-<p></p>
 </div>
   
   
