@@ -4,8 +4,108 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2015-04-13T11:47:11+08:00</pubDate>
+        <pubDate>2015-06-03T18:29:15+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
+
+<p>当愤怒的用户，张牙舞爪地告诉你他遇到问题的时候，往往已经病入膏肓。－－题记</p>
+
+<p>作者同全国各地愤怒的用户亲密接触了很长的时间之后，做出了以下总结，希望对后来的人们能够有一点启发。</p>
+
+<h1>一、用户IP是个不可靠的东西</h1>
+
+<ul>
+<li>在实际的案例中，使用用户的IP地址去IP库里找用户属于哪个地域哪个运营商。</li>
+<li>不幸的是，IP库有可能不准。</li>
+<li>更不幸的是，连IP地址都可能是错的。实际案例中，我们遇到了运营商级别的流量劫持，用户本来是浙江移动，在某些服务器取得的IP居然是江苏电信。</li>
+<li>解决的办法：尽量不依赖IP，用smartDNS。或者多渠道纠正IP地址，使用本地客户端的运营商识别能力＋电话号码地域识别。</li>
+</ul>
+
+
+<!--more-->
+
+
+<h1>二、用户不是傻子，他其实都知道自己网络是好是坏</h1>
+
+<ul>
+<li>许多案例，用户都会告诉你，他的QQ是好的、微信是好的，为什么你不行？你不行！</li>
+<li>看用户日志，感觉用户在撒谎。</li>
+<li>然而这并没有什么卵用。</li>
+<li>知道真相眼泪掉下来：用户在坏网络下时并不会反馈，而从坏网络－>好网络时，你如果还在原来的状态下，你不行，用户就愤怒了。</li>
+<li>解决的办法：维护好socket的connect init->connecting->connected状态，任何用户的手动操作，1）天线没变，除了connected状态外，都要转圈; 2）天线变了，除了connected状态外，都要重新开始。</li>
+</ul>
+
+
+<h1>三、用户的愤怒，还因为反应慢</h1>
+
+<ul>
+<li>当socket正在创建时，用户手动重发一个数据，往往是采取转菊花和感叹号两个办法。</li>
+<li>对用户的行为硬碰硬（立即感叹号），会立即引发用户的愤怒。</li>
+<li>对用户的行为超过一定时间的转对抗（菊花），超过10秒即会引发用户的愤怒。</li>
+<li>解决的办法：设置合适的timeout值。wifi下：connect timeout 1s，send data timeout 1s（明显的大数据包要区别对待）。4g/3g/2g下：connect timeout 1s，send data timeout 10s（明显的大数据包要区别对待）</li>
+<li>connect timeout的情况处理：重新发起connect。换IP。</li>
+<li>send data timeout的情况处理：重新发数据2次。reconnect new ip。</li>
+</ul>
+
+
+<h1>四、遇到了localDNS问题－不解析、乱解析</h1>
+
+<ul>
+<li>dns问题最好的办法：方案中不用dns。退而选之，少用dns。</li>
+</ul>
+
+
+<h1>五、遇到了运营商加广告</h1>
+
+<ul>
+<li>一般运营商只对http加广告</li>
+<li>二逼运营商还对tcp加广告</li>
+<li>解决的办法：parse数据失败时，reconnect新的地方。</li>
+</ul>
+
+
+<h1>六、遇到了协议、端口拦截</h1>
+
+<ul>
+<li>常见问题</li>
+<li>一个协议不行，换另一个。tcp|udp->http->websocket</li>
+<li>一个端口不行，换另一个。80->443->8080->14000</li>
+</ul>
+
+
+<h1>七、遇到了EPIPE\ECONNRESET</h1>
+
+<ul>
+<li>与服务器的连接中断后，send一次数据过去，如果能够到服务器，且服务器已经关了，会回一个RST，RST到了客户端，客户端此时read数据，将遇到ECONNRESET。</li>
+<li>与服务器的连接中断后，send数据时时如果已经通过RST得到对方关了，返回EPIPE。</li>
+<li>以功夫网为例，ECONNRESET的原因，是海外势力被发现后根本收不到数据或者数据乱了，就从server上关掉了socket，再过去的包就会回RST，我们再读就会显示ECONNRESET。</li>
+<li>解决办法：只有timeout值得重试，其他都reconnect吧。</li>
+</ul>
+
+
+<h1>八、总结</h1>
+
+<ul>
+<li>要想用户不愤怒，网坏时可坏，但网好要他也好。（迅速恢复）</li>
+<li>客户端各种适应环境。</li>
+</ul>
+
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[R u ok--客户端网络优化实践]]></title>
+            <link>http://2014.54chen.com/blog/2015/06/03/are-u-ok/</link>
+            <pubDate>2015-06-03T16:11:08+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2015/06/03/are-u-ok</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -2106,172 +2206,6 @@ int i = sc.read(buff)</p></blockquote>
             <link>http://2014.54chen.com/blog/2014/04/16/how-to-use-akka-in-java-2/</link>
             <pubDate>2014-04-16T15:12:32+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2014/04/16/how-to-use-akka-in-java-2</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
-
-<h2>什么是actor?</h2>
-
-<ul>
-<li>Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。</li>
-<li>它由Carl Hewitt于上世纪70年代早期提出，目的是为了解决分布式编程中一系列的编程问题。</li>
-<li>Actor模型的本质已经被强调了无数遍：万物皆Actor。Actor之间只有发送消息这一种通信方式。</li>
-<li>一个Actor如何处理多个Actor的请求呢？它先建立一个消息队列，每次收到消息后，就放入队列，而它每次也从队列中取出消息体来处理。通常我们都使得这个过程是循环的。让Actor可以时刻处理发送来的消息。</li>
-</ul>
-
-
-<h2>什么是akka?</h2>
-
-<p>Akka是一个用Scala编写的库，用于简化编写容错的、高可伸缩性的Java和Scala的Actor模型应用。</p>
-
-<!--more-->
-
-
-<ul>
-<li>下面以在java项目中使用akka写代码为例子。</li>
-</ul>
-
-
-<h2>依赖</h2>
-
-<ul>
-<li>maven项目</li>
-<li>java6 or 7</li>
-<li>添加akka相关的包</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;dependency>
-</span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
-</span><span class='line'>            &lt;artifactId>akka-actor_2.10&lt;/artifactId>
-</span><span class='line'>            &lt;version>2.3.1&lt;/version>
-</span><span class='line'>        &lt;/dependency>
-</span><span class='line'>        &lt;dependency>
-</span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
-</span><span class='line'>            &lt;artifactId>akka-remote_2.10&lt;/artifactId>
-</span><span class='line'>            &lt;version>2.3.1&lt;/version>
-</span><span class='line'>        &lt;/dependency>
-</span><span class='line'>        &lt;dependency>
-</span><span class='line'>            &lt;groupId>com.google.protobuf&lt;/groupId>
-</span><span class='line'>            &lt;artifactId>protobuf-java&lt;/artifactId>
-</span><span class='line'>            &lt;version>2.5.0&lt;/version>
-</span><span class='line'>        &lt;/dependency>
-</span><span class='line'>        &lt;dependency>
-</span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
-</span><span class='line'>            &lt;artifactId>akka-testkit_2.10&lt;/artifactId>
-</span><span class='line'>            &lt;version>2.3.1&lt;/version>
-</span><span class='line'>        &lt;/dependency></span></code></pre></td></tr></table></div></figure>
-
-
-<h2>依赖包解析</h2>
-
-<ul>
-<li>akka-actor 核心包，有这个包就可以写简单的代码了</li>
-<li>akka-remote 远程包，有这个包，才能够跨进程和网络调用</li>
-<li>protobuf-java 不解释了，之所有是要声明版本，是因为pb的版本太低会造成消息传递过程中序列化反序列化有问题</li>
-<li>akka-testkit 测试集，有这个包，写test case方便</li>
-</ul>
-
-
-<h2>常见问题</h2>
-
-<ul>
-<li>Q:shutting down JVM since &lsquo;akka.jvm-exit-on-fatal-error&rsquo; is enabled</li>
-<li>A:所有出错的时候都会有这个提示，快速错误退出是一个常见的机制，让系统最快时间发现错误。</li>
-<li>Q:java.lang.ClassNotFoundException: akka.remote.RemoteActorRefProvider</li>
-<li>A:没有添加进来akka-remote的时候会这样</li>
-<li>Q:class akka.remote.WireFormats$AkkaControlMessage overrides final method getUnknownFields.()Lcom/google/protobuf/UnknownFieldSet</li>
-<li>A:这是pb版本太低导致的，声明到2.5.0或以上</li>
-</ul>
-
-
-<h2>例子</h2>
-
-<ul>
-<li>这是typesafe的经典例子。</li>
-<li>所有actor的配置都在classpath中。</li>
-<li>此例启动了两个system（简称为worker与creator）：startRemoteWorkerSystem &amp;&amp; startRemoteCreationSystem</li>
-<li>worker使用calculator.conf，在2552端口侦听。</li>
-<li>creator使用remotecreation.conf，定义了它的worker在远程的2552端口，路径在creationActor下，自己的端口为2554。</li>
-</ul>
-
-
-<h2>creator中的逻辑</h2>
-
-<ul>
-<li>creator启动后，调用了schedule，进行了一秒一次的随机调用乘法或除法。</li>
-<li>具体的计算，在creationActor这个actor中完成。</li>
-<li>而creationActor这个actor被定义到了远程2552端口的进程中执行。</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>akka {
-</span><span class='line'>  actor {
-</span><span class='line'>    deployment {
-</span><span class='line'>      "/creationActor/*" {
-</span><span class='line'>        remote = "akka.tcp://CalculatorWorkerSystem@127.0.0.1:2552"
-</span><span class='line'>      }
-</span><span class='line'>    }
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>运行中进程观察</h2>
-
-<ul>
-<li>run CreationApplication.java</li>
-<li>一个进程 启动了一个端口</li>
-<li>进程通过这个端口，产生随机算式，交给另一个进程（这里是同一个进程）。</li>
-</ul>
-
-
-<h2>代码</h2>
-
-<ul>
-<li>本文提及代码在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a></li>
-</ul>
-
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[java中使用akka手记一]]></title>
-            <link>http://2014.54chen.com/blog/2014/04/14/how-to-use-akka-in-java/</link>
-            <pubDate>2014-04-14T21:38:24+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/04/14/how-to-use-akka-in-java</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>

@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[视频]云南大旱小学生6天喝一瓶水省水送父母 等 本次的视频分享有意减少了数量，主要是有事要说。 西南大旱已经半年无雨，54chen是云南人，重灾区离老家不远，深知情况的严重性，及后续对农业生产带来的巨大影响。 老婆说要捐款，红十字会也在贪污，还能捐给谁？（可搜一下512地震捐款的使用情况） &hellip;">
+  <meta name="description" content="试用新型JAVA构建工具Gradle 54chen在研究一个开源项目的时候，发现其使用的构建工具很特殊，叫Gradle，和ant maven类似，他提供的东西更加有感觉，不过冒似版本还不高，最新的0.9也只是一个预览版本。 名词解释 ant
+当一个代码项目大了以后，每次重新编译，打包， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,180 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/01/try-the-new-build-tools-gradle/">试用新型JAVA构建工具Gradle</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>54chen在研究一个开源项目的时候，发现其使用的构建工具很特殊，叫Gradle，和ant maven类似，他提供的东西更加有感觉，不过冒似版本还不高，最新的0.9也只是一个预览版本。</p>
+
+<p><strong>名词解释</strong></p>
+
+<p>ant<br />
+当一个代码项目大了以后，每次重新编译，打包，测试等都会变得非常复杂而且重复，因此c语言中有make脚本来帮助这些工作的批量完成。在Java 中应用是平台无关性的，当然不会用平台相关的make脚本来完成这些批处理任务了，ANT本身就是这样一个流程脚本引擎，用于自动化调用程序完成项目的编译，打包，测试等。除了基于JAVA是平台无关的外，脚本的格式是基于XML的，比make脚本来说还要好维护一些。</p>
+
+<p>maven<br />
+Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具.<br />
+如果你已经有十次输入同样的Ant targets来编译你的代码、jar或者war、生成javadocs，你一定会自问，是否有有一个重复性更少却能同样完成该工作的方法。Maven便提供了这样一种选择，将你的注意力从作业层转移到项目管理层。Maven项目已经能够知道如何构建和捆绑代码，运行测试，生成文档并宿主项目网页.<br />
+项目的主页地址为：http://maven.apache.org/</p>
+
+<p>Gradle<br />
+Gradle是一个基于Groovy的build工具——“Ease - Freedom - Power for your build<br />
+Gradle试图使用Groovy语法来提供Ant的灵活性；它支持多项目的创建，为Ivy提供了一个layer，提供了build-by-convention集成；而且它还让你获得许多类似Maven的功能比如传递依赖管理和约定大于配置。</p>
+
+<p>Groovy<br />
+Groovy 是 JVM 的一个替代语言 — 替代 是指可以用 Groovy 在 Java 平台上进行 Java 编程，使用方式基本与使用 Java 代码的方式相同。在编写新应用程序时，Groovy 代码能够与 Java 代码很好地结合，也能用于扩展现有代码。目前的 Groovy 版本是 1.6.3，在 Java 1.4 和 Java 5 平台上都能使用，也能在 Java 6 上使用。</p>
+
+<p><strong>为何使用Gradle</strong>
+尽管Ant没有内置的依赖管理是个事实，但是将Ivy整合到你build.xml中还是很简单的。Maven有构建脚本，只需要几行代码来配置就可以有许多功能：依赖管理、内置的编译和打包应用的任务、与Jetty的集成、干净的项目web网址，与cobertura的集成、pmd或者findbugs。<br />
+Maven和Ant就只是我们的选择么？是否还有比它们更好的选择？在过去的几年中，我们看到很多项目，他们使用的工具不再使用XML来定义构建逻辑，而是真正的编程语言像Groovy、Ruby、Python，它们经常允许依赖管理。这里有几个：GRADLE 、Gant、Kundo、 Raven、 Buildr。</p>
+
+<p><strong>如何使用Gradle</strong>
+用Groovy语法（相当类似java）写好构建的逻辑。类似下面这个（elasticsearch项目的）：
+<blockquote>import java.text.SimpleDateFormat
+<div><code>defaultTasks "clean", "release"</code></div>
+<div><code>usePlugin BasePlugin</code></div>
+<div><code>archivesBaseName = 'elasticsearch'</code></div>
+<code>buildTime = new Date()<br />
+SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");<br />
+sdf.setTimeZone(TimeZone.getTimeZone("UTC"));<br />
+buildTimeStr = sdf.format(buildTime)</code></blockquote></p>
+
+<p>versionNumber = &#8216;0.5.1-SNAPSHOT&#8217;</p>
+
+<p>explodedDistDir = new File(distsDir, &#8216;exploded&#8217;)<br />
+explodedDistLibDir = new File(explodedDistDir, &#8216;lib&#8217;)<br />
+explodedDistBinDir = new File(explodedDistDir, &#8216;bin&#8217;)<br />
+explodedDistConfigDir = new File(explodedDistDir, &#8216;config&#8217;)</p>
+
+<p>allprojects {<br />
+group = &#8216;org.elasticsearch&#8217;<br />
+version = versionNumber</p>
+
+<p>plugins.withType(JavaPlugin).whenPluginAdded {<br />
+sourceCompatibility = 1.6<br />
+targetCompatibility = 1.6<br />
+}</p>
+
+<p>repositories {<br />
+mavenCentral()<br />
+mavenRepo urls: &#8216;http://repository.jboss.com/maven2/&#8217;<br />
+}
+}</p>
+
+<p>configurations {<br />
+dists<br />
+distLib {<br />
+visible = false<br />
+}
+}</p>
+
+<p>dependencies {<br />
+distLib project(&#8216;:elasticsearch&#8217;)<br />
+}</p>
+
+<p>task explodedDist(dependsOn: [configurations.distLib], description: &#8216;Builds a minimal distribution image&#8217;) &lt;&lt; {<br />
+[explodedDistDir, explodedDistLibDir, explodedDistBinDir, explodedDistConfigDir]*.mkdirs()<br />
+// remove old elasticsearch files<br />
+ant.delete { fileset(dir: explodedDistLibDir, includes: &#8220;$archivesBaseName-*.jar&#8221;) }</p>
+
+<p>copy {<br />
+from configurations.distLib<br />
+into explodedDistLibDir<br />
+}</p>
+
+<p>copy { from(&#8216;bin&#8217;); into explodedDistBinDir }<br />
+copy { from(&#8216;config&#8217;); into explodedDistConfigDir }</p>
+
+<p>copy {<br />
+from(&#8216;.&#8217;)<br />
+into explodedDistDir<br />
+include &#8216;LICENSE.txt&#8217;<br />
+include &#8216;NOTICE.txt&#8217;<br />
+include &#8216;README.textile&#8217;<br />
+}</p>
+
+<p>ant.chmod(dir: &#8220;$explodedDistDir/bin&#8221;, perm: &#8220;ugo+rx&#8221;, includes: &#8220;**/*&#8221;)<br />
+}</p>
+
+<p>task zip(type: Zip) {<br />
+dependsOn explodedDist<br />
+// classifier = &#8216;all&#8217;<br />
+}</p>
+
+<p>zip.doFirst {task -&gt;<br />
+zipRootFolder = &#8220;$archivesBaseName-${-&gt; version}&#8221;<br />
+task.configure {<br />
+zipFileSet(dir: explodedDistDir, prefix: zipRootFolder) {<br />
+exclude &#8216;bin/*&#8217;<br />
+}
+zipFileSet(dir: explodedDistDir, prefix: zipRootFolder, fileMode: &#8216;775&#8217;) {<br />
+include &#8216;bin/*&#8217;<br />
+exclude &#8216;bin/*.*&#8217;<br />
+}
+zipFileSet(dir: explodedDistDir, prefix: zipRootFolder) {<br />
+include &#8216;bin/*.*&#8217;<br />
+}
+}<br />
+}</p>
+
+<p>task release(dependsOn: [zip]) {<br />
+}</p>
+
+<p> <br />
+task wrapper(type: Wrapper) {<br />
+gradleVersion = &#8216;0.8&#8217;<br />
+jarPath = &#8216;gradle&#8217;<br />
+}
+到Gradle下载zip包，解压到任何位置，设置环境变量中的GRADLE_HOME过程此位置，path中增加gradle的bin目录，<a href="http://www.gradle.org">http://www.gradle.org</a> (杯具，需翻)</p>
+
+<p>到项目目录下直接运行 gradle，编译成功有如下提示:
+<img src="http://img01.taobaocdn.com/bao/uploaded/i1/T1JtxwXnBeXXc3NVk._111121.jpg" alt="" /></p>
+
+<p>如果直接运行 gradle &#8211;gui，还能以gui的模式来选择，非常人性化：
+<img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1dI8wXXhqXXX_GaU._111317.jpg" alt="" /></p>
+
+<p>本文作者：<br />
+54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br />
+个人技术站点:<a href="http://www.54chen.com/"><span style="color: #0b3b8c;">http://www.54chen.com/</span></a> 。可以通过电子邮件 czhttp@gmail.com 联系到他。</p>
+
+<p><strong>本文提到的网址</strong></p>
+
+<p>Gradle: <a href="http://www.gradle.org">http://www.gradle.org</a></p>
+
+<p>国内的评论：<a href="http://news.csdn.net/n/20090313/124106.html">http://news.csdn.net/n/20090313/124106.html</a></p>
+
+<p>国外的一些讨论：<a href="http://stackoverflow.com/questions/1163173/why-use-gradle-instead-of-ant-or-maven">http://stackoverflow.com/questions/1163173/why-use-gradle-instead-of-ant-or-maven</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -644,61 +819,6 @@
 </ul></p>
 
 <p>周末愉快！</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/03/09/renren-wonderful-video/">人人网精彩视频展播：世界前50名灵异视频等</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-03-09T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>继续上周的展播：
-<div class="preview float-left">
-<div class="share-figuie"><a id="previewLink" title="【优酷首播】超可爱！迷你版Lady gaga演唱造型也很雷人嘛！" href="http://share.renren.com/share/GetShare.do?id=1688456407&amp;owner=253729600&amp;from=hotvideo2" target="_blank"><img id="previewImg" src="http://g1.ykimg.com/0100641F464B8D8600416D01B368A1296DDC59-CF94-D75E-54AD-E4170E20806F" alt="" width="220" height="165" /> </a></div>
-</div>
-	<li><a title="六岁的他想拿冠军" href="http://share.renren.com/share/GetShare.do?id=1714735879&amp;owner=287286920&amp;from=hotvideo1" target="_blank"><span style="color: #005eac;">六岁的他想拿冠军</span></a></li>
-	<li class=" "><a title="【优酷首播】超可爱！迷你版Lady gaga演唱造型也很雷人嘛！" href="http://share.renren.com/share/GetShare.do?id=1688456407&amp;owner=253729600&amp;from=hotvideo2" target="_blank"><span style="color: #005eac;">【优酷首播】超可爱！迷你版Lady g&#8230;</span></a></li>
-	<li class=" "><a title="2010新片【花田喜事】 完整版正片" href="http://share.renren.com/share/GetShare.do?id=1714179282&amp;owner=229242700&amp;from=hotvideo3" target="_blank"><span style="color: #005eac;">2010新片【花田喜事】 完整版正片</span></a></li>
-	<li class=" "><a title="【犀利哥】【03月02日14点】宁波东论流言阁：是否愿意接受救助？全民关注犀利哥首度开口！  - 视频 - 优酷视频 - 在线观看" href="http://share.renren.com/share/GetShare.do?id=1681742239&amp;owner=226076400&amp;from=hotvideo4" target="_blank"><span style="color: #005eac;">【犀利哥】【03月02日14点】宁波东&#8230;</span></a></li>
-	<li class=" "><a title="小女孩歌声媲美小康妮" href="http://share.renren.com/share/GetShare.do?id=1688444324&amp;owner=287286312&amp;from=hotvideo5" target="_blank"><span style="color: #005eac;">小女孩歌声媲美小康妮</span></a></li>
-	<li class=" "><a title="世界前50名灵异视频 - 视频 - 优酷视频 - 在线观看 - 灵异 恐怖 不可思议 超自然" href="http://share.renren.com/share/GetShare.do?id=1690230742&amp;owner=248907800&amp;from=hotvideo6" target="_blank"><span style="color: #005eac;">世界前50名灵异视频 - 视频 - 优&#8230;</span></a></li>
- 
-<ul class="video-list clearfix">
-	<li><a class="share-figure" title="抢座位：艾佛森式过人" href="http://share.renren.com/share/GetShare.do?id=1682586943&amp;owner=287286312&amp;from=hotvideo" target="_blank"><img src="http://g4.ykimg.com/0100641F464B8C796BA89302FC7CEFB0B6B838-F69F-3454-A6F2-F66CB1BCD653" alt="" width="120" height="90" /> <span class="play-icon"> </span> </a><span class="share-name"><a title="抢座位：艾佛森式过人" href="http://share.renren.com/share/GetShare.do?id=1682586943&amp;owner=287286312&amp;from=hotvideo" target="_blank"><span style="color: #005eac;">抢座位：艾佛森式过人</span></a></span> <span class="share-num">分享:<span style="font-size: x-small; color: #666666;">1168</span></span> <span class="float-right"><a onclick="create_share_nosysn(1682586943,287286312,287286312)" href="http://share.renren.com/wp-admin/#nogo"><span style="color: #005eac;">分享</span></a></span></li>
-	<li><a class="share-figure" title="刘谦首度回应棘手话题 “闭关修炼”只是谣传" href="http://share.renren.com/share/GetShare.do?id=1682592343&amp;owner=287286920&amp;from=hotvideo" target="_blank"><img src="http://i1.6.cn/57/aa/b852172991424.t1.jpg" alt="" width="120" height="90" /> <span class="play-icon"> </span> </a><span class="share-name"><a title="刘谦首度回应棘手话题 “闭关修炼”只是谣传" href="http://share.renren.com/share/GetShare.do?id=1682592343&amp;owner=287286920&amp;from=hotvideo" target="_blank"><span style="color: #005eac;">刘谦首度回应棘手话题 “闭关修&#8230;</span></a></span> <span class="share-num">分享:<span style="font-size: x-small; color: #666666;">190</span></span> <span class="float-right"><a onclick="create_share_nosysn(1682592343,287286920,287286920)" href="http://share.renren.com/wp-admin/#nogo"><span style="color: #005eac;">分享</span></a></span></li>
-	<li><a class="share-figure" title="献给妈妈，发自肺腑的音乐&lt;那口锅&gt; ！" href="http://share.renren.com/share/GetShare.do?id=1682595394&amp;owner=287286312&amp;from=hotvideo" target="_blank"><img src="http://g2.ykimg.com/0100641F464B6DBD9D5C0603259188E5E2053B-2DF3-370E-3409-14D2CBA9C835" alt="" width="120" height="90" /> <span class="play-icon"> </span> </a><span class="share-name"><a title="献给妈妈，发自肺腑的音乐&lt;那口锅&gt; ！" href="http://share.renren.com/share/GetShare.do?id=1682595394&amp;owner=287286312&amp;from=hotvideo" target="_blank"><span style="color: #005eac;">献给妈妈，发自肺腑的音乐&lt;&#8230;</span></a></span> <span class="share-num">分享:<span style="font-size: x-small; color: #666666;">3017</span></span> <span class="float-right"><a onclick="create_share_nosysn(1682595394,287286312,287286312)" href="http://share.renren.com/wp-admin/#nogo"><span style="color: #005eac;">分享</span></a></span></li>
-	<li><a class="share-figure" title="【感人短片】人生到底需要什么？（送给你迷茫的你···）" href="http://share.renren.com/share/GetShare.do?id=1714728090&amp;owner=254572300&amp;from=hotvideo" target="_blank"><img src="http://g3.ykimg.com/0100641F464B91F1A247B7004E51CDE345CEFC-D10F-201A-5F46-E3D8D47B3A0F" alt="" width="120" height="90" /> <span class="play-icon"> </span> </a><span class="share-name"><a title="【感人短片】人生到底需要什么？（送给你迷茫的你···）" href="http://share.renren.com/share/GetShare.do?id=1714728090&amp;owner=254572300&amp;from=hotvideo" target="_blank"><span style="color: #005eac;">【感人短片】人生到底需要什么？&#8230;</span></a></span> <span class="share-num">分享:<span style="font-size: x-small; color: #666666;">1656</span></span> <span class="float-right"><a onclick="create_share_nosysn(1714728090,254572300,254572300)" href="http://share.renren.com/wp-admin/#nogo"><span style="color: #005eac;">分享</span></a></span></li>
-	<li><a class="share-figure" title="【搞笑＋回忆】2010密歇根大学华人春节晚会最受欢迎节目My Awaken Dream (80后的回忆)" href="http://share.renren.com/share/GetShare.do?id=1707784421&amp;owner=233515700&amp;from=hotvideo" target="_blank"><img src="http://g4.ykimg.com/0100641F464B8D77DFF1400060A38160988791-E145-D5B0-423C-EA206292D6D7" alt="" width="120" height="90" /> <span class="play-icon"> </span> </a><span class="share-name"><a title="【搞笑＋回忆】2010密歇根大学华人春节晚会最受欢迎节目My Awaken Dream (80后的回忆)" href="http://share.renren.com/share/GetShare.do?id=1707784421&amp;owner=233515700&amp;from=hotvideo" target="_blank"><span style="color: #005eac;">【搞笑＋回忆】2010密歇根大&#8230;</span></a></span> <span class="share-num">分享:<span style="font-size: x-small; color: #666666;">18232</span></span> <span class="float-right"><a onclick="create_share_nosysn(1707784421,233515700,233515700)" href="http://share.renren.com/wp-admin/#nogo"><span style="color: #005eac;">分享</span></a></span></li>
-	<li><a class="share-figure" title="原来是这样！驻伊美军揭秘真实拆弹部队！" href="http://share.renren.com/share/GetShare.do?id=1721899456&amp;owner=287519876&amp;from=hotvideo" target="_blank"><img src="http://i2.6.cn/90/18/a2791943527269.t1.jpg" alt="" width="120" height="90" /> <span class="play-icon"> </span> </a><span class="share-name"><a title="原来是这样！驻伊美军揭秘真实拆弹部队！" href="http://share.renren.com/share/GetShare.do?id=1721899456&amp;owner=287519876&amp;from=hotvideo" target="_blank"><span style="color: #005eac;">原来是这样！驻伊美军揭秘真实拆弹部队！</span></a></span> <span class="share-num">分享:<span style="font-size: x-small; color: #666666;">118</span></span> <span class="float-right"><a onclick="create_share_nosysn(1721899456,287519876,287519876)" href="http://share.renren.com/wp-admin/#nogo"><span style="color: #005eac;">分享</span></a></span></li>
-	<li><a class="share-figure" title="吃饭不宜观看  化学的力量" href="http://share.renren.com/share/GetShare.do?id=1715724868&amp;owner=245854000&amp;from=hotvideo" target="_blank"><img src="http://g4.ykimg.com/0100641F464B939463E22F0010C714EAF51485-7B6D-D896-DBE1-394F19DC58A6" alt="" width="120" height="90" /> <span class="play-icon"> </span> </a><span class="share-name"><a title="吃饭不宜观看  化学的力量" href="http://share.renren.com/share/GetShare.do?id=1715724868&amp;owner=245854000&amp;from=hotvideo" target="_blank"><span style="color: #005eac;">吃饭不宜观看 化学的力量</span></a></span> <span class="share-num">分享:<span style="font-size: x-small; color: #666666;">2338</span></span> <span class="float-right"><a onclick="create_share_nosysn(1715724868,245854000,245854000)" href="http://share.renren.com/wp-admin/#nogo"><span style="color: #005eac;">分享</span></a></span></li>
-</ul></p>
 </div>
   
   

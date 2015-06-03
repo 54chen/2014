@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Linux C获取机器MAC及IP的两个函数 [文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.25 转载请注明原文链接：http://www.54chen.com/c/28] 以下两函数分别将mac ip通过memcpy至mac_addr和ip_addr
-char * &hellip;">
+  <meta name="description" content="intel汇编与AT＆T的区别 [文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.26 转载请注明原文链接：http://www.54chen.com/c/30] 在设计mynet的时候用到这个，其实二者区别不是太多，总结一下有下面几点：
+1.intel的mov 变成了movb &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,90 @@ char * &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/10/26/intel-compile-the-difference-between-at-u0026amp-t/">intel汇编与AT＆T的区别</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2006-10-26T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.26 转载请注明原文链接：<a href="http://www.54chen.com/c/30">http://www.54chen.com/c/30</a>]</p>
+
+<p>在设计mynet的时候用到这个，其实二者区别不是太多，总结一下有下面几点：<br />
+1.intel的mov 变成了movb movl mov (后面对应8 16 32位的操作位)<br />
+) 2.寄存器都加百分号<br />
+3.操作都是反过来的：mov al,cl（inter）＝＝movb %cl,%al</p>
+
+<p>而在gcc里的内联汇编也有不同，用起来也是挺好用的，看例～<br />
+main(){<br />
+char tmp;<br />
+__asm__(<br />
+&#8220;movb %1, %%cl;&#8221;<br />
+&#8220;movb %%cl, %%dl;&#8221;<br />
+&#8220;shl $7,%%edx;&#8221;<br />
+&#8220;movb %%cl,%%al;&#8221;<br />
+&#8220;and $2,%%eax;&#8221;<br />
+&#8220;shr $1,%%al;&#8221;<br />
+&#8220;or %%eax,%%edx;&#8221;<br />
+&#8220;movb %%cl,%%al;&#8221;<br />
+&#8220;and $4,%%eax;&#8221;<br />
+&#8220;shl $2,%%eax;&#8221;<br />
+&#8220;or %%eax,%%edx;&#8221;<br />
+&#8220;movb %%cl,%%al;&#8221;<br />
+&#8220;and $8,%%eax;&#8221;<br />
+&#8220;shl $2,%%eax;&#8221;<br />
+&#8220;or %%eax,%%edx;&#8221;<br />
+&#8220;movb %%cl,%%al;&#8221;<br />
+&#8220;and $0x10,%%eax;&#8221;<br />
+&#8220;shl $2,%%eax;&#8221;<br />
+&#8220;or %%eax, %%edx;&#8221;<br />
+&#8220;movb %%cl,%%al;&#8221;<br />
+&#8220;and $0x20,%%eax;&#8221;<br />
+&#8220;shr $2,%%al;&#8221;<br />
+&#8220;or %%eax,%%edx;&#8221;<br />
+&#8220;movb %%cl,%%al;&#8221;<br />
+&#8220;and $0x40,%%eax;&#8221;<br />
+&#8220;shr $4,%%al;&#8221;<br />
+&#8220;or %%eax,%%edx;&#8221;<br />
+&#8220;and $0x80,%%ecx;&#8221;<br />
+&#8220;shr $6,%%cl;&#8221;<br />
+&#8220;or %%ecx,%%edx;&#8221;<br />
+&#8220;movb %%dl, %0;&#8221;<br />
+:&#8221;=r&#8221;(tmp) //tmp变量写出，就是上文中的%0，第0个参数<br />
+:&#8221;r&#8221;(tmp) //tmp写入，就是上文中的%1，第1个参数<br />
+:&#8221;%ecx&#8221;,&#8221;%edx&#8221;);</p>
+
+<p>//tmp变了;<br />
+}
+这来自一段用过的加密过程中，8位的tmp变量传入了内嵌的汇编中，一通翻江倒海后变了。。。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

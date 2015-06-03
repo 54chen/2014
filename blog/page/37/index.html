@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="艾睿网 CMAX（RIA中国）技术峰会归来 演稿分享 感谢junidea、kenshin等牛人的组织和邀请，为这次技术峰会的成功举办感到由衷的高兴，这一群新兴的群体，在一线的朋友们，到场的牛人还有《Flex 3 RIA开发详解与精深实践》作者杨占坡、杨铭、《银光开发者工作室》的魏永超、 &hellip;">
+  <meta name="description" content="Ubuntu 9.10快速安装nginx+php环境手记[54chen科学院] 我(54chen)因为场景需要，特地在ubuntu9.10中安装nginx+php的环境，要快速不要优化，记录如下：
+sudo apt-get install php5 php5-cgi php5-cli php5- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,86 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/24/ubuntu-910-quick-install-nginx-php-notes-from-the-environment-54/">Ubuntu 9.10快速安装nginx+php环境手记[54chen科学院]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-12-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>我(<a href="http://www.54chen.com">54chen</a>)因为场景需要，特地在<a href="http://www.54chen.com/_linux_/11-return-ubuntu-910-notes-from-the-hard-disk-installation.html">ubuntu9.10</a>中安装nginx+php的环境，要快速不要优化，记录如下：
+<blockquote>sudo apt-get install php5 php5-cgi php5-cli php5-gd php5-curl php5-mysql nginx</blockquote></p>
+
+<p>sudo apt-get install lighttpd</p>
+
+<p>spawn-fcgi -a 127.0.0.1 -p 9000 -C 5 -u www-data -g www-data -f /usr/bin/php-cgi
+上面的操作解读：</p>
+
+<p>1.安装php nginx</p>
+
+<p>2.安装lighttpd，为啥要安装这个，因为他有个spawn-fcgi，因为apt下来的php不是php-fpm。</p>
+
+<p>3.用spawn-fcgi启动php-cgi在9000端口监听。
+<blockquote>sudo vim /etc/php5/cgi/php.ini</blockquote></p>
+
+<p>修改php.ini文件</p>
+
+<p>cgi.fix_pathinfo=1; 这样php-cgi方能正常使用SCRIPT_FILENAME这个变量
+sudo vim /etc/nginx/sites-enabled/www.54chen.com
+<blockquote>server {<br />
+listen 80; //端口<br />
+server_name wiki.54chen.com; //虚拟域名<br />
+access_log /var/log/nginx/hwiki.54chen.com.access.log; //访问日志<br />
+location / {<br />
+root /home/wiki.54chen.com; //size根目录<br />
+index index.php;<br />
+}
+location ~ &#46;php$ { #php fastcgi的配置<br />
+fastcgi_pass 127.0.0.1:9000; #php fastcgi的代理端口与ip<br />
+fastcgi_index index.php;<br />
+fastcgi_param SCRIPT_FILENAME /home/wiki.54chen.com$fastcgi_script_name; #要处理的php文件的路径<br />
+include /etc/nginx/fastcgi_params; #fastcgi的参数文件地址<br />
+}
+}</blockquote>
+好，上面的操作就建立了一个<a href="http://www.54chen.com/memo/%e4%b8%80%e5%8f%a5%e8%af%9d%e8%ae%b0%e5%bd%95%e5%a4%87%e5%bf%98.html">虚拟主机</a>，保存好。</p>
+
+<p>sudo killall apache2</p>
+
+<p>杀掉apache，启动nginx.</p>
+
+<p>sudo /etc/init.d/nginx start</p>
+
+<p>大功告成！整个过程不超过十五分钟。呼呼～～</p>
+
+<p>圣诞快乐！！！</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -770,54 +851,6 @@ return b;<br />
 <p>最后喘出的气息，天高云淡的感觉，豁然开朗，理解幸福与快乐，学会幸福与快乐。</p>
 
 <p>一月之后，是新的一年，心情超好，呼，好久没有喘气的感觉。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/28/54chen-twitter-2009-11-28/">一周废话汇总【54chen Twitter 2009-11-28】</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-11-28T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-	<li>支付宝不支持ubuntu firefox3.55? <a href="http://twitter.com/54chen/statuses/5998517185">#</a></li>
-	<li>前台看到一个应聘java的，居然是老妈带来在前台帮着登记 <a href="http://twitter.com/54chen/statuses/6037384540">#</a></li>
-	<li>转文章故意去掉出处的小人，我代表中国一线的原创作者BS你。 <a href="http://twitter.com/54chen/statuses/6038809159">#</a></li>
-	<li><a href="http://page.renren.com/600002662?ref=54chen" rel="nofollow">http://page.renren.com/600002662?ref=54chen</a> offer寺，找工作专用，拜过有offer <a href="http://twitter.com/54chen/statuses/6040211076">#</a></li>
-	<li>一个人的成长有两个条件，一是要给予足够的时间，没有任何人会在一天之内成长起来，就像一棵树一样，十年过去才会发现长大了，另一个条件是生命的热情永不熄灭，不管多么卑微，内心的种子一定要向往天空，要尽力伸展自己的枝叶去触摸蓝天，去追逐天空的云彩，有了向上的心，一定就会有灿烂的果。 <a href="http://twitter.com/54chen/statuses/6045283054">#</a></li>
-	<li>google wave每人放出了8个 <a href="http://twitter.com/54chen/statuses/6069424873">#</a></li>
-	<li>席慕容说过：我并不是立意要错过 可是我 一直都在这样做 。生命的旅驿中 一定有些什么，是使你我不可割舍的；一定有些什么，是令你我思念牵挂的；一定有些什么，是让你我柔肠千转刻骨铭心的。如果昨日重现，请别再让幸福擦肩。 <a href="http://twitter.com/54chen/statuses/6074926459">#</a></li>
-	<li>至尊宝挖开自己的心，看到了紫霞留在那里的一滴眼泪，毕竟曾经沧海过。五百年又五百年，兜了一个大圈子又回到了原地。人没能战胜命运，而人的尊严却在抗争中得到了肯定，人的情感也必将不朽。 <a href="http://twitter.com/54chen/statuses/6076823445">#</a></li>
-	<li>1949年，只有社会主义才能救中国； 1979年，只有资本主义才能救中国； 1989年，只有中国才能救社会主义； 2009年，只有中国才能救资本主义； 2012年，只有中国才能救地球…… <a href="http://twitter.com/54chen/statuses/6099921378">#</a></li>
-	<li>好疯狂  到处是google wave的邀请 全是用户自发的 这是如何做到的 <a href="http://twitter.com/54chen/statuses/6108741323">#</a></li>
-</ul>
-</p>
 </div>
   
   
