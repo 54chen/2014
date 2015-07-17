@@ -4,7 +4,7 @@
   <title><![CDATA[Category: C,c++ | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/c-c-plus-plus/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2015-07-17T18:10:01+08:00</updated>
+  <updated>2015-07-17T21:52:34+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -326,9 +326,9 @@
 </span><span class='line'>
 </span><span class='line'>&lt;p> let g:ycm_error_symbol = &lsquo;>>&rsquo;
 </span><span class='line'> let g:ycm_warning_symbol = &lsquo;>*&rsquo;
-</span><span class='line'> nnoremap &lt;leader>gl :YcmCompleter GoToDeclaration&lt;CR>
-</span><span class='line'> nnoremap &lt;leader>gf :YcmCompleter GoToDefinition&lt;CR>
-</span><span class='line'> nnoremap &lt;leader>gg :YcmCompleter GoToDefinitionElseDeclaration&lt;CR>
+</span><span class='line'> nnoremap gl :YcmCompleter GoToDeclaration&lt;CR>
+</span><span class='line'> nnoremap gf :YcmCompleter GoToDefinition&lt;CR>
+</span><span class='line'> nnoremap gg :YcmCompleter GoToDefinitionElseDeclaration&lt;CR>
 </span><span class='line'> nmap &lt;F4> :YcmDiags&lt;CR>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>

@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2015-07-17T18:10:01+08:00</updated>
+  <updated>2015-07-17T21:52:34+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -219,9 +219,9 @@
 <span class='line-number'>6</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>let g:ycm_error_symbol = '>>'
 </span><span class='line'> let g:ycm_warning_symbol = '>*'
-</span><span class='line'> nnoremap &lt;leader>gl :YcmCompleter GoToDeclaration&lt;CR>
-</span><span class='line'> nnoremap &lt;leader>gf :YcmCompleter GoToDefinition&lt;CR>
-</span><span class='line'> nnoremap &lt;leader>gg :YcmCompleter GoToDefinitionElseDeclaration&lt;CR>
+</span><span class='line'> nnoremap gl :YcmCompleter GoToDeclaration&lt;CR>
+</span><span class='line'> nnoremap gf :YcmCompleter GoToDefinition&lt;CR>
+</span><span class='line'> nnoremap gg :YcmCompleter GoToDefinitionElseDeclaration&lt;CR>
 </span><span class='line'> nmap &lt;F4> :YcmDiags&lt;CR></span></code></pre></td></tr></table></div></figure>
 
 
