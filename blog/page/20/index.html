@@ -9,9 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-05-29 关于hadoop:1.用坏机器基本就在维护硬件 2.离线拖日志的带宽费用不如买机器去机房。 #
-maven打jar包自动生成run脚本-appassembler插件的使用 http://goo.gl/fb/JiC8G #
-54chen &hellip;">
+  <meta name="description" content="改写java TreeMap制造方便查询的ip内存库 国库流行的ip库记录数大约在6万条左右，数据格式大约都是如下：
+start,end,country&#8230;
+要查询的时候都是放到mysql里去，然后select * from ip where start&gt;=xx and end &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,116 @@ maven打jar包自动生成run脚本-appassembler插件的使用 http://goo.gl/fb
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/30/chang-java-treemap-store-ip/">改写java TreeMap制造方便查询的ip内存库</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-05-30T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1AhydXlJnXXcZ9h76_061839.jpg" alt="ip" /></p>
+
+<p>国库流行的ip库记录数大约在6万条左右，数据格式大约都是如下：<br />
+start,end,country&#8230;<br />
+要查询的时候都是放到mysql里去，然后select * from ip where start&gt;=xx and end end &lt;=xx来得到ip信息，我（54chen）在搞一个实时监控时，因为并发量非常大，全部查询IP库，需要好几万每秒的查询，特改了java的TreeMap的get方法，将所有数据放到内存里来操作，put的时候还是保持TreeMap的红黑树实现，以start作为key，而在get的时候有一个 compare的过程，在发现compare是大于0的时候进行如下修改：
+<blockquote>else if (cmp &gt; 0) {<br />
+int start = ((Data) p.value).getStart();<br />
+int end = ((Data) p.value).getEnd();<br />
+int intKey = Integer.parseInt(k.toString());<br />
+if (intKey &gt;= start &amp;&amp; intKey &lt;= end) {<br />
+return p;<br />
+}
+p = p.right;<br />
+}</blockquote>
+大概意思是：在树上遇到比要找的数据小的节点时，从数据中取到end的大小，来参加对比，如果满足要求，直接返回。</p>
+
+<p>附修改好的代码：
+<a href="http://ishare.iask.sina.com.cn/f/15805095.html">http://ishare.iask.sina.com.cn/f/15805095.html</a></p>
+
+<p><strong>重要补充：</strong></p>
+
+<p>由qunar的sunli大侠补充，用实现comparable的key用法更加正宗，代码如下：
+<blockquote>public class Chen {<br />
+public static void main(String[] args) {</blockquote></p>
+
+<p>java.util.TreeMap&lt;IpEntry, Data&gt; xmap = new  java.util.TreeMap&lt;IpEntry, Data&gt;();<br />
+xmap.put(new IpEntry(0, 100), genData(0, 100, &#8220;中国&#8221;));<br />
+xmap.put(new IpEntry(101, 200), genData(101, 200, &#8220;日本&#8221;));<br />
+xmap.put(new IpEntry(2000, 3000), genData(2000, 3000, &#8220;美国&#8221;));<br />
+xmap.put(new IpEntry(201, 300), genData(201, 300, &#8220;巴西&#8221;));<br />
+xmap.put(new IpEntry(501, 600), genData(501, 600, &#8220;法国&#8221;));<br />
+xmap.put(new IpEntry(701, 800), genData(701, 800, &#8220;英国&#8221;));<br />
+xmap.put(new IpEntry(601, 700), genData(601, 700, &#8220;北京&#8221;));<br />
+xmap.put(new IpEntry(1601, 1700), genData(1601, 1700, &#8220;广州&#8221;));</p>
+
+<p>Data data = xmap.get(new IpEntry(1260, 1260));<br />
+if (data == null) {<br />
+System.out.println(&#8220;not found!&#8221;);<br />
+} else {<br />
+System.out.println(data.getCountry());<br />
+}
+}</p>
+
+<p>private static class IpEntry implements Comparable&lt;IpEntry&gt; {</p>
+
+<p>final long start;<br />
+final long end;</p>
+
+<p>IpEntry(long start, long end) {<br />
+this.start = start;<br />
+this.end = end;<br />
+}</p>
+
+<p>public int compareTo(IpEntry t) {<br />
+long t1 = start - t.start;<br />
+if (t1 &lt; 0) {<br />
+return -1;<br />
+}
+long t2 = end - t.end;<br />
+if (t1 &gt;= 0 &amp;&amp; t2 &lt;= 0) {<br />
+return 0;<br />
+}
+return 1;<br />
+}</p>
+
+<p>}</p>
+
+<p>private static Data genData(int start, int end, String country) {<br />
+Data data = new Data();<br />
+data.setCountry(country);<br />
+data.setStart(start);<br />
+data.setEnd(end);<br />
+return data;<br />
+}
+}</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -557,60 +667,6 @@ self()表示正在运行的进程ID
 -record(message_to,{to_name,message}).<br />
 message_to{to_name=aaaa,message=&#8221;hello&#8221;}<br />
 将得到{message_to,aaaa,&#8221;hello&#8221;}</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/04/24/54chen-twitter-memo-2011-04-24/">54chen Twitter Memo 2011-04-24</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-04-24T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-焦点访谈剑指淘宝，小马哥说过，如果关了淘宝网就没有假货，那就关了。看上去可以成立个淘宝网城管部门。 </ul><a href="http://twitter.com/54chen/statuses/61759411160494081" class="aktt_tweet_time">#</a>
-<a href="http://eu.techcrunch.com/2011/04/21/amazon-ec2-goes-down-taking-with-it-reddit-foursquare-and-quora/" rel="nofollow">http://eu.techcrunch.com/2011/04/21/amazon-ec2-goes-down-taking-with-it-reddit-foursquare-and-quora/</a>  这个帖子，很杯催的很多人在评论里吐槽。 <a href="http://twitter.com/54chen/statuses/61696604331192320" class="aktt_tweet_time">#</a>
-<a href="http://ec2disabled.com/" rel="nofollow">http://ec2disabled.com/</a> 这里列出了受这次亚马逊ec2服务宕机影响的公司。 <a href="http://twitter.com/54chen/statuses/61694277415219200" class="aktt_tweet_time">#</a>
-纽约时报：亚马逊事件或致云计算产业蒙上阴影 <a href="http://twitter.com/54chen/statuses/61676566576500736" class="aktt_tweet_time">#</a>
-亚马逊down了40多小时，对未来会有什么影响？ <a href="http://twitter.com/54chen/statuses/61643751017295872" class="aktt_tweet_time">#</a>
-如果有需求，用nodejs来做comet,bigpipe的特定功能的开发是个不错的选择，而大中型项目用nodejs可能会面临项目构建代码管理的问题。 <a href="http://twitter.com/54chen/statuses/61415730863816706" class="aktt_tweet_time">#</a>
-nodejs vs erlang <a href="http://twitter.com/54chen/statuses/61405044456697856" class="aktt_tweet_time">#</a>
-@<a href="http://twitter.com/hnws" class="aktt_username">hnws</a> 善哉善哉  版权的事情 只是借鉴下设计 代码都是自己写的 <a href="http://twitter.com/54chen/statuses/61398411391410176" class="aktt_tweet_time">#</a>
-看nodejs看到了joyent这家云计算公司的身影，遥想去年还名不见经传的时候，renren的明星哥帮我选博客主题，最后向joyent学习了，joyent.com和54chen.com很像，有木有！！！ <a href="http://twitter.com/54chen/statuses/61057378572959744" class="aktt_tweet_time">#</a>
-利用sqoop将mysql数据同步到hive手记 <a href="http://goo.gl/fb/xuzzG" rel="nofollow">http://goo.gl/fb/xuzzG</a> <a href="http://twitter.com/54chen/statuses/60967091024568320" class="aktt_tweet_time">#</a>
-互联网行业的数据具有以下特点：新增数据源非常频繁；生命周期也较短；数据量增长速度惊人，如果没有严格的控制，会导致数据仓库中的数据组织混乱，不可审计与追踪。 <a href="http://twitter.com/54chen/statuses/60635904791945216" class="aktt_tweet_time">#</a>
-关于召开类KIK业务发展座谈会的通知&#8230;&#8230;. <a href="http://twitter.com/54chen/statuses/59918972568608768" class="aktt_tweet_time">#</a>
-gprs来访者中，许多ip都会瞬时漂移到69.28.58.*，奇怪的事情。 <a href="http://twitter.com/54chen/statuses/59879230229581824" class="aktt_tweet_time">#</a>
-研究移动的数据，会有许多附带的html或者莫名其妙的请求来源，这会是另一个局域网高地吗？ <a href="http://twitter.com/54chen/statuses/59797433529540610" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-04-17 <a href="http://goo.gl/fb/lLJ6h" rel="nofollow">http://goo.gl/fb/lLJ6h</a> <a href="http://twitter.com/54chen/statuses/59430872713146368" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-04-17 <a href="http://goo.gl/fb/9tTTK" rel="nofollow">http://goo.gl/fb/9tTTK</a> <a href="http://twitter.com/54chen/statuses/59430870787948544" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   

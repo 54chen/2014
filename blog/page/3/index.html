@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Java中使用akka手记一 Apr 14th, 2014 什么是actor? Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。
-它由Carl Hewitt于上世纪70年代早期提出， &hellip;">
+  <meta name="description" content="Java中使用akka手记二 Cluster Apr 16th, 2014 基础知识 2.3.2的cluster还有些想实现的东西没有实现，包括：actor分区（负载均衡） actor handoff（临时故障时的actor处理） actor重新平衡（增减节点时有用） actor状态复制机制（ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +73,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/16/how-to-use-akka-in-java-2/">Java中使用akka手记二 Cluster</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-16T15:12:32+08:00" pubdate data-updated="true">Apr 16<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
+
+<h2>基础知识</h2>
+
+<ul>
+<li><p>2.3.2的cluster还有些想实现的东西没有实现，包括：actor分区（负载均衡） actor handoff（临时故障时的actor处理） actor重新平衡（增减节点时有用） actor状态复制机制（类似做M/S作用）</p></li>
+<li><p>2.3.2的cluster已经有的能力有：节点－集群－leader节点; membership; gossip协议同步状态; VECTOR CLOCKS保障顺序; 失败检测－节点不可达算法; seed节点－新节点加入时可以向这些节点发消息，但也是可以向任意成员发的; membership生命周期有joining up leaving exiting removed unreachable几种状态。</p></li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/16/how-to-use-akka-in-java-2/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -525,53 +573,6 @@ Cassandra 2.0.3</p>
   
     <footer>
       <a rel="full-article" href="/blog/2013/12/30/cassandra-thrift/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/30/bluno/">BLUNO试用手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-11-30T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
-<strong>准备工作</strong>
-rmbp<br />
-BLUNO ×1<br />
-Android 4.3+ Devices with BLE or IOS 7.0+ Devices<br />
-Accessory Shield with Arduino ×1<br />
-Micro USB cable x1<br />
-http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。</p>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/11/30/bluno/">Read on &rarr;</a>
     </footer>
   
 

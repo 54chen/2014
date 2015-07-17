@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Twitter Api 中文文档 [前言][515更新] [ 翻译：陈臻 本文版本：v1.1 最后修改：2009.5.15 转载请注明原文链接：http://www.54chen.com/c/591 原稿：twitter wiki 完成2%]
-前言
-(每个开发者在开始使用api前都必须知道的概念 &hellip;">
+  <meta name="description" content="Scp和rsync的限制流量（速度）方法 有些机房会限制机器的流量，为了不触及底线，在使用scp和rsync的时候都要注意。 为了避免你的scp或者rsync因为无良＆懒惰的OPS设置防火墙的偷懒而造成的断流现象，我们必须对自己的数据传输进行一定的限流措施，慢一点总比被掐了的好。因此（限制为 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +73,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/05/24/%E5%A6%82%E4%BD%95%E5%AF%B9%E4%BB%98%E6%97%A0%E8%89%AF%E6%87%92%E6%83%B0ops%E7%9A%84%E5%8F%AF%E8%80%BB%E7%9A%84%E9%99%90%E6%B5%81%E6%8E%AA%E6%96%BD/">Scp和rsync的限制流量（速度）方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-05-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>有些机房会限制机器的流量，为了不触及底线，在使用scp和rsync的时候都要注意。</p>
+
+<p>为了避免你的<a href="http://www.54chen.com/c/406">scp</a>或者rsync因为无良＆懒惰的OPS设置防火墙的偷懒而造成的断流现象，我们必须对自己的数据传输进行一定的限流措施，慢一点总比被掐了的好。因此（限制为  1M <a href="http://www.54chen.com/c/148">Bytes</a>/s）：
+<pre>  scp -l 10000 某个大文件   你的账号@远程的机器</pre>
+或者rsync是（限制为 60k Bytes/s）：
+<pre>  rsync -auvz --progress --delete --bwlimit=60 远程的文件  本地的文件
+  rsync -auvz --progress --delete --bwlimit=60 本地的文件  远程的文件</pre>
+<!-- end content --></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -790,96 +831,6 @@ Todd从定义BigTable的适用范围开始论述。由于BigTable引入的各种
 4.路过帮我喂。
 <div style="width: 250px; padding: 0; margin: 0; border: 1px solid #000; text-align: center;"><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="250" height="300" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="bgcolor" value="#ffffff" /><param name="flashvars" value="cn=零蛋坐骑&amp;an=零蛋&amp;clr=0xedd177&amp;uid=1" /><param name="src" value="http://www.54chen.com/2/f/ma2.swf" /><embed type="application/x-shockwave-flash" width="250" height="300" src="http://www.54chen.com/2/f/ma2.swf" flashvars="cn=零蛋坐骑&amp;an=零蛋&amp;clr=0xedd177&amp;uid=1" bgcolor="#ffffff"></embed></object></div>
 <a href="http://www.54chen.com/2/">领养一个珍惜动物!</a></p></p></p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/01/%E5%8E%9F%E5%88%9B%E6%89%93%E5%80%92%E6%8A%95%E7%A5%A8%E4%BD%9C%E5%BC%8A%EF%BC%8C%E5%B7%A7%E7%94%A8flex%E9%98%B2%E5%88%B7%E7%A5%A8/">[原创]打倒投票作弊，巧用flex防刷票</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-04-01T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.2 最后修改：2009.4.28 转载请注明原文链接：<a href="http://www.54chen.com/c/520">http://www.54chen.com/c/520</a> ]</p>
-
-<p>在开放ID<a href="http://www.54chen.com/c/17">投票</a>的应用中，如果投票后的奖品丰富，必然会招来各种各样的刷票机和人肉刷票，如何防止刷票，也就成了大家头疼的事情。</p>
-
-<p>一般情况下，大家都会使用限制IP的策略，同时加上Cookies，但是日常都刷票机都能解决掉这两种方法，下面介绍的是一种比较少用一些的方法，就是利用<a href="http://www.54chen.com/c/96">flash</a>的share object机制来防止刷票，这只能增加刷票的成本，而不能完全规避这种行为，要做到没人刷票而又开放，基本上只能靠&#8211;人。</p>
-
-<p>下面请看flex代码,内附注释(xx.mxml)：
-<blockquote>&lt;?xml version=&#8221;1.0&#8221; encoding=&#8221;utf-8&#8221;?&gt;<br />
-&lt;mx:Application xmlns:mx=&#8221;http://www.adobe.com/2006/mxml&#8221; layout=&#8221;absolute&#8221; initialize=&#8221;init()&#8221; applicationComplete=&#8221;onBrowseClick()&#8221; width=&#8221;190&#8221; height=&#8221;54&#8221; horizontalAlign=&#8221;center&#8221; verticalAlign=&#8221;middle&#8221; alpha=&#8221;0.44&#8221; backgroundGradientAlphas=&#8221;[0.0, 0.0]&#8221; backgroundGradientColors=&#8221;[#ffffff, #ffffff]&#8221;&gt;<br />
-&lt;mx:Script&gt;<br />
-&lt;![CDATA[<br />
-import flash.external.*;<br />
-import com.cc.StringManipulator;<br />
-import com.cc.Md5;<br />
-import mx.controls.Alert;<br />
-[Bindable]<br />
-public var myTime:String;<br />
-[Bindable]<br />
-public var myUid:String;<br />
-[Bindable]<br />
-public var myHash:String;</p>
-<p>private function init():void{//初始化 通过下面三个html传过来的参数进行下一步的计算<br />
-myTime = Application.application.parameters.t;<br />
-myUid = Application.application.parameters.u;<br />
-myHash = Application.application.parameters.h;<br />
-}
-private function onBrowseClick():void{<br />
-var hk123:SharedObject = SharedObject.getLocal( &#8220;hk123&#8221; );<br />
-var temp:String = hk123.data[myUid];<br />
-var hashCode2:String = &#8221;;<br />
-hk123.data[myUid]=myTime;<br />
-hk123.data.dt = myTime;<br />
-hk123.flush();<br />
-hashCode2 = Md5.calculate(&#8216;caoninengdudaozelizhenxian&#8217; + myUid + myHash);//这一行自己加了个密钥串和传来的用户ID和服务器串进行md5 如果能破解flash到这里 这个基本上就破了
-<a href="http://www.54chen.com/c/350">ExternalInterface</a>.call(&#8220;browse&#8221;,temp,hashCode2);//提交到html里的js function-&gt;browse,通过这个js把form提交给服务器端，去计算整个串是不是对的或者是不是使用过的，也就可以限制重复了<br />
-}
-]]&gt;<br />
-&lt;/mx:Script&gt;<br />
-&lt;/mx:Application&gt;</p>
-</blockquote>
-<p> 
-PS:</p>
-
-<p>有许多朋友来mail问我js部分，特地加一下，其实就是一个简单的function，里面怎么写都行，只要把参数传到服务器端就成：</p>
-
-<p> 
-<div>大致如下</div>
-<blockquote>
-<div>function <span>browse(a,b)</span></div>
-<div><span>{</span></div>
-<div><span>form.action += &#8216;&amp;s1=a&amp;s2=b&#8217;;</span></div>
-<div><span>form.submit();//其实用ajax传也不失为一个好办法</span></div>
-<div><span>}
-</span>这就把一个form提出去了，你当然还可以用ajax什么的直接发那两个值去服务器端就是了。</div></blockquote>
-END</p>
 </div>
   
   

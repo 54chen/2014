@@ -9,10 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Cloud Foundry之vmc代码解读 简介
-cloudfoundry是vmvare推出来的开源PaaS平台，vmc全称是The VMware Cloud CLI，是vmware的应用平台命令行接口。
-ubuntu安装vmc
-sudo gem install vmc 常见的用法 vmc &hellip;">
+  <meta name="description" content="Cloud Foundry之cloud_controller代码解读 简介
+cloudfoundry是vmvare推出来的开源PaaS平台，cloud_controller是其管理界面的http rest api入口。 补课 rails
+Rails基于MVC（模型- 视图- 控制器）设计模式。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +75,86 @@ sudo gem install vmc 常见的用法 vmc &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/30/cloud-foundry-cloud_controller/">Cloud Foundry之cloud_controller代码解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-30T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloud" />
+<strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，cloud_controller是其管理界面的http rest api入口。</p>
+
+<p><strong>补课 rails</strong>
+Rails基于MVC（模型- 视图- 控制器）设计模式。从视图中的Ajax应用，到控制器中的访问请求和反馈，到封装数据库的模型，Rails 为你提供一个纯Ruby的开发环境。<br />
+习惯约定大于配置：<br />
+model类位置app/models/xxx.rb<br />
+controller位置app/controllers/xxx_controller.rc<br />
+help位置app/helpers/xxx_helpers.rb<br />
+view位置app/views/xxx<br />
+对应布局app/views/layouts/xxx.rhtml xxx.rxml</p>
+
+<p><strong>开始cloud_controller</strong>
+https://github.com/cloudfoundry/cloud_controller</p>
+
+<p>里面有两个项目，一个是cloud controller另一个是health_manager，今天要研究的是前者，下节说后者。</p>
+
+<p><strong>入口</strong>
+bin/cloud_controller -> config/boot.rb<br />
+cloud_controller必需要求ruby1.9以上，因为其中有一个fiber需要ruby支持（传说中的Coroutine）。<br />
+如果没有配置 cloud_controller使用nginx，则会启用Thin去启动Rack。（Thin是ruby内置的network server，Rack: a Ruby Webserver Interface）</p>
+
+<p><strong>app</strong>
+以vmc push举例：<br />
+vmc push的关键一请求：post apps<br />
+对应app/controllers/apps_controller.rb</p>
+
+<p><blockquote>def create<br />
+	update_app_from_params(app)<br />
+	检查各种参数并赋值<br />
+	app.save! (app使用了ActiveRecord::Base，ActiveRecord是ruby用来做orm的东东，具体可以认为save!就是入库了)<br />
+        stage_app(app)<br />
+		去nats注册：result = client.stage(request, AppConfig[:staging][:max_staging_runtime])</blockquote></p>
+
+<p>	
+<strong>关键点</strong>
+cloud_controller接收到请求记录到db:postgresql/sqlite(cloud_controller.yml中定义)。<br />
+请求同时发送到nats等进一步处理。
+<strong>
+vmc push所做的事情</strong>
+1．发一个POST到”apps”，创建一个app;  (本文只做了这一步的分析)<br />
+2．发一个PUT到”apps/:name/application”，上传app;<br />
+3．发一个GET到”apps/:name/”，取得app状态，看看是否已经启动；<br />
+4．如果没有启动，发一个PUT到”apps/:name/”，使其启动。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -710,49 +789,6 @@ proc 就像一个函数</p>
 在helper末尾，对输入进行了循环检查，</p>
 
 <p>入口在：test_client_main，由末尾的if条件中调用。去test_client_main中取列表循环运行。
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/15/54chen-twitter-memo-2012-07-15/">54chen Twitter Memo 2012-07-15</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-07-15T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-rose手册在线版本：http://t.co/CRNq2eyH 同时提供pdf\mobi下载: </ul><a href="http://t.co/rE9S2X3E" rel="nofollow">http://t.co/rE9S2X3E</a> <a href="http://twitter.com/54chen/statuses/223321355679055873" class="aktt_tweet_time">#</a>
-完整版本的rose手册，http://t.co/GzEt2O4g ，还剩下最后的历史一章留下给了 @<a href="http://twitter.com/Qieqie" class="aktt_username">Qieqie</a> ，连续一个多月的连载，希望能为用java开发的创业公司起到作用。 <a href="http://twitter.com/54chen/statuses/223055062174416900" class="aktt_tweet_time">#</a>
-rose手册第三章C节：DAO层：分表设置 <a href="http://t.co/R0zdOCWF" rel="nofollow">http://t.co/R0zdOCWF</a> <a href="http://twitter.com/54chen/statuses/223044448664305664" class="aktt_tweet_time">#</a>
-今天写rose jade dao分表一节。 <a href="http://twitter.com/54chen/statuses/223009878787100672" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2012-07-08 <a href="http://t.co/kJnBarCk" rel="nofollow">http://t.co/kJnBarCk</a> <a href="http://twitter.com/54chen/statuses/221792405660237826" class="aktt_tweet_time">#</a>
-
 </p>
 </div>
   
