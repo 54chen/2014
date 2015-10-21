@@ -4,8 +4,113 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2015-07-17T21:52:34+08:00</pubDate>
+        <pubDate>2015-10-21T17:12:45+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <p><img width=300 src=http://ww2.sinaimg.cn/large/663fba41jw1ex8v5vyrgxj20u00i0ju9.jpg></p>
+
+<ul>
+<li><p>本文纯粹是鸡汤，里面的内容也全是胡扯，如果觉得有点用，有可能是你经历过或者正在经历。</p></li>
+<li><p>风格迥异的团队文化，可以让在一个团队不可能发生的事情，在另一群人眼里变得十分简单。</p></li>
+</ul>
+
+
+<h1>不要猜</h1>
+
+<ul>
+<li>在A团队，线上故障了，或者遇到了一个什么问题，经常遇到的对话如下：</li>
+</ul>
+
+
+<p>&mdash; 这应该是xxx的问题，和我们这边没有关系。</p>
+
+<p>&mdash; 这可能由于xxx超时引起的，我们也没有办法。</p>
+
+<ul>
+<li>很多很容易发现的问题就这样放松了警惕，慢慢积累成了重大问题。</li>
+</ul>
+
+
+<!--more-->
+
+
+<ul>
+<li>在B团队，线上故障，也有类似的对话：</li>
+</ul>
+
+
+<p>&mdash; 这可能是YYY的问题，我们没有办法。</p>
+
+<p>&mdash; 这大把握是YYY的原因，和某某没有关系。</p>
+
+<p>&mdash; 不要猜。（老大发话，很关键）</p>
+
+<ul>
+<li><p>然后B团队各部门协作起来，层层剥皮，剥洋葱一样的找到了问题在哪里，防患于未然。</p></li>
+<li><p>运维开发团队在剥皮过程中，尝试积累成工具。</p></li>
+<li><p>时间长了，在B团队再也没有人在猜问题原因了，一方面大家不要猜已经是默认，另一方面因为有各种总结出来的运营工具，让问题原因直接暴露。</p></li>
+</ul>
+
+
+<h1>can do</h1>
+
+<ul>
+<li>在A团队，线上发现问题，有人问起，会有如下的对话：</li>
+</ul>
+
+
+<p>&mdash; 这个不是我负责的，我也不清楚细节。</p>
+
+<p>&mdash; 这个事情需要修改代码上线才行。</p>
+
+<p>&mdash; 这个项目我没有参与。</p>
+
+<ul>
+<li><p>然后这个问题被踢来踢去，直到找到会解决的人，问题才有所缓解。</p></li>
+<li><p>在B团队，也有类似的对话：</p></li>
+</ul>
+
+
+<p>&mdash; 这个不是我负责的，我也不清楚细节。</p>
+
+<p>&mdash; 你是团队的一员，不要告诉No。（老大发话，很关键）</p>
+
+<p>&mdash; 这个事情需要修改代码上线才行。</p>
+
+<p>&mdash; 那就动手。（老大发话，很关键）</p>
+
+<p>&mdash; 这个项目我没有参与。</p>
+
+<p>&mdash; 现在就参与，不要说No。（老大发话，很关键）</p>
+
+<ul>
+<li><p>然后B团队中，成员的能量是无限大的，任何有能力的成员，都将在各个方面闪光。</p></li>
+<li><p>遇到问题，B团队的成员第一反应是:Can Do，而不是No。</p></li>
+</ul>
+
+
+<h1>结语</h1>
+
+<ul>
+<li><p>以上AB团队纯属虚构，如有雷同，纯属巧合。</p></li>
+<li><p>不猜的CanDo团队，才有可能是高效率团队，执行力才能暴仓。</p></li>
+</ul>
+
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[如何练就高效率团队]]></title>
+            <link>http://2014.54chen.com/blog/2015/10/21/dont-guess-can-do-team/</link>
+            <pubDate>2015-10-21T17:26:27+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2015/10/21/dont-guess-can-do-team</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -2024,353 +2129,6 @@ int i = sc.read(buff)</p></blockquote>
             <link>http://2014.54chen.com/blog/2014/04/18/how-to-use-akka-in-java-4/</link>
             <pubDate>2014-04-18T15:37:25+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2014/04/18/how-to-use-akka-in-java-4</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
-
-<h2>一个例子</h2>
-
-<ul>
-<li>同样是typesafe的经典例子。</li>
-<li>例子提供的服务是传输文本。当文本发给frontend节点，它会委派backend节点，backend执行转化任务，把结果返回给原来的客户端。</li>
-<li>新的backend节点和frontend节点，都可以动态地在cluster上增减。</li>
-</ul>
-
-
-<!--more-->
-
-
-<h2>message</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public interface TransformationMessages {
-</span><span class='line'>
-</span><span class='line'>  public static class TransformationJob implements Serializable {
-</span><span class='line'>    private final String text;
-</span><span class='line'>//......
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  public static class TransformationResult implements Serializable {
-</span><span class='line'>    private final String text;
-</span><span class='line'>//.....
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  public static class JobFailed implements Serializable {
-</span><span class='line'>    private final String reason;
-</span><span class='line'>    private final TransformationJob job;
-</span><span class='line'>//....
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  public static final String BACKEND_REGISTRATION = "BackendRegistration";
-</span><span class='line'>
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<h2>backend处理逻辑</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public class TransformationBackend extends UntypedActor {
-</span><span class='line'>
-</span><span class='line'>  Cluster cluster = Cluster.get(getContext().system());
-</span><span class='line'>//...  
-</span><span class='line'>  @Override
-</span><span class='line'>  public void onReceive(Object message) {
-</span><span class='line'>    if (message instanceof TransformationJob) {
-</span><span class='line'>      TransformationJob job = (TransformationJob) message;
-</span><span class='line'>      getSender().tell(new TransformationResult(job.getText().toUpperCase()),
-</span><span class='line'>          getSelf());
-</span><span class='line'>
-</span><span class='line'>    } else if (message instanceof CurrentClusterState) {
-</span><span class='line'>      CurrentClusterState state = (CurrentClusterState) message;
-</span><span class='line'>      for (Member member : state.getMembers()) {
-</span><span class='line'>        if (member.status().equals(MemberStatus.up())) {
-</span><span class='line'>          register(member);
-</span><span class='line'>        }
-</span><span class='line'>      }
-</span><span class='line'>
-</span><span class='line'>    } else if (message instanceof MemberUp) {
-</span><span class='line'>      MemberUp mUp = (MemberUp) message;
-</span><span class='line'>      register(mUp.member());
-</span><span class='line'>
-</span><span class='line'>    } else {
-</span><span class='line'>      unhandled(message);
-</span><span class='line'>    }
-</span><span class='line'>  }
-</span><span class='line'>
-</span><span class='line'>  void register(Member member) {
-</span><span class='line'>    if (member.hasRole("frontend"))
-</span><span class='line'>      getContext().actorSelection(member.address() + "/user/frontend").tell(
-</span><span class='line'>          BACKEND_REGISTRATION, getSelf());
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>backend订阅了cluster的事件，检测frontend节点，还会发一条消息告诉fontend可以使用了。</li>
-<li>frontend节点接收用户的任务，扔给注册好的backend节点。</li>
-</ul>
-
-
-<h2>frontend节点</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public class TransformationFrontend extends UntypedActor {
-</span><span class='line'>  List&lt;ActorRef> backends = new ArrayList&lt;ActorRef>();
-</span><span class='line'>  int jobCounter = 0;
-</span><span class='line'>  @Override
-</span><span class='line'>  public void onReceive(Object message) {
-</span><span class='line'>    if ((message instanceof TransformationJob) && backends.isEmpty()) {
-</span><span class='line'>      TransformationJob job = (TransformationJob) message;
-</span><span class='line'>      getSender().tell(
-</span><span class='line'>          new JobFailed("Service unavailable, try again later", job),
-</span><span class='line'>          getSender());
-</span><span class='line'>
-</span><span class='line'>    } else if (message instanceof TransformationJob) {
-</span><span class='line'>      TransformationJob job = (TransformationJob) message;
-</span><span class='line'>      jobCounter++;
-</span><span class='line'>      backends.get(jobCounter % backends.size())
-</span><span class='line'>          .forward(job, getContext());
-</span><span class='line'>
-</span><span class='line'>    } else if (message.equals(BACKEND_REGISTRATION)) {
-</span><span class='line'>      getContext().watch(getSender());
-</span><span class='line'>      backends.add(getSender());
-</span><span class='line'>
-</span><span class='line'>    } else if (message instanceof Terminated) {
-</span><span class='line'>      Terminated terminated = (Terminated) message;
-</span><span class='line'>      backends.remove(terminated.getActor());
-</span><span class='line'>
-</span><span class='line'>    } else {
-</span><span class='line'>      unhandled(message);
-</span><span class='line'>    }
-</span><span class='line'>  }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>frontend用List<ActorRef>保存了backend的actor位置，有需要的时候就轮循发给backend。</li>
-<li>getSender 本次收到消息的上游，一般用来回复消息。</li>
-<li>getContext 本actor的上下文。</li>
-<li>getContext().watch DeathWatch，相当于watch了谁，谁有啥公开动作就会告诉我，包括挂了之类的。</li>
-<li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在做路由、负载均衡、备份时非常有用。</li>
-</ul>
-
-
-<h2>运行TransformationApp</h2>
-
-<ul>
-<li>sample.cluster.transformation.TransformationApp 启动三个backend 2551 2552 0为一个cluster，启动一个fronend。</li>
-<li>frontend每5秒会收到一次任务，接收成功后print代码，代码如下：</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>system.scheduler().schedule(interval, interval, new Runnable() {
-</span><span class='line'>      public void run() {
-</span><span class='line'>        ask(frontend,
-</span><span class='line'>            new TransformationJob("hello-" + counter.incrementAndGet()),
-</span><span class='line'>            timeout).onSuccess(new OnSuccess&lt;Object>() {
-</span><span class='line'>          public void onSuccess(Object result) {
-</span><span class='line'>            System.out.println(result);
-</span><span class='line'>          }
-</span><span class='line'>        }, ec);
-</span><span class='line'>      }
-</span><span class='line'>
-</span><span class='line'>    }, ec);</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>frontend节点中，收到job的时候会去检查backend注册数是否可用了，如果有可用的就forward任务。</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>public void onReceive(Object message) {
-</span><span class='line'>    if ((message instanceof TransformationJob) && backends.isEmpty()) {
-</span><span class='line'>      TransformationJob job = (TransformationJob) message;
-</span><span class='line'>      getSender().tell(
-</span><span class='line'>          new JobFailed("Service unavailable, try again later", job),
-</span><span class='line'>          getSender());
-</span><span class='line'>
-</span><span class='line'>    } else if (message instanceof TransformationJob) {
-</span><span class='line'>      TransformationJob job = (TransformationJob) message;
-</span><span class='line'>      jobCounter++;
-</span><span class='line'>      backends.get(jobCounter % backends.size())
-</span><span class='line'>              .forward(job, getContext());
-</span><span class='line'>
-</span><span class='line'>    } else if (message.equals(BACKEND_REGISTRATION)) {
-</span><span class='line'>      getContext().watch(getSender());
-</span><span class='line'>      backends.add(getSender());
-</span><span class='line'>
-</span><span class='line'>    } else if (message instanceof Terminated) {
-</span><span class='line'>      Terminated terminated = (Terminated) message;
-</span><span class='line'>      backends.remove(terminated.getActor());
-</span><span class='line'>
-</span><span class='line'>    } else {
-</span><span class='line'>      unhandled(message);
-</span><span class='line'>    }
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>在backend中有一句代码如下：</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>void register(Member member) {
-</span><span class='line'>    if (member.hasRole("frontend"))
-</span><span class='line'>      getContext().actorSelection(member.address() + "/user/frontend").tell(
-</span><span class='line'>          BACKEND_REGISTRATION, getSelf());
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>解析：backend订阅了memberUp事件，所以在cluster中如果有memberUp了，都会执行上述代码。</li>
-<li>actorSelection是根据地址进行lookup，返回一个ActorSelection，可以当成本地的actor一样tell。</li>
-</ul>
-
-
-<h2>代码</h2>
-
-<ul>
-<li>本文提及代码在 <a href="https://github.com/54chen/akka_cluster_learn">https://github.com/54chen/akka_cluster_learn</a></li>
-</ul>
-
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[java中使用akka手记三 cluster详例]]></title>
-            <link>http://2014.54chen.com/blog/2014/04/17/how-to-use-akka-in-java-3/</link>
-            <pubDate>2014-04-17T20:11:07+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/04/17/how-to-use-akka-in-java-3</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>

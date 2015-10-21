@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-04-24 焦点访谈剑指淘宝，小马哥说过，如果关了淘宝网就没有假货，那就关了。看上去可以成立个淘宝网城管部门。 #
-http://eu.techcrunch.com/2011/04/21/amazon-ec2-goes-down-taking- &hellip;">
+  <meta name="description" content="Erlang学习手记 ubuntu10.04下erlide for eclipse安装 网址：http://erlide.sourceforge.net/
+3.5版本的eclipse，直接用url http://erlide.org/update 安装 安装后，还需要erlang的环境： &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,119 @@ http://eu.techcrunch.com/2011/04/21/amazon-ec2-goes-down-taking- &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/26/erlang-notes/">Erlang学习手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-26T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_EN.XadjXXbk3DE3_051340.jpg" alt="erlang install notes" /></p>
+
+<p><strong>ubuntu10.04下erlide for eclipse安装</strong></p>
+
+<p>网址：http://erlide.sourceforge.net/<br />
+3.5版本的eclipse，直接用url   http://erlide.org/update  安装</p>
+
+<p>安装后，还需要erlang的环境：</p>
+
+<p><blockquote>sudo apt-get install erlang</blockquote></p>
+
+<p>现在还不能打开文件，会报空指针错误，选择window->preferences->erlang->installed runtimes<br />
+把location选择到 /usr/lib/erlang 即可使用。</p>
+
+<p><blockquote>[把build automatically关掉，这插件还是不怎么靠谱的，用来写写代码就完了，要编译还是走命令行]</blockquote></p>
+
+<p><strong>erlang学习要点：</strong>
+<strong>（1）-module(xx).</strong>
+注意前面的杠（-）和后面的点（.） 类似java的package，文件名要求为xx.erl，与module里名字相同。
+<strong>（2）-export([double/1]).</strong>
+同样注意杠和点。表示模块内的函数为double，包含一个参数。<br />
+扩展：多个声明这样写  -export([fac/1, mult/2]).
+<strong>（3）模式匹配</strong>
+xxxx->aaaa;<br />
+箭头的用意：节省代码，不需要if&#8230;else&#8230;对应前面执行箭头后面。
+<strong>（4）变量只能单次赋值</strong>
+首字母必须大写。
+<strong>（5）元子</strong>
+以小写字母开头。只是一个名字。类似java的常量。
+<strong>（6）元组</strong>
+{inch,Y}<br />
+{moscow,{c,-10}}<br />
+元组中有元素。
+<strong>（7）列表</strong>
+[{},{},{}]<br />
+列表不一定要写在一行，不可以在元子或者整数中间分段。<br />
+一个很有用的遍历列表的方法是“|”<strong>
+（8）guard满足条件之后才会执行后面的</strong>
+大于> 小于< 等于== 大于等于>= 小于等于<= 不等于/=
+<strong>（9）竖线的作用 |</strong>
+得到列表中第一个元素：<br />
+[M1|T1] =[aaa,bbb,ccc].<br />
+在列表头部添加元素：<br />
+L1=[ddd|T1].
+<strong>（10）if case</strong>
+if<br />
+   condition 1 -> Action 1;<br />
+   condition 4 -> Action 4<br />
+end.<br />
+最后一个没有分号。<br />
+case XXX of<br />
+   xxx->
+      xxx;<br />
+   yyy->
+       yyy<br />
+end.<br />
+最后一个条件没有分号。
+<strong>（11）io:format</strong>
+~p很长的时候断行<br />
+~w输出<br />
+~n回车
+<strong>（12）spawn和receive以及!还有self()</strong>
+spawn启动一个process<br />
+receive等待来自其它进程的消息<br />
+!用来发消息：Pid!Message<br />
+self()表示正在运行的进程ID
+<strong>（13）register</strong>
+将一个进程名字注册为一个名字。
+<strong>（14）头文件</strong>
+*.hrl<br />
+-include(&#8220;xxx.hrl&#8221;).
+<strong>（15）宏</strong>
+-define(SERV_NODE,messenger@super).<br />
+？SERV_NODE
+<strong>（16）记录</strong>
+-record(message_to,{to_name,message}).<br />
+message_to{to_name=aaaa,message=&#8221;hello&#8221;}<br />
+将得到{message_to,aaaa,&#8221;hello&#8221;}</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -798,94 +911,6 @@ maven项目代码质量检测工具sonar使用手记 <a href="http://goo.gl/fb/p
 54chen Twitter memo 2011-03-20 <a href="http://goo.gl/fb/9sInW" rel="nofollow">http://goo.gl/fb/9sInW</a> <a href="http://twitter.com/54chen/statuses/49325258758565888" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/03/23/open-source-quality-management-platform-sonar-notes/">Maven项目代码质量检测工具sonar使用手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-03-23T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1o7d4XgVmXXa0tYUU_013741.jpg" alt="sonar" /></p>
-
-<p>Sonar是一个开源代码质量控制工具。把它加到现在的持续集成工具中就能够让你的java开发项目集中处于质量控制之下。下面是安装和使用记录 ：</p>
-
-<p><strong>修改.m2/settings.xml</strong>
-增加下边的内容到profiles段落中：
-<blockquote>&lt;profile&gt;<br />
-&lt;id&gt;sonar&lt;/id&gt;<br />
-&lt;activation&gt;<br />
-&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;<br />
-&lt;/activation&gt;<br />
-&lt;properties&gt;<br />
-&lt;!&#8211; EXAMPLE FOR MYSQL &#8211;&gt;<br />
-&lt;sonar.jdbc.url&gt;<br />
-jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;amp;characterEncoding=utf8<br />
-&lt;/sonar.jdbc.url&gt;<br />
-&lt;sonar.jdbc.driverClassName&gt;com.mysql.jdbc.Driver&lt;/sonar.jdbc.driverClassName&gt;<br />
-&lt;sonar.jdbc.username&gt;sonar&lt;/sonar.jdbc.username&gt;<br />
-&lt;sonar.jdbc.password&gt;sonar&lt;/sonar.jdbc.password&gt;</blockquote></p>
-
-<p>&lt;!&#8211; SERVER ON A REMOTE HOST &#8211;&gt;<br />
-&lt;sonar.host.url&gt;http://localhost:8888&lt;/sonar.host.url&gt;<br />
-&lt;/properties&gt;<br />
-&lt;/profile&gt;
-<strong>增加mysql权限 </strong>
-GRANT all ON sonar.* TO sonar@localhost IDENTIFIED BY &#8216;sonar&#8217;;<br />
-FLUSH PRIVILEGES ;</p>
-
-<p><strong>vim .bashrc</strong>
-export MAVEN_OPTS=&#8221;-Xmx512m -XX:MaxPermSize=128m -Duser.timezone=Asia/Shanghai&#8221;</p>
-
-<p>source .bashrc</p>
-
-<p><strong>下载sonar，配置mysql:</strong>
-<blockquote>conf/sonar.properties<br />
-sonar.jdbc.url: jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8<br />
-sonar.jdbc.driverClassName: com.mysql.jdbc.Driver<br />
-sonar.jdbc.validationQuery: select 1</blockquote>
-用户密码不用，默认都是sonar</p>
-
-<p><strong>配置启动的http端口</strong>
-<blockquote>sonar.web.host : localhost<br />
-sonar.web.port: 8888<br />
-sonar.web.context: /</blockquote>
-<strong>启动服务：</strong>
-<blockquote>bin/[YOUR PLATEFORM]/sonar.sh start</blockquote>
-<strong>开始使用：</strong>
-<blockquote>进到项目里运行 mvn sonar:sonar</blockquote></p>
-
-<p>打开http://localhost:8888 即可看到对应项目里的代码质量和修改建议。
-<strong>解决系统时区的问题：</strong>
-vim sonar-xx/conf/wrapper.conf<br />
-wrapper.java.additional.3=-Duser.timezone=Asia/Shanghai</p>
 </div>
   
   
