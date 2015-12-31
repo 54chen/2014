@@ -9,11 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part3）关键逻辑 /***
+  <meta name="description" content="[中秋零献续集] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part4）getaccess线程内的故事 /***
 * Author: cc0cc
 * E-mail: cc0cc@126.com
-* WebSite: http://www.54chen.com
-* Date: the &hellip;">
+* WebSite: http://www.54chen.com &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +76,292 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/01/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE%E7%BB%AD%E9%9B%86-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3/">[中秋零献续集] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part4）getaccess线程内的故事</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>/***<br />
+* Author: cc0cc<br />
+* E-mail: cc0cc@126.com<br />
+* WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+* Date: 11 01 2008<br />
+* FileName: Mythread.c<br />
+* <span style="font-size: medium; color: #ff0000;">这个文件要从Access_Thread看起</span>，因为在上一章节里，我们了解了 pthread_create(&amp;getaccess,NULL,Access_Thread,NULL);创建了一个叫getaccess的线程，正是运行的Access_Thread，在Access_Thread里，将完成一系列的过程，802.1x从这里才真正开始了。<br />
+***/<br />
+#include &lt;gnome.h&gt;<br />
+#include &lt;sys/select.h&gt;<br />
+#include &#8220;Mythread.h&#8221;<br />
+#include &#8220;connect.h&#8221;<br />
+#include &#8220;support.h&#8221;<br />
+#include &#8220;interface.h&#8221;</p>
+
+<p>int i=0;<br />
+typedef struct{<br />
+                  long    tv_sec;        <br />
+                  long    tv_uec;       <br />
+              }timeval;<br />
+           <br />
+gint<br />
+keeplink(gpointer data)<br />
+{
+pthread_t keeptest;<br />
+    fd_set readfds;<br />
+    timeval timeout={5,0};//设置超时<br />
+    BYTE recvbuf[1024];<br />
+    BYTE cmd;<br />
+    CMD_RECORD *cmd_record;<br />
+    int recvlen;<br />
+    int index=0;<br />
+    BYTE tmp=0;<br />
+    send_keeplink_request();//这也在connect.c里，用来构造一个包含指令和验证信息的包并发给服务器<br />
+    FD_ZERO(&amp;readfds);<br />
+    FD_SET(sockfd, &amp;readfds);<br />
+    if(1!=select(sockfd + 1,&amp;readfds,NULL,NULL,&amp;timeout))<br />
+    {//超时<br />
+        Acc_Keep_Link=2;<br />
+        g_message(&#8220;1.keep lost,thread keeptest ok!&#8221;);<br />
+        pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br />
+        return FALSE;<br />
+    }<br />
+    recvlen=recvfrom(sockfd,(char *)recvbuf,sizeof(recvbuf),0,NULL,NULL);<br />
+    if (recvlen==-1 ) {<br />
+                    Acc_Keep_Link=2;<br />
+                    pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br />
+                    g_message(&#8220;2.keep lost,thread keeptest ok!&#8221;);<br />
+                    return FALSE;<br />
+    }<br />
+    amt_decrypt(recvbuf,recvlen);//与认证过程大同小异<br />
+    if(0==check_packet(recvbuf,recvlen))<br />
+    {<br />
+                    Acc_Keep_Link=2;<br />
+                    pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br />
+                    g_message(&#8220;3.keep lost,thread keeptest ok!&#8221;);<br />
+                    return FALSE;<br />
+    }<br />
+    cmd_record=get_attr(recvbuf);<br />
+    cmd=*recvbuf;<br />
+    if(cmd==4)    //收到send_keeplink_request对应的包<br />
+    {<br />
+        index=0;<br />
+        tmp=0;<br />
+        for (;(index&lt;8)&amp;&amp;(attr_id[index]);index++) {<br />
+            if (attr_id[index]==3) {<br />
+                if (attr_val[8*(index+4*index)]!=1) {//发送send_keeplink_request失败<br />
+                    Acc_Keep_Link=2;<br />
+                    pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br />
+                    g_message(&#8220;4.keep lost,thread keeptest ok!&#8221;);<br />
+                    return FALSE;<br />
+                }<br />
+            }<br />
+        }<br />
+        //AfxGetMainWnd()-&gt;PostMessage(WM_KEEPLINK_RESULT,KEEPLINK_SUCCESSED,NULL);<br />
+        g_message(&#8220;keeplink result success&#8221;);<br />
+    }<br />
+    else<br />
+    {<br />
+                    Acc_Keep_Link=2;<br />
+                    pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br />
+                    g_message(&#8220;5.keep lost,thread keeptest ok!&#8221;);<br />
+                    return FALSE;<br />
+    }<br />
+return TRUE;//至此 全过程结束（当然，你不是按照从上到下读着来的，而是按照我的提示来阅读的话） 未来我会逐步分析connect.c和mdd.c里的几个函数，都是加密和解密的内容，主程序本身的流程关系不大，其中还包含了linux c中使用ASM的方法，敬请关注http://hi.baidu.com/cc0cc<br />
+}</p>
+
+<p>void<br />
+Link_Thread(void *arg)<br />
+{
+guint send_timer;<br />
+if(Acc_Keep_Link!=1)return;<br />
+g_message(&#8220;keep thread online!&#8221;);<br />
+send_timer=gtk_timeout_add(30000,keeplink,NULL);//802.1x了，每三十秒发送一个认证请求 看keeplink<br />
+}
+<strong><span style="font-size: large; color: #ff0000;">从这里看起↓</span></strong><span style="font-size: large; color: #ff0000;"><strong>
+</strong></span>void<br />
+Access_Thread()<br />
+{
+if(Acc_Keep_Link!=0)return;//这是个全局的标，任何情况下标被修改都应当退出线程<br />
+pthread_t keeplink;//这是一个孙线程的名字，根据协议规则需要在认证通过后定时发包<br />
+int times=0;//超时次数<br />
+fd_set readfds;//这个东东不知道要去补一下网络编程，<span>异步套接字。文件描述符集，select调用时用的</span>
+timeval timeout;//设置超时为5秒 这个timeval struct在本文件有定义<br />
+timeout.tv_sec=5;<br />
+timeout.tv_uec=0;<br />
+FD_ZERO(&amp;readfds);<br />
+FD_SET(sockfd, &amp;readfds);   </p>
+
+<p>BYTE recvbuf[1024];<br />
+BYTE cmd;<br />
+CMD_RECORD *cmd_record;<br />
+int recvlen;<br />
+int index=0;<br />
+BYTE tmp=0;</p>
+
+<p>   <br />
+retry://这里没办法，用了个goto 看后面就知道了，大概就是超时两次就置标志位了，最后结束运行<br />
+        if (times&gt;=2) {<br />
+        Acc_Keep_Link=-1;//ACCESS_FAILED_TIMEOUT;<br />
+        return ;<br />
+    }<br />
+send_access_request();//这是开始发送包给服务器了，将会发送用户名密码MAC等一系列的东西给远端的服务器，另一个文件中（connet.c）将专门来介绍</p>
+
+<p>int rt=select(sockfd + 1,&amp;readfds,NULL,NULL,&amp;timeout);//等着看有没有返回<br />
+//g_message(&#8220;select id :%d&#8221;,rt);<br />
+if(1!=rt)<br />
+    {//超时<br />
+        g_message(&#8220;time out this&#8221;);<br />
+        times++;<br />
+        goto retry;<br />
+    }<br />
+//有返回了！<br />
+recvlen=recvfrom(sockfd,(char *)recvbuf,sizeof(recvbuf),0,NULL,NULL);//接受返回<br />
+    if (recvlen==-1) {<br />
+        g_message(&#8220;recvfrom faild&#8221;);<br />
+       <br />
+    }<br />
+    amt_decrypt(recvbuf,recvlen);//将收到的recvbuf里的东西去解密 amt_decrypt是原程序中的解密算法,接收到的数据包得经过本函数解密，将在mdd.c中介绍<br />
+    if(check_packet(recvbuf,recvlen)==0&amp;&amp;times&lt;2)//check_packet检查解密amt_decrypt完后的数据包是否符合md5摘要<br />
+    {   g_message(&#8220;check_packet bad here&#8221;);<br />
+        times++;<br />
+        goto retry;//check_packet失败则重发数据包<br />
+    }<br />
+    cmd_record=get_attr(recvbuf);//取出对应的指令变成结构体链表CMD_RECORD<br />
+    cmd=*recvbuf;<br />
+    if(cmd==2)    //收到send_access_request对应的包<br />
+    {<br />
+        get_spec_attr(cmd_record);//把结构体链表CMD_RECORD里的东西分进全局变量attr_yy里 马上就要用到，attr_id存了cmd指令<br />
+        index=0;<br />
+        tmp=0;<br />
+       <br />
+        for (;(index&lt;0x0A)&amp;&amp;(attr_id[index]!=0);index++) {<br />
+           <br />
+            if (attr_id[index]==3) {<br />
+                tmp=attr_val[8*(index+4*index)];////attr_val给每个命令40字节<br />
+            }<br />
+        }<br />
+        if (tmp==1) {//认证成功！<br />
+            //g_message(&#8220;ok&#8221;);<br />
+            gtk_widget_hide_all (linkwindow);<br />
+            Acc_Keep_Link=1;<br />
+            pthread_create(&amp;keeplink,NULL,Link_Thread,NULL);//认证成功了，再创建一个线程用来保持连接 这回要去看Link_Thread了<br />
+            return;<br />
+        }<br />
+        else<br />
+        {   g_message(&#8220;server_back_err&#8221;);<br />
+            gtk_widget_hide_all (linkwindow);<br />
+            Acc_Keep_Link=-1;<br />
+            return ;<br />
+        }</p>
+
+<p>    }</p>
+
+<p>}</p>
+
+<p>gint<br />
+keeptest(gpointer data)<br />
+{
+pthread_t keeplink;<br />
+i++;<br />
+g_message(&#8220;%d&#8221;,i);<br />
+if (i&gt;10){Acc_Keep_Link=-1;g_message(&#8220;can&#8217;t keeplink!&#8221;);return FALSE;}<br />
+    fd_set readfds;<br />
+    timeval timeout={5,0};//设置超时<br />
+    BYTE recvbuf[1024];<br />
+    BYTE cmd;<br />
+    CMD_RECORD *cmd_record;<br />
+    int recvlen;<br />
+    int index=0;<br />
+    BYTE tmp=0;<br />
+    send_keeplink_request();<br />
+    FD_ZERO(&amp;readfds);<br />
+    FD_SET(sockfd, &amp;readfds);<br />
+    if(1!=select(sockfd + 1,&amp;readfds,NULL,NULL,&amp;timeout))<br />
+    {//超时<br />
+        g_message(&#8220;1.keep lost,thread keeptest for once!&#8221;);<br />
+        return TRUE;<br />
+    }<br />
+    recvlen=recvfrom(sockfd,(char *)recvbuf,sizeof(recvbuf),0,NULL,NULL);<br />
+    if (recvlen==-1 ) {<br />
+                    g_message(&#8220;2.keep lost,thread keeptest for once!&#8221;);<br />
+                    return TRUE;<br />
+    }<br />
+    amt_decrypt(recvbuf,recvlen);<br />
+    if(0==check_packet(recvbuf,recvlen))<br />
+    {<br />
+                    g_message(&#8220;3.keep lost,thread keeptest for once!&#8221;);<br />
+                    return TRUE;<br />
+    }<br />
+    cmd_record=get_attr(recvbuf);<br />
+    cmd=*recvbuf;<br />
+    if(cmd==4)    //收到send_keeplink_request对应的包<br />
+    {<br />
+        index=0;<br />
+        tmp=0;<br />
+        for (;(index&lt;8)&amp;&amp;(attr_id[index]);index++) {<br />
+            if (attr_id[index]==3) {<br />
+                if (attr_val[8*(index+4*index)]!=1) {//发送send_keeplink_request失败<br />
+                    g_message(&#8220;4.keep lost,thread keeptest for once!&#8221;);<br />
+                    return TRUE;<br />
+                }<br />
+            }<br />
+        }<br />
+            g_message(&#8220;keeptest result success&#8221;);<br />
+            Acc_Keep_Link=1;<br />
+            pthread_create(&amp;keeplink,NULL,Link_Thread,NULL);<br />
+            return FALSE;       <br />
+    }<br />
+    else<br />
+    {<br />
+                    g_message(&#8220;5.keep lost,thread keeptest for once!&#8221;);<br />
+                    return TRUE;<br />
+    }</p>
+
+<p>return FALSE;<br />
+}</p>
+
+<p>void<br />
+Keep_Thread()<br />
+{guint send_timer;<br />
+    if(Acc_Keep_Link!=2)return;<br />
+    send_timer=gtk_timeout_add(10000,keeptest,NULL);<br />
+}
+/***<br />
+* Author: cc0cc<br />
+* E-mail: cc0cc@126.com<br />
+* WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+* Date: 11 01 2008<br />
+* FileName: Mythread.c<br />
+***/</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1559,97 +1844,6 @@ cz@cz-desktop:~$ sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/gu
 <p>cz@cz-desktop:~$ sudo apt-get update</p>
 
 <p>cz@cz-desktop:~$ sudo apt-get install wine</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/29/64%E4%BD%8Dubuntu-wine10-%E5%AE%89%E8%A3%85qq/">64位ubuntu wine1.0 安装qq</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>环境比较特殊 注意是64的i386就不要看了<br />
-{安装wine:}<br />
-1.添加签名<br />
-wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -<br />
-2.更新WINE源<br />
-sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/hardy.list -O /etc/apt/sources.list.d/winehq.list<br />
-3.更新软件包<br />
-sudo apt-get update<br />
-4.安装WINE<br />
-sudo apt-get install wine</p>
-
-<p>{设置wine:}</p>
-
-<p>Wine快速设置 deb包 for amd64的下载地址是：</p>
-
-<p><a href="http://ubuntu-tweak.googlecode.com/files/wine-ubuntu_amd64.deb">http://ubuntu-tweak.googlecode.com/files/wine-ubuntu_amd64.deb</a></p>
-
-<p>顺便再加上之前的for i386的：</p>
-
-<p><a href="http://ubuntu-tweak.googlecode.com/files/wine-ubuntu.deb">http://ubuntu-tweak.googlecode.com/files/wine-ubuntu.deb </a>
-{使用QQ}
-<span class="postbody"><span style="font-weight: bold;">Wine的版本</span>:<br />
-Wine 1.0 (默认中文补丁,有打过补丁的Wine1.0下载,见下面)<br />
-windowssux已经把8.04-32bits的deb包(包括中文补丁)做出来了，在<a class="postlink" href="http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/" target="_blank">http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/</a>。<br />
-登录的用户名和密码在<a class="postlink" href="http://forum.ubuntu.org.cn/viewtopic.php?t=9685" target="_blank">http://forum.ubuntu.org.cn/viewtopic.php?t=9685</a>。</span></p>
-
-<p><span style="font-weight: bold;">Wine的注册表</span>
-修改过的内容如下,请给这个文件保存成QQ2007.reg<br />
-REGEDIT4<br />
-[HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe]<br />
-&#8220;Version&#8221;=&#8221;vista&#8221;<br />
-[HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe\DllOverrides]<br />
-&#8220;riched20&#8221;=&#8221;native&#8221;<br />
-&#8220;riched32&#8221;=&#8221;native&#8221;</p>
-
-<p>并使用下列命令导入<br />
-#regedit QQ2007.reg</p>
-
-<p><span style="font-weight: bold;">替换DLL文件</span>
-需要的 dll:: mfc42.dll msvcp60.dll 给上面的这二个dll放到~/.wine/drive_c/windows/system32/目录中<br />
-下面下载的那个qq2007beta1kb5_0.0.2007_x86.tgz中也有,也可以从windows的系统中找</p>
-
-<p><span style="font-weight: bold;">安装方法</span>
-下载:<a class="postlink" href="http://linuxfire.com.cn/%7Ehuahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz" target="_blank">http://linuxfire.com.cn/~huahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz</a>
-解压后,只使用这个中的那个QQ,原wine之类的配置文件不要了.</p>
-
-<p><span style="font-weight: bold;">运行</span>
-可以建一个下面这样的快捷方式,注意修复你的路径为你自己的.<br />
-env WINEPREFIX=&#8221;/home/fukai/.wine&#8221; wine &#8220;Z:\home\fukai\qq2007beta1kb5\QQ\QQ.exe&#8221;</p>
-
-<p><span style="font-weight: bold;">在安装和使用程序时的注意事项</span>
-现发现的bug有快捷键不能用,视频有时会死机,传文件之类都非常正常</p>
-
-<p>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝<br />
-有空的时候再研究下一键安装 linux qq<br />
-为今天听到的马化腾说linux qq是假消息的消息默哀</p>
 </div>
   
   

@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2015-10-21T17:12:45+08:00</updated>
+  <updated>2015-12-31T18:10:15+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,50 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[8182015年总结和2016年预测]]></title>
+    <link href="http://2014.54chen.com/blog/2015/12/31/2015-2016/"/>
+    <updated>2015-12-31T16:29:11+08:00</updated>
+    <id>http://2014.54chen.com/blog/2015/12/31/2015-2016</id>
+    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
+
+<p>  2015年，是一直在学习的一年，来自腾讯小伙伴们的多年经验要在一年里吸收，包括方式方法技术方案，着实不是一件容易的事情。</p>
+
+<p>  在这一年大部分时间，都在围绕着用户的网络问题进行着努力，让问题从出现到解决成为闭环，环环相扣，直到找不到漏洞所在。</p>
+
+<p>  汇总一句话，2015是充实忙碌的一年，也是完全解开了前三年的一些技术疑问的一年。</p>
+
+<!--more-->
+
+
+<p> 生活方面，这一年搬了新家，学习了装修的过程，端午在在塞班了解了一下苦逼的帝国主义人民都是如何浪费生命的，年底又去了一趟大连办档案，然后在小米满了五年，签了第一份无固定期劳动合同。</p>
+
+<p><b>展望2016，可能会有以下十件大事：</b></p>
+
+<p>1.阿黎应该是要回来小米了。</p>
+
+<p>2.服务器行业应该不会出现啥大的热门技术了。</p>
+
+<p>3.中国的移动网络可能会有改善。</p>
+
+<p>4.c/s结构的好用的框架开始出现。</p>
+
+<p>5.进入资本冬天，各种小公司不好融资。</p>
+
+<p>6.国内的污染进一步加剧。</p>
+
+<p>7.安全生产事故再一次出现。</p>
+
+<p>8.中国造开始追求品质。</p>
+
+<p>9.更多的中国有钱人移民。</p>
+
+<p>10.人民币汇率到7。</p>
+
+<p>明年见！</p>
+ <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何练就高效率团队]]></title>
@@ -1930,52 +1974,6 @@ int i = sc.read(buff)</p></blockquote>
 <p>这个之前有介绍过，就是cpu占得比较猛的进程，直接打出来里面最费CPU的前五个堆栈。</p>
 
 <p>具体用法都在项目的README上。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Java中使用akka手记四 用法速查]]></title>
-    <link href="http://2014.54chen.com/blog/2014/04/18/how-to-use-akka-in-java-4/"/>
-    <updated>2014-04-18T15:37:25+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/04/18/how-to-use-akka-in-java-4</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
-
-<h2>Actor</h2>
-
-<ul>
-<li>UntypedActor actor的基类，继承并实现onReceive方法就可以得到一个Actor。</li>
-<li>Props 配置类，用Props.create可以创建一个按指定配置生成的Actor。</li>
-<li>Props的推荐实践，创建Actor时，搞一个static的Props.create方法。可以少写不少重复代码。</li>
-<li>system.actorOf 会创建顶级的actor，将被系统监控。</li>
-<li>getContext().acrtorOf 会创建子actor。</li>
-<li>ActorRef 由actorOf产生，可以是一个网络actor。</li>
-<li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在>做路由、负载均衡、备份时非常有用。ask会拦住reply消息直接给onsuccess等，sender不会再得到reply。</li>
-<li>Inbox 当actor不能满足需要时，可以使用inbox，比如收多个回复，watch其他actor的生命周期。</li>
-</ul>
-
-
-<!--more-->
-
-
-<h2>spring集成</h2>
-
-<ul>
-<li>实现SpringExtProvider在spring context中去寻找actor class，实现akka.actor.Extension和akka.actor.IndirectActorProducer。</li>
-<li>system.actorOf(SpringExtProvider.get(system).props(&ldquo;CountingActor&rdquo;), &ldquo;counter&rdquo;);即可取到bean为CountingActor的class。</li>
-</ul>
-
-
-<h2>else</h2>
-
-<ul>
-<li>PoisonPill 这毒药，给哪个actor一发就挂。myActor.tell(akka.actor.PoisonPill.getInstance(), sender);</li>
-<li>TypedActor 是比较好的连接actor系统与非actor内容的东东。</li>
-<li>mailbox 每个actor的消息存放处，默认为java.util.concurrent.ConcurrentLinkedQueue，akka.dispatch.SingleConsumerOnlyUnboundedMailbox为更高效的一个box，但不能用在BalancingDispatcher时。还可以自已定义mailbox的细节。</li>
-<li>UntypedProcessor 继承它可得到一个processor。用来做persistence用的。</li>
-<li>SupervisorStrategy 定义出错处理。</li>
-<li>routing 定义路由选择机制。cluster中使用。</li>
-</ul>
-
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
   </entry>
   
