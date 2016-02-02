@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="孔乙己cnflex版     鲁镇的flex技术群的格局，和别处没什么不同，都是在群资料里写一推废话，废话里透着淫荡，群里男人女人总是不成比例。搞技术的人，上午下午进了群，三三两两报了三围，改个群里的名就安了身，盯着大家讨论的内容看。要提问题时，沉思熟虑，写上一堆，ctrl+enter发送—— &hellip;">
+  <meta name="description" content="坐阵杭州淘宝 照片欠奉。 涉及到技术转型，看到一句话，共勉。 如果程序语言是宗教，那么： C语言是犹太教，Java是基督教，c++是回教. C#是摩門教，LISP是禪宗佛教，PHP是Cafeteria基督教，Haskell是道教，Erlang是印度教，Perl是伏都教，Lua是巫术， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,46 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/17/%E5%9D%90%E9%98%B5%E6%9D%AD%E5%B7%9E%E6%B7%98%E5%AE%9D/">坐阵杭州淘宝</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-17T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>照片欠奉。</p>
+
+<p>涉及到技术转型，看到一句话，共勉。</p>
+
+<p>如果程序语言是宗教，那么： C语言是犹太教，Java是基督教，c++是回教. C#是摩門教，LISP是禪宗佛教，PHP是Cafeteria基督教，Haskell是道教，Erlang是印度教，Perl是伏都教，Lua是巫术，Ruby是新异教主义，Python是世俗人文主义，COBOL是古异教主义，APL是山达基教，Visual Basic是撒旦教。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -717,119 +757,6 @@ if (isset($_GET[&#8216;query&#8217;]))   <br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/26/web%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/">Web压力测试工具介绍</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-11-26T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><strong>1.http_load</strong></p>
-
-<p>下载地址：<a href="http://www.acme.com/software/http_load/" target="_top">http://www.acme.com/software/http_load/</a></p>
-
-<p>实际运行：</p>
-
-<p>bash# http_load -rate 5 -seconds 10 urls
-<ul>
-	<li>-parallel 简写-p ：含义是并发的用户进程数。</li>
-	<li>-fetches 简写-f ：含义是总计的访问次数</li>
-	<li>-rate 简写-r ：含义是每秒的访问频率</li>
-	<li>-seconds简写-s ：含义是总计的访问时间</li>
-	<li>urls.txt 是一个url 列表，每个url 单独的一行；不可以直接跟一个url，有些博客主说的可以跟一个url是错误的说法。</li>
-</ul>
-<pre>49 fetches, 2 max parallel, 289880 bytes, in 10.0145 seconds
-5916 mean bytes/connection
-4.89274 fetches/sec, 28945.1 bytes/sec
-msecs/connect: 28.8932 mean, 44.243 max, 24.488 min
-msecs/first-response: 63.5362 mean, 81.624 max, 57.803 min
-HTTP response codes:
-code 200 -- 49</pre>
-<pre>解释：</pre>
-<pre>
-<ul>
-	<li>49 fetches, 2 max parallel, 289880 bytes, in 10.0145 seconds</li>
-	<li>说明在上面的测试中运行了49个请求，最大的并发进程数是2，总计传输的数据是289880bytes，运行的时间是10.0145秒</li>
-</ul>
-<div>
-<ul>
-	<li>5916 mean bytes/connection</li>
-	<li>说明每一连接平均传输的数据量289880/49=5916</li>
-</ul>
-<div>
-<ul>
-	<li>4.89274 fetches/sec, 28945.1 bytes/sec</li>
-	<li>说明每秒的响应请求为4.89274，每秒传递的数据为28945.1 bytes/sec</li>
-</ul>
-<div>
-<ul>
-	<li>msecs/connect: 28.8932 mean, 44.243 max, 24.488 min</li>
-	<li>说明每连接的平均响应时间是28.8932 msecs，最大的响应时间44.243 msecs，最小的响应时间24.488 msecs</li>
-</ul>
-<div></div>
-<ul>
-	<li>msecs/first-response: 63.5362 mean, 81.624 max, 57.803 min</li>
-</ul>
-<div>
-<ul>
-	<li>HTTP response codes: code 200 — 49</li>
-	<li>说明打开响应页面的类型，如果403的类型过多，那可能要注意是否系统遇到了瓶颈。</li>
-</ul>
-<div>
-<ul>
-	<li>一般会关注到的指标是fetches/sec、msecs/connect，它们分别对应的常用性能指标参数QPS-每秒响应用户数和response time，每连接响应用户时间。测试的结果主要也是看这两个值。当然仅有这两个指标并不能完成对性能的分析，我们还需要对服务器的cpu、men进行分析，才能得出结论；</li>
-	<li>如果要测试HTTPS，需要在编译前指定Makefile中 <strong>SSL_TREE</strong> 的路径：一般为 <em>/usr</em> 或<em>/usr/local</em> 。</li>
-</ul>
-</div>
-</div>
-</div>
-</div>
-</div></pre>
- </p>
-
-<p><strong>2.ab</strong>
-<pre>ab -n 1000 -c 50 http://www.domain.com/test.php</pre>
-<pre>ab将同时向http://www.domain.com/test.php发出50个并发请求，共发出1000次。</pre>
-<pre>有用的信息：</pre>
-<pre>
-<pre>Requests per second:    75.45 [#/sec] (mean)</pre>
-</pre>
-<pre>每秒钟可以处理的请求数为75.45个</pre>
-<pre>
-<ul>
-	<li>若将请求数增加，看看服务器能否处理更大的压力，需要调节Apache的 <strong>MaxClients、ThreadsPerChild、MaxThreadsPerChild</strong> 等参数，基于httpd.conf中的MPM模块选择。</li>
-	<li>若本地服务器不是Apache，请使用其它测试方法。</li>
-</ul>
-</pre>
-<pre></pre></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/50/">&larr; Older</a>
@@ -851,7 +778,7 @@ code 200 -- 49</pre>
   <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
   <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
   <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
-  Copyright &copy; 2015 - 54chen -
+  Copyright &copy; 2016 - 54chen -
 
 </footer>
   

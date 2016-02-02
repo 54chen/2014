@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2015-12-31T18:10:15+08:00</updated>
+  <updated>2016-02-02T12:01:13+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,60 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[服务质量衡量抽象心经]]></title>
+    <link href="http://2014.54chen.com/blog/2016/02/02/service-memo/"/>
+    <updated>2016-02-02T10:30:54+08:00</updated>
+    <id>http://2014.54chen.com/blog/2016/02/02/service-memo</id>
+    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p>马上过年了，先祝大家新快乐、万事如意！</p>
+
+<p><img src=http://img02.taobaocdn.com/imgextra/i2/T1o7d4XgVmXXa0tYUU_013741.jpg></p>
+
+<p>一群错综复杂的服务，如何去衡量质量，如何去快速找到问题，如何每个环节都有“眼线”？</p>
+
+<!--more-->
+
+
+<h1>一、抽象的数据</h1>
+
+<p>yammer的metrics项目，可能算是大家用得最多的一个了，可以算qps，可以算99.9％的请求时长。</p>
+
+<p>这些在线上故障的发现和定位有用吗？够用吗？</p>
+
+<p>通过线上的事故积累，答案是，故障的发现，仅通过一个qps和percentile的绝对值来报警，误报非常高，真正的故障往往被掩盖。:(</p>
+
+<p>经过前辈们的探索，下面的实践的确是最佳的：</p>
+
+<p>1.服务抽象为主调方和被调方。</p>
+
+<p>2.提前商定好超时，以一分钟为单位计算成功率。</p>
+
+<p>3.连续三分钟的成功率低于三个九，报警。</p>
+
+<p>实践中从来没有误报过。:)</p>
+
+<h1>二、抽象的返回</h1>
+
+<p>服务在告诉监控系统成功率的时候，随带就告诉了系统，是因为1（超时）、2（用户不存在）、3（xx服务不响应）、4（存储异常）等等。</p>
+
+<p>出现故障的时候，报警直接会告诉你，“90％原因是超时”，连服务器上的日志都不用去看！</p>
+
+<h1>三、抽象的调查过程</h1>
+
+<p>通过抽象的数据，我们可以再按照每天的成功率进行统计，“天三个九”的要求会低于“分钟三个九”（不信你算一下）。</p>
+
+<p>日报里大致会标出 A->B 99.1%  B->C 98.9%  C->D 99%，很明显了，D服务有问题了，导致上面每一层都有问题。</p>
+
+<p>再单独看C->D抽象返回的结果统计，1占88% 2占1%等等，定位为超时原因。</p>
+
+<p>然后看看具体出问题的时间点是否有其他的异常日志，如果没有，则是需要扩容了（增加处理线程OR增加机器）。</p>
+
+<h1>四、抽象的总结</h1>
+
+<p>文中系统真实存在，童叟无欺，实现简单并未开源，小米同学可以使用，如有欲望邮件联系我。</p>
+ <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[8182015年总结和2016年预测]]></title>
@@ -1942,38 +1996,6 @@ int i = sc.read(buff)</p></blockquote>
 <p>你的企业没有出现过安全问题，不代表你的团队没有短板，更不代表你的线上没有漏洞，更不代表你的用户数据没有在黑市上买卖。</p>
 
 <p>不在乎有没有漏洞，就是认真。</p>
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[线上JVM调查工具:JCPU和JMEM]]></title>
-    <link href="http://2014.54chen.com/blog/2014/05/07/jvm-cpu-mem-tools/"/>
-    <updated>2014-05-07T17:05:13+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/05/07/jvm-cpu-mem-tools</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
-
-<p>之前的jkiller改名为jcpu，然后再加上jmem，齐活了，线上要再遇到问题，内存和CPU之外的也没啥其他办法了。</p>
-
-<h2>JMEM</h2>
-
-<p><a href="https://github.com/54chen/jmem">https://github.com/54chen/jmem</a></p>
-
-<p>用来定位莫名其妙的堆外内存问题。首先还是要先用jmap之类的看清楚是否是JVM堆内问题了再用此神物。</p>
-
-<!--more-->
-
-
-<p> jmem.sh 用来靠gdb找到够大的内存块，直接dump到文件里。然后肉眼看吧。。。反正我没看出来，祝你好运。</p>
-
-<p> pmap2stack.sh 弄出来大块的内存地址后，尝试在各种stack中帮你grep出来可以读懂的东东。</p>
-
-<h2>JCPU</h2>
-
-<p><a href="https://github.com/54chen/jcpu">https://github.com/54chen/jcpu</a></p>
-
-<p>这个之前有介绍过，就是cpu占得比较猛的进程，直接打出来里面最费CPU的前五个堆栈。</p>
-
-<p>具体用法都在项目的README上。</p>
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
   </entry>
   

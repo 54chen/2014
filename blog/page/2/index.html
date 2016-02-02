@@ -9,9 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="网络IO型程序压力测试要点 Nov 4th, 2014 一.突破客户端端口数限制 这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。
-现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（216=65536）
-但是从计算机网络的发展来看， &hellip;">
+  <meta name="description" content="有关socket Read Nov 18th, 2014 实际开发中，网络程序最可能遇到的就是数据没收到、收到错误数据这样诡异的问题.
+很多时候，都是由于对socket read的细节理解的不一致，导致了程序前后的矛盾。
+下面详细阐述整个read的过程。 Read on &rarr; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/18/about-socket-read/">有关socket Read</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-18T20:37:49+08:00" pubdate data-updated="true">Nov 18<span>th</span>, 2014</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140710/logo.png></p>
+
+<ul>
+<li>实际开发中，网络程序最可能遇到的就是数据没收到、收到错误数据这样诡异的问题.</li>
+<li>很多时候，都是由于对socket read的细节理解的不一致，导致了程序前后的矛盾。</li>
+<li>下面详细阐述整个read的过程。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/18/about-socket-read/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -574,55 +622,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/07/jvm-cpu-mem-tools/">线上JVM调查工具:JCPU和JMEM</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-07T17:05:13+08:00" pubdate data-updated="true">May 7<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
-
-<p>之前的jkiller改名为jcpu，然后再加上jmem，齐活了，线上要再遇到问题，内存和CPU之外的也没啥其他办法了。</p>
-
-<h2>JMEM</h2>
-
-<p><a href="https://github.com/54chen/jmem">https://github.com/54chen/jmem</a></p>
-
-<p>用来定位莫名其妙的堆外内存问题。首先还是要先用jmap之类的看清楚是否是JVM堆内问题了再用此神物。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/07/jvm-cpu-mem-tools/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -644,7 +643,7 @@
   <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
   <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
   <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
-  Copyright &copy; 2015 - 54chen -
+  Copyright &copy; 2016 - 54chen -
 
 </footer>
   
