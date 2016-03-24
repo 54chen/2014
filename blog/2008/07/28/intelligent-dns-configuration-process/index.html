@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="注：对于配置智能DNS，主要用途为：1、解决网通与电信问题 2、实现区域规划（不同区域访问各自最近的服务器），下面以解决网通与电信连接问题的配置。至于实现2的功能，只需稍加更改即可。
-一、DNS服务器安装&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&# &hellip;">
+一、DNS服务器安装 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,13 +101,13 @@
 
 
 <div class="entry-content"><p>注：对于配置智能DNS，主要用途为：1、解决网通与电信问题 2、实现区域规划（不同区域访问各自最近的服务器），下面以解决网通与电信连接问题的配置。至于实现2的功能，只需稍加更改即可。<br />
-一、DNS服务器安装&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;.. 1<br />
-二、named.conf的配置&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230; 2<br />
-三、更新根区文件：&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230; 3<br />
-四、建立启动脚本：&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230; 4<br />
-五、添加一个NS&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;.. 5<br />
-六、添加一个域名&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;. 5<br />
-附：获取IP地址范围方法:&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230; 7<br />
+一、DNS服务器安装......................................................................................... 1<br />
+二、named.conf的配置....................................................................................... 2<br />
+三、更新根区文件：.......................................................................................... 3<br />
+四、建立启动脚本：.......................................................................................... 4<br />
+五、添加一个NS............................................................................................... 5<br />
+六、添加一个域名.............................................................................................. 5<br />
+附：获取IP地址范围方法:................................................................................. 7<br />
 一、DNS服务器安装<br />
 1、 软件列表<br />
 BIND 9.3.2<br />
@@ -117,7 +117,7 @@ ftp://ftp.isc.org/isc/bind9/9.4.0a6/bind-9.4.0a6.tar.gz<br />
 安装BIND9：<br />
 # tar zxvf bind-9.3.2.tar.gz<br />
 # cd bind-9.3.2<br />
-# ./configure &#8211;prefix=/usr/local/named &#8211;disable-ipv6<br />
+# ./configure --prefix=/usr/local/named --disable-ipv6<br />
 # make &amp;&amp; make install<br />
 建立BIND用户：<br />
 # groupadd bind<br />
@@ -130,20 +130,20 @@ ftp://ftp.isc.org/isc/bind9/9.4.0a6/bind-9.4.0a6.tar.gz<br />
 创建主要的配置文件：<br />
 # vi /usr/local/named/etc/named.conf<br />
 ===========================named.conf=======================<br />
-acl &#8220;trust-lan&#8221; { 127.0.0.1/8; 192.168.0.0/16;};<br />
+acl "trust-lan" { 127.0.0.1/8; 192.168.0.0/16;};<br />
 options {<br />
-directory &#8220;/usr/local/named/etc/&#8221;;<br />
-pid-file &#8220;/var/run/named/named.pid&#8221;;<br />
-version &#8220;0.0.0&#8221;;<br />
+directory "/usr/local/named/etc/";<br />
+pid-file "/var/run/named/named.pid";<br />
+version "0.0.0";<br />
 datasize 40M;<br />
 allow-transfer {<br />
-&#8220;trust-lan&#8221;;};<br />
+"trust-lan";};<br />
 recursion yes;<br />
 allow-notify {<br />
-&#8220;trust-lan&#8221;;<br />
+"trust-lan";<br />
 };<br />
 allow-recursion {<br />
-&#8220;trust-lan&#8221;;<br />
+"trust-lan";<br />
 };<br />
 auth-nxdomain no;<br />
 forwarders {<br />
@@ -152,14 +152,14 @@ forwarders {<br />
 };<br />
 logging {<br />
 channel warning<br />
-{ file &#8220;/var/log/named/dns_warnings&#8221; versions 3 size 1240k;<br />
+{ file "/var/log/named/dns_warnings" versions 3 size 1240k;<br />
 severity warning;<br />
 print-category yes;<br />
 print-severity yes;<br />
 print-time yes;<br />
 };<br />
 channel general_dns<br />
-{ file &#8220;/var/log/named/dns_logs&#8221; versions 3 size 1240k;<br />
+{ file "/var/log/named/dns_logs" versions 3 size 1240k;<br />
 severity info;<br />
 print-category yes;<br />
 print-severity yes;<br />
@@ -168,11 +168,11 @@ print-time yes;<br />
 category default { warning; };<br />
 category queries { general_dns; };<br />
 };<br />
-zone &#8220;.&#8221; {<br />
+zone "." {<br />
 type hint;<br />
-file &#8220;named.root&#8221;;<br />
+file "named.root";<br />
 };<br />
-acl &#8220;CNC&#8221; {<br />
+acl "CNC" {<br />
 58.16.0.0/16;<br />
 58.17.0.0/17;<br />
 58.17.128.0/17;<br />
@@ -182,29 +182,29 @@ acl &#8220;CNC&#8221; {<br />
 58.21.0.0/16;<br />
 注：这些根据情况输入IP地址段<br />
 };<br />
-view &#8220;view_cnc&#8221; {<br />
+view "view_cnc" {<br />
 match-clients { CNC; };<br />
-zone &#8220;.&#8221; {<br />
+zone "." {<br />
 type hint;<br />
-file &#8220;named.root&#8221;;<br />
+file "named.root";<br />
 };<br />
-zone &#8220;0.0.127.IN-ADDR.ARPA&#8221; {<br />
+zone "0.0.127.IN-ADDR.ARPA" {<br />
 type master;<br />
-file &#8220;localhost.rev&#8221;;<br />
+file "localhost.rev";<br />
 };<br />
-include &#8220;master/cnc.def&#8221;;<br />
+include "master/cnc.def";<br />
 };<br />
-view &#8220;view_any&#8221; {<br />
+view "view_any" {<br />
 match-clients { any; };<br />
-zone &#8220;.&#8221; {<br />
+zone "." {<br />
 type hint;<br />
-file &#8220;named.root&#8221;;<br />
+file "named.root";<br />
 };<br />
-zone &#8220;0.0.127.IN-ADDR.ARPA&#8221; {<br />
+zone "0.0.127.IN-ADDR.ARPA" {<br />
 type master;<br />
-file &#8220;localhost.rev&#8221;;<br />
+file "localhost.rev";<br />
 };<br />
-include &#8220;master/telecom.def&#8221;;<br />
+include "master/telecom.def";<br />
 };<br />
 添加完成后，保存。<br />
 三、更新根区文件：<br />
@@ -244,29 +244,29 @@ include &#8220;master/telecom.def&#8221;;<br />
 #
 if [ `id -u` -ne 0 ]<br />
 then<br />
-echo &#8220;ERROR:For bind to port 53,must run as root.&#8221;<br />
+echo "ERROR:For bind to port 53,must run as root."<br />
 exit 1<br />
 fi<br />
-case &#8220;&#8221; in<br />
+case "" in<br />
 start)<br />
 if [ -x /usr/local/named/sbin/named ]; then<br />
-/usr/local/named/sbin/named -u bind -c /usr/local/named/etc/named.conf &amp;&amp; echo . &amp;&amp; echo &#8216;BIND9 server started.&#8217;<br />
+/usr/local/named/sbin/named -u bind -c /usr/local/named/etc/named.conf &amp;&amp; echo . &amp;&amp; echo 'BIND9 server started.'<br />
 fi<br />
 ;;<br />
 stop)<br />
-kill `cat /var/run/named/pid` &amp;&amp; echo . &amp;&amp; echo &#8216;BIND9 server stopped.&#8217;<br />
+kill `cat /var/run/named/pid` &amp;&amp; echo . &amp;&amp; echo 'BIND9 server stopped.'<br />
 ;;<br />
 restart)<br />
 echo .<br />
-echo &#8220;Restart BIND9 server&#8221;<br />
+echo "Restart BIND9 server"<br />
 注：对于配置智能DNS，主要用途为：1、解决网通与电信问题 2、实现区域规划（不同区域访问各自最近的服务器），下面以解决网通与电信连接问题的配置。至于实现2的功能，只需稍加更改即可。<br />
-一、DNS服务器安装&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;.. 1<br />
-二、named.conf的配置&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230; 2<br />
-三、更新根区文件：&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230; 3<br />
-四、建立启动脚本：&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230; 4<br />
-五、添加一个NS&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;.. 5<br />
-六、添加一个域名&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;. 5<br />
-附：获取IP地址范围方法:&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230;&#8230; 7<br />
+一、DNS服务器安装......................................................................................... 1<br />
+二、named.conf的配置....................................................................................... 2<br />
+三、更新根区文件：.......................................................................................... 3<br />
+四、建立启动脚本：.......................................................................................... 4<br />
+五、添加一个NS............................................................................................... 5<br />
+六、添加一个域名.............................................................................................. 5<br />
+附：获取IP地址范围方法:................................................................................. 7<br />
 一、DNS服务器安装<br />
 1、 软件列表<br />
 BIND 9.3.2<br />
@@ -276,7 +276,7 @@ ftp://ftp.isc.org/isc/bind9/9.4.0a6/bind-9.4.0a6.tar.gz<br />
 安装BIND9：<br />
 # tar zxvf bind-9.3.2.tar.gz<br />
 # cd bind-9.3.2<br />
-# ./configure &#8211;prefix=/usr/local/named &#8211;disable-ipv6<br />
+# ./configure --prefix=/usr/local/named --disable-ipv6<br />
 # make &amp;&amp; make install<br />
 建立BIND用户：<br />
 # groupadd bind<br />
@@ -289,20 +289,20 @@ ftp://ftp.isc.org/isc/bind9/9.4.0a6/bind-9.4.0a6.tar.gz<br />
 创建主要的配置文件：<br />
 # vi /usr/local/named/etc/named.conf<br />
 ===========================named.conf=======================<br />
-acl &#8220;trust-lan&#8221; { 127.0.0.1/8; 192.168.0.0/16;};<br />
+acl "trust-lan" { 127.0.0.1/8; 192.168.0.0/16;};<br />
 options {<br />
-directory &#8220;/usr/local/named/etc/&#8221;;<br />
-pid-file &#8220;/var/run/named/named.pid&#8221;;<br />
-version &#8220;0.0.0&#8221;;<br />
+directory "/usr/local/named/etc/";<br />
+pid-file "/var/run/named/named.pid";<br />
+version "0.0.0";<br />
 datasize 40M;<br />
 allow-transfer {<br />
-&#8220;trust-lan&#8221;;};<br />
+"trust-lan";};<br />
 recursion yes;<br />
 allow-notify {<br />
-&#8220;trust-lan&#8221;;<br />
+"trust-lan";<br />
 };<br />
 allow-recursion {<br />
-&#8220;trust-lan&#8221;;<br />
+"trust-lan";<br />
 };<br />
 auth-nxdomain no;<br />
 forwarders {<br />
@@ -311,14 +311,14 @@ forwarders {<br />
 };<br />
 logging {<br />
 channel warning<br />
-{ file &#8220;/var/log/named/dns_warnings&#8221; versions 3 size 1240k;<br />
+{ file "/var/log/named/dns_warnings" versions 3 size 1240k;<br />
 severity warning;<br />
 print-category yes;<br />
 print-severity yes;<br />
 print-time yes;<br />
 };<br />
 channel general_dns<br />
-{ file &#8220;/var/log/named/dns_logs&#8221; versions 3 size 1240k;<br />
+{ file "/var/log/named/dns_logs" versions 3 size 1240k;<br />
 severity info;<br />
 print-category yes;<br />
 print-severity yes;<br />
@@ -327,11 +327,11 @@ print-time yes;<br />
 category default { warning; };<br />
 category queries { general_dns; };<br />
 };<br />
-zone &#8220;.&#8221; {<br />
+zone "." {<br />
 type hint;<br />
-file &#8220;named.root&#8221;;<br />
+file "named.root";<br />
 };<br />
-acl &#8220;CNC&#8221; {<br />
+acl "CNC" {<br />
 58.16.0.0/16;<br />
 58.17.0.0/17;<br />
 58.17.128.0/17;<br />
@@ -341,29 +341,29 @@ acl &#8220;CNC&#8221; {<br />
 58.21.0.0/16;<br />
 注：这些根据情况输入IP地址段<br />
 };<br />
-view &#8220;view_cnc&#8221; {<br />
+view "view_cnc" {<br />
 match-clients { CNC; };<br />
-zone &#8220;.&#8221; {<br />
+zone "." {<br />
 type hint;<br />
-file &#8220;named.root&#8221;;<br />
+file "named.root";<br />
 };<br />
-zone &#8220;0.0.127.IN-ADDR.ARPA&#8221; {<br />
+zone "0.0.127.IN-ADDR.ARPA" {<br />
 type master;<br />
-file &#8220;localhost.rev&#8221;;<br />
+file "localhost.rev";<br />
 };<br />
-include &#8220;master/cnc.def&#8221;;<br />
+include "master/cnc.def";<br />
 };<br />
-view &#8220;view_any&#8221; {<br />
+view "view_any" {<br />
 match-clients { any; };<br />
-zone &#8220;.&#8221; {<br />
+zone "." {<br />
 type hint;<br />
-file &#8220;named.root&#8221;;<br />
+file "named.root";<br />
 };<br />
-zone &#8220;0.0.127.IN-ADDR.ARPA&#8221; {<br />
+zone "0.0.127.IN-ADDR.ARPA" {<br />
 type master;<br />
-file &#8220;localhost.rev&#8221;;<br />
+file "localhost.rev";<br />
 };<br />
-include &#8220;master/telecom.def&#8221;;<br />
+include "master/telecom.def";<br />
 };<br />
 添加完成后，保存。<br />
 三、更新根区文件：<br />
@@ -403,33 +403,33 @@ include &#8220;master/telecom.def&#8221;;<br />
 #
 if [ `id -u` -ne 0 ]<br />
 then<br />
-echo &#8220;ERROR:For bind to port 53,must run as root.&#8221;<br />
+echo "ERROR:For bind to port 53,must run as root."<br />
 exit 1<br />
 fi<br />
-case &#8220;&#8221; in<br />
+case "" in<br />
 start)<br />
 if [ -x /usr/local/named/sbin/named ]; then<br />
-/usr/local/named/sbin/named -u bind -c /usr/local/named/etc/named.conf &amp;&amp; echo . &amp;&amp; echo &#8216;BIND9 server started.&#8217;<br />
+/usr/local/named/sbin/named -u bind -c /usr/local/named/etc/named.conf &amp;&amp; echo . &amp;&amp; echo 'BIND9 server started.'<br />
 fi<br />
 ;;<br />
 stop)<br />
-kill `cat /var/run/named/pid` &amp;&amp; echo . &amp;&amp; echo &#8216;BIND9 server stopped.&#8217;<br />
+kill `cat /var/run/named/pid` &amp;&amp; echo . &amp;&amp; echo 'BIND9 server stopped.'<br />
 ;;<br />
 restart)<br />
 echo .<br />
-echo &#8220;Restart BIND9 server&#8221;<br />
+echo "Restart BIND9 server"<br />
 stop<br />
 sleep 10<br />
 start<br />
 ;;<br />
 *)<br />
-echo &#8221; start | stop | restart&#8221;<br />
+echo " start | stop | restart"<br />
 ;;<br />
 esac<br />
 ===============================named.sh============================<br />
 # chmod 755 /etc/init.d/named<br />
 # chown root:root /etc/init.d/named<br />
-# chkconfig &#8211;add named<br />
+# chkconfig --add named<br />
 # chkconfig named on<br />
 五、添加一个NS<br />
 在域名的管理网站上，设定NS服务器为你安装的DNS<br />
@@ -439,15 +439,15 @@ esac<br />
 # mkdir telecom<br />
 # vi cnc.def<br />
 添加<br />
-zone &#8220;724cn.com&#8221; {<br />
+zone "724cn.com" {<br />
 type master;<br />
-file &#8220;master/cnc/724cn.com&#8221;;<br />
+file "master/cnc/724cn.com";<br />
 };<br />
 # vi telecom.def<br />
 添加<br />
-zone &#8220;724cn.com&#8221; {<br />
+zone "724cn.com" {<br />
 type master;<br />
-file &#8220;master/telecom/724cn.com&#8221;;<br />
+file "master/telecom/724cn.com";<br />
 };<br />
 添加网通的解析，解析到的IP为61.45.55.78<br />
 #vi cnc/724cn.com<br />
@@ -491,11 +491,11 @@ OK，到此你的DNS服务器就算是跑起来了。试一下分别用网通和
 FILE=/root/study/apnic/ip_apnic<br />
 rm -f $FILE<br />
 wget http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest -O $FILE<br />
-grep &#8216;apnic|CN|ipv4|&#8217; $FILE | cut -f 4,5 -d&#8217;|&#8217;|sed -e &#8216;s/|/ /g&#8217; | while read ip cnt<br />
+grep 'apnic|CN|ipv4|' $FILE | cut -f 4,5 -d'|'|sed -e 's/|/ /g' | while read ip cnt<br />
 do<br />
 echo $ip:$cnt<br />
 mask=$(cat &gt; cn.net<br />
-NETNAME=`whois $ip@whois.apnic.net | sed -e &#8216;/./{H;$!d;}&#8217; -e &#8216;x;/netnum/!d&#8217; |grep ^netname | sed -e &#8216;s/.*: \(.*\)//g&#8217; | sed -e &#8216;s/-.*//g&#8217;`<br />
+NETNAME=`whois $ip@whois.apnic.net | sed -e '/./{H;$!d;}' -e 'x;/netnum/!d' |grep ^netname | sed -e 's/.*: \(.*\)//g' | sed -e 's/-.*//g'`<br />
 case $NETNAME in<br />
 CNC)<br />
    echo $ip/$mask &gt;&gt; CNCGROUP<br />

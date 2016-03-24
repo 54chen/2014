@@ -139,7 +139,7 @@ location / {<br />
 root /home/wiki.54chen.com; //size根目录<br />
 index index.php;<br />
 }
-location ~ &#46;php$ { #php fastcgi的配置<br />
+location ~ \.php$ { #php fastcgi的配置<br />
 fastcgi_pass 127.0.0.1:9000; #php fastcgi的代理端口与ip<br />
 fastcgi_index index.php;<br />
 fastcgi_param SCRIPT_FILENAME /home/wiki.54chen.com$fastcgi_script_name; #要处理的php文件的路径<br />
@@ -161,7 +161,7 @@ include /etc/nginx/fastcgi_params; #fastcgi的参数文件地址<br />
 
 <p>通过浏览器访问安装，安装时选择postgresql.</p>
 
-<p>将wiki目录下connfig目录中的LocalSettings.php剪切到wiki目录中，把$wgEnableUploads = false;改为$wgEnableUploads = true;（这样允许上传图片了），还有就是把Wiki的Logo改成您所需要的$wgLogo = &#8220;$wgStylePath/common/images/wiki.png&#8221;。</p>
+<p>将wiki目录下connfig目录中的LocalSettings.php剪切到wiki目录中，把$wgEnableUploads = false;改为$wgEnableUploads = true;（这样允许上传图片了），还有就是把Wiki的Logo改成您所需要的$wgLogo = "$wgStylePath/common/images/wiki.png"。</p>
 
 <p><strong>第三步.修改meidawiki及修改sql</strong>
 1.修改DB<br />

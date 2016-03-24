@@ -1,0 +1,741 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="54chen Twitter Memo 2012-07-29 zookeeper客户端curator使用手记 http://t.co/mWAGu1il #
+效率高的秘诀其实是一件事情一件事情地做而已。 #
+听说bmw的车子都会遇水断电后再用最后的一点电把窗户打开。。。 #
+54chen &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/9">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/29/54chen-twitter-memo-2012-07-29/">54chen Twitter Memo 2012-07-29</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+zookeeper客户端curator使用手记 </ul><a href="http://t.co/mWAGu1il" rel="nofollow">http://t.co/mWAGu1il</a> <a href="http://twitter.com/54chen/statuses/227963864858370048" class="aktt_tweet_time">#</a>
+效率高的秘诀其实是一件事情一件事情地做而已。 <a href="http://twitter.com/54chen/statuses/227655563511726080" class="aktt_tweet_time">#</a>
+听说bmw的车子都会遇水断电后再用最后的一点电把窗户打开。。。 <a href="http://twitter.com/54chen/statuses/227286708771778560" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-07-22 <a href="http://t.co/8eoJsWBr" rel="nofollow">http://t.co/8eoJsWBr</a> <a href="http://twitter.com/54chen/statuses/226864044928286720" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/25/zookeeper-curator/">Zookeeper客户端curator使用手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-25T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13M02XbRXXXX4FVU4_051626.jpg" alt="zookeeper" />
+<strong>一、简介</strong>
+    curator是Netflix公司开源的一个Zookeeper client library，用于简化zookeeper客户端编程，包含一下几个模块：</p>
+
+<p>    curator-client - zookeeper client封装，用于取代原生的zookeeper客户端，提供一些非常有用的客户端特性<br />
+    curator-framework - zookeeper api的高层封装，大大简化zookeeper客户端编程，添加了例如zookeeper连接管理、重试机制等<br />
+    curator-recipes - zookeeper recipes 基于curator-framework的实现（除2PC以外）</p>
+
+<p>    从github和maven上的消息来看，1.0.1的版本已经十分稳定，相对应的zk版本是3.3.x，还在开发中的版本是1.1.x，对应的版本是zk3.4.x。
+<strong>二、依赖</strong></p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.netflix.curator</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>curator-framework</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0.1</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>
+三、代码讲解</strong></p>
+
+<p>    以下代码以CuratorFramework为例：<br />
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">static</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;main(String[]&nbsp;args)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;Exception&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;path&nbsp;=&nbsp;<span class="string">"/test_path"</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CuratorFramework&nbsp;client&nbsp;=&nbsp;CuratorFrameworkFactory.builder().connectString(<span class="string">"zookeeper.n.miliao.com:2181"</span><span>).namespace(</span><span class="string">"/brokers"</span><span>).retryPolicy(</span><span class="keyword">new</span><span>&nbsp;RetryNTimes(Integer.MAX_VALUE,&nbsp;</span><span class="number">1000</span><span>)).connectionTimeoutMs(</span><span class="number">5000</span><span>).build();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;启动&nbsp;上面的namespace会作为一个最根的节点在使用时自动创建</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.start();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;创建一个节点</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.create().forPath(<span class="string">"/head"</span><span>,&nbsp;</span><span class="keyword">new</span><span>&nbsp;</span><span class="keyword">byte</span><span>[</span><span class="number">0</span><span>]);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;异步地删除一个节点</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.delete().inBackground().forPath(<span class="string">"/head"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;创建一个临时节点</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(<span class="string">"/head/child"</span><span>,&nbsp;</span><span class="keyword">new</span><span>&nbsp;</span><span class="keyword">byte</span><span>[</span><span class="number">0</span><span>]);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;取数据</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.getData().watched().inBackground().forPath(<span class="string">"/test"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;检查路径是否存在</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.checkExists().forPath(path);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;异步删除</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.delete().inBackground().forPath(<span class="string">"/head"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;注册观察者，当节点变动时触发</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.getData().usingWatcher(<span class="keyword">new</span><span>&nbsp;Watcher()&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;process(WatchedEvent&nbsp;event)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"node&nbsp;is&nbsp;changed"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).inBackground().forPath(<span class="string">"/test"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;结束使用</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.close();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p><strong>四、方法说明
+</strong>
+    create(): 发起一个create操作. 可以组合其他方法 (比如mode 或background) 最后以forPath()方法结尾<br />
+    delete(): 发起一个删除操作. 可以组合其他方法(version 或background) 最后以forPath()方法结尾<br />
+    checkExists(): 发起一个检查ZNode 是否存在的操作. 可以组合其他方法(watch 或background) 最后以forPath()方法结尾<br />
+    getData(): 发起一个获取ZNode数据的操作. 可以组合其他方法(watch, background 或get stat) 最后以forPath()方法结尾<br />
+    setData(): 发起一个设置ZNode数据的操作. 可以组合其他方法(version 或background) 最后以forPath()方法结尾<br />
+    getChildren(): 发起一个获取ZNode子节点的操作. 可以组合其他方法(watch, background 或get stat) 最后以forPath()方法结尾<br />
+    inTransaction(): 发起一个ZooKeeper事务. 可以组合create, setData, check, 和/或delete 为一个操作, 然后commit() 提交 </p>
+
+<p><strong>五、五四陈点评</strong></p>
+
+<p>相比zookeeper常用的zkClient的确是平易近人了，上手容易，理解轻松，语法优美，至于是不是各种情况都处理了，还得靠实践检验。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/22/54chen-twitter-memo-2012-07-22/">54chen Twitter Memo 2012-07-22</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+看来还需要一章写rose单元测试的，漏了。 </ul><a href="http://twitter.com/54chen/statuses/225888028277751808" class="aktt_tweet_time">#</a>
+夏天的下午听张楚的歌写代码是很爽的事情。 <a href="http://twitter.com/54chen/statuses/225874131822972928" class="aktt_tweet_time">#</a>
+创业公司的工程师一定要有“野性”，敢于对自己的代码负责，我在上一家公司任职的时候，大量的工程师写完代码之后，基本不会保障自测，直接扔给测试组，轮子就是这么越转越慢，甚至他们养成习惯之后很难改掉，所有的代码都十分依赖另一个人来查问题。 <a href="http://twitter.com/54chen/statuses/225072923852013568" class="aktt_tweet_time">#</a>
+redis 测试办法tclsh入门手记 <a href="http://t.co/uARTrrla" rel="nofollow">http://t.co/uARTrrla</a> <a href="http://twitter.com/54chen/statuses/224796453900517377" class="aktt_tweet_time">#</a>
+逐渐收到来自各处的mail询问rose的各种看似古怪的问题，典型的：1.很久不升级了？ 升级说明在开发，现在很稳定。 2.使用sql拼接容易造成sql注入等问题，尽量使用规范的preparestatement。3.只内置了velocity和jsp，通过后缀是vm还是jsp来区别。 <a href="http://twitter.com/54chen/statuses/224749739902640128" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-07-15 <a href="http://t.co/M36ripIz" rel="nofollow">http://t.co/M36ripIz</a> <a href="http://twitter.com/54chen/statuses/224316774945005569" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/16/redis-tcl/">Redis 测试办法tclsh入门手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-16T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="redis tcl" />
+<strong>一 什么是tclsh</strong>
+tool command language<br />
+terminal control language<br />
+看上去两个都是。tcl和c语言有着天然的亲缘关系，相近的数据类型与控制结构，通过规范的 api，可以比较方便的用c进行tcl的扩展开发，当然不在本文的讨论范围。</p>
+
+<p><strong>二 变量</strong>
+任何字符串均可作变量名。甚至空格也可以作为变量名。
+<strong>
+三 变量赋值</strong>
+set Name xxxxx<br />
+set Name "xxxxxxx"</p>
+
+<p><strong>四 数据类型</strong>
+实际上只有一种数据类型：字符串<br />
+数值计算只能用在expr命令中：<br />
+%expr abs(sin($x))<br />
+输出时非常类似C语言：set x [format "hello %-8.2f!" $y]</p>
+
+<p><strong>五 特殊的字符</strong>
+$ 异常变量的值<br />
+[] 展开一个命令的值<br />
+"" 内容为一个整体，内支持$[]等<br />
+{} 内容为一个整体，内不支持$[]及转义<br />
+\  转义字符</p>
+
+<p>list 列<br />
+llenght 列的长度</p>
+
+<p><strong>六 各种注意</strong>
+如果表达式一端有字符串常量，一定要使用引号。<br />
+source 相当于php的include似的。<br />
+global <br />
+load 加载外部的函数库（基本上都是加载C的）<br />
+proc 就像一个函数</p>
+
+<p><strong>七 redis测试入口</strong>
+最外层的make file会使用src下的make file的 test，当test接入时，最先会进行连接编译，然后运行runtest，runtest开始运行tcl脚本。</p>
+
+<p>tests/test_helper.tcl<br />
+文件中设置了五个位于support下的tcl脚本。<br />
+同时所有的test case记录在::all_tests中<br />
+在helper末尾，对输入进行了循环检查，</p>
+
+<p>入口在：test_client_main，由末尾的if条件中调用。去test_client_main中取列表循环运行。
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/15/54chen-twitter-memo-2012-07-15/">54chen Twitter Memo 2012-07-15</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+rose手册在线版本：http://t.co/CRNq2eyH 同时提供pdf\mobi下载: </ul><a href="http://t.co/rE9S2X3E" rel="nofollow">http://t.co/rE9S2X3E</a> <a href="http://twitter.com/54chen/statuses/223321355679055873" class="aktt_tweet_time">#</a>
+完整版本的rose手册，http://t.co/GzEt2O4g ，还剩下最后的历史一章留下给了 @<a href="http://twitter.com/Qieqie" class="aktt_username">Qieqie</a> ，连续一个多月的连载，希望能为用java开发的创业公司起到作用。 <a href="http://twitter.com/54chen/statuses/223055062174416900" class="aktt_tweet_time">#</a>
+rose手册第三章C节：DAO层：分表设置 <a href="http://t.co/R0zdOCWF" rel="nofollow">http://t.co/R0zdOCWF</a> <a href="http://twitter.com/54chen/statuses/223044448664305664" class="aktt_tweet_time">#</a>
+今天写rose jade dao分表一节。 <a href="http://twitter.com/54chen/statuses/223009878787100672" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-07-08 <a href="http://t.co/kJnBarCk" rel="nofollow">http://t.co/kJnBarCk</a> <a href="http://twitter.com/54chen/statuses/221792405660237826" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/11/rose-3-c/">rose手册第三章C节：DAO层：分表设置</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-11T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" /></p>
+
+<p>欢迎顺利进入本章，如果您的企业需要这一节的内容，那么说明用户量很有前途，如果使用了本节的内容，不防向czhttp@gmail.com发信一封以表谢意，我们会很高兴收到各种反馈。</p>
+
+<p><strong>3.C.1 mysql分表的常规做法</strong></p>
+
+<p>以下是个人从业经验中的分表规则：</p>
+
+<p>    按照 id % 100 分为一百份<br />
+    按照 id % 16 分为十六份<br />
+    按照 id/10 % 10 分为十份<br />
+    按照 id%10 分为十份</p>
+
+<p>  以上分表规则特别在mysql中使用机会比较多，各有优势，没有对错，只有最好与最不好用。</p>
+
+<p><strong>3.C.2 使用分表第一步：添加新的依赖</strong></p>
+
+<p>要使用分表，需要添加新的依赖，由bmw提供的bmwutils。</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.54chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>bmwutils</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>0.0.2</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>3.C.3 使用分表第二步：设置applicationContext.xml分表规则</strong></p>
+
+<p>在开写代码之前，需要告诉DAO是哪个表需要分表，按照什么规则分，分多少份。</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="comments">&lt;!--&nbsp;以下配置为分表设置&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">"jade.routerInterpreter"</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">"com.xiaomi.common.service.dal.routing.RewriteSQLInterpreter"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"routingConfigurator"</span><span>&nbsp;</span><span class="attribute">ref</span><span>=</span><span class="attribute-value">"jade.routingConfigurator"</span><span>&nbsp;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">"jade.routingConfigurator"</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">"com.xiaomi.common.service.dal.routing.RoutingConfigurator"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"partitions"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>hash:test:id:test_{0}:100</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    此处配置中，partitions参数为一个list，可以对多个table进行定义。<br />
+        hash:test:id:test_{0}:100 表示：使用hash这种办法，将test这个表，按照id的值，分成100份，每份的表名为test_x</p>
+
+<p><strong>3.C.4 使用分表第三步：bmwutils支持的分表办法</strong></p>
+
+<p>    (hash)上例中的hash: 最常用的 id % 100 就是这种办法。该办法会把传入的值先进行转为数字后与定义的份数进行取模（%）。<br />
+    (direct)最直接的一种：用的少一些，没有什么规则，直接根据第四个正则，与第三位传入的值进行替换。假设有个人名表，按照字母分表可以用。name_A,name_B,name_C...<br />
+    (round)轮循：根据设置，按照调用sql的情况，轮流使用各个表。<br />
+    (range)范围：一般用来做日期范围的分表，比如说微博类的，可变值为一个时间，当时间传入时，第三位支持log{yyyy} log{yyyy_MM}等时间格式的替换，可轻松做到按周、月、年分表。<br />
+    (xm-hash)小米hash：一种古怪的办法，按照传入值的十位进行取模的分表方案。<br />
+    (xm-str-hash)小米字符串hash：将字符串按照固定算法变成long之后，再按照小米hash逻辑处理。<br />
+    (hex-hash)16进制分表：固定256份以内，传入的值按照16进制转换后按hash求模。</p>
+
+<p><strong>3.C.5 使用分表第四步：写DAO代码@ShardBy</strong></p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test&nbsp;where&nbsp;user_id&nbsp;=:id"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsById(</span><span class="annotation">@ShardBy</span><span>&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"id"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;id);&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>与不分表的dao相比，只多了一个shardBy，标识按照这个参数值分表。</p>
+
+<p>    文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
+    长期更新版本：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_C">https://github.com/XiaoMi/rose/tree/master/chapter_3_C</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/08/54chen-twitter-memo-2012-07-08/">54chen Twitter Memo 2012-07-08</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-08T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+rose手册第三章B节：DAO层：DAO进阶：SQLParm支持和表达式SQL </ul><a href="http://t.co/ecLqOv41" rel="nofollow">http://t.co/ecLqOv41</a> <a href="http://twitter.com/54chen/statuses/220811013879107585" class="aktt_tweet_time">#</a>
+七一闰秒：除了一个低版本的内核会有ntpd占用cpu的情况，从观察的情况，centos6.2+java都有cpu高的问题。 <a href="http://twitter.com/54chen/statuses/220076268857729024" class="aktt_tweet_time">#</a>
+<a href="http://t.co/GMWRgDnY" rel="nofollow">http://t.co/GMWRgDnY</a>  有朋友在jetty中使用rose portal和pipe功能时发现有空指针问题，研究发现，jetty默认的nio connector会使一些子window的返回是null，因此在使用时一定要切回bio。 <a href="http://twitter.com/54chen/statuses/220024596575956995" class="aktt_tweet_time">#</a>
+闰秒这个事情真的让我们服务受到了影响，ntpd同步来的时间重合还是很危险的。 <a href="http://twitter.com/54chen/statuses/219667125411913728" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-07-01 <a href="http://t.co/cOzvPr8A" rel="nofollow">http://t.co/cOzvPr8A</a> <a href="http://twitter.com/54chen/statuses/219250977742663680" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/05/rose-3-b/">rose手册第三章B节：DAO层：DAO进阶：SQLParm支持和表达式SQL</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-05T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" /></p>
+
+<p><strong>3.B.1 SQLParam介绍：DAO方法传递参数</strong></p>
+
+<p>    SQLParam作为DAO支持中的参数传递使者，可以传递一个常见的变量，也可以是一个自定义的对象。<br />
+    比如：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t.id,:t.msg)"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"t"</span><span>)&nbsp;Test&nbsp;test);&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    上列中Test对象通过t传递到sql执行中去，并且可以分别使用其中的属性。这感觉是不是很自然？</p>
+
+<p>    当然，如果是一个int、long、String等自在不言中。</p>
+
+<p>    当是list时，会有自动的batch操作，将sql拆为多条sql执行。这个小技巧会在后面的章节里讲。平时很少用到。
+<strong>
+3.B.2 ReturnGeneratedKeys介绍：返回刚刚插入的ID号</strong></p>
+
+<p>    特别是使用mysql开发的广大劳苦大众，常常会使用到auto_increament的字段。<br />
+    当一条insert语句在执行的时候，我们常常会去需要拿它的当前的自增id是多少。</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@ReturnGeneratedKeys</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="annotation">@SQL</span><span>(</span><span class="string">"insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t.id,:t.msg)"</span><span>)&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"t"</span><span>)&nbsp;Test&nbsp;test);&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    如上述代码所示，只需要加上一个@ReturnGeneratedKeys即可返回当前的id</p>
+
+<p><strong>3.B.2 表达式的支持</strong></p>
+
+<p>    多变的业务需求决定了我们的sql是复杂的，需要有条件地执行。<br />
+    如果每种条件都去写DAO中的SQL，那DAO的变得很大。<br />
+    常常会有动态产生sql的需求。</p>
+
+<p>    jade支持一些常规的表达式。</p>
+
+<p>    语法一：常见的变量赋值<br />
+        冒号（:）表示这是一个变量，比如上面的例子里的 :t.id，它会被一个值替换。</p>
+
+<p>    语法二：字符串连接<br />
+        连续的井号（##） 表示后面的变量作字符串连接<br />
+        如下例中的partition变量，还请不要误解，分表不是这样做的，下一章会介绍标准的分表设置。</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;LIMIT&nbsp;:limit"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTests(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"limit"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit);&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>语法三：条件选择</p>
+
+<p>    井号if（#if{}）用于表示当条件满足时sql拼接。</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;#if(:user&gt;0){&nbsp;where&nbsp;user_id=:user&nbsp;}&nbsp;LIMIT&nbsp;:limit"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsIf(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"limit"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"user"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;user);&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    其他语法：还有for循环，实际使用少。<br />
+    典型地，一般的select in查询，可以直接传入list，例如下例中的ids变量：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;where&nbsp;user_id&nbsp;in(:ids)"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsByIds(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"ids"</span><span>)&nbsp;List&lt;Integer&gt;&nbsp;ids);&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>文中所提及代码均在<a href=" https://github.com/XiaoMi/rose/tree/master/rose-example"> https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
+常年更新版本在：<a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/01/54chen-twitter-memo-2012-07-01/">54chen Twitter Memo 2012-07-01</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+rose手册第三章A节：DAO层：DAO的基本配置与使用 </ul><a href="http://t.co/Whs4IMIL" rel="nofollow">http://t.co/Whs4IMIL</a> <a href="http://twitter.com/54chen/statuses/217980570993561600" class="aktt_tweet_time">#</a>
+开始DAO层的文档写作，恰逢公司热火朝天融资翻番，本想说点啥感言吧，最后只留下在文章末尾附招人广告邮箱一枚，哈哈。 <a href="http://twitter.com/54chen/statuses/217975264808935425" class="aktt_tweet_time">#</a>
+有朋友在观望rose-jade的时候发现无法用注解做更加灵活的动态sql，其实jade提供了常规的一些if表达式之类的支持。 <a href="http://twitter.com/54chen/statuses/217541573972459520" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-06-24 <a href="http://t.co/a13H2rOR" rel="nofollow">http://t.co/a13H2rOR</a> <a href="http://twitter.com/54chen/statuses/216704590601662464" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/27/rose-3-a/">rose手册第三章A节：DAO层：DAO的基本配置与使用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-06-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" />
+本章开始进入对DB层的支持，同进也是日常开发用得最多的章节。
+<strong>3.A.1 什么是jade？</strong></p>
+
+<p>    jade大概是java access data layer的意思吧，具体的来由，在章节写到末尾的时候，我再找qieqie和liaohan大侠们写一写编年史。<br />
+    用jade的好处在于，尽可能减少重复的从db把数据对bean进行装配的过程，统一入口，隔离业务逻辑，方便review。<br />
+    jade是在spring完成的数据层的良好实践总结，无缝接入rose中，可以算得上是rose亲密无间的好模块。</p>
+
+<p><strong>3.A.2 引入基础配置</strong></p>
+
+<p>    要开始使用jade，一定要先引用jade的基础包：</p>
+
+<p>pom.xml
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.54chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-jade</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.1</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>除了需要jade的包外，还需要引入数据源连接池的jar，这里使用了dbcp，还是在pom.xml中：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>commons-dbcp</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>commons-dbcp</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.2.2</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>mysql</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>mysql-connector-java</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>5.1.10</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    在pom中引入了依赖之后，需要定义一个数据源，这里先不考虑多个数据源的情况。</p>
+
+<p>在war项目的applicationContext.xml中增加数据源定义：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span>&nbsp;</span><span class="comments">&lt;!--&nbsp;数据源配置&nbsp;dbcp&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span>&nbsp;</span><span class="attribute">id</span><span>=</span><span class="attribute-value">"jade.dataSource.com.chen.dao"</span><span>&nbsp;</span><span class="attribute">class</span><span>=</span><span class="attribute-value">"org.apache.commons.dbcp.BasicDataSource"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">destroy-method</span><span>=</span><span class="attribute-value">"close"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"driverClassName"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"com.mysql.jdbc.Driver"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"url"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">value</span><span>=</span><span class="attribute-value">"jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;amp;characterEncoding=utf-8"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"username"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"test"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"password"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"test"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;运行判断连接超时任务的时间间隔，单位为毫秒，默认为-1，即不执行任务。&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"timeBetweenEvictionRunsMillis"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"3600000"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments">&lt;!--&nbsp;连接的超时时间，默认为半小时。&nbsp;--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"minEvictableIdleTimeMillis"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"3600000"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    这里假设了mysql已经安装在本地了，用户名为test，密码为test。<br />
+    jade约定了bean的id为jade.dataSource.classPackageName。<br />
+    jade约定了这个bean的有效范围为classPackageName所有的DAO。<br />
+    jade约定了除非有专门的定义，所有的子目录也受bean上的classpackageName所影响。</p>
+
+<p><strong>3.A.3 第一个读取数据库的实例</strong></p>
+
+<p>    先需要准备一下数据库：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-sql" start="1"><li class="alt"><span><span class="keyword">create</span><span>&nbsp;</span><span class="keyword">table</span><span>&nbsp;test&nbsp;(</span><span class="keyword">int</span><span>&nbsp;id,&nbsp;</span><span class="keyword">varchar</span><span>(200)&nbsp;msg);&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">insert</span><span>&nbsp;</span><span class="keyword">into</span><span>&nbsp;test&nbsp;</span><span class="keyword">values</span><span>(111,'adfafafasdf');&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>    然后准备简练的DAO声明：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@DAO</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">interface</span><span>&nbsp;TestDAO&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@SQL</span><span>(</span><span class="string">"select&nbsp;id,msg&nbsp;from&nbsp;test&nbsp;limit&nbsp;1"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;Test&nbsp;getTest();&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>    Test是一个class，里面有标准的getter和setter。</p>
+
+<p>    然后从一个类去调用它：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Service</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;TestService&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Autowired</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">private</span><span>&nbsp;TestDAO&nbsp;testDAO;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;Test&nbsp;getTest()&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;testDAO.getTest();&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>    当然也可以直接用controller就调用它显示了，当然这不是一个大型项目良好的架构，架构问题在最后的章节里讲述。
+<strong>
+3.A.4 查看演示代码</strong></p>
+
+<p>    rose-example项目的HelloController已经准备好了一个action做为此节的总结。</p>
+
+<p>    你可以将此节发布到resin或者tomcat后访问：http://127.0.0.1/3.10 查看结果。</p>
+
+<p>    文中所提及代码均在<a href=" https://github.com/XiaoMi/rose/tree/master/rose-example"> https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。</p>
+
+<p>    常期更新版：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_A">https://github.com/XiaoMi/rose/tree/master/chapter_3_A</a></p>
+
+<p>    ×××小米C轮融资成功，不经意间过去的两年已经翻了数十倍，需要你加入，继续创造翻N倍的价值。chenzhen at xiaomi dot com。×××
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="10">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="8">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

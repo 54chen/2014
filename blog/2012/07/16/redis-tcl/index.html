@@ -113,18 +113,18 @@ terminal control language<br />
 <strong>
 三 变量赋值</strong>
 set Name xxxxx<br />
-set Name &#8220;xxxxxxx&#8221;</p>
+set Name "xxxxxxx"</p>
 
 <p><strong>四 数据类型</strong>
 实际上只有一种数据类型：字符串<br />
 数值计算只能用在expr命令中：<br />
 %expr abs(sin($x))<br />
-输出时非常类似C语言：set x [format &#8220;hello %-8.2f!&#8221; $y]</p>
+输出时非常类似C语言：set x [format "hello %-8.2f!" $y]</p>
 
 <p><strong>五 特殊的字符</strong>
 $ 异常变量的值<br />
 [] 展开一个命令的值<br />
-&#8221;&#8221; 内容为一个整体，内支持$[]等<br />
+"" 内容为一个整体，内支持$[]等<br />
 {} 内容为一个整体，内不支持$[]及转义<br />
 \  转义字符</p>
 

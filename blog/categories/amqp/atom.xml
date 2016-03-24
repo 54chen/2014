@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Amqp | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/amqp/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-02-02T12:01:13+08:00</updated>
+  <updated>2016-03-24T21:18:45+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -45,14 +45,14 @@
 
 <h2>连接</h2>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>ConnectionFactory factory = new ConnectionFactory();
 </span><span class='line'>factory.setHost(hostName);
 </span><span class='line'>Connection conn = factory.newConnection();
-</span><span class='line'>Channel channel = conn.createChannel();</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>Channel channel = conn.createChannel();</span></code></pre></td></tr></table></div></figure></p>
 
 <ul>
 <li>以上是得到一个rabbitmq连接最最基础的代码，当然了，还可以设置一些诸如用户名密码的事情。</li>
@@ -62,10 +62,10 @@
 
 <h2>消息者线程池</h2>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>ExecutorService es = Executors.newFixedThreadPool(20);
-</span><span class='line'>Connection conn = factory.newConnection(es);</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>Connection conn = factory.newConnection(es);</span></code></pre></td></tr></table></div></figure></p>
 
 <ul>
 <li>消费者时使用，上述自动开了一20个线程的池来搞。</li>
@@ -74,18 +74,12 @@
 
 <h2>地址数组</h2>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Address[] addrArr = new Address[]{ new Address(hostname1, portnumber1)&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>                             , new Address(hostname2, portnumber2)};
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>Connection conn = factory.newConnection(addrArr);</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</pre></td><td class='code'><pre><code class=''><span class='line'>Address[] addrArr = new Address[]{ new Address(hostname1, portnumber1)
+</span><span class='line'>                                 , new Address(hostname2, portnumber2)};
+</span><span class='line'>Connection conn = factory.newConnection(addrArr);</span></code></pre></td></tr></table></div></figure></p>
 
 <ul>
 <li>上述代码如果连hostname1失败了就去hostname2。</li>
@@ -95,12 +89,12 @@
 
 <h2>声明exchange与queue</h2>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>channel.exchangeDeclare(exchangeName, &ldquo;direct&rdquo;, true);
 </span><span class='line'>String queueName = channel.queueDeclare().getQueue();
-</span><span class='line'>channel.queueBind(queueName, exchangeName, routingKey);</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>channel.queueBind(queueName, exchangeName, routingKey);</span></code></pre></td></tr></table></div></figure></p>
 
 <ul>
 <li>channel.exchangeDeclare 参数有 交换机名字  类型  是否持久化  不使用时是否自动删除 是否是内部的（不能被客户端使用） 其他参数</li>
@@ -111,10 +105,10 @@
 
 <h2>发出消息</h2>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>byte[] messageBodyBytes = &ldquo;Hello, world!&rdquo;.getBytes();
-</span><span class='line'>channel.basicPublish(exchangeName, routingKey, null, messageBodyBytes);</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>channel.basicPublish(exchangeName, routingKey, null, messageBodyBytes);</span></code></pre></td></tr></table></div></figure></p>
 
 <ul>
 <li>channel.basicPublish 参数有 要发出的交换机名字  路由关键字 是否强制（设置为true时，找不到收的人时可以通过returnListener返回）  是否立即（其实rabbitmq不支持） 其他属性 消息主体</li>
@@ -130,7 +124,7 @@
 
 <h2>最简单的办法消费消息</h2>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -147,31 +141,23 @@
 <span class='line-number'>15</span>
 <span class='line-number'>16</span>
 <span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>boolean autoAck = false;
-</span><span class='line'>channel.basicConsume(queueName, autoAck, &ldquo;myConsumerTag&rdquo;,&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> new DefaultConsumer(channel) {
-</span><span class='line'>     @Override
-</span><span class='line'>     public void handleDelivery(String consumerTag,
-</span><span class='line'>                                Envelope envelope,
-</span><span class='line'>                                AMQP.BasicProperties properties,
-</span><span class='line'>                                byte[] body)
-</span><span class='line'>         throws IOException
-</span><span class='line'>     {
-</span><span class='line'>         String routingKey = envelope.getRoutingKey();
-</span><span class='line'>         String contentType = properties.contentType;
-</span><span class='line'>         long deliveryTag = envelope.getDeliveryTag();
-</span><span class='line'>         // (process the message components here ...)
-</span><span class='line'>         channel.basicAck(deliveryTag, false);
-</span><span class='line'>     }
-</span><span class='line'> });
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>channel.basicConsume(queueName, autoAck, &ldquo;myConsumerTag&rdquo;,
+</span><span class='line'>     new DefaultConsumer(channel) {
+</span><span class='line'>         @Override
+</span><span class='line'>         public void handleDelivery(String consumerTag,
+</span><span class='line'>                                    Envelope envelope,
+</span><span class='line'>                                    AMQP.BasicProperties properties,
+</span><span class='line'>                                    byte[] body)
+</span><span class='line'>             throws IOException
+</span><span class='line'>         {
+</span><span class='line'>             String routingKey = envelope.getRoutingKey();
+</span><span class='line'>             String contentType = properties.contentType;
+</span><span class='line'>             long deliveryTag = envelope.getDeliveryTag();
+</span><span class='line'>             // (process the message components here &hellip;)
+</span><span class='line'>             channel.basicAck(deliveryTag, false);
+</span><span class='line'>         }
+</span><span class='line'>     });</span></code></pre></td></tr></table></div></figure></p>
 
 <ul>
 <li>一个Channel一个Consumer。</li>

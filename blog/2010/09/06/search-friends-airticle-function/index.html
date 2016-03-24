@@ -114,24 +114,24 @@
 下面代码片段所做之事，是将10万条记录插入到表中，表的members的记录在五千条内随机，里的人id从1到50000随机产生，这样，基本能够模拟一个中型应用的水平了。
 <blockquote>
 $db = new DLConnection();<br />
-$sql = &#8220;INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES&#8221;;<br />
-$dot = &#8220;&#8221;;<br />
+$sql = "INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES";<br />
+$dot = "";<br />
 for ($i=0;$i<100000;$i++)<br />
 {
-    $dot2 = &#8220;&#8221;;<br />
-    $sql2 = &#8220;&#8221;;<br />
+    $dot2 = "";<br />
+    $sql2 = "";<br />
     for ($j=0;$j<rand(1,5000);$j++){<br />
         $x = rand(1,50000);<br />
         $sql2 .= $dot2.$x;<br />
-        $dot2 = &#8220;,&#8221;;<br />
+        $dot2 = ",";<br />
     }<br />
-    $sql .= $dot.&#8221;(&#8216;$i&#8217;, &#8216;$sql2&#8217;)&#8221;;<br />
-    $dot = &#8220;,&#8221;;<br />
+    $sql .= $dot."('$i', '$sql2')";<br />
+    $dot = ",";<br />
     <br />
     if ($i%1000==0) {<br />
     	$db->Execute($sql);<br />
-    	$sql = &#8220;INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES&#8221;;<br />
-    	$dot = &#8220;&#8221;;<br />
+    	$sql = "INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES";<br />
+    	$dot = "";<br />
     }<br />
 }
 </blockquote></p>
@@ -175,7 +175,7 @@ sphinx的搜索性能还是基本满意，在压力测试的时候看后台的qu
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>, <a class='category' href='/blog/categories/jia-gou-yan-jiu/'>架构研究</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>, <a class='category' href='/blog/categories/jia-gou-yan-jiu/'>架构研究</a>
   
 </span>
 

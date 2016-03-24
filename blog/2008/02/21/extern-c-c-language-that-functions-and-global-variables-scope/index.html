@@ -109,7 +109,7 @@
 </span><span style="color: #000000;">3。</span>与extern对应的关键字是static，被它修饰的全局变量和函数只能在本模块中使用。</p>
 
 <p>后面转载，阅读中。。。。。。。<br />
-被extern &#8220;C&#8221;修饰的变量和函数是按照C语言方式编译和连接的；
+被extern "C"修饰的变量和函数是按照C语言方式编译和连接的；
 <strong>未加extern “C”声明时的编译方式</strong></p>
 
 <p>　　首先看看C++中对类似C的函数是怎样编译的。</p>
@@ -125,9 +125,9 @@
 
 <p>_foo_int_int这样的名字包含了函数名、函数参数数量及类型信息，C++就是靠这种机制来实现函数重载的。例如，在C++中，函数void foo( int x, int y )与void foo( int x, float y )编译生成的符号是不相同的，后者为_foo_int_float。</p>
 
-<p>同样地，C++中的变量除支持局部变量外，还支持类成员变量和全局变量。用户所<a class="bluekey" href="http://www.yesky.com/key/4285/189285.html" target="_blank">编写</a>程序的类成员变量可能与全局变量同名，我们以&#8221;.&#8221;来区分。而本质上，编译器在进行编译时，与函数的处理相似，也为类中的变量取了一个独一无二的名字，这个名字与用户程序中同名的全局变量名字不同。</p>
+<p>同样地，C++中的变量除支持局部变量外，还支持类成员变量和全局变量。用户所<a class="bluekey" href="http://www.yesky.com/key/4285/189285.html" target="_blank">编写</a>程序的类成员变量可能与全局变量同名，我们以"."来区分。而本质上，编译器在进行编译时，与函数的处理相似，也为类中的变量取了一个独一无二的名字，这个名字与用户程序中同名的全局变量名字不同。</p>
 
-<p><strong>未加extern &#8220;C&#8221;声明时的连接方式</strong></p>
+<p><strong>未加extern "C"声明时的连接方式</strong></p>
 
 <p>假设在C++中，模块A的头文件如下：
 <table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
@@ -145,22 +145,22 @@ int foo( int x, int y );<br />
 <tbody>
 <tr>
 <td>// 模块B实现文件　moduleB.cpp<br />
-#include &#8220;moduleA.h&#8221;<br />
+#include "moduleA.h"<br />
 foo(2,3);</td>
 </tr>
 </tbody></table>
 实际上，在连接阶段，连接器会从模块A生成的目标文件moduleA.obj中寻找_foo_int_int这样的符号！</p>
 
-<p><strong>加extern &#8220;C&#8221;声明后的编译和连接方式</strong></p>
+<p><strong>加extern "C"声明后的编译和连接方式</strong></p>
 
-<p>加extern &#8220;C&#8221;声明后，模块A的头文件变为：
+<p>加extern "C"声明后，模块A的头文件变为：
 <table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
 <tbody>
 <tr>
 <td>// 模块A头文件　moduleA.h<br />
 #ifndef MODULE_A_H<br />
 #define MODULE_A_H<br />
-extern &#8220;C&#8221; int foo( int x, int y );<br />
+extern "C" int foo( int x, int y );<br />
 #endif</td>
 </tr>
 </tbody></table>
@@ -170,27 +170,27 @@ extern &#8220;C&#8221; int foo( int x, int y );<br />
 
 <p>（2）连接器在为模块B的目标代码寻找foo(2,3)调用时，寻找的是未经修改的符号名_foo。</p>
 
-<p>如果在模块A中函数声明了foo为extern &#8220;C&#8221;类型，而模块B中包含的是extern int foo( int x, int y ) ，则模块B找不到模块A中的函数；反之亦然。</p>
+<p>如果在模块A中函数声明了foo为extern "C"类型，而模块B中包含的是extern int foo( int x, int y ) ，则模块B找不到模块A中的函数；反之亦然。</p>
 
 <p>所以，可以用一句话概括extern “C”这个声明的真实目的（任何语言中的任何语法特性的诞生都不是随意而为的，来源于真实世界的需求驱动。我们在思考问题时，不能只停留在这个语言是怎么 做的，还要问一问它为什么要这么做，动机是什么，这样我们可以更深入地理解许多问题）：</p>
 
 <p>实现C++与C及其它语言的混合编程。</p>
 
-<p>明白了C++中extern &#8220;C&#8221;的设立动机，我们下面来具体分析extern &#8220;C&#8221;通常的<a class="bluekey" href="http://www.yesky.com/key/263/160263.html" target="_blank">使用技巧</a>。</p>
+<p>明白了C++中extern "C"的设立动机，我们下面来具体分析extern "C"通常的<a class="bluekey" href="http://www.yesky.com/key/263/160263.html" target="_blank">使用技巧</a>。</p>
 
-<p>4.extern &#8220;C&#8221;的惯用法</p>
+<p>4.extern "C"的惯用法</p>
 
 <p>（1）在C++中引用C语言中的函数和变量，在包含C语言头文件（假设为cExample.h）时，需进行下列处理：
 <table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
 <tbody>
 <tr>
-<td>extern &#8220;C&#8221;<br />
+<td>extern "C"<br />
 {
-#include &#8220;cExample.h&#8221;<br />
+#include "cExample.h"<br />
 }</td>
 </tr>
 </tbody></table>
-而在C语言的头文件中，对其外部函数只能指定为extern类型，C语言中不支持extern &#8220;C&#8221;声明，在.c文件中包含了extern &#8220;C&#8221;时会出现编译语法错误。</p>
+而在C语言的头文件中，对其外部函数只能指定为extern类型，C语言中不支持extern "C"声明，在.c文件中包含了extern "C"时会出现编译语法错误。</p>
 
 <p>笔者编写的C++引用C函数例子工程中包含的三个文件的源代码如下：
 <table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
@@ -202,15 +202,15 @@ extern &#8220;C&#8221; int foo( int x, int y );<br />
 extern int add(int x,int y);<br />
 #endif<br />
 /* c语言实现文件：cExample.c */<br />
-#include &#8220;cExample.h&#8221;<br />
+#include "cExample.h"<br />
 int add( int x, int y )<br />
 {
 return x + y;<br />
 }
 // c++实现文件，调用add：cppFile.cpp<br />
-extern &#8220;C&#8221;<br />
+extern "C"<br />
 {
-#include &#8220;cExample.h&#8221;<br />
+#include "cExample.h"<br />
 }
 int main(int argc, char* argv[])<br />
 {
@@ -219,9 +219,9 @@ return 0;<br />
 }</td>
 </tr>
 </tbody></table>
-如果C++调用一个C语言编写的.DLL时，当包括.DLL的头文件或声明接口函数时，应加extern &#8220;C&#8221; {　}。</p>
+如果C++调用一个C语言编写的.DLL时，当包括.DLL的头文件或声明接口函数时，应加extern "C" {　}。</p>
 
-<p>（2）在C中引用C++语言中的函数和变量时，C++的头文件需添加extern &#8220;C&#8221;，但是在C语言中不能直接引用声明了extern &#8220;C&#8221;的该头文件，应该仅将C文件中将C++中定义的extern &#8220;C&#8221;函数声明为extern类型。</p>
+<p>（2）在C中引用C++语言中的函数和变量时，C++的头文件需添加extern "C"，但是在C语言中不能直接引用声明了extern "C"的该头文件，应该仅将C文件中将C++中定义的extern "C"函数声明为extern类型。</p>
 
 <p>笔者编写的C引用C++函数例子工程中包含的三个文件的源代码如下：
 <table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
@@ -230,16 +230,16 @@ return 0;<br />
 <td>//C++头文件 cppExample.h<br />
 #ifndef CPP_EXAMPLE_H<br />
 #define CPP_EXAMPLE_H<br />
-extern &#8220;C&#8221; int add( int x, int y );<br />
+extern "C" int add( int x, int y );<br />
 #endif<br />
 //C++实现文件 cppExample.cpp<br />
-#include &#8220;cppExample.h&#8221;<br />
+#include "cppExample.h"<br />
 int add( int x, int y )<br />
 {
 return x + y;<br />
 }
 /* C实现文件 cFile.c<br />
-/* 这样会编译出错：#include &#8220;cExample.h&#8221; */<br />
+/* 这样会编译出错：#include "cExample.h" */<br />
 extern int add( int x, int y );<br />
 int main( int argc, char* argv[] )<br />
 {
@@ -277,7 +277,7 @@ return 0;<br />
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

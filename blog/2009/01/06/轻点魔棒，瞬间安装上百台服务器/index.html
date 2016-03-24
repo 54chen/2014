@@ -117,7 +117,7 @@
 
 <p>3. 导入 Fedora 9 安装 DVD ISO 中的文件：<br />
      mount -o loop Fedora9/x86_64/Fedora-9-x86_64-DVD.iso /mnt/dvd/    # 将ISO文件挂载到 /mnt/dvd 目录<br />
-     cobbler import &#8211;mirror=/mnt/dvd &#8211;name=FC9-x86-64      # 从 /mnt/dvd 目录导入所有安装文件，命名为 FC9-x86-64<br />
+     cobbler import --mirror=/mnt/dvd --name=FC9-x86-64      # 从 /mnt/dvd 目录导入所有安装文件，命名为 FC9-x86-64<br />
      cobbler distro list          # 查看导入结果，应显示 FC9-64-i386 和 FC9-64-xen-i386</p>
 
 <p>4. 修改 DHCP 和 Kickstart 配置模板：<br />

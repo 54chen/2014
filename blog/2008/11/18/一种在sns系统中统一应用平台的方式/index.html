@@ -121,9 +121,9 @@ RewriteEngine On
 
 <p>&lt;?php</p>
 
-<p>$__app_path = trim($_GET(&#8216;__app_path&#8217;));</p>
+<p>$__app_path = trim($_GET('__app_path'));</p>
 
-<p>$__app_page = trim($_GET(&#8216;__app_page&#8217;));</p>
+<p>$__app_page = trim($_GET('__app_page'));</p>
 
 <p>/*</p>
 
@@ -133,9 +133,9 @@ RewriteEngine On
 
 <p>if(!$__app_page)</p>
 
-<p><span> </span>$__app_page = &#8220;index.php&#8221;;</p>
+<p><span> </span>$__app_page = "index.php";</p>
 
-<p><span> </span>$file_path = &#8220;./&#8221;.$__app_path.&#8221;/&#8221;.$__app_page;</p>
+<p><span> </span>$file_path = "./".$__app_path."/".$__app_page;</p>
 
 <p>include($file_path);</p>
 
@@ -147,7 +147,7 @@ RewriteEngine On
 
 <p>&lt;?php</p>
 
-<p>echo &#8216;hello world!&#8217;;</p>
+<p>echo 'hello world!';</p>
 
 <p>?&gt;</p>
 

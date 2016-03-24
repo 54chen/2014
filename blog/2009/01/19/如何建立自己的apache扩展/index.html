@@ -110,7 +110,7 @@
 /path/to/libtool --mode=compile gcc ... -c mod_foo.c<br />
 /path/to/libtool --mode=link gcc ... -o mod_foo.la mod_foo.slo<br />
 $ _ </code>
-然后，必须修改Apache的配置，以确保有一个<code class="directive">LoadModule </code>指令来加载此共享对象。为了简化这一步骤，<code>apxs</code> 可以自动进行该操作，以安装此共享对象到&#8221;modules&#8221;目录，并更新<code><a href="http://www.54chen.com/c/148">httpd</a>.conf</code> 文件，命令如下：
+然后，必须修改Apache的配置，以确保有一个<code class="directive">LoadModule </code>指令来加载此共享对象。为了简化这一步骤，<code>apxs</code> 可以自动进行该操作，以安装此共享对象到"modules"目录，并更新<code><a href="http://www.54chen.com/c/148">httpd</a>.conf</code> 文件，命令如下：
 <div class="example" /></p>
 
 <p><code> $ apxs -i -a mod_foo.la<br />

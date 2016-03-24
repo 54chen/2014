@@ -161,7 +161,7 @@ this.list = list;<br />
 }<br />
 }
 运行后的结果：
-<blockquote>[test.Test$BlockData@1bc4459, test.Test$BlockData@12b6651, &#8230;</blockquote>
+<blockquote>[test.Test$BlockData@1bc4459, test.Test$BlockData@12b6651, ...</blockquote>
 从后面一个例子看到的object在<a href="http://www.54chen.com/705-peer-to-peer-distributed-hash-algorithm-in-the-mainstream-of-comparative-analysis-of-the-collection/">toString</a>的时候，对象只是一个串了，要想再恢复成<a href="http://www.54chen.com/814-tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">object</a>不可能了。54chen曾想把list.toString.getBytes，被证明是不靠谱的做法。</p>
 
 <p>而要想把一个list变成byte[]在网络上传输，看下面的代码：

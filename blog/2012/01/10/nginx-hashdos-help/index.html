@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="经过上周一周朋友们帮忙测试和bug fix，nginx_http_hashdos_module已经达到可以线上使用的水平，下面是使用记录。
-下载 #wget &#8211;no-check-certificate https://github.com/54chen/nginx-http- &hellip;">
+下载 #wget --no-check-certificate https://github.com/54chen/nginx-http-hashdos- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,7 +104,7 @@
 经过上周一周朋友们帮忙测试和bug fix，nginx_http_hashdos_module已经达到可以线上使用的水平，下面是使用记录。
 <strong>下载</strong></p>
 
-<p><blockquote>#wget &#8211;no-check-certificate https://github.com/54chen/nginx-http-hashdos-module/zipball/master<br />
+<p><blockquote>#wget --no-check-certificate https://github.com/54chen/nginx-http-hashdos-module/zipball/master<br />
 #mv master nginx_hashdos.zip<br />
 #unzip nginx_hashdos.zip</blockquote></p>
 
@@ -112,7 +112,7 @@
 
 <p><blockquote>#tar zxvf nginx-1.0.xx.tar.gz <br />
 #cd nginx-1.0.xx/<br />
-#./configure &#8211;prefix=/opt/soft/nginx &#8211;with-pcre &#8211;user=www &#8211;group=www &#8211;with-http_stub_status_module &#8211;with-http_ssl_module &#8211;add-module=../54chen-nginx-http-hashdos-module-f84d909<br />
+#./configure --prefix=/opt/soft/nginx --with-pcre --user=www --group=www --with-http_stub_status_module --with-http_ssl_module --add-module=../54chen-nginx-http-hashdos-module-f84d909<br />
 #make && make install</blockquote></p>
 
 <p><strong>配置注意事项</strong>
@@ -159,7 +159,7 @@ client_max_body_size 2m;</blockquote>
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

@@ -131,8 +131,8 @@ bin/vmc<br />
 
 <p>以push为例：</p>
 
-<p> when &#8216;push&#8217;<br />
-      usage(&#8216;vmc push [appname] [&#8211;path PATH] [&#8211;url URL] [&#8211;instances N] [&#8211;mem] [&#8211;runtime RUNTIME] [&#8211;no-start]&#8217;)<br />
+<p> when 'push'<br />
+      usage('vmc push [appname] [--path PATH] [--url URL] [--instances N] [--mem] [--runtime RUNTIME] [--no-start]')<br />
       if @args.size == 1<br />
         set_cmd(:apps, :push, 1)<br />
       else<br />
@@ -164,7 +164,7 @@ cmd.new(@options).send(@action, *@args.collect(&:dup))</p>
 		client.upload_app(appname, file, appcloud_resources)<br />
 lib/vmc/clinet.rb<br />
 		def upload_app<br />
-			http_post(path(VMC::APPS_PATH, name, &#8220;application&#8221;), upload_data)<br />
+			http_post(path(VMC::APPS_PATH, name, "application"), upload_data)<br />
 			def http_post(path, body, content_type=nil)<br />
 				def request(method, path, content_type = nil, payload = nil, headers = {})<br />
 					perform_http_request<br />

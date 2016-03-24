@@ -134,7 +134,7 @@ rpm -ivh libconfuse-devel-2.5-4.el5.x86_64.rpm</blockquote>
 <blockquote>wget http://cdnetworks-kr-1.dl.sourceforge.net/project/ganglia/ganglia%20monitoring%20core/3.1.7/ganglia-3.1.7.tar.gz<br />
 tar zxvf ganglia-3.1.7.tar.gz<br />
 cd ganglia-3.1.7<br />
-./configure &#8211;with-gmetad &#8211;sysconfdir=/etc/ganglia<br />
+./configure --with-gmetad --sysconfdir=/etc/ganglia<br />
 make<br />
 make install</blockquote>
 <strong>第六步，安装 nginx php环境 略去（54chen的老文章里有多个安装nginx-php的文章，自查之。右侧有搜索框） </strong>
@@ -169,11 +169,11 @@ rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-de
 python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br />
 pcre pcre-devel libpcre libconfuse libart_lgpl-devel</p>
 
-<p>./configure &#8211;prefix=/opt/soft/ganglia &#8211;sysconfdir=/opt/soft/ganglia/etc/<br />
+<p>./configure --prefix=/opt/soft/ganglia --sysconfdir=/opt/soft/ganglia/etc/<br />
 make<br />
 make install</p>
 
-<p>/opt/soft/ganglia/sbin/gmond &#8211;default_config &gt; /opt/soft/ganglia/etc/gmond.conf
+<p>/opt/soft/ganglia/sbin/gmond --default_config &gt; /opt/soft/ganglia/etc/gmond.conf
 修改cluster_name和多播的那个莫名其妙的ip地址启动即可。</p>
 
 <p>5.安装完成后为什么都正常只有空图却没有显示各节点的数据？<br />

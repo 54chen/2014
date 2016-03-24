@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="做各种SERVICE的时候，常常会需要一个程序重复定时地执行，基本上常见的山寨写法都是如下所示： while (true) { System.out.println(&#8220;yours code&#8221;); Thread.sleep(3000); } 但实际这样的写法可控性很低， &hellip;">
+  <meta name="description" content="做各种SERVICE的时候，常常会需要一个程序重复定时地执行，基本上常见的山寨写法都是如下所示： while (true) { System.out.println("yours code"); Thread.sleep(3000); } 但实际这样的写法可控性很低，JDK的java.util. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -103,7 +103,7 @@
 
 <p>做各种SERVICE的时候，常常会需要一个程序重复定时地执行，基本上常见的山寨写法都是如下所示：
 <blockquote>        while (true) {<br />
-            System.out.println(&#8220;yours code&#8221;);<br />
+            System.out.println("yours code");<br />
             <br />
             Thread.sleep(3000);<br />
         }</blockquote></p>
@@ -113,7 +113,7 @@
 scheduler.scheduleWithFixedDelay(new Runner(), 0, 3, TimeUnit.SECONDS);<br />
 public class Runner implements Runnable {<br />
       public void run() {<br />
-             System.out.println(&#8220;yours code&#8221;);<br />
+             System.out.println("yours code");<br />
       }<br />
 }</blockquote></p>
 

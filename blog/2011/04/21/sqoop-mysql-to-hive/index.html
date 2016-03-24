@@ -114,25 +114,25 @@
 <p>6.修改configure-sqoop</p>
 
 <p><blockquote>注释掉hbase zookeeper检查：<br />
-#if [ ! -d &#8220;${HBASE_HOME}&#8221; ]; then<br />
-#  echo &#8220;Error: $HBASE_HOME does not exist!&#8221;<br />
-#  echo &#8216;Please set $HBASE_HOME to the root of your HBase installation.&#8217;<br />
+#if [ ! -d "${HBASE_HOME}" ]; then<br />
+#  echo "Error: $HBASE_HOME does not exist!"<br />
+#  echo 'Please set $HBASE_HOME to the root of your HBase installation.'<br />
 #  exit 1<br />
 #fi<br />
-#if [ ! -d &#8220;${ZOOKEEPER_HOME}&#8221; ]; then<br />
-#  echo &#8220;Error: $ZOOKEEPER_HOME does not exist!&#8221;<br />
-#  echo &#8216;Please set $ZOOKEEPER_HOME to the root of your ZooKeeper installation.&#8217;<br />
+#if [ ! -d "${ZOOKEEPER_HOME}" ]; then<br />
+#  echo "Error: $ZOOKEEPER_HOME does not exist!"<br />
+#  echo 'Please set $ZOOKEEPER_HOME to the root of your ZooKeeper installation.'<br />
 #  exit 1<br />
 #fi</blockquote></p>
 
 <p>7.运行：<br />
 列出mysql所有的表：</p>
 
-<p><blockquote>./sqoop list-tables &#8211;connect jdbc:mysql://127.0.0.1/operation &#8211;username root &#8211;password 123</blockquote></p>
+<p><blockquote>./sqoop list-tables --connect jdbc:mysql://127.0.0.1/operation --username root --password 123</blockquote></p>
 
 <p>导入mysql表到hive：</p>
 
-<p><blockquote>./sqoop import &#8211;connect jdbc:mysql://192.168.100.52/operation &#8211;username root &#8211;password 3487e498770b9740086144fc03140876 &#8211;table active_uuid &#8211;hive-import</blockquote></p>
+<p><blockquote>./sqoop import --connect jdbc:mysql://192.168.100.52/operation --username root --password 3487e498770b9740086144fc03140876 --table active_uuid --hive-import</blockquote></p>
 
 <p>导入需要表里有主建，还要注意不要使用127.0.0.1，因为map出去不一定在哪个节点执行。</p>
 

@@ -133,8 +133,8 @@ mysqladmin -u root password 'newpassword' [引号内填密码]<br />
 mysql -u root -p [此时会要求你输入刚刚设置的密码，输入后回车即可]</code></p>
 
 <p>mysql&gt; DROP DATABASE test; [删除test数据库]<br />
-mysql&gt; DELETE FROM mysql.user WHERE user = &#8221;; [删除匿名帐户]<br />
-mysql&gt;DELETE FROM mysql.user WHERE password = &#8221;;[删除无密码帐户]<br />
+mysql&gt; DELETE FROM mysql.user WHERE user = ''; [删除匿名帐户]<br />
+mysql&gt;DELETE FROM mysql.user WHERE password = '';[删除无密码帐户]<br />
 mysql&gt; FLUSH PRIVILEGES; [重载权限]</p>
 
 <p>【优化MySQL】<br />
@@ -276,7 +276,7 @@ cd ..</code></p>
 
 <p>tar zxvf nginx-0.7.61.tar.gz<br />
 cd nginx-0.7.61<br />
-./configure &#8211;user=www &#8211;group=www &#8211;prefix=/opt/nginx &#8211;with-http_stub_status_module &#8211;with-http_ssl_module<br />
+./configure --user=www --group=www --prefix=/opt/nginx --with-http_stub_status_module --with-http_ssl_module<br />
 make &amp;&amp; make install</p>
 
 <p>增加www用户：<br />
@@ -309,7 +309,7 @@ gzip_vary on;<br />
 fastcgi_pass unix:/tmp/php-cgi.sock;</code></p>
 
 <p>【设置开机启动】<br />
-/sbin/chkconfig &#8211;add mysqld [在服务清单中添加mysql服务]<br />
+/sbin/chkconfig --add mysqld [在服务清单中添加mysql服务]<br />
 /sbin/chkconfig mysqld on [设置mysql服务开机启动]</p>
 
 <p>vi /etc/rc.locale<br />

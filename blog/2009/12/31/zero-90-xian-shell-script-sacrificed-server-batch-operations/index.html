@@ -112,9 +112,9 @@
 <p>#!/bin/sh<br />
 SERVER_FILE=server</p>
 
-<p>SERVER_LIST=&#8221;`cat ${SERVER_FILE}|grep -v &#8220;#&#8221;`&#8221;</p>
+<p>SERVER_LIST="`cat ${SERVER_FILE}|grep -v "#"`"</p>
 
-<p>for SERVER in `echo &#8220;${SERVER_LIST}&#8221;`<br />
+<p>for SERVER in `echo "${SERVER_LIST}"`<br />
 do<br />
 echo ${SERVER}<br />
 sh runOne.sh ${SERVER};<br />
@@ -124,7 +124,7 @@ done;</p>
 
 <p>#!/bin/sh<br />
 host=$1<br />
-ssh root@$host &#8220;yum -y install mysql-server&#8221; #上传<br />
+ssh root@$host "yum -y install mysql-server" #上传<br />
 scp my.cnf root@$host:/etc/my.cnf #操作</p>
 
 <p>第三个文件 server 功能 记录有哪些服务器要操作 ＃号可以<a href="http://www.54chen.com/_linux_/intelligent-dns-configuration-process.html">注释</a>不想操作的机器</p>

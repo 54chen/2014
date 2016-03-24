@@ -134,10 +134,10 @@ windowssux已经把8.04-32bits的deb包(包括中文补丁)做出来了，在<a 
 修改过的内容如下,请给这个文件保存成QQ2007.reg<br />
 REGEDIT4<br />
 [HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe]<br />
-&#8220;Version&#8221;=&#8221;vista&#8221;<br />
+"Version"="vista"<br />
 [HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe\DllOverrides]<br />
-&#8220;riched20&#8221;=&#8221;native&#8221;<br />
-&#8220;riched32&#8221;=&#8221;native&#8221;</p>
+"riched20"="native"<br />
+"riched32"="native"</p>
 
 <p>并使用下列命令导入<br />
 #regedit QQ2007.reg</p>
@@ -152,7 +152,7 @@ REGEDIT4<br />
 
 <p><span style="font-weight: bold;">运行</span>
 可以建一个下面这样的快捷方式,注意修复你的路径为你自己的.<br />
-env WINEPREFIX=&#8221;/home/fukai/.wine&#8221; wine &#8220;Z:\home\fukai\qq2007beta1kb5\QQ\QQ.exe&#8221;</p>
+env WINEPREFIX="/home/fukai/.wine" wine "Z:\home\fukai\qq2007beta1kb5\QQ\QQ.exe"</p>
 
 <p><span style="font-weight: bold;">在安装和使用程序时的注意事项</span>
 现发现的bug有快捷键不能用,视频有时会死机,传文件之类都非常正常</p>

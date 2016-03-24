@@ -110,17 +110,17 @@ Empathy是个托，python-papyon是个python实现的msn库，telepathy-butterfl
 sudo vim /usr/share/pyshared/papyon/conversation.py<br />
 查找 if message_type == 这个字符串<br />
 找到内容为：
-<blockquote>if message_type == &#8216;text/plain&#8217;:<br />
+<blockquote>if message_type == 'text/plain':<br />
             msg = ConversationMessage(unicode(message.body, message_encoding),<br />
                     TextFormat.parse(message_formatting),<br />
                     self.__last_received_msn_objects)<br />
             try:<br />
-                display_name = message.get_header(&#8216;P4-Context&#8217;)</blockquote></p>
+                display_name = message.get_header('P4-Context')</blockquote></p>
 
 <p>将if判断后try之前中间定义msg这一堆内容修改为如下：</p>
 
 <p><blockquote> try:<br />
-                msg = ConversationMessage(unicode(&#8220;[&#8220;+message.get_header(&#8216;P4-Context&#8217;)+&#8221;]&#8221;+message.body, message_encoding),<br />
+                msg = ConversationMessage(unicode("["+message.get_header('P4-Context')+"]"+message.body, message_encoding),<br />
                     TextFormat.parse(message_formatting),<br />
                     self.__last_received_msn_objects)<br />
             except KeyError:<br />

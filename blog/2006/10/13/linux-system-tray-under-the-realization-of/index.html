@@ -114,12 +114,12 @@ GtkWidget *event_box;<br />
 GtkTooltips *tooltips;<br />
 EggTrayIcon *tray_icon;<br />
 tooltips = gtk_tooltips_new ();<br />
-tray_icon = egg_tray_icon_new (&#8220;Tray icon demo&#8221;);<br />
+tray_icon = egg_tray_icon_new ("Tray icon demo");<br />
 event_box = gtk_event_box_new ();<br />
 gtk_container_add (GTK_CONTAINER (tray_icon), event_box);<br />
-g_signal_connect (G_OBJECT (event_box), &#8220;button-press-event&#8221;,<br />
+g_signal_connect (G_OBJECT (event_box), "button-press-event",<br />
 G_CALLBACK (tray_button_press_event_cb), tray);<br />
-gtk_tooltips_set_tip (GTK_TOOLTIPS(tooltips), event_box, _(&#8220;Try a left/right click&#8221;), NULL);<br />
+gtk_tooltips_set_tip (GTK_TOOLTIPS(tooltips), event_box, _("Try a left/right click"), NULL);<br />
 image = load_image (GCN_ICON);<br />
 gtk_container_add (GTK_CONTAINER (event_box), image);<br />
 gtk_widget_show_all (GTK_WIDGET (tray_icon));<br />
@@ -154,7 +154,7 @@ return;<br />
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

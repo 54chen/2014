@@ -125,14 +125,14 @@ EasyMock.verify(aDAO);
 
 <p>int type = 1;<br />
 AnalyzeResult ar = new AnalyzeResult();<br />
-ar.setName(&#8220;123&#8221;);<br />
+ar.setName("123");<br />
 IMocksControl mocksControl = EasyMock.createStrictControl();<br />
 analyzeResultBiz = new AnalyzeResultBiz();<br />
 aDAO = mocksControl.createMock(AnalyzeResultDAO.class);<br />
 EasyMock.expect(aDAO.getARByLimit(type)).andReturn(ar);<br />
 EasyMock.replay(aDAO);<br />
 // 用spring提供的方法注入aurowired的字段<br />
-ReflectionTestUtils.setField(analyzeResultBiz, &#8220;analyzeResultDAO&#8221;, aDAO, AnalyzeResultDAO.class);<br />
+ReflectionTestUtils.setField(analyzeResultBiz, "analyzeResultDAO", aDAO, AnalyzeResultDAO.class);<br />
 Assert.assertNotNull(analyzeResultBiz.getLastAR(type));<br />
 EasyMock.verify(aDAO);
 这样一录一用，看起来简单方便，实用美观大方，54chen强力推荐。</p>

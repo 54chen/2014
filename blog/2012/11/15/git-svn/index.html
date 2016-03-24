@@ -124,7 +124,7 @@ ecf28daf78732c0538a99e206bd9e6e32cbd1ff3 refs/remotes/git-svn</blockquote></p>
 <p><strong>三、使用</strong>
 $cd xxx<br />
 $vim yyy<br />
-$git commit -am &#8216;Adding git-svn instructions to the README&#8217;<br />
+$git commit -am 'Adding git-svn instructions to the README'<br />
 这一步是提交到本地，还可以用各种分支之类的都是对本地的操作。</p>
 
 <p><strong>四、注意</strong>
@@ -160,15 +160,15 @@ $sudo chmod +x /usr/bin/extMerge</blockquote></p>
 
 <p><blockquote>[merge]<br />
         tool = extMerge<br />
-[merge &#8220;tool&#8221;]<br />
-        cmd = extMerge &#34;$BASE&#34; &#34;$LOCAL&#34; &#34;$REMOTE&#34; &#34;$MERGED&#34;<br />
+[merge "tool"]<br />
+        cmd = extMerge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"<br />
 [mergetool]<br />
         trustExitCode = false</blockquote></p>
 
 <p>这样就可以在rebase的时候自动弹出来merge工具进行修改。</p>
 
 <p><strong>九、与review board发code review的协作</strong>
-当完成代码的编写后，可以在本地招行git commit -am &#8216;some thing&#8217;，然后需要发code review的话，就需要一段脚本来帮忙了。</p>
+当完成代码的编写后，可以在本地招行git commit -am 'some thing'，然后需要发code review的话，就需要一段脚本来帮忙了。</p>
 
 <p>http://mojodna.net/2009/02/24/my-work-git-workflow.html 这哥们写了一份，在mac下的有些格式需要调整。Baoqiu更新了源码，我们米的同学可以来信索取最新的代码。</p>
 

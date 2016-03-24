@@ -115,7 +115,7 @@ socket = /tmp/mysql.sock</blockquote>
 <p style="margin-top: 10px; margin-bottom: 10px;"> </p>
 <p style="margin-top: 10px; margin-bottom: 10px;">样例输出：在终端上按照问题重要程度分别用黄色/红色字符标记问题</p></p>
 
-<p><blockquote style="margin-top: 10px; margin-bottom: 10px;">&#8211; MYSQL PERFORMANCE TUNING PRIMER &#8211;<br />
+<p><blockquote style="margin-top: 10px; margin-bottom: 10px;">-- MYSQL PERFORMANCE TUNING PRIMER --<br />
 - By: Matthew Montgomery -
 <p style="margin-top: 10px; margin-bottom: 10px;"> </p>
 <p style="margin-top: 10px; margin-bottom: 10px;">MySQL Version 5.0.45 i686</p></blockquote></p>
@@ -132,7 +132,7 @@ It should be safe to follow these recommendations</p>
 runtime variables effects performance visit:<br />
 http://dev.mysql.com/doc/refman/5.0/en/server-system-variables.html<br />
 Visit http://www.mysql.com/products/enterprise/advisors.html<br />
-for info about MySQL&#8217;s Enterprise Monitoring and Advisory Service</p>
+for info about MySQL's Enterprise Monitoring and Advisory Service</p>
 
 <p><p style="margin-top: 10px; margin-bottom: 10px;">SLOW QUERIES<br />
 The slow query log is NOT enabled.<br />
@@ -222,7 +222,7 @@ Your table locking seems to be fine
 <p><p style="margin-top: 10px; margin-bottom: 10px;">更有用是作者总结的处理MySQL性能问题处理的优先级：尤其是头3条，基本上可以解决大部分瓶颈问题的原因。<br />
 # Slow Query Log 慢查询 尤其是like操作，性能杀手，轻易不要使用，让全文索引交给<a style="color: #3165ce; text-decoration: underline;" href="http://www.chedong.com/tech/lucene.html">Lucene</a>或者利用Tag机制减少like操作；<br />
 # Max Connections 并发连接数：一个MySQL deamon缺省最大连接数是100，调到更高只是为了出现问题是给我们更多的缓冲时间而不是任其一直处于那么高的状态，并发连接数类似于等候大厅：当等候人数过多的时候，一味扩大等候厅不是根本解决问题的办法，提高业务的处理速度，多开几个窗口才是更好的解决方法；我的经验就是<a style="color: #3165ce; text-decoration: underline;" href="http://www.chedong.com/blog/archives/000945.html">超过100： 数据就要想办法（镜像或者分片）分布到更多Deamon上</a>；<br />
-# Worker Threads：<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://jeremy.zawodny.com/blog/archives/000173.html">Jeremy Zawondy 曾在部落格上說到：Thread caching</a><span class="Apple-converted-space"> </span>並不是我們最需要關心的問題，但當你解決了所有其他更嚴重的問題之後，它就會是最嚴重的問題。(thread caching really wasn&#8217;t the worst of our problems. But it became the worst after we had fixed all the bigger ones.)<br />
+# Worker Threads：<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://jeremy.zawodny.com/blog/archives/000173.html">Jeremy Zawondy 曾在部落格上說到：Thread caching</a><span class="Apple-converted-space"> </span>並不是我們最需要關心的問題，但當你解決了所有其他更嚴重的問題之後，它就會是最嚴重的問題。(thread caching really wasn't the worst of our problems. But it became the worst after we had fixed all the bigger ones.)<br />
 # Key Buffer<span class="Apple-converted-space"> </span>
 # Query Cache<span class="Apple-converted-space"> </span>
 # Sort Buffer<span class="Apple-converted-space"> </span>

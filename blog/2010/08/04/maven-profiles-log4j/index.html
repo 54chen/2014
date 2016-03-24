@@ -140,14 +140,14 @@ Profiles是maven的一个很关键的术语：profile是用来定义一些在bui
 &lt;/profiles&gt;</blockquote>
 <strong>log4j.xml文件设置</strong>
 为了配合maven的设置属性，需要将log4j中使用的声明用成变量，片段举例：
-<blockquote>﻿&lt;logger name=&#8221;com.xx.xx.xx.xx&#8221; additivity=&#8221;false&#8221;&gt;<br />
-&lt;level value=&#8221;${log4j.debug.level}&#8221;/&gt;<br />
-&lt;appender-ref ref=&#8221;dao&#8221;/&gt;<br />
+<blockquote>﻿&lt;logger name="com.xx.xx.xx.xx" additivity="false"&gt;<br />
+&lt;level value="${log4j.debug.level}"/&gt;<br />
+&lt;appender-ref ref="dao"/&gt;<br />
 &lt;/logger&gt;</blockquote></p>
 
 <p>&lt;root&gt;<br />
-&lt;level value=&#8221;${log4j.debug.level}&#8221;/&gt;<br />
-&lt;appender-ref ref=&#8221;service&#8221;/&gt;<br />
+&lt;level value="${log4j.debug.level}"/&gt;<br />
+&lt;appender-ref ref="service"/&gt;<br />
 &lt;/root&gt;
 <strong>解释</strong>
 这样，在运行mvn进行build项目的时候，如果线上环境，测试到/data/test文件是missing的，则会激活对应的设置，以此来达到线上环境改成error级别，而测试环境为debug级别。</p>

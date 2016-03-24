@@ -127,7 +127,7 @@ location / {<br />
 root /home/wiki.54chen.com; //size根目录<br />
 index index.php;<br />
 }
-location ~ &#46;php$ { #php fastcgi的配置<br />
+location ~ \.php$ { #php fastcgi的配置<br />
 fastcgi_pass 127.0.0.1:9000; #php fastcgi的代理端口与ip<br />
 fastcgi_index index.php;<br />
 fastcgi_param SCRIPT_FILENAME /home/wiki.54chen.com$fastcgi_script_name; #要处理的php文件的路径<br />

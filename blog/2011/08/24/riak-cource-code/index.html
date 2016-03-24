@@ -134,7 +134,7 @@ OTP系统定义里有这么一个东西：<br />
 
 <p><strong>自定义behaviour</strong></p>
 
-<p><blockquote>-spec behaviour_info(atom()) -> &#8216;undefined&#8217; | [{atom(), arity()}].<br />
+<p><blockquote>-spec behaviour_info(atom()) -> 'undefined' | [{atom(), arity()}].<br />
 behaviour_info(callbacks) ->
     [{start,2},       % (Partition, Config)<br />
      {stop,1},        % (State) <br />
@@ -153,7 +153,7 @@ behaviour_info(_Other) ->
 <p>上述就是一个自定义的behaviour，使用的时候：</p>
 
 <p><blockquote>-behaviour(xxx).<br />
-&#8230;</blockquote></p>
+...</blockquote></p>
 
 <p>有点类似java的interface.</p>
  

@@ -143,7 +143,7 @@
 
 <p>在twitter api中有两个特殊的参数：</p>
 
-<p>1. callback：仅在返回格式是JSON的时候使用，用这个参数指定一个回调函数来包装你的返回。例如：附加&amp;callback=myFancyFunction在你的请求上，将会返回：myFancyFunction(&#8230;)。此参数只能包含字母数字和下划线，其他非法的字符将会丢弃。</p>
+<p>1. callback：仅在返回格式是JSON的时候使用，用这个参数指定一个回调函数来包装你的返回。例如：附加&amp;callback=myFancyFunction在你的请求上，将会返回：myFancyFunction(...)。此参数只能包含字母数字和下划线，其他非法的字符将会丢弃。</p>
 
 <p>2. suppress_response_codes：当出现这个参数的时候，所有的返回都将以200的结果返回-甚至是错误的时候。这个参数的存在是为了解决js和flash会拦截所有非200的返回这个问题。一旦使用这个参数，要判断错误就只能依靠解析返回的信息体。请小心使用，因为错误信息可能会改变。</p>
 
@@ -171,9 +171,9 @@
 
 <p>2.使用XML格式取到所有你follow的人的更新，需要认证：<span style="font-family: Courier New;">curl -u username:<em>password</em> </span><a href="http://twitter.com/statuses/friends_timeline.xml"><span style="font-family: Courier New; color: #114488;">http://twitter.com/statuses/friends_timeline.xml</span></a></p>
 
-<p>3.仅查看2中的头信息：<span style="font-family: Courier New;">curl &#8211;head <em>-u username</em>:<em>password</em> </span><a href="http://twitter.com/statuses/friends_timeline.xml"><span style="font-family: Courier New; color: #114488;">http://twitter.com/statuses/friends_timeline.xml</span></a></p>
+<p>3.仅查看2中的头信息：<span style="font-family: Courier New;">curl --head <em>-u username</em>:<em>password</em> </span><a href="http://twitter.com/statuses/friends_timeline.xml"><span style="font-family: Courier New; color: #114488;">http://twitter.com/statuses/friends_timeline.xml</span></a></p>
 
-<p>4.发送一个状态并且取得JSON返回：<span style="font-family: Courier New;">curl -u username:<em>password</em> -d status=&#8221;<em>your message here</em>&#8221; </span><a href="http://twitter.com/statuses/update.json"><span style="font-family: Courier New; color: #114488;">http://twitter.com/statuses/update.json</span></a></p>
+<p>4.发送一个状态并且取得JSON返回：<span style="font-family: Courier New;">curl -u username:<em>password</em> -d status="<em>your message here</em>" </span><a href="http://twitter.com/statuses/update.json"><span style="font-family: Courier New; color: #114488;">http://twitter.com/statuses/update.json</span></a></p>
 
 <p>学习更多相关的curl和api请等候翻译。</p>
 

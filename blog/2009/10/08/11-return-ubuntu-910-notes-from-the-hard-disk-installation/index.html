@@ -123,7 +123,7 @@
 
 <p>6、Ubuntu 9.10将主要采用Amazon APIs来管理云计算，当然GoGrid APIs 也在考虑中；</p>
 
-<p>7、Ubuntu 9.10中的Canonical 将创建Karmic Koala的标准Amazon机器镜像，本质上就是创建&#8221;ready-to-run&#8221; 程序，作为Amazon群体的“标准版本”；</p>
+<p>7、Ubuntu 9.10中的Canonical 将创建Karmic Koala的标准Amazon机器镜像，本质上就是创建"ready-to-run" 程序，作为Amazon群体的“标准版本”；</p>
 
 <p>8、为了节约资源，Ubuntu 9.10中的休眠和唤醒特性将扩展到服务器版本。
 <blockquote>第七这个太牛B了，单台机器做成云里的一个节点，绝对主流，绝对未来！力顶！</blockquote>
@@ -153,14 +153,14 @@
 timeout=5<br />
 default=multi(0)disk(0)rdisk(0)partition(1)\WINNT<br />
 [operating systems]<br />
-multi(0)disk(0)rdisk(0)partition(1)\WINNT=&#8221;Microsoft Windows 2000 Professional&#8221; /fastdetect<br />
-C:\GRLDR=&#8221;Linux&#8221;</blockquote>
+multi(0)disk(0)rdisk(0)partition(1)\WINNT="Microsoft Windows 2000 Professional" /fastdetect<br />
+C:\GRLDR="Linux"</blockquote>
 C:\boot\grub\menu.lst
 <blockquote>timeout 15</blockquote></p>
 
 <p>title 1. install Ubuntu9.10<br />
 root (hd0,0)<br />
-kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu9.iso ro quiet splash &#8211;<br />
+kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu9.iso ro quiet splash --<br />
 label check live-install<br />
 initrd (hd0,0)/initrd.lz
 <strong>进入liveCD安装：</strong></p>

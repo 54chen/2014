@@ -117,16 +117,16 @@
 # include &lt;config.h&gt;<br />
 #endif<br />
 #include &lt;gnome.h&gt;<br />
-#include &#8220;Mythread.h&#8221;<br />
-#include &#8220;connect.h&#8221;<br />
-#include &#8220;callbacks.h&#8221;<br />
-#include &#8220;interface.h&#8221;<br />
-#include &#8220;support.h&#8221;</p>
+#include "Mythread.h"<br />
+#include "connect.h"<br />
+#include "callbacks.h"<br />
+#include "interface.h"<br />
+#include "support.h"</p>
 
 <p>gchar line2[255];//用来存去掉回车后的字符串<br />
 void write_config(gchar *usr,gchar *pwd);//remember pwd<br />
 void write_new_config();//first time to write config<br />
-gchar * scape(gchar *line);//escapse the enter like &#8216;\n&#8217;<br />
+gchar * scape(gchar *line);//escapse the enter like '\n'<br />
 /*<br />
 * 关于mac和ip的：http://hi.baidu.com/cc0cc/blog/item/403cbb25a0cd9a6435a80fa7.html<br />
 */<br />
@@ -145,14 +145,14 @@ on_window1_show                        (GtkWidget    
 /*<br />
 //采访一下：为什么要把这段干掉？<br />
 //A：因为在程序异常关闭的时候，老是不能自己删除掉原来的PID文件，于是就得手工去删除，实在是不爽，干脆不限制了。<br />
-char runfile[1024]=&#8221;&#8220;;<br />
+char runfile[1024]="";<br />
 FILE *runfp;   <br />
-sprintf(runfile,&#8221;%s/.mynet/run.pid&#8221;,getenv(&#8220;HOME&#8221;));</p>
+sprintf(runfile,"%s/.mynet/run.pid",getenv("HOME"));</p>
 
-<p>if((runfp = fopen(runfile, &#8220;r&#8221;)) != NULL)<br />
+<p>if((runfp = fopen(runfile, "r")) != NULL)<br />
     {   <br />
     gtk_widget_hide(window1);<br />
-    getAtrBox = create_messagebox(&#8220;错误&#8221;,&#8221;程序已经运行了！&#8221;,0);<br />
+    getAtrBox = create_messagebox("错误","程序已经运行了！",0);<br />
      gtk_widget_show (getAtrBox);<br />
     }else{<br />
         CreateMutex();<br />
@@ -166,14 +166,14 @@ mac_Hex[6]=0;<br />
 ip_addr[0x20]=0;<br />
 passwd[0x40]=0;<br />
 server_type[0x40]=0;<br />
-memcpy(server_type,&#8221;internet&#8221;,strlen((char *)&#8221;internet&#8221;));</p>
+memcpy(server_type,"internet",strlen((char *)"internet"));</p>
 
 <p>gchar *line = ((char *) malloc(255));//is 255b enough?<br />
-char cfgfile[1024]=&#8221;&#8220;;<br />
+char cfgfile[1024]="";<br />
 FILE *fp;   <br />
    <br />
-sprintf(cfgfile,&#8221;%s/.mynet/config&#8221;,getenv(&#8220;HOME&#8221;));<br />
-if ((fp = fopen(cfgfile, &#8220;r&#8221;)) == NULL)    write_new_config();//看出来这是在干什么了吗？这是把用户的当前设置给写进一个config文件，就算是windows里的注册表了<br />
+sprintf(cfgfile,"%s/.mynet/config",getenv("HOME"));<br />
+if ((fp = fopen(cfgfile, "r")) == NULL)    write_new_config();//看出来这是在干什么了吗？这是把用户的当前设置给写进一个config文件，就算是windows里的注册表了<br />
 else<br />
     {<br />
     fgets(line,254,fp);<br />
@@ -185,14 +185,14 @@ else<br />
     fgets(line,254,fp);<br />
     memcpy(ip_addr,scape(line),strlen(scape(line)));<br />
     fgets(line,254,fp);<br />
-    memcpy(host,scape(line),strlen(scape(line)));g_message(&#8220;here1&#8221;);<br />
+    memcpy(host,scape(line),strlen(scape(line)));g_message("here1");<br />
     //get_socket((char *)scape(line));//host to<br />
-        g_message(&#8220;%c&#8221;,&amp;line);<br />
-    fgets(line,254,fp);g_message(&#8220;here3&#8221;);<br />
-    memcpy(mac_addr,scape(line),strlen(scape(line)));g_message(&#8220;here4&#8221;);<br />
-    tr_mac();g_message(&#8220;here5&#8221;);<br />
+        g_message("%c",&amp;line);<br />
+    fgets(line,254,fp);g_message("here3");<br />
+    memcpy(mac_addr,scape(line),strlen(scape(line)));g_message("here4");<br />
+    tr_mac();g_message("here5");<br />
     }   <br />
-g_message(&#8220;mem now here:usr:%s\npwd:%s\nip:%s\nmac:%s\nserver:%s&#8221;,username,passwd,ip_addr,mac_addr,host);<br />
+g_message("mem now here:usr:%s\npwd:%s\nip:%s\nmac:%s\nserver:%s",username,passwd,ip_addr,mac_addr,host);<br />
 free(line);<br />
 }</p>
 
@@ -210,7 +210,7 @@ on_window2_show                        (GtkWidget    
    <br />
 }</p>
 
-<p>/*这个是哪个button?&#8230;是设置属性的那个按钮*/<br />
+<p>/*这个是哪个button?...是设置属性的那个按钮*/<br />
 void<br />
 on_button3_clicked                     (GtkButton       *button,<br />
                                         gpointer         user_data)<br />
@@ -229,7 +229,7 @@ flash_timeout(gpointer data)<br />
 {if(Acc_Keep_Link==-1){<br />
     gtk_widget_hide_all (linkwindow);<br />
     gtk_widget_show_all (window1);<br />
-    getAtrBox = create_messagebox(&#8220;提示&#8221;,&#8221;与网络连接中断！&#8221;,1);<br />
+    getAtrBox = create_messagebox("提示","与网络连接中断！",1);<br />
      gtk_widget_show_all (getAtrBox);<br />
     return FALSE;<br />
     }<br />
@@ -248,7 +248,7 @@ write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br />
             (gchar *)gtk_entry_get_text ((GtkEntry *)entry2));<br />
 else<br />
 write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br />
-            &#8220;&#8221;);   <br />
+            "");   <br />
 gtk_widget_hide_all (window1);//所有窗口隐藏掉。。。<br />
 linkwindow = create_window3 ();//window3就是“请稍候”的那个窗口，大家都隐藏的时候它就要出来了<br />
 gtk_widget_show_all (linkwindow);<br />
@@ -270,10 +270,10 @@ on_button4_clicked                     (GtkButton     �
 {
 memcpy(host,(char *)gtk_entry_get_text ((GtkEntry *)entry4),strlen((gchar *)gtk_entry_get_text ((GtkEntry *)entry4)));<br />
 write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br />
-            &#8220;&#8221;);</p>
+            "");</p>
 
 <p>    get_socket((char *)gtk_entry_get_text ((GtkEntry *)entry4));<br />
-    getAtrBox = create_messagebox(&#8220;提示&#8221;,&#8221;恭喜，获取服务成功！&#8221;,1);<br />
+    getAtrBox = create_messagebox("提示","恭喜，获取服务成功！",1);<br />
      gtk_widget_show (getAtrBox);<br />
     return;//sorry i can not understand what is this<br />
 }</p>
@@ -286,8 +286,8 @@ before_quit                      (GtkWidget       *wi
                                         gpointer         user_data)<br />
 {
 /*<br />
-char cfgfile[1024]=&#8221;&#8220;;<br />
-sprintf(cfgfile,&#8221;%s/.mynet/run.pid&#8221;,getenv(&#8220;HOME&#8221;));<br />
+char cfgfile[1024]="";<br />
+sprintf(cfgfile,"%s/.mynet/run.pid",getenv("HOME"));<br />
 unlink(cfgfile);//delete mutex file*/<br />
    <br />
 if(gtk_toggle_button_get_active((GtkToggleButton *)checkbutton1))<br />
@@ -305,19 +305,19 @@ char filename[1024];<br />
 char log_string[1024];<br />
 char filepath[1024];<br />
 char *dir;<br />
-strcpy(log_string,&#8221;&#8220;);<br />
-strcat(log_string,&#8221;\n&#8221;);memcpy(username,&#8221;0&#8221;,strlen((char *)username));<br />
-strcat(log_string,&#8221;\n&#8221;);memcpy(passwd,&#8221;0&#8221;,strlen((char *)passwd));<br />
+strcpy(log_string,"");<br />
+strcat(log_string,"\n");memcpy(username,"0",strlen((char *)username));<br />
+strcat(log_string,"\n");memcpy(passwd,"0",strlen((char *)passwd));<br />
 get_ip();   <br />
-strcat(log_string,(char *)ip_addr);strcat(log_string,&#8221;\n&#8221;);<br />
-strcat(log_string,SERVER);strcat(log_string,&#8221;\n&#8221;);<br />
+strcat(log_string,(char *)ip_addr);strcat(log_string,"\n");<br />
+strcat(log_string,SERVER);strcat(log_string,"\n");<br />
 get_mac();tr_mac();<br />
-strcat(log_string,(char *)mac_addr);strcat(log_string,&#8221;\n&#8221;);<br />
-dir=getenv(&#8220;HOME&#8221;);<br />
-sprintf(filepath,&#8221;%s/.mynet/&#8221;,dir);<br />
+strcat(log_string,(char *)mac_addr);strcat(log_string,"\n");<br />
+dir=getenv("HOME");<br />
+sprintf(filepath,"%s/.mynet/",dir);<br />
 mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br />
 chmod(filepath,0777);<br />
-sprintf(filename,&#8221;%sconfig&#8221;,filepath);<br />
+sprintf(filename,"%sconfig",filepath);<br />
 log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br />
 chmod(filename,0777);<br />
 write(log,log_string,strlen(log_string));<br />
@@ -330,8 +330,8 @@ gchar * scape(gchar *line)<br />
 int i;<br />
 int j;<br />
 for(i=0;i&lt;254;i++)line2[i]=NULL;//这个主要目的是全部干成空的<br />
-for(i=0;i&lt;254;i++){if((line[i]==&#8217;\n&#8217;)||(line[i]==&#8217;\r&#8217;))break;}//一旦遇到回车直接就over掉<br />
-for(j=0;j&lt;i;j++){line2[j]=line[j];/*g_message(&#8220;%c&#8221;,line[j]);*/}//复制到line2中<br />
+for(i=0;i&lt;254;i++){if((line[i]=='\n')||(line[i]=='\r'))break;}//一旦遇到回车直接就over掉<br />
+for(j=0;j&lt;i;j++){line2[j]=line[j];/*g_message("%c",line[j]);*/}//复制到line2中<br />
 return line2;<br />
 }</p>
 
@@ -343,17 +343,17 @@ char filename[1024];<br />
 char log_string[1024];<br />
 char filepath[1024];</p>
 
-<p>strcpy(log_string,&#8221;&#8220;);<br />
-strcat(log_string,usr);strcat(log_string,&#8221;\n&#8221;);<br />
-strcat(log_string,pwd);strcat(log_string,&#8221;\n&#8221;);<br />
-strcat(log_string,(char *)ip_addr);strcat(log_string,&#8221;\n&#8221;);<br />
-strcat(log_string,(char *)host);strcat(log_string,&#8221;\n&#8221;);<br />
-strcat(log_string,(char *)mac_addr);strcat(log_string,&#8221;\n&#8221;);</p>
+<p>strcpy(log_string,"");<br />
+strcat(log_string,usr);strcat(log_string,"\n");<br />
+strcat(log_string,pwd);strcat(log_string,"\n");<br />
+strcat(log_string,(char *)ip_addr);strcat(log_string,"\n");<br />
+strcat(log_string,(char *)host);strcat(log_string,"\n");<br />
+strcat(log_string,(char *)mac_addr);strcat(log_string,"\n");</p>
 
-<p>sprintf(filepath,&#8221;%s/.mynet/&#8221;,getenv(&#8220;HOME&#8221;));<br />
+<p>sprintf(filepath,"%s/.mynet/",getenv("HOME"));<br />
 mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br />
 chmod(filepath,0777);<br />
-sprintf(filename,&#8221;%sconfig&#8221;,filepath);<br />
+sprintf(filename,"%sconfig",filepath);<br />
 log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br />
 chmod(filename,0777);<br />
 write(log,log_string,strlen(log_string));<br />
@@ -374,13 +374,13 @@ get_mac()<br />
         struct ifreq struReq;<br />
         nSocket = socket(PF_INET,SOCK_STREAM,0);<br />
         memset(&amp;struReq,0,sizeof(struReq));<br />
-        strncpy(struReq.ifr_name, &#8220;eth0&#8221;, sizeof(struReq.ifr_name));  <br />
+        strncpy(struReq.ifr_name, "eth0", sizeof(struReq.ifr_name));  <br />
         ioctl(nSocket,SIOCGIFHWADDR,&amp;struReq);<br />
         close(nSocket);<br />
         //strcpy(mac_addr,(BYTE)ether_ntoa(struReq.ifr_hwaddr.sa_data));<br />
         memcpy(mac_addr,(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data),strlen((char *)ether_ntoa(struReq.ifr_hwaddr.sa_data)));<br />
-        //g_message(&#8220;\n get_mac: %s\n&#8221;,(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data)+1);<br />
-        //g_message(&#8220;\n mem_mac : %s lenth:%d\n&#8221;,mac_addr,strlen((char *)mac_addr));<br />
+        //g_message("\n get_mac: %s\n",(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data)+1);<br />
+        //g_message("\n mem_mac : %s lenth:%d\n",mac_addr,strlen((char *)mac_addr));<br />
         return 0;<br />
 }</p>
 
@@ -393,24 +393,24 @@ get_ip()<br />
            sock = socket(AF_INET, SOCK_DGRAM, 0);<br />
            if (sock == -1)<br />
            {<br />
-                       perror(&#8220;socket&#8221;);<br />
-                       return &#8220;&#8221;;                         <br />
+                       perror("socket");<br />
+                       return "";                         <br />
            }<br />
             <br />
-           strncpy(ifr.ifr_name, &#8220;eth0&#8221;, sizeof(ifr.ifr_name));      <br />
+           strncpy(ifr.ifr_name, "eth0", sizeof(ifr.ifr_name));      <br />
    <br />
            if (ioctl(sock, SIOCGIFADDR, &amp;ifr) &lt; 0)<br />
            {<br />
-                       perror(&#8220;ioctl&#8221;);<br />
-                       return &#8220;&#8221;;<br />
+                       perror("ioctl");<br />
+                       return "";<br />
            }</p>
 
 <p>           memcpy(&amp;sin, &amp;ifr.ifr_addr, sizeof(sin));  <br />
            close(sock);<br />
            memcpy(ip_addr,inet_ntoa(sin.sin_addr),strlen(inet_ntoa(sin.sin_addr)));<br />
-           //g_message(&#8220;\n get_ip:eth0: %s\n&#8221;,inet_ntoa(sin.sin_addr));<br />
-           //g_message(&#8220;\n mem_ip: %s&#8221;,ip_addr);<br />
-           return &#8220;&#8221;;<br />
+           //g_message("\n get_ip:eth0: %s\n",inet_ntoa(sin.sin_addr));<br />
+           //g_message("\n mem_ip: %s",ip_addr);<br />
+           return "";<br />
 }</p>
 
 <p>int<br />
@@ -421,14 +421,14 @@ get_socket()<br />
            sockfd=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);<br />
            if (sockfd == -1)<br />
            {<br />
-                       perror(&#8220;socket&#8221;);<br />
+                       perror("socket");<br />
                        return 0;                         <br />
            }<br />
            client.sin_family=AF_INET;<br />
            client.sin_port=htons(3848);<br />
            //client.sin_addr=inet_addr(host);   <br />
            inet_pton(AF_INET, ser, &amp;client.sin_addr);           <br />
-           //g_message(&#8220;udp socket ok!%d&#8221;,sockfd);<br />
+           //g_message("udp socket ok!%d",sockfd);<br />
            return 1;<br />
 }
 int<br />
@@ -446,12 +446,12 @@ int p,i;</p>
 <p>p=0;<br />
 for(i=0;i&lt;6;i++)<br />
     {<br />
-    if (mac_addr[p+1]==&#8217;:&#8217;){mac_Hex[i]=chToHex((int)mac_addr[p]);p+=2;}<br />
+    if (mac_addr[p+1]==':'){mac_Hex[i]=chToHex((int)mac_addr[p]);p+=2;}<br />
       else{mac_Hex[i]=16*(chToHex((int)mac_addr[p]))+chToHex((char)mac_addr[p+1]);p+=3;}   <br />
     }<br />
-//g_message(&#8220;%s&#8221;,mac_addr);<br />
+//g_message("%s",mac_addr);<br />
 //for(i=0;i&lt;6;i++)<br />
-//g_message(&#8220;%d&#8212;%c-%c-%c-%c&#8221;,mac_Hex[i],mac_addr[i],mac_addr[i+1],mac_addr[i+2],mac_addr[i+3]);<br />
+//g_message("%d---%c-%c-%c-%c",mac_Hex[i],mac_addr[i],mac_addr[i+1],mac_addr[i+2],mac_addr[i+3]);<br />
 return 0;<br />
 }</p>
 
@@ -463,12 +463,12 @@ char filename[1024];<br />
 char log_string[1024];<br />
 char filepath[1024];<br />
 char *dir;<br />
-strcpy(log_string,&#8221;MyNet&#8221;);<br />
-dir=getenv(&#8220;HOME&#8221;);<br />
-sprintf(filepath,&#8221;%s/.mynet/&#8221;,dir);<br />
+strcpy(log_string,"MyNet");<br />
+dir=getenv("HOME");<br />
+sprintf(filepath,"%s/.mynet/",dir);<br />
 mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br />
 chmod(filepath,0777);<br />
-sprintf(filename,&#8221;%srun.pid&#8221;,filepath);<br />
+sprintf(filename,"%srun.pid",filepath);<br />
 log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br />
 chmod(filename,0777);<br />
 write(log,log_string,strlen(log_string));<br />

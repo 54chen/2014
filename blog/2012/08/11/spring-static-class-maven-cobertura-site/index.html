@@ -117,7 +117,7 @@ java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException
 EasyMock未提到是否支持static methods.功能类经常是static的，是因为没有上下文环境依赖，但如果一定要mock他们，可以选择powerMock.</p>
 
 <p><strong>PowerMock、static Class、junit、spring</strong>
-PowerMock 需要你添加 &#8216;@RunWith(PowerMockRunner.class)&#8217;.但 sping-test 需要你添加 &#8216;@RunWith(SpringJUnit4ClassRunner.class)&#8217;.
+PowerMock 需要你添加 '@RunWith(PowerMockRunner.class)'.但 sping-test 需要你添加 '@RunWith(SpringJUnit4ClassRunner.class)'.
 <a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
 如果junit 4.7,PowerMock将RunWith替换为:<br />
     @Rule<br />
@@ -129,18 +129,18 @@ Spring 2.5.x不能用JUnit 4.5+, 而PowerMockRule 只能用 JUnit 4.7.<br />
 基本上在Java + Spring 2.5 & JUnit 4.4环境下没啥简单的办法去mock static class了.</p>
 
 <p><strong>maven site 与 cobertura</strong>
-当你运行 &#8216;mvn site&#8217; or  &#8216;mvn sonar:sonar&#8217;, 在spring项目中你可能会得到:<br />
+当你运行 'mvn site' or  'mvn sonar:sonar', 在spring项目中你可能会得到:<br />
 NoSuchBeanDefinitionException</p>
 
 <p>第一个答案:<br />
 在test的application文件中添加:</p>
 
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">&#8220;true&#8221;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
 
 <p>第二个答案:<br />
-&#8216;mvn site&#8217; 与 &#8216;mvn sonar:sonar&#8217; 会生成类在目录 ./generated-classes/cobertura 中.确保你想autowire的类都在正确的目录下扫描.</p>
+'mvn site' 与 'mvn sonar:sonar' 会生成类在目录 ./generated-classes/cobertura 中.确保你想autowire的类都在正确的目录下扫描.</p>
 
-<p>&#8212;&#8212;&#8212;&#8211;</p>
+<p>-----------</p>
 
 <p><strong>spring 2.5 and junit 4.4</strong>
 Spring 2.5.x is incompatible with JUnit 4.5+.If you upgrade to junit 4.5,all of your test case which uses the SpringJUnit4ClassRunner will get a NoClassDefFoundError:</p>
@@ -155,10 +155,10 @@ Or you can try the patch in the issue tracker.
 <a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
 
 <p><strong>EasyMock and static Class</strong>
-EasyMock doesn&#8217;t mention static methods.Utility methods should be most of the time static as they have no context and no dependencies.But when you need to mock it,you can you choose PowerMock.</p>
+EasyMock doesn't mention static methods.Utility methods should be most of the time static as they have no context and no dependencies.But when you need to mock it,you can you choose PowerMock.</p>
 
 <p><strong>PowerMock、static Class、junit、spring</strong>
-PowerMock need you add &#8216;@RunWith(PowerMockRunner.class)&#8217; to your test code.But sping-test need you add &#8216;@RunWith(SpringJUnit4ClassRunner.class)&#8217;.
+PowerMock need you add '@RunWith(PowerMockRunner.class)' to your test code.But sping-test need you add '@RunWith(SpringJUnit4ClassRunner.class)'.
 <a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
 With junit 4.7,PowerMock can replace RunWith to:<br />
     @Rule<br />
@@ -167,19 +167,19 @@ http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
 
 <p><strong>conflict</strong>
 Spring 2.5.x is incompatible with JUnit 4.5+, and that PowerMockRule is compatible with JUnit 4.7.<br />
-Basically, There isn&#8217;t an easy way to do this in Java + Spring 2.5 & JUnit 4.4 at the moment.</p>
+Basically, There isn't an easy way to do this in Java + Spring 2.5 & JUnit 4.4 at the moment.</p>
 
 <p><strong>maven site and cobertura</strong>
-When you run &#8216;mvn site&#8217; or  &#8216;mvn sonar:sonar&#8217; with spring project,you may get the error:<br />
+When you run 'mvn site' or  'mvn sonar:sonar' with spring project,you may get the error:<br />
 NoSuchBeanDefinitionException</p>
 
 <p>The first answer:<br />
 In your test application context add the line:</p>
 
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">&#8220;true&#8221;</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
 
 <p>The second answer:<br />
-The &#8216;mvn site&#8217; or &#8216;mvn sonar:sonar&#8217; will generates class in ./generated-classes/cobertura.Make sure the classes that you want to autowire is all scan in right folder.
+The 'mvn site' or 'mvn sonar:sonar' will generates class in ./generated-classes/cobertura.Make sure the classes that you want to autowire is all scan in right folder.
 </p>
  
 <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>

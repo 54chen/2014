@@ -167,15 +167,15 @@ CassandraTestServer －> CustomTNonBlockingServer.Factory().buildTServer -> new 
 
 <p>the codes and the stages which plugged in:<br />
 TCustomNonblockingServerSocket->acceptImpl  When the client is comming,we can set the configuration like the value of timeout,etc.<br />
-CustomTNonBlockingServer->requestInvoke   And then it will be called here.It seems that Cassandra&#8217;s codes cast a parent class to children one.It is maybe a bug。</p>
+CustomTNonBlockingServer->requestInvoke   And then it will be called here.It seems that Cassandra's codes cast a parent class to children one.It is maybe a bug。</p>
 
 <p><strong>Else Server</strong>
-Cassandra&#8217;s default server CustomTThreadPoolServer is also can be plugged in like above talked.The plugin main target is set timeout,buffer,etc.And the TServerTransport it used is more flexible to setting values。</p>
+Cassandra's default server CustomTThreadPoolServer is also can be plugged in like above talked.The plugin main target is set timeout,buffer,etc.And the TServerTransport it used is more flexible to setting values。</p>
 
-<p>It&#8217;s hard to ignore the another type,THsHaDisruptorServer,is not normaI。<br />
-THsHaDisruptorServer is use TCustomNonblockingServerSocket to socket.The TDisruptorServer is based on LMAX Disruptor.The TDisruptorServer&#8217;s codes is here:<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> Can be understood as,a queue-improved TNonBlockingServer。</p>
+<p>It's hard to ignore the another type,THsHaDisruptorServer,is not normaI。<br />
+THsHaDisruptorServer is use TCustomNonblockingServerSocket to socket.The TDisruptorServer is based on LMAX Disruptor.The TDisruptorServer's codes is here:<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> Can be understood as,a queue-improved TNonBlockingServer。</p>
 
-<p>I&#8217;ll write a blog about disruptor_thrift_server later.<br />
+<p>I'll write a blog about disruptor_thrift_server later.<br />
 __EOF__</p>
 
 <p>Happy New Year!</p>

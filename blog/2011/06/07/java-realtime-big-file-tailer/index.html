@@ -185,11 +185,11 @@
 
 <p>        try {<br />
             this.tailing = true;<br />
-            RandomAccessFile file = new RandomAccessFile(logfile, &#8220;r&#8221;);<br />
+            RandomAccessFile file = new RandomAccessFile(logfile, "r");<br />
             while (this.tailing) {<br />
                 long fileLength = this.logfile.length();<br />
                 if (fileLength < filePointer) {<br />
-                    file = new RandomAccessFile(logfile, &#8220;r&#8221;);<br />
+                    file = new RandomAccessFile(logfile, "r");<br />
                     filePointer = 0;<br />
                 }<br />
                 if (fileLength > filePointer) {<br />
@@ -205,9 +205,9 @@
             }<br />
             file.close();<br />
         } catch (IOException e) {<br />
-            logger.error(&#8220;IO ERROR:&#8221;, e);<br />
+            logger.error("IO ERROR:", e);<br />
         } catch (InterruptedException e) {<br />
-            logger.error(&#8220;InterruptedException:&#8221;, e);<br />
+            logger.error("InterruptedException:", e);<br />
         }</p>
 
 <p>    }<br />
@@ -246,7 +246,7 @@
      */<br />
     public static void main(String[] args) {<br />
         if (args.length < 1) {<br />
-            System.out.println(&#8220;Usage: Tail <filename>&#8221;);<br />
+            System.out.println("Usage: Tail <filename>");<br />
             System.exit(0);<br />
         }<br />
         Tail tail = new Tail(args[0]);<br />

@@ -133,7 +133,7 @@ Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</blockquote>
 <p><blockquote>$sudo vim /etc/udev/rules.d/70-android.rules</blockquote></p>
 
 <p>加入以下内容：
-<blockquote>SUBSYSTEM==&#8221;usb&#8221;, SYSFS{idVendor}==&#8221;0bb4&#8221;, MODE=&#8221;0666&#8221;
+<blockquote>SUBSYSTEM=="usb", SYSFS{idVendor}=="0bb4", MODE="0666"
 </blockquote></p>
 
 <p>运行命令，重启udev：

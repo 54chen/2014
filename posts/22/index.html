@@ -1,0 +1,1081 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="54chen Twitter Memo 2011-04-03 hadoop hive安装手记 http://goo.gl/fb/RGHRU #
+54chen Twitter memo 2011-03-27 http://goo.gl/fb/eLRhH # Hadoop Hive安装手记 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/22">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/03/54chen-twitter-memo-2011-04-03/">54chen Twitter Memo 2011-04-03</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-03T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+hadoop hive安装手记 </ul><a href="http://goo.gl/fb/RGHRU" rel="nofollow">http://goo.gl/fb/RGHRU</a> <a href="http://twitter.com/54chen/statuses/54057382011088896" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-03-27 <a href="http://goo.gl/fb/eLRhH" rel="nofollow">http://goo.gl/fb/eLRhH</a> <a href="http://twitter.com/54chen/statuses/51822724775034880" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/04/02/hive-hadoop-how-to-install/">Hadoop Hive安装手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-04-02T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="hadoop hive" />
+hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供完整的sql查询功能，可以将sql语句转换为 MapReduce任务进行运行。 其优点是学习成本低，可以通过类SQL语句快速实现简单的MapReduce统计，不必开发专门的MapReduce应用，十分适合数据仓库的统计分析。</p>
+
+<p><strong>[网络环境设置]</strong>
+vim /etc/hosts</p>
+
+<p><blockquote>192.168.100.52 hadoop1<br />
+192.168.99.34 hadoop2<br />
+192.168.103.135 hadoop3</blockquote></p>
+
+<p>分别到对应机器执行：</p>
+
+<p><blockquote>hostname hadoop1<br />
+hostname hadoop2<br />
+hostname hadoop3</blockquote></p>
+
+<p><strong>[打通机器]</strong></p>
+
+<p><blockquote>hadoop1# ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa<br />
+hadoop1# scp ~/.ssh/id_dsa.pub hadoop2:/root/<br />
+hadoop1# scp ~/.ssh/id_dsa.pub hadoop3:/root/<br />
+hadoop2# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys<br />
+hadoop3# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys</blockquote></p>
+
+<p>验证：从hadoop1登录到hadoop2和hadoop3，不再需要密码。</p>
+
+<p><strong>[安装hadoop]</strong>
+确保所有机器有 ssh rsync jdk<br />
+确保设置了：<br />
+export JAVA_HOME=/opt/soft/jdk</p>
+
+<p>hive在0.20.x的hadoop做了大量的测试，因此选择0.20</p>
+
+<p><blockquote>cd /opt/soft/<br />
+wget http://mirror.bjtu.edu.cn/apache/hadoop/core/hadoop-0.20.2/hadoop-0.20.2.tar.gz<br />
+tar -zxvf hadoop-0.20.2.tar.gz<br />
+cd hadoop-0.20.2/<br />
+vim .bashrc<br />
+export HADOOP_HOME=/opt/soft/hadoop-0.20.2</blockquote></p>
+
+<p>（重复以上操作到另外两机器）</p>
+
+<p><strong>[配置hadoop]</strong>
+vim conf/core-site.xml<br />
+修改：</p>
+
+<p><blockquote>&lt;configuration&gt;<br />
+&lt;property&gt;<br />
+&lt;!-- 用于dfs命令模块中指定默认的文件系统协议 --&gt;<br />
+&lt;name&gt;fs.default.name&lt;/name&gt;<br />
+&lt;value&gt;hdfs://hadoop1:9000&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;/configuration&gt;</blockquote></p>
+
+<p>vim conf/hdfs-site.xml<br />
+修改：</p>
+
+<p><blockquote>&lt;configuration&gt;<br />
+&lt;property&gt;<br />
+&lt;!-- DFS中存储文件命名空间信息的目录 --&gt;<br />
+&lt;name&gt;dfs.name.dir&lt;/name&gt;<br />
+&lt;value&gt;/opt/hadoop/data/dfs.name.dir&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;property&gt;<br />
+&lt;!-- DFS中存储文件数据的目录 --&gt;<br />
+&lt;name&gt;dfs.data.dir&lt;/name&gt;<br />
+&lt;value&gt;/opt/hadoop/data/dfs.data.dir&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;property&gt;<br />
+&lt;!-- 是否对DFS中的文件进行权限控制(测试中一般用false)--&gt;<br />
+&lt;name&gt;dfs.permissions&lt;/name&gt;<br />
+&lt;value&gt;false&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;/configuration&gt;</blockquote></p>
+
+<p>vim conf/mapred-site.xml<br />
+修改：</p>
+
+<p><blockquote>&lt;configuration&gt;<br />
+&lt;property&gt;<br />
+&lt;!-- 用来作JobTracker的节点的(一般与NameNode保持一致) --&gt;<br />
+&lt;name&gt;mapred.job.tracker&lt;/name&gt;<br />
+&lt;value&gt;hadoop1:9001&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;property&gt;<br />
+&lt;!-- map/reduce的系统目录（使用的HDFS的路径） --&gt;<br />
+&lt;name&gt;mapred.system.dir&lt;/name&gt;<br />
+&lt;value&gt;/opt/hadoop/system/mapred.system.dir&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;property&gt;<br />
+&lt;!-- map/reduce的临时目录（可使用“,”隔开，设置多重路径来分摊磁盘IO） --&gt;<br />
+&lt;name&gt;mapred.local.dir&lt;/name&gt;<br />
+&lt;value&gt;/opt/hadoop/data/mapred.local.dir&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;/configuration&gt;</blockquote></p>
+
+<p>vim masters</p>
+
+<p><blockquote>hadoop1</blockquote>
+vim slaves</p>
+
+<p><blockquote>hadoop2<br />
+hadoop3</blockquote></p>
+
+<p>scp conf/* hadoop2:/opt/soft/hadoop-0.20.2/conf/<br />
+scp conf/* hadoop3:/opt/soft/hadoop-0.20.2/conf/</p>
+
+<p><strong>
+[初始化]</strong></p>
+
+<p><blockquote>cd $HADOOP_HOME/bin<br />
+./hadoop namenode -format</blockquote></p>
+
+<p>启动<br />
+./start-all.sh</p>
+
+<p><strong>[验证]</strong>
+$HADOOP_HOME/bin/hadoop dfs -ls /<br />
+打开 http://192.168.100.52:50030<br />
+http://192.168.100.52:50070</p>
+
+<p><strong>
+[搭建hive集群]</strong>
+下载<br />
+只需要在hadoop1机器上安装</p>
+
+<p><blockquote>cd /opt/soft/hadoop-0.20.2<br />
+wget http://mirror.bjtu.edu.cn/apache/hive/hive-0.7.0/hive-0.7.0.tar.gz<br />
+tar zxvf hive-0.7.0.tar.gz<br />
+cd hive-0.7.0<br />
+vim ~/.bashrc<br />
+export HIVE_HOME=/opt/soft/hadoop-0.20.2/hive-0.7.0</blockquote></p>
+
+<p>$HIVE_HOME/bin/hive<br />
+&gt;create table tt(id int,name string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;<br />
+&gt;select * from tt;<br />
+&gt;drop table tt;</p>
+
+<p>试玩结束。</p>
+
+<p><strong>[配置hive]</strong>
+准备mysql:hadoop1 user:hadoop pwd:hadoop</p>
+
+<p><blockquote>&gt;create database hive<br />
+&gt;GRANT all ON hive.* TO hadoop@% IDENTIFIED BY 'hadoop';<br />
+&gt;FLUSH PRIVILEGES ;</blockquote></p>
+
+<p>vim $HIVE_HOME/conf/hive-site.xml</p>
+
+<p><blockquote>
+&lt;?xml version="1.0"?&gt;<br />
+&lt;?xml-stylesheet type="text/xsl" href="configuration.xsl"?&gt;<br />
+&lt;configuration&gt;<br />
+&lt;property&gt;<br />
+&lt;name&gt;hive.metastore.local&lt;/name&gt;<br />
+&lt;value&gt;true&lt;/value&gt;<br />
+&lt;/property&gt;</blockquote></p>
+
+<p>&lt;property&gt;<br />
+&lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;<br />
+&lt;value&gt;jdbc:mysql://hadoop1:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;<br />
+&lt;/property&gt;</p>
+
+<p>&lt;property&gt;<br />
+&lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;<br />
+&lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;<br />
+&lt;/property&gt;</p>
+
+<p>&lt;property&gt;<br />
+&lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;<br />
+&lt;value&gt;hadoop&lt;/value&gt;<br />
+&lt;/property&gt;</p>
+
+<p>&lt;property&gt;<br />
+&lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;<br />
+&lt;value&gt;hadoop&lt;/value&gt;<br />
+&lt;/property&gt;<br />
+&lt;/configuration&gt;</p>
+
+<p><strong>[启动]</strong>
+复制一个mysql-connector-java-5.1.10.jar到hive/lib下后：</p>
+
+<p><blockquote>$HIVE_HOME/bin/hive<br />
+&gt;create table tt(id int,name string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;</blockquote></p>
+
+<p>如果报如下错：</p>
+
+<p><blockquote>FAILED: Error in metadata: javax.jdo.JDOException: Couldnt obtain a new sequence (unique id) : Binary logging not possible. Message: Transaction level 'READ-COMMITTED' in InnoDB is not safe for binlog mode 'STATEMENT'</blockquote></p>
+
+<p>退出hive后，以root进入mysql执行：</p>
+
+<p><blockquote>&gt;set global binlog_format='MIXED';</blockquote></p>
+
+<p>这是mysql的一个bug。</p>
+
+<p>安装结束。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/27/54chen-twitter-memo-2011-03-27/">54chen Twitter Memo 2011-03-27</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+#</ul><a href="http://search.twitter.com/search?q=%23linux" class="aktt_hashtag">linux</a> 必杀技# /usr/sbin/tmpwatch -m 240 /opt/resin/log/  删除某目录下1周后的过期日志 <a href="http://twitter.com/54chen/statuses/50825112785666048" class="aktt_tweet_time">#</a>
+maven项目代码质量检测工具sonar使用手记 <a href="http://goo.gl/fb/pJqS1" rel="nofollow">http://goo.gl/fb/pJqS1</a> <a href="http://twitter.com/54chen/statuses/50431185817567232" class="aktt_tweet_time">#</a>
+开源项目Sonar：maven项目配置Sonar做为团队代码质量检查的工具是一个提高代码质量的有效办法。 <a href="http://twitter.com/54chen/statuses/50180034106884096" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-03-20 <a href="http://goo.gl/fb/9sInW" rel="nofollow">http://goo.gl/fb/9sInW</a> <a href="http://twitter.com/54chen/statuses/49325258758565888" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/23/open-source-quality-management-platform-sonar-notes/">Maven项目代码质量检测工具sonar使用手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-23T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1o7d4XgVmXXa0tYUU_013741.jpg" alt="sonar" /></p>
+
+<p>Sonar是一个开源代码质量控制工具。把它加到现在的持续集成工具中就能够让你的java开发项目集中处于质量控制之下。下面是安装和使用记录 ：</p>
+
+<p><strong>修改.m2/settings.xml</strong>
+增加下边的内容到profiles段落中：
+<blockquote>&lt;profile&gt;<br />
+&lt;id&gt;sonar&lt;/id&gt;<br />
+&lt;activation&gt;<br />
+&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;<br />
+&lt;/activation&gt;<br />
+&lt;properties&gt;<br />
+&lt;!-- EXAMPLE FOR MYSQL --&gt;<br />
+&lt;sonar.jdbc.url&gt;<br />
+jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;amp;characterEncoding=utf8<br />
+&lt;/sonar.jdbc.url&gt;<br />
+&lt;sonar.jdbc.driverClassName&gt;com.mysql.jdbc.Driver&lt;/sonar.jdbc.driverClassName&gt;<br />
+&lt;sonar.jdbc.username&gt;sonar&lt;/sonar.jdbc.username&gt;<br />
+&lt;sonar.jdbc.password&gt;sonar&lt;/sonar.jdbc.password&gt;</blockquote></p>
+
+<p>&lt;!-- SERVER ON A REMOTE HOST --&gt;<br />
+&lt;sonar.host.url&gt;http://localhost:8888&lt;/sonar.host.url&gt;<br />
+&lt;/properties&gt;<br />
+&lt;/profile&gt;
+<strong>增加mysql权限 </strong>
+GRANT all ON sonar.* TO sonar@localhost IDENTIFIED BY 'sonar';<br />
+FLUSH PRIVILEGES ;</p>
+
+<p><strong>vim .bashrc</strong>
+export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m -Duser.timezone=Asia/Shanghai"</p>
+
+<p>source .bashrc</p>
+
+<p><strong>下载sonar，配置mysql:</strong>
+<blockquote>conf/sonar.properties<br />
+sonar.jdbc.url: jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;characterEncoding=utf8<br />
+sonar.jdbc.driverClassName: com.mysql.jdbc.Driver<br />
+sonar.jdbc.validationQuery: select 1</blockquote>
+用户密码不用，默认都是sonar</p>
+
+<p><strong>配置启动的http端口</strong>
+<blockquote>sonar.web.host : localhost<br />
+sonar.web.port: 8888<br />
+sonar.web.context: /</blockquote>
+<strong>启动服务：</strong>
+<blockquote>bin/[YOUR PLATEFORM]/sonar.sh start</blockquote>
+<strong>开始使用：</strong>
+<blockquote>进到项目里运行 mvn sonar:sonar</blockquote></p>
+
+<p>打开http://localhost:8888 即可看到对应项目里的代码质量和修改建议。
+<strong>解决系统时区的问题：</strong>
+vim sonar-xx/conf/wrapper.conf<br />
+wrapper.java.additional.3=-Duser.timezone=Asia/Shanghai</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/20/54chen-twitter-memo-2011-03-20/">54chen Twitter Memo 2011-03-20</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-20T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+</ul><a href="http://svn.php.net/viewvc/php/php-src/trunk/ext/standard/credits.c?r1=305420&amp;r2=306409&amp;pathrev=306409" rel="nofollow">http://svn.php.net/viewvc/php/php-src/trunk/ext/standard/credits.c?r1=305420&amp;r2=306409&amp;pathrev=306409</a> php又寂寞了，核心源码里有贡献者：我勒个去，给力！ <a href="http://twitter.com/54chen/statuses/48571543592243200" class="aktt_tweet_time">#</a>
+<a href="http://book.51cto.com/art/201101/244188.htm" rel="nofollow">http://book.51cto.com/art/201101/244188.htm</a>  项目百态: 深入理解软件项目行为模式 易懂的道理，不错的内容。 <a href="http://twitter.com/54chen/statuses/48354399713628160" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23linux" class="aktt_hashtag">linux</a> 必杀技# echo $RANDOM 可以产生一个0-32767的随机整数。 <a href="http://twitter.com/54chen/statuses/48219034025598976" class="aktt_tweet_time">#</a>
+#<a href="http://search.twitter.com/search?q=%23linux" class="aktt_hashtag">linux</a> 必杀技# date -d &#039;-15min&#039; &#039;+%Y-%m-%d %T&#039; 15分钟前的时间按yyyy-MM-dd HH:mm:ss显示 <a href="http://twitter.com/54chen/statuses/48214383087718400" class="aktt_tweet_time">#</a>
+<a href="http://news.qq.com/a/20110316/001276.htm" rel="nofollow">http://news.qq.com/a/20110316/001276.htm</a>  这是浮云吗？ <a href="http://twitter.com/54chen/statuses/47959584505204736" class="aktt_tweet_time">#</a>
+关于maven，做错的十件事 <a href="http://goo.gl/fb/eUbxW" rel="nofollow">http://goo.gl/fb/eUbxW</a> <a href="http://twitter.com/54chen/statuses/47585221020876800" class="aktt_tweet_time">#</a>
+Instagram 代码背后的免费午餐 <a href="http://diwublog.com/archives/165" rel="nofollow">http://diwublog.com/archives/165</a> <a href="http://twitter.com/54chen/statuses/47130584450998272" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/15/about-maven-10-wrong-things/">关于maven，做错的十件事</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="java maven" /></p>
+
+<p>maven管理的java项目越来越多，令人遗憾的是在使用maven的时候，多多少少都会遇到这样那样的问题，于是会有各种各样的解决办法，下面是一个列表，列出了使用maven的误区和解决办法。
+<strong>1.频繁在所有项目使用mvn install并且随时在更新</strong>
+这是我见过的最常见的问题，解决了这个问题有许多的好处。在maven的文档中找不到一句对这种情况的描述，不过我坚信一句话：每个artifact在maven仓库中都有一个家。<br />
+在你的公司里，应该有一个仓库管理工具。每一个你开发的模块都应该发布到这个仓库上去。你可能会问，应该什么时候发布？答案是，每次在你的构建服务器构建之后，都需要发到仓库。我们通常都使用<a href="https://hudson.dev.java.net/">Hudson</a>来做这件事情，另外还有<a href="http://continuum.apache.org/">Continuum</a>和<a href="http://www.jetbrains.com/teamcity/">TeamCity</a>也还不错。</p>
+
+<p>现在，当你所有的项目都在仓库里有的时候，你的项目就不再需要不断地mvn install了。如果你修改一个模块，你只需要重建这个模块，其余依赖的模块会由maven自动从仓库中下载。</p>
+
+<p><strong>2.你和你的团队成员依靠复制.m2文件夹来解决项目里的依赖找不到的问题</strong>
+这看起来很疯狂，不过这件事情经常发生。解决的办法，设置一名仓库管理员。一旦管理好了仓库，就不会再出现大家找u盘复制.m2文件夹的事情了。因为可以加速，你不应该把本地的仓库整个地删除掉，毕竟在本地读取仓库是最快的。</p>
+
+<p><strong>3. 你为了解决依赖找不到一个老版本构件的问题，把最新的pom文件修改了版本弄到了老文件里后安装</strong>
+考虑到这种情况，有人把一个模块的版本从1.3-SNAPSHOT修改成了1.4-SNAPSHOT。你马上要去度假，所以呢你就不想再更新和安装1.3的版本了，而你的模块正好要依赖1.3版本的那个模块，你如何去弄到老的版本呢？嗯，你可以到处找找，在代码库里找到了这个模块的最新代码，而且版本还是1.3的，你更新了这个版本号并且进行了安装。或者你还可以把你的代码从1.4弄到1.3去，安装并祈祷能够正常工作。</p>
+
+<p>我想上面的解决办法都不是很好，同样，你的公司需要一个代码仓库管理员，如果有一次1.3-SNAPSHOT成功的构建，那就应该在仓库里存在一份，问题解决。</p>
+
+<p><strong>4. 你有许多shell脚本或者是批处理文件，它们通过你的模块的target文件来产生一个zip文件</strong>
+maven有方法专门做这件事情，叫做“assemblies”。他们不是最容易安装的，但是一旦你安装好了，将与maven完全无缝结合，这要比许多山寨自制的脚本要平滑得多。这些山寨的脚本有许多的问题，比如说版本开始改变，模块被移动等等。</p>
+
+<p><strong>5.你有许多的xml在pom里，目的只是复制文件到发布时的文件夹去，而且它不成很好的工作，也不轻便</strong>
+这和4正好是对立的，maven看上去不是为了复制文件而构建。如果你想复制你的包（诸如war,ear,zip文件），写一个ant shell bat文件都会很简单完成。</p>
+
+<p><strong>6.你在build的时候总是呆在“checking for updates from xxx-repo”而你不知道什么原因</strong>
+这是一个很让有些人很气愤的事情，往往花费太多时间去找问题所在。也许这个事情正好可以让你去喝杯咖啡。尽管如此，这个问题的一些通常原因，就是你有一个快照版本的依赖，并且在你的pom文件中有一堆的仓库列表。maven不关心哪个包去哪个仓库里取，所以看上去是从所有的仓库里更新所有的包。<br />
+如果你配置了你的maven安装时到指定的仓库里去寻找所有的包（在settings.xml里设置mirror），maven会只到这个仓库里寻找。当这个服务器在本地，将得到加速。用上仓库管理很重要，</p>
+
+<p><strong>7.如果你在release分支上写代码，你的trunk的构建将会失败（或者说是1.0-SNAPSHOT应该对所有人来说都是好用的）</strong>
+有许多事情你应该记住，当给你的项目创建一个分枝的时候。其中之一是告诉你的构建服务器，并且其他模块需要修改版本为你的pom的声明。如果你忽略随后才做这事，当你想修改了分支里的代码又想在主干里开发时，你会遇到问题。<br />
+这里有一个goal在发布插件里，叫做“branch”，靠运行“mvn release:branch”，maven可以为你自动重命名pom文件里的版本号。（免责声明，我还没试过这个命令。。。目前我经常只在创建了一个release的时候才打分支，在“mvn release:perform”后使用“mvn release:prepare”）</p>
+
+<p><strong>8.整个公司内容的依赖都是以-SNAPSHOT结束</strong>
+快照对开发者来说很舒服，它几乎要完成了，但是迟早，你应该要停下你的脚步，发送你的包给世人，或者是你的同事。一直呆在快照版本有许多的问题。首先它减慢了你的构建速度。因为maven不得不去检查最后的快照是不是在更新了。其次，如果你的项目依赖于一个快照版本，你很难判断是依赖哪个版本的快照。构建可能会失败，只是因为你拿到了一个更新的快照。<br />
+如果你依赖一个公司内部的模块，并且这个模块目前是好用的，那么修改所有的依赖为非快照版本后才发布，是一个不错的主意。这样我们才能知道，即使有家伙还在那个模块上疯狂写代码的时候，你的模块依旧可以构建通过，因为它依赖的是一个稳定的发布。</p>
+
+<p><strong>9.跑一下“mvn dependency:analyze”，没有使用和没有使用的依赖列表很长</strong>
+这个很BT，但不知道准确依赖很危险。最大的问题是maven的传递依赖。</p>
+
+<p><strong>10.当有人发布了你使用的新版本的插件，你的构建就挂了</strong>
+maven的插件不必写上版本，maven会找到最好的版本。当有新版本的插件的时候，你不必知道就会下载使用最新的。有时候，最好的判断不总是正确。根据经验，越新的越有bug。因此，明码标价写上你使用的插件的版本是有意义的</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/13/54chen-twitter-memo-2011-03-13/">54chen Twitter Memo 2011-03-13</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-13T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+Flashcache一个非常不错的软件（准确的说是一个Linux的模块）， 可以动态加载。Flashcache通过在文件系统（VFS）和设备驱动之间新增了一次缓存层，来实现对热门的缓存。#系统架构# </ul><a href="http://twitter.com/54chen/statuses/46032398315556865" class="aktt_tweet_time">#</a>
+amoeba系统性能报告 <a href="http://goo.gl/fb/WeRBK" rel="nofollow">http://goo.gl/fb/WeRBK</a> <a href="http://twitter.com/54chen/statuses/44688398920855552" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/07/amoeba-benchmark-report/">Amoeba系统性能报告</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13M02XbRXXXX4FVU4_051626.jpg" alt="amoeba" />
+关于amoeba，请见<a href="http://www.54chen.com/java-ee/amoeba-rose-open-source-big-website-arch.html">http://www.54chen.com/java-ee/amoeba-rose-open-source-big-website-arch.html</a>，他是一个不错的mysql proxy替代工具。
+<strong>读操作</strong></p>
+
+<p>100个并发,mysql:<br />
+load:7-8<blockquote>
+Rate: 225 req/s<br />
+Rate: 240 req/s<br />
+Rate: 216 req/s<br />
+Rate: 193 req/s<br />
+Rate: 212 req/s<br />
+Rate: 210 req/s<br />
+Rate: 208 req/s<br />
+Rate: 229 req/s<br />
+Rate: 215 req/s<br />
+Rate: 231 req/s<br />
+Rate: 241 req/s<br />
+Rate: 210 req/s<br />
+Rate: 273 req/s<br />
+Rate: 247 req/s<br />
+Rate: 212 req/s</blockquote>
+amoeba:<br />
+load:13-15<blockquote>
+Rate: 214 req/s<br />
+Rate: 185 req/s<br />
+Rate: 174 req/s<br />
+Rate: 181 req/s<br />
+Rate: 210 req/s<br />
+Rate: 194 req/s<br />
+Rate: 187 req/s<br />
+Rate: 190 req/s<br />
+Rate: 189 req/s<br />
+Rate: 167 req/s<br />
+Rate: 182 req/s<br />
+Rate: 182 req/s<br />
+Rate: 185 req/s<br />
+Rate: 178 req/s<br />
+Rate: 184 req/s<br />
+Rate: 187 req/s<br />
+Rate: 183 req/s<br />
+Rate: 196 req/s<br />
+Rate: 177 req/s </blockquote></p>
+
+<p>50个并发：<br />
+mysql:<br />
+load:5-6<blockquote>
+Rate: 233 req/s<br />
+Rate: 207 req/s<br />
+Rate: 247 req/s<br />
+Rate: 231 req/s<br />
+Rate: 262 req/s<br />
+Rate: 195 req/s<br />
+Rate: 202 req/s<br />
+Rate: 224 req/s<br />
+Rate: 258 req/s<br />
+Rate: 256 req/s<br />
+Rate: 217 req/s<br />
+Rate: 183 req/s<br />
+Rate: 208 req/s<br />
+Rate: 265 req/s<br />
+Rate: 213 req/s<br />
+Rate: 244 req/s<br />
+Rate: 225 req/s<br />
+Rate: 238 req/s</blockquote>
+omaeba:<br />
+load:10-13<blockquote>
+Rate: 231 req/s<br />
+Rate: 200 req/s<br />
+Rate: 223 req/s<br />
+Rate: 171 req/s<br />
+Rate: 205 req/s<br />
+Rate: 201 req/s<br />
+Rate: 179 req/s<br />
+Rate: 192 req/s<br />
+Rate: 221 req/s<br />
+Rate: 225 req/s<br />
+Rate: 188 req/s<br />
+Rate: 159 req/s<br />
+Rate: 184 req/s<br />
+Rate: 212 req/s<br />
+Rate: 169 req/s<br />
+Rate: 172 req/s<br />
+Rate: 189 req/s<br />
+Rate: 222 req/s</blockquote></p>
+
+<p>20个并发：<br />
+mysql:<br />
+load:5-6<blockquote>
+Rate: 208 req/s<br />
+Rate: 261 req/s<br />
+Rate: 257 req/s<br />
+Rate: 166 req/s<br />
+Rate: 218 req/s<br />
+Rate: 165 req/s<br />
+Rate: 240 req/s<br />
+Rate: 215 req/s<br />
+Rate: 218 req/s<br />
+Rate: 251 req/s<br />
+Rate: 197 req/s<br />
+Rate: 215 req/s<br />
+Rate: 242 req/s<br />
+Rate: 187 req/s<br />
+Rate: 196 req/s</blockquote>
+omeba:<br />
+load:6-7<blockquote>
+Rate: 209 req/s<br />
+Rate: 160 req/s<br />
+Rate: 180 req/s<br />
+Rate: 152 req/s<br />
+Rate: 204 req/s<br />
+Rate: 192 req/s<br />
+Rate: 170 req/s<br />
+Rate: 214 req/s<br />
+Rate: 187 req/s<br />
+Rate: 217 req/s<br />
+Rate: 180 req/s<br />
+Rate: 225 req/s<br />
+Rate: 208 req/s<br />
+Rate: 198 req/s<br />
+Rate: 200 req/s<br />
+Rate: 211 req/s</blockquote></p>
+
+<p>1个并发：<br />
+mysql:<br />
+load:2<blockquote>
+Rate: 84 req/s<br />
+Rate: 78 req/s<br />
+Rate: 81 req/s<br />
+Rate: 85 req/s<br />
+Rate: 83 req/s<br />
+Rate: 76 req/s<br />
+Rate: 84 req/s<br />
+Rate: 80 req/s<br />
+Rate: 84 req/s<br />
+Rate: 80 req/s<br />
+Rate: 89 req/s<br />
+Rate: 83 req/s<br />
+Rate: 78 req/s<br />
+Rate: 75 req/s</blockquote></p>
+
+<p>omaeba:<br />
+load:3<blockquote>
+Rate: 80 req/s<br />
+Rate: 77 req/s<br />
+Rate: 79 req/s<br />
+Rate: 89 req/s<br />
+Rate: 73 req/s<br />
+Rate: 72 req/s<br />
+Rate: 73 req/s<br />
+Rate: 72 req/s<br />
+Rate: 82 req/s<br />
+Rate: 79 req/s<br />
+Rate: 67 req/s<br />
+Rate: 81 req/s</blockquote></p>
+
+<p><strong>写操作</strong></p>
+
+<p>1并发，mysql:<blockquote>
+Rate: 83 req/s<br />
+Rate: 86 req/s<br />
+Rate: 84 req/s<br />
+Rate: 84 req/s<br />
+Rate: 91 req/s<br />
+Rate: 82 req/s<br />
+Rate: 88 req/s<br />
+Rate: 82 req/s<br />
+Rate: 76 req/s<br />
+Rate: 87 req/s<br />
+Rate: 90 req/s<br />
+Rate: 86 req/s<br />
+Rate: 87 req/s<br />
+Rate: 93 req/s<br />
+Rate: 95 req/s
+</blockquote>
+1并发，amoeba:
+<blockquote>
+Rate: 77 req/s<br />
+Rate: 56 req/s<br />
+Rate: 72 req/s<br />
+Rate: 75 req/s<br />
+Rate: 75 req/s<br />
+Rate: 79 req/s<br />
+Rate: 75 req/s<br />
+Rate: 80 req/s<br />
+Rate: 71 req/s<br />
+Rate: 80 req/s<br />
+Rate: 78 req/s<br />
+Rate: 71 req/s</blockquote></p>
+
+<p>10并发，mysql:
+<blockquote>
+Rate: 209 req/s<br />
+Rate: 190 req/s<br />
+Rate: 201 req/s<br />
+Rate: 194 req/s<br />
+Rate: 188 req/s<br />
+Rate: 234 req/s<br />
+Rate: 168 req/s<br />
+Rate: 266 req/s<br />
+Rate: 242 req/s<br />
+Rate: 243 req/s<br />
+Rate: 260 req/s<br />
+Rate: 261 req/s<br />
+Rate: 180 req/s<br />
+Rate: 240 req/s<br />
+Rate: 260 req/s</blockquote></p>
+
+<p>10并发，amoeba:
+<blockquote>
+Rate: 132 req/s<br />
+Rate: 142 req/s<br />
+Rate: 154 req/s<br />
+Rate: 188 req/s<br />
+Rate: 164 req/s<br />
+Rate: 165 req/s<br />
+Rate: 188 req/s<br />
+Rate: 172 req/s<br />
+Rate: 173 req/s<br />
+Rate: 184 req/s<br />
+Rate: 147 req/s<br />
+Rate: 164 req/s<br />
+Rate: 172 req/s<br />
+Rate: 159 req/s<br />
+Rate: 133 req/s<br />
+Rate: 159 req/s<br />
+Rate: 191 req/s
+</blockquote>
+100并发，mysql:
+<blockquote>Rate: 175 req/s<br />
+Rate: 201 req/s<br />
+Rate: 226 req/s<br />
+Rate: 256 req/s<br />
+Rate: 258 req/s<br />
+Rate: 229 req/s<br />
+Rate: 220 req/s<br />
+Rate: 234 req/s<br />
+Rate: 203 req/s<br />
+Rate: 227 req/s<br />
+Rate: 211 req/s<br />
+Rate: 223 req/s<br />
+Rate: 266 req/s<br />
+Rate: 253 req/s<br />
+Rate: 226 req/s<br />
+Rate: 242 req/s<br />
+Rate: 269 req/s<br />
+Rate: 199 req/s<br />
+Rate: 123 req/s
+</blockquote></p>
+
+<p>100并发，amoeba:
+<blockquote>
+Rate: 198 req/s<br />
+Rate: 185 req/s<br />
+Rate: 182 req/s<br />
+Rate: 171 req/s<br />
+Rate: 181 req/s<br />
+Rate: 160 req/s<br />
+Rate: 124 req/s<br />
+Rate: 213 req/s<br />
+Rate: 200 req/s<br />
+Rate: 216 req/s<br />
+Rate: 179 req/s<br />
+Rate: 257 req/s<br />
+Rate: 165 req/s<br />
+Rate: 150 req/s<br />
+Rate: 241 req/s</blockquote></p>
+
+<p><strong>结论</strong>
+性能还可以，网络损失和解释过程损失了一些性能，不过总体还是不错的。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/06/54chen-twitter-memo-2011-03-06/">54chen Twitter Memo 2011-03-06</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+Amoeba+rose：开源项目搭建大型网站可扩展构架实记 </ul><a href="http://goo.gl/fb/CE2Rg" rel="nofollow">http://goo.gl/fb/CE2Rg</a> <a href="http://twitter.com/54chen/statuses/43552226383364096" class="aktt_tweet_time">#</a>
+某公司猎头言：X大目前人才战略，确实是不惜代价挖小米科技的人。无言以对。 <a href="http://twitter.com/54chen/statuses/43296516949020672" class="aktt_tweet_time">#</a>
+人人网不登录的时候，首页提示：禁止利用互联网等从事违法活动。这是神马情况？ <a href="http://twitter.com/54chen/statuses/42966438251728896" class="aktt_tweet_time">#</a>
+touch iconv.tmp &amp;&amp; find . -iname &quot;*.java&quot; -exec iconv -f gbk -t utf-8 &#039;{}&#039; -o iconv.tmp \; -exec mv iconv.tmp &#039;{}&#039; \; #<a href="http://search.twitter.com/search?q=%23linux" class="aktt_hashtag">linux</a> </p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/03/04/amoeba-rose-open-source-big-website-arch/">Amoeba+rose：开源项目搭建大型网站可扩展构架实记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-03-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1KVN2XbRpXXbyndEV_020212.jpg" alt="amoeba rose " />
+java是一把双刃剑，可以很重地伤人，亦可很重地自伤。曾在一处见到，淘宝在长期使用java构建web项目后，得出一个结论：积重难返。<br />
+实际工作经验得到的结论，积重难返的原因，往往不是java本身的缘故，而是团队成员基础积累参差不齐，许多次的“一不小心”积累成了最终的结果。到了悔之晚矣的时候自然就积重难返了。如何避免java使用自伤，最关键在于，统一团队成员的code入口，框下可能发生的事情，避开不能发生的事情，言归正传，下面开始介绍两个非常不错的java开源项目，搭配两个项目，可以搞定所有的mysql+java项目的任何方向的扩展和自由的开发而不担心积重难返。
+<strong>项目简介</strong>
+1) rose框架：<br />
+来自人人网王志亮大侠的大作，其优异的性能撑下了SNS网站复杂多变的业务（人人网大量使用），同时开发非常方便，有大量的文档可供参考。<br />
+项目地址：
+<a href="http://code.google.com/p/paoding-rose/">http://code.google.com/p/paoding-rose/</a></p>
+
+<p>2) Amoeba：<br />
+Amoeba(变形虫)项目，专注分布式数据库 proxy 开发。对客户端透明。具有负载均衡、高可用性、sql过滤、读写分离、可路由相关的query到目标数据库、可并发请求多台数据库合并结果。使用这个项目可以将DB层透明，简单做到分库分表，甚至无限partition。作者陈思儒大侠。<br />
+下面有一篇两年前Fenng对作者的采访：
+<a href="http://www.infoq.com/cn/articles/interview-chensiru-amoeba">http://www.infoq.com/cn/articles/interview-chensiru-amoeba</a>
+项目地址：
+<a href="http://amoeba.meidusa.com/">http://amoeba.meidusa.com/</a></p>
+
+<p><strong>构架图</strong>
+<img src="http://img04.taobaocdn.com/imgextra/i4/T1cEt1XoXGXXX9DQkU_015423.jpg" alt="amoeba+rose构架图" /></p>
+
+<p><strong>相关配置</strong>
+1) 配置rose中的数据源为amoeba
+<a href="http://code.google.com/p/paoding-rose/wiki/Jade_DataSource">http://code.google.com/p/paoding-rose/wiki/Jade_DataSource</a></p>
+
+<p>2) 配置amoeba为mysql(使用amoeba-mysql)
+<a href="http://amoeba.meidusa.com/amoeba.pdf">http://amoeba.meidusa.com/amoeba.pdf</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="23">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="21">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

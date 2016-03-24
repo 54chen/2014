@@ -1,0 +1,700 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="54chen Twitter Memo 2011-08-28 riak源码阅读手记二 左右开弓 启动 http://t.co/G6kB76e #
+riak源码阅读手记一 初出茅庐 项目入口 http://t.co/aA32hlp #
+54chen Twitter memo 2011-08-21 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/18">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/28/54chen-twitter-memo-2011-08-28/">54chen Twitter Memo 2011-08-28</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-28T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+riak源码阅读手记二 左右开弓 启动 </ul><a href="http://t.co/G6kB76e" rel="nofollow">http://t.co/G6kB76e</a> <a href="http://twitter.com/54chen/statuses/106192647915446272" class="aktt_tweet_time">#</a>
+riak源码阅读手记一 初出茅庐 项目入口 <a href="http://t.co/aA32hlp" rel="nofollow">http://t.co/aA32hlp</a> <a href="http://twitter.com/54chen/statuses/105618365443358720" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-08-21 <a href="http://t.co/9K4IoNr" rel="nofollow">http://t.co/9K4IoNr</a> <a href="http://twitter.com/54chen/statuses/105099916141010944" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/24/riak-cource-code/">Riak源码阅读手记二 左右开弓 启动</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_EN.XadjXXbk3DE3_051340.jpg" alt="erlang riak 54chen" />
+<strong>目标系统(target system)</strong>
+OTP系统定义里有这么一个东西：<br />
+可以被一般的erl脚本启动的系统叫基础目标系统；<br />
+除此之外还可以做运行时代码替换的系统叫简单目标系统；<br />
+如果还支持日志输出到文件、自动定时启动的话就叫做内嵌目标系统。</p>
+
+<p><strong>启动目标系统的方式</strong>
+通过erlang/OTP标准的reltool工具生成的目标系统，可以用多种方式灵活启动。<br />
+第一种：</p>
+
+<p><blockquote>os> /usr/local/erl-target/bin/erl</blockquote></p>
+
+<p>这只启动了一个基础目标系统。基本没什么具体功能。</p>
+
+<p>第二种：</p>
+
+<p><blockquote>os> /usr/local/erl-target/bin/erl -boot /usr/local/erl-target/releases/FIRST/start</blockquote></p>
+
+<p>用-boot参数，这可以启动一个简单目标系统。releases/RELEASES文件可用来做热替换。</p>
+
+<p>第三种：</p>
+
+<p><blockquote>bin/start
+</blockquote></p>
+
+<p>这个脚本会去调用 bin/run_erl ，最终调用 bin/start_erl启动。run_erl是一个提供运行时日志输出到文件的封装。还提供了简单的机制attach到一个erlang shell。</p>
+
+<p><strong>自定义behaviour</strong></p>
+
+<p><blockquote>-spec behaviour_info(atom()) -> 'undefined' | [{atom(), arity()}].<br />
+behaviour_info(callbacks) ->
+    [{start,2},       % (Partition, Config)<br />
+     {stop,1},        % (State) <br />
+     {get,2},         % (State, BKey)<br />
+     {put,3},         % (State, BKey, Val)<br />
+     {list,1},        % (State)<br />
+     {list_bucket,2}, % (State, Bucket)<br />
+     {delete,2},      % (State, BKey)<br />
+     {drop,1},        % (State)<br />
+     {fold,3},        % (State, Folder, Acc), Folder({B,K},V,Acc)<br />
+     {is_empty,1},    % (State)<br />
+     {callback,3}];   % (State, Ref, Msg) ->
+behaviour_info(_Other) ->
+    undefined.</blockquote></p>
+
+<p>上述就是一个自定义的behaviour，使用的时候：</p>
+
+<p><blockquote>-behaviour(xxx).<br />
+...</blockquote></p>
+
+<p>有点类似java的interface.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/22/riak-source/">Riak源码阅读手记一 初出茅庐 项目入口</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" /></p>
+
+<p><strong>简介</strong>
+basho（相扑）是一家美国的技术公司，专营数据存储和管理软件，11年6月30日获得了750万美元的融资。basho将riak开源，通过收取riak的维护和管理界面软件的使用费用来赚钱，和resin的公司类似。<br />
+今天主要研究的是，basho旗下的riak:一个类dynamo系统的kv存储。riak使用了erlang进行开发，将代码精简到极致。</p>
+
+<p><strong>rebar</strong>
+riak的代码使用了一个叫做rebar（钢筋）的erlang构建工具，使用起来真的很方便，其使用方法建议参考这篇文章：http://www.linezing.com/blog/?p=347。每个项目下，都有一个叫做rebar.config的文件，里面用erlang语法记录了这个项目需要的目录、环境、版本、以及依赖的包在github上的位置。真的很方便。riak项目中，rebar和reltool被大量使用。reltool使用方法参见 http://erlangdisplay.iteye.com/blog/508944</p>
+
+<p>riak的总控工程：https://github.com/basho/riak。<br />
+看rebar.config定义的依赖部分:</p>
+
+<p><blockquote>{deps, [<br />
+       {cluster_info, "1.1.*", {git, "git://github.com/basho/cluster_info", {branch, "master"}}}, %% 这个模块提供了一个松散易扩展的导出集群节点状态的办法。可以收集的信息包括：时间、所有的erlang进程的静态统计、网络连接情况、cpu和内存、大队列进程、内部内存调用统计、ETS、各节点的名字版本等<br />
+       {luwak, "1.*", {git, "git://github.com/basho/luwak", {branch, "master"}}}, %% 大对象存储。用来存音频视频啥的。<br />
+       {riak_kv, "0.14.*", {git, "git://github.com/basho/riak_kv", {branch, "master"}}}, %% 这个模块依赖riak_core，在这一层里，封装了给各种client调用的接口，处理具体存储、M/R等。<br />
+       {riak_search, "0.14.*", {git, "git://github.com/basho/riak_search",<br />
+                                {branch, "master"}}} %% 基于riak的全文检索实现<br />
+       ]}.</blockquote></p>
+
+<p><strong>构建过程</strong>
+通过rebar的reltool支持，在riak项目中，rebar.conf中定义了{sub_dirs,["rel"]}，表示在rel目录下使用reltool创建一个发行版本。<br />
+在rel目录的rel.config中，{lib_dirs, ["../deps"]}，定义了所有的子模块都放在了deps目录下。很长的一个config文件，有点像ant脚本。</p>
+
+<p><strong>函数规范定义：spec</strong>
+-spec Module:Function(ArgType1, ..., ArgTypeN) -> ReturnType.<br />
+函数的参数数目必须与函数规范定义相同，否则编译出错。定义了type及spec，我们可以使用 dialyzer 对代码进行静态分析，在运行之前发现很多低级或者隐藏的错误。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/21/54chen-twitter-memo-2011-08-21/">54chen Twitter Memo 2011-08-21</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-21T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+basho的产能：23个代码提供者，46个项目。这就是erlang的产能。 </ul><a href="http://twitter.com/54chen/statuses/104530288926916608" class="aktt_tweet_time">#</a>
+今天挺多人上不了gtalk，神马情况 <a href="http://twitter.com/54chen/statuses/104442815542595584" class="aktt_tweet_time">#</a>
+Rebar是一款Erlang的构建工具，使用它可以方便的编译、测试erlang程序、内联驱动和打包Erlang发行版本。 <a href="http://t.co/jzC5m5k" rel="nofollow">http://t.co/jzC5m5k</a> <a href="http://twitter.com/54chen/statuses/104007717047382016" class="aktt_tweet_time">#</a>
+艳阳高照，小米手机于今天正式发布。http://xiaomi.com <a href="http://twitter.com/54chen/statuses/103280928717160448" class="aktt_tweet_time">#</a>
+记hadoop故障一例：BlockAlreadyExistsException <a href="http://t.co/C1K4DZi" rel="nofollow">http://t.co/C1K4DZi</a> <a href="http://twitter.com/54chen/statuses/103094281211883520" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-08-14 <a href="http://t.co/tQPFCNF" rel="nofollow">http://t.co/tQPFCNF</a> <a href="http://twitter.com/54chen/statuses/102548332869730304" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/15/hive-hadoop-blockalreadyexistsexception/">记hadoop故障一例：BlockAlreadyExistsException</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="" />
+hive版本：0.7.0 hadoop版本：0.20.2 <br />
+在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。</p>
+
+<p>在hive执行时留下的蛛丝马迹：
+<blockquote>Failed with exception org.apache.hadoop.hdfs.server.namenode.NotReplicatedYetException: Not replicated yet:/tmp/hive-root/hive_2011-08-15_00-31-02_332_247809173824307798/-ext-10000/access_bucket-2011-08-14_00004<br />
+        at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getAdditionalBlock(FSNamesystem.java:1257)<br />
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.addBlock(NameNode.java:422)<br />
+        at sun.reflect.GeneratedMethodAccessor2037.invoke(Unknown Source)<br />
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br />
+        at java.lang.reflect.Method.invoke(Method.java:597)<br />
+        at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:508)<br />
+        at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:959)<br />
+        at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:955)<br />
+        at java.security.AccessController.doPrivileged(Native Method)<br />
+        at javax.security.auth.Subject.doAs(Subject.java:396)<br />
+        at org.apache.hadoop.ipc.Server$Handler.run(Server.java:953)</blockquote></p>
+
+<p>FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.CopyTask</p>
+
+<p>在DN中发现：</p>
+
+<p><blockquote>2011-08-15 00:47:09,138 INFO org.apache.hadoop.hdfs.server.datanode.DataNode: writeBlock blk_8964076545845199727_216399 received exception org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br />
+2011-08-15 00:47:09,138 ERROR org.apache.hadoop.hdfs.server.datanode.DataNode: DatanodeRegistration(192.168.1.23:50010, storageID=DS-52195649-192.168.1.23-50010-1299427987620, infoPort=50075, ipcPort=50020):DataXceiver<br />
+org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br />
+        at org.apache.hadoop.hdfs.server.datanode.FSDataset.writeToBlock(FSDataset.java:983)<br />
+        at org.apache.hadoop.hdfs.server.datanode.BlockReceiver.<init>(BlockReceiver.java:98)<br />
+        at org.apache.hadoop.hdfs.server.datanode.DataXceiver.writeBlock(DataXceiver.java:259)<br />
+        at org.apache.hadoop.hdfs.server.datanode.DataXceiver.run(DataXceiver.java:103)<br />
+        at java.lang.Thread.run(Thread.java:662)</init></blockquote></p>
+
+<p>2011-08-15 00:47:15,366 WARN org.apache.hadoop.util.Shell: Could not get disk usage information<br />
+org.apache.hadoop.util.Shell$ExitCodeException: du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018_216371.meta': No such file or directory<br />
+du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018': No such file or directory</p>
+
+<p>        at org.apache.hadoop.util.Shell.runCommand(Shell.java:195)<br />
+        at org.apache.hadoop.util.Shell.run(Shell.java:134)<br />
+        at org.apache.hadoop.fs.DU.access$200(DU.java:29)<br />
+        at org.apache.hadoop.fs.DU$DURefreshThread.run(DU.java:84)<br />
+        at java.lang.Thread.run(Thread.java:662)</p>
+
+<p> <br />
+看着像是DN写入的时候遇到了服务不响应，google追了一把，发现DN上全都忘记设置ulimit了，汗：<br />
+ulimit -SHn 18912</p>
+
+<p><strong>参考：</strong>
+http://www.cloudera.com/blog/2009/03/configuration-parameters-what-can-you-just-ignore/<br />
+http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/<br />
+http://sudhirvn.blogspot.com/2010/07/hadoop-error-logs-orgapachehadoophdfsse.html
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/14/54chen-twitter-memo-2011-08-14/">54chen Twitter Memo 2011-08-14</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+祝贺@laruence php开发组中唯一的中国人，哥学社的骄傲！ </ul><a href="http://www.blog-brother.com/" rel="nofollow">http://www.blog-brother.com/</a> <a href="http://twitter.com/54chen/statuses/101629857879965696" class="aktt_tweet_time">#</a>
+早上学习了@淘宝褚霸 的erlang心得，一起吃完中饭，现在在听多玩cto通礼分享经验。 <a href="http://twitter.com/54chen/statuses/100813570069106688" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-08-07 <a href="http://goo.gl/fb/8jERf" rel="nofollow">http://goo.gl/fb/8jERf</a> <a href="http://twitter.com/54chen/statuses/100033001517363201" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/07/54chen-twitter-memo-2011-08-07/">54chen Twitter Memo 2011-08-07</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+小米米聊团队招聘各类高手：主攻方向MapReduce，HiveSQL，DW实施，ETL设计。欢迎中高级选手简历 </ul><a href="mailto:chenzhen@xiaomi.com">chenzhen@xiaomi.com</a>。 <a href="http://twitter.com/54chen/statuses/98677562057834496" class="aktt_tweet_time">#</a>
+redmine极速安装手记 <a href="http://goo.gl/fb/5zT5D" rel="nofollow">http://goo.gl/fb/5zT5D</a> <a href="http://twitter.com/54chen/statuses/98554959926263808" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-07-31 <a href="http://goo.gl/fb/0GQ5D" rel="nofollow">http://goo.gl/fb/0GQ5D</a> <a href="http://twitter.com/54chen/statuses/97484589886476288" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/03/redmine-install-fast-detail/">Redmine极速安装手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-03T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1RF46XddFXXXANWHX_084227.jpg" alt="redmine install ubuntu" />
+Redmine是用Ruby开发的基于基于web的项目管理软件，是用ROR框架开发的一套跨平台项目管理系统，系统通过“项目（Project）”的形式把成员、任务（问题）、文档、讨论以及各种形式的资源组织在一起，大家参与更新任务、文档等内容来推动项目的进度，同时系统利用时间线索和各种动态的报表形式来自动给成员汇报项目进度。</p>
+
+<p>机器环境：</p>
+
+<p><blockquote>ubuntu 10.04 dell optiplex 380<br />
+root权限下操作</blockquote></p>
+
+<p>1）apt-get install mysql-client mysqld-server</p>
+
+<p>2)进mysql:</p>
+
+<p><blockquote>create database redmine_default;<br />
+GRANT all ON redmine_default.* TO root@'%' IDENTIFIED BY 'miliao';<br />
+FLUSH PRIVILEGES ;</blockquote></p>
+
+<p>3)apt-get install redmine redmine-mysql subversion libapache2-mod-passenger</p>
+
+<p>4)ln -s /usr/share/redmine/public /var/www/redmine</p>
+
+<p>5)a2enmod passenger</p>
+
+<p>6)chmod a+x /usr/share/redmine/public</p>
+
+<p>7)/etc/apache2/sites-available/default<br />
+增加：</p>
+
+<p><blockquote>&lt;Directory /var/www/redmine&gt;<br />
+RailsBaseURI /redmine<br />
+PassengerResolveSymlinksInDocumentRoot on<br />
+&lt;/Directory&gt;</blockquote></p>
+
+<p>8)/etc/init.d/apache2 restart<br />
+9)打开 http://xxx/redmine</p>
+
+<p>排查问题：<br />
+1） /var/log/redmine下有500的原因<br />
+2）中文乱码问题：</p>
+
+<p><blockquote>上述第8步时，不要着急做配置。把redmine_default整个数据库导出来，替换其中的charset=laitin1为charset=utf8，清空原表重新导入后再用admin/admin登录重新配置。</blockquote></p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/31/54chen-twitter-memo-2011-07-31/">54chen Twitter Memo 2011-07-31</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-31T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+hudson重启jobs丢失：jobs都是定义在$HUDSON_HOME里，缺省~/.hudson，重启前后不相等就会找不到原来的jobs。http://www.54chen.com/java-ee/ci-tool-hudson-usage.html </ul><a href="http://twitter.com/54chen/statuses/96431803556052993" class="aktt_tweet_time">#</a>
+小成本，大制作；小工具，大效率。 <a href="http://twitter.com/54chen/statuses/96431240693039105" class="aktt_tweet_time">#</a>
+hive 0.7.0代码分析解读 <a href="http://goo.gl/fb/7o7E5" rel="nofollow">http://goo.gl/fb/7o7E5</a> <a href="http://twitter.com/54chen/statuses/96131241954394112" class="aktt_tweet_time">#</a>
+<a href="https://issues.apache.org/jira/browse/HIVE-2181" rel="nofollow">https://issues.apache.org/jira/browse/HIVE-2181</a>  hadoop hive定义的scratch.dir在长时间运行后目录巨大，hive0.8.0将解决这一问题，在hive重启的时候，这办法有点土。 <a href="http://twitter.com/54chen/statuses/95435135268294656" class="aktt_tweet_time">#</a>
+RT 邵峰  : 温：我们不会判你死刑。赖：谢谢总理。温：在外这么多年，想家不想？赖：想，做梦都想。温：我让地方上安排一下，你下午就回家看看，拿着这个。赖接过一张动车一等座票.....你们懂的 <a href="http://twitter.com/54chen/statuses/95315027715821568" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-07-24 <a href="http://goo.gl/fb/DVCZl" rel="nofollow">http://goo.gl/fb/DVCZl</a> <a href="http://twitter.com/54chen/statuses/94949621956231169" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/27/hive-0-7-0-source-code-detail/">Hive 0.7.0代码分析解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1sUV8Xk4sXXablPM9_104155.jpg" alt="hadoop hive" /></p>
+
+<p><strong>入口：</strong>
+bin/hive脚本中，环境检查后执行ext中的cli.sh，进入主类：CliDriver.main。</p>
+
+<p><strong>CliDriver.main:</strong>
+把分号隔开命令进cli.processLine，再进processCmd。</p>
+
+<p><strong>processCmd:</strong>
+处理quit/exit，再处理source，处理！，处理list；else建立CommandProcessor(实现有Driver和各种Processor)，set/dfs/add/delete命令有单独的Processor，剩下的走Driver。</p>
+
+<p><strong>如果是Driver类型的Processor：</strong>
+把cmd发到这个driver的run，再进到compile，在compile中，用一个parseDriver去生成ASTNode(生成使用了antlr，主要过程：经过文法分析器切割，进解析器，出来一个TREE)，这里有细节的compile的过程说明 http://fromheartgo.wordpress.com/2010/04/02/hive%E7%9A%84compile%E8%BF%87%E7%A8%8B%EF%BC%881%EF%BC%89/ ；<br />
+根据得到的ASTNode，开始语义分析，把结果设置到一个QueryPlan对象中，初始化一些task放在QueryPlan中；</p>
+
+<p>run里的test only代码读了test.serialize.qplan的设置，test状态会把这些查询记录写到文件里；权限检查。</p>
+
+<p>退出complie，在Driver的run中分解执行MR后，退出来到了processCmd:<br />
+如果装填一切正常，通过getResults取到MR运行结果。</p>
+
+<p>插一句，54chen最近在各处只谈政治，不谈技术，罪过罪过，只因看不下去了。</p>
+
+<p><strong>全过程如下：</strong></p>
+
+<p>CliDriver.main > processLine > processCmd >> Driver.run(cmd) > compile >> BaseSemanticAnalyzer >> xxxSemanticAnalyzer（常规select走SemanticAnalyzer） > analyze(sem.analyze) >> SemanticAnalyzer的analyzeInternal方法 >> new Optimizer.optimize（进行列剪裁等优化后生成Task） >  genMapRedTasks >> 返回到Driver.run(cmd) >>ret = execute() >> launchTask >> TaskRunner.run > Task.executeTask > ExecDriver.execute > 执行MR（submitJob） >> getResults.
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="19">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="17">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

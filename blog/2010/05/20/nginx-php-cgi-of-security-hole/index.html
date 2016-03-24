@@ -110,13 +110,13 @@ http://docs.php.net/manual/zh/ &hellip;">
 <p>具体的重现过程，用php代码修改后缀名后上传，比如说www.xxx.com/1.jpg，访问的时候用www.xxx.com/1.jpg/xxx.php
 <blockquote><strong><span style="color: #ff0000;">这段jpg代码将会被执行！！！</span></strong></blockquote>
 <a href="http://docs.php.net/manual/zh/ini.core.php">http://docs.php.net/manual/zh/ini.core.php</a>
-cgi.fix_pathinfo &#8220;1&#8221; PHP_INI_ALL 从 PHP 4.3.0 起可用 <strong><span style="color: #ff0000;">请注意：默认为1</span></strong></p>
+cgi.fix_pathinfo "1" PHP_INI_ALL 从 PHP 4.3.0 起可用 <strong><span style="color: #ff0000;">请注意：默认为1</span></strong></p>
 
 <p><strong>解决办法：</strong>
 1.修改php.ini中的cgi.cgi.fix_pathinfo为0（<span style="text-decoration: underline;">即使你在php.ini中没有搜到，也要设置，没有搜到表示默认为1</span>）<br />
 2.判断文件上传类型时使用严格的判断，至于怎么判断，参见：<a href="http://www.54chen.com/php-tech/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program.html">http://www.54chen.com/php-tech/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program.html</a>
 3.把nginx的判断正则修改为去除/<br />
-if ( $fastcgi_script_name ~ &#46;.*\/.*php ) {<br />
+if ( $fastcgi_script_name ~ \..*\/.*php ) {<br />
 return 403;<br />
 }</p>
 

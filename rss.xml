@@ -4,8 +4,122 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2016-02-02T12:01:13+08:00</pubDate>
+        <pubDate>2016-03-24T21:18:45+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg alt=c></p>
+
+<p>在c++中使用protobuf的时候，大多数元素，我们可以直接set_xxx，如果有嵌套进去一个对象，会有set_allocated_xxx的方法和mutable_xxx的方法。</p>
+
+<p>这里有一个坑。</p>
+
+<h2>现象</h2>
+
+<p>首先，看pb定义：</p>
+
+<!--more-->
+
+
+
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">package</span> <span class="n">test</span><span class="p">;</span>
+<span class="n">message</span> <span class="n">a</span><span class="p">{</span>
+    <span class="n">required</span> <span class="n">uint32</span> <span class="n">aa</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">message</span> <span class="n">b</span><span class="p">{</span>
+    <span class="n">required</span> <span class="n">a</span> <span class="n">aaa</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+
+<p>如果使用set_allocated_aaa，同时传入了一个定义好的a，而不是new的a，如下：</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">bad_case</span><span class="p">(){</span>
+    <span class="n">a</span> <span class="n">aa</span><span class="p">;</span>
+    <span class="n">b</span> <span class="n">bb</span><span class="p">;</span>
+    <span class="n">aa</span><span class="p">.</span><span class="n">set_aa</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">bb</span><span class="p">.</span><span class="n">set_allocated_aaa</span><span class="p">(</span><span class="o">&amp;</span><span class="n">aa</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+
+<p>编译的时候不会有错误，一运行就出问题了：</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">***</span> <span class="n">glibc</span> <span class="n">detected</span> <span class="o">***</span> <span class="p">.</span><span class="o">/</span><span class="n">test</span><span class="p">.</span><span class="nl">run</span><span class="p">:</span> <span class="kt">double</span> <span class="n">free</span> <span class="n">or</span> <span class="n">corruption</span> <span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">:</span> <span class="mh">0x00007fffc65ade20</span> <span class="o">***</span></code></pre></div>
+
+
+<h2>正确的写法</h2>
+
+<p>下面的写法，不会有问题：</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">int</span> <span class="nf">good_case1</span><span class="p">(){</span>
+    <span class="n">a</span><span class="o">*</span> <span class="n">aa</span> <span class="o">=</span> <span class="n">new</span> <span class="n">a</span><span class="p">();</span>
+    <span class="n">b</span> <span class="n">bb</span><span class="p">;</span>
+    <span class="n">aa</span><span class="o">-&gt;</span><span class="n">set_aa</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">bb</span><span class="p">.</span><span class="n">set_allocated_aaa</span><span class="p">(</span><span class="n">aa</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+
+<p>下面的写法，也不会有问题：</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kt">void</span> <span class="nf">good_case2</span><span class="p">(){</span>
+    <span class="n">a</span> <span class="n">aa</span><span class="p">;</span>
+    <span class="n">b</span> <span class="n">bb</span><span class="p">;</span>
+    <span class="n">aa</span><span class="p">.</span><span class="n">set_aa</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+    <span class="n">bb</span><span class="p">.</span><span class="n">mutable_aaa</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">MergeFrom</span><span class="p">(</span><span class="n">aa</span><span class="p">);</span>
+<span class="p">}</span></code></pre></div>
+
+
+<h2>原因</h2>
+
+<p>在pb生成的对象中，析构函数统一都要进行对象的delete操作：</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">b</span><span class="o">::~</span><span class="n">b</span><span class="p">()</span> <span class="p">{</span>
+  <span class="c1">// @@protoc_insertion_point(destructor:test.b)</span>
+  <span class="n">SharedDtor</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">b</span><span class="o">::</span><span class="n">SharedDtor</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">this</span> <span class="o">!=</span> <span class="n">default_instance_</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">delete</span> <span class="n">aaa_</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></div>
+
+
+<p>通过定义得到的一个变量，只在栈上临时生成，在函数生命周期后自动清理，而将地址给了一个pb后，执行结束时会进行手动delete，从而导致了double free。</p>
+
+<p>通过new得到的一个对象，放在堆上，手动delete才会清理。</p>
+
+<p>good_case2正确的原因，是因为mutable_aaa的代码里new了一个a。</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="kr">inline</span> <span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">a</span><span class="o">*</span> <span class="n">b</span><span class="o">::</span><span class="n">mutable_aaa</span><span class="p">()</span> <span class="p">{</span>
+  <span class="n">set_has_aaa</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">aaa_</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="n">aaa_</span> <span class="o">=</span> <span class="n">new</span> <span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">a</span><span class="p">;</span>
+  <span class="c1">// @@protoc_insertion_point(field_mutable:test.b.aaa)</span>
+  <span class="k">return</span> <span class="n">aaa_</span><span class="p">;</span>
+<span class="p">}</span></code></pre></div>
+
+
+<h2>结论</h2>
+
+<p>使用pb的set_allocated_xxx要小心，没有显式allocate的东西不要往里传。</p>
+
+<p>文中涉及的代码地址：<a href="https://github.com/54chen/test">https://github.com/54chen/test</a></p>
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[c++ protobuf中set_allocated引起的double free core dump]]></title>
+            <link>http://2014.54chen.com/blog/2016/03/24/protobuf-double-free/</link>
+            <pubDate>2016-03-24T16:09:04+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2016/03/24/protobuf-double-free</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -140,9 +254,9 @@
 </ul>
 
 
-<p>&mdash; 这应该是xxx的问题，和我们这边没有关系。</p>
+<p>&ndash; 这应该是xxx的问题，和我们这边没有关系。</p>
 
-<p>&mdash; 这可能由于xxx超时引起的，我们也没有办法。</p>
+<p>&ndash; 这可能由于xxx超时引起的，我们也没有办法。</p>
 
 <ul>
 <li>很多很容易发现的问题就这样放松了警惕，慢慢积累成了重大问题。</li>
@@ -157,11 +271,11 @@
 </ul>
 
 
-<p>&mdash; 这可能是YYY的问题，我们没有办法。</p>
+<p>&ndash; 这可能是YYY的问题，我们没有办法。</p>
 
-<p>&mdash; 这大把握是YYY的原因，和某某没有关系。</p>
+<p>&ndash; 这大把握是YYY的原因，和某某没有关系。</p>
 
-<p>&mdash; 不要猜。（老大发话，很关键）</p>
+<p>&ndash; 不要猜。（老大发话，很关键）</p>
 
 <ul>
 <li><p>然后B团队各部门协作起来，层层剥皮，剥洋葱一样的找到了问题在哪里，防患于未然。</p></li>
@@ -177,11 +291,11 @@
 </ul>
 
 
-<p>&mdash; 这个不是我负责的，我也不清楚细节。</p>
+<p>&ndash; 这个不是我负责的，我也不清楚细节。</p>
 
-<p>&mdash; 这个事情需要修改代码上线才行。</p>
+<p>&ndash; 这个事情需要修改代码上线才行。</p>
 
-<p>&mdash; 这个项目我没有参与。</p>
+<p>&ndash; 这个项目我没有参与。</p>
 
 <ul>
 <li><p>然后这个问题被踢来踢去，直到找到会解决的人，问题才有所缓解。</p></li>
@@ -189,17 +303,17 @@
 </ul>
 
 
-<p>&mdash; 这个不是我负责的，我也不清楚细节。</p>
+<p>&ndash; 这个不是我负责的，我也不清楚细节。</p>
 
-<p>&mdash; 你是团队的一员，不要告诉No。（老大发话，很关键）</p>
+<p>&ndash; 你是团队的一员，不要告诉No。（老大发话，很关键）</p>
 
-<p>&mdash; 这个事情需要修改代码上线才行。</p>
+<p>&ndash; 这个事情需要修改代码上线才行。</p>
 
-<p>&mdash; 那就动手。（老大发话，很关键）</p>
+<p>&ndash; 那就动手。（老大发话，很关键）</p>
 
-<p>&mdash; 这个项目我没有参与。</p>
+<p>&ndash; 这个项目我没有参与。</p>
 
-<p>&mdash; 现在就参与，不要说No。（老大发话，很关键）</p>
+<p>&ndash; 现在就参与，不要说No。（老大发话，很关键）</p>
 
 <ul>
 <li><p>然后B团队中，成员的能量是无限大的，任何有能力的成员，都将在各个方面闪光。</p></li>
@@ -880,7 +994,7 @@
 
 <ul>
 <li>SelectorProvider在Solaris上有新实现（基于Solaris事件端口机制）。这种SelectorProvider有可能在一些工作负荷下有可能会提升性能和扩展性。/dev/poll这种SelectorProvider依旧是默认的。要使用Solaris事件端口机制，启动的时候要设置系统属性java.nio.channels.spi.Selector为sun.nio.ch.EventPortSelectorProvider。</li>
-<li>将&lt;JDK_HOME>/jre/lib/charsets.jar文件大小减小。</li>
+<li>将<JDK_HOME>/jre/lib/charsets.jar文件大小减小。</li>
 <li>java.lang.String(byte[], *)构造函数和java.lang.String.getBytes()方法的性能改善。</li>
 </ul>
 
@@ -1008,10 +1122,10 @@
 <blockquote><p>设置/etc/pptpd.conf中的localip与remoteip，分别表示虚拟出来的双方ip范围。
 <br>设置/etc/ppp/chap-secrets中的用户名密码和连接ip等。
 <br>service pptpd start
-<br>iptables -A FORWARD -p tcp &mdash;syn -s 172.16.36.0/24 -j TCPMSS &mdash;set-mss 1356</p></blockquote></li>
+<br>iptables -A FORWARD -p tcp &ndash;syn -s 172.16.36.0/24 -j TCPMSS &ndash;set-mss 1356</p></blockquote></li>
 <li><p>client上apt-get install安装的pptpsetup，设置好用户名密码，启动vpn连接。</p>
 
-<blockquote><p>/usr/sbin/pptpsetup &mdash;create vpn &mdash;server <em>.</em>.<em>.</em>(server ip) &mdash;username vpn &mdash;password ASDF &mdash;encrypt &mdash;start</p></blockquote></li>
+<blockquote><p>/usr/sbin/pptpsetup &ndash;create vpn &ndash;server <em>.</em>.<em>.</em>(server ip) &ndash;username vpn &ndash;password ASDF &ndash;encrypt &ndash;start</p></blockquote></li>
 <li><p>pptpd v1.4.0</p></li>
 </ul>
 
@@ -1275,11 +1389,9 @@ int i = sc.read(buff)</p></blockquote>
 
 <h1>四、从kernel的角度</h1>
 
-<blockquote><p>static int unix_stream_recvmsg(struct kiocb <em>iocb, struct socket </em>sock,</p>
-
-<pre><code>        struct msghdr *msg, size_t size,
-        int flags)
-</code></pre></blockquote>
+<blockquote><p>static int unix_stream_recvmsg(struct kiocb <em>iocb, struct socket </em>sock,
+            struct msghdr *msg, size_t size,
+            int flags)</p></blockquote>
 
 <ul>
 <li><a href="http://blog.chinaunix.net/uid-23629988-id-3035613.html">http://blog.chinaunix.net/uid-23629988-id-3035613.html</a></li>
@@ -1843,7 +1955,7 @@ int i = sc.read(buff)</p></blockquote>
 <h2>架子</h2>
 
 <ul>
-<li>ComponentRegistrator:本身是一种组件，专用于注册各种组件。registr &ndash;> addComponent</li>
+<li>ComponentRegistrator:本身是一种组件，专用于注册各种组件。registr -> addComponent</li>
 <li>MessageReceiver:本身是一种组件，专用于收消息。也叫Router，因为消息内容在此类组件中流动。</li>
 <li><p>XMPPService:本身是一种组件，专用于显示serviceDiscovery时的名称啥的。大作用没有。</p></li>
 <li><p>AbstractMessageReceiver:高级一点的组件，基于MessageReceiver、XMPPService，同时实现了很多细节，还搞了多个线程搞收和发。</p></li>
@@ -2018,8 +2130,8 @@ int i = sc.read(buff)</p></blockquote>
 <h1>第二轮：交叉调用</h1>
 
 <ul>
-<li>client 0.9.1 &ndash;> server 0.5.0 一切正常</li>
-<li>client 0.5.0 &ndash;> server 0.9.1 一切正常</li>
+<li>client 0.9.1 -> server 0.5.0 一切正常</li>
+<li>client 0.5.0 -> server 0.9.1 一切正常</li>
 </ul>
 
 
@@ -2057,98 +2169,6 @@ int i = sc.read(buff)</p></blockquote>
             <link>http://2014.54chen.com/blog/2014/05/28/thrift-upgrade/</link>
             <pubDate>2014-05-28T16:59:27+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2014/05/28/thrift-upgrade</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p>事情的经过是这样的：</p>
-
-<p>那天在使用某创业团队的APP时，输入完了微博账号还需要他自己的账号，于是就发了条微博，</p>
-
-<p><img width="450" src=http://chen54.b0.upaiyun.com/20140525/1.png></p>
-
-<p>然后就有人@我是不是在说小米被脱库的事。。。呵呵！</p>
-
-<p>这里要讨论的是，如何让数千计的开发人员在安全防守安全编程上，得到有效的效果。有人说，我干了xx年，手上从来没有一个项目出过安全漏洞; 还有人说，我一个人做的x项目，也从来没有出现过安全漏洞; 呵呵，集体的智慧不由个人意志来控制，木桶漏水取决于最短的一块。</p>
-
-<h1>一、内防</h1>
-
-<!--more-->
-
-
-<p>内防是需要苦练内功的一块，因为招聘标准不一导致技术团队的水平不一，一个上千人的技术团队，一定要有一定的固定流程进行上线质量的把控。</p>
-
-<h2>1.1 基础</h2>
-
-<p>基础包括了：基础代码框架、基础网络环境、基础硬件环境、基础系统环境。</p>
-
-<ul>
-<li>基础代码框架：统一的去除xss\sql注入等第一层的框架服务，确保出现在每个技术人员的入职学习流程中。</li>
-<li>基础网络环境：业务隔离和灵活兼顾的网络，对基础运维网络工程师有更高的要求，确保每一台新上线的机器都在正确安全的网络中。</li>
-<li>基础硬件环境：确保新的硬件出现在正确安全的地方，安全性要求高的硬件有固定的选择。</li>
-<li>基础系统环境：新系统的投入，有安全标准的套路安装和设置。</li>
-</ul>
-
-
-<h2>1.2 走查</h2>
-
-<p>走查使变动中的系统周期性也进行了安全检查。</p>
-
-<ul>
-<li>收集：主要是收集服务，因为公司大了，各种小业务未必会拿得全，特别要关注边缘业务。一个非常好的点，就是在上线系统中进行收集。</li>
-<li>查证：各种侦测手段，扫描脚本，应该流程化，代码化，尽可能缩短全公司运行时间，同时尽最大可能扩大面积。</li>
-</ul>
-
-
-<h2>1.3 紧跟</h2>
-
-<p>紧跟是各种开源软件如果正在被使用，需要对其安全变动公告进行紧跟。尽可能在重大漏洞发布后最短时间里解决，缩小影响时间。</p>
-
-<p>这里要求对全公司所使用的开源项目进行有效的登记记录工作，而且上千人的公司，很有可能会漏掉。一个非常好的点，就是在上线系统中进行开源项目检测。</p>
-
-<h2>1.4 重点</h2>
-
-<p>重点是指对经常报漏洞的项目进行重点关注，确保这些项目：1.不引用或保存重要数据 2.不与其他业务在受信网段 3.更加频繁的重复前面三点</p>
-
-<h2>1.5 重要</h2>
-
-<p>重要项目一定要坚持原则，绝对禁止数据的流动、绝对禁止明文重要数据的存放，即便是ceo说可以也不行。</p>
-
-<h1>二、外攻</h1>
-
-<p>外攻是指通过上面的一系列手段，依旧无法控制短板的项目或人出现，于是要做的事情就是尽一切手段尽快地把这短板找到。</p>
-
-<h2>2.1 外援</h2>
-
-<p>外援有很多，包括各种白帽平台、安全厂商平台。下血本也要和他们搞好关系，心甘情愿被敲诈，当有发现重大短板时第一时间取得联系是非常有效的。</p>
-
-<h2>2.2 自建</h2>
-
-<p>自建安全响应平台是对外援的补充，许多短板像xss sql注入都是很显而易见的问题，许多还不足以“下血本”，但积小成大，经常出现短板的团队，需要考虑技术培训等活动。</p>
-
-<h1>三、另类</h1>
-
-<p>非技术漏洞导致的泄密、个人管理密码被盗、VPN密码被盗等类似的另类事件，要求各部门不应该出现扁平化的权限控制系统，每人控制一块，可以减少个人失误扩大变成灾难。</p>
-
-<h1>四、总结</h1>
-
-<p>一个互联网技术企业，绝对不是老板出多少钱就一定不会再出现安全漏洞的，也不是老板出的钱越多就代表越重视的，真正的重视体现在研发人员的日常工作中。</p>
-
-<p>你的企业没有出现过安全问题，不代表你的团队没有短板，更不代表你的线上没有漏洞，更不代表你的用户数据没有在黑市上买卖。</p>
-
-<p>不在乎有没有漏洞，就是认真。</p>
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[安全无小事－－技术团队防守一二三]]></title>
-            <link>http://2014.54chen.com/blog/2014/05/25/security/</link>
-            <pubDate>2014-05-25T13:56:31+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/05/25/security</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>

@@ -165,8 +165,8 @@ public void run() {<br />
 while (true) {<br />
 try {<br />
 long current = _c.get();<br />
-System.out.println(&#8220;Rate: &#8221; + (current - _last)<br />
-+ &#8221; req/s&#8221;);<br />
+System.out.println("Rate: " + (current - _last)<br />
++ " req/s");<br />
 _last = current;<br />
 Thread.sleep(1000L);<br />
 } catch (Throwable e) {<br />
@@ -180,14 +180,14 @@ e.printStackTrace();<br />
 <p>public static class EchoThread extends Thread {<br />
 private TDB tdb;<br />
 public EchoThread(String ip,String port, int in, ThreadGroup group){<br />
-super(group, &#8220;EchoThread-&#8221; + in);<br />
+super(group, "EchoThread-" + in);<br />
 // create the object<br />
 tdb = new TDB();</p>
 
 <p>// open the database<br />
-if(!tdb.open(&#8220;casket.tct&#8221;, TDB.OWRITER | TDB.OCREAT)){<br />
+if(!tdb.open("casket.tct", TDB.OWRITER | TDB.OCREAT)){<br />
 int ecode = tdb.ecode();<br />
-System.err.println(&#8220;open error: &#8221; + tdb.errmsg(ecode));<br />
+System.err.println("open error: " + tdb.errmsg(ecode));<br />
 }
 }</p>
 
@@ -199,16 +199,16 @@ try {</p>
 
 <p>String pkey = new Long(tdb.genuid()).toString();<br />
 Map cols = new HashMap();<br />
-cols.put(&#8220;name&#8221;, &#8220;mikio&#8221;+index);<br />
-cols.put(&#8220;age&#8221;, &#8220;30&#8221;);<br />
-cols.put(&#8220;lang&#8221;, &#8220;ja,en,c&#8221;);<br />
+cols.put("name", "mikio"+index);<br />
+cols.put("age", "30");<br />
+cols.put("lang", "ja,en,c");<br />
 if(!tdb.put(pkey, cols)){<br />
 int ecode = tdb.ecode();<br />
-//System.err.println(&#8220;put error: &#8221; + tdb.errmsg(ecode));<br />
+//System.err.println("put error: " + tdb.errmsg(ecode));<br />
 }</p>
 
-<p>//client.insert(&#8220;Table1&#8221;, &#8220;name&#8221;+index, &#8220;Standard1:name&#8221;, (&#8220;name&#8221;+index).getBytes(&#8220;UTF-8&#8221;), System.currentTimeMillis(), true);<br />
-//client.get_column(&#8220;Table1&#8221;, &#8220;name0&#8221;, &#8220;Standard1:name&#8221;);<br />
+<p>//client.insert("Table1", "name"+index, "Standard1:name", ("name"+index).getBytes("UTF-8"), System.currentTimeMillis(), true);<br />
+//client.get_column("Table1", "name0", "Standard1:name");<br />
 index ++;<br />
 Stat.getInstance().inc();<br />
 } catch (Throwable e) {<br />
@@ -218,7 +218,7 @@ break;<br />
 // close the database<br />
 if(!tdb.close()){<br />
 int ecode = tdb.ecode();<br />
-//System.err.println(&#8220;close error: &#8221; + tdb.errmsg(ecode));<br />
+//System.err.println("close error: " + tdb.errmsg(ecode));<br />
 }</p>
 
 <p>}<br />
@@ -233,7 +233,7 @@ int ecode = tdb.ecode();<br />
 public static void main(String[] args){<br />
 if (args.length != 1) {<br />
 System.out<br />
-.println(&#8220;Usage: Benchmark &#8220;);<br />
+.println("Usage: Benchmark ");<br />
 System.exit(1);<br />
 }</p>
 
@@ -241,9 +241,9 @@ System.exit(1);<br />
 String port = args[0];</p>
 
 <p>Integer concurrent = Integer.valueOf(args[0]);<br />
-System.out.println(&#8220;ip = &#8220;+ip+&#8221;,port = &#8220;+port+&#8221;,concurrent = &#8221; + concurrent);</p>
+System.out.println("ip = "+ip+",port = "+port+",concurrent = " + concurrent);</p>
 
-<p>ThreadGroup group = new ThreadGroup(&#8220;Benchmark&#8221;);<br />
+<p>ThreadGroup group = new ThreadGroup("Benchmark");<br />
 List<br />
 threads = new ArrayList<br />
 ();<br />

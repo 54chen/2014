@@ -107,10 +107,10 @@ color:#00FF00;<br />
 fontSize:20px;<br />
 }</p>
 
-<p><p style="text-indent: 15pt; line-height: 150%;"><strong><em>green.mxml</em></strong> &lt;?xml version=&#8221;1.0&#8221; encoding=&#8221;utf-8&#8221;?&gt;<br />
-&lt;mx:Application xmlns:mx=&#8221;http://www.macromedia.com/2003/mxml&#8221;&gt;</p>
+<p><p style="text-indent: 15pt; line-height: 150%;"><strong><em>green.mxml</em></strong> &lt;?xml version="1.0" encoding="utf-8"?&gt;<br />
+&lt;mx:Application xmlns:mx="http://www.macromedia.com/2003/mxml"&gt;</p>
 
-<p>&lt;mx:Style source=&#8221;green.<span>css</span>&#8220;&gt;&lt;/mx:Style&gt;</p>
+<p>&lt;mx:Style source="green.<span>css</span>"&gt;&lt;/mx:Style&gt;</p>
 
 <p>&lt;/mx:Application&gt;
 <p style="text-indent: 15pt; line-height: 150%;">类似的还有red.css/red.mxml,blue.css/blue.mxml。 然后，我们要切换到相应的CSS就直接LOAD相应的SWF文件； 最后，将_global.styles设置为所导入的SWF文件的_global.styles 。 这里有一个工具封装好的工具类:</p></p>
@@ -146,37 +146,37 @@ _source = value;</p>
 <p>if (loader == undefined)<br />
 {
 loader = Loader(_document.createClassObject(Loader,<br />
-&#8220;runtimeStyleLoader&#8221;, 21983));<br />
+"runtimeStyleLoader", 21983));<br />
 loader.width = loader.height = 0;<br />
-loader.addEventListener(&#8220;complete&#8221;,<br />
+loader.addEventListener("complete",<br />
 Delegate.create(this, loader_complete));<br />
 }</p>
 
-<p>loader.source = _source + &#8220;.swf&#8221;;<br />
+<p>loader.source = _source + ".swf";<br />
 }
 }</p>
 
 <p>private function loader_complete(event:Object):Void<br />
 {
 _global.styles = Loader(event.target).content._global.styles;<br />
-_document.styleName = _document.styleName == &#8220;!&#8221; ? &#8220;@&#8221; : &#8220;!&#8221;;<br />
+_document.styleName = _document.styleName == "!" ? "@" : "!";<br />
 }</p>
 
 <p>}</p>
 
-<p><p style="text-indent: 15pt; line-height: 150%;">测试代码：<strong><em>cssChg.mxml</em></strong>&lt;local:RuntimeStyle xmlns:local=&#8221;*&#8221;</p>
+<p><p style="text-indent: 15pt; line-height: 150%;">测试代码：<strong><em>cssChg.mxml</em></strong>&lt;local:RuntimeStyle xmlns:local="*"</p>
 
-<p>source=&#8221;{stylesWrappers.selectedItem.source}&#8221; /&gt;</p>
+<p>source="{stylesWrappers.selectedItem.source}" /&gt;</p>
 
-<p>&lt;mx:Model id=&#8221;alternateStyles&#8221;</p>
+<p>&lt;mx:Model id="alternateStyles"</p>
 
-<p>source=&#8221;alternateStyles.xml&#8221; /&gt;</p>
+<p>source="alternateStyles.xml" /&gt;</p>
 
-<p>&lt;mx:ComboBox id=&#8221;stylesWrappers&#8221;<br />
-dataProvider=&#8221;{alternateStyles.stylesheet}&#8221;<br />
-labelField=&#8221;name&#8221; selectedIndex=&#8221;-1&#8221; /&gt;</p>
+<p>&lt;mx:ComboBox id="stylesWrappers"<br />
+dataProvider="{alternateStyles.stylesheet}"<br />
+labelField="name" selectedIndex="-1" /&gt;</p>
 
-<p><strong><em>alternateStyles.xml</em></strong> &lt;?xml version=&#8221;1.0&#8221; encoding=&#8221;UTF-8&#8221;?&gt;<br />
+<p><strong><em>alternateStyles.xml</em></strong> &lt;?xml version="1.0" encoding="UTF-8"?&gt;<br />
 &lt;styles&gt;</p>
 
 <p>&lt;stylesheet&gt;<br />
@@ -222,7 +222,7 @@ labelField=&#8221;name&#8221; selectedIndex=&#8221;-1&#8221; /&gt;</p>
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

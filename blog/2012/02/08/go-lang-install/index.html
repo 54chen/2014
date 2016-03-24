@@ -127,7 +127,7 @@ arm (a.k.a. ARM); 5g,5l,5c,5a
 
 <p>最后会停在一段时间：</p>
 
-<p><blockquote>&#8212; cd ../test</blockquote></p>
+<p><blockquote>--- cd ../test</blockquote></p>
 
 <p>然后提示：</p>
 
@@ -135,7 +135,7 @@ arm (a.k.a. ARM); 5g,5l,5c,5a
 
 <p>ALL TESTS PASSED</p>
 
-<p>&#8212;<br />
+<p>---<br />
 Installed Go for linux/amd64 in /root/go.<br />
 Installed commands in /root/go/bin.<br />
 *** You need to add /root/go/bin to your $PATH. ***<br />
@@ -158,10 +158,10 @@ export PATH</blockquote></p>
 <p><blockquote>$ cat >hello.go <<EOF<br />
 package main</blockquote></p>
 
-<p>import &#8220;fmt&#8221;</p>
+<p>import "fmt"</p>
 
 <p>func main() {<br />
-	fmt.Printf(&#8220;hello, world\n&#8221;)<br />
+	fmt.Printf("hello, world\n")<br />
 }
 EOF<br />
 $ 6g hello.go<br />

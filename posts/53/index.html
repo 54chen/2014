@@ -1,0 +1,1526 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="Wine 运行 Tm Pv4版本 wget http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe 用wine运行安装程序： wine tm2008preview4_sp2_chs.exe
+安装完成后，并不能运行，缺少一些dll。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/53">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/29/wine-%E8%BF%90%E8%A1%8C-tm-pv4%E7%89%88%E6%9C%AC/">Wine 运行 Tm Pv4版本</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>wget <a href="http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe">http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe</a></p>
+
+<p>用wine运行安装程序： wine tm2008preview4_sp2_chs.exe<br />
+安装完成后，并不能运行，缺少一些dll。将tm2008目录下SysDir目录下的各个子目录（Microsoft.VC80.ATL等5个子目录）下的所有dll文件拷贝到tm2008下的Bin目录中。将windows<br />
+xp下的system32目录下的msxml3.dll, msxml3r.dll, riched32.dll,<br />
+riched20.dll文件拷贝到.wine/drive_c/windows/system32/目录中。<br />
+运行winecfg，在library标签页下，添加msxml3、riched32、riched20。<br />
+然后就可以运行tm2008了。</p>
+
+<p>如果遇到中文乱码，注意做如下配置：<br />
+1 如果用的英文locale，记得改成中文再启动wine。即export LANG=zh_CN.UTF-8<br />
+2 配置中文字体。将windows下的simsun.ttc拷贝到~/.fonts/目录下，然后运行regedit，修改HKEY_LOCAL_MACHINE\Software\Microsoft\Windows<br />
+NT\CurrentVersion\FontSubstitutes\ 下的所有键值，将他们都改成SimSun。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/29/ubuntu-710-install-wine-records/">Ubuntu 7.10 安装wine记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>cz@cz-desktop:~$ wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -<br />
+OK<br />
+cz@cz-desktop:~$ sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/gutsy.list -O /etc/apt/sources.list.d/winehq.list</p>
+
+<p>cz@cz-desktop:~$ sudo apt-get update</p>
+
+<p>cz@cz-desktop:~$ sudo apt-get install wine</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/29/64%E4%BD%8Dubuntu-wine10-%E5%AE%89%E8%A3%85qq/">64位ubuntu wine1.0 安装qq</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>环境比较特殊 注意是64的i386就不要看了<br />
+{安装wine:}<br />
+1.添加签名<br />
+wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -<br />
+2.更新WINE源<br />
+sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/hardy.list -O /etc/apt/sources.list.d/winehq.list<br />
+3.更新软件包<br />
+sudo apt-get update<br />
+4.安装WINE<br />
+sudo apt-get install wine</p>
+
+<p>{设置wine:}</p>
+
+<p>Wine快速设置 deb包 for amd64的下载地址是：</p>
+
+<p><a href="http://ubuntu-tweak.googlecode.com/files/wine-ubuntu_amd64.deb">http://ubuntu-tweak.googlecode.com/files/wine-ubuntu_amd64.deb</a></p>
+
+<p>顺便再加上之前的for i386的：</p>
+
+<p><a href="http://ubuntu-tweak.googlecode.com/files/wine-ubuntu.deb">http://ubuntu-tweak.googlecode.com/files/wine-ubuntu.deb </a>
+{使用QQ}
+<span class="postbody"><span style="font-weight: bold;">Wine的版本</span>:<br />
+Wine 1.0 (默认中文补丁,有打过补丁的Wine1.0下载,见下面)<br />
+windowssux已经把8.04-32bits的deb包(包括中文补丁)做出来了，在<a class="postlink" href="http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/" target="_blank">http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/</a>。<br />
+登录的用户名和密码在<a class="postlink" href="http://forum.ubuntu.org.cn/viewtopic.php?t=9685" target="_blank">http://forum.ubuntu.org.cn/viewtopic.php?t=9685</a>。</span></p>
+
+<p><span style="font-weight: bold;">Wine的注册表</span>
+修改过的内容如下,请给这个文件保存成QQ2007.reg<br />
+REGEDIT4<br />
+[HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe]<br />
+"Version"="vista"<br />
+[HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe\DllOverrides]<br />
+"riched20"="native"<br />
+"riched32"="native"</p>
+
+<p>并使用下列命令导入<br />
+#regedit QQ2007.reg</p>
+
+<p><span style="font-weight: bold;">替换DLL文件</span>
+需要的 dll:: mfc42.dll msvcp60.dll 给上面的这二个dll放到~/.wine/drive_c/windows/system32/目录中<br />
+下面下载的那个qq2007beta1kb5_0.0.2007_x86.tgz中也有,也可以从windows的系统中找</p>
+
+<p><span style="font-weight: bold;">安装方法</span>
+下载:<a class="postlink" href="http://linuxfire.com.cn/%7Ehuahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz" target="_blank">http://linuxfire.com.cn/~huahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz</a>
+解压后,只使用这个中的那个QQ,原wine之类的配置文件不要了.</p>
+
+<p><span style="font-weight: bold;">运行</span>
+可以建一个下面这样的快捷方式,注意修复你的路径为你自己的.<br />
+env WINEPREFIX="/home/fukai/.wine" wine "Z:\home\fukai\qq2007beta1kb5\QQ\QQ.exe"</p>
+
+<p><span style="font-weight: bold;">在安装和使用程序时的注意事项</span>
+现发现的bug有快捷键不能用,视频有时会死机,传文件之类都非常正常</p>
+
+<p>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝<br />
+有空的时候再研究下一键安装 linux qq<br />
+为今天听到的马化腾说linux qq是假消息的消息默哀</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/28/intelligent-dns-configuration-process/">智能DNS配置过程</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-28T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>注：对于配置智能DNS，主要用途为：1、解决网通与电信问题 2、实现区域规划（不同区域访问各自最近的服务器），下面以解决网通与电信连接问题的配置。至于实现2的功能，只需稍加更改即可。<br />
+一、DNS服务器安装......................................................................................... 1<br />
+二、named.conf的配置....................................................................................... 2<br />
+三、更新根区文件：.......................................................................................... 3<br />
+四、建立启动脚本：.......................................................................................... 4<br />
+五、添加一个NS............................................................................................... 5<br />
+六、添加一个域名.............................................................................................. 5<br />
+附：获取IP地址范围方法:................................................................................. 7<br />
+一、DNS服务器安装<br />
+1、 软件列表<br />
+BIND 9.3.2<br />
+ftp://ftp.isc.org/isc/bind9/9.3.2/bind-9.3.2.tar.gz<br />
+ftp://ftp.isc.org/isc/bind9/9.4.0a6/bind-9.4.0a6.tar.gz<br />
+2、 安装BIND 9<br />
+安装BIND9：<br />
+# tar zxvf bind-9.3.2.tar.gz<br />
+# cd bind-9.3.2<br />
+# ./configure --prefix=/usr/local/named --disable-ipv6<br />
+# make &amp;&amp; make install<br />
+建立BIND用户：<br />
+# groupadd bind<br />
+# useradd -g bind -d /usr/local/named -s /sbin/nologin bind<br />
+创建配置文件目录：<br />
+# mkdir –p /usr/local/named/etc<br />
+# chown bind:bind /usr/local/named/etc<br />
+# chmod 700 /usr/local/named/etc<br />
+二、named.conf的配置<br />
+创建主要的配置文件：<br />
+# vi /usr/local/named/etc/named.conf<br />
+===========================named.conf=======================<br />
+acl "trust-lan" { 127.0.0.1/8; 192.168.0.0/16;};<br />
+options {<br />
+directory "/usr/local/named/etc/";<br />
+pid-file "/var/run/named/named.pid";<br />
+version "0.0.0";<br />
+datasize 40M;<br />
+allow-transfer {<br />
+"trust-lan";};<br />
+recursion yes;<br />
+allow-notify {<br />
+"trust-lan";<br />
+};<br />
+allow-recursion {<br />
+"trust-lan";<br />
+};<br />
+auth-nxdomain no;<br />
+forwarders {<br />
+211.162.106.9;<br />
+211.162.106.254;};<br />
+};<br />
+logging {<br />
+channel warning<br />
+{ file "/var/log/named/dns_warnings" versions 3 size 1240k;<br />
+severity warning;<br />
+print-category yes;<br />
+print-severity yes;<br />
+print-time yes;<br />
+};<br />
+channel general_dns<br />
+{ file "/var/log/named/dns_logs" versions 3 size 1240k;<br />
+severity info;<br />
+print-category yes;<br />
+print-severity yes;<br />
+print-time yes;<br />
+};<br />
+category default { warning; };<br />
+category queries { general_dns; };<br />
+};<br />
+zone "." {<br />
+type hint;<br />
+file "named.root";<br />
+};<br />
+acl "CNC" {<br />
+58.16.0.0/16;<br />
+58.17.0.0/17;<br />
+58.17.128.0/17;<br />
+58.18.0.0/16;<br />
+58.19.0.0/16;<br />
+58.20.0.0/16;<br />
+58.21.0.0/16;<br />
+注：这些根据情况输入IP地址段<br />
+};<br />
+view "view_cnc" {<br />
+match-clients { CNC; };<br />
+zone "." {<br />
+type hint;<br />
+file "named.root";<br />
+};<br />
+zone "0.0.127.IN-ADDR.ARPA" {<br />
+type master;<br />
+file "localhost.rev";<br />
+};<br />
+include "master/cnc.def";<br />
+};<br />
+view "view_any" {<br />
+match-clients { any; };<br />
+zone "." {<br />
+type hint;<br />
+file "named.root";<br />
+};<br />
+zone "0.0.127.IN-ADDR.ARPA" {<br />
+type master;<br />
+file "localhost.rev";<br />
+};<br />
+include "master/telecom.def";<br />
+};<br />
+添加完成后，保存。<br />
+三、更新根区文件：<br />
+# cd /usr/local/named/etc/<br />
+# wget ftp://ftp.internic.org/domain/named.root<br />
+创建PID和日志文件：<br />
+# mkdir /var/run/named/<br />
+# chmod 777 /var/run/named/<br />
+# chown bind:bind /var/run/named/<br />
+# mkdir /var/log/named/<br />
+# touch /var/log/named/dns_warnings<br />
+# touch /var/log/named/dns_logs<br />
+# chown bind:bind /var/log/named/*<br />
+# mkdir master<br />
+# touch master/cnc.def<br />
+# touch master/telecom.def<br />
+生成rndc-key：<br />
+# cd /usr/local/named/etc/<br />
+# ../sbin/rndc-confgen &gt; rndc.conf<br />
+把rndc.conf中：<br />
+# Use with the following in named.conf, adjusting the allow list as needed:<br />
+后面以的部分加到/usr/local/named/etc/named.conf中并去掉注释<br />
+运行测试：<br />
+# /usr/local/named/sbin/named -gc /usr/local/named/etc/named.conf &amp;<br />
+状态检查：<br />
+# /usr/local/named/sbin/rndc status<br />
+四、建立启动脚本：<br />
+# vi /etc/init.d/named<br />
+============================== named.sh============================<br />
+#!/bin/bash<br />
+#
+# named a network name service.<br />
+#
+#<br />
+# chkconfig: 545 35 75<br />
+# description: a name server<br />
+#
+if [ `id -u` -ne 0 ]<br />
+then<br />
+echo "ERROR:For bind to port 53,must run as root."<br />
+exit 1<br />
+fi<br />
+case "" in<br />
+start)<br />
+if [ -x /usr/local/named/sbin/named ]; then<br />
+/usr/local/named/sbin/named -u bind -c /usr/local/named/etc/named.conf &amp;&amp; echo . &amp;&amp; echo 'BIND9 server started.'<br />
+fi<br />
+;;<br />
+stop)<br />
+kill `cat /var/run/named/pid` &amp;&amp; echo . &amp;&amp; echo 'BIND9 server stopped.'<br />
+;;<br />
+restart)<br />
+echo .<br />
+echo "Restart BIND9 server"<br />
+注：对于配置智能DNS，主要用途为：1、解决网通与电信问题 2、实现区域规划（不同区域访问各自最近的服务器），下面以解决网通与电信连接问题的配置。至于实现2的功能，只需稍加更改即可。<br />
+一、DNS服务器安装......................................................................................... 1<br />
+二、named.conf的配置....................................................................................... 2<br />
+三、更新根区文件：.......................................................................................... 3<br />
+四、建立启动脚本：.......................................................................................... 4<br />
+五、添加一个NS............................................................................................... 5<br />
+六、添加一个域名.............................................................................................. 5<br />
+附：获取IP地址范围方法:................................................................................. 7<br />
+一、DNS服务器安装<br />
+1、 软件列表<br />
+BIND 9.3.2<br />
+ftp://ftp.isc.org/isc/bind9/9.3.2/bind-9.3.2.tar.gz<br />
+ftp://ftp.isc.org/isc/bind9/9.4.0a6/bind-9.4.0a6.tar.gz<br />
+2、 安装BIND 9<br />
+安装BIND9：<br />
+# tar zxvf bind-9.3.2.tar.gz<br />
+# cd bind-9.3.2<br />
+# ./configure --prefix=/usr/local/named --disable-ipv6<br />
+# make &amp;&amp; make install<br />
+建立BIND用户：<br />
+# groupadd bind<br />
+# useradd -g bind -d /usr/local/named -s /sbin/nologin bind<br />
+创建配置文件目录：<br />
+# mkdir –p /usr/local/named/etc<br />
+# chown bind:bind /usr/local/named/etc<br />
+# chmod 700 /usr/local/named/etc<br />
+二、named.conf的配置<br />
+创建主要的配置文件：<br />
+# vi /usr/local/named/etc/named.conf<br />
+===========================named.conf=======================<br />
+acl "trust-lan" { 127.0.0.1/8; 192.168.0.0/16;};<br />
+options {<br />
+directory "/usr/local/named/etc/";<br />
+pid-file "/var/run/named/named.pid";<br />
+version "0.0.0";<br />
+datasize 40M;<br />
+allow-transfer {<br />
+"trust-lan";};<br />
+recursion yes;<br />
+allow-notify {<br />
+"trust-lan";<br />
+};<br />
+allow-recursion {<br />
+"trust-lan";<br />
+};<br />
+auth-nxdomain no;<br />
+forwarders {<br />
+211.162.106.9;<br />
+211.162.106.254;};<br />
+};<br />
+logging {<br />
+channel warning<br />
+{ file "/var/log/named/dns_warnings" versions 3 size 1240k;<br />
+severity warning;<br />
+print-category yes;<br />
+print-severity yes;<br />
+print-time yes;<br />
+};<br />
+channel general_dns<br />
+{ file "/var/log/named/dns_logs" versions 3 size 1240k;<br />
+severity info;<br />
+print-category yes;<br />
+print-severity yes;<br />
+print-time yes;<br />
+};<br />
+category default { warning; };<br />
+category queries { general_dns; };<br />
+};<br />
+zone "." {<br />
+type hint;<br />
+file "named.root";<br />
+};<br />
+acl "CNC" {<br />
+58.16.0.0/16;<br />
+58.17.0.0/17;<br />
+58.17.128.0/17;<br />
+58.18.0.0/16;<br />
+58.19.0.0/16;<br />
+58.20.0.0/16;<br />
+58.21.0.0/16;<br />
+注：这些根据情况输入IP地址段<br />
+};<br />
+view "view_cnc" {<br />
+match-clients { CNC; };<br />
+zone "." {<br />
+type hint;<br />
+file "named.root";<br />
+};<br />
+zone "0.0.127.IN-ADDR.ARPA" {<br />
+type master;<br />
+file "localhost.rev";<br />
+};<br />
+include "master/cnc.def";<br />
+};<br />
+view "view_any" {<br />
+match-clients { any; };<br />
+zone "." {<br />
+type hint;<br />
+file "named.root";<br />
+};<br />
+zone "0.0.127.IN-ADDR.ARPA" {<br />
+type master;<br />
+file "localhost.rev";<br />
+};<br />
+include "master/telecom.def";<br />
+};<br />
+添加完成后，保存。<br />
+三、更新根区文件：<br />
+# cd /usr/local/named/etc/<br />
+# wget ftp://ftp.internic.org/domain/named.root<br />
+创建PID和日志文件：<br />
+# mkdir /var/run/named/<br />
+# chmod 777 /var/run/named/<br />
+# chown bind:bind /var/run/named/<br />
+# mkdir /var/log/named/<br />
+# touch /var/log/named/dns_warnings<br />
+# touch /var/log/named/dns_logs<br />
+# chown bind:bind /var/log/named/*<br />
+# mkdir master<br />
+# touch master/cnc.def<br />
+# touch master/telecom.def<br />
+生成rndc-key：<br />
+# cd /usr/local/named/etc/<br />
+# ../sbin/rndc-confgen &gt; rndc.conf<br />
+把rndc.conf中：<br />
+# Use with the following in named.conf, adjusting the allow list as needed:<br />
+后面以的部分加到/usr/local/named/etc/named.conf中并去掉注释<br />
+运行测试：<br />
+# /usr/local/named/sbin/named -gc /usr/local/named/etc/named.conf &amp;<br />
+状态检查：<br />
+# /usr/local/named/sbin/rndc status<br />
+四、建立启动脚本：<br />
+# vi /etc/init.d/named<br />
+============================== named.sh============================<br />
+#!/bin/bash<br />
+#
+# named a network name service.<br />
+#
+#<br />
+# chkconfig: 545 35 75<br />
+# description: a name server<br />
+#
+if [ `id -u` -ne 0 ]<br />
+then<br />
+echo "ERROR:For bind to port 53,must run as root."<br />
+exit 1<br />
+fi<br />
+case "" in<br />
+start)<br />
+if [ -x /usr/local/named/sbin/named ]; then<br />
+/usr/local/named/sbin/named -u bind -c /usr/local/named/etc/named.conf &amp;&amp; echo . &amp;&amp; echo 'BIND9 server started.'<br />
+fi<br />
+;;<br />
+stop)<br />
+kill `cat /var/run/named/pid` &amp;&amp; echo . &amp;&amp; echo 'BIND9 server stopped.'<br />
+;;<br />
+restart)<br />
+echo .<br />
+echo "Restart BIND9 server"<br />
+stop<br />
+sleep 10<br />
+start<br />
+;;<br />
+*)<br />
+echo " start | stop | restart"<br />
+;;<br />
+esac<br />
+===============================named.sh============================<br />
+# chmod 755 /etc/init.d/named<br />
+# chown root:root /etc/init.d/named<br />
+# chkconfig --add named<br />
+# chkconfig named on<br />
+五、添加一个NS<br />
+在域名的管理网站上，设定NS服务器为你安装的DNS<br />
+六、添加一个域名<br />
+# cd /usr/local/named/etc/master<br />
+# mkdir cnc<br />
+# mkdir telecom<br />
+# vi cnc.def<br />
+添加<br />
+zone "724cn.com" {<br />
+type master;<br />
+file "master/cnc/724cn.com";<br />
+};<br />
+# vi telecom.def<br />
+添加<br />
+zone "724cn.com" {<br />
+type master;<br />
+file "master/telecom/724cn.com";<br />
+};<br />
+添加网通的解析，解析到的IP为61.45.55.78<br />
+#vi cnc/724cn.com<br />
+添加<br />
+$TTL 3600<br />
+$ORIGIN 724cn.com.<br />
+@ IN SOA ns.724cn.com. root.ns.724cn.com.(<br />
+2005121013 ;Serial<br />
+3600 ; Refresh ( seconds )<br />
+900 ; Retry ( seconds )<br />
+68400 ; Expire ( seconds )<br />
+15 );Minimum TTL for Zone ( seconds )<br />
+;
+@ IN NS ns.724cn.com.<br />
+@ IN A 211.162.106.9<br />
+www IN A 211.162.106.9<br />
+;
+;end<br />
+添加电信的解析，解析到的IP为210.75.1.178<br />
+#vi telecom/724cn.com<br />
+添加<br />
+$TTL 3600<br />
+$ORIGIN 724cn.com.<br />
+@ IN SOA ns.724cn.com. root.ns.724cn.com.(<br />
+2005121013 ;Serial<br />
+3600 ; Refresh ( seconds )<br />
+900 ; Retry ( seconds )<br />
+68400 ; Expire ( seconds )<br />
+15 );Minimum TTL for Zone ( seconds )<br />
+;
+@ IN NS ns.724cn.com.<br />
+@ IN A 211.162.106.254<br />
+www IN A 211.162.106.254<br />
+;
+;end<br />
+#/usr/local/named/sbin/rndc reload<br />
+OK，到此你的DNS服务器就算是跑起来了。试一下分别用网通和电信的线路ping一下吧.<br />
+附：获取IP地址范围方法:<br />
+1、 利用shell程序获取IP地址段<br />
+#!/bin/sh<br />
+FILE=/root/study/apnic/ip_apnic<br />
+rm -f $FILE<br />
+wget http://ftp.apnic.net/apnic/stats/apnic/delegated-apnic-latest -O $FILE<br />
+grep 'apnic|CN|ipv4|' $FILE | cut -f 4,5 -d'|'|sed -e 's/|/ /g' | while read ip cnt<br />
+do<br />
+echo $ip:$cnt<br />
+mask=$(cat &gt; cn.net<br />
+NETNAME=`whois $ip@whois.apnic.net | sed -e '/./{H;$!d;}' -e 'x;/netnum/!d' |grep ^netname | sed -e 's/.*: \(.*\)//g' | sed -e 's/-.*//g'`<br />
+case $NETNAME in<br />
+CNC)<br />
+   echo $ip/$mask &gt;&gt; CNCGROUP<br />
+;;<br />
+CHINANET|CNCGROUP)<br />
+   echo $ip/$mask &gt;&gt; $NETNAME<br />
+;;<br />
+CHINATELECOM)<br />
+   echo $ip/$mask &gt;&gt; CHINANET<br />
+;;<br />
+*)<br />
+   echo $ip/$mask &gt;&gt; OTHER<br />
+;;<br />
+esac<br />
+done<br />
+2、 可以利用网上的资料，下面是最新的信息，然后利awk行成地址段即可。<br />
+wget http://218.66.103.230/vpn_route/cnc.new 新的网通路由表<br />
+wget http://218.66.103.230/vpn_route/chinanet.new 新的电信路由表<br />
+stop<br />
+sleep 10<br />
+注：对于配置智能DNS，主要用途为：1、解决网通与电信问题 2、实现区域规划（不同区域访问各自最近的服务器），下面以解决网通与电信连接问题的配置。至于实现2的功能，只需稍加更改即可。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/07/nine-moon-canon-full-volume/">九阴真经　全卷</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>天之道，损有余而补不足，是故虚胜实，不足胜有余。其意博，其理奥，其趣深，天地之象分，阴阳之候列，变化之由表，死生之兆彰，不谋而遗迹自同，勿约而幽明斯契，稽其言有微，验之事不忒，诚可谓至道之宗，奉生之始矣。假若天机迅发，妙识玄通，成谋虽属乎生知，标格亦资于治训，未尝有行不由送，出不由产者亦。然刻意研精，探微索隐，或识契真要，则目牛无全，故动则有成，犹鬼神幽赞，而命世奇杰，时时间出焉。<br />
+　　五藏六府之精气，皆上注于目而为之精。精之案为眼，骨之精为瞳子，筋之精为黑眼，血之精力络，其案气之精为白眼，肌肉之精为约束，裹撷筋骨血气之精而与脉并为系，上属于脑，后出于项中。故邪中于项，因逢其身之虚，其人深，则随眼系以入于脑，入手腼则脑转，脑转则引目系急，目系急则目眩以转矣。邪其精，其精所中不相比亦则精散，精散则视岐，视岐见两物。<br />
+　　阴极在六，何以言九。太极生两仪，天地初刨判。六阴已极，逢七归元太素，太素西方金德，阴之清纯，寒之渊源。<br />
+　　第一重诀曰：子午卯酉四正时，归气丹田掌前推。面北背南朝天盘，意随两掌行当中。意注丹田一阳动，左右回收对两穴。拜佛合什当胸作，真气旋转贯其中。气行任督小周天，温养丹田一柱香。快慢合乎三十六，九阳神功第一重。每日子、午、卯、酉四正时，找一阴气重的地方，最好为四高中低。面北而坐，五心朝天，静心绝虑，意守丹田，到一阳初动之时，双手在胸前合什，指尖朝前。<br />
+　　引丹田之气沿督脉上行，任脉下归丹田。如此待小周天三十六圈。由慢至快。气归丹田后，双掌前推，掌心向前，掌指朝天，气行两掌。双掌指下垂，掌指朝下，掌心朝下，迅速收回，左手掌心对准气海穴，右手掌心对准命门穴，真气随手式成螺旋状贯入气海、命门两穴。汇于丹田内。如此意守下丹田一柱香的时间。待此功练有一定功力，能收发自如，有抗寒之功时可修第二重。<br />
+　　第二重诀曰：极寒午时正，独坐寒冰床。裸体面朝北，气行小周天。五心朝天式，打开丹田门。寒气螺旋入，收发当自如。合和汇丹田，落雪雪不化。缩如一寒珠，雪落无化雪。扩为雾环身，九阴第二重。每日午时，找一极寒之地，面北背南，五心朝天，坐于寒冰床上（一种玉、一年四季都如寒冰一样）。今人练习可在冰或雪上练习，静心绝虑，启动周天三十六圈，意守丹田片刻，打开气海、命门两穴，分别成螺旋状入寒气，吸一柱香的时间后，关闭以上两穴，丹田内有一寒球再不停的旋转，越转越大，至到隔体三丈远，收回。如此反复八十一次，练到雪花落体而不化，放气时雪花距体三尺不落为功成。<br />
+　　第三重诀曰：法如第二重，阴阳互相克。意在修罡气，热火不侵法。阳中求真阴，九阴第三重。每日子时，找一极热之地，坐于火鼎之上（今人练习坐在铁板上，下面加火，应慢慢加热，以不能忍耐为度）。面北背南，五心朝天，静心绝虑，起动丹田寒气防止热气侵入，其方法就是第二重所练寒气用以抗热量。此乃“真阳中求真阴”。<br />
+　　第四重诀曰：法如第三重，阴合阴为生。同为修罡气，静流极之法。以阴练真阴，九阴第四重。不拘时间，找一静止不动的水池，五心朝天，坐于湖底，静心绝虑，水位不过脖子，运行丹田真气用以抗水之压力，其方法与第三重相同，待体入水，而衣不湿为成。然后找有流动河水中练，急流下练，而衣不湿为成。到此《九阴神功》成。如用掌把真气放出击人，就是催心掌。<br />
+　　第五重采气大法诀曰：采气不在气，口闭双目开。玄机在于目，神气乾鼎聚。此法为增进内力之法，用以目吸聚宇宙内的精气，主要是修炼双眼，使双眼在对敌时能求察分明，并有摄取敌人神魂之效。每日太阳将出之际，站于高处，双眼平视太阳，带双眼发热时，意念太阳之气由双目吸入汇于上丹田，吸汇到一定程度自天目穴射出，在由双眼收回，如此反复。<br />
+　　《横空挪移》螺旋九影，左右挪移，其聊不为，以气行之，可幻化九影诱敌。如加九阴白骨爪其威力可增十倍。如何横空挪移可据个况自定，今公之二法以参考。<br />
+　　诀曰：左转一，左转半。右转一，右转半。左右转一为不一，横空旋较为太一。<br />
+　　诀曰：左旋右旋天地旋，左踏右空平地旋。合手阴阳为上旋，右踏左空旋不为。虽为身法，实含玄理。须参照“九阴行功诀曰”进行，以防走火。习此功主要为子、午两时，其它时间亦可。必须选一处绝对安静，空气必须流畅。此功中的呼吸均为鼻吸鼻呼。习此功贵在持之以恒。功中会出现各种幻境，千万不可惧怕，顺其自然。练功中出现自然腾空，应顺其自然，千万不可妄加意念。<br />
+　　《鬼獄阴风吼》<br />
+　　此功属音波功，以音伤人，以音索魂，亦可以音布罡气，其威力无比，其音如地狱鬼吼，阴风阵阵，使人不攻自退，不寒而栗。<br />
+　　第一重：面北而坐，取五心朝天式，上身正直，虚灵劲，舌抵上腭，下颌微收，双目平视。双手于下丹田处成托式，即掌心向上，掌指相对，意守丹田一柱香，引真气自督脉、任脉行到中丹田，并在此汇聚成乒乓球大小的真气球，其色赤。口中默念，意念中丹田之真气化为波圈，若水纹之状。碰肤弹回，须反复重阳之数。<br />
+　　第二重：意大波圈，自内向外旋为散，自外向内旋为聚，散聚合适为阴阳平<br />
+　　衡，阴阳平衡，万物之本。渐如虚空，与宇共振，法同上。<br />
+　　第三重：自然站立，双脚与肩同宽，双手自然放于两腿外侧，百会上，舌<br />
+　　放平，双目平视，调整呼吸，意守丹田一柱香的时间，然后点头，吸气、收腹，<br />
+　　口发鬼怪连音，同时意引丹田真气随声音向外扩散；抬头、呼气、口闭，意收回<br />
+　　真气归中丹田，如此反复。一点一抬，一上一下，上下起到，喉轮自开，开通喉<br />
+　　轮魔音自现。<br />
+　　第四重：无相音罡<br />
+　　无相音罡，即音罡无形。其秒音无穷，可防敌护体，亦可以音控他人或给他<br />
+　　人治病。其练法很简单，只需把“九阴神功”的“先天真气”与“鬼獄阴风吼”<br />
+　　之音合二为一就可，具体练习方法可参照以上两法自悟，此不详述。</p>
+
+<p>下卷<br />
+　　九阴白骨爪<br />
+　　爪力无比，鬼气回荡，不攻自惧。其爪可使头骨成孔而不碎，爪心有强大的吸力可隔空取物或吸取他人功力，爪指有强大的透劲可隔空伤人。一收一放，一开一合，合乎武学大道之理。<br />
+　　第一重金丝手诀曰：面北背南朝天坐，气行任督贯大椎。意聚丹田一柱香，分支左右聚掌心。打开气海命门穴，气满冲贯十指爪。旋入阴气一坤炉，放收来回金丝手。凡习九阴白骨爪需先习九阴神功百日，于极阴之地，谷地为佳。面北背南，五心朝天坐于低处。双手放于膝上，手心朝下，意守丹田。开气海、命门，旋转吸入阴气汇于丹田。气顺任、督两脉上行汇于大椎穴，于右肩井穴入掌心，气满鼓支，掌起平胸。五指下垂，气贯入指，十指内扣、回拉，手丝为一。回气丹田，温养柱香。<br />
+　　第二重摄魂大法诀曰：打开丹田前后门，三昧磷火化无形。吸进鬼狱阴鬼精，阴功在此更为进。此法是一种极秘之法，可开通人的死生之谜，吸取鬼魂之气，同时亦可用此法吸他人功力元神。找一坟场，在半夜无人之时，面北背南，五心朝天，左掌心向上，大拇指扣小指其它三指伸直。左手立于胸前，掌心朝左，大拇指、中、无名、小指内扣，食指伸直，口念咒“探地达摩，无相无上，摄阴摄魂，无畏无惧，阴阳合和，人鬼交战，吗咪呗咪‘口奄’”三十六遍，一遍过于一遍，到最后一遍，只需“吗咪呗咪‘口奄’”。然后双手抬到头上方，合掌， 尖朝天，打开气海、命门两穴，从两穴内射出阴气，成螺旋型由小到大，如龙卷风一样把野魂阴精卷入两穴汇于丹田，练习一柱香的时间后，开始炼熔。双掌放于膝上，掌心朝上，意守丹田中的无数阴魂阴精被丹田阴气形成环状，封闭在内不能出来。意念丹田封魂球开始旋转，同时意念坟场突然起了无数磷火，用同样方法把磷火吸入丹田封魂球外圈，燃烧炼熔阴魂，由慢到快不停旋转，火由小到大，直到化尽为止。收功，温养丹田一柱香。如果用来吸取他人功力或元神其方法于上面同理。<br />
+　　第三重白骨练爪诀曰：白骨头上悬，幻化为二骨。阴精悬九穴，左右手中擒。合和为阴珠，吸阴吸精鬼。齐汇坤炉内，回返丹炉内。面北背南，五心朝天，坐 坟场中，意守丹田片刻，意守自身前后有九座坟，突然裂开飞出九个头骨，这时意念打开气海、命门两穴，射出旋转真气由小到大，把九个头骨给悬起来，位于本人头上方左右，缓慢旋转。从每一个头骨的两眼射出一条红气线，分别射入百会、玉枕、膻中，左右肩井穴，灵台、气海、命门九大穴道中，并且在每个穴道中渐渐汇聚成一个球，然后这九个红球同时从任督两脉汇于丹田，意守丹田使之气化合。然后运气两掌贯足真气，由于反向力，双掌抬起平胸，在贯入十指，十指突然变爪，这时意念那九个头骨互相幻化，变为两个头骨于胸前方。掌心外突把两个头骨吸入掌中，随后十指内扣抓住头骨，放出真气把头骨抓成十个小孔，然后吸回真气，同时吸取头骨内的阴精归于丹田。收功，温养丹田一柱香。至头骨隔空袭来抓成孔而骨不碎，九阴白骨爪成矣。练之此境界需配合外功练习即第四重。<br />
+　　第四重外功诀曰：气至丹田贯十指，倒行古树狸猫功。抓石打铁练指力，内外合修白骨功。平常把内气贯于十指用以隔空取物，在以十指抓，练硬物，所用之物应由轻到重，由近到远。在者可以倒立于树旁，双脚依树，然后用十指抓树缓缓上行，以练指力。此重应与第三重同练。<br />
+　　第五重练到第四重此功已成，此第五重为加深功夫，其阴毒程度更甚。用古时棺材、蝙蝠血、砒霜三种物体加水加热后，用以漫手，再练内外功，这样手上有剧毒，以此手伤人无救。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/04/10/technical-test-you-are-oltp-application-in-the-development-of-pro/">技术测试：你是oltp应用开发方面的高手吗？</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-10T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><strong>整理文章整理出来的，很早时候caoz写的，翻出来备份</strong></p>
+
+<p>这里是一篇技术测试的文章，希望所有那些自称的和被人吹捧的技术高手来看一看，做做我们的几个测试，看看你属于那种层次的高手？</p>
+
+<p>以下测试是针对oltp开发而言的，对于做算法和桌面程序的，不是我这里要讨论的对象。</p>
+
+<p>好了，第一个考题：你能否做一个统计系统，功能上和易数差不多，能够通过页面嵌入方式记录一个网站的显示次数，来访分析，时段分析，日期分析等等。怎么，这就被难住了，那你算哪门子高手？啊哈，这位说了，这些都easy，手到擒来，很好，很好，看来在实现功能上，你具有了高手的基本能力，不过且慢，如果你认为可以实现这些功能就能自称做个易数统计出来，未免也太小瞧了技术这碗饭的分量，实现这些功能，就中国而言，至少有6位数的程序员可以作到，而设计这么一套系统（仅从功能考虑），也至少有5位数的程序员可以作到，明白吗？你不过是这里面平平常常的一个而已了，要高兴还早呢。</p>
+
+<p>第二个考题：呵呵，其实还是做这些功能，不过加个条件，我只给你一台PC Server（单/双PIII 733+512M Ecc内存+18G SCSI硬盘），你要支撑300万/天的请求调用。琢磨琢磨吧。<br />
+简简单单的一个cgi+数据库，那是肯定死翘翘了，怎么办？<br />
+第一，你要建立三层体系模型，后台数据库必须通过中间应用层和前台CGI分开。<br />
+第二，合理分配使用共享内存空间，并合理通过IPC信号量防止内存区的读写冲突和死锁。<br />
+第三，必要时改写web server原代码以获得效率最优化，比如改写apache server的http_log.c程序并重新编译。<br />
+如果你对建立这么一套系统的整体架构非常清楚，那么恭喜，你可以在一个比较不错的网络公司做一个CTO了，中国能够清晰搭建这样系统的人，不过4位数而已（当然，能够在这样系统里进行编码工作的，肯定还是有5位数以上的，毕竟左右都是c语言而已）。<br />
+知道为什么层出不穷那么多统计系统，虽然功能花哨，但是最后都撑不过易数，基本功不扎实，光靠功能花哨，那是没前途的。</p>
+
+<p>在这个领域做的比较好的，好耶，网易，adsunion，腾讯，太极链等几家而已。<br />
+那些所谓广告交换没什么技术瓶颈的人，自己做一套大并访系统出来再说话。</p>
+
+<p>第三个考题，还是这些功能，（我够贫的是吧）我要你一天能记录下3000万次浏览日志，不但要统计，还要完整记录，以供随时查验，当然主机环境提升一下，处理数据的主机用集群，但是核心数据库还是用一台电脑的，这次用sun的小型机，比如RS6000什么的；还有这次再加个条件，数据损失不能超过 0.01%。<br />
+这个已经不再象建立一个网站了，到象是大型电信的计费中心。你能胜任吗？<br />
+这时候要求对整体操作系统，对C语言，对数据库核心都必须有深入骨髓的理解，甚至于，对于数据的导入导出和一些日志的数据库记录，你已经不能再用sql去写了！要利用数据库产品的核心接口按照其数据存储格式直接进行文件或设备块的读写操作！对于一些负载非常大而性能要求又非常高的系统，甚至你需要建立一套独立的数据库体系和数据结构体系。这不是玩笑，因为我领教过这样的系统。<br />
+在中国，能搭建这样平台的高手，最多3位数而已。主要集中在电信计费领域，如亚信这样的企业。</p>
+
+<p>第四个考题，这次每天的请求不是3000万了，而是3万万，我没说胡话，3万万！不过你的工作变了，我不要你再做后面的数据处理，我只让你做一个前端报文转发处理，这次我很苛刻，给你一台PII的PC服务器，256M Ecc内存，而数据损失要求则绝对不能超过0.0001%，你的工作很简单，对来往的请求进行简单识别并转发到合适的应用服务器处理。<br />
+你用web server转发？别开玩笑了！这时候，你已经别无选择，用汇编自己写一套报文处理程序，作为看守进程驻入内存并挂在接收报文的端口上，你对效率的理解，应当已经超出了对操作系统的认识，对编程语言的认识，而直接达到对CPU指令集的认识程度上，是的，你必须清楚自己的每一条汇编指令是不是已经达到最小的 CPU指令占用。必须能计算出分解和处理一条报文的流程需要多少CPU指令循环，是不是已经针对CPU的指令集达到了最大优化，当然，你还必须很熟悉 TCP/IP协议对每一种报文的格式定义和规范，不过这和汇编指令的效率优化而言，到不显得有多高深了。<br />
+我们经常说CISCO是硬件产品服务商，错了！他们的利润主要就来自于这样的算法！！中国联想、华为等等都想强占这块肥肉的市场，但是在高端领域（其实并不是硬件高端，而是算法高端！），我们还是彻底的空白。<br />
+庆幸的是，我知道国内有人在做这样的事情了，当宽带不可避免的成为主流的时候，这种算法的强度和要求，会成为攫取利润的最好途径。<br />
+中国在这方面能达到标准的，又有几个人呢？</p>
+
+<p>出了这四个考题，没别的意思，我刚大学毕业的时候，也是自视甚高，因为当时的感觉是，和专业课的计算机作业相比（我是力学专业的，动不动要求编程解一个偏微分方程的收敛解，来分析什么旋流场的速度、温度等的分布），做wewebb开发简直毫无算法可言。再加上当时国内做web数据库的也少，动辄以为自己已经是满高手了，结果幸好跑到给电信做计费的企业混了一年，接触了国内最大的电信集中计费中心的解决方案（一直在运营，还不错），才知道敢情OLTP应用里面学问大的很，自己这点皮毛拿出来吹嘘简直是不知天高地厚。现在看看外面一堆和我当初一样的小毛孩子整天做两个烂程序就自诩高手，只好出来说几句。</p>
+
+<p>其实对于OLTP应用而言，功能的实现一般都非常容易，和那些从事力学、数学、物理等行业的数值计算相比简直毫无算法可言，而OLTP的技术难点主要在于性能，也就是你做一个桌面程序或算法程序，都不会面临并访过高的处理问题，但是做一个OLTP应用，无论如何你都必须直视一下子很多访问冲上来的情况，如果这个问题解决不了，无论多好的创意，多好的功能，都不会得到持续和长远的发展。</p>
+
+<p>由于很多创业者和投资者对技术不通或半通，他们往往拿一个性能指标有很大缺陷的东东当个宝贝，因为一般而言，开发出新东东大家都只是忙着测试功能，很少有对性能进行完整测评的，只有持续运营到一定阶段，并访达到一定程度，性能缺陷开始暴露，才临急抱佛脚，这时候造成的损失就很不核算，甚至是压根解决不了，只好放弃某种功能，从而使品牌信誉整体下降。</p>
+
+<p>加强算法基础，加强技术基础，少卖弄一些花里胡哨的东西，是走向技术高手的真正路线，那些今天学会了什么语言，明天又学会了什么语言的主儿，别吹嘘了，从70年代到现在，最值钱的程序员一直是写汇编和写标准C的，不为什么，因为这是真功夫。</p>
+
+<p>—————————————————–<br />
+搜出来这个帖子，呵呵，稍微回复一下。</p>
+
+<p>caoz早期也做过asp，中国最早的asp中文教程，是caoz翻译的，那是1998年的事情。但是后来（99年）换了php，不是因为asp不好，而是因为安全性，安全性的问题，根源在microsoft，这个和程序员没关系，但是程序员规避风险的话，还是linux下塌实一些，顺便说一下，caoz 在安全公司混过一年半的程序员。</p>
+
+<p>asp和php相比，在某些应用的效率上，甚至更胜一筹，这个原因也不是语言的问题，而是本身系统的进程模式，Asp是线程模式，线程间的数据通信是非常简单的，写过asp的都知道，可以用application变量做，非常简单。而php在apache下只能是进程模式就麻烦很多，虽然也有共享内存支持，但是调用时候需要做信号量锁定，很麻烦，否则就有内存索引崩溃的危险。就进程间通信而言，asp不是略胜一筹的问题，而是拥有无可比拟的优势。</p>
+
+<p>所以一个统计系统效率还还是不好，语言并不是决定因素，但是阿江有一点说的过了，一台服务器千万次的静态调用就达到极限？<br />
+caoz告诉你，在apache 下，caoz所能达到的数字是4000万次，而且是普通的服务器。</p>
+
+<p>阿飞做过极限测试，单服务器最高的一天，统计量达到了3670万次（真实网络流量，不是测试机的模拟流量），单p4的机器，配置很一般的那种。当然这种极限测试不代表真正的应用环境，毕竟单用户和多用户对统计系统负载开销是不同的，但是单服务器在应用环境下每日支撑千万次以上的统计，却并非难事。关键不是看语言，而是看设计。cnzz可以做到，50bang也可以做到。</p>
+
+<p>技术无止境，对比千兆的网络数据包分析工具（如千兆路由器，千兆IDS，千兆黑洞等），那种每秒解析上百万数据包变态应用，的现在的站点统计系统，日千万次处理简直是小儿科的东西。</p>
+
+<p>不过说实话，国内统计系统技术依然有很大的提升空间，阿江的，caoz的，不外如此，处理效率上去只是一方面，分析能力提高也是很考验技术实力的。就这一点，caoz坦承，Google Analytics的数据挖掘能力，无可比拟，完全超越了caoz的技术理解力。当然，这是另一个话题了。</p>
+
+<p>—————————————————<br />
+阿江的回帖</p>
+
+<p>看了那个顶上了的贴，接受里面的一些批评，<br />
+我自己的观点也在实践中变化，我仔细的看过CNZZ的统计报告并对其统计方式进行了推断。<br />
+我的结论是，影响效率差异的主要因素并不在操作系统和WEB服务软件上，<br />
+而是在数据结构和程序结构上。</p>
+
+<p>对于一次访问，51LA立即更新统计报告，保存统计报告，<br />
+而CNZZ则很傲能是追加访问记录，而在显示统计报告时检索汇总，或者每天还会把前一天的数据汇总后保存。<br />
+所以差异出现在这里：向数据库里追加行少数次 VS 更新数据库中指定的行多次<br />
+后者的效率明显要低的多。</p>
+
+<p>虽然51LA在统计程序效率上有差距，<br />
+但是这种设计思路可以实现统计报告的完整、快速显示、翻页、排序、筛选，<br />
+这对很多站长是非常有用的，也是很多人喜欢51LA的原因。<br />
+这也正是我迟迟不肯使用承受力更强的新思路重写统计的原因。</p>
+
+<p>另外，MSSQL数据库是一个库一个文件，而MYSQL是一个表一个文件，<br />
+这使MSSQL在磁盘操作上稍逊一筹，因为要处理的是大文件。<br />
+加上直接更新统计报告的统计方式增加了数据库操作次数，效率大打折扣。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/04/01/baidu-hi-ethereal-protocol-analysis/">百度hi通讯协议 抓包分析</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-04-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>ethereal居然自己就分析了msn messager service...</p>
+
+<p>[登录]</p>
+
+<p>DNS -&gt; TCP</p>
+
+<p>建立TCP连接后,开始发文.</p>
+
+<p>1.本地向Hi发: 内容可能加密了,没看出什么来</p>
+
+<p>1.1 Hi返回:按照MSN协议,应该是返回一个地址了,不过登录前后的Hi-ip一直都没变,估计不是这样子实现的.</p>
+
+<p>1.2 本地响应给Hi: 乱七八糟</p>
+
+<p>1.3...循环五次左右...大都是乱的...</p>
+
+<p>思考: MSNS</p>
+
+<p>[对话]待续</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/03/15/discuss-community-development-from-the-internet-to-see-the-school-bbs/">[讨论]从互联网社区发展看学校BBS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p> 很欣慰学校的BBS能够打得开,即使是如此的慢(我的网络北京网通ADSL 1M).找了一个黑龙江的代理,总算可以打开发贴的页面了,看到blue的一席话,我也来鸟语几句,看完能明白的师弟师妹引以为介.看完觉得无聊的权当鸟语便罢.<br />
+      互联网从诞生开始,其目的就是信息的传达.<br />
+      中国第一个BBS是冒似是丁磊在电信局搭建的firebirdBBS(无从查证,这是他自己说的)...不过这足以说明火鸟系BBS的历史悠久.(我把从火鸟系统中繁殖出来的众多系统都算一个系列).另一个不得不提的第一,是曙光,看smth的源代码就知道这个名字了.这是在93\94年间,我们学校好像是在合并中吧...相信那时候我们学校的前辈们肯定还是依靠书信传达信息的...<br />
+      互联网瞬间进入了高校,那时候...我还没上高中吧...不过咱们学校的互联网建设是在2000年开始搞的吧,庆幸我已经上了高中了...[em21]<br />
+      全国高校BBS大动乱的时候,我们学校还没有BBS.<br />
+      后来,2004年左右的时候,国家工商开始全国所有网站的ICP备案(这是全世界首屈一指的动作哦...).接下来,高校BBS实名制.<br />
+      实名制闹得很厉害,水木BBS在这一闹中分离了一个校内一个校外,校外是以公司名义运营;北大的未名直接关站,后来也转向校内,直到后来两全其美站以替代未名站的姿态出现,同样以公司的名义运营(lqqm站长之一是我一同事).<br />
+      互联网的开放性,不适合国情,不适合社会.再往下写就要被定义成反动了.下面讲我们.</p>
+
+<p>      海天白云BBS,经过的风风雨雨估计是水木这些都没经历过的吧,因为我们总是经历灾难式的数据全部丢失事件.<br />
+      首先,从系统安全和技术实现层面来说.现在的系统比两年前的系统,进步肯定不是一个级别的,不管是硬件还是软件.这要归功于给予支持的学校各部门和站务组的同学们.<br />
+      其次,从BBS内容建设层面来说.现在和两年前对比,也算是有了进步.至少有更多的人在使用BBS了.然而,BBS离同学们究竟还有多远的距离,究竟还要花多长的时间,BBS和它的组织,才能成为一个成熟的系统组织,真正服务于同学,服务于学校.这些都是现在的站务组同学和老师值得深究的.<br />
+      再次,从管理组组成来说.一个合理的BBS管理组,最好且应该包括一半及以上的技术人员,另一部分是BBS活动组织策划管理人员.如果能长期保持这个比例且各成员都任意施展才华的话,BBS自然会长期健康有序发展.纵观站务组,值得沉思.<br />
+      最后,劲往一处使.互联网决策最忌拍脑袋的行为.</p>
+
+<p>有想沟通的同学可以来我空间,学校太慢看起来累...http://www.54chen.com<br />
+祝母校繁荣昌盛!祝海天白云BBS更加民主自由,更加强大!</p>
+
+<p>cc0cc</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/03/09/jquery-plug-n/">Jquery的N个插件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-03-09T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><span style="font-size: medium; color: #ff0000;">最近发现很多朋友在查找使用这jQuery,希望大家能留言推荐自己觉得不错的插件,同时也请留下自己的交流方式,以便初用者能与你交流,请大家多多支持,共创发展.</span><span style="font-size: medium; color: #ff0000;">
+一、文件上传类(File upload)
+<a href="http://www.phpletter.com/Demo/AjaxFileUpload-Demo/">Ajax File Upload</a>
+<a href="http://www.pixeline.be/experiments/jqUploader/">jQUploader</a>.
+<a href="http://www.fyneworks.com/jquery/multiple-file-upload/">Multiple File Upload plugin</a>.
+<a href="http://www.appelsiini.net/projects/filestyle">jQuery File Style</a>.
+<a href="http://jquery.com/plugins/project/InputFileCSS">Styling an input type file</a>.
+<a href="http://digitalbush.com/projects/progress-bar-plugin">Progress Bar Plugin</a>.<br />
+二、表单验证(Form Validation)
+<a href="http://bassistance.de/jquery-plugins/jquery-plugin-validation/">jQuery Validation</a>.
+<a href="http://www.dyve.net/jquery/?autohelp">Auto Help</a>.
+<a href="http://www.willjessup.com/sandbox/jquery/form_validator/form_validate.html">Simple jQuery form validation</a>.
+<a href="http://letmehaveblog.blogspot.com/2007/08/easy-client-side-web-forms-validations.html">jQuery XAV - form validations</a>.
+<a href="http://itgroup.com.ph/alphanumeric/">jQuery AlphaNumeric</a>.
+<a href="http://digitalbush.com/projects/masked-input-plugin">Masked Input</a>.
+<a href="http://www.dennydotnet.com/post/TypeWatch-jQuery-Plugin.aspx">TypeWatch Plugin</a>.
+<a href="http://jquery.com/plugins/project/TextLimiter">Text limiter for form fields</a>.
+<a href="http://www.shawngo.com/gafyd/index.html">Ajax Username Check with jQuery</a>.<br />
+三、表单－选取框(Form - Select Box stuff)
+<a href="http://jquery.sanchezsalvador.com/page/jquerycombobox.aspx">jQuery Combobox</a>.
+<a href="http://www.ajaxray.com/blog/2007/11/08/jquery-controlled-dependent-or-cascading-select-list-2/">jQuery controlled dependent (or Cascadign) Select List</a>.
+<a href="http://code.google.com/p/jqmultiselects/">Multiple Selects</a>.
+<a href="http://www.texotela.co.uk/code/jquery/select/">Select box manipulation</a>.
+<a href="http://code.google.com/p/jqueryselectcombo/">Select Combo Plugin</a>.
+<a href="http://www.msxhost.com/jquery/linked-selects/json/%20target=">jQuery - LinkedSelect</a>
+<a href="http://remysharp.com/2007/09/18/auto-populate-multiple-select-boxes/">Auto-populate multiple select boxes</a>.
+<a href="http://www.sitespotting.it/esempi/002/">Choose Plugin (Select Replacement)</a>.<br />
+四、表单基本、输入框、选择框等(Form Basics, Input Fields, Checkboxes etc.)
+<a href="http://www.malsup.com/jquery/form/">jQuery Form Plugin</a>.
+<a href="http://code.handlino.com/wiki/jquery-form">jQuery-Form</a>.
+<a href="http://envero.org/jlook/">jLook Nice Forms</a>.
+<a href="http://www.whitespace-creative.com/jquery/jNice/">jNice</a>.
+<a href="http://www.brainfault.com/2007/07/07/pin-plugin-reloaded/">Ping Plugin</a>.
+<a href="http://grzegorz.frydrychowicz.net/jquery_toggleformtext/">Toggle Form Text</a>.
+<a href="http://thoughts.kuzemchak.net/entry/toggleval-for-jquery/">ToggleVal</a>.
+<a href="http://www.pengoworks.com/workshop/jquery/field.plugin.htm">jQuery Field Plugin</a>.
+<a href="http://code.befruit.com/">jQuery Form’n Field plugin</a>.
+<a href="http://www.texotela.co.uk/code/jquery/checkboxes/">jQuery Checkbox manipulation</a>.
+<a href="http://www.alcoholwang.cn/jquery/jTaggingDemo.htm">jTagging</a>.
+<a href="http://code.google.com/p/labelcheck/">jQuery labelcheck</a>.
+<a href="http://scott.sauyet.com/thoughts/archives/2007/03/31/overlabel-with-jquery/">Overlabel</a>.
+<a href="http://blog.amicoimmaginario.it/2007/08/28/jquery-plugin-3-state-radio-buttons/">3 state radio buttons</a>.
+<a href="http://sanisoft-demo.com/jquery/plugins/shiftcheckbox/">ShiftCheckbox jQuery Plugin</a>.
+<a href="http://digitalbush.com/projects/watermark-input-plugin">Watermark Input</a>.
+<a href="http://kawika.org/jquery/checkbox/">jQuery Checkbox (checkboxes with imags)</a>.
+<a href="http://www.softwareunity.com/sandbox/jqueryspinbtn/">jQuery SpinButton Control</a>.
+<a href="http://www.phpletter.com/form_builder/demo.html">jQuery Ajax Form Builder</a>.
+<a href="http://www.texotela.co.uk/code/jquery/focusfields/">jQuery Focus Fields</a>.
+<a href="http://home.iprimus.com.au/kbwood/jquery/timeEntry.html">jQuery Time Entry</a>.<br />
+五、时间、日期和颜色选取(Time, Date and Color Picker)
+<a href="http://marcgrabanski.com/code/ui-datepicker/">jQuery UI Datepicker</a>.<span style="font-size: xx-small; color: #ff0000;">推存使用,其支持中文</span>
+<a href="http://kelvinluck.com/assets/jquery/datePicker/">jQuery date picker plugin</a>.
+<a href="http://code.google.com/p/jquery-timepicker/">jQuery Time Picker</a>.
+<a href="http://www.texotela.co.uk/code/jquery/timepicker/">Time Picker</a>.
+<a href="http://www.oakcitygraphics.com/jquery/clockpick/ClockPick.cfm">ClickPick</a>.
+<a href="http://labs.perifer.se/timedatepicker/">TimePicker</a>.
+<a href="http://acko.net/dev/farbtastic">Farbtastic jQuery Color Picker Plugin</a>.
+<a href="http://www.intelliance.fr/jquery/color_picker/">Color Picker by intelliance.fr</a>.<br />
+六、投票插件(Rating Plugins)
+<a href="http://www.phpletter.com/Demo/Jquery-Star-Rating-Plugin/#">jQuery Star Rating Plugin</a>.
+<a href="http://www.m3nt0r.de/devel/raterDemo/">jQuery Star Rater</a>.
+<a href="http://riderdesign.com/articles/displayarticle.aspx?articleid=21">Content rater with asp.net, ajax and jQuery</a>.
+<a href="http://www.learningjquery.com/2007/05/half-star-rating-plugin">Half-Star Rating Plugin</a>.<br />
+七、搜索插件(Search Plugins)
+<a href="http://www.vulgarisoip.com/2007/08/06/jquerysuggest-11/">jQuery Suggest</a>.
+<a href="http://bassistance.de/jquery-plugins/jquery-plugin-autocomplete/">jQuery Autocomplete</a>.
+<a href="http://www.pengoworks.com/workshop/jquery/autocomplete.htm">jQuery Autocomplete Mod</a>.
+<a href="http://www.ajaxdaddy.com/demo-jquery-autocomplete.html">jQuery Autocomplete by AjaxDaddy</a>.
+<a href="http://dev.reach1to1.net/saurabh/jplugins/autocomplete/">jQuery Autocomplete Plugin with HTML formatting</a>.
+<a href="http://interface.eyecon.ro/docs/autocomplete">jQuery Autocompleter</a>.
+<a href="http://nodstrum.com/2007/09/19/autocompleter/">AutoCompleter (Tutorial with PHP&amp;MySQL)</a>.
+<a href="http://rikrikrik.com/jquery/quicksearch/">quick Search jQuery Plugin</a>.<br />
+八、编辑器(Inline Edit &amp; Editors)
+<a href="http://www.jaysalvat.com/jquery/jtageditor/">jTagEditor</a>.
+<a href="http://demo.wymeditor.org/demo.html">WYMeditor</a>.
+<a href="http://garage.pimentech.net/scripts_doc_jquery_jframe/">jQuery jFrame</a>.
+<a href="http://www.appelsiini.net/projects/jeditable">Jeditable - edit in place plugin for jQuery</a>.
+<a href="http://www.dyve.net/jquery/?editable">jQuery editable</a>.
+<a href="http://www.jdempster.com/category/jquery/disableTextSelect/">jQuery Disable Text Select Plugin</a>.
+<a href="http://15daysofjquery.com/edit-in-place-with-ajax-using-jquery-%20-library/15/">Edit in Place with Ajax using jQuery</a>.
+<a href="http://davehauenstein.com/blog/archives/28">jQuery Plugin - Another In-Place Editor</a>.
+<a href="http://dev.iceburg.net/jquery/tableEditor/demo.php">TableEditor</a>.
+<a href="http://joshhundley.com/teditable-in-place-editing-for-tables/">tEditable - in place table editing for jQuery</a>.<br />
+九、多媒体、视频、Flash等(Audio, Video, Flash, SVG, etc)
+<a href="http://www.contentwithstructure.com/extras/jmedia">jMedia - accessible multi-media embedding</a>.
+<a href="http://sourceforge.net/projects/jbedit/">JBEdit - Ajax online Video Editor</a>.
+<a href="http://www.sean-o.com/jquery/jmp3/">jQuery MP3 Plugin</a>.
+<a href="http://malsup.com/jquery/media/">jQuery Media Plugin</a>.
+<a href="http://jquery.lukelutman.com/plugins/flash/index.html">jQuery Flash Plugin</a>.
+<a href="http://www.solitude.dk/archives/embedquicktime/">Embed QuickTime</a>.
+<a href="http://keith-wood.name/svg.html">SVG Integration</a>.<br />
+十、图片(Photos/Images/Galleries)
+<a href="http://jquery.com/demo/thickbox/">ThickBox</a>.
+<a href="http://leandrovieira.com/projects/jquery/lightbox/">jQuery lightBox plugin</a>.
+<a href="http://blog.joshuaeichorn.com/archives/2007/01/11/jquery-image-strip/">jQuery Image Strip</a>.
+<a href="http://www.gcmingati.net/wordpress/wp-content/lab/jquery/imagestrip/imageslide-plugin.html">jQuery slideViewer</a>.
+<a href="http://benjaminsterling.com/2007/09/09/jquery-jqgalscroll-photo-gallery/">jQuery jqGalScroll 2.0</a>.
+<a href="http://benjaminsterling.com/2007/10/02/jquery-jqgalviewii-photo-gallery/">jQuery - jqGalViewII</a>.
+<a href="http://benjaminsterling.com/2007/10/21/jqgalviewiii-proof-of-concept/">jQuery - jqGalViewIII</a>.
+<a href="http://opiefoto.com/articles/photoslider">jQuery Photo Slider</a>.
+<a href="http://joanpiedra.com/jquery/thumbs/">jQuery Thumbs - easily create thumbnails</a>.
+<a href="http://www.texotela.co.uk/code/jquery/jQIR/">jQuery jQIR Image Replacement</a>.
+<a href="http://www.gmarwaha.com/jquery/jcarousellite/index.php#what">jCarousel Lite</a>.
+<a href="http://projects.sevir.org/storage/jpanview/index.html">jQPanView</a>.
+<a href="http://sorgalla.com/projects/jcarousel/#Examples">jCarousel</a>.
+<a href="http://www.intelliance.fr/jquery/imagebox/">Interface Imagebox</a>.
+<a href="http://www.getintothis.com/blog/2006/10/12/image-gallery-using-jquery-interface-reflections/">Image Gallery using jQuery, Interface &amp; Reflactions</a>.
+<a href="http://realazy.org/lab/jquery/j-gallery/">simple jQuery Gallery</a>.
+<a href="http://chicagosocial.com/gallery/">jQuery Gallery Module</a>.
+<a href="http://www.eogallery.com/">EO Gallery</a>.
+<a href="http://flesler.blogspot.com/search/label/jQuery.ScrollShow">jQuery ScrollShow</a>.
+<a href="http://www.malsup.com/jquery/cycle/">jQuery Cycle Plugin</a>.
+<a href="http://www.projectatomic.com/en/flickr.htm">jQuery Flickr</a>.
+<a href="http://www.appelsiini.net/2007/9/lazy-load-images-jquery-plugin">jQuery Lazy Load Images Plugin</a>.
+<a href="http://www.sunsean.com/zoomi/">Zoomi - Zoomable Thumbnails</a>.
+<a href="http://remysharp.com/2007/03/19/a-few-more-jquery-plugins-crop-labelover-and-pluck/#crop">jQuery Crop - crop any image on the fly</a>.
+<a href="http://jquery.com/plugins/project/reflection">Image Reflection</a>.<br />
+十一、Google地图（Google Map）
+<a href="http://www.dyve.net/jquery/?googlemaps">jQuery Plugin googlemaps</a>.
+<a href="http://code.google.com/p/jmaps/">jMaps jQuery Maps Framework</a>.
+<a href="http://projects.sevir.org/storage/jqmaps/index.html">jQmaps</a>.
+<a href="http://olbertz.de/jquery/googlemap.html#">jQuery &amp; Google Maps</a>.
+<a href="http://snippets.dzone.com/posts/show/4361">jQuery Maps Interface forr Google and Yahoo maps</a>.
+<a href="http://webrocket.ulmb.com/jmaps/">jQuery J Maps - by Tane Piper</a>.<br />
+十二、游戏(Games)
+<a href="http://fmarcia.info/jquery/tetris/tetris.html">Tetris with jQuery</a>.
+<a href="http://64squar.es/">jQuery Chess</a>.
+<a href="http://www.bennadel.com/blog/623-jQuery-Demo-Mad-Libs-Word-Game.htm">Mad Libs Word Game</a>.
+<a href="http://www.alexatnet.com/node/68">jQuery Puzzle</a>.
+<a href="http://www.willjessup.com/sandbox/jquery/solar_system/rotator.html">jQuery Solar System (not a game but awesome jQuery Stuff)</a>.<br />
+十三、表格等(Tables, Grids etc.)
+<a href="http://docs.jquery.com/Plugins/Tablesorter">UI/Tablesorter</a>.
+<a href="http://www.reconstrukt.com/ingrid/">jQuery ingrid</a>.
+<a href="http://www.trirand.com/blog/?p=13">jQuery Grid Plugin</a>.
+<a href="http://ideamill.synaptrixgroup.com/jquery/tablefilter/tabletest.htm">Table Filter - awesome!</a>.
+<a href="http://dev.iceburg.net/jquery/tableEditor/demo.php">TableEditor</a>.
+<a href="http://www.hanpau.com/jquery/unobtrusivetreetable.php">jQuery Tree Tables</a>.
+<a href="http://www.javascripttoolbox.com/jquery/#expandablerows">Expandable “Detail” Table Rows</a>.
+<a href="http://www.remotesynthesis.com/blog/index.cfm/2007/9/25/Sortable-Table-ColdFusion-Custom-Tag-with-jQueryUI">Sortable Table ColdFusion Costum Tag with jQuery UI</a>.
+<a href="http://flesler.blogspot.com/2007/10/jquerybubble.html">jQuery Bubble</a>.
+<a href="http://tablesorter.com/docs/">TableSorter</a>.
+<a href="http://www.webtoolkit.info/demo/jquery/scrollable/demo.html">Scrollable HTML Table</a>.
+<a href="http://p.sohei.org/stuff/jquery/columnmanager/demo/demo.html">jQuery column Manager Plugin</a>.
+<a href="http://p.sohei.org/stuff/jquery/tablehover/demo/demo.html">jQuery tableHover Plugin</a>.
+<a href="http://p.sohei.org/stuff/jquery/columnhover/demo/demo.html">jQuery columnHover Plugin</a>.
+<a href="http://makoomba.altervista.org/grid/">jQuery Grid</a>.
+<a href="http://motherrussia.polyester.se/jquery-plugins/tablesorter/">TableSorter plugin for jQuery</a>.
+<a href="http://joshhundley.com/teditable-in-place-editing-for-tables/">tEditable - in place table editing for jQuery</a>.
+<a href="http://www.hovinne.com/dev/jquery/chartotable/">jQuery charToTable Plugin</a>.
+<a href="http://www.ita.es/jquery/jquery.grid.columnSizing.htm">jQuery Grid Column Sizing</a>.
+<a href="http://www.ita.es/jquery/jquery.grid.rowSizing.htm">jQuery Grid Row Sizing</a>.<br />
+十四、统计图(Charts, Presentation etc.)
+<a href="http://worcesterwideweb.com/2007/06/04/jquery-wizard-plugin/">jQuery Wizard Plugin </a>.
+<a href="http://www.reach1to1.com/sandbox/jquery/jqchart/">jQuery Chart Plugin</a>.
+<a href="http://ejohn.org/apps/speed/">Bar Chart</a>.<br />
+十五、边框、圆角、背景(Border, Corners, Background)
+<a href="http://www.malsup.com/jquery/corner/">jQuery Corner</a>.
+<a href="http://blue-anvil.com/archives/anti-aliased-rounded-corners-with-jquery">jQuery Curvy Corner</a>.
+<a href="http://dev.jquery.com/~paul/plugins/nifty/example.html">Nifty jQuery Corner</a>.
+<a href="http://illandril.net/jQuery/transparentCorners/">Transparent Corners</a>.
+<a href="http://www.methvin.com/jquery/jq-corner.html">jQuery Corner Gallery</a>.
+<a href="http://blog.brandonaaron.net/my-jquery-plugins/gradient/">Gradient Plugin</a>.<br />
+十六、文字和超链接(Text and Links)
+<a href="http://wanderinghorse.net/computing/%20/jquery/spoilers/demo.html">jQuery Spoiler plugin</a>.
+<a href="http://johannburkard.de/blog/programming/%20/highlight-%20-text-higlighting-jquery-plugin.html">Text Highlighting</a>[注:关键字标亮,但还没尝试中文</span>].
+<a href="http://www.jdempster.com/category/jquery/disableTextSelect/">Disable Text Select Plugin</a>.
+<a href="http://www.texotela.co.uk/code/jquery/newsticker/">jQuery Newsticker</a>.
+<a href="http://www.ollicle.com/2007/jun/03/jquery_lineheight_flexible.html">Auto line-height Plugin</a>.
+<a href="http://agencenp.net/textgrad/textgrad.html">Textgrad - a text gradient plugin</a>.
+<a href="http://kawika.org/jquery/linklook/">LinkLook - a link thumbnail preview</a>.
+<a href="http://rikrikrik.com/jquery/pager/#examples">pager jQuery Plugin[注:分页效果]</a>.
+<a href="http://rikrikrik.com/jquery/shortkeys/">shortKeys jQuery Plugin</a>.
+<a href="http://www.ollicle.com/eg/jquery/biggerlink">jQuery Biggerlink</a>.
+<a href="http://troy.dyle.net/linkchecker/">jQuery Ajax Link Checker</a>.<br />
+十七、鼠标提示（Tooltips）
+<a href="http://bassistance.de/jquery-plugins/jquery-plugin-tooltip/">jQuery Plugin - Tooltip</a>.
+<a href="http://www.codylindley.com/blogstuff/js/jtip/">jTip - The jQuery Tool Tip</a>[<span style="color: #ff0000;">注:推荐</span>].
+<a href="http://examples.learningjquery.com/62/demo/index.html#examplesection">clueTip</a>.
+<a href="http://edgarverle.com/BetterTip/default.cfm">BetterTip</a>.
+<a href="http://ioreader.com/2007/05/15/flash-tooltips-using-jquery/">Flash Tooltips using jQuery</a>.
+<a href="http://www.texotela.co.uk/code/jquery/tooltipdemo/">ToolTip</a>.<br />
+十八、菜单和导航(Menus, Navigations)
+<a href="http://stilbuero.de/jquery/tabs_3/">jQuery Tabs Plugin - awesome! </a>. [<a href="http://stilbuero.de/jquery/tabs_3/nested.html">demo nested tabs</a>.]
+<a href="http://blog.cutterscrossing.com/index.cfm/2007/6/15/Updated-JQuery-Nested-Tab-Set-with-Demo">another jQuery nested Tab Set example (based on jQuery Tabs Plugin)</a>.
+<a href="http://www.sunsean.com/idTabs/">jQuery idTabs</a>.
+<a href="http://jdsharp.us/jQuery/plugins/jdMenu/">jdMenu - Hierarchical Menu Plugin for jQuery</a>.
+<a href="http://be.twixt.us/jquery/suckerFish.php">jQuery SuckerFish Style</a>.
+<a href="http://bassistance.de/jquery-plugins/jquery-plugin-treeview/">jQuery Plugin Treeview</a>.
+<a href="http://be.twixt.us/jquery/treeView.php">treeView Basic</a>.
+<a href="http://labs.activespotlight.net/jQuery/menu_demo.html">FastFind Menu</a>.
+<a href="http://www.getintothis.com/blog/2006/09/26/my-first-jquery-plugin-a-sliding-menu/">Sliding Menu</a>.
+<a href="http://gmarwaha.com/blog/?p=7">Lava Lamp jQuery Menu</a>.
+<a href="http://icon.cat/wiki/IconDock_En#iconDock_jQuery_Plugin">jQuery iconDock</a>.
+<a href="http://cherne.net/brian/resources/jquery.variations.html">jVariations Control Panel</a>.
+<a href="http://www.trendskitchens.co.nz/jquery/contextmenu/">ContextMenu plugin</a>.
+<a href="http://p.sohei.org/jquery-plugins/clickmenu/">clickMenu</a>.
+<a href="http://www.ndesign-studio.com/blog/mac/css-dock-menu">CSS Dock Menu</a>.
+<a href="http://webexpose.org/2006/12/28/jquery-pop-up-menu-tutorial/">jQuery Pop-up Menu Tutorial</a>.
+<a href="http://www.getintothis.com/blog/2006/09/26/my-first-jquery-plugin-a-sliding-menu/">Sliding Menu</a>.
+<a title="http://stilbuero.de/jquery/tabs_3/" href="http://stilbuero.de/jquery/tabs_3/">http://stilbuero.de/jquery/tabs_3/</a>
+十九、幻灯、翻转等(Accordions, Slide and Toggle stuff)
+<a href="http://bassistance.de/jquery-plugins/jquery-plugin-accordion/">jQuery Plugin Accordion</a>.
+<a href="http://fmarcia.info/jquery/accordion.html">jQuery Accordion Plugin Horizontal Way</a>.
+<a href="http://letmehaveblog.blogspot.com/2007/10/haccordion-simple-horizontal-accordion.html">haccordion - a simple horizontal accordion plugin for jQuery</a>.
+<a href="http://dev.portalzine.de/index?/Horizontal_Accordion--print">Horizontal Accordion by portalzine.de</a>.
+<a href="http://berndmatzner.de/jquery/hoveraccordion/">HoverAccordion</a>.
+<a href="http://fmarcia.info/jquery/accordion.html">Accordion Example from fmarcia.info</a>.
+<a href="http://blog.evaria.com/wp-content/themes/blogvaria/jquery/index.php">jQuery Accordion Example</a>.
+<a href="http://jquery.com/files/demo/dl-done.html">jQuery Demo - Expandable Sidebar Menu</a>.
+<a href="http://www.andreacfm.com/examples/jQpanels/">Sliding Panels for jQuery</a>.
+<a href="http://jquery.andreaseberhard.de/toggleElements/">jQuery ToggleElements</a>.
+<a href="http://www.ndoherty.com/demos/coda-slider/">Coda Slider</a>.
+<a href="http://sorgalla.com/projects/jcarousel/#Examples">jCarousel</a>.
+<a href="http://www.reindel.com/accessible_news_slider/">Accesible News Slider Plugin</a>.
+<a href="http://icant.co.uk/sandbox/jquerycodeview/">Showing and Hiding code Examples</a>.
+<a href="http://gsgd.co.uk/sandbox/jquery/easing/">jQuery Easing Plugin</a>.
+<a href="http://sonspring.com/journal/jquery-portlets">jQuery Portlets</a>.
+<a href="http://jdsharp.us/jQuery/plugins/AutoScroll/">AutoScroll</a>.
+<a href="http://medienfreunde.com/lab/innerfade/">Innerfade</a>.<br />
+二十、拖放插件(Drag and Drop)
+<a href="http://docs.jquery.com/UI/Draggables">UI/Draggables</a>.
+<a href="http://fromvega.com/wordpress/2007/07/14/easydrag-jquery-plugin/">EasyDrag jQuery Plugin</a>.
+<a href="http://sonspring.com/journal/jquery-portlets">jQuery Portlets</a>.
+<a href="http://dev.iceburg.net/jquery/jqDnR/">jqDnR - drag, drop resize</a>.
+<a href="http://interface.eyecon.ro/demos/drag.html">Drag Demos</a>.<br />
+二十一、XML XSL JSON Feeds
+<a href="http://www.jongma.org/webtools/jquery/xslt/">XSLT Plugin</a>.
+<a href="http://cgaskell.wordpress.com/2006/11/02/jquery-ajax-call-and-result-xml-parsing/">jQuery Ajax call and result XML parsing</a>.
+<a href="http://jquery.com/plugins/project/xmlObjectifier">xmlObjectifier - Converts XML DOM to JSON</a>.
+<a href="http://jquery.glyphix.com/">jQuery XSL Transform</a>.
+<a href="http://malsup.com/jquery/taconite/">jQuery Taconite - multiple Dom updates</a>.
+<a href="http://www.hovinne.com/blog/index.php/2007/07/15/132-jfeed-jquery-rss-atom-feed-parser-plugin">RSS/ATOM Feed Parser Plugin</a>.
+<a href="http://www.malsup.com/jquery/gfeed/">jQuery Google Feed Plugin</a>.<br />
+二十二、浏览器(Browserstuff)
+<a href="http://noteslog.com/post/how-to-fix-the-resize-event-in-ie/">Wresize - IE Resize event Fix Plugin</a>.
+<a href="http://jquery.khurshid.com/ifixpng.php">jQuery ifixpng</a>.
+<a href="http://jquery.andreaseberhard.de/pngFix/">jQuery pngFix</a>.
+<a href="http://www.crismancich.de/jquery/plugins/linkscrubber/">Link Scrubber - removes the dotted line onfocus from links</a>.
+<a href="http://www.matthewjrichards.co.uk/articles/2007/06/25/jquery-perciformes-the-entire-suckerfish-familly-under-one-roof">jQuery Perciformes - the entire suckerfish familly under one roof</a>.
+<a href="http://blog.brandonaaron.net/my-jquery-plugins/background-iframe/">Background Iframe</a>.
+<a href="http://jquery.com/plugins/project/QinIE">QinIE - for proper display of Q tags in IE</a>.
+<a href="http://webrocket.ulmb.com/ability/">jQuery Accessibility Plugin</a>.
+<a href="http://www.ogonek.net/mousewheel/jquery-demo.html">jQuery MouseWheel Plugin</a>.<br />
+二十三、对话框、确认窗口(Alert, Prompt, Confirm Windows)
+<a href="http://trentrichardson.com/Impromptu/">jQuery Impromptu</a>.<span style="color: #ff0000;">[注:很值得使用]</span>
+<a href="http://nadiaspot.com/jquery/confirm">jQuery Confirm Plugin</a>.
+<a href="http://dev.iceburg.net/jquery/jqModal/">jqModal</a>.
+<a href="http://www.ericmmartin.com/projects/simplemodal/">SimpleModal</a>.<span style="color: #ff0000;">[注:很值得使用]</span>
+二十四、CSS
+<a href="http://www.kelvinluck.com/article/switch-stylesheets-with-jquery">jQuery Style Switcher</a>.
+<a href="http://andykent.bingodisk.com/bingo/public/jss/">JSS - Javascript StyleSheets</a>.
+<a href="http://flesler.blogspot.com/2007/11/jqueryrule.html">jQuery Rule - creation/manipulation of CSS Rules</a>.
+<a href="http://www.designerkamal.com/jPrintArea/">jPrintArea</a>.<br />
+二十五、DOM、AJAX和其它JQuery插件（DOM, Ajax and other jQuery plugins）
+<a href="http://flydom.socianet.com/">FlyDOM</a>.
+<a href="http://brandonaaron.net/docs/dimensions/#getting-started">jQuery Dimenion Plugin</a>.
+<a href="http://happygiraffe.net/blog/articles/2007/09/26/jquery-logging">jQuery Loggin</a>.
+<a href="http://jquery.com/plugins/project/metadata">Metadata - extract metadata from classes, attributes, elements</a>.
+<a href="http://johannburkard.de/blog/programming/%20/inc-a-super-tiny-client-side-include-%20-jquery-plugin.html">Super-tiny Client-Side Include Javascript jQuery Plugin</a>.[<span style="color: #ff0000;">在页面加载后,通过inc加载(替换)</span>]
+<a href="http://humanized.com/weblog/2007/09/14/undo-made-easy-with-ajax-part-1/">Undo Made Easy with Ajax</a>.
+<a href="http://www.jasons-toolbox.com/JHeartbeat/">JHeartbeat - periodically poll the server</a>[<span style="color: #ff0000;">定时再次连接服务器,在使用些方法后,会自动建立起一个id为'HeartBeatDIV'的div,从服务器返回的值,将在这个div里</span>].
+<a href="http://www.appelsiini.net/projects/lazyload">Lazy Load Plugin</a>.
+<a href="http://blog.brandonaaron.net/2007/08/19/new-plugin-live-query/">Live Query</a>.
+<a href="http://jquery.offput.ca/every/">jQuery Timers</a>.
+<a href="http://www.joanpiedra.com/jquery/shareit/">jQuery Share it - display social bookmarking icons</a>.
+<a href="http://www.jdempster.com/category/code/jquery/cookiejar/">jQuery serverCookieJar</a>.
+<a href="http://ideamill.synaptrixgroup.com/?p=3">jQuery autoSave</a>[自动向服务器提交保存数据].
+<a href="http://www.semicomplete.com/blog/geekery/jquery-interface-puffer.html">jQuery Puffer</a>[<span style="color: #ff0000;">喷气效果(用于图片,很炫)</span>].
+<a href="http://33rockers.com/jquery/iframe-demo/">jQuery iFrame Plugin</a>[<span style="color: #ff0000;">内嵌框架,如果JS失败,那么框架页不显示,而由自己定义的东西代替</span>].
+<a href="http://www.stilbuero.de/2006/09/17/%20-plugin-for-jquery/">Cookie Plugin for jQuery</a>.
+<a href="http://leftlogic.com/lounge/articles/jquery_spy2">jQuery Spy - awesome plugin</a>.
+<a href="http://www.learningjquery.com/2007/01/effect-delay-trick">Effect Delay Trick</a>[<span style="color: #ff0000;">提示内容自动消失</span>].
+<a href="http://jquick.sullof.com/jquick/">jQuick - a quick tag creator for jQuery</a>.<a href="http://noteslog.com/post/metaobjects-11-released-today/">
+Metaobjects</a>.
+<a href="http://www.thunderguy.com/semicolon/2007/08/14/elementready-jquery-plugin/">elementReady</a>[<span style="color: #ff0000;">方便的设置Ready动作</span>].</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/02/21/extern-c-c-language-that-functions-and-global-variables-scope/">extern--C/C++语言中表明函数和全局变量作用范围</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-02-21T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><strong>extern</strong>是C/C++语言中表明函数和全局变量<strong>作用范围</strong>（可见性）的关键字.<br />
+它告诉编译器，其<strong>声明</strong>的函数和变量可以在本模块或其它模块中使用。
+<span style="color: #ff0000; background-color: #ffffff;"><span style="color: #000000;">1。对于extern变量来说，</span>仅仅是一个变量的声明，其并不是在定义分配内存空间</span>。如果该变量定义多次，会有连接错误<br />
+2。通常，<span style="color: #ff0000;"><strong>在模块的头文件中对本模块提供给其它模块引用的函数和全局变量以关键字extern声明。</strong><strong>也就是说c文件里面定义，如果该函数或者变量与开放给外面，则在h文件中用extern加以声明。所以外部文件只用include该h文件就可以了。</strong>而且编译阶段，外面是找不到该函数的，但是不报错。link阶段会从定义模块生成的目标代码中找到此函数。
+</span><span style="color: #000000;">3。</span>与extern对应的关键字是static，被它修饰的全局变量和函数只能在本模块中使用。</p>
+
+<p>后面转载，阅读中。。。。。。。<br />
+被extern "C"修饰的变量和函数是按照C语言方式编译和连接的；
+<strong>未加extern “C”声明时的编译方式</strong></p>
+
+<p>　　首先看看C++中对类似C的函数是怎样编译的。</p>
+
+<p>作为一种面向对象的语言，C++支持函数重载，而过程式语言C则不支持。函数被C++编译后在符号库中的名字与C语言的不同。例如，假设某个函数的原型为：
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+<tbody>
+<tr>
+<td>void foo( int x, int y );</td>
+</tr>
+</tbody></table>
+该函数被C编译器编译后在符号库中的名字为_foo，而C++编译器则会产生像_foo_int_int之类的名字（不同的编译器可能生成的名字不同，但是都采用了相同的机制，生成的新名字称为“mangled name”）。</p>
+
+<p>_foo_int_int这样的名字包含了函数名、函数参数数量及类型信息，C++就是靠这种机制来实现函数重载的。例如，在C++中，函数void foo( int x, int y )与void foo( int x, float y )编译生成的符号是不相同的，后者为_foo_int_float。</p>
+
+<p>同样地，C++中的变量除支持局部变量外，还支持类成员变量和全局变量。用户所<a class="bluekey" href="http://www.yesky.com/key/4285/189285.html" target="_blank">编写</a>程序的类成员变量可能与全局变量同名，我们以"."来区分。而本质上，编译器在进行编译时，与函数的处理相似，也为类中的变量取了一个独一无二的名字，这个名字与用户程序中同名的全局变量名字不同。</p>
+
+<p><strong>未加extern "C"声明时的连接方式</strong></p>
+
+<p>假设在C++中，模块A的头文件如下：
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+<tbody>
+<tr>
+<td>// 模块A头文件　moduleA.h<br />
+#ifndef MODULE_A_H<br />
+#define MODULE_A_H<br />
+int foo( int x, int y );<br />
+#endif</td>
+</tr>
+</tbody></table>
+在模块B中引用该函数：
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+<tbody>
+<tr>
+<td>// 模块B实现文件　moduleB.cpp<br />
+#include "moduleA.h"<br />
+foo(2,3);</td>
+</tr>
+</tbody></table>
+实际上，在连接阶段，连接器会从模块A生成的目标文件moduleA.obj中寻找_foo_int_int这样的符号！</p>
+
+<p><strong>加extern "C"声明后的编译和连接方式</strong></p>
+
+<p>加extern "C"声明后，模块A的头文件变为：
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+<tbody>
+<tr>
+<td>// 模块A头文件　moduleA.h<br />
+#ifndef MODULE_A_H<br />
+#define MODULE_A_H<br />
+extern "C" int foo( int x, int y );<br />
+#endif</td>
+</tr>
+</tbody></table>
+在模块B的实现文件中仍然调用foo( 2,3 )，其结果是：</p>
+
+<p>（1）模块A编译生成foo的目标代码时，没有对其名字进行特殊处理，采用了C语言的方式；</p>
+
+<p>（2）连接器在为模块B的目标代码寻找foo(2,3)调用时，寻找的是未经修改的符号名_foo。</p>
+
+<p>如果在模块A中函数声明了foo为extern "C"类型，而模块B中包含的是extern int foo( int x, int y ) ，则模块B找不到模块A中的函数；反之亦然。</p>
+
+<p>所以，可以用一句话概括extern “C”这个声明的真实目的（任何语言中的任何语法特性的诞生都不是随意而为的，来源于真实世界的需求驱动。我们在思考问题时，不能只停留在这个语言是怎么 做的，还要问一问它为什么要这么做，动机是什么，这样我们可以更深入地理解许多问题）：</p>
+
+<p>实现C++与C及其它语言的混合编程。</p>
+
+<p>明白了C++中extern "C"的设立动机，我们下面来具体分析extern "C"通常的<a class="bluekey" href="http://www.yesky.com/key/263/160263.html" target="_blank">使用技巧</a>。</p>
+
+<p>4.extern "C"的惯用法</p>
+
+<p>（1）在C++中引用C语言中的函数和变量，在包含C语言头文件（假设为cExample.h）时，需进行下列处理：
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+<tbody>
+<tr>
+<td>extern "C"<br />
+{
+#include "cExample.h"<br />
+}</td>
+</tr>
+</tbody></table>
+而在C语言的头文件中，对其外部函数只能指定为extern类型，C语言中不支持extern "C"声明，在.c文件中包含了extern "C"时会出现编译语法错误。</p>
+
+<p>笔者编写的C++引用C函数例子工程中包含的三个文件的源代码如下：
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+<tbody>
+<tr>
+<td>/* c语言头文件：cExample.h */<br />
+#ifndef C_EXAMPLE_H<br />
+#define C_EXAMPLE_H<br />
+extern int add(int x,int y);<br />
+#endif<br />
+/* c语言实现文件：cExample.c */<br />
+#include "cExample.h"<br />
+int add( int x, int y )<br />
+{
+return x + y;<br />
+}
+// c++实现文件，调用add：cppFile.cpp<br />
+extern "C"<br />
+{
+#include "cExample.h"<br />
+}
+int main(int argc, char* argv[])<br />
+{
+add(2,3);<br />
+return 0;<br />
+}</td>
+</tr>
+</tbody></table>
+如果C++调用一个C语言编写的.DLL时，当包括.DLL的头文件或声明接口函数时，应加extern "C" {　}。</p>
+
+<p>（2）在C中引用C++语言中的函数和变量时，C++的头文件需添加extern "C"，但是在C语言中不能直接引用声明了extern "C"的该头文件，应该仅将C文件中将C++中定义的extern "C"函数声明为extern类型。</p>
+
+<p>笔者编写的C引用C++函数例子工程中包含的三个文件的源代码如下：
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+<tbody>
+<tr>
+<td>//C++头文件 cppExample.h<br />
+#ifndef CPP_EXAMPLE_H<br />
+#define CPP_EXAMPLE_H<br />
+extern "C" int add( int x, int y );<br />
+#endif<br />
+//C++实现文件 cppExample.cpp<br />
+#include "cppExample.h"<br />
+int add( int x, int y )<br />
+{
+return x + y;<br />
+}
+/* C实现文件 cFile.c<br />
+/* 这样会编译出错：#include "cExample.h" */<br />
+extern int add( int x, int y );<br />
+int main( int argc, char* argv[] )<br />
+{
+add( 2, 3 );<br />
+return 0;<br />
+}</td>
+</tr>
+</tbody></table></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="54">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="52">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

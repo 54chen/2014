@@ -154,8 +154,8 @@ router代码不多，共有下面的一些主要目录。</p>
 nginx对接的配置在https://github.com/cloudfoundry/vcap/blob/master/dev_setup/cookbooks/nginx/templates/default/router-nginx.conf.erb，是动态生成的，在安装时决定。<br />
 其中，关键的内容是：<br />
 #定义lua运行的环境<br />
-  lua_package_path &#8221;<%= node[:lua][:module_path] %>/?.lua;;&#8221;;<br />
-  lua_package_cpath &#8221;<%= node[:lua][:module_path] %>/?.so;;&#8221;;<br />
+  lua_package_path "<%= node[:lua][:module_path] %>/?.lua;;";<br />
+  lua_package_cpath "<%= node[:lua][:module_path] %>/?.so;;";<br />
 #upstream定义到nls服务上<br />
   upstream router_status {<br />
     server <%= node[:nginx][:uls_ip] %>:<%= node[:nginx][:uls_port] %>;<br />

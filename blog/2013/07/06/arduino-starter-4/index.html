@@ -124,7 +124,7 @@ PDE(processing IDE)的极简程度令人发指，用习惯了eclipse的同学上
 <blockquote>import processing.serial.*;</blockquote></p>
 
 <p>String cs;<br />
-String buffer = &#8220;&#8221;;</p>
+String buffer = "";</p>
 
 <p>Serial port;</p>
 
@@ -132,7 +132,7 @@ String buffer = &#8220;&#8221;;</p>
   println(Serial.list());<br />
   String arduinoPort = Serial.list()[5];//如果你运行代码后arduino里没反应，需要来调整这个端口号，据机器不同而不同，看上一行代码打印出来的序号哪一个是arduino就写几。<br />
   port = new Serial(this, arduinoPort, 9600); //link to arduino<br />
-  cs = &#8220;#hello&#8221;;<br />
+  cs = "#hello";<br />
 }</p>
 
 <p>void draw() {<br />
@@ -165,7 +165,7 @@ char buffer[6]; </p>
 <p>void loop(){<br />
   if(Serial.available() > 0){<br />
     inByte = Serial.read();<br />
-    if(inByte == &#8216;#&#8217;){<br />
+    if(inByte == '#'){<br />
       while(pointer < 5){<br />
         buffer[pointer] = Serial.read();<br />
       }<br />

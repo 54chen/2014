@@ -124,9 +124,9 @@ import net.paoding.rose.web.Invocation;</p>
 
 <p>    public Object onError(Invocation inv, Throwable ex) throws Throwable {</p>
 
-<p>        // TODO logger.error(&#8220;handle err:&#8221;, ex);</p>
+<p>        // TODO logger.error("handle err:", ex);</p>
 
-<p>        return &#8220;@error&#8221;;<br />
+<p>        return "@error";<br />
     }<br />
 }</p>
 
@@ -138,11 +138,11 @@ import net.paoding.rose.web.Invocation;</p>
 所有的方法都可以尽情地向处throws Exception了。<br />
 不需要再try了。</p>
 
-<p><blockquote>@Path(&#8220;&#8221;)<br />
+<p><blockquote>@Path("")<br />
 public class HelloController {<br />
-    @Get(&#8220;&#8221;)<br />
+    @Get("")<br />
     public String index2() throws Exception {<br />
-        return &#8220;@hello world&#8221;;<br />
+        return "@hello world";<br />
     }<br />
 }</blockquote></p>
 
@@ -163,11 +163,11 @@ import net.paoding.rose.web.Invocation;</p>
 
 <p>    public Object onError(Invocation inv, Throwable ex) throws Throwable {</p>
 
-<p>        // TODO logger.error(&#8220;handle err:&#8221;, ex);<br />
+<p>        // TODO logger.error("handle err:", ex);<br />
         if (ex instanceof RuntimeException) {<br />
-            return &#8220;@runtime&#8221;;<br />
+            return "@runtime";<br />
         }<br />
-        return &#8220;@error&#8221;;<br />
+        return "@error";<br />
     }<br />
 }</p>
 

@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="服务质量衡量抽象心经 Feb 2nd, 2016 马上过年了，先祝大家新快乐、万事如意！ 一群错综复杂的服务，如何去衡量质量，如何去快速找到问题，如何每个环节都有“眼线”？ Read on &rarr; 8182015年总结和2016年预测 Dec 31st, 2015 2015年， &hellip;">
+  <meta name="description" content="C++ Protobuf中set_allocated引起的double Free Core Dump 在c++中使用protobuf的时候，大多数元素，我们可以直接set_xxx，如果有嵌套进去一个对象，会有set_allocated_xxx的方法和mutable_xxx的方法。 这里有一个坑 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -79,6 +79,55 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2016/03/24/protobuf-double-free/">C++ Protobuf中set_allocated引起的double Free Core Dump</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-03-24T16:09:04+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg alt=c></p>
+
+<p>在c++中使用protobuf的时候，大多数元素，我们可以直接set_xxx，如果有嵌套进去一个对象，会有set_allocated_xxx的方法和mutable_xxx的方法。</p>
+
+<p>这里有一个坑。</p>
+
+<h2>现象</h2>
+
+<p>首先，看pb定义：</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/03/24/protobuf-double-free/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2016/02/02/service-memo/">服务质量衡量抽象心经</a></h1>
     
     
@@ -95,7 +144,7 @@
   
 
 
-<time datetime="2016-02-02T10:30:54+08:00" pubdate data-updated="true">Feb 2<span>nd</span>, 2016</time>
+<time datetime="2016-02-02T10:30:54+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -140,7 +189,7 @@
   
 
 
-<time datetime="2015-12-31T16:29:11+08:00" pubdate data-updated="true">Dec 31<span>st</span>, 2015</time>
+<time datetime="2015-12-31T16:29:11+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -187,7 +236,7 @@
   
 
 
-<time datetime="2015-10-21T17:26:27+08:00" pubdate data-updated="true">Oct 21<span>st</span>, 2015</time>
+<time datetime="2015-10-21T17:26:27+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -209,9 +258,9 @@
 </ul>
 
 
-<p>&mdash; 这应该是xxx的问题，和我们这边没有关系。</p>
+<p>&ndash; 这应该是xxx的问题，和我们这边没有关系。</p>
 
-<p>&mdash; 这可能由于xxx超时引起的，我们也没有办法。</p>
+<p>&ndash; 这可能由于xxx超时引起的，我们也没有办法。</p>
 
 <ul>
 <li>很多很容易发现的问题就这样放松了警惕，慢慢积累成了重大问题。</li>
@@ -250,7 +299,7 @@
   
 
 
-<time datetime="2015-07-17T18:05:16+08:00" pubdate data-updated="true">Jul 17<span>th</span>, 2015</time>
+<time datetime="2015-07-17T18:05:16+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -307,7 +356,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2015/06/03/are-u-ok/">R U Ok&#8211;客户端网络优化实践</a></h1>
+      <h1 class="entry-title"><a href="/blog/2015/06/03/are-u-ok/">R U Ok--客户端网络优化实践</a></h1>
     
     
       <p class="meta">
@@ -323,7 +372,7 @@
   
 
 
-<time datetime="2015-06-03T16:11:08+08:00" pubdate data-updated="true">Jun 3<span>rd</span>, 2015</time>
+<time datetime="2015-06-03T16:11:08+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -378,7 +427,7 @@
   
 
 
-<time datetime="2015-04-13T10:00:00+08:00" pubdate data-updated="true">Apr 13<span>th</span>, 2015</time>
+<time datetime="2015-04-13T10:00:00+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -425,7 +474,7 @@
   
 
 
-<time datetime="2015-03-04T14:51:29+08:00" pubdate data-updated="true">Mar 4<span>th</span>, 2015</time>
+<time datetime="2015-03-04T14:51:29+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -529,7 +578,7 @@
   
 
 
-<time datetime="2015-02-04T15:22:29+08:00" pubdate data-updated="true">Feb 4<span>th</span>, 2015</time>
+<time datetime="2015-02-04T15:22:29+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -544,7 +593,7 @@
 
 <ul>
 <li>SelectorProvider在Solaris上有新实现（基于Solaris事件端口机制）。这种SelectorProvider有可能在一些工作负荷下有可能会提升性能和扩展性。/dev/poll这种SelectorProvider依旧是默认的。要使用Solaris事件端口机制，启动的时候要设置系统属性java.nio.channels.spi.Selector为sun.nio.ch.EventPortSelectorProvider。</li>
-<li>将&lt;JDK_HOME>/jre/lib/charsets.jar文件大小减小。</li>
+<li>将<JDK_HOME>/jre/lib/charsets.jar文件大小减小。</li>
 <li>java.lang.String(byte[], *)构造函数和java.lang.String.getBytes()方法的性能改善。</li>
 </ul>
 
@@ -581,7 +630,7 @@
   
 
 
-<time datetime="2014-12-30T14:31:30+08:00" pubdate data-updated="true">Dec 30<span>th</span>, 2014</time>
+<time datetime="2014-12-30T14:31:30+08:00" pubdate data-updated="true"></time>
         
       </p>
     
@@ -600,10 +649,10 @@
 <blockquote><p>设置/etc/pptpd.conf中的localip与remoteip，分别表示虚拟出来的双方ip范围。
 <br>设置/etc/ppp/chap-secrets中的用户名密码和连接ip等。
 <br>service pptpd start
-<br>iptables -A FORWARD -p tcp &mdash;syn -s 172.16.36.0/24 -j TCPMSS &mdash;set-mss 1356</p></blockquote></li>
+<br>iptables -A FORWARD -p tcp &ndash;syn -s 172.16.36.0/24 -j TCPMSS &ndash;set-mss 1356</p></blockquote></li>
 <li><p>client上apt-get install安装的pptpsetup，设置好用户名密码，启动vpn连接。</p>
 
-<blockquote><p>/usr/sbin/pptpsetup &mdash;create vpn &mdash;server <em>.</em>.<em>.</em>(server ip) &mdash;username vpn &mdash;password ASDF &mdash;encrypt &mdash;start</p></blockquote></li>
+<blockquote><p>/usr/sbin/pptpsetup &ndash;create vpn &ndash;server <em>.</em>.<em>.</em>(server ip) &ndash;username vpn &ndash;password ASDF &ndash;encrypt &ndash;start</p></blockquote></li>
 <li><p>pptpd v1.4.0</p></li>
 </ul>
 
@@ -627,81 +676,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/11/how-to-big-network/">如何做一个快速运转的大规模网络开发公司</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-12-11T11:12:21+08:00" pubdate data-updated="true">Dec 11<span>th</span>, 2014</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20141211/thinking.jpg></p>
-
-<p>受《精益创业》 <a href="http://www.duokan.com/book/35802">http://www.duokan.com/book/35802</a> 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。</p>
-
-<p>不仅仅是一些令人苦恼的“人的问题”，还有一些，是无从下手、或者不知道未来是怎样的疑惑。</p>
-
-<p>以下，列出一些“看得见的未来”，因为是一些系统已经在线上服务过亿的用户，如果你在思考相同的问题，也许会有一些用处。</p>
-
-<h1>一.流程与制度</h1>
-
-<h2>1.代码质量</h2>
-
-<ul>
-<li>没有经过适量单元测试的代码，不能发起code review。</li>
-<li>codereview:每行code都经过超过两双眼睛阅读。</li>
-<li>没有经过code review的代码不能进入代码库。</li>
-<li>没有经过完整bvt测试的代码，不能merge到线上分支。</li>
-<li>没有完成上述流程的代码，不应该被用户访问到。</li>
-</ul>
-
-
-<h2>2.故障报告</h2>
-
-<ul>
-<li>实际上最有效的制度是postmortem制度，但往往在国内被称为“故障报告”。</li>
-<li>如果在你的公司里，《故障报告》与工资是挂钩的，恭喜你，制度用错了。</li>
-<li>故障报告的本意，是让发生的故障告诉所有的人，让所有的工程师都学到，这次故障的起因是什么、如何避免。</li>
-<li>故障报告绝对不是用来惩罚和警告你犯错了。</li>
-<li>不情愿的故障报告，宣告了这个制度在你司实施的失败。</li>
-<li>经常性的重复的故障报告，一定是制度没有彻底实施或者招聘人员眼神错了（眼神错的几率小之又小）。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/11/how-to-big-network/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
-      <a class="prev" href="/blog/page/2/">&larr; Older</a>
+      <a class="prev" href="2">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     

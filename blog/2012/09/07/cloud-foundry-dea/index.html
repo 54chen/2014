@@ -124,27 +124,27 @@ EM.run {<br />
 
 <p>然后进到lib/dea/agent.rb:</p>
 
-<p><blockquote>NATS.start(:uri => @nats_uri) do &#8230;</blockquote></p>
+<p><blockquote>NATS.start(:uri => @nats_uri) do ...</blockquote></p>
 
 <p>里面注册了各种各样的收到对应消息干什么活的定义，我们来看其中几条线：<br />
 1. 收到update:<br />
-        NATS.subscribe(&#8216;dea.update&#8217;) { |msg| process_dea_update(msg) }<br />
+        NATS.subscribe('dea.update') { |msg| process_dea_update(msg) }<br />
 上一句是说收到update的指令， process_dea_update里面关键的一句：<br />
 	register_instance_with_router(instance, :uris => (uris - current_uris))<br />
 通过NATS告诉router，新的app来了。</p>
 
 <p>2.收到start:<br />
-	NATS.subscribe(&#8220;dea.#{uuid}.start&#8221;) { |msg| process_dea_start(msg) }<br />
+	NATS.subscribe("dea.#{uuid}.start") { |msg| process_dea_start(msg) }<br />
 在process_dea_start里面：<br />
-	start_operation = lambda do&#8230; 把app下载回来，修改好权限什么的。<br />
+	start_operation = lambda do... 把app下载回来，修改好权限什么的。<br />
 	下面用了fiber（它是ruby里的协程，用来达到异步线程的效果，但是开销要比线程低）：<br />
 	f = Fiber.new do..<br />
 	f.resume<br />
 在协程中，最关键的调用：<br />
 	stage_app_dir(bits_file, bits_uri, sha1, tgz_file, instance_dir, runtime)<br />
 		bind_local_runtime(instance_dir, runtime)<br />
-			startup_contents.gsub!(&#8216;%VCAP_LOCAL_RUNTIME%&#8217;, runtime[&#8216;executable&#8217;]) // 替换运行时路径 <br />
-			File.open(startup, &#8216;w&#8217;) { |f| f.write(new_startup) } #写入运行的脚本<br />
+			startup_contents.gsub!('%VCAP_LOCAL_RUNTIME%', runtime['executable']) // 替换运行时路径 <br />
+			File.open(startup, 'w') { |f| f.write(new_startup) } #写入运行的脚本<br />
  一切就绪之后，调用先前准备好的lambda:<br />
           start_operation.call<br />
 然后去运行各种shell命令，包括启动应用。</p>

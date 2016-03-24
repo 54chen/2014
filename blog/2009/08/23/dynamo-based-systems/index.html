@@ -157,7 +157,7 @@ store.delete(key)</pre>
 
 <p>同样，因为负载过重或者是维护原因的停机，服务器经常会不可用。如果有S台机器并且每台机器一天有p的概率会独自挂掉，因此一天里一台机器丢失数据的概率为1 - (1 - <em>p</em>)<sup><em>s</em></sup>，显然，鉴于这一事实，我们不能将数据只保存在一台机器上，或者说，数据丢失的概率与群集中的数量成反比。</p>
 
-<p>最简单的方式来完成这件事是，将数据分成S个分区（每个机器一个），并且在R台机器上面保存键为K的值的拷贝。用K这个键来关联R台机器的一种方法是，设a=K%S，然后将这个值保存在机器a，a+1，a+2，&#8230;a+r。因此，对于任何的概率p，你都可以选择一个合适的复制因子R，来达到一个可接受的够低的数据丢失的概率。</p>
+<p>最简单的方式来完成这件事是，将数据分成S个分区（每个机器一个），并且在R台机器上面保存键为K的值的拷贝。用K这个键来关联R台机器的一种方法是，设a=K%S，然后将这个值保存在机器a，a+1，a+2，...a+r。因此，对于任何的概率p，你都可以选择一个合适的复制因子R，来达到一个可接受的够低的数据丢失的概率。</p>
 
 <p>这个系统有个非常漂亮的特性，那就是任何人只要知道数据的key就可以计算到数据所处的位置，系统允许我们以peer-to-peer的方式做数据寻找，而不需要联系一个装有所有的key到服务器的映射信息的中央元数据服务器。</p>
 
@@ -183,15 +183,15 @@ store.delete(key)</pre>
 
 <p>通过输入在存储上的配置文件，我们可以广泛地支持以下各种类型:</p>
 
-<p>json&#8211;二进制，类型的JSON数据模型，支持列表，地图，日期，布尔值和各种精度数字。这是唯一的一种可以从字节&lt;-&gt;对象和字符串&lt;-&gt;对象映射的序列化的类型。这就意味着，它可以和SQL相互作用（例如通过命令行客户端）。我们当前的产品设计中使用了一种有类型的、压缩的、结构检查的类Json格式；但这并没有特殊的状态，对于其他的应用软件来说，其他的序列化机制可能会更好。</p>
+<p>json--二进制，类型的JSON数据模型，支持列表，地图，日期，布尔值和各种精度数字。这是唯一的一种可以从字节&lt;-&gt;对象和字符串&lt;-&gt;对象映射的序列化的类型。这就意味着，它可以和SQL相互作用（例如通过命令行客户端）。我们当前的产品设计中使用了一种有类型的、压缩的、结构检查的类Json格式；但这并没有特殊的状态，对于其他的应用软件来说，其他的序列化机制可能会更好。</p>
 
-<p>字符串&#8211;只保存原生的字条串类型。对xml数据块比较有用。</p>
+<p>字符串--只保存原生的字条串类型。对xml数据块比较有用。</p>
 
-<p>java序列化&#8211;我们的老朋友java序列化。当你保存许多的java对象之前，请确认了解java序列化所提供的兼容性保证。</p>
+<p>java序列化--我们的老朋友java序列化。当你保存许多的java对象之前，请确认了解java序列化所提供的兼容性保证。</p>
 
-<p>protobuf&#8211;Protocol buffers是来自google的代码生成的序列化格式，这可能是条不错的道，如果你不需要命令行访问的话。</p>
+<p>protobuf--Protocol buffers是来自google的代码生成的序列化格式，这可能是条不错的道，如果你不需要命令行访问的话。</p>
 
-<p>identity&#8211;这个类型有效地禁止了序列化，将返回给你确切的byte[]</p>
+<p>identity--这个类型有效地禁止了序列化，将返回给你确切的byte[]</p>
 
 <p>字符串和identity的序列化都是相当的不言自明。Protocol Buffers最好的说明应该是google来说。因此本节的剩余部分讲述json背后的机制。
 <h3>json序列化类型详解</h3>
@@ -234,15 +234,15 @@ JAVA代码将会返回List&lt;Integer&gt;。
 <td>8, 16, 32, 64, 32, 64, 32</td>
 <td>Byte, Short, Integer, Long Float, Double, Date</td>
 <td>1</td>
-<td>&#8220;int32&#8221;</td>
+<td>"int32"</td>
 </tr>
 <tr>
 <td>string</td>
 <td>string, bytes</td>
 <td>2 + length of string or bytes</td>
 <td>String, byte[]</td>
-<td>&#8220;hello&#8221;</td>
-<td>&#8220;string&#8221;</td>
+<td>"hello"</td>
+<td>"string"</td>
 </tr>
 <tr>
 <td>boolean</td>
@@ -250,15 +250,15 @@ JAVA代码将会返回List&lt;Integer&gt;。
 <td>1</td>
 <td>Boolean</td>
 <td>true</td>
-<td>&#8220;boolean&#8221;</td>
+<td>"boolean"</td>
 </tr>
 <tr>
 <td>object</td>
 <td>object</td>
 <td>1 + size of contents</td>
 <td>Map&lt;String,Object&gt;</td>
-<td>{&#8220;key1&#8221;: 1, &#8220;key2&#8221;:&#8221;2&#8221;, &#8220;key3&#8221;:false}</td>
-<td>{&#8220;name&#8221;:&#8221;string&#8221;, &#8220;height&#8221;:&#8221;int16&#8221;}</td>
+<td>{"key1": 1, "key2":"2", "key3":false}</td>
+<td>{"name":"string", "height":"int16"}</td>
 </tr>
 <tr>
 <td>array</td>
@@ -266,7 +266,7 @@ JAVA代码将会返回List&lt;Integer&gt;。
 <td>size * sizeof(type)</td>
 <td>List&lt;?&gt;</td>
 <td>[1, 2, 3]</td>
-<td>[&#8220;int32&#8221;]</td>
+<td>["int32"]</td>
 </tr>
 </tbody></table>
 从这个意义上来说，类型定义是一套在标准json上的限制集，这样能使序列化高效执行（通过分段重复的字段，并且压缩数字），并且允许基础数据正确性检测。</p>
@@ -285,11 +285,11 @@ JAVA代码将会返回List&lt;Integer&gt;。
 
 <p>下面有些方法，靠不同的保证和折衷性能来达到一致性：</p>
 
-<p>两步提交&#8211;这是一个锁协议，包括在机器之间两轮的协作。它是完全一致的，但不能兼容出错，而且很慢。</p>
+<p>两步提交--这是一个锁协议，包括在机器之间两轮的协作。它是完全一致的，但不能兼容出错，而且很慢。</p>
 
-<p>Paxos式的共识&#8211;这是一个在一个值上达成共识的协议，能够更多地兼容出错。</p>
+<p>Paxos式的共识--这是一个在一个值上达成共识的协议，能够更多地兼容出错。</p>
 
-<p>读修复&#8211;前两种方法防止永久不一致。这种方法在写的时候写入所有的不一致版本，在读的时候检测所有的冲突并且解决问题。这不涉及协调工作，是完全兼容出错的，但可能需要额外的应用程序逻辑来解决冲突。</p>
+<p>读修复--前两种方法防止永久不一致。这种方法在写的时候写入所有的不一致版本，在读的时候检测所有的冲突并且解决问题。这不涉及协调工作，是完全兼容出错的，但可能需要额外的应用程序逻辑来解决冲突。</p>
 
 <p>我们使用版本和读修复。这有一个最好的可用性保证，和最高的性能（N次复制只需要W次的网络往返写，W可以配置成小于N的值）。两步提交需要2N次的阻塞网络往返。Paxos变化有很大不同，但相比两步提交也差不多。</p>
 
@@ -297,13 +297,13 @@ JAVA代码将会返回List&lt;Integer&gt;。
 
 <p>这里有一些很好的写关于这个问题的东东：
 <ul>
-	<li><a href="http://hnr.dnsalias.net/wordpress/?p=51">Consistency in Amazon&#8217;s Dynamo</a></li>
+	<li><a href="http://hnr.dnsalias.net/wordpress/?p=51">Consistency in Amazon's Dynamo</a></li>
 	<li><a href="http://research.microsoft.com/users/lamport/pubs/paxos-simple.pdf">Paxos Made Simple</a></li>
 	<li><a href="http://en.wikipedia.org/wiki/Two-phase_commit_protocol">Two-phase commit</a></li>
-	<li><a href="http://www.allthingsdistributed.com/2008/12/eventually_consistent.html">The meaning&#8217;s of eventual consistency (by Amazon&#8217;s CTO Werner Vogels)</a></li>
+	<li><a href="http://www.allthingsdistributed.com/2008/12/eventually_consistent.html">The meaning's of eventual consistency (by Amazon's CTO Werner Vogels)</a></li>
 </ul>
 <h3>分布式系统中的版本</h3>
-一个简单的版本控制系统只是乐观锁定&#8211;我们保存一个唯一的计数器或者是时钟值在每一片数据上，并且只允许更新数据的时候才能更新这个值。</p>
+一个简单的版本控制系统只是乐观锁定--我们保存一个唯一的计数器或者是时钟值在每一片数据上，并且只允许更新数据的时候才能更新这个值。</p>
 
 <p>在集中式的数据库中这运行良好，但在一个机器时好时坏、复制需要时间的分布式系统中，它就挂了。对于这种用法，一个单一的值不能保存足够的写入历史，以便我们丢弃老的版本。考虑下面的一系列指令：
 <pre>#两个机器同时取一个相同的值
@@ -311,14 +311,14 @@ JAVA代码将会返回List&lt;Integer&gt;。
 [client 2] get(1234) =&gt; {"name":"jay", "email":"jay.kreps@linkedin.com"}</pre></p>
 
 <p>#1客户端作了一次对name的修改并且put了一下<br />
-[client 1] put(1234, {&#8220;name&#8221;:&#8221;jay kreps&#8221;, &#8220;email&#8221;:&#8221;jay.kreps@linkedin.com&#8221;})<br />
+[client 1] put(1234, {"name":"jay kreps", "email":"jay.kreps@linkedin.com"})<br />
 #2客户端作了一次对email的修改也put了一下<br />
-[client 2] put(1234, {&#8220;name&#8221;:&#8221;jay&#8221;, &#8220;email&#8221;:&#8221;jay.kreps@yahoo.com&#8221;})</p>
+[client 2] put(1234, {"name":"jay", "email":"jay.kreps@yahoo.com"})</p>
 
 <p>#现在我们有了以下的冲突版本<br />
-{&#8220;name&#8221;:&#8221;jay&#8221;, &#8220;email&#8221;:&#8221;jay.kreps@linkedin.com&#8221;}<br />
-{&#8220;name&#8221;:&#8221;jay kreps&#8221;, &#8220;email&#8221;:&#8221;jay.kreps@linkedin.com&#8221;}<br />
-{&#8220;name&#8221;:&#8221;jay&#8221;, &#8220;email&#8221;:&#8221;jay.kreps@yahoo.com&#8221;}
+{"name":"jay", "email":"jay.kreps@linkedin.com"}<br />
+{"name":"jay kreps", "email":"jay.kreps@linkedin.com"}<br />
+{"name":"jay", "email":"jay.kreps@yahoo.com"}
 在这个模型中，后面两次的写入使原值不再可用（因为是基于原值的修改）。尽管如此，我们没有规则来告诉服务器是要抛弃对name的修改，还是对email的修改。因此我们需要一个版本系统来允许我们检测重写和抛弃老版本内容，同时也要能检测冲突并且让客户去解决。</p>
 
 <p>解决这个问题的一个答案是靠传说中的向量时钟版本。一个向量时钟在每次写机器的时候都保持一个计数器，在两个版本冲突和一个版本成功或者是比另一个新的时候，我们能计算它。</p>
@@ -349,15 +349,15 @@ JAVA代码将会返回List&lt;Integer&gt;。
 <p>处理批量计算的大多数痛苦来自于从数据仓库或者是hadoop传输数据到线上系统的“推送”的过程。在传统DB这意味着在线上机器重建新数据的索引。做数以百万计的insert和update操作一般不会所有都很高效地执行，通常在一个sql数据库里数据需要被布到一个新的表中，当新表建立完毕，再交换回来替换当前数据。比数百万计的单独的update操作来说这样做更好，但是，当同时服务于真实环境时，这仍然意味着线上系统现正为新的数据集（或者是performa）兴建许多GB的索引。仅此一点可能需要数小时或数天，并可能会毁了实时查询的性能。有人想搞定这个问题，通过将数据库级别的swap换出（比如说，有一个在线的DB和一个离线的DB，进行交换），但这要求做许多事并且意味着你将只有一半的硬件正在使用。伏地魔依靠尽可能的离线重建自身的索引（在hadoop之上或者其他），然后简单地推送给线上机器并且透明地进行交换。
 <h2>参考文献</h2>
 <ul>
-	<li> <a href="http://s3.amazonaws.com/AllThingsDistributed/sosp/amazon-dynamo-sosp2007.pdf"> Dynamo: Amazon&#8217;s Highly Available Key-Value Store </a> — 	 This is the original!</li>
+	<li> <a href="http://s3.amazonaws.com/AllThingsDistributed/sosp/amazon-dynamo-sosp2007.pdf"> Dynamo: Amazon's Highly Available Key-Value Store </a> — 	 This is the original!</li>
 	<li> <a href="https://research.microsoft.com/en-us/um/people/lamport/pubs/time-clocks.pdf"> Time, Clocks, and the Ordering of Events in a Distributed System </a> — 	 This is the template for the versioning system</li>
-	<li> <a href="http://www.allthingsdistributed.com/2008/12/eventually_consistent.html"> Eventual Consistency Revisited </a> Very interesting discussion on Werner Vogels&#8217; blog on the developers interaction with the storage system and what the tradeoffs mean in practical terms.</li>
-	<li> <a href="http://portal.acm.org/citation.cfm?id=564601">Brewer&#8217;s conjecture and the feasibility of consistent, available, partition-tolerant web services</a> — Consistency, Availability, Partition-tolerance choose two.</li>
+	<li> <a href="http://www.allthingsdistributed.com/2008/12/eventually_consistent.html"> Eventual Consistency Revisited </a> Very interesting discussion on Werner Vogels' blog on the developers interaction with the storage system and what the tradeoffs mean in practical terms.</li>
+	<li> <a href="http://portal.acm.org/citation.cfm?id=564601">Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services</a> — Consistency, Availability, Partition-tolerance choose two.</li>
 	<li> <a href="http://www.oracle.com/technology/products/berkeley-db/pdf/berkeley-db-perf.pdf">Berkeley DB performance</a> — A somewhat biased overview of bdb performance.</li>
-	<li> <a href="http://labs.google.com/papers/bigtable-osdi06.pdf">Google&#8217;s Bigtable</a> — For comparison, a very different approach.</li>
-	<li> <a href="http://www.cs.brown.edu/%7Eugur/fits_all.pdf"> One Size Fit&#8217;s All: An Idea Whose Time Has Come and Gone </a> — Very interesting paper by the creator of Ingres, Postgres and Vertica</li>
+	<li> <a href="http://labs.google.com/papers/bigtable-osdi06.pdf">Google's Bigtable</a> — For comparison, a very different approach.</li>
+	<li> <a href="http://www.cs.brown.edu/%7Eugur/fits_all.pdf"> One Size Fit's All: An Idea Whose Time Has Come and Gone </a> — Very interesting paper by the creator of Ingres, Postgres and Vertica</li>
 	<li> <a href="http://www.cs.brown.edu/%7Eugur/osfa.pdf"> One Size Fits All? - Part 2, Benchmarking Results </a> — Benchmarks to go with the above paper</li>
-	<li> <a href="http://hnr.dnsalias.net/wordpress/?p=51"> Consistency in Amazon&#8217;s Dynamo </a> — A good blog post on Dynamo</li>
+	<li> <a href="http://hnr.dnsalias.net/wordpress/?p=51"> Consistency in Amazon's Dynamo </a> — A good blog post on Dynamo</li>
 	<li> <a href="http://research.microsoft.com/users/lamport/pubs/paxos-simple.pdf"> Paxos Made Simple </a></li>
 	<li> <a href="http://en.wikipedia.org/wiki/Two-phase_commit_protocol">Two-phase commit</a> — Wikipedia description.</li>
 </ul>

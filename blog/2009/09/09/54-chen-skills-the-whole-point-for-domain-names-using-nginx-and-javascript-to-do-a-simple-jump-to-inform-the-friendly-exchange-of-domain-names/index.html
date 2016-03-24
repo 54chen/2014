@@ -120,22 +120,22 @@ rewrite ^/(.*)?$ /index.html?t=$1 last;<br />
 }<br />
 }
 第二步，在/old下放进一个index.html，<a href="http://www.54chen.com/576-54%e9%99%88%e7%a7%91%e5%ad%a6%e9%99%a28021x%e6%ba%90%e4%bb%a3%e7%a0%81%e4%b8%8b%e8%bd%bd/">代码</a>如下：
-<blockquote>&lt;div class=&#8221;all-error&#8221;&gt;</blockquote></p>
+<blockquote>&lt;div class="all-error"&gt;</blockquote></p>
 
 <p>&lt;h1&gt;&lt;span&gt;old换名啦！&lt;/span&gt;<br />
 &lt;br&gt;<br />
-原来old更名为new，请放心不会影响您的使用，新的地址为&lt;a href=&#8221;http://new.com&#8221; id=&#8221;link&#8221;&gt;new.c<br />
+原来old更名为new，请放心不会影响您的使用，新的地址为&lt;a href="http://new.com" id="link"&gt;new.c<br />
 om&lt;/a&gt;谢谢您的支持！<br />
 &lt;/h1&gt;<br />
 &lt;p&gt;<br />
-2秒之后自动跳转到新的地址&#8230;<br />
+2秒之后自动跳转到新的地址...<br />
 &lt;/p&gt;<br />
 &lt;/div&gt;</p>
 
-<p>&lt;script type=&#8221;text/javascript&#8221;&gt;<br />
-document.getElementById(&#8220;link&#8221;).href = location.href.replace(&#8220;old.com&#8221;,&#8221;new.com&#8221;);<br />
+<p>&lt;script type="text/javascript"&gt;<br />
+document.getElementById("link").href = location.href.replace("old.com","new.com");<br />
 setTimeout(function(){<br />
-location.href =  location.href.replace(&#8220;old.com&#8221;,&#8221;new.com&#8221;);<br />
+location.href =  location.href.replace("old.com","new.com");<br />
 }, 2000)<br />
 &lt;/script&gt;
 第三步，关机，回家睡觉</p>

@@ -114,7 +114,7 @@
 &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;<br />
 &lt;/activation&gt;<br />
 &lt;properties&gt;<br />
-&lt;!&#8211; EXAMPLE FOR MYSQL &#8211;&gt;<br />
+&lt;!-- EXAMPLE FOR MYSQL --&gt;<br />
 &lt;sonar.jdbc.url&gt;<br />
 jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;amp;characterEncoding=utf8<br />
 &lt;/sonar.jdbc.url&gt;<br />
@@ -122,16 +122,16 @@ jdbc:mysql://localhost:3306/sonar?useUnicode=true&amp;amp;characterEncoding=utf8
 &lt;sonar.jdbc.username&gt;sonar&lt;/sonar.jdbc.username&gt;<br />
 &lt;sonar.jdbc.password&gt;sonar&lt;/sonar.jdbc.password&gt;</blockquote></p>
 
-<p>&lt;!&#8211; SERVER ON A REMOTE HOST &#8211;&gt;<br />
+<p>&lt;!-- SERVER ON A REMOTE HOST --&gt;<br />
 &lt;sonar.host.url&gt;http://localhost:8888&lt;/sonar.host.url&gt;<br />
 &lt;/properties&gt;<br />
 &lt;/profile&gt;
 <strong>增加mysql权限 </strong>
-GRANT all ON sonar.* TO sonar@localhost IDENTIFIED BY &#8216;sonar&#8217;;<br />
+GRANT all ON sonar.* TO sonar@localhost IDENTIFIED BY 'sonar';<br />
 FLUSH PRIVILEGES ;</p>
 
 <p><strong>vim .bashrc</strong>
-export MAVEN_OPTS=&#8221;-Xmx512m -XX:MaxPermSize=128m -Duser.timezone=Asia/Shanghai&#8221;</p>
+export MAVEN_OPTS="-Xmx512m -XX:MaxPermSize=128m -Duser.timezone=Asia/Shanghai"</p>
 
 <p>source .bashrc</p>
 

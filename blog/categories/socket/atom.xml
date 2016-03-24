@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Socket | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/socket/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-02-02T12:01:13+08:00</updated>
+  <updated>2016-03-24T21:18:45+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -68,11 +68,9 @@ int i = sc.read(buff)</p></blockquote>
 
 <h1>四、从kernel的角度</h1>
 
-<blockquote><p>static int unix_stream_recvmsg(struct kiocb <em>iocb, struct socket </em>sock,</p>
-
-<pre><code>        struct msghdr *msg, size_t size,
-        int flags)
-</code></pre></blockquote>
+<blockquote><p>static int unix_stream_recvmsg(struct kiocb <em>iocb, struct socket </em>sock,
+            struct msghdr *msg, size_t size,
+            int flags)</p></blockquote>
 
 <ul>
 <li><a href="http://blog.chinaunix.net/uid-23629988-id-3035613.html">http://blog.chinaunix.net/uid-23629988-id-3035613.html</a></li>

@@ -184,7 +184,7 @@
 
 <p><span> </span>long current = _c.get();</p>
 
-<p><span> </span>System.out.println(&#8220;Rate: &#8221; + (current - _last) + &#8221; req/s&#8221;);</p>
+<p><span> </span>System.out.println("Rate: " + (current - _last) + " req/s");</p>
 
 <p><span> </span>_last = current;</p>
 
@@ -210,7 +210,7 @@
 
 <p><span> </span>public EchoThread(String ip, String port, int in, ThreadGroup group) {</p>
 
-<p><span> </span>super(group, &#8220;EchoThread-&#8221; + in);</p>
+<p><span> </span>super(group, "EchoThread-" + in);</p>
 
 <p><span> </span>// // create the object</p>
 
@@ -220,11 +220,11 @@
 
 <p><span> </span>// // open the database</p>
 
-<p><span> </span>// if(!tdb.open(&#8220;casket&#8221;+in+&#8221;.tct&#8221;, TDB.OWRITER | TDB.OCREAT)){</p>
+<p><span> </span>// if(!tdb.open("casket"+in+".tct", TDB.OWRITER | TDB.OCREAT)){</p>
 
 <p><span> </span>// int ecode = tdb.ecode();</p>
 
-<p><span> </span>// System.err.println(&#8220;open error: &#8221; + tdb.errmsg(ecode));</p>
+<p><span> </span>// System.err.println("open error: " + tdb.errmsg(ecode));</p>
 
 <p><span> </span>// }</p>
 
@@ -242,11 +242,11 @@
 
 <p><span> </span>// open the database</p>
 
-<p>//<span> </span>if (!tdb.open(&#8220;casket&#8221; + Thread.currentThread().getId() + &#8220;.tct&#8221;, TDB.OWRITER | TDB.OCREAT)) {</p>
+<p>//<span> </span>if (!tdb.open("casket" + Thread.currentThread().getId() + ".tct", TDB.OWRITER | TDB.OCREAT)) {</p>
 
 <p>//<span> </span>int ecode = tdb.ecode();</p>
 
-<p>//<span> </span>System.err.println(&#8220;open error: &#8221; + tdb.errmsg(ecode));</p>
+<p>//<span> </span>System.err.println("open error: " + tdb.errmsg(ecode));</p>
 
 <p>//<span> </span>}</p>
 
@@ -256,31 +256,31 @@
 
 <p><span> </span>TDB tdb = dbList.get(0);</p>
 
-<p><span> </span>String pkey = index + &#8220;asdf&#8221;;</p>
+<p><span> </span>String pkey = index + "asdf";</p>
 
 <p><span> </span>Map&lt;String, String&gt; cols = new HashMap&lt;String, String&gt;();</p>
 
-<p><span> </span>cols.put(&#8220;name&#8221;, &#8220;mikio&#8221; + index);</p>
+<p><span> </span>cols.put("name", "mikio" + index);</p>
 
-<p><span> </span>cols.put(&#8220;age&#8221;, &#8220;30&#8221;);</p>
+<p><span> </span>cols.put("age", "30");</p>
 
-<p><span> </span>cols.put(&#8220;lang&#8221;, &#8220;ja,en,c&#8221;);</p>
+<p><span> </span>cols.put("lang", "ja,en,c");</p>
 
 <p><span> </span>if (!tdb.put(pkey, cols)) {</p>
 
 <p><span> </span>int ecode = tdb.ecode();</p>
 
-<p><span> </span>System.err.println(&#8220;put error: &#8221; + tdb.errmsg(ecode) + &#8221; key:&#8221; + pkey + &#8221;  value:&#8221; + cols);</p>
+<p><span> </span>System.err.println("put error: " + tdb.errmsg(ecode) + " key:" + pkey + "  value:" + cols);</p>
 
 <p><span> </span>}</p>
 
-<p><span> </span>// client.insert(&#8220;Table1&#8221;, &#8220;name&#8221;+index, &#8220;Standard1:name&#8221;,</p>
+<p><span> </span>// client.insert("Table1", "name"+index, "Standard1:name",</p>
 
-<p><span> </span>// (&#8220;name&#8221;+index).getBytes(&#8220;UTF-8&#8221;),</p>
+<p><span> </span>// ("name"+index).getBytes("UTF-8"),</p>
 
 <p><span> </span>// System.currentTimeMillis(), true);</p>
 
-<p><span> </span>// client.get_column(&#8220;Table1&#8221;, &#8220;name0&#8221;, &#8220;Standard1:name&#8221;);</p>
+<p><span> </span>// client.get_column("Table1", "name0", "Standard1:name");</p>
 
 <p><span> </span>index++;</p>
 
@@ -300,7 +300,7 @@
 
 <p><span> </span>//int ecode = tdb.ecode();</p>
 
-<p><span> </span>// System.err.println(&#8220;close error: &#8221; +</p>
+<p><span> </span>// System.err.println("close error: " +</p>
 
 <p><span> </span>// tdb.errmsg(ecode));</p>
 
@@ -326,7 +326,7 @@
 
 <p><span> </span>if (args.length != 1) {</p>
 
-<p><span> </span>System.out.println(&#8220;Usage: Benchmark &lt;concurrent&gt;&#8221;);</p>
+<p><span> </span>System.out.println("Usage: Benchmark &lt;concurrent&gt;");</p>
 
 <p><span> </span>System.exit(1);</p>
 
@@ -338,9 +338,9 @@
 
 <p><span> </span>Integer concurrent = Integer.valueOf(args[0]);</p>
 
-<p><span> </span>System.out.println(&#8220;ip = &#8221; + ip + &#8220;,port = &#8221; + port + &#8220;,concurrent = &#8221; + concurrent);</p>
+<p><span> </span>System.out.println("ip = " + ip + ",port = " + port + ",concurrent = " + concurrent);</p>
 
-<p><span> </span>ThreadGroup group = new ThreadGroup(&#8220;Benchmark&#8221;);</p>
+<p><span> </span>ThreadGroup group = new ThreadGroup("Benchmark");</p>
 
 <p><span> </span>List&lt;Thread&gt; threads = new ArrayList&lt;Thread&gt;();</p>
 
@@ -350,11 +350,11 @@
 
 <p><span> </span>//db.optimize();</p>
 
-<p><span> </span>if (!db.open(&#8220;./test&#8221; + i + &#8220;.tdb&#8221;, TDB.OCREAT | TDB.OWRITER)) {</p>
+<p><span> </span>if (!db.open("./test" + i + ".tdb", TDB.OCREAT | TDB.OWRITER)) {</p>
 
 <p><span> </span>int ecode = db.ecode();</p>
 
-<p><span> </span>System.err.println(&#8220;open error: &#8221; + TDB.errmsg(ecode));</p>
+<p><span> </span>System.err.println("open error: " + TDB.errmsg(ecode));</p>
 
 <p><span> </span>continue;</p>
 

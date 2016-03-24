@@ -122,31 +122,31 @@
 <p>　　下面这一小段“劣质”的PHP代码是一道简化了的测试题。这种问题就像在问：你该怎样优化这段代码？</p>
 
 <p>&lt;?<br />
-echo(&#8220;&lt;p&gt;Search results for query: &#8221; .<br />
-    $_GET[&#8216;query&#8217;] . &#8220;.&lt;/p&gt;&#8221;);<br />
+echo("&lt;p&gt;Search results for query: " .<br />
+    $_GET['query'] . ".&lt;/p&gt;");<br />
 ?&gt;</p>
 
 <p>　　这段代码的主要问题在于它把用户提交的数据直接显示到了网页上，从而产生XSS漏洞。其实有很多方法可以填补这个漏洞。那么，什么代码是我们想要的呢？</p>
 
 <p>&lt;?<br />
-echo(&#8220;&lt;p&gt;Search results for query: &#8221; .<br />
-    htmlspecialchars($_GET[&#8216;query&#8217;]) . &#8220;.&lt;/p&gt;&#8221;);<br />
+echo("&lt;p&gt;Search results for query: " .<br />
+    htmlspecialchars($_GET['query']) . ".&lt;/p&gt;");<br />
 ?&gt;</p>
 
 <p>　　这是最低要求。XSS漏洞用htmlspecialchars函数填补了，从而屏蔽了非法字符。</p>
 
 <p>&lt;?<em>php</em>   <br />
-if (isset($_GET[&#8216;query&#8217;]))   <br />
+if (isset($_GET['query']))   <br />
 {   <br />
-  echo &#8216;&lt;p&gt;Search results for query: &#8216;,   <br />
-      htmlspecialchars($_GET[&#8216;query&#8217;], ENT_QUOTES), &#8216;.&lt;/p&gt;&#8217;;   <br />
+  echo '&lt;p&gt;Search results for query: ',   <br />
+      htmlspecialchars($_GET['query'], ENT_QUOTES), '.&lt;/p&gt;';   <br />
 }   <br />
 ?&gt; </p>
 
 <p>　　能写出这样代码的人应该是我想要录用的人了。
 <ul>
 	<li>&lt;?被替换成了&lt;?<em>php</em>，这样更符合XML规范。</li>
-	<li>在输出$_GET[&#8216;query&#8217;]的值之前先判断它是否为空。</li>
+	<li>在输出$_GET['query']的值之前先判断它是否为空。</li>
 	<li>echo命令中多余的括号被去掉了。</li>
 	<li>字符串用单引号限定，从而节省了PHP从字符串中搜索可替换的变量的时间。</li>
 	<li>用逗号代替句号，节省了echo的时间。</li>

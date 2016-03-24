@@ -14,13 +14,13 @@
 server
 resin 4
 1 rose+1 thrift
-java version &#8220;1.6.0_29&#8221;
+java version "1.6.0_29"
 Ubuntu 10.04 LTS
 双核cpu
 8G mem client
 macbook pro
 ab server代码
-1. &hellip;">
+1.用thrift创建了一个方法， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -116,7 +116,7 @@ ab server代码
 <tr><td>server</td><td>
 resin 4<br />
 1 rose+1 thrift<br />
-java version &#8220;1.6.0_29&#8221;<br />
+java version "1.6.0_29"<br />
 Ubuntu 10.04 LTS<br />
 双核cpu<br />
 8G mem
@@ -128,11 +128,11 @@ ab
 
 <p><strong>server代码</strong>
 1.用thrift创建了一个方法，内部只有几行代码：
-<blockquote>logger.info(&#8220;in call&#8221;);<br />
+<blockquote>logger.info("in call");<br />
 try {<br />
 Thread.sleep(1000);<br />
 } catch (InterruptedException e) {<br />
-logger.info(&#8220;sleep error&#8221;);<br />
+logger.info("sleep error");<br />
 }</blockquote>
 2.使用的paoding-rose调用这个thrift方法。</p>
 

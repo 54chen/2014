@@ -111,35 +111,35 @@ Febootstrap is a tool like debootstrap in ubuntu.<br />
 Threre is a basic centos system in rootfs dir.</p>
 
 <p><strong>2)install ruby 1.9 (optional)</strong>
-yum -y groupinstall &#8220;Development Tools&#8221;<br />
+yum -y groupinstall "Development Tools"<br />
 yum -y install openssl-devel zlib-devel gcc gcc-c++ make autoconf readline-devel curl-devel expat-devel gettext-devel readline-devel</p>
 
 <p>wget http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz<br />
 tar xzvf yaml-0.1.4.tar.gz<br />
 cd yaml-0.1.4<br />
-./configure &#8211;prefix=/opt/soft/yaml<br />
+./configure --prefix=/opt/soft/yaml<br />
 make && make install</p>
 
 <p>wget http://ruby.taobao.org/mirrors/ruby/ruby-1.9.3-p286.tar.gz<br />
 tar xzvf ruby-1.9.3-p286.tar.gz<br />
 cd ruby-1.9.3-p286<br />
-./configure &#8211;prefix=/opt/soft/ruby  &#8211;enable-shared &#8211;disable-install-doc &#8211;with-opt-dir=/opt/soft/yaml<br />
+./configure --prefix=/opt/soft/ruby  --enable-shared --disable-install-doc --with-opt-dir=/opt/soft/yaml<br />
 make && make install<br />
 ln -s /opt/soft/ruby/bin/* /usr/bin/</p>
 
 <p>gem source -r http://rubygems.org/<br />
 gem source -a http://ruby.taobao.org</p>
 
-<p>gem install bundler &#8211;no-rdoc &#8211;no-ri <br />
-gem install rails &#8211;no-rdoc &#8211;no-ri <br />
+<p>gem install bundler --no-rdoc --no-ri <br />
+gem install rails --no-rdoc --no-ri <br />
 ln -s /opt/soft/ruby/bin/* /usr/bin/</p>
 
 <p><strong>3)install and start cgroups (optional)</strong>
  All of the configuration is here:<br />
  vi /etc/cgconfig.conf <br />
  Turn it on:<br />
- chkconfig &#8211;level 3 cgconfig on<br />
- chkconfig &#8211;list<br />
+ chkconfig --level 3 cgconfig on<br />
+ chkconfig --list<br />
  service cgconfig start</p>
 
 <p><strong>4)turn off selinux</strong>
@@ -164,7 +164,7 @@ ifconfig lo up</p>
 <p>in ssh1:<br />
 ping 10.254.0.221</p>
 
-<p>&#8212;&#8212;&#8212;&#8212;&#8211;EOF&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;<br />
+<p>--------------EOF------------------<br />
 Ha ha, expect my next time write again, write here today, very tired of. </p>
  
 <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>

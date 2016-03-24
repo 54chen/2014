@@ -112,8 +112,8 @@
 4.hive这里使用了mysql来保存metadata<br />
 因为这些信息会被写死在hive的DBS和SBS表里，下面是关键的一步：<br />
 进入mysql，执行下面的sql，
-<blockquote>update DBS set DB_LOCATION_URI=REPLACE(DB_LOCATION_URI,&#8217;old host&#8217;,&#8217;new host&#8217;);<br />
-update SDS set LOCATION=REPLACE(LOCATION,&#8217;old host&#8217;,&#8217;new host&#8217;);</blockquote></p>
+<blockquote>update DBS set DB_LOCATION_URI=REPLACE(DB_LOCATION_URI,'old host','new host');<br />
+update SDS set LOCATION=REPLACE(LOCATION,'old host','new host');</blockquote></p>
 
 <p>启动，一切正常了！迁移hive namenode成功。</p>
 

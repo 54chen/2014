@@ -117,7 +117,7 @@ ubuntu:
 配置文件在/etc/monit.conf</p>
 
 <p><strong>配置发邮件的smtp服务器</strong>
-<blockquote>set mailserver 111.111.111.111 USERNAME &#8220;xxx@xiaomi.com&#8221; PASSWORD &#8220;54chen54chen&#8221;</blockquote></p>
+<blockquote>set mailserver 111.111.111.111 USERNAME "xxx@xiaomi.com" PASSWORD "54chen54chen"</blockquote></p>
 
 <p><strong>配置服务检测的周期</strong>
 <blockquote>set daemon 30     <br />
@@ -136,7 +136,7 @@ ubuntu:
 
 <p><strong>配置监控对象</strong>
 <blockquote>check host webim-91 with address 192.168.1.2<br />
-  if failed host www.miliao.com port 80 proto http and request &#8220;/test.html&#8221;  for 2 times within 2 cycles  then alert</blockquote></p>
+  if failed host www.miliao.com port 80 proto http and request "/test.html"  for 2 times within 2 cycles  then alert</blockquote></p>
 
 <p><strong>其他</strong>
 可以监控的类型有： CHECK PROCESS FILE  FIFO DEVICE DIRECTORY HOST SYSTEM  </p>

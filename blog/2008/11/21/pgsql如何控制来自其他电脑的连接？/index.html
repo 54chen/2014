@@ -101,7 +101,7 @@
 
 <div class="entry-content"><p><ul>
 	<li>缺省情况下，<a href="http://www.54chen.com/c/101">PostgreSQL</a>只允许来自本机且通过 unix  域套接字或TCP/IP方式的连接。你只有在修改了配置文件postgresql.conf中的listen_addresses，且也在配置文件$PGDATA/pg_hba.conf中打开了  基于远程电脑（ host-based ）的身份认证，并重新启动<a href="http://www.54chen.com/c/101">PostgreSQL</a>，否则其他电脑是不能与你的<a href="http://www.54chen.com/c/101">PostgreSQL</a>服务器进行<a href="http://www.54chen.com/c/89">连接</a>的。</li>
-	<li>将postgresql.conf中的listen_addresses设为：listen_addresses = &#8216;*&#8217;</li>
+	<li>将postgresql.conf中的listen_addresses设为：listen_addresses = '*'</li>
 	<li>在pg_hba.conf中加入访问<a href="http://www.54chen.com/c/89">数据库</a>的服务器的IP。如，IP=10.62.130.136，在pg_hba.conf的最后加入 host all  all 10.62.130.136/32 trust</li>
 </ul>
 <!-- end content --></p>

@@ -124,32 +124,32 @@ lex在c下的后缀是*.l  yacc是*.y</blockquote></p>
 从svn取最新的php源代码。
 </blockquote>
 开始深入：
-<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name &#8220;*.l&#8221; -exec grep -Hn &#8220;require_once&#8221; {} \;<br />
-./Zend/zend_language_scanner.l:1093:&#8221;require_once&#8221; {<br />
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.l" -exec grep -Hn "require_once" {} \;<br />
+./Zend/zend_language_scanner.l:1093:"require_once" {<br />
 寻找lex代码扫描器文件中出现require_once的地方，zend_language_scanner.l的1093行。<br />
-1093  &#8220;require_once&#8221; {<br />
+1093  "require_once" {<br />
 1094         return T_REQUIRE_ONCE;<br />
 1095 }</blockquote></p>
 
 <p>然后再搜一下T_REQUIRE_ONCE,
-<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name &#8220;*.y&#8221; -exec grep -Hn &#8220;T_INCLUDE&#8221; {} \;<br />
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.y" -exec grep -Hn "T_INCLUDE" {} \;<br />
 ./Zend/zend_language_parser.y:52:%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE<br />
 ./Zend/zend_language_parser.y:985:	|	T_INCLUDE expr 			{ zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
 ./Zend/zend_language_parser.y:986:	|	T_INCLUDE_ONCE expr 	{ zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }</blockquote></p>
 
 <p>在985行附近，有这样一群代码：
 <blockquote>internal_functions_in_yacc:<br />
-T_ISSET &#8216;(&#8217; isset_variables &#8216;)&#8217; { $$ = $3; }<br />
-|       T_EMPTY &#8216;(&#8217; variable &#8216;)&#8217;        { zend_do_isset_or_isempty(ZEND_ISEMPTY, &amp;$$, &amp;$3 TSRMLS_CC); }<br />
+T_ISSET '(' isset_variables ')' { $$ = $3; }<br />
+|       T_EMPTY '(' variable ')'        { zend_do_isset_or_isempty(ZEND_ISEMPTY, &amp;$$, &amp;$3 TSRMLS_CC); }<br />
 |       T_INCLUDE expr                  { zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
 |       T_INCLUDE_ONCE expr     { zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
-|       T_EVAL &#8216;(&#8217; expr &#8216;)&#8217;     { zend_do_include_or_eval(ZEND_EVAL, &amp;$$, &amp;$3 TSRMLS_CC); }<br />
+|       T_EVAL '(' expr ')'     { zend_do_include_or_eval(ZEND_EVAL, &amp;$$, &amp;$3 TSRMLS_CC); }<br />
 |       T_REQUIRE expr                  { zend_do_include_or_eval(ZEND_REQUIRE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
 |       T_REQUIRE_ONCE expr             { zend_do_include_or_eval(ZEND_REQUIRE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
 ;</blockquote></p>
 
 <p>于是乎，我们需要继续深入寻找zend_do_include_or_eval，
-<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name &#8220;*.c&#8221; -exec grep -Hn &#8220;zend_do_include_or_eval&#8221; {} \;<br />
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.c" -exec grep -Hn "zend_do_include_or_eval" {} \;<br />
 ./Zend/zend_compile.c:4317:void zend_do_include_or_eval(int type, znode *result, const znode *op1 TSRMLS_DC) /*  */</blockquote></p>
 
 <p>zend_do_include_or_eval中组装了一个结构体，ZEND_INCLUDE_OR_EVAL。</p>
@@ -179,7 +179,7 @@ compilation_successful=0;<br />
 
 <p><blockquote>//include输出错误信息时的级别为：E_WARNING<br />
 		case ZMSG_FAILED_INCLUDE_FOPEN:<br />
-			php_error_docref(&#8220;function.include&#8221; TSRMLS_CC, E_WARNING, &#8220;Failed opening &#8216;%s&#8217; for inclusion (include_path=&#8217;%s&#8217;)&#8221;, php_strip_url_passwd((char *) data), STR_PRINT(PG(include_path)));<br />
+			php_error_docref("function.include" TSRMLS_CC, E_WARNING, "Failed opening '%s' for inclusion (include_path='%s')", php_strip_url_passwd((char *) data), STR_PRINT(PG(include_path)));<br />
 			break;<br />
 		//require输出错误信息时的级别为：E_COMPILE_ERROR<br />
 代码略

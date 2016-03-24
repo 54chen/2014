@@ -1,0 +1,953 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="51ditu等网站技术揭秘-利用开源框架搭建一整套的WEBGIS [文章作者：陈臻 本文版本：v1.0 最后修改：2009.1.8 转载请注明原文链接：http://www.54chen.com/c/387] 感谢老早前李兄做的tech talk， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/48">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/08/51ditu-webgis-postgresql-postgregis/">51ditu等网站技术揭秘-利用开源框架搭建一整套的WEBGIS</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-08T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.1.8 转载请注明原文链接：<a href="http://www.54chen.com/c/387">http://www.54chen.com/c/387</a>]</p>
+
+<p>感谢老早前李兄做的tech talk，一直有人在问及51ditu和mapbar什么的都怎么做的，老是记不住这些开源的东东都什么名字，特做下记录。</p>
+
+<p>下图是一个完整的方案图：</p>
+
+<p><a href="http://www.54chen.com/wp-content/uploads/2009/01/e59bbee789871.jpg"><img class="alignnone size-full wp-image-388" title="e59bbee789871" src="http://www.54chen.com/wp-content/uploads/2009/01/e59bbee789871.jpg" alt="" width="500" height="185" /></a></p>
+
+<p>其中所涉及的开源技术有：
+<h4> 
+<table border="1" cellspacing="0" cellpadding="0" width="548"><colgroup span="1"><col span="2" width="152" /><col span="1" width="128" /><col span="1" width="160" /><col span="1" width="256" /></colgroup>
+<tbody></tbody>
+<tbody>
+<tr height="96">
+<td class="oa1" width="152" height="96"><span>软件名称</span></td>
+<td class="oa2" width="152"><span>License</span> <span>类型</span></td>
+<td class="oa2" width="128"><span>编程</span> <span>语言</span></td>
+<td class="oa2" width="160"><span>运行环境</span></td>
+<td class="oa3" width="256"><span>用途</span></td>
+</tr>
+<tr height="48">
+<td class="oa4" width="152" height="48"><span>PostGIS</span></td>
+<td class="oa5" width="152"><span>GPL</span></td>
+<td class="oa5" width="128"><span>Plpgsql</span></td>
+<td class="oa5" width="160"><span>Postgresql</span></td>
+<td class="oa6" width="256"><span>存储数据</span></td>
+</tr>
+<tr height="67">
+<td class="oa4" width="152" height="67"><span>MapServer</span></td>
+<td class="oa5" width="152"><span>MapServer</span><span> License</span></td>
+<td class="oa5" width="128"><span>C++</span></td>
+<td class="oa5" width="160"><span>UNIX like/ Windows</span></td>
+<td class="oa6" width="256"><span>提供地图相关服务</span></td>
+</tr>
+<tr height="67">
+<td class="oa4" width="152" height="67"><span>TileCache</span></td>
+<td class="oa5" width="152"><span>BSD</span></td>
+<td class="oa5" width="128"><span>Python</span></td>
+<td class="oa5" width="160"><span>All Platform</span></td>
+<td class="oa6" width="256"><span>图片缓存</span></td>
+</tr>
+<tr height="66">
+<td class="oa4" width="152" height="66"><span>OpenLayers</span></td>
+<td class="oa5" width="152"><span>BSD</span></td>
+<td class="oa5" width="128"><span>Javascript</span><span> </span></td>
+<td class="oa5" width="160"><span>IE/Firefox</span></td>
+<td class="oa6" width="256"><span>客户端展现控制</span></td>
+</tr>
+<tr height="67">
+<td class="oa7" width="152" height="67"><span>GDAL/OGR</span></td>
+<td class="oa8" width="152"><span>MIT License</span></td>
+<td class="oa8" width="128"><span>C++</span></td>
+<td class="oa8" width="160"><span>UNIX like/ Windows</span></td>
+<td class="oa9" width="256"><span>数据格式导换</span></td>
+</tr>
+</tbody></table>
+</h4>
+<h4>再简单解释下：</h4>
+1.PostGis是PGSQL的一个扩展，<span>在遵循</span><span>OpenGIS</span><span>规范下，提供空间对象、空间索引、空间操作函数和空间操作符等空间信息服务功能。</span></p>
+
+<p>2.MapServer可以提供openGIS规范的各种接口。</p>
+
+<p>3.<span>MapServer</span><span>根据参数中指定的路径读取</span><span>mapfile</span><span>文件和</span><span>SLD</span><span>文件。</span></p>
+
+<p>4.<span>使用</span><span>SLD(Styled Layer Descriptors ), </span><span>Mapfile</span><span>控制地图显示样式。</span></p>
+
+<p>5.<span>根据</span><span>SLD</span><span>和</span><span>mapfile</span><span>的样式参数</span><span>,</span><span>配合</span><span>GD(Graphics Library)</span><span>进行的图形制作。</span></p>
+
+<p>6.查询只与pgsql有关</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/07/eclipse%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95jboss%E5%BA%94%E7%94%A8%E8%AE%BE%E7%BD%AE/">Eclipse远程调试JBoss应用设置(linux&win版本)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul>
+	<li>修改<a href="http://www.54chen.com/c/364">JBoss</a>启动配置</li>
+</ul>
+打开JBOSS_HOME/bin目录下的run.conf文件，找到：</p>
+
+<p> #JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y"</p>
+
+<p>将其修改为：</p>
+
+<p> JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"</p>
+
+<p>(最后的y改成n)</p>
+
+<p>其中：8787为调试的端口号；</p>
+
+<p><strong>WIN:</strong></p>
+
+<p>直接修改run.bat，找到这一行，删除前面的rem，修改suspend为n。
+<ul>
+	<li> 启动JBoss</li>
+</ul>
+ ./run.sh -b192.168.1.x</p>
+
+<p>其中192.168.1.x是Jboss所在机器的ip；
+<ul>
+	<li>新建调试配置</li>
+</ul>
+在Eclipse中，<a href="http://www.54chen.com/c/47">打开</a>菜单“run”-〉“debug configurations...”；在出现的对话框中，选择“Remote Java Application”，右键单击，在弹出的菜单中选择“New”，在出现的对话框的“host”中输入Jboss<a href="http://www.54chen.com/c/379">服务器</a>的ip（192.168.1.x），在“port”中输入调试的端口号（8787），选择“debug”开始调试；
+<ul>
+	<li>  调试</li>
+</ul>
+在出现的“debug view”中，打开需要调试的<a href="http://www.54chen.com/c/354">Java</a>源文件，设置相应的断点就可以了</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/06/%E8%BD%BB%E7%82%B9%E9%AD%94%E6%A3%92%EF%BC%8C%E7%9E%AC%E9%97%B4%E5%AE%89%E8%A3%85%E4%B8%8A%E7%99%BE%E5%8F%B0%E6%9C%8D%E5%8A%A1%E5%99%A8/">轻点魔棒，瞬间安装上百台服务器</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>转自: 知道分子<a href="http://www.blogger.com/profile/00767221594564607162" target="_blank">查看完整个人资料</a>  <a href="http://hutuworm.blogspot.com/" target="_blank">http://hutuworm.blogspot.com</a></p>
+
+<p> </p>
+
+<p>从前，我们一直在做装机民工这份很有前途的职业。自打若干年前 Red Hat 推出了Kickstart，此后我们顿觉身价倍增。不再需要刻了光盘一台一台地安装 <a href="http://www.54chen.com/c/356">Linux</a>，只要搞定PXE、DHCP、TFTP，还有那满屏眼花缭乱不知所云的 Kickstart脚本，我们就可以像哈里波特一样，轻点魔棒，瞬间安装上百台服务器。这一堆花里胡哨的东西可不是一般人都能整明白的，没有大专以上学 历，通不过英语四级，根本别想玩转。总而言之，这是一份多么有前途，多么有技术含量的工作啊。</p>
+
+<p>很不幸，Red Hat 最新发布了网络安装服务器套件Cobbler（补鞋匠），它已将 <a href="http://www.54chen.com/c/356">Linux</a>网络安装的技术门槛，从大专以上文化水平，成功降低到初中以下，连补鞋匠都能学会。对于我们这些在装机领域浸淫多年，经验丰富，老骥伏枥，志在 千里的民工兄弟们来说，不啻为一个晴天霹雳（}雷{）。</p>
+
+<p>Cobbler（<a href="https://fedorahosted.org/cobbler" target="_blank">https://fedorahosted.org/cobbler</a>）声称可以快速建立网络安装<a href="http://www.54chen.com/c/372">环境</a>（rapid setup ofnetwork installation environments），那么到底有多快呢？我在一台装有 Fedora 9的服务器上进行了测试，步骤如下：</p>
+
+<p>1. 安装相关软件：<br />
+     yum -y install cobbler tftp-server dhcp httpd xinetd     # 注意 /var/www/cobbler 目录必须具有足够容纳 Linux 安装文件的空间（移动，建软链接）</p>
+
+<p>2. 检查 cobbler <span class="t_tag" onclick="tagshow(event)">配置</span>：<br />
+     cobbler check   # 按提示解决相关问题，把 /etc/cobbler/settings 中的 server 和  next_server 设为本服务器的 IP 地址，manage_dhcp 设为 1，以便管理 DHCP</p>
+
+<p>3. 导入 Fedora 9 安装 DVD ISO 中的文件：<br />
+     mount -o loop Fedora9/x86_64/Fedora-9-x86_64-DVD.iso /mnt/dvd/    # 将ISO文件挂载到 /mnt/dvd 目录<br />
+     cobbler import --mirror=/mnt/dvd --name=FC9-x86-64      # 从 /mnt/dvd 目录导入所有安装文件，命名为 FC9-x86-64<br />
+     cobbler distro list          # 查看导入结果，应显示 FC9-64-i386 和 FC9-64-xen-i386</p>
+
+<p>4. 修改 DHCP 和 Kickstart 配置模板：<br />
+     vi /etc/cobbler/dhcp.template        # DHCP 配置模板，如果已经有一个 dhcpd.conf，可参照修改此模板<br />
+     vi /etc/cobbler/sample.ks            # Kickstart 配置模板</p>
+
+<p>5. 生成并同步所有配置：<br />
+     cobbler sync</p>
+
+<p>6. 启动相关服务：<br />
+     service xinetd start               # /etc/xinetd.d/tftp 中 disable = no<br />
+     service dhcpd start<br />
+     service cobblerd start</p>
+
+<p>曹植七步成诗，而 Cobbler 居然只需要六步。启动另一台新服务器，通过 PXE 启动进入蓝色的 Cobbler 安装界面，选择 Fedora 9 安装项，几分钟之内就能一气呵成，自动完成<span class="t_tag" onclick="tagshow(event)">系统</span>安装。[OVER] </p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/05/%E8%88%AC%E8%8B%A5%E8%8F%A0%E8%90%9D%E8%9C%9C%E5%A4%9A%E5%BF%83%E7%BB%8F%E8%A7%A3/">般若菠萝蜜多心经解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-05T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>注：</p>
+
+<p><span style="font-size: medium;">般若波罗蜜多心经,简称心经,是在中国流行最广泛的佛经.据说这是观音菩萨和舍利佛的一段对 话.在佛学界,对心经的评价是很高的.认为心经是佛经的总括,读懂了心经,读佛经就入门了.佛教界认为,心经是有法力的,可以消除业障,启迪智慧,给每个 持有心经的人带来莫大的好处.今天,我把这篇心经和心经解献给大家,希望每一个看到的人将他下载下来,好好地保存在自己地硬盘里,那样你会得到意想不到的 好处.</span>
+<span style="font-size: medium;">般若菠萝蜜多心经原文:<br />
+观自在菩萨，行深班若菠萝蜜多时，照见五蕴皆空，度一切苦厄。舍利子，色不 异空，空不异色，色既是空，空既是色。受想行识，亦复如是。舍利子，是诸法空相，不生不灭，不垢不净，不增不减。是故空中无色，无受想行识，无眼耳鼻舌身 意，无色声香味触法，无眼界，乃至无意识界。无无明，亦无无明尽，乃至无老死，亦无老死尽，无苦集灭道，无智亦无得，已无所得故，菩提萨陲。以般若菠萝蜜 多故，心无碍疑，无碍疑故，无有恐怖，远离颠倒梦想，究竟涅盘。三世诸佛，以般若菠萝蜜多故，得阿褥多罗三貌三菩缇。故知般若菠萝蜜多咒，是大神咒，是大 明咒，是无上咒，是无等等咒，能除一切苦，真实不虚。故说般若菠萝蜜多咒，既说咒曰：结谛结谛，菠萝结谛，菠萝僧结谛，婆啼萨婆荷.</span></p>
+
+<p> </p>
+
+<p><span style="font-size: medium;">般若菠萝蜜多心经解:<br />
+看观世音菩萨，以甚深的智慧之光，照见受，想，行，识，意这五蕴都是一些虚渺的幻象， 到达了那不生不灭的彼岸，脱离了一切苦难。舍利子啊，（你可知道，）精神和物质并没有不一样的地方，因为所谓精神，所谓物质的本质都是一样的。我们的感 觉，思想，行为，认识，也不能分成精神，物质什么的。舍利子啊，（你可知道，）什么精神啊，物质啊，受，想，行，识啊，这所有的一切，其本质都是不生不 灭，不垢不净，不增不减的。（这是什么意思呢？你可知道，我们世界的本质，乃至生命的本质，是永恒的，是无限的，没有起点，也没有终点。没有形，也没有 相，更不存在什么空间。所以你也不能让其多点什么，少点什么，不能让其变大，也不能让其缩小。）所以这世界的本质，乃至生命的本质，是精神的，既不存在一 个个实实在在的个体，更没有什么感觉啊，思想啊，行为啊，看法认识啊等等。我们眼睛看到的形象，鼻子嗅到的气味，舌头尝到的味道，身体接触到的触觉，以及 由此而产生的一系列什么东西是好的，什么是坏的等等等的概念，都是一些虚假的幻像，必须坚决加以屏弃。到那时,你就不会在我和非我之间感觉到一个界限,你 也不会意识到我和非我之间有一个界限.到那时,你那一切愚昧的都没有了,你那一切不愚昧的也没有了.你将跳出生死轮回,不存在生与死的概念. .什么苦,集,灭,道阿,智慧阿,佛法阿,只是过去的一个过程.你不会认为自己已得到了至高无上的佛法.(因为这世界上并不存在着什么至高无上的佛法,你 只不过是遵循佛的教诲,通过修炼,回到了自己本来的面目而已).菩萨就是这样通过到达不生不灭彼岸的智慧,排除了心中的一切疑虑,(对于肉体生命的消 亡),不会再有恐怖,离开这个本末倒置的梦幻世界,最后达到寂灭的境界.过去,现在,未来三世的诸佛,不就是依靠这到达彼岸的智慧,最后证得无上正等正觉 吗?所以这个关于到达彼岸的智慧的咒语,是具有无上神力的咒语,是扫除黑暗和愚昧的咒语,是世界上最高等的咒语,能给我们意想不到的结果.(这咒语)能除 去一切苦难,不存在任何虚妄.所以,我们这个到达彼岸的智慧的咒语是这么说的:结谛结谛,菠萝结谛,菠萝僧结谛,婆谛萨婆苛.</span></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/05/ubuntu-810-desktop%E7%89%88%E6%9C%AC-%E7%A1%AC%E7%9B%98%E5%AE%89%E8%A3%85%E6%89%8B%E8%AE%B0/">Ubuntu 8.10 Desktop版本 硬盘安装手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-01-05T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.1.5 转载请注明原文链接：<a href="http://www.54chen.com/c/372">http://www.54chen.com/c/372</a>]</p>
+
+<p>折腾到半夜，特做记录。</p>
+
+<p>1.ubuntu8.10 liveCD系统镜像文件下载：</p>
+
+<p>ubuntu-8.10-desktop-i386.iso</p>
+
+<p>http://ubuntu.interhost.co.il/intrepid/ubuntu-8.10-desktop-i386.iso（某一个镜像的地址）</p>
+
+<p>2.winGrub文件下载：</p>
+
+<p>WINGRB0206.EXE</p>
+
+<p>http://fedora.linuxsir.org/main/files/WINGRB0206.EXE</p>
+
+<p>3.安装WINGRB0206.EXE：</p>
+
+<p>双击，没啥说的。</p>
+
+<p>4.运行winGrub：</p>
+
+<p>第一次打开会有个BaseSetup，把勾都选上，选OK就行。</p>
+
+<p>主界面中：</p>
+
+<p>Profiles选default。</p>
+
+<p>Tools-&gt;Install Grub-&gt;Boot From 选Boot.ini，System Drive选C，Title随便写，TimeOut写30，-&gt;install</p>
+
+<p>完毕！</p>
+
+<p>5.修改menu.lst：</p>
+
+<p>从ubuntu-8.10-desktop-i386.iso的casper里解压出来vmlinuz和initrd.gz到C盘根目录，ubuntu-8.10-desktop-i386.iso文件放在任何一个盘的根目录，它会自己去找到的。</p>
+
+<p>在C:\GRUB\menu.lst里增加如下：</p>
+
+<p>title Install Ubuntu<br />
+root (hd0,0)<br />
+kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu-8.10-desktop-i386.iso ro quiet splash locale=zh_CN.UTF-8<br />
+initrd (hd0,0)/initrd.gz</p>
+
+<p>保存，重启。</p>
+
+<p>6.选择从install Ubuntu进去：</p>
+
+<p>一直进啊进，到了liveCD的桌面。双击安装。</p>
+
+<p>问题来了，整个硬盘没有显示！使用ubuntu下的系统管理器可以看到系统加载了一个/isodevice的设备，这个就是加载的在F盘下的ubuntu镜像。我们要使用ubuntu下的终端输入sudo umount -l /isodevice来卸载掉它。-l这个参数必须加，否则不能卸载。然后在安装进程中点击后退，鼠标变成一个转动的圆圈，等两三分钟（视系统配置）就可以加载硬盘了。</p>
+
+<p>7.安装完成重新启动</p>
+
+<p>8.进入系统：</p>
+
+<p>这时会发现一半中文一半英文，听说是LiveCD版本的原因，中文支持不完整。</p>
+
+<p>这时先搜索最快的软件源服务器，然后在终端里输入</p>
+
+<p>sudo apt-get update 更新了列表后执行下列命令</p>
+
+<p>sudo apt-get install language-support-zh</p>
+
+<p>ThinkPad 系列，调整屏幕亮度，请使用“首选项”-“电源管理”.亮度选择那个条是反的。试了就知道了。</p>
+
+<p>完毕。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/29/java-ee%E4%B8%AD%E5%90%84%E7%A7%8D%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6/">Java EE中各种打包文件</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>1.EJB-JAR包：后缀为.jar</p>
+
+<p>EJB模块，包含有Session Bean，Message Driver Bean，Entity  Bean；管理这些Bean业务的为EntityManager，而EntityManager由EntityManagerFactory产生。通过配置persistence.xml配置这些Bean。</p>
+
+<p>2.WAR包：后缀为.war</p>
+
+<p>web模块，包括开发java  web的所有文件如：JSP，Servlet，JSF，javascrpit，web.xml，图片，音乐，flash资源等等；如果需要在war中应用EntityBean，可以配置一下persistence.xml然后将EntityBean打包进war包中。。war描述文件web.xml放在WEB-INF文件下。</p>
+
+<p>3.EAR包：后缀为.ear</p>
+
+<p>实际上就是j2ee应用中的各种文档或模块，包括：EJB模块，WEB模块，RAR模块，CAR模块等。可以说它是开发项目的最终包，其他开发过程的模块最终会以.ear的包形式来实施应用。ear包中一个非常重要的描述文件为application.xml，它放在META-INF文件下。</p>
+
+<p>4.CAR包：后缀为.jar</p>
+
+<p>应用客户端模块，包含在客户端独立运行的类和访问的JDBC，JMS，JAXP，JAAS，以及 EJB客户端需要的类等。</p>
+
+<p>5.RAR包：后缀为.rar</p>
+
+<p>这个包应该比较好理解，它是资源适配器模块，包括java连接器，帮助库函数，以及其他一些相关资源。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/26/windowsxp%E5%AE%89%E8%A3%85jdk15-jboss4-tips/">windowsXP安装jdk1.5 Jboss4 Antx Tips</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-26T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>1.jdk 1.5(也就是5)</p>
+
+<p>文件名：java_ee_sdk-5_01-windows.exe</p>
+
+<p>下载地址：http://cds-esd.sun.com/ESD28/JSCDL/java_ee_sdk/5.0_01-fcs/java_ee_sdk-5_01-windows.exe?AuthParam=1230186860_df7d73a40e743135e1323ad74ae1cd16&amp;TicketId=B%2Fw5lx%2BGTl1OShVEMlBdkgPg&amp;GroupName=CDS&amp;FilePath=/ESD28/JSCDL/java_ee_sdk/5.0_01-fcs/java_ee_sdk-5_01-windows.exe&amp;File=java_ee_sdk-5_01-windows.exe</p>
+
+<p>双击安装至：C:\Sun\SDK</p>
+
+<p>环境变量设置：</p>
+
+<p>JAVA_HOME：C:\Sun\SDK\jdk</p>
+
+<p>classpath：.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar;</p>
+
+<p>PATH：%JAVA_HOME%\bin;</p>
+
+<p> </p>
+
+<p>2.jboss 4.02</p>
+
+<p>文件名：jboss-4.0.2.zip</p>
+
+<p>下载地址：http://nchc.dl.sourceforge.net/sourceforge/jboss/jboss-4.0.2.zip</p>
+
+<p>双击解压缩到：D:\jboss\</p>
+
+<p>环境变量：</p>
+
+<p>JBOSS_PATH：D:\jboss\jboss-4.0.2</p>
+
+<p> </p>
+
+<p>3.antx</p>
+
+<p>svn co .... antx</p>
+
+<p>目录：D:\antx</p>
+
+<p>运行：build.bat</p>
+
+<p>环境变量：</p>
+
+<p>ANTX_HOME：D:\antx\dist\antx</p>
+
+<p>PATH：D:\antx\dist\antx\bin</p>
+
+<p> </p>
+
+<p>4.hesper</p>
+
+<p>代码： svn co hesper</p>
+
+<p>配置antx构建工程：C:\Documents and Settings\dongfangbai\antx.properties
+<blockquote>antx.properties释义：</blockquote></p>
+
+<p>antx.repository.project  = d:/antx/repository.project(二方库的位置，修改成你自己的)</p>
+
+<p>hesper.output  = D:/work/logs/hesper（hesper的日志指定目录，修改成你自己的）</p>
+
+<p>hesper.vmcommon.path  = D:/work/vmcommon（公共模板文件目录，修改成你自己的）
+进入代码文件夹构建工程：antx reactor goals=default,eclipse</p>
+
+<p>导入eclipse：导入现有的工程-&gt;指向hesper主目录</p>
+
+<p> </p>
+
+<p>5.ear发布至jboss</p>
+
+<p>修改jboss配置(修改默认的发布目录为自己的开发目录，这样不用来回复制了)：</p>
+
+<p>D:\jboss\jboss-4.0.2\server\default\conf\jboss-service.xml
+<blockquote> &lt;attribute name="URLs"&gt;</blockquote></p>
+
+<p>         deploy/,file:/D:\dev\hesper\deploy\target（你自己的目录）</p>
+
+<p> &lt;/attribute&gt;</p>
+
+<p> 
+修改jboss配置（修改默认端口为80）：</p>
+
+<p>D:\jboss\jboss-4.0.2\server\default\deploy\jbossweb-tomcat55.sar\server.xml</p>
+
+<p> 
+<blockquote> &lt;Connector port="80" address="${jboss.bind.address}"</blockquote></p>
+
+<p>         maxThreads="250" strategy="ms" maxHttpHeaderSize="8192"</p>
+
+<p>         emptySessionPath="true"</p>
+
+<p>         enableLookups="false" redirectPort="8443" acceptCount="100"</p>
+
+<p>         connectionTimeout="20000" disableUploadTimeout="true"/&gt;
+ </p>
+
+<p> </p>
+
+<p>修改jboss配置（加虚拟目录，这个是意思意思...说不好哪天会使用...）：</p>
+
+<p>D:\jboss\jboss-4.0.2\server\default\deploy\jbossweb-tomcat55.sar\server.xml</p>
+
+<p>找到&lt;Host name="localhost"</p>
+
+<p>            autoDeploy="false" deployOnStartup="false" deployXML="false"&gt; 下一行添加：
+<blockquote>&lt;Context   path="/h"   docBase="D:\dev\"   debug="0"   reloadable="false"/&gt;</blockquote></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/24/%E6%88%91%E6%89%BF%E8%AE%A4%E6%88%91%E5%9C%9F-%E8%96%AA%E8%B5%84%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B9%8B%E5%9C%A3%E8%AF%9E%E7%89%88/">我承认我土-薪资调整系统之圣诞版</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>感谢蔬影的工具,使我在十分钟内出来这个结果.</p>
+
+<p>要体验的童鞋进:</p>
+
+<p>圣诞薪水提速,圣诞快乐!</p>
+
+<p><a href="http://www.54chen.com/rpc/xmas.html">http://www.54chen.com/rpc/xmas.html</a></p>
+
+<p>ps:不得不承认,大家都玩过了.</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/23/%E8%83%A1%E6%88%88%E6%96%B0%E4%BD%9C%E5%B1%B1%E5%AF%A8%E3%80%8A%E6%96%B0%E9%97%BB%E8%81%94%E6%92%AD%E3%80%8B%E6%81%B6%E6%90%9E%E5%A4%AE%E8%A7%86%E8%A7%86%E9%A2%91/">胡戈新作山寨《新闻联播》恶搞央视(视频)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-23T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>胡戈新作山寨《新闻联播》恶搞央视(视频)</p>
+
+<p><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="480" height="360" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="src" value="http://player.youku.com/player.php/sid/XNjEzNDk4MjQ=/v.swf" /><embed type="application/x-shockwave-flash" width="480" height="360" src="http://player.youku.com/player.php/sid/XNjEzNDk4MjQ=/v.swf"></embed></object></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/22/mysql%E7%9A%84%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%B7%A5%E5%85%B7%EF%BC%9A%E6%AF%94mysqlreport%E6%9B%B4%E6%96%B9%E4%BE%BF%E7%9A%84tuning-primersh/">MySQL的性能调优工具：比mysqlreport更方便的tuning-primer.sh</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><div class="entry-body" style="clear: both;">
+<p style="margin-top: 10px; margin-bottom: 10px;">Sundry MySQL提供的脚本相比mysqlreport更进一步：除了报表还进一步提供了修改建议。安装和使用非常简单：</p></div></p>
+
+<p><blockquote style="margin-top: 10px; margin-bottom: 10px;">wget<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://www.day32.com/MySQL/tuning-primer.sh">http://www.day32.com/MySQL/tuning-primer.sh</a>
+chmod +x tuning-primer.sh<br />
+./tuning-primer.sh</blockquote>
+和mysqlreport一样，tuning-primer.sh也支持.my.cnf
+<blockquote style="margin-top: 10px; margin-bottom: 10px;">[client]<br />
+user = USERNAME<br />
+password = PASSWORD<br />
+socket = /tmp/mysql.sock</blockquote>
+<p style="margin-top: 10px; margin-bottom: 10px;"> </p>
+<p style="margin-top: 10px; margin-bottom: 10px;">样例输出：在终端上按照问题重要程度分别用黄色/红色字符标记问题</p></p>
+
+<p><blockquote style="margin-top: 10px; margin-bottom: 10px;">-- MYSQL PERFORMANCE TUNING PRIMER --<br />
+- By: Matthew Montgomery -
+<p style="margin-top: 10px; margin-bottom: 10px;"> </p>
+<p style="margin-top: 10px; margin-bottom: 10px;">MySQL Version 5.0.45 i686</p></blockquote></p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">Uptime = 19 days 8 hrs 32 min 54 sec<br />
+Avg. qps = 0<br />
+Total Questions = 264260<br />
+Threads Connected = 1</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">Server has been running for over 48hrs.<br />
+It should be safe to follow these recommendations</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">To find out more information on how each of these<br />
+runtime variables effects performance visit:<br />
+http://dev.mysql.com/doc/refman/5.0/en/server-system-variables.html<br />
+Visit http://www.mysql.com/products/enterprise/advisors.html<br />
+for info about MySQL's Enterprise Monitoring and Advisory Service</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">SLOW QUERIES<br />
+The slow query log is NOT enabled.<br />
+Current long_query_time = 10 sec.<br />
+You have 0 out of 264274 that take longer than 10 sec. to complete<br />
+Your long_query_time may be too high, I typically set this under 5 sec.</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">BINARY UPDATE LOG<br />
+The binary update log is NOT enabled.<br />
+You will not be able to do point in time recovery<br />
+See http://dev.mysql.com/doc/refman/5.0/en/point-in-time-recovery.html</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">WORKER THREADS<br />
+Current thread_cache_size = 0<br />
+Current threads_cached = 0<br />
+Current threads_per_sec = 1<br />
+Historic threads_per_sec = 0<br />
+Your thread_cache_size is fine</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">MAX CONNECTIONS<br />
+Current max_connections = 100<br />
+Current threads_connected = 1<br />
+Historic max_used_connections = 33<br />
+The number of used connections is 33% of the configured maximum.<br />
+Your max_connections variable seems to be fine.</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">MEMORY USAGE<br />
+Max Memory Ever Allocated : 96 M<br />
+Configured Max Per-thread Buffers : 268 M<br />
+Configured Max Global Buffers : 7 M<br />
+Configured Max Memory Limit : 276 M<br />
+Physical Memory : 1.97 G<br />
+Max memory limit seem to be within acceptable norms</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">KEY BUFFER<br />
+Current MyISAM index space = 8 M<br />
+Current key_buffer_size = 7 M<br />
+Key cache miss rate is 1 : 1817<br />
+Key buffer fill ratio = 6.00 %<br />
+Your key_buffer_size seems to be too high.<br />
+Perhaps you can use these resources elsewhere</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">QUERY CACHE<br />
+Query cache is supported but not enabled<br />
+Perhaps you should set the query_cache_size</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">SORT OPERATIONS<br />
+Current sort_buffer_size = 2 M<br />
+Current read_rnd_buffer_size = 256 K<br />
+Sort buffer seems to be fine</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">JOINS<br />
+Current join_buffer_size = 132.00 K<br />
+You have had 0 queries where a join could not use an index properly<br />
+Your joins seem to be using indexes properly</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">OPEN FILES LIMIT<br />
+Current open_files_limit = 1024 files<br />
+The open_files_limit should typically be set to at least 2x-3x<br />
+that of table_cache if you have heavy MyISAM usage.<br />
+Your open_files_limit value seems to be fine</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">TABLE CACHE<br />
+Current table_cache value = 64 tables<br />
+You have a total of 125 tables<br />
+You have 64 open tables.<br />
+Current table_cache hit rate is 9%, while 100% of your table cache is in use
+<strong>You should probably increase your table_cache
+</strong>
+TEMP TABLES<br />
+Current max_heap_table_size = 16 M<br />
+Current tmp_table_size = 32 M<br />
+Of 564 temp tables, 6% were created on disk<br />
+Effective in-memory tmp_table_size is limited to max_heap_table_size.<br />
+Created disk tmp tables ratio seems fine</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">TABLE SCANS<br />
+Current read_buffer_size = 128 K<br />
+Current table scan ratio = 1 : 1<br />
+read_buffer_size seems to be fine</p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">TABLE LOCKING<br />
+Current Lock Wait ratio = 0 : 264392<br />
+Your table locking seems to be fine
+<p style="margin-top: 10px; margin-bottom: 10px;"> </p></p>
+
+<p><p style="margin-top: 10px; margin-bottom: 10px;">更有用是作者总结的处理MySQL性能问题处理的优先级：尤其是头3条，基本上可以解决大部分瓶颈问题的原因。<br />
+# Slow Query Log 慢查询 尤其是like操作，性能杀手，轻易不要使用，让全文索引交给<a style="color: #3165ce; text-decoration: underline;" href="http://www.chedong.com/tech/lucene.html">Lucene</a>或者利用Tag机制减少like操作；<br />
+# Max Connections 并发连接数：一个MySQL deamon缺省最大连接数是100，调到更高只是为了出现问题是给我们更多的缓冲时间而不是任其一直处于那么高的状态，并发连接数类似于等候大厅：当等候人数过多的时候，一味扩大等候厅不是根本解决问题的办法，提高业务的处理速度，多开几个窗口才是更好的解决方法；我的经验就是<a style="color: #3165ce; text-decoration: underline;" href="http://www.chedong.com/blog/archives/000945.html">超过100： 数据就要想办法（镜像或者分片）分布到更多Deamon上</a>；<br />
+# Worker Threads：<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://jeremy.zawodny.com/blog/archives/000173.html">Jeremy Zawondy 曾在部落格上說到：Thread caching</a><span class="Apple-converted-space"> </span>並不是我們最需要關心的問題，但當你解決了所有其他更嚴重的問題之後，它就會是最嚴重的問題。(thread caching really wasn't the worst of our problems. But it became the worst after we had fixed all the bigger ones.)<br />
+# Key Buffer<span class="Apple-converted-space"> </span>
+# Query Cache<span class="Apple-converted-space"> </span>
+# Sort Buffer<span class="Apple-converted-space"> </span>
+# Joins<span class="Apple-converted-space"> </span>
+# Temp Tables 临时表<br />
+# Table (Open &amp; Definition) Cache 表缓存；<br />
+# Table Locking 表锁定<br />
+# Table Scans (read_buffer)<span class="Apple-converted-space"> </span>
+# Innodb Status</p>
+
+<p>
+<div id="more" class="entry-more" style="clear: both;">
+<p style="margin-top: 10px; margin-bottom: 10px;">其他一些工具：<span class="Apple-converted-space"> </span>
+1<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://jeremy.zawodny.com/mysql/mytop/">mytop</a>： 一个top like的show processlist;<br />
+2 使用cacti做MySQL的监控：推荐<a style="color: #3165ce; text-decoration: underline;" href="http://code.google.com/p/mysql-cacti-templates/">配置模板</a>；<br />
+3 把binlog导出成文本和slowquery的格式几乎是一样的，调用mysqlslowquery脚本分析，有时候也会有意外收获；</p>
+
+<p /><p style="margin-top: 10px; margin-bottom: 10px;">谢谢 oldplantegg 补充：
+<a style="color: #3165ce; text-decoration: underline;" href="http://hackmysql.com/mysqlsla">mysqlsla</a>(<a style="color: #3165ce; text-decoration: underline;" href="http://hackmysql.com/">hackmysql.com</a>推出的一款日志分析工具该网站还维护了，mysqlreport,<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://hackmysql.com/mysqlidxchk">mysqlidxchk</a><span class="Apple-converted-space"> </span>等比较实用的mysql工具)能够分析slow query 和binlog等，这样就不用将binlog导出来了.
+</p><p style="margin-top: 10px; margin-bottom: 10px;">from:http://www.chedong.com/blog/archives/001451.html</p></div></p>
+
+<p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="49">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="47">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

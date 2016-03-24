@@ -121,14 +121,14 @@ while(has_items()): the_item();<br />
 *
 * @since 1.0<br />
 *
-* @return bool|stdClass False if item doesn&#8217;t exist, otherwise returns the specified item<br />
+* @return bool|stdClass False if item doesn't exist, otherwise returns the specified item<br />
 */<br />
 public function current_item() {<br />
 $this-&gt;previous_item = $this-&gt;current_item;<br />
-$this-&gt;current_item = &#8221;;</blockquote></p>
+$this-&gt;current_item = '';</blockquote></p>
 
 <p>$item = each($this-&gt;items);<br />
-$item = $item[&#8216;value&#8217;];<br />
+$item = $item['value'];<br />
 if(!$item)<br />
 return false;</p>
 
@@ -141,7 +141,7 @@ $this-&gt;current_feed = $item-&gt;feed;</p>
 <h1>each</h1>
 <div class="refnamediv"><a name="AEN12322"></a>(PHP 3, PHP 4, PHP 5)</div></p>
 
-<p>each &#8211;       返回数组中当前的<a href="http://www.54chen.com/translate/dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized.html">键／值</a>对并将数组指针向前移动一步
+<p>each --       返回数组中当前的<a href="http://www.54chen.com/translate/dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized.html">键／值</a>对并将数组指针向前移动一步
 <div class="refsect1"><a name="AEN12325"></a>
 <h2>说明</h2>
 array <strong class="methodname">each</strong> ( array &amp;array )</div></p>
@@ -158,7 +158,7 @@ array <strong class="methodname">each</strong> ( array &amp;array )</div></p>
 <blockquote>function the_item() {<br />
 global $lilina_items, $item;</blockquote></p>
 
-<p>$item = apply_filters(&#8216;the_item&#8217;, $lilina_items-&gt;current_item());<br />
+<p>$item = apply_filters('the_item', $lilina_items-&gt;current_item());<br />
 }
 这是lilina里的一个函数，要看的是这个apply_filters方法，有一个简单的例子：
 <blockquote>function example_hook($string, $arg1, $arg2)<br />
@@ -166,12 +166,12 @@ global $lilina_items, $item;</blockquote></p>
 //Do stuff<br />
 return $string;<br />
 }
-$value = apply_filters(&#8216;example_hook&#8217;, &#8216;filter me&#8217;, &#8216;arg1&#8217;, &#8216;arg2&#8217;);</blockquote>
+$value = apply_filters('example_hook', 'filter me', 'arg1', 'arg2');</blockquote>
 apply_filters里面最关键的一个函数：
 <h1>call_user_func_array</h1>
 <div class="refnamediv"><a name="AEN50629"></a>(PHP 4 &gt;= 4.0.4, PHP 5)</div></p>
 
-<p>call_user_func_array &#8211;       Call a user function given with an array of parameters
+<p>call_user_func_array --       Call a user function given with an array of parameters
 <div class="refsect1"><a name="AEN50632"></a>
 <h2>Description</h2>
 mixed <strong class="methodname">call_user_func_array</strong> ( callback function, array param_arr )</div></p>

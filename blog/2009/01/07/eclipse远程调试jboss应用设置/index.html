@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="修改JBoss启动配置 打开JBOSS_HOME/bin目录下的run.conf文件，找到：  #JAVA_OPTS=&#8221;$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y&# &hellip;">
+  <meta name="description" content="修改JBoss启动配置 打开JBOSS_HOME/bin目录下的run.conf文件，找到：  #JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y" 将其修改为 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,11 +104,11 @@
 </ul>
 打开JBOSS_HOME/bin目录下的run.conf文件，找到：</p>
 
-<p> #JAVA_OPTS=&#8221;$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y&#8221;</p>
+<p> #JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y"</p>
 
 <p>将其修改为：</p>
 
-<p> JAVA_OPTS=&#8221;$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n&#8221;</p>
+<p> JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"</p>
 
 <p>(最后的y改成n)</p>
 
@@ -126,7 +126,7 @@
 <ul>
 	<li>新建调试配置</li>
 </ul>
-在Eclipse中，<a href="http://www.54chen.com/c/47">打开</a>菜单“run”-〉“debug configurations&#8230;”；在出现的对话框中，选择“Remote Java Application”，右键单击，在弹出的菜单中选择“New”，在出现的对话框的“host”中输入Jboss<a href="http://www.54chen.com/c/379">服务器</a>的ip（192.168.1.x），在“port”中输入调试的端口号（8787），选择“debug”开始调试；
+在Eclipse中，<a href="http://www.54chen.com/c/47">打开</a>菜单“run”-〉“debug configurations...”；在出现的对话框中，选择“Remote Java Application”，右键单击，在弹出的菜单中选择“New”，在出现的对话框的“host”中输入Jboss<a href="http://www.54chen.com/c/379">服务器</a>的ip（192.168.1.x），在“port”中输入调试的端口号（8787），选择“debug”开始调试；
 <ul>
 	<li>  调试</li>
 </ul>

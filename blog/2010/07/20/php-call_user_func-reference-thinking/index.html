@@ -120,22 +120,22 @@ function increment(&$var)<br />
 }</p>
 
 <p>$a = 0;<br />
-call_user_func(&#8216;increment&#8217;, $a);<br />
-echo $a.&#8221;\n&#8221;;</p>
+call_user_func('increment', $a);<br />
+echo $a."\n";</p>
 
-<p>call_user_func_array(&#8216;increment&#8217;, array(&$a)); // You can use this instead before PHP 5.3<br />
-echo $a.&#8221;\n&#8221;;<br />
+<p>call_user_func_array('increment', array(&$a)); // You can use this instead before PHP 5.3<br />
+echo $a."\n";<br />
 ?>
 输出是：<br />
 0
 1<br />
 而网友bercmisir的问题在于：<br />
-call_user_func(&#8216;increment&#8217;, $a);输出是0,而call_user_func(&#8216;increment&#8217;, &$a);却输出是1，明明说不能依靠引用来传递。</p>
+call_user_func('increment', $a);输出是0,而call_user_func('increment', &$a);却输出是1，明明说不能依靠引用来传递。</p>
 
 <p><strong>寻根溯源</strong></p>
 
 <p>然后再进一步寻根溯源，这个Note的信息其实是http://bugs.php.net/bug.php?id=24931这个bug中最后处理的结果。<br />
-并且在call_user_func(&#8216;increment&#8217;, &$a);虽然输出了1的结果，但一般情况下，会有一个警告信息：Deprecated: Call-time pass-by-reference has been deprecated。</p>
+并且在call_user_func('increment', &$a);虽然输出了1的结果，但一般情况下，会有一个警告信息：Deprecated: Call-time pass-by-reference has been deprecated。</p>
 
 <p>这是什么原因呢？<br />
 先看一个例子：

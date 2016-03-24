@@ -1,0 +1,633 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="Maven插件编写实例 概况
+实现一个自定义的类，必须要继承自 org.apache.maven.plugin.AbstractMojo，同时实现execute方法。
+maven使用了在注释中写代码，BT的写法，所以注释里的@goal @parameter都是有含义的。 实例
+mvn&nbsp; &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/15">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/14/maven-plugin/">Maven插件编写实例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://maven.apache.org/images/maventxt_logo_200.gif" alt="apache maven" /></p>
+
+<p><strong>概况</strong>
+实现一个自定义的类，必须要继承自 org.apache.maven.plugin.AbstractMojo，同时实现execute方法。<br />
+maven使用了在注释中写代码，BT的写法，所以注释里的@goal @parameter都是有含义的。</p>
+
+<p><strong>实例</strong>
+<div class="chen-hl"><ol class="dp-j" start="1"><li class="alt"><span><span>mvn&nbsp;hello:gogo&nbsp;&nbsp;</span></span></li></ol></div>
+这样的一个命令，到代码里，应该是如下过程</p>
+
+<p><strong>进入</strong>
+hello被叫做plugin的prefix，maven会去寻找以hello开头的插件。<br />
+在插件的pom里必须定义其名字为hello开头的，例如：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>hello-maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>goal目标</strong>
+hello后面的gogo叫做goal，目标，则以注释中写代码的方式来完成：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">*@goal&nbsp;gogo</span>&nbsp;</span></li><li class="alt"><span><span class="comment">**/</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>HelloMojo&nbsp;<span class="keyword">extends</span><span>&nbsp;AbstractMojo&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>需要的依赖</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.apache.maven</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>maven-plugin-api</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>3.0.3</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>必需的选项</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">packaging</span><span class="tag">&gt;</span><span>maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">packaging</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+必需要是maven-plugin才能成功。</p>
+
+<p><strong>参数</strong>
+如果要传什么参数给插件，应该是
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">*&nbsp;if&nbsp;false&nbsp;all&nbsp;compression&nbsp;is&nbsp;off&nbsp;(default&nbsp;is&nbsp;true)</span>&nbsp;</span></li><li class="alt"><span><span class="comment">*</span>&nbsp;</span></li><li class=""><span><span class="comment">*&nbsp;@parameter&nbsp;expression="${hello.enabled}"&nbsp;default-value="true"</span>&nbsp;</span></li><li class="alt"><span><span class="comment">*/</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">private</span><span>&nbsp;Boolean&nbsp;enabled=</span><span class="keyword">true</span><span>;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>使用时项目定义</strong>
+然后在使用的项目里，需要定义的有
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">plugin</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>demo-maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">configuration</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">goalPrefix</span><span class="tag">&gt;</span><span>hello</span><span class="tag">&lt;/</span><span class="tag-name">goalPrefix</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">enabled</span><span class="tag">&gt;</span><span>false</span><span class="tag">&lt;/</span><span class="tag-name">enabled</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">configuration</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">plugin</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>然后执行上述命令时自然可以执行HelloMojo的execute方法。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/11/54chen-twitter-memo-2011-12-11/">54chen Twitter Memo 2011-12-11</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-11T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+velocity2011讲师经验总结及velocity2011的ppt下载 </ul><a href="http://t.co/92LBh44l" rel="nofollow">http://t.co/92LBh44l</a> <a href="http://twitter.com/54chen/statuses/144219817187094528" class="aktt_tweet_time">#</a>
+移动互联网api设计实践 <a href="http://t.co/D7ARuqWo" rel="nofollow">http://t.co/D7ARuqWo</a> <a href="http://twitter.com/54chen/statuses/143633406436179968" class="aktt_tweet_time">#</a>
+明天参加velocity的朋友，欢迎加我米聊号110005，附言velocity，明天会分享米聊创业过程中半dev半ops的过程，如果公司没有急事，会呆在现场听一听别的几场感兴趣的议题。 <a href="http://twitter.com/54chen/statuses/143559790377975808" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/07/velocity-china-2011-ppt-dow/">Velocity2011讲师经验总结及velocity2011的ppt下载</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="velocity" /></p>
+
+<p>总结：<br />
+1）会场有点小，比较热<br />
+2）讲的东西为了照顾更多人，比较片面，如果有想听深入的同学，可以参加我们<a href="http://blog-brother.com" target="_blank">哥学社</a>的吃喝会。<br />
+3）会上遇到了douban强宁大侠、安全宝的冯大侠、还有一位来自清华的主任、以及各位一线的朋友恕不能一一列出，深感荣幸。</p>
+
+<p><div style="width:425px" id="__ss_10490088"><strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/54chen/ss-10490088" title="互联网创业服务器运维工具集">互联网创业服务器运维工具集</a></strong><object id="__sse10490088" width="425" height="355"><param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-111206183925-phpapp01&stripped_title=ss-10490088&userName=54chen" /><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="wmode" value="transparent" /><embed name="__sse10490088" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-111206183925-phpapp01&stripped_title=ss-10490088&userName=54chen" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="transparent" width="425" height="355"></embed></object><div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/54chen">zhen chen</a>.</div></div></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/05/mobile-net-api-design/">移动互联网api设计实践</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-05T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/13078490/T28EicXgtXXXXXXXXX_!!13078490.jpg" alt="api quota perf design" />
+过去一年时间里，都在做中国移动互联网下的API设计工作，所面对的情况可能是最具中国特色的了。如果你在尝试构架一整套的新的API供你的客户端使用，可以尝试以下的几点：
+<strong>1）api所使用协议，要能够不怕被加js、加广告和各种代码。</strong>
+全国各地的运营商，有习惯挂广告、加代码等等，要做的事情就是在客户端做各种解析判断。实践证明，这帮孙子的设备是检测http协议的head头里的content-type，如果是html/text则会加，如果是text/json就不加了，所以，你懂的。</p>
+
+<p><strong>2）api可视化</strong>
+你的app上架了，后端也布好了。然后呢，就天天看下载量。但后端好坏一问三不知。所以在设计api时，要提前回答以下问题：<br />
+1.此时此刻，有多少个app正在调用这些api，每分钟多少个？<br />
+2.他们（api）有快？<br />
+3.能否很简单地通过浏览器快速debug？<br />
+4.能否快速禁止单个用户？</p>
+
+<p><strong>3）链路</strong>
+在幅员辽阔的我国，总是一个地方到一个地方的IDC直接就ping不通（移动互联网下更甚）。于是需要花钱自己打通这些地方，没有专线，只有代理再代理。</p>
+
+<p><strong>4）api quota与perfcounter</strong>
+对api进行quota限制，针对每个api每个人，都有限额。<br />
+这个限制的传统做法：<br />
+1.每天的上限调用次数。每天半夜清空，一天一个量累计。<br />
+2.每分钟的频度。这个防止有恶性的突发情况。<br />
+上述二者，缺一不可。<br />
+perfcounter用于对api的监控设计指标，如果一个api有异常，应当十分灵敏地得出结论，而不是误报连连。
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/04/54chen-twitter-memo-2011-12-04-2/">54chen Twitter Memo 2011-12-04</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+总有这么些人，成天乐于找个php上传漏洞，传个木马，妈的，又得浪费一天时间打扫卫生。有本事你攻个人人网或者微博主站去。 </ul><a href="http://twitter.com/54chen/statuses/142522042531590144" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-11-27 <a href="http://t.co/WyG9g8Ki" rel="nofollow">http://t.co/WyG9g8Ki</a> <a href="http://twitter.com/54chen/statuses/140615692243304448" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/27/54chen-twitter-memo-2011-11-27/">54chen Twitter Memo 2011-11-27</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+@</ul><a href="http://twitter.com/Fenng" class="aktt_username">Fenng</a> 公司的哪能想迁就迁，还要在天朝混饭吃呢。 <a href="http://twitter.com/54chen/statuses/139945824808472576" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/GoogleAmphi" class="aktt_username">GoogleAmphi</a> 官网裸奔一年了 这才被qjj <a href="http://twitter.com/54chen/statuses/139911606934048768" class="aktt_tweet_time">#</a>
+“您好!由于您的域名没有备案,现已将您的域名阻断!请您尽快联系运营商。”江湖救急，哪位大侠知道这个来自哪个衙门的系统？ <a href="http://twitter.com/54chen/statuses/139897662500646912" class="aktt_tweet_time">#</a>
+神器monit监控报警设置手记 <a href="http://t.co/uqgTPJm6" rel="nofollow">http://t.co/uqgTPJm6</a> <a href="http://twitter.com/54chen/statuses/139654923129339904" class="aktt_tweet_time">#</a>
+备你大爷的案 <a href="http://twitter.com/54chen/statuses/139201454866051073" class="aktt_tweet_time">#</a>
+居然有卖“美国原装留学生代购”的小米手机。。。雷得个里娕外焦 <a href="http://twitter.com/54chen/statuses/138442701451431936" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-11-20 <a href="http://t.co/X2xZ1Arc" rel="nofollow">http://t.co/X2xZ1Arc</a> <a href="http://twitter.com/54chen/statuses/138077321767825408" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/24/monit-notes/">神器monit监控报警设置手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-24T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i1/13078490/T28C9aXblXXXXXXXXX_!!13078490.png" alt="monit" /></p>
+
+<p>系统监控工具monit是一款功能非常丰富的进程、文件、目录和设备的监测软件，用于Unix平台。它可以自动修复那些已经停止运作的程序，特使适合处理那些由于多种原因导致的软件错误。 </p>
+
+<p><strong>安装</strong>
+centos:
+<blockquote>yum install monit</blockquote>
+ubuntu:
+<blockquote>apt-get install monit</blockquote></p>
+
+<p><strong>使用</strong>
+配置文件在/etc/monit.conf</p>
+
+<p><strong>配置发邮件的smtp服务器</strong>
+<blockquote>set mailserver 111.111.111.111 USERNAME "xxx@xiaomi.com" PASSWORD "54chen54chen"</blockquote></p>
+
+<p><strong>配置服务检测的周期</strong>
+<blockquote>set daemon 30     <br />
+30秒检查一次</blockquote></p>
+
+<p><strong>配置报警邮件格式</strong>
+<blockquote>set mail-format {<br />
+      from: ALERT<alert@xiaomi.com>
+   subject: $SERVICE $EVENT at $DATE<br />
+   message: Monit $ACTION $SERVICE at $DATE on $HOST: $DESCRIPTION.<br />
+}</blockquote></p>
+
+<p><strong>配置收报警的人</strong></p>
+
+<p><blockquote>set alert 54chen@xiaomi.com with reminder on 3 cycles ；出问题时最多连续报3次</blockquote></p>
+
+<p><strong>配置监控对象</strong>
+<blockquote>check host webim-91 with address 192.168.1.2<br />
+  if failed host www.miliao.com port 80 proto http and request "/test.html"  for 2 times within 2 cycles  then alert</blockquote></p>
+
+<p><strong>其他</strong>
+可以监控的类型有： CHECK PROCESS FILE  FIFO DEVICE DIRECTORY HOST SYSTEM  </p>
+
+<p><strong>帮助</strong></p>
+
+<p><blockquote>man monit</blockquote></p>
+
+<p>        
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/20/54chen-twitter-memo-2011-11-20/">54chen Twitter Memo 2011-11-20</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-20T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+</ul><a href="http://t.co/7QorTVrr" rel="nofollow">http://t.co/7QorTVrr</a> 这个卖vps的主机商收集的知识点真不少，包括监控报警安全数据库很全面。 <a href="http://twitter.com/54chen/statuses/137777235938639872" class="aktt_tweet_time">#</a>
+thrift快速入门实例 <a href="http://t.co/rjYGRvHI" rel="nofollow">http://t.co/rjYGRvHI</a> <a href="http://twitter.com/54chen/statuses/137401866442113025" class="aktt_tweet_time">#</a>
+南京校招有感：学生喜欢android开发职位，以为是用c搞操作系统，不喜欢web相关职位，以为做个网页没有技术含量。简单评价：这个行业入行10年内都是在别人走过的路上踩。 <a href="http://twitter.com/54chen/statuses/135932944882741248" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/18/thrift-quick-start/">Thrift快速入门实例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="facebook thrift" />
+Thrift是Facebook的核心框架之一，使不同的开发语言开发的系统可以通过该框架实现彼此的通信，类似于webservice，但是Thrift提供了近乎变态的效率和开发的方便性，是webservice所不能比拟的。给分布式开发带来了极大的方便。但是这柄利器也有一些不完美。 </p>
+
+<p><strong>安装thrift</strong>
+<blockquote>1、./configure --with-boost=/usr/include<br />
+2、make<br />
+3、make install</blockquote></p>
+
+<p><strong>定义接口文件</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-rb" start="1"><li class="alt"><span><span>vim&nbsp;chen.thrift&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="comment">#!/usr/local/bin/thrift&nbsp;--gen&nbsp;java</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>namespace&nbsp;java&nbsp;com.chen&nbsp;&nbsp;</span></li><li class="alt"><span>service&nbsp;Hello{&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i32&nbsp;hello()&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p><strong>生成代码</strong>
+<div class="chen-hl"><ol class="dp-perl" start="1"><li class="alt"><span><span>thrift&nbsp;--gen&nbsp;java&nbsp;chen.thrift&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>要使用1.6的jdk
+<strong>
+实现server代码：</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*&nbsp;@author&nbsp;54chen(陈臻)&nbsp;[chenzhen@xiaomi.com&nbsp;czhttp@gmail.com]</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;*&nbsp;@since&nbsp;2011-6-24&nbsp;下午08:11:15</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">package</span><span>&nbsp;com.chen;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">import</span><span>&nbsp;org.apache.thrift.TException;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;HelloImpl&nbsp;</span><span class="keyword">implements</span><span>&nbsp;Hello.Iface&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;HelloImpl()&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;hello()&nbsp;</span><span class="keyword">throws</span><span>&nbsp;TException&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"hello&nbsp;54chen"</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p><strong>通过下面的代码启动server</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>TServerSocket&nbsp;serverTransport&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;TServerSocket(</span><span class="number">7911</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello.Processor&nbsp;processor&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Hello.Processor(</span><span class="keyword">new</span><span>&nbsp;HelloImpl());&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Factory&nbsp;protFactory&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TBinaryProtocol.Factory(</span><span class="keyword">true</span><span>,&nbsp;</span><span class="keyword">true</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TServer&nbsp;server&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TThreadPoolServer(processor,&nbsp;serverTransport,&nbsp;protFactory);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"Starting&nbsp;server&nbsp;on&nbsp;port&nbsp;7911&nbsp;..."</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server.serve();&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p><strong>通过下面代码启动client</strong>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>TTransport&nbsp;transport&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;TSocket(</span><span class="string">"localhost"</span><span>,&nbsp;</span><span class="number">7911</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TProtocol&nbsp;protocol&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TBinaryProtocol(transport);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello.Client&nbsp;client&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Hello.Client(protocol);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transport.open();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"Client&nbsp;calls&nbsp;hello()"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.hello();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transport.close();&nbsp;&nbsp;</span></li></ol></div></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/11/06/54chen-twitter-memo-2011-11-06/">54chen Twitter Memo 2011-11-06</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-11-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+quercus记录：php使用连接池访问数据库 </ul><a href="http://t.co/KhR0AG9I" rel="nofollow">http://t.co/KhR0AG9I</a> <a href="http://twitter.com/54chen/statuses/132283387288371201" class="aktt_tweet_time">#</a>
+爆走了两天，准备把codeigniter放在quercus里跑，先后解决了SHA1加密bug，解析$与&amp;的bug，最后还有mysql latin1字符的问题，时间不等人，quercus跑php绝对比nginx+fpm安全，遗憾问题太多，后面如果fix会提供下载。 <a href="http://twitter.com/54chen/statuses/131336323452772353" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-10-30 <a href="http://t.co/AddQugsn" rel="nofollow">http://t.co/AddQugsn</a> <a href="http://twitter.com/54chen/statuses/130462815726211072" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="16">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="14">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -117,7 +117,7 @@ hostname hadoop3</blockquote></p>
 
 <p><strong>[打通机器]</strong></p>
 
-<p><blockquote>hadoop1# ssh-keygen -t dsa -P &#8221; -f ~/.ssh/id_dsa<br />
+<p><blockquote>hadoop1# ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa<br />
 hadoop1# scp ~/.ssh/id_dsa.pub hadoop2:/root/<br />
 hadoop1# scp ~/.ssh/id_dsa.pub hadoop3:/root/<br />
 hadoop2# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys<br />
@@ -147,7 +147,7 @@ vim conf/core-site.xml<br />
 
 <p><blockquote>&lt;configuration&gt;<br />
 &lt;property&gt;<br />
-&lt;!&#8211; 用于dfs命令模块中指定默认的文件系统协议 &#8211;&gt;<br />
+&lt;!-- 用于dfs命令模块中指定默认的文件系统协议 --&gt;<br />
 &lt;name&gt;fs.default.name&lt;/name&gt;<br />
 &lt;value&gt;hdfs://hadoop1:9000&lt;/value&gt;<br />
 &lt;/property&gt;<br />
@@ -158,17 +158,17 @@ vim conf/core-site.xml<br />
 
 <p><blockquote>&lt;configuration&gt;<br />
 &lt;property&gt;<br />
-&lt;!&#8211; DFS中存储文件命名空间信息的目录 &#8211;&gt;<br />
+&lt;!-- DFS中存储文件命名空间信息的目录 --&gt;<br />
 &lt;name&gt;dfs.name.dir&lt;/name&gt;<br />
 &lt;value&gt;/opt/hadoop/data/dfs.name.dir&lt;/value&gt;<br />
 &lt;/property&gt;<br />
 &lt;property&gt;<br />
-&lt;!&#8211; DFS中存储文件数据的目录 &#8211;&gt;<br />
+&lt;!-- DFS中存储文件数据的目录 --&gt;<br />
 &lt;name&gt;dfs.data.dir&lt;/name&gt;<br />
 &lt;value&gt;/opt/hadoop/data/dfs.data.dir&lt;/value&gt;<br />
 &lt;/property&gt;<br />
 &lt;property&gt;<br />
-&lt;!&#8211; 是否对DFS中的文件进行权限控制(测试中一般用false)&#8211;&gt;<br />
+&lt;!-- 是否对DFS中的文件进行权限控制(测试中一般用false)--&gt;<br />
 &lt;name&gt;dfs.permissions&lt;/name&gt;<br />
 &lt;value&gt;false&lt;/value&gt;<br />
 &lt;/property&gt;<br />
@@ -179,17 +179,17 @@ vim conf/core-site.xml<br />
 
 <p><blockquote>&lt;configuration&gt;<br />
 &lt;property&gt;<br />
-&lt;!&#8211; 用来作JobTracker的节点的(一般与NameNode保持一致) &#8211;&gt;<br />
+&lt;!-- 用来作JobTracker的节点的(一般与NameNode保持一致) --&gt;<br />
 &lt;name&gt;mapred.job.tracker&lt;/name&gt;<br />
 &lt;value&gt;hadoop1:9001&lt;/value&gt;<br />
 &lt;/property&gt;<br />
 &lt;property&gt;<br />
-&lt;!&#8211; map/reduce的系统目录（使用的HDFS的路径） &#8211;&gt;<br />
+&lt;!-- map/reduce的系统目录（使用的HDFS的路径） --&gt;<br />
 &lt;name&gt;mapred.system.dir&lt;/name&gt;<br />
 &lt;value&gt;/opt/hadoop/system/mapred.system.dir&lt;/value&gt;<br />
 &lt;/property&gt;<br />
 &lt;property&gt;<br />
-&lt;!&#8211; map/reduce的临时目录（可使用“,”隔开，设置多重路径来分摊磁盘IO） &#8211;&gt;<br />
+&lt;!-- map/reduce的临时目录（可使用“,”隔开，设置多重路径来分摊磁盘IO） --&gt;<br />
 &lt;name&gt;mapred.local.dir&lt;/name&gt;<br />
 &lt;value&gt;/opt/hadoop/data/mapred.local.dir&lt;/value&gt;<br />
 &lt;/property&gt;<br />
@@ -233,7 +233,7 @@ vim ~/.bashrc<br />
 export HIVE_HOME=/opt/soft/hadoop-0.20.2/hive-0.7.0</blockquote></p>
 
 <p>$HIVE_HOME/bin/hive<br />
-&gt;create table tt(id int,name string) row format delimited fields terminated by &#8216;,&#8217; collection items terminated by &#8220;\n&#8221; stored as textfile;<br />
+&gt;create table tt(id int,name string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;<br />
 &gt;select * from tt;<br />
 &gt;drop table tt;</p>
 
@@ -243,14 +243,14 @@ export HIVE_HOME=/opt/soft/hadoop-0.20.2/hive-0.7.0</blockquote></p>
 准备mysql:hadoop1 user:hadoop pwd:hadoop</p>
 
 <p><blockquote>&gt;create database hive<br />
-&gt;GRANT all ON hive.* TO hadoop@% IDENTIFIED BY &#8216;hadoop&#8217;;<br />
+&gt;GRANT all ON hive.* TO hadoop@% IDENTIFIED BY 'hadoop';<br />
 &gt;FLUSH PRIVILEGES ;</blockquote></p>
 
 <p>vim $HIVE_HOME/conf/hive-site.xml</p>
 
 <p><blockquote>
-&lt;?xml version=&#8221;1.0&#8221;?&gt;<br />
-&lt;?xml-stylesheet type=&#8221;text/xsl&#8221; href=&#8221;configuration.xsl&#8221;?&gt;<br />
+&lt;?xml version="1.0"?&gt;<br />
+&lt;?xml-stylesheet type="text/xsl" href="configuration.xsl"?&gt;<br />
 &lt;configuration&gt;<br />
 &lt;property&gt;<br />
 &lt;name&gt;hive.metastore.local&lt;/name&gt;<br />
@@ -282,15 +282,15 @@ export HIVE_HOME=/opt/soft/hadoop-0.20.2/hive-0.7.0</blockquote></p>
 复制一个mysql-connector-java-5.1.10.jar到hive/lib下后：</p>
 
 <p><blockquote>$HIVE_HOME/bin/hive<br />
-&gt;create table tt(id int,name string) row format delimited fields terminated by &#8216;,&#8217; collection items terminated by &#8220;\n&#8221; stored as textfile;</blockquote></p>
+&gt;create table tt(id int,name string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;</blockquote></p>
 
 <p>如果报如下错：</p>
 
-<p><blockquote>FAILED: Error in metadata: javax.jdo.JDOException: Couldnt obtain a new sequence (unique id) : Binary logging not possible. Message: Transaction level &#8216;READ-COMMITTED&#8217; in InnoDB is not safe for binlog mode &#8216;STATEMENT&#8217;</blockquote></p>
+<p><blockquote>FAILED: Error in metadata: javax.jdo.JDOException: Couldnt obtain a new sequence (unique id) : Binary logging not possible. Message: Transaction level 'READ-COMMITTED' in InnoDB is not safe for binlog mode 'STATEMENT'</blockquote></p>
 
 <p>退出hive后，以root进入mysql执行：</p>
 
-<p><blockquote>&gt;set global binlog_format=&#8217;MIXED&#8217;;</blockquote></p>
+<p><blockquote>&gt;set global binlog_format='MIXED';</blockquote></p>
 
 <p>这是mysql的一个bug。</p>
 

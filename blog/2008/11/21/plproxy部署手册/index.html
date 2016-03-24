@@ -106,13 +106,13 @@
      '/usr/local/pgsql/lib/plpgsql.so'  LANGUAGE C;</pre></dt></p>
 
 <p> CREATE FUNCTION plpgsql_validator(oid) RETURNS void AS<br />
-     &#8216;/usr/local/pgsql/lib/plpgsql.so&#8217;  LANGUAGE C;</p>
+     '/usr/local/pgsql/lib/plpgsql.so'  LANGUAGE C;</p>
 
-<p> CREATE TRUSTED PROCEDURAL LANGUAGE &#8216;plpgsql&#8217;<br />
+<p> CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'<br />
      HANDLER plpgsql_call_handler<br />
      VALIDATOR plpgsql_validator;</p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;</p>
+<p> --------------------------------------------------------------------</p>
 
 <p> drop schema if exists plproxy cascade;</p>
 
@@ -120,52 +120,52 @@
 
 <p> grant all on schema plproxy to yahoo;</p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+<p> --------------------------------------------------------------------<br />
  create or replace function plproxy.get_cluster_version(cluster_name text)</p>
 
 <p> returns integer as $$</p>
 
 <p> begin<br />
-     if cluster_name = &#8216;&lt;cluster名字&gt;&#8217; then</p>
+     if cluster_name = '&lt;cluster名字&gt;' then</p>
 
 <p> 	return 8;</p>
 
 <p>     end if;</p>
 
-<p>     raise exception &#8216;no such cluster: %&#8217;, cluster_name;</p>
+<p>     raise exception 'no such cluster: %', cluster_name;</p>
 
 <p> end; $$ language plpgsql;</p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;  <br />
+<p> --------------------------------------------------------------------  <br />
  create or replace function plproxy.get_cluster_partitions(cluster_name text)</p>
 
 <p> returns setof text as $$</p>
 
 <p> begin</p>
 
-<p>    if cluster_name = &#8216;&lt;cluster名字&gt;&#8217; then</p>
+<p>    if cluster_name = '&lt;cluster名字&gt;' then</p>
 
-<p> 	&#8211;return next &#8216;host=202.165.97.144 port=6000 user=chry password=chry dbname=chry_134&#8217;;</p>
+<p> 	--return next 'host=202.165.97.144 port=6000 user=chry password=chry dbname=chry_134';</p>
 
-<p> 	return next &#8216;host=pg1.sns.cn3.yahoo.com user=yahoo dbname=sns_search&#8217;;<br />
- 	return next &#8216;host=pg2.sns.cn3.yahoo.com user=yahoo dbname=sns_search&#8217;;</p>
+<p> 	return next 'host=pg1.sns.cn3.yahoo.com user=yahoo dbname=sns_search';<br />
+ 	return next 'host=pg2.sns.cn3.yahoo.com user=yahoo dbname=sns_search';</p>
 
 <p> 	return;</p>
 
 <p>     end if;</p>
 
-<p>     raise exception &#8216;no such cluster: %&#8217;, cluster_name;</p>
+<p>     raise exception 'no such cluster: %', cluster_name;</p>
 
 <p> end; $$ language plpgsql;</p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+<p> --------------------------------------------------------------------<br />
  create or replace function plproxy.get_cluster_config(cluster_name text, out key text, out val text)</p>
 
 <p> returns setof record as $$</p>
 
 <p> begin</p>
 
-<p>     key := &#8216;statement_timeout&#8217;;</p>
+<p>     key := 'statement_timeout';</p>
 
 <p>     val := 60;</p>
 
@@ -183,24 +183,24 @@
  RUN ON ALL;
  $$ LANGUAGE plproxy;</pre></pre></p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+<p> --------------------------------------------------------------------<br />
  CREATE OR REPLACE FUNCTION public.doquery(urlstr text,query text)<br />
  RETURNS setof record AS $$<br />
- CLUSTER &#8216;&lt;cluster名字&gt;&#8217;;<br />
+ CLUSTER '&lt;cluster名字&gt;';<br />
  RUN ON hashtext(urlstr);<br />
  $$ LANGUAGE plproxy;</p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;  <br />
+<p> --------------------------------------------------------------------  <br />
  CREATE OR REPLACE FUNCTION public.dmlExec(query text)<br />
  RETURNS integer AS $$<br />
- CLUSTER &#8216;&lt;cluster名字&gt;&#8217;;<br />
+ CLUSTER '&lt;cluster名字&gt;';<br />
  RUN ON ALL;<br />
  $$ LANGUAGE plproxy;</p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;<br />
+<p> --------------------------------------------------------------------<br />
  CREATE OR REPLACE FUNCTION public.dmlExec(urlstr text,query text)<br />
  RETURNS integer AS $$<br />
- CLUSTER &#8216;&lt;cluster名字&gt;&#8217;;<br />
+ CLUSTER '&lt;cluster名字&gt;';<br />
  RUN ON hashtext(urlstr);<br />
  $$ LANGUAGE plproxy;
  
@@ -217,7 +217,7 @@
  END;
  $$ LANGUAGE plpgsql;</pre></p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-<br />
+<p> ----------------------------------------------------------------<br />
  CREATE OR REPLACE FUNCTION public.doquery(urlstr text,query text)<br />
  RETURNS SETOF RECORD AS $$<br />
  DECLARE<br />
@@ -230,7 +230,7 @@
  END;<br />
  $$ LANGUAGE plpgsql;</p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-</p>
+<p> ----------------------------------------------------</p>
 
 <p> CREATE OR REPLACE FUNCTION public.dmlExec(query text)<br />
  RETURNS integer AS $$<br />
@@ -245,7 +245,7 @@
 <p> END;<br />
  $$ LANGUAGE plpgsql;</p>
 
-<p> &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;<br />
+<p> ---------------------------------------------------------------<br />
  CREATE OR REPLACE FUNCTION public.dmlExec(urlstr text,query text)<br />
  RETURNS integer AS $$<br />
  DECLARE<br />

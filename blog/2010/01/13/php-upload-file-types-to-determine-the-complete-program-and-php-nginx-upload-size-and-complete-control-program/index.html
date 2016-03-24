@@ -116,44 +116,44 @@ PHP JAVA C上传文件如何准确判断文件类型－mime知识普及
 * @return String<br />
 */<br />
 function checkTitle($filename) {<br />
-$file     = fopen($filename, &#8220;rb&#8221;);<br />
+$file     = fopen($filename, "rb");<br />
 $bin      = fread($file, 2); //只读2字节<br />
 fclose($file);<br />
-$strInfo  = @unpack(&#8220;c2chars&#8221;, $bin);<br />
-$typeCode = intval($strInfo[&#8216;chars1&#8217;].$strInfo[&#8216;chars2&#8217;]);<br />
-$fileType = &#8221;;<br />
+$strInfo  = @unpack("c2chars", $bin);<br />
+$typeCode = intval($strInfo['chars1'].$strInfo['chars2']);<br />
+$fileType = '';<br />
 switch ($typeCode)<br />
 {
 case 7790:<br />
-$fileType = &#8216;exe&#8217;;<br />
+$fileType = 'exe';<br />
 break;<br />
 case 7784:<br />
-$fileType = &#8216;midi&#8217;;<br />
+$fileType = 'midi';<br />
 break;<br />
 case 8297:<br />
-$fileType = &#8216;rar&#8217;;<br />
+$fileType = 'rar';<br />
 break;<br />
 case 255216:<br />
-$fileType = &#8216;jpg&#8217;;<br />
+$fileType = 'jpg';<br />
 break;<br />
 case 7173:<br />
-$fileType = &#8216;gif&#8217;;<br />
+$fileType = 'gif';<br />
 break;<br />
 case 6677:<br />
-$fileType = &#8216;bmp&#8217;;<br />
+$fileType = 'bmp';<br />
 break;<br />
 case 13780:<br />
-$fileType = &#8216;png&#8217;;<br />
+$fileType = 'png';<br />
 break;<br />
 default:<br />
-$fileType = &#8216;unknown&#8217;.$typeCode;<br />
+$fileType = 'unknown'.$typeCode;<br />
 }
 //Fix<br />
-if ($strInfo[&#8216;chars1&#8217;]==&#8217;-1&#8217; &amp;&amp; $strInfo[&#8216;chars2&#8217;]==&#8217;-40&#8217; ) {<br />
-return &#8216;jpg&#8217;;<br />
+if ($strInfo['chars1']=='-1' &amp;&amp; $strInfo['chars2']=='-40' ) {<br />
+return 'jpg';<br />
 }
-if ($strInfo[&#8216;chars1&#8217;]==&#8217;-119&#8217; &amp;&amp; $strInfo[&#8216;chars2&#8217;]==&#8217;80&#8217; ) {<br />
-return &#8216;png&#8217;;<br />
+if ($strInfo['chars1']=='-119' &amp;&amp; $strInfo['chars2']=='80' ) {<br />
+return 'png';<br />
 }
 return $fileType;<br />
 }</blockquote>
@@ -179,9 +179,9 @@ return $fileType;<br />
 <h2><strong><span style="color: #ff0000;">重要PS</span>：</strong></h2>
 对于上传文件类型的判断，一直没有太好的办法，即使使用上面的代码，也有办法构造假的图片的（如何构造不再传播），有人使用getimagesize来判断，不失为一种好办法：</p>
 
-<p>if(in_array($attach[&#8216;ext&#8217;], array(&#8216;jpg&#8217;, &#8216;jpeg&#8217;, &#8216;gif&#8217;, &#8216;png&#8217;, &#8216;swf&#8217;, &#8216;bmp&#8217;)) &amp;&amp; function_exists(&#8216;getimagesize&#8217;) &amp;&amp; <a href="mailto:!@getimagesize($target">!@getimagesize($target</a>)) {<br />
+<p>if(in_array($attach['ext'], array('jpg', 'jpeg', 'gif', 'png', 'swf', 'bmp')) &amp;&amp; function_exists('getimagesize') &amp;&amp; <a href="mailto:!@getimagesize($target">!@getimagesize($target</a>)) {<br />
     @unlink($target);<br />
-    upload_error(&#8216;post_attachment_ext_notallowed&#8217;, $attacharray);<br />
+    upload_error('post_attachment_ext_notallowed', $attacharray);<br />
    }</p>
 
 <p>摘自dz代码。</p>

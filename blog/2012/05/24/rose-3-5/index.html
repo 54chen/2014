@@ -10,10 +10,12 @@
 
   
   <meta name="description" content="3.5.1 用来做什么
-&#8212;&#8212;&#8212;&#8212;&#8212;-
+----------------
 * 我们把的参数验证办法叫ParamValidator
 * 一般来说，像比如说验证http传来的参数是不是为空呀啥的（发挥你的想象力）。
-* 好处在于不用再重复地写if else 3.5.2 怎么用 &hellip;">
+* 好处在于不用再重复地写if else 3.5.2 怎么用
+------------
+* &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -106,15 +108,15 @@
 <div class="entry-content"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" />
 <strong>
 3.5.1 用来做什么</strong>
-&#8212;&#8212;&#8212;&#8212;&#8212;-<br />
+----------------<br />
 * 我们把的参数验证办法叫ParamValidator<br />
 * 一般来说，像比如说验证http传来的参数是不是为空呀啥的（发挥你的想象力）。<br />
 * 好处在于不用再重复地写if else</p>
 
 <p><strong>3.5.2 怎么用</strong>
-&#8212;&#8212;&#8212;&#8212;<br />
+------------<br />
 * 来看一个例子，验证用户的参数不可为空(灰常灰常的实用)：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;NotBlankParamValidator&nbsp;</span><span class="keyword">implements</span><span>&nbsp;ParamValidator&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">boolean</span><span>&nbsp;supports(ParamMetaData&nbsp;metaData)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;metaData.getAnnotation(NotBlank.</span><span class="keyword">class</span><span>)&nbsp;!=&nbsp;</span><span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;Object&nbsp;validate(ParamMetaData&nbsp;metaData,&nbsp;Invocation&nbsp;inv,&nbsp;Object&nbsp;target,&nbsp;Errors&nbsp;errors)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;paramName&nbsp;=&nbsp;metaData.getParamName();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;value&nbsp;=&nbsp;inv.getParameter(paramName);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(StringUtils.isBlank(value))&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;@参数不能为空&#8221;</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;NotBlankParamValidator&nbsp;</span><span class="keyword">implements</span><span>&nbsp;ParamValidator&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">boolean</span><span>&nbsp;supports(ParamMetaData&nbsp;metaData)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;metaData.getAnnotation(NotBlank.</span><span class="keyword">class</span><span>)&nbsp;!=&nbsp;</span><span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;Object&nbsp;validate(ParamMetaData&nbsp;metaData,&nbsp;Invocation&nbsp;inv,&nbsp;Object&nbsp;target,&nbsp;Errors&nbsp;errors)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;paramName&nbsp;=&nbsp;metaData.getParamName();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;value&nbsp;=&nbsp;inv.getParameter(paramName);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(StringUtils.isBlank(value))&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@参数不能为空"</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
 
 <p><strong>解读：</strong></p>
 
@@ -129,10 +131,10 @@
 * NotBlank是一个自己定义的annotation</p>
 
 <p><strong>3.5.3 使用时action长什么样？</strong>
-&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-<br />
+----------------------<br />
 * 下面的代码是action中使用时长的样子:</p>
 
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Get</span><span>(</span><span class="string">&#8220;/notBlank&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;String&nbsp;notBlank(</span><span class="annotation">@NotBlank</span><span>&nbsp;</span><span class="annotation">@Param</span><span>(</span><span class="string">&#8220;messages&#8221;</span><span>)&nbsp;String&nbsp;messages)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;Exception&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;@hello&nbsp;world&#8221;</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Get</span><span>(</span><span class="string">"/notBlank"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;String&nbsp;notBlank(</span><span class="annotation">@NotBlank</span><span>&nbsp;</span><span class="annotation">@Param</span><span>(</span><span class="string">"messages"</span><span>)&nbsp;String&nbsp;messages)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;Exception&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@hello&nbsp;world"</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
 
 <p><strong>解读：</strong>
 * 当遇到NotBlank注解的参数时，会自动执行参数判断<br />

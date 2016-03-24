@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="1. 到 http://www.postgresql.org下载pg8.2.4 source 2. 编译安装pgsql tar xvfj postgresql-8.2.4.tar.bz2 cd postgresql-8.2.4 ./configure &#8211;prefix=/home/y/ &hellip;">
+  <meta name="description" content="1. 到 http://www.postgresql.org下载pg8.2.4 source 2. 编译安装pgsql tar xvfj postgresql-8.2.4.tar.bz2 cd postgresql-8.2.4 ./configure --prefix=/home/y/pgsql &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,12 +104,12 @@
 <ul>
 	<li>tar xvfj postgresql-8.2.4.tar.bz2</li>
 	<li>cd postgresql-8.2.4</li>
-	<li>./configure &#8211;prefix=/home/y/pgsql #注意下一步把这个目录加入你bash的PATH中去</li>
+	<li>./configure --prefix=/home/y/pgsql #注意下一步把这个目录加入你bash的PATH中去</li>
 	<li>gmake</li>
 	<li>sudo gmake install</li>
 	<li>sudo mkdir /home/y/pgsql/data</li>
 	<li>sudo chown yahoo /home/y/pgsql/data</li>
-	<li>sudo -u yahoo /home/y/pgsql/bin/initdb &#8211;locale=zh_CN.UTF-8 &#8211;encoding=utf8  -D /home/y/pgsql/data</li>
+	<li>sudo -u yahoo /home/y/pgsql/bin/initdb --locale=zh_CN.UTF-8 --encoding=utf8  -D /home/y/pgsql/data</li>
 </ul>
 </li>
 	<li>3.创建数据库

@@ -116,7 +116,7 @@ sql2需要从这个表中检索出来时间为2010-05-26 11:55:00之<font color=
 
 <p>两条sql写出来大概是这样子的：<br />
 sql1:select * from table where time <'2010-05-26 11:55:00' and id>20000 order by id limit 10;<br />
-sql2:select * from table where time >&#8217;2010-05-26 11:55:00&#8217; and id>20000 order by id limit 10;</p>
+sql2:select * from table where time >'2010-05-26 11:55:00' and id>20000 order by id limit 10;</p>
 
 <p>并且已经知道表中的数据，在上面所示时间之前的数据要远远多于所示时间之后的数据。如图1所示：
 <img src="http://img05.taobaocdn.com/imgextra/i5/T1AKhFXgdbXXaH.kQ3_051000.jpg" alt="54chen" />

@@ -118,17 +118,17 @@ yum install byacc flex
 <blockquote>tar -zxvf boost_1_45_0.tar.gz <br />
 cd boost_1_45_0<br />
 ./bootstrap.sh<br />
-./bjam install &#8211;prefix=/opt/soft/bootstrap</blockquote></p>
+./bjam install --prefix=/opt/soft/bootstrap</blockquote></p>
 
 <p><strong>安装thrift-0.5.0</strong>
 <blockquote>tar zxvf thrift-0.5.0.tar.gz<br />
-./configure &#8211;with-php-config=/opt/soft/php/bin/php-config  &#8211;with-boost=/opt/soft/boost/ &#8211;with-java &#8211;prefix=/opt/soft/thrift<br />
+./configure --with-php-config=/opt/soft/php/bin/php-config  --with-boost=/opt/soft/boost/ --with-java --prefix=/opt/soft/thrift<br />
 make<br />
 make install</blockquote></p>
 
 <p><strong>安装fb303</strong>
 <blockquote>cd contrib/fb303<br />
-./bootstrap.sh &#8211;prefix=/opt/soft/thrift/fb303 &#8211;with-boost=/opt/soft/boost/ &#8211;with-thriftpath=/opt/soft/thrift/<br />
+./bootstrap.sh --prefix=/opt/soft/thrift/fb303 --with-boost=/opt/soft/boost/ --with-thriftpath=/opt/soft/thrift/<br />
 make<br />
 make install</blockquote></p>
 
@@ -138,7 +138,7 @@ cd facebook-scribe-2ee14d3</blockquote></p>
 
 <p>export BOOST_ROOT=/opt/soft/boost/<br />
 export LD_LIBRARY_PATH=/opt/soft/thrift/lib:/usr/lib:/usr/local/lib:/opt/soft/boost/lib/<br />
-./bootstrap.sh &#8211;prefix=/opt/soft/scribe &#8211;with-boost=/opt/soft/boost/ &#8211;with-thriftpath=/opt/soft/thrift/<br />
+./bootstrap.sh --prefix=/opt/soft/scribe --with-boost=/opt/soft/boost/ --with-thriftpath=/opt/soft/thrift/<br />
 make<br />
 make install</p>
 

@@ -104,7 +104,7 @@
 <p>在最简单的分析下，采取更换sshd服务的办法来去除老毛子的垃圾sshd.</p>
 
 <p>第一步、下载、安装
-<blockquote>wget -c &#8220;ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-5.0p1.tar.gz&#8221;</blockquote></p>
+<blockquote>wget -c "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-5.0p1.tar.gz"</blockquote></p>
 
 <p>tar zxvf openssh-5.0p1.tar.gz<br />
 cd openssh-5.0p1
@@ -122,7 +122,7 @@ http://www.openssl.org/</p>
 
 <p>make &amp;&amp; make install
 然后重新进入 openssh-5.0p1:
-<blockquote>./configure &#8211;sysconfdir=/etc/ssh</blockquote></p>
+<blockquote>./configure --sysconfdir=/etc/ssh</blockquote></p>
 
 <p>make</p>
 
@@ -144,7 +144,7 @@ http://www.openssl.org/</p>
 
 <p>注意打开下iptable:</p>
 
-<p>iptables -I <a href="http://www.54chen.com/230-%e6%b7%ab%e8%8d%a1%e4%b8%80%e4%b8%8b%ef%bc%8c%e4%bd%a0%e5%b0%b1%e7%9f%a5%e9%81%93/">INPUT</a> -p udp &#8211;dport 220 -j ACCEPT
+<p>iptables -I <a href="http://www.54chen.com/230-%e6%b7%ab%e8%8d%a1%e4%b8%80%e4%b8%8b%ef%bc%8c%e4%bd%a0%e5%b0%b1%e7%9f%a5%e9%81%93/">INPUT</a> -p udp --dport 220 -j ACCEPT
 K掉原来的~~搞定！打完收工。</p>
  
 <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>

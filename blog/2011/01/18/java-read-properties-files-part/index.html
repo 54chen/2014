@@ -134,27 +134,27 @@ ClassLoader.getResourceAsStream(), Class.getResourceAsStream(), ResourceBundle.g
                                  <tr bgcolor="#cccccc" /></table></p>
 
 <p>                                    <td>ClassLoader.<br />getResourceAsStream()</td>
-                                    <td>&#8221;/&#8221;-separated names; no leading &#8220;/&#8221; (all names are absolute)</td>
+                                    <td>"/"-separated names; no leading "/" (all names are absolute)</td>
                                     <td>Silent (returns null)<br />
                                     </td>
-                                    <td>this.getClass().getClassLoader()<br />.getResourceAsStream<br />(&#8220;some/pkg/resource.properties&#8221;)</td></p>
+                                    <td>this.getClass().getClassLoader()<br />.getResourceAsStream<br />("some/pkg/resource.properties")</td></p>
 
 <p>                                 
                                  <tr bgcolor="#ffffff">
                                     <td>Class.<br />getResourceAsStream()</td>
-                                    <td>&#8221;/&#8221;-separated names; leading &#8220;/&#8221; indicates absolute names; all other names are relative to the class&#8217;s package</td>
+                                    <td>"/"-separated names; leading "/" indicates absolute names; all other names are relative to the class's package</td>
                                     <td>Silent (returns null)<br />
                                     </td>
-                                    <td>this.getClass()<br />.getResourceAsStream<br />(&#8220;resource.properties&#8221;)</td></tr></p>
+                                    <td>this.getClass()<br />.getResourceAsStream<br />("resource.properties")</td></tr></p>
 
 <p>                                 
                                  <tr bgcolor="#cccccc">
                                     <td>ResourceBundle.<br />getBundle()</td>
-                                    <td>&#8221;.&#8221;-separated names; all names are absolute; .properties suffix is implied<br />
+                                    <td>"."-separated names; all names are absolute; .properties suffix is implied<br />
                                     </td>
                                     <td>Throws unchecked<br /> java.util.<br />MissingResource<br />Exception</td></tr></p>
 
-<p>                                    <td>ResourceBundle.getBundle<br />(&#8220;some.pkg.resource&#8221;)</td>
+<p>                                    <td>ResourceBundle.getBundle<br />("some.pkg.resource")</td>
                                  
                               
 [未完待续]<br />

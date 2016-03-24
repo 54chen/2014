@@ -133,7 +133,7 @@
 
 <p>3.antx</p>
 
-<p>svn co &#8230;. antx</p>
+<p>svn co .... antx</p>
 
 <p>目录：D:\antx</p>
 
@@ -170,7 +170,7 @@
 <p>修改jboss配置(修改默认的发布目录为自己的开发目录，这样不用来回复制了)：</p>
 
 <p>D:\jboss\jboss-4.0.2\server\default\conf\jboss-service.xml
-<blockquote> &lt;attribute name=&#8221;URLs&#8221;&gt;</blockquote></p>
+<blockquote> &lt;attribute name="URLs"&gt;</blockquote></p>
 
 <p>         deploy/,file:/D:\dev\hesper\deploy\target（你自己的目录）</p>
 
@@ -182,27 +182,27 @@
 <p>D:\jboss\jboss-4.0.2\server\default\deploy\jbossweb-tomcat55.sar\server.xml</p>
 
 <p> 
-<blockquote> &lt;Connector port=&#8221;80&#8221; address=&#8221;${jboss.bind.address}&#8221;</blockquote></p>
+<blockquote> &lt;Connector port="80" address="${jboss.bind.address}"</blockquote></p>
 
-<p>         maxThreads=&#8221;250&#8221; strategy=&#8221;ms&#8221; maxHttpHeaderSize=&#8221;8192&#8221;</p>
+<p>         maxThreads="250" strategy="ms" maxHttpHeaderSize="8192"</p>
 
-<p>         emptySessionPath=&#8221;true&#8221;</p>
+<p>         emptySessionPath="true"</p>
 
-<p>         enableLookups=&#8221;false&#8221; redirectPort=&#8221;8443&#8221; acceptCount=&#8221;100&#8221;</p>
+<p>         enableLookups="false" redirectPort="8443" acceptCount="100"</p>
 
-<p>         connectionTimeout=&#8221;20000&#8221; disableUploadTimeout=&#8221;true&#8221;/&gt;
+<p>         connectionTimeout="20000" disableUploadTimeout="true"/&gt;
  </p>
 
 <p> </p>
 
-<p>修改jboss配置（加虚拟目录，这个是意思意思&#8230;说不好哪天会使用&#8230;）：</p>
+<p>修改jboss配置（加虚拟目录，这个是意思意思...说不好哪天会使用...）：</p>
 
 <p>D:\jboss\jboss-4.0.2\server\default\deploy\jbossweb-tomcat55.sar\server.xml</p>
 
-<p>找到&lt;Host name=&#8221;localhost&#8221;</p>
+<p>找到&lt;Host name="localhost"</p>
 
-<p>            autoDeploy=&#8221;false&#8221; deployOnStartup=&#8221;false&#8221; deployXML=&#8221;false&#8221;&gt; 下一行添加：
-<blockquote>&lt;Context   path=&#8221;/h&#8221;   docBase=&#8221;D:\dev&#34;   debug=&#8221;0&#8221;   reloadable=&#8221;false&#8221;/&gt;</blockquote></p>
+<p>            autoDeploy="false" deployOnStartup="false" deployXML="false"&gt; 下一行添加：
+<blockquote>&lt;Context   path="/h"   docBase="D:\dev\"   debug="0"   reloadable="false"/&gt;</blockquote></p>
  
 <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
 </div>
@@ -232,7 +232,7 @@
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

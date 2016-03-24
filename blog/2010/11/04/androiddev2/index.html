@@ -140,7 +140,7 @@ android:layout_x=”35dip“&gt;<br />
 				String phoneNumber = PhoneNumberEditText.getText().toString();<br />
 				// new Intent(行为，数据)，其中action_dial是拨号行为，数据是电话号码<br />
 				Intent intent = new Intent(Intent.ACTION_DIAL, Uri<br />
-						.parse(&#8220;tel://&#8221; + phoneNumber));<br />
+						.parse("tel://" + phoneNumber));<br />
 				// 去调用那些可以处理拨号行为的Activity<br />
 				startActivity(intent);
 </blockquote></p>

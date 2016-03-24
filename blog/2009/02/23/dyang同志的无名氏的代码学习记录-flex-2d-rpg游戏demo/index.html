@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[文章作者：陈臻 本文版本：v1.0 最后修改：2009.2.23 转载请注明原文链接：http://www.54chen.com/c/469] 略去一千字废话，要谢谢地阳同学把人家的包全改成了funcat&#8230;哪里来的胖猫。。。 先上截图： flex builder3编译后运行， &hellip;">
+  <meta name="description" content="[文章作者：陈臻 本文版本：v1.0 最后修改：2009.2.23 转载请注明原文链接：http://www.54chen.com/c/469] 略去一千字废话，要谢谢地阳同学把人家的包全改成了funcat...哪里来的胖猫。。。 先上截图： flex builder3编译后运行，鼠标控制小女孩， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -101,7 +101,7 @@
 
 <div class="entry-content"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.2.23 转载请注明原文链接：<a href="http://www.54chen.com/c/469">http://www.54chen.com/c/469</a>]</p>
 
-<p>略去一千字废话，要谢谢地阳同学把人家的包全改成了funcat&#8230;哪里来的胖猫。。。</p>
+<p>略去一千字废话，要谢谢地阳同学把人家的包全改成了funcat...哪里来的胖猫。。。</p>
 
 <p>先上截图：</p>
 
@@ -125,37 +125,37 @@ sceneHolder.addChild(scene);</p>
 sceneHolder.x = 0;//(this.stage.stageWidth - 1000)/2;<br />
 sceneHolder.y = 0;//(this.stage.stageHeight -631)/2;<br />
 //男孩 参数：图片地址，宽度，高度，x,y,速度<br />
-role = new Player(&#8220;../assets/roles/38x88.png&#8221;, 62, 103, 38, 88, 4);<br />
+role = new Player("../assets/roles/38x88.png", 62, 103, 38, 88, 4);<br />
 scene.addContain(role);<br />
 role.place(600,315);<br />
 //女孩 同上<br />
-role1 = new Player(&#8220;../assets/roles/39x83.png&#8221;, 62, 103, 39, 83, 4);<br />
+role1 = new Player("../assets/roles/39x83.png", 62, 103, 39, 83, 4);<br />
 scene.addContain(role1);<br />
 role1.place(600,515);<br />
 //创造一个Item 参数： 图片地址,宽,高,x,y<br />
-bg = new Item(&#8220;../assets/bg/ground1.jpg&#8221;, 1000, 631, 0, 0);<br />
+bg = new Item("../assets/bg/ground1.jpg", 1000, 631, 0, 0);<br />
 scene.addBg(bg);</p>
 
 <p>//蓝色房子三个<br />
 for(var i:int=0;i&lt;aList.length;i++){<br />
-building = new Item(&#8220;../assets/bg/building2.png&#8221;, 297, 307, -1, 275);<br />
+building = new Item("../assets/bg/building2.png", 297, 307, -1, 275);<br />
 building.place(aList[i][0]+500, aList[i][1]+315);<br />
 building.mirror(aList[i][2]);//数组的第三个元素控制房子是否水平翻转，-1翻转，1不翻转<br />
 scene.addContain(building);<br />
 }
 //黄色的房子<br />
 for(var j:int=0;j&lt;bList.length;j++){<br />
-building = new Item(&#8220;../assets/bg/building1.png&#8221;, 275, 334, -1, 260);<br />
+building = new Item("../assets/bg/building1.png", 275, 334, -1, 260);<br />
 building.place(bList[j][0]+500, bList[j][1]+315);<br />
 building.mirror(bList[j][2]);<br />
 scene.addContain(building);<br />
 }
 //中间那个塑像<br />
-girl = new Item(&#8220;../assets/bg/obj1.png&#8221;, 110, 154, -1, 135);<br />
+girl = new Item("../assets/bg/obj1.png", 110, 154, -1, 135);<br />
 girl.place(500, 315);<br />
 scene.addContain(girl);<br />
 //再放一个房子<br />
-ft = new Item(&#8220;../assets/bg/building1.png&#8221;, 275, 334);<br />
+ft = new Item("../assets/bg/building1.png", 275, 334);<br />
 ft.place(400+500, 200+315);<br />
 scene.addFront(ft);</p>
 
@@ -195,7 +195,7 @@ this.stage.addEventListener(KeyboardEvent.KEY_UP, onKeyDownHandler);<br />
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

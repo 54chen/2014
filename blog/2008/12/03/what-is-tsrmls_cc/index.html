@@ -103,7 +103,7 @@
 <div class="entry-content"><p><blockquote>翻译：<a href="http://www.54chen.com">54chen.com</a></blockquote>
 原文地址：<a href="http://blog.libssh2.org/index.php?/archives/22-What-the-heck-is-TSRMLS_CC-anyway.html">http://blog.libssh2.org/index.php?/archives/22-What-the-heck-is-TSRMLS_CC-anyway.html</a></p>
 
-<p>如果你曾经做过php内核或者是<a href="http://www.54chen.com/c/91">php扩展</a>方面的工作，你一定见到过这个到处都是的结构，但是却从来没有人提起过它。知道这是什么的人典型回答不知道的人都会这样说：“不用管它是什么，只需要在这里、这里还有这里用，如果编译器说少一个tsrm_ls，就加一个&#8230;”。这样回答并非都是因为这个人懒惰（的确是有一点点懒），其实那只是在说引擎甚至可以不管这个神奇的值在简化什么，这是因为一个新入门的扩展开发者知道它的结构没有什么益处。这信息就像奶牛的意见一样，没关系，就是牛叫而已。</p>
+<p>如果你曾经做过php内核或者是<a href="http://www.54chen.com/c/91">php扩展</a>方面的工作，你一定见到过这个到处都是的结构，但是却从来没有人提起过它。知道这是什么的人典型回答不知道的人都会这样说：“不用管它是什么，只需要在这里、这里还有这里用，如果编译器说少一个tsrm_ls，就加一个...”。这样回答并非都是因为这个人懒惰（的确是有一点点懒），其实那只是在说引擎甚至可以不管这个神奇的值在简化什么，这是因为一个新入门的扩展开发者知道它的结构没有什么益处。这信息就像奶牛的意见一样，没关系，就是牛叫而已。</p>
 
 <p>既然我喜欢听自己喋喋不休的无意义主题（这个月我已经少写很多博客了），我想我得弥补这一主题，看看会不会有人通过他能领会什么。你可以责怪Lukas(Lukas Smith 是 PEAR DB 的主要作者应该是这个Lukas，译者注)，他让我一直在<a href="http://www.planet-php.net/">planet-php.net</a>上。</p>
 
@@ -115,7 +115,7 @@
 
 <p>ZTS</p>
 
-<p><strong>Z</strong>end <strong>T</strong>hread <strong>S</strong>safety -通常情况下，与TSRM有相同的用处。具体来说不同在于，ZTS的使用需要在编译的时候加上参数如<span style="font-family: courier;">./configure</span> ( <span style="font-family: courier;">&#8211;enable-experimental-zts</span> for PHP4, <span style="font-family: courier;">&#8211;enable-maintainer-zts</span> for PHP5），而TSRM是否被使用是由#define的预处理机制来确定的。</p>
+<p><strong>Z</strong>end <strong>T</strong>hread <strong>S</strong>safety -通常情况下，与TSRM有相同的用处。具体来说不同在于，ZTS的使用需要在编译的时候加上参数如<span style="font-family: courier;">./configure</span> ( <span style="font-family: courier;">--enable-experimental-zts</span> for PHP4, <span style="font-family: courier;">--enable-maintainer-zts</span> for PHP5），而TSRM是否被使用是由#define的预处理机制来确定的。</p>
 
 <p>tsrm_ls</p>
 
@@ -138,7 +138,7 @@
 
 <p>void output_func(char *message)<br />
 {
-    printf(&#8220;%s\n&#8221;, message);<br />
+    printf("%s\n", message);<br />
 }</p>
 
 <p>int main(int argc, char *argv[])<br />
@@ -156,7 +156,7 @@
 
 <p>void output_func(void)<br />
 {
-    printf(&#8220;%s\n&#8221;, message);<br />
+    printf("%s\n", message);<br />
 }</p>
 
 <p>int main(int argv, char *argv[])<br />

@@ -1,0 +1,876 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="54chen Twitter Memo 2012-09-09 cloud foundry之dea代码解读 http://t.co/wr5cdwWA #
+在深入cf之后，感觉cloud foundry的不好的几点：1.模块间内网通讯基本全用http; 2.NATS严重的单点依赖; 3. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/8">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/09/54chen-twitter-memo-2012-09-09/">54chen Twitter Memo 2012-09-09</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-09T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+cloud foundry之dea代码解读 </ul><a href="http://t.co/wr5cdwWA" rel="nofollow">http://t.co/wr5cdwWA</a> <a href="http://twitter.com/54chen/statuses/243964510463987712" class="aktt_tweet_time">#</a>
+在深入cf之后，感觉cloud foundry的不好的几点：1.模块间内网通讯基本全用http; 2.NATS严重的单点依赖; 3.低效的nginx router机制不能承载大应用。 <a href="http://twitter.com/54chen/statuses/243700970683498498" class="aktt_tweet_time">#</a>
+cloud foundry之router代码解读 <a href="http://t.co/ICavjNUs" rel="nofollow">http://t.co/ICavjNUs</a> <a href="http://twitter.com/54chen/statuses/243650530159783936" class="aktt_tweet_time">#</a>
+今天继续阅读cf代码，ruby的代码虽然简单，可惜不是虚拟机形式的，效率差了点。 <a href="http://twitter.com/54chen/statuses/243551429858582528" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/07/cloud-foundry-dea/">Cloud Foundry之dea代码解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloudfoundry" /></p>
+
+<p><strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，dea（DropletExecution Agent）是其应用运行的环境，一个DEA可以启动多个应用。<br />
+代码位置在： https://github.com/cloudfoundry/dea<br />
+这一部分也是我最想了解细节的地方，因为在一个paas平台中，资源的隔离才是最有价值的部分。</p>
+
+<p><strong>历史</strong>
+初始版的dea基本不控制系统资源，然后基于cgroup搞了一个warden（真正的资源隔离是它，下节再述），程序运行容器。cf希望warden运行在多个平台上，所以没有直接使用LXC。
+<strong>代码</strong>
+代码入口在lib/dea.rb:</p>
+
+<p><blockquote>EM.epoll<br />
+EM.run {<br />
+  agent = DEA::Agent.new(config)<br />
+  agent.run()<br />
+}</blockquote></p>
+
+<p>EM是ruby有名的eventmachine，是一个事件驱动网络框架，从java程序员的角度，可以理解有点像mina，也可以认为有点像erlang的gen_server。</p>
+
+<p>然后进到lib/dea/agent.rb:</p>
+
+<p><blockquote>NATS.start(:uri => @nats_uri) do ...</blockquote></p>
+
+<p>里面注册了各种各样的收到对应消息干什么活的定义，我们来看其中几条线：<br />
+1. 收到update:<br />
+        NATS.subscribe('dea.update') { |msg| process_dea_update(msg) }<br />
+上一句是说收到update的指令， process_dea_update里面关键的一句：<br />
+	register_instance_with_router(instance, :uris => (uris - current_uris))<br />
+通过NATS告诉router，新的app来了。</p>
+
+<p>2.收到start:<br />
+	NATS.subscribe("dea.#{uuid}.start") { |msg| process_dea_start(msg) }<br />
+在process_dea_start里面：<br />
+	start_operation = lambda do... 把app下载回来，修改好权限什么的。<br />
+	下面用了fiber（它是ruby里的协程，用来达到异步线程的效果，但是开销要比线程低）：<br />
+	f = Fiber.new do..<br />
+	f.resume<br />
+在协程中，最关键的调用：<br />
+	stage_app_dir(bits_file, bits_uri, sha1, tgz_file, instance_dir, runtime)<br />
+		bind_local_runtime(instance_dir, runtime)<br />
+			startup_contents.gsub!('%VCAP_LOCAL_RUNTIME%', runtime['executable']) // 替换运行时路径 <br />
+			File.open(startup, 'w') { |f| f.write(new_startup) } #写入运行的脚本<br />
+ 一切就绪之后，调用先前准备好的lambda:<br />
+          start_operation.call<br />
+然后去运行各种shell命令，包括启动应用。</p>
+
+<p>__EOF__</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/06/cloud-foundry-router/">Cloud Foundry之router代码解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloudfoundry" />
+<strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，router是其所有请求的入口路由，其与nginx进行配合完成各种情况情况下的转发。<br />
+代码位置在：https://github.com/cloudfoundry/router</p>
+
+<p><strong>历史</strong>
+第一版的router直接通过unix sock将http request通过nginx的proxy 发到了router.rb中处理，第二版的时候，因为ruby直接处理请求性能不行，换成了lua脚本来接收请求，再由ruby程序将结果返回。</p>
+
+<p><strong>目录结构</strong>
+router代码不多，共有下面的一些主要目录。</p>
+
+<p>.<br />
+├── bin<br />
+│   └── router  （启用router server的脚本）<br />
+├── config<br />
+│   ├── router2.yml<br />
+│   └── router.yml （配置文件，指定了服务的端口和消息队列pid等）<br />
+├── ext<br />
+│   └── nginx<br />
+│       ├── tablesave.lua<br />
+│       └── uls.lua （这两个lua脚本供nginx conf使用，实现用户第一次访问时生成一个cookies，lua让其去同一个地方）<br />
+├── Gemfile<br />
+├── Gemfile.lock<br />
+├── lib<br />
+│   ├── router<br />
+│   │   ├── const.rb<br />
+│   │   ├── router.rb<br />
+│   │   └── router_uls_server.rb  （基于一个简单的web框架(Sinatra)开发的一些http api）<br />
+│   └── router.rb（负责整体启动router的http server）<br />
+├── LICENSE<br />
+├── NOTICE<br />
+├── Rakefile<br />
+├── README<br />
+└── spec<br />
+    ├── functional<br />
+    │   ├── router_spec.rb<br />
+    │   └── spec_helper.rb<br />
+    ├── integration<br />
+    │   ├── router_spec.rb<br />
+    │   └── spec_helper.rb<br />
+    ├── lib<br />
+    │   ├── nats_timeout.rb<br />
+    │   └── spec_helper.rb<br />
+    ├── Rakefile<br />
+    ├── spec_helper.rb<br />
+    └── unit<br />
+        └── router_spec.rb</p>
+
+<p><strong>nginx的关键配置</strong>
+nginx对接的配置在https://github.com/cloudfoundry/vcap/blob/master/dev_setup/cookbooks/nginx/templates/default/router-nginx.conf.erb，是动态生成的，在安装时决定。<br />
+其中，关键的内容是：<br />
+#定义lua运行的环境<br />
+  lua_package_path "<%= node[:lua][:module_path] %>/?.lua;;";<br />
+  lua_package_cpath "<%= node[:lua][:module_path] %>/?.so;;";<br />
+#upstream定义到nls服务上<br />
+  upstream router_status {<br />
+    server <%= node[:nginx][:uls_ip] %>:<%= node[:nginx][:uls_port] %>;<br />
+  }</p>
+
+<p>其中，根据 health_monitor的值穿插了subrequest去query /vcapuls的subrequest，而 /vcapuls是接到router.sock的。</p>
+
+<p>简单地说，第二版的变化在于，大量的业务请求在health_moniter确定之后，变成了nginx直连下属业务，而不再经过router了。</p>
+
+<p><strong>学到什么</strong>
+1.nginx_lua相当好用，还得感谢之前的老同事agentzh他们的贡献;<br />
+2.router用http这么来回的搞感觉不如tcp来得靠谱。
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/02/54chen-twitter-memo-2012-09-02/">54chen Twitter Memo 2012-09-02</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-02T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+在小米写服务端java代码，你只需要知道java语法，其他maven呀、nginx配置呀、高可用呀、负载均衡呀，统统都可以忽略，天然就是支持的，嗯，我说的是下一年的事情。 </ul><a href="http://twitter.com/54chen/statuses/241511264084443136" class="aktt_tweet_time">#</a>
+cloud foundry之cloud_controller代码解读 <a href="http://t.co/5um7YuL8" rel="nofollow">http://t.co/5um7YuL8</a> <a href="http://twitter.com/54chen/statuses/241103911606431744" class="aktt_tweet_time">#</a>
+随着gfw越来越凶残，后来的再搞技术的朋友啊，你们将会连eclipse插件都下不全，所以说，趁早改行吧。 <a href="http://twitter.com/54chen/statuses/241032121408450561" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/hongqn" class="aktt_username">hongqn</a> 两个显示双屏也是一种重构思路。 <a href="http://twitter.com/54chen/statuses/240698514127060992" class="aktt_tweet_time">#</a>
+谁知道为什么cloud foundry采用了大量的ruby，而不是其他什么语言？ <a href="http://twitter.com/54chen/statuses/240698420543762432" class="aktt_tweet_time">#</a>
+cloud foundry之vmc代码解读 <a href="http://t.co/fm1U34u0" rel="nofollow">http://t.co/fm1U34u0</a> <a href="http://twitter.com/54chen/statuses/240667502982610944" class="aktt_tweet_time">#</a>
+clound foundry之vmc代码解读 <a href="http://t.co/9fx5HaQS" rel="nofollow">http://t.co/9fx5HaQS</a> <a href="http://twitter.com/54chen/statuses/240659819873329152" class="aktt_tweet_time">#</a>
+ruby快速学习手记(ubuntu) <a href="http://t.co/Aas2KH3J" rel="nofollow">http://t.co/Aas2KH3J</a> <a href="http://twitter.com/54chen/statuses/240400757344587777" class="aktt_tweet_time">#</a>
+ruby得用一天时间学一下，看看有没有实际用处。 <a href="http://twitter.com/54chen/statuses/240289018850459650" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-08-26 <a href="http://t.co/J16AmMdc" rel="nofollow">http://t.co/J16AmMdc</a> <a href="http://twitter.com/54chen/statuses/239545198609326082" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/30/cloud-foundry-cloud_controller/">Cloud Foundry之cloud_controller代码解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-30T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloud" />
+<strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，cloud_controller是其管理界面的http rest api入口。</p>
+
+<p><strong>补课 rails</strong>
+Rails基于MVC（模型- 视图- 控制器）设计模式。从视图中的Ajax应用，到控制器中的访问请求和反馈，到封装数据库的模型，Rails 为你提供一个纯Ruby的开发环境。<br />
+习惯约定大于配置：<br />
+model类位置app/models/xxx.rb<br />
+controller位置app/controllers/xxx_controller.rc<br />
+help位置app/helpers/xxx_helpers.rb<br />
+view位置app/views/xxx<br />
+对应布局app/views/layouts/xxx.rhtml xxx.rxml</p>
+
+<p><strong>开始cloud_controller</strong>
+https://github.com/cloudfoundry/cloud_controller</p>
+
+<p>里面有两个项目，一个是cloud controller另一个是health_manager，今天要研究的是前者，下节说后者。</p>
+
+<p><strong>入口</strong>
+bin/cloud_controller -> config/boot.rb<br />
+cloud_controller必需要求ruby1.9以上，因为其中有一个fiber需要ruby支持（传说中的Coroutine）。<br />
+如果没有配置 cloud_controller使用nginx，则会启用Thin去启动Rack。（Thin是ruby内置的network server，Rack: a Ruby Webserver Interface）</p>
+
+<p><strong>app</strong>
+以vmc push举例：<br />
+vmc push的关键一请求：post apps<br />
+对应app/controllers/apps_controller.rb</p>
+
+<p><blockquote>def create<br />
+	update_app_from_params(app)<br />
+	检查各种参数并赋值<br />
+	app.save! (app使用了ActiveRecord::Base，ActiveRecord是ruby用来做orm的东东，具体可以认为save!就是入库了)<br />
+        stage_app(app)<br />
+		去nats注册：result = client.stage(request, AppConfig[:staging][:max_staging_runtime])</blockquote></p>
+
+<p>	
+<strong>关键点</strong>
+cloud_controller接收到请求记录到db:postgresql/sqlite(cloud_controller.yml中定义)。<br />
+请求同时发送到nats等进一步处理。
+<strong>
+vmc push所做的事情</strong>
+1．发一个POST到”apps”，创建一个app;  (本文只做了这一步的分析)<br />
+2．发一个PUT到”apps/:name/application”，上传app;<br />
+3．发一个GET到”apps/:name/”，取得app状态，看看是否已经启动；<br />
+4．如果没有启动，发一个PUT到”apps/:name/”，使其启动。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/29/cloud-foundry-vmc/">Cloud Foundry之vmc代码解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloud" />
+<strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，vmc全称是The VMware Cloud CLI，是vmware的应用平台命令行接口。<br />
+ubuntu安装vmc
+<blockquote>sudo gem install vmc</blockquote></p>
+
+<p><strong>常见的用法 </strong>
+<blockquote>vmc target api.paas.n.xiaomi.net<br />
+vmc add-user<br />
+vmc login<br />
+vmc push
+</blockquote></p>
+
+<p>vmc其实是使用ruby来实现的一整套的cli命令转化为http restful请求的对应工具。<br />
+其代码位于：https://github.com/cloudfoundry/vmc<br />
+git clone回来代码之后，下面对代码进行半瓶水解析法解析。</p>
+
+<p><strong>入口 </strong>
+bin/vmc<br />
+引用了 $github/vmc/lib/cli<br />
+直接运行VMC::Cli::Runner.run<br />
+位于：lib/cli/runner.rb</p>
+
+<p>看上去run会被执行。</p>
+
+<p><strong>进入到parse_command!方法中</strong></p>
+
+<p>以push为例：</p>
+
+<p> when 'push'<br />
+      usage('vmc push [appname] [--path PATH] [--url URL] [--instances N] [--mem] [--runtime RUNTIME] [--no-start]')<br />
+      if @args.size == 1<br />
+        set_cmd(:apps, :push, 1)<br />
+      else<br />
+        set_cmd(:apps, :push, 0)<br />
+      end</p>
+
+<p><strong>进入到set_cmd中设置变量</strong></p>
+
+<p>module Cli<br />
+    :Runner<br />
+     module Command<br />
+         :Apps</p>
+
+<p><strong>然后</strong>
+cmd = VMC::Cli::Command.const_get(@namespace.to_s.capitalize)<br />
+cmd.new(@options).send(@action, *@args.collect(&:dup))</p>
+
+<p><strong>最终</strong>
+<blockquote>VMC::Cli::Command::Apps.new().send(push)<br />
+（在ruby语法中，此处send方法是一个关键词，表示callMethod)</blockquote></p>
+
+<p><strong>
+于是来到了lib/cli/commands/apps.rb</strong></p>
+
+<p><blockquote>def push(appname=nil)<br />
+	def do_push(appname=nil)<br />
+	upload_app_bits(appname, @application)<br />
+		def upload_app_bits(appname, path)<br />
+		client.upload_app(appname, file, appcloud_resources)<br />
+lib/vmc/clinet.rb<br />
+		def upload_app<br />
+			http_post(path(VMC::APPS_PATH, name, "application"), upload_data)<br />
+			def http_post(path, body, content_type=nil)<br />
+				def request(method, path, content_type = nil, payload = nil, headers = {})<br />
+					perform_http_request<br />
+						RestClient::Request.execute(req)
+</blockquote></p>
+
+<p>于是就没有了（RestClient是ruby中一个rest库）。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/28/learn-ruby-ubuntu/">Ruby快速学习手记(ubuntu)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-28T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1MQxKXkpmXXcK5RZ8_071520.jpg" alt="ruby" />
+ruby 1993年诞生于日本。rails是用ruby写的web framework，所谓的ROR正是这一搭档。</p>
+
+<p><strong>ruby安装</strong></p>
+
+<p>ubuntu 10.04很简单，安装ruby和rails：<br />
+sudo apt-get install ruby<br />
+sudo apt-get install rails</p>
+
+<p><strong>小试牛刀</strong>
+rails first_rails<br />
+cd first_rails/<br />
+ruby script/server<br />
+浏览器打开127.0.0.1:3000 it's works!</p>
+
+<p><strong>IDE:eclipse</strong></p>
+
+<p><strong>语法特点</strong>
+解释型<br />
+适合文本处理，类似perl<br />
+完全面向对象<br />
+无分号<br />
+方法定义关键字：def+end 木有大括号（{}）<br />
+无需指定类型<br />
+局部变量用小写字母或下划线开头即可<br />
+全局变量用美元符作为前缀 $；而实例变量用 @ 开头；类变量用 @@ 开头；类名、模块名和常量应该用大写字母开头<br />
+常量是以大写字母打头的变量（ruby的常量是可以改变的，但编译器会发出警告。）<br />
+ruby中这样实例化类：car = Car.new
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/11/spring-static-class-maven-cobertura-site/">Testing and Mocking in spring2.5: Static Class、maven Site、cobertura</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-11T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="mock spring static class cobertura" />
+<strong>spring 2.5 与 junit 4.4</strong>
+Spring 2.5.x不能用JUnit 4.5+.如果把使用了spring-test 2.5 的testcase升级到 junit 4.5会得到NoClassDefFoundError:</p>
+
+<p><blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br />
+org/junit/Assume$AssumptionViolatedException<br />
+java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException 
+</blockquote></p>
+
+<p>这是spring-test 2.5.x的一个bug. 其与JUnit 4.5不一致. 只能使用4.0-4.4.<br />
+或者就是自己打patch.
+<a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
+
+<p><strong>EasyMock 与 static Class</strong>
+EasyMock未提到是否支持static methods.功能类经常是static的，是因为没有上下文环境依赖，但如果一定要mock他们，可以选择powerMock.</p>
+
+<p><strong>PowerMock、static Class、junit、spring</strong>
+PowerMock 需要你添加 '@RunWith(PowerMockRunner.class)'.但 sping-test 需要你添加 '@RunWith(SpringJUnit4ClassRunner.class)'.
+<a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
+如果junit 4.7,PowerMock将RunWith替换为:<br />
+    @Rule<br />
+    public PowerMockRule rule = new PowerMockRule();<br />
+http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
+
+<p><strong>冲突</strong>
+Spring 2.5.x不能用JUnit 4.5+, 而PowerMockRule 只能用 JUnit 4.7.<br />
+基本上在Java + Spring 2.5 & JUnit 4.4环境下没啥简单的办法去mock static class了.</p>
+
+<p><strong>maven site 与 cobertura</strong>
+当你运行 'mvn site' or  'mvn sonar:sonar', 在spring项目中你可能会得到:<br />
+NoSuchBeanDefinitionException</p>
+
+<p>第一个答案:<br />
+在test的application文件中添加:</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>第二个答案:<br />
+'mvn site' 与 'mvn sonar:sonar' 会生成类在目录 ./generated-classes/cobertura 中.确保你想autowire的类都在正确的目录下扫描.</p>
+
+<p>-----------</p>
+
+<p><strong>spring 2.5 and junit 4.4</strong>
+Spring 2.5.x is incompatible with JUnit 4.5+.If you upgrade to junit 4.5,all of your test case which uses the SpringJUnit4ClassRunner will get a NoClassDefFoundError:</p>
+
+<p><blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br />
+org/junit/Assume$AssumptionViolatedException<br />
+java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException<br />
+ </blockquote></p>
+
+<p>It is an known issue with spring-test 2.5.x. It is incompatible with JUnit 4.5. Use 4.0-4.4.<br />
+Or you can try the patch in the issue tracker.
+<a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
+
+<p><strong>EasyMock and static Class</strong>
+EasyMock doesn't mention static methods.Utility methods should be most of the time static as they have no context and no dependencies.But when you need to mock it,you can you choose PowerMock.</p>
+
+<p><strong>PowerMock、static Class、junit、spring</strong>
+PowerMock need you add '@RunWith(PowerMockRunner.class)' to your test code.But sping-test need you add '@RunWith(SpringJUnit4ClassRunner.class)'.
+<a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
+With junit 4.7,PowerMock can replace RunWith to:<br />
+    @Rule<br />
+    public PowerMockRule rule = new PowerMockRule();<br />
+http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
+
+<p><strong>conflict</strong>
+Spring 2.5.x is incompatible with JUnit 4.5+, and that PowerMockRule is compatible with JUnit 4.7.<br />
+Basically, There isn't an easy way to do this in Java + Spring 2.5 & JUnit 4.4 at the moment.</p>
+
+<p><strong>maven site and cobertura</strong>
+When you run 'mvn site' or  'mvn sonar:sonar' with spring project,you may get the error:<br />
+NoSuchBeanDefinitionException</p>
+
+<p>The first answer:<br />
+In your test application context add the line:</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>The second answer:<br />
+The 'mvn site' or 'mvn sonar:sonar' will generates class in ./generated-classes/cobertura.Make sure the classes that you want to autowire is all scan in right folder.
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/05/54chen-twitter-memo-2012-08-05/">54chen Twitter Memo 2012-08-05</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-05T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+利用h2database和easymock轻松不依赖环境单元测试（rose等spring环境万能） </ul><a href="http://t.co/4w5Hudmv" rel="nofollow">http://t.co/4w5Hudmv</a> <a href="http://twitter.com/54chen/statuses/230605153399631872" class="aktt_tweet_time">#</a>
+印度的人们会不会特别想移民中国？ <a href="http://twitter.com/54chen/statuses/230544161600835584" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/Fenng" class="aktt_username">Fenng</a> 怎么解决先发到到时序问题？ <a href="http://twitter.com/54chen/statuses/230151793424887813" class="aktt_tweet_time">#</a>
+spring mock/h2 database/daotest/thrift/zookeeper/rose 基本上已经摸索出来一蓝子的开始高可用性高性能服务或者api的大路。 <a href="http://twitter.com/54chen/statuses/229930542307631105" class="aktt_tweet_time">#</a>
+xmpp muc的定义真是非常完整！ <a href="http://twitter.com/54chen/statuses/229788103076892672" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-07-29 <a href="http://t.co/r2SJQxKo" rel="nofollow">http://t.co/r2SJQxKo</a> <a href="http://twitter.com/54chen/statuses/229393311008440320" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/01/h2database-easymock-unit-test/">利用h2database和easymock轻松不依赖环境单元测试（rose等spring环境万能）</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-08-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1LbWjXndsXXccfjjX_085624.jpg" alt="h2database,easymock" />
+<strong>前言</strong>
+写java时间久了，慢慢就变得自信了，也可能是变得懒了，或者是项目进度的原因，test case越写越少，越来越不写了。<br />
+还有一个很大的原因是，DB环境不好搞，老是有垃圾数据，依赖的东西太多，有memcache、有别人的服务，等等等等，都是没有test case良好的理由。</p>
+
+<p>下面将以rose环境下，使用easy mock搞写第三方依赖和h2database搞写DB环境为例子，简单讲述如何轻松测试。</p>
+
+<p>完整代码可以在 <a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a> 下载到。</p>
+
+<p><strong>依赖的包介绍</strong>
+spring-test：提供一些基础的spring环境的支持，如果你不是spring环境，可能不需要。<br />
+h2：一个内存数据库，使用它的原因是，我们的业务大多数时候使用的都是mysql，而h2有一个mysql模式，可以支持绝大多数的mysql的SQL语句。<br />
+easymock：以前在五四陈科学院提到过的利器，用来模拟各种调用的工具。</p>
+
+<p>pom定义为：</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.springframework</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>spring-test</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>2.5.6</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.h2database</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>h2</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.3.163</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.easymock</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>easymockclassextension</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>2.4</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>基础配置与schema.sql准备</strong>
+在test/resources下我们需要两个关键的文件：applicationContext.xml  与 schema.sql</p>
+
+<p>applicationContext.xml定义了test执行时扫描的情况，同正常运行时使用的配置大同小异。不同在于需要替换db定义中的mysql driver为h2的driver，关键部分：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"driverClassName"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"org.h2.Driver"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"url"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li></ol></div>
+而schema.sql文件定义了初始化的表结构，这个文件的出现是因为h2与mysql还是有一定的语法区别的，不过在我的使用过程中，基本上只有create table的那个引擎声明是不支持的，所以喽，干掉先。</p>
+
+<p><strong>H2下的DAO的Test的代码示例</strong>
+在test case的初始化状态里需要导入schema.sql，代码如下：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>Statement&nbsp;st&nbsp;=&nbsp;conn.createStatement();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st.execute(<span class="string">"drop&nbsp;all&nbsp;objects;"</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st.execute(<span class="string">"runscript&nbsp;from&nbsp;'"</span><span>&nbsp;+&nbsp;</span><span class="keyword">new</span><span>&nbsp;DefaultResourceLoader().getResource(</span><span class="string">"schema.sql"</span><span>).getURL().toString()&nbsp;+&nbsp;</span><span class="string">"'"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st.close();&nbsp;&nbsp;</span></li></ol></div>
+而如果是spring/rose环境，则可以再加载上context.xml文件，代码如下：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@RunWith</span><span>(SpringJUnit4ClassRunner.</span><span class="keyword">class</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="annotation">@ContextConfiguration</span><span>(locations&nbsp;=&nbsp;</span><span class="string">"classpath:applicationContext.xml"</span><span>)&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;TestDAOTest&nbsp;{&nbsp;&nbsp;</span></span></li></ol></div>
+然后就开始写测试代码：
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Test</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;getTestTest()&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;com.chen.model.Test&nbsp;t&nbsp;=&nbsp;testDAO.getTest();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Assert.assertEquals(<span class="number">111</span><span>,&nbsp;t.getId());&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div>
+<strong>
+easymock的代码示例</strong></p>
+
+<p>easymock以前也提到过，这里再提一次：<a href="http://www.54chen.com/java-ee/spring-easymock-tutorial.html">http://www.54chen.com/java-ee/spring-easymock-tutorial.html</a>
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Test</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;getTestTest()&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;com.chen.model.Test&nbsp;t&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;com.chen.model.Test();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.setId(<span class="number">1111</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.setMsg(<span class="string">"adfadf"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestDAO&nbsp;testDAO&nbsp;=&nbsp;EasyMock.createMock(<span class="string">"testDAO"</span><span>,&nbsp;TestDAO.</span><span class="keyword">class</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EasyMock.expect(testDAO.getTest()).andReturn(t);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EasyMock.replay(testDAO);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReflectionTestUtils.setField(service,&nbsp;<span class="string">"testDAO"</span><span>,&nbsp;testDAO,&nbsp;TestDAO.</span><span class="keyword">class</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t&nbsp;=&nbsp;service.getTest();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;确信使用了mock</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EasyMock.verify(testDAO);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Assert.assertEquals(<span class="number">1111</span><span>,&nbsp;t.getId());&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p>mock其他东西以此类推。</p>
+
+<p><strong>后序 </strong>
+至此，已经可以mock一切了，你还有什么理由不写test case呢？<br />
+本文完整代码可以在 <a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a> 下载到。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="9">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="7">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

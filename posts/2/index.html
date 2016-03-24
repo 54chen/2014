@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="如何做一个快速运转的大规模网络开发公司 受《精益创业》 http://www.duokan.com/book/35802 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。 不仅仅是一些令人苦恼的“人的问题”，还有一些，是无从下手、或者不知道未来是怎样的疑惑。 以下，列出一些“ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/2">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/11/how-to-big-network/">如何做一个快速运转的大规模网络开发公司</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-11T11:12:21+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20141211/thinking.jpg></p>
+
+<p>受《精益创业》 <a href="http://www.duokan.com/book/35802">http://www.duokan.com/book/35802</a> 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。</p>
+
+<p>不仅仅是一些令人苦恼的“人的问题”，还有一些，是无从下手、或者不知道未来是怎样的疑惑。</p>
+
+<p>以下，列出一些“看得见的未来”，因为是一些系统已经在线上服务过亿的用户，如果你在思考相同的问题，也许会有一些用处。</p>
+
+<h1>一.流程与制度</h1>
+
+<h2>1.代码质量</h2>
+
+<ul>
+<li>没有经过适量单元测试的代码，不能发起code review。</li>
+<li>codereview:每行code都经过超过两双眼睛阅读。</li>
+<li>没有经过code review的代码不能进入代码库。</li>
+<li>没有经过完整bvt测试的代码，不能merge到线上分支。</li>
+<li>没有完成上述流程的代码，不应该被用户访问到。</li>
+</ul>
+
+
+<h2>2.故障报告</h2>
+
+<ul>
+<li>实际上最有效的制度是postmortem制度，但往往在国内被称为“故障报告”。</li>
+<li>如果在你的公司里，《故障报告》与工资是挂钩的，恭喜你，制度用错了。</li>
+<li>故障报告的本意，是让发生的故障告诉所有的人，让所有的工程师都学到，这次故障的起因是什么、如何避免。</li>
+<li>故障报告绝对不是用来惩罚和警告你犯错了。</li>
+<li>不情愿的故障报告，宣告了这个制度在你司实施的失败。</li>
+<li>经常性的重复的故障报告，一定是制度没有彻底实施或者招聘人员眼神错了（眼神错的几率小之又小）。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/12/11/how-to-big-network/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/18/about-socket-read/">有关socket Read</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-18T20:37:49+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140710/logo.png></p>
+
+<ul>
+<li>实际开发中，网络程序最可能遇到的就是数据没收到、收到错误数据这样诡异的问题.</li>
+<li>很多时候，都是由于对socket read的细节理解的不一致，导致了程序前后的矛盾。</li>
+<li>下面详细阐述整个read的过程。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/18/about-socket-read/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/11/04/network-load-test/">网络IO型程序压力测试要点</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-11-04T18:23:05+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20141104/20141104.jpg></p>
+
+<h1>一.突破客户端端口数限制</h1>
+
+<ul>
+<li>这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。</li>
+<li>现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（2<sup>16</sup>=65536）</li>
+<li>但是从计算机网络的发展来看，端口长度定义同IPv4定义一样，都是当时的同志们拍脑袋的结果。</li>
+</ul>
+
+
+<h2>突破的办法</h2>
+
+<ul>
+<li>一个机器绑定多个IP地址。</li>
+<li>搞无数机器或者虚拟机。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/11/04/network-load-test/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/">Rabbitmq Java Client Api详解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-27T15:33:38+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
+
+<h1>AMQP</h1>
+
+<ul>
+<li>AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。</li>
+</ul>
+
+
+<h1>基础概念快速入门</h1>
+
+<ul>
+<li>每个rabbitmq-server叫做一个Broker，等着tcp连接进入。</li>
+<li>在rabbitmq-server进程内有Exchange，定义了这个消息的发送类型。（一对多、直连、多对多等等）</li>
+<li>Queue是进程内的逻辑队列，有多个，有名字。</li>
+<li>Binding联系Exchane与Queue。</li>
+<li>Routing key由生产者指定。Binding key由消费者指定。二者联合决定一条消息的来去。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/">小米互娱招java工程师</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-25T21:17:53+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png></p>
+
+<h2>序</h2>
+
+<ul>
+<li>这是一个新的时代。</li>
+<li>小米互娱作为一个真正意义上的小米互联网部门，开启小米“铁人三项”中互联网征途。</li>
+<li>这里有众多靠谱的兄弟。</li>
+<li>这里缺更加强大的你的加入。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/31/connection-secret-in-mobile/">中国移动网络下连接的秘密</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-31T17:44:55+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
+
+<p> 最近在研究网络层的接入问题。一些心得记录在下面：</p>
+
+<h2>一、TCP与HTTP</h2>
+
+<ul>
+<li>0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。</li>
+<li>1.TCP传输的数据，绝对是顺序正确、不丢包的数据。否则它一定不会把数据扔给应用层。</li>
+<li>2.从应用层角度，TCP是一个数据流，收到的数据会聚在一起。所以需要应用层去协商数据与数据之间用什么间隔，比如常用的长度标识。</li>
+<li>3.TCP在网络恶劣的情况下，开始启动：拥塞避免算法 与 慢启动算法。而这些都是由一些公式去估计当前网络情况的。</li>
+<li>4.TCP的报文包与我们自己应用层的发的“包”半毛钱关系都没有，数据到了底层还是要切成N块来传送的。</li>
+<li>5.所谓的HTTP比TCP更可靠是错误的。HTTP是应用层协议，实际也是TCP，只不过数据在应用层定义了规则：必须有request\header\body等等。</li>
+<li>6.硬件防火墙一般拦截端口，软件防火墙才拦协议。所以80端口走TCP有不少好处。</li>
+<li>7.HTTP比TCP更可靠的错觉产生的原因是：HTTP请求基本都是每次新开连接，而TCP很少这样做。</li>
+<li>8.TCP就像</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/31/connection-secret-in-mobile/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/09/tigase-sockthread/">tigase网络核心SockThread详解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-09T16:03:33+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140710/logo.png></p>
+
+<h2>总述</h2>
+
+<ul>
+<li>SocketThread类是一个很底层的类，在初始化时调用了Selector.open（clientsSel）。</li>
+<li>socketReadThread nThread个</li>
+<li>socketWriteThread nThread个</li>
+<li>ResultsListener nThread个</li>
+<li>completionService一个，池化线程nThread个，在sockThread.run里被submit，ResultsListener里进行completionService.take().get()取出执行结果。</li>
+<li>forCompletion有序队列一个，在socketThread.run里开始add，同一方法立即被从最小依次取出，然后submit给completionService。</li>
+<li>waiting有序队列一个，recreateSelector阶段存在add，最大来源是addSocketService静态方法，在socketThread.run最后阶段的addAllWaiting时注册Channel时把waiting里的IOService取出做为附加对象绑定。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/09/tigase-sockthread/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/07/explain-tigase/">Tigase代码框架解读</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-07-07T13:47:54+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
+
+<ul>
+<li><p>在java下实现的xmpp开源实现，除了openfire外，tigase是另一个牛逼的项目。</p></li>
+<li><p>实际的实验室压力下，50万人同时在线的单机，tigase的gc情况要优于openfire，而且openfire的网络层代码借鉴了不少tigase的。</p></li>
+</ul>
+
+
+<p>下面的内容，在解剖tigase过程中所写，使用的版本是：5.2.1 (2014年7月份)。</p>
+
+<h2>组件</h2>
+
+<p>tigase就是一个大组件框，里面所有东西基本都是组件组成的。session manager、message router、c2s connection manager&hellip;全部是组件。</p>
+
+<p>ServerComponent接口是一个最小化接口，但是要去写很多代码，tigase提供了许多的现成的代码，减少去从零实现这个接口的过程。</p>
+
+<p>比如extends AbstractMessageReceiver可以直接生成一个处理消息的组件。只需要实现一个processPacket方法。实现getDefaults方法，可以对系统变量进行处理。实现setProperties方法，可以去设置一些要用的变量。</p>
+
+<h2>多线程</h2>
+
+<p>processPacket方法，可以把逻辑扔到不同的cpu上去运行，以发挥服务器多核的优势。processingThreads方法返回用多少个cpu来处理。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/07/explain-tigase/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Bosh vs Comet vs Long Polling vs Polling</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-06-30T11:41:42+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
+
+<p>最近在研究在中国特色移动互联网下通过性最好的应用层协议办法，看到很多混乱的概念和实现，54chen在对各种名词的历史进行了深度考察，特作记录以做区分。</p>
+
+<h2>HTTP协议历史</h2>
+
+<ul>
+<li>第一个HTTP协议诞生于1989年3月。</li>
+<li>第一个HTTP协议的版本是HTTP 0.9，它的组成极其简单，因为它只允许客户端发送GET这一种请求。</li>
+<li>HTTP协议的第二个版本是HTTP 1.0，直到HTTP 1.0成为最重要的面向事务的应用层协议。该协议对每一次请求/响应，同样是建立并关闭一次连接。</li>
+<li>HTTP协议的第三个版本是HTTP 1.1，它就是目前使用最广泛的协议版本。从HTTP 1.1开始，客户端默认与Web 服务器建立长连接。</li>
+</ul>
+
+
+<h2>原始阶段polling</h2>
+
+<p>最早期的时候，因为没有可以依赖的东西，能用的只有javascript的setInterval，定时循环向服务器发起请求。</p>
+
+<p>优点是：服务器端啥特别的东西都不用准备，直接当http请求处理即可。缺点是：白白浪费大量的请求。</p>
+
+<h2>什么是Comet?</h2>
+
+<p>中文意思彗星，大概是想表示这是一次尾巴会拖很长的请求。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/28/thrift-upgrade/">Thrift版本升级调查记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-28T16:59:27+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg></p>
+
+<p>自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。</p>
+
+<p>代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
+
+<h1>第一轮：编译阶段</h1>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/28/thrift-upgrade/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="3">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="1">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

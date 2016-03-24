@@ -134,15 +134,15 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");<br />
 sdf.setTimeZone(TimeZone.getTimeZone("UTC"));<br />
 buildTimeStr = sdf.format(buildTime)</code></blockquote></p>
 
-<p>versionNumber = &#8216;0.5.1-SNAPSHOT&#8217;</p>
+<p>versionNumber = '0.5.1-SNAPSHOT'</p>
 
-<p>explodedDistDir = new File(distsDir, &#8216;exploded&#8217;)<br />
-explodedDistLibDir = new File(explodedDistDir, &#8216;lib&#8217;)<br />
-explodedDistBinDir = new File(explodedDistDir, &#8216;bin&#8217;)<br />
-explodedDistConfigDir = new File(explodedDistDir, &#8216;config&#8217;)</p>
+<p>explodedDistDir = new File(distsDir, 'exploded')<br />
+explodedDistLibDir = new File(explodedDistDir, 'lib')<br />
+explodedDistBinDir = new File(explodedDistDir, 'bin')<br />
+explodedDistConfigDir = new File(explodedDistDir, 'config')</p>
 
 <p>allprojects {<br />
-group = &#8216;org.elasticsearch&#8217;<br />
+group = 'org.elasticsearch'<br />
 version = versionNumber</p>
 
 <p>plugins.withType(JavaPlugin).whenPluginAdded {<br />
@@ -152,7 +152,7 @@ targetCompatibility = 1.6<br />
 
 <p>repositories {<br />
 mavenCentral()<br />
-mavenRepo urls: &#8216;http://repository.jboss.com/maven2/&#8217;<br />
+mavenRepo urls: 'http://repository.jboss.com/maven2/'<br />
 }
 }</p>
 
@@ -164,50 +164,50 @@ visible = false<br />
 }</p>
 
 <p>dependencies {<br />
-distLib project(&#8216;:elasticsearch&#8217;)<br />
+distLib project(':elasticsearch')<br />
 }</p>
 
-<p>task explodedDist(dependsOn: [configurations.distLib], description: &#8216;Builds a minimal distribution image&#8217;) &lt;&lt; {<br />
+<p>task explodedDist(dependsOn: [configurations.distLib], description: 'Builds a minimal distribution image') &lt;&lt; {<br />
 [explodedDistDir, explodedDistLibDir, explodedDistBinDir, explodedDistConfigDir]*.mkdirs()<br />
 // remove old elasticsearch files<br />
-ant.delete { fileset(dir: explodedDistLibDir, includes: &#8220;$archivesBaseName-*.jar&#8221;) }</p>
+ant.delete { fileset(dir: explodedDistLibDir, includes: "$archivesBaseName-*.jar") }</p>
 
 <p>copy {<br />
 from configurations.distLib<br />
 into explodedDistLibDir<br />
 }</p>
 
-<p>copy { from(&#8216;bin&#8217;); into explodedDistBinDir }<br />
-copy { from(&#8216;config&#8217;); into explodedDistConfigDir }</p>
+<p>copy { from('bin'); into explodedDistBinDir }<br />
+copy { from('config'); into explodedDistConfigDir }</p>
 
 <p>copy {<br />
-from(&#8216;.&#8217;)<br />
+from('.')<br />
 into explodedDistDir<br />
-include &#8216;LICENSE.txt&#8217;<br />
-include &#8216;NOTICE.txt&#8217;<br />
-include &#8216;README.textile&#8217;<br />
+include 'LICENSE.txt'<br />
+include 'NOTICE.txt'<br />
+include 'README.textile'<br />
 }</p>
 
-<p>ant.chmod(dir: &#8220;$explodedDistDir/bin&#8221;, perm: &#8220;ugo+rx&#8221;, includes: &#8220;**/*&#8221;)<br />
+<p>ant.chmod(dir: "$explodedDistDir/bin", perm: "ugo+rx", includes: "**/*")<br />
 }</p>
 
 <p>task zip(type: Zip) {<br />
 dependsOn explodedDist<br />
-// classifier = &#8216;all&#8217;<br />
+// classifier = 'all'<br />
 }</p>
 
 <p>zip.doFirst {task -&gt;<br />
-zipRootFolder = &#8220;$archivesBaseName-${-&gt; version}&#8221;<br />
+zipRootFolder = "$archivesBaseName-${-&gt; version}"<br />
 task.configure {<br />
 zipFileSet(dir: explodedDistDir, prefix: zipRootFolder) {<br />
-exclude &#8216;bin/*&#8217;<br />
+exclude 'bin/*'<br />
 }
-zipFileSet(dir: explodedDistDir, prefix: zipRootFolder, fileMode: &#8216;775&#8217;) {<br />
-include &#8216;bin/*&#8217;<br />
-exclude &#8216;bin/*.*&#8217;<br />
+zipFileSet(dir: explodedDistDir, prefix: zipRootFolder, fileMode: '775') {<br />
+include 'bin/*'<br />
+exclude 'bin/*.*'<br />
 }
 zipFileSet(dir: explodedDistDir, prefix: zipRootFolder) {<br />
-include &#8216;bin/*.*&#8217;<br />
+include 'bin/*.*'<br />
 }
 }<br />
 }</p>
@@ -217,15 +217,15 @@ include &#8216;bin/*.*&#8217;<br />
 
 <p> <br />
 task wrapper(type: Wrapper) {<br />
-gradleVersion = &#8216;0.8&#8217;<br />
-jarPath = &#8216;gradle&#8217;<br />
+gradleVersion = '0.8'<br />
+jarPath = 'gradle'<br />
 }
 到Gradle下载zip包，解压到任何位置，设置环境变量中的GRADLE_HOME过程此位置，path中增加gradle的bin目录，<a href="http://www.gradle.org">http://www.gradle.org</a> (杯具，需翻)</p>
 
 <p>到项目目录下直接运行 gradle，编译成功有如下提示:
 <img src="http://img01.taobaocdn.com/bao/uploaded/i1/T1JtxwXnBeXXc3NVk._111121.jpg" alt="" /></p>
 
-<p>如果直接运行 gradle &#8211;gui，还能以gui的模式来选择，非常人性化：
+<p>如果直接运行 gradle --gui，还能以gui的模式来选择，非常人性化：
 <img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1dI8wXXhqXXX_GaU._111317.jpg" alt="" /></p>
 
 <p>本文作者：<br />

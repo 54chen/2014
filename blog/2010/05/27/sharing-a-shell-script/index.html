@@ -114,9 +114,9 @@
 然后会有结果输出，持续输出返回结果的一个或者多个ip即是可用的服务器。
 <h2><strong>内涵第四章 代码</strong></h2>
 <blockquote>#!/bin/sh<br />
-cat temp | awk &#8216;{print $3}&#8217; &gt; ip.txt<br />
-FLIST=&#8221;`cat ip.txt|grep -v &#8220;#&#8221;`&#8221;<br />
-for FILE in `echo &#8220;${FLIST}&#8221;`<br />
+cat temp | awk '{print $3}' &gt; ip.txt<br />
+FLIST="`cat ip.txt|grep -v "#"`"<br />
+for FILE in `echo "${FLIST}"`<br />
 do<br />
 ping ${FILE}&gt; tmp/${FILE}.txt&amp;<br />
 done<br />

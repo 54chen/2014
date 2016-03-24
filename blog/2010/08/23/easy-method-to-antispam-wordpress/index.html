@@ -106,23 +106,23 @@
 虽然说akismet是wordpress中antispam无二的选择，但是akismet那个验证码让人很纠结，于是只能自己山寨一把了。
 <strong>土办法步骤一 转发默认评论地址</strong>
 常见的洋鬼子的广告肉机，都是利用了wordpress公开的post地址来做到脚本灌入的，其默认地址是wp-comments-post.php，第一步要做的是，屏蔽这个地址（以nginx为例）：<br />
-rewrite ^/wp&#45;comments&#45;post&#46;php$ http://www.54chen.com/ last;</p>
+rewrite ^/wp\-comments\-post\.php$ http://www.54chen.com/ last;</p>
 
 <p><strong>土办法步骤二 伪造假地址</strong>
 既然第一步中的真实地址无法访问了，那第二步肯定是假冒出来可以访问的地址：<br />
 if (!-e $request_filename){<br />
-rewrite ^/wc([0-9]+)&#46;html$ /wp-comments-post.php?54chen=$1 last;<br />
+rewrite ^/wc([0-9]+)\.html$ /wp-comments-post.php?54chen=$1 last;<br />
 }</p>
 
 <p><strong>土办法步骤三 javascript制造假post</strong>
 完成上面两步之后 ，最后一步就是将原来的comments.php修改post action的地址为伪造的地址，为了更加有效果，使用js来产生随机的wc1234.html即可：<br />
-在评论的form中增加onsubmit=&#8221;chenAntiSpam()&#8221; name=&#8221;commentform&#8221;；<br />
+在评论的form中增加onsubmit="chenAntiSpam()" name="commentform"；<br />
 再增加js:</p>
 
-<p>&lt;script type=&#8221;text/javascript&#8221;&gt;<br />
+<p>&lt;script type="text/javascript"&gt;<br />
 function chenAntiSpam() {<br />
- var param =&#8217;wc&#8217;+Math.round(Math.random()*1000)+&#8217;.html&#8217;;<br />
- document.commentform.action = &#8216;http://www.54chen.com/&#8217;+param;<br />
+ var param ='wc'+Math.round(Math.random()*1000)+'.html';<br />
+ document.commentform.action = 'http://www.54chen.com/'+param;<br />
 }
 &lt;/script&gt;</p>
 

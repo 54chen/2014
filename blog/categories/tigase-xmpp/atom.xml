@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Tigase,xmpp | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/tigase-xmpp/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-02-02T12:01:13+08:00</updated>
+  <updated>2016-03-24T21:18:45+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -84,7 +84,7 @@
 <h2>架子</h2>
 
 <ul>
-<li>ComponentRegistrator:本身是一种组件，专用于注册各种组件。registr &ndash;> addComponent</li>
+<li>ComponentRegistrator:本身是一种组件，专用于注册各种组件。registr -> addComponent</li>
 <li>MessageReceiver:本身是一种组件，专用于收消息。也叫Router，因为消息内容在此类组件中流动。</li>
 <li><p>XMPPService:本身是一种组件，专用于显示serviceDiscovery时的名称啥的。大作用没有。</p></li>
 <li><p>AbstractMessageReceiver:高级一点的组件，基于MessageReceiver、XMPPService，同时实现了很多细节，还搞了多个线程搞收和发。</p></li>

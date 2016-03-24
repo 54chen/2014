@@ -108,7 +108,7 @@ squidclient -p 8088 mgr:info （启在8088）<br />
 <img src="http://img03.taobaocdn.com/imgextra/i3/T1nU8SXdFrXXcxpD.U_015909.jpg" alt="http://img03.taobaocdn.com/imgextra/i3/T1nU8SXdFrXXcxpD.U_015909.jpg" />
 刚启动squid的时候，个人认为是因为缓存文件还没有拖动到前端来，所以是正常的，但结果过了一天后，还是没有看到进流量松动。</p>
 
-<p>第二天来，硬盘已经过了10G了，还是不行。通过cat access.log来看，cat access.log|gawk &#8216;{print $4}&#8217;|sort|uniq -c|sort -nr<br />
+<p>第二天来，硬盘已经过了10G了，还是不行。通过cat access.log来看，cat access.log|gawk '{print $4}'|sort|uniq -c|sort -nr<br />
 发现TCP_MISS/200相当的多，再看流量图，进出还是没有变化。杯具。</p>
 
 <p>于是乎，想到了直接tail -f access.log，看看究竟都有什么东西在访问。</p>
@@ -162,7 +162,7 @@ squidclient -p 8088 mgr:info （启在8088）<br />
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

@@ -105,7 +105,7 @@
 
 <p>branches：分枝</p>
 
-<p>当多个人合作（Sally和John）时，可能有这样的情况出现：John突然有个想法，跟原先的设计不太一致，可能是功能的添加或者日志格式的改进等等，总而言之，这个想法可能需要花一段时间来完成，而这个过程中，John的一些操作可能会影响Sally的工作，John从现有的状态单独出一个project的话，又不能及时得到Sally对已有代码做的修正，而且独立出来的话，John的尝试成功时，跟原来的合并也存在困难。这时最好的实践方法是使用branches。John建立一个自己的branch，然后在里面实验，必要的时候从Sally的trunk里取得更新，或者将自己的阶段成果汇集到trunk中。（svn copy SourceURL/trunk \ DestinationURL/branchName \ -m &#8220;Creating a private branch of xxxx/trunk.&#8221; ）</p>
+<p>当多个人合作（Sally和John）时，可能有这样的情况出现：John突然有个想法，跟原先的设计不太一致，可能是功能的添加或者日志格式的改进等等，总而言之，这个想法可能需要花一段时间来完成，而这个过程中，John的一些操作可能会影响Sally的工作，John从现有的状态单独出一个project的话，又不能及时得到Sally对已有代码做的修正，而且独立出来的话，John的尝试成功时，跟原来的合并也存在困难。这时最好的实践方法是使用branches。John建立一个自己的branch，然后在里面实验，必要的时候从Sally的trunk里取得更新，或者将自己的阶段成果汇集到trunk中。（svn copy SourceURL/trunk \ DestinationURL/branchName \ -m "Creating a private branch of xxxx/trunk." ）</p>
 
 <p>trunk：主干</p>
 
@@ -114,7 +114,7 @@
 <p>tag:</p>
 
 <p>在经过了一段时间的开发后，项目到达了一个里程碑阶段，你可能想记录这一阶段的代码的状态，那么你就需要给代码打上标签。(svn cp <a href="file:///svnroot/mojavescripts/trunk">file:///svnroot/mojavescripts/trunk</a> \ file:///svnroot/mojavescripts/tags/mirrorutils_rel_0_0_1 \<br />
--m &#8220;taged mirrorutils_rel_0_0_1&#8221;)</p>
+-m "taged mirrorutils_rel_0_0_1")</p>
 
 <p>另有一说，无所谓谁对谁错。</p>
 

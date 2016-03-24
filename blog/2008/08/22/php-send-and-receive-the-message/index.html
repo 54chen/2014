@@ -11,9 +11,10 @@
   
   <meta name="description" content="&lt;?php
 if ($EMAIL_INC) return;
-$EMAIL_INC=   &#8220;defined&#8221;;
-define( &#8220;SmtpPort&#8221;,25); class Pop3 {
-var $subject &hellip;">
+$EMAIL_INC=   "defined";
+define( "SmtpPort",25); class Pop3 {
+var $subject;                           // 邮件主题
+var $ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -105,8 +106,8 @@ var $subject &hellip;">
 
 <div class="entry-content"><p>&lt;?php<br />
 if ($EMAIL_INC) return;<br />
-$EMAIL_INC=   &#8220;defined&#8221;;<br />
-define( &#8220;SmtpPort&#8221;,25);</p>
+$EMAIL_INC=   "defined";<br />
+define( "SmtpPort",25);</p>
 
 <p>class Pop3 {<br />
 var $subject;                           // 邮件主题<br />
@@ -128,10 +129,10 @@ if ($this-&gt;Socket &lt;= 0){<br />
 return false;<br />
 }
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return false;<br />
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return false;<br />
 return true;<br />
 }</p>
 
@@ -141,12 +142,12 @@ return true;<br />
 <p>if ($this-&gt;Socket &lt; 0){<br />
 return false;<br />
 }
-fputs($this-&gt;Socket,   &#8220;USER $this-&gt;user\r\n&#8221;);<br />
+fputs($this-&gt;Socket,   "USER $this-&gt;user\r\n");<br />
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return false;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return false;</p>
 
 <p>return true;<br />
 }</p>
@@ -154,12 +155,12 @@ $this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024)
 <p>function pop3_pass( $pass)<br />
 {</p>
 
-<p>fputs($this-&gt;Socket,   &#8220;PASS $pass\r\n&#8221;);<br />
+<p>fputs($this-&gt;Socket,   "PASS $pass\r\n");<br />
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
 
 <p>return 1;<br />
 }</p>
@@ -167,14 +168,14 @@ $this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024)
 <p>function pop3_stat()<br />
 {</p>
 
-<p>fputs($this-&gt;Socket,   &#8220;STAT\r\n&#8221;);<br />
+<p>fputs($this-&gt;Socket,   "STAT\r\n");<br />
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
 
-<p>if (!eregi( &#8220;+OK (.*) (.*)&#8221;, $this-&gt;Line, $regs))<br />
+<p>if (!eregi( "+OK (.*) (.*)", $this-&gt;Line, $regs))<br />
 return 0;</p>
 
 <p>return $regs[1];<br />
@@ -182,20 +183,20 @@ return 0;</p>
 
 <p>function pop3_list()<br />
 {
-fputs($this-&gt;Socket,   &#8220;LIST\r\n&#8221;);<br />
+fputs($this-&gt;Socket,   "LIST\r\n");<br />
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
 
 <p>$i = 0;<br />
-while   (substr($this-&gt;Line   =   fgets($this-&gt;Socket, 1024),   0,   1)   &lt;&gt;    &#8220;.&#8221;)<br />
+while   (substr($this-&gt;Line   =   fgets($this-&gt;Socket, 1024),   0,   1)   &lt;&gt;    ".")<br />
 {
 $articles[$i] = $this-&gt;Line;<br />
 $i++;<br />
 }
-$articles[ &#8220;count&#8221;] = $i;</p>
+$articles[ "count"] = $i;</p>
 
 <p>return $articles;<br />
 }</p>
@@ -203,19 +204,19 @@ $articles[ &#8220;count&#8221;] = $i;</p>
 <p>function pop3_retr($nr)<br />
 {</p>
 
-<p>fputs($this-&gt;Socket,   &#8220;RETR $nr\r\n&#8221;);<br />
+<p>fputs($this-&gt;Socket,   "RETR $nr\r\n");<br />
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
 
-<p>while   (substr($this-&gt;Line   =   fgets($this-&gt;Socket, 1024),   0,   1)   &lt;&gt;    &#8220;.&#8221;)<br />
+<p>while   (substr($this-&gt;Line   =   fgets($this-&gt;Socket, 1024),   0,   1)   &lt;&gt;    ".")<br />
 {
 $data[$i] = $this-&gt;Line;<br />
 $i++;<br />
 }
-$data[ &#8220;count&#8221;] = $i;</p>
+$data[ "count"] = $i;</p>
 
 <p>return $data;<br />
 }</p>
@@ -223,24 +224,24 @@ $data[ &#8220;count&#8221;] = $i;</p>
 <p>function pop3_dele( $nr)<br />
 {</p>
 
-<p>fputs($this-&gt;Socket,   &#8220;DELE $nr\r\n&#8221;);<br />
+<p>fputs($this-&gt;Socket,   "DELE $nr\r\n");<br />
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;<br />
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;<br />
 return 1;<br />
 }</p>
 
 <p>function pop3_quit()<br />
 {</p>
 
-<p>fputs($this-&gt;Socket,   &#8220;QUIT\r\n&#8221;);<br />
+<p>fputs($this-&gt;Socket,   "QUIT\r\n");<br />
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;+&#8221;) return 0;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
 
 <p>return 1;<br />
 }
@@ -258,12 +259,12 @@ var $Socket;<br />
 var $Line;<br />
 var $Status;</p>
 
-<p>function Smtp($Server =   &#8220;localhost&#8221;,$Port = SmtpPort)<br />
+<p>function Smtp($Server =   "localhost",$Port = SmtpPort)<br />
 {
 return $this-&gt;Open($Server, $Port);<br />
 }</p>
 
-<p>function SmtpMail($FromEmail, $FromName, $ToEmail, $ToName, $Subject, $Body, $Attachment=null, $AttachmentType= &#8220;TEXT&#8221;)<br />
+<p>function SmtpMail($FromEmail, $FromName, $ToEmail, $ToName, $Subject, $Body, $Attachment=null, $AttachmentType= "TEXT")<br />
 {
 $this-&gt;Subject    = $Subject;<br />
 $this-&gt;ToName     = $ToName;</p>
@@ -299,24 +300,24 @@ if ($this-&gt;Socket &lt; 0) return false;</p>
 
 <p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
 
-<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+<p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;</p>
 
 <p>return true;<br />
 }
 function Helo()<br />
 {
-if (fputs($this-&gt;Socket,   &#8220;helo\r\n&#8221;) &lt; 0 ){<br />
+if (fputs($this-&gt;Socket,   "helo\r\n") &lt; 0 ){<br />
 return false;<br />
 }
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
 
-<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+<p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;</p>
 
 <p>return true;<br />
 }</p>
@@ -324,18 +325,18 @@ $this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024)
 <p>function Ehlo()<br />
 {</p>
 
-<p>/* Well, let@#s use &#8220;helo&#8221; for now.. Until we need the<br />
+<p>/* Well, let@#s use "helo" for now.. Until we need the<br />
 extra func@#s    [Unk]<br />
 */<br />
-if(fputs($this-&gt;Socket,   &#8220;helo localhost\r\n&#8221;)&lt;0){<br />
+if(fputs($this-&gt;Socket,   "helo localhost\r\n")&lt;0){<br />
 return false;<br />
 }
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
 
-<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+<p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;</p>
 
 <p>return true;<br />
 }</p>
@@ -343,16 +344,16 @@ $this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024)
 <p>function MailFrom($FromEmail)<br />
 {</p>
 
-<p>if (fputs($this-&gt;Socket,   &#8220;MAIL FROM: &lt;$FromEmail&gt;\r\n&#8221;)&lt;0){<br />
+<p>if (fputs($this-&gt;Socket,   "MAIL FROM: &lt;$FromEmail&gt;\r\n")&lt;0){<br />
 return false;<br />
 }</p>
 
 <p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
 
-<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+<p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;</p>
 
 <p>return true;<br />
 }</p>
@@ -360,15 +361,15 @@ $this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024)
 <p>function RcptTo($ToEmail)<br />
 {</p>
 
-<p>if(fputs($this-&gt;Socket,   &#8220;RCPT TO: &lt;$ToEmail&gt;\r\n&#8221;)&lt;0){<br />
+<p>if(fputs($this-&gt;Socket,   "RCPT TO: &lt;$ToEmail&gt;\r\n")&lt;0){<br />
 return false;<br />
 }
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
 
-<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+<p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return false;<br />
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;<br />
 return true;<br />
 }</p>
 
@@ -378,17 +379,17 @@ $FileSize = 0;<br />
 $Attachment = null;<br />
 $fp = null;</p>
 
-<p>$buffer = sprintf( &#8220;From: %s\r\nTo:%s\r\nSubject:%s\r\n&#8221;, $this-&gt;FromName, $this-&gt;ToName, $this-&gt;Subject);</p>
+<p>$buffer = sprintf( "From: %s\r\nTo:%s\r\nSubject:%s\r\n", $this-&gt;FromName, $this-&gt;ToName, $this-&gt;Subject);</p>
 
-<p>if(fputs($this-&gt;Socket,   &#8220;DATA\r\n&#8221;)&lt;0){<br />
+<p>if(fputs($this-&gt;Socket,   "DATA\r\n")&lt;0){<br />
 return false;<br />
 }
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
 
-<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+<p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;3&#8221;) return false;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "3") return false;</p>
 
 <p>if(fputs($this-&gt;Socket, $buffer)&lt;0){<br />
 return false;<br />
@@ -396,47 +397,47 @@ return false;<br />
 
 <p>if ($this-&gt;Attachment == null){</p>
 
-<p>if(fputs($this-&gt;Socket,   &#8220;MIME-Version: 1.0\r\nContent-Type: text/plain; charset=ISO-8859-1\r\nContent-Transfer-Encoding: 7bit\r\n\r\n&#8221;)&lt;0){<br />
+<p>if(fputs($this-&gt;Socket,   "MIME-Version: 1.0\r\nContent-Type: text/plain; charset=ISO-8859-1\r\nContent-Transfer-Encoding: 7bit\r\n\r\n")&lt;0){<br />
 return false;<br />
 }
-if(fputs($this-&gt;Socket,   &#8220;$this-&gt;Body\r\n\r\n&#8221;)&lt;0){<br />
+if(fputs($this-&gt;Socket,   "$this-&gt;Body\r\n\r\n")&lt;0){<br />
 return false;<br />
 }</p>
 
-<p>if(fputs($this-&gt;Socket,   &#8220;.\r\n&#8221;)&lt;0){<br />
+<p>if(fputs($this-&gt;Socket,   ".\r\n")&lt;0){<br />
 return false;<br />
 }</p>
 
 <p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-if (substr($this-&gt;Line, 0, 1) &lt;&gt;   &#8220;2&#8221;){<br />
+if (substr($this-&gt;Line, 0, 1) &lt;&gt;   "2"){<br />
 return false;<br />
 }else{<br />
 return true;<br />
 }
 }else{<br />
-if(fputs($this-&gt;Socket, &#8220;MIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=&#34;&#8212;-=_NextPart_000_01BCFA61.A3697360&#34;\r\n&#8221;.<br />
-&#8220;Content-Transfer-Encoding: 7bit\r\n\r\n&#8221;.<br />
-&#8220;This is a multi-part message in MIME format.\r\n&#8221;.<br />
-&#8220;\r\n&#8212;&#8212;=_NextPart_000_01BCFA61.A3697360\r\n&#8221;.<br />
-&#8220;Content-Type: text/plain; charset=ISO-8859-1\r\n&#8221;.<br />
-&#8220;Content-Transfer-Encoding: 7bit\r\n&#8221;.<br />
-&#8220;\r\n&#8221;)&lt;0){<br />
+if(fputs($this-&gt;Socket, "MIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"----=_NextPart_000_01BCFA61.A3697360\"\r\n".<br />
+"Content-Transfer-Encoding: 7bit\r\n\r\n".<br />
+"This is a multi-part message in MIME format.\r\n".<br />
+"\r\n------=_NextPart_000_01BCFA61.A3697360\r\n".<br />
+"Content-Type: text/plain; charset=ISO-8859-1\r\n".<br />
+"Content-Transfer-Encoding: 7bit\r\n".<br />
+"\r\n")&lt;0){<br />
 return false;<br />
 }</p>
 
 <p>/* 输出邮件内容 */<br />
-if(fputs($this-&gt;Socket,   &#8220;$this-&gt;Body\r\n\r\n&#8221;)&lt;0){<br />
+if(fputs($this-&gt;Socket,   "$this-&gt;Body\r\n\r\n")&lt;0){<br />
 return false;<br />
 }</p>
 
-<p>if ( fputs($this-&gt;Socket, &#8220;\r\n&#8212;&#8212;=_NextPart_000_01BCFA61.A3697360\r\n&#8221;)&lt;0){<br />
+<p>if ( fputs($this-&gt;Socket, "\r\n------=_NextPart_000_01BCFA61.A3697360\r\n")&lt;0){<br />
 return false;<br />
 }
 $FileSize = filesize($this-&gt;Attachment);<br />
 if ($FileSize == false){<br />
 return false;<br />
 }
-if (($fp = fopen($this-&gt;Attachment, &#8220;r&#8221;))== false) {<br />
+if (($fp = fopen($this-&gt;Attachment, "r"))== false) {<br />
 return false;<br />
 }else{<br />
 $Attachment = fread($fp,$FileSize);<br />
@@ -449,11 +450,11 @@ if (($AttachName = strrchr($this-&gt;Attachment, @#/@#)) == false){</p>
 }</p>
 
 <p>if( fputs($this-&gt;Socket,<br />
-&#8220;Content-Type: application/octet-stream; \r\nname=&#34;$AttachName&#34;\r\n&#8221;.<br />
-&#8220;Content-Transfer-Encoding: quoted-printable\r\n&#8221;.<br />
-&#8220;Content-Description: $AttachName\r\n&#8221;.<br />
-&#8220;Content-Disposition: attachment; \r\n\tfilename=&#34;$AttachName&#34;\r\n&#8221;.<br />
-&#8220;\r\n&#8221;)&lt;0){<br />
+"Content-Type: application/octet-stream; \r\nname=\"$AttachName\"\r\n".<br />
+"Content-Transfer-Encoding: quoted-printable\r\n".<br />
+"Content-Description: $AttachName\r\n".<br />
+"Content-Disposition: attachment; \r\n\tfilename=\"$AttachName\"\r\n".<br />
+"\r\n")&lt;0){<br />
 return false;<br />
 }</p>
 
@@ -461,16 +462,16 @@ return false;<br />
 if( fputs($this-&gt;Socket, $Attachment)&lt;0){<br />
 return false;<br />
 }
-if ( fputs($this-&gt;Socket, &#8220;\r\n\r\n&#8212;&#8212;=_NextPart_000_01BCFA61.A3697360&#8211;\r\n&#8221;)&lt;0){<br />
+if ( fputs($this-&gt;Socket, "\r\n\r\n------=_NextPart_000_01BCFA61.A3697360--\r\n")&lt;0){<br />
 return false;<br />
 }</p>
 
-<p>if( fputs($this-&gt;Socket, &#8220;.\r\n&#8221;)&lt;0){<br />
+<p>if( fputs($this-&gt;Socket, ".\r\n")&lt;0){<br />
 return false;<br />
 }</p>
 
 <p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br />
-if (substr($this-&gt;Line, 0, 1) &lt;&gt;   &#8220;2&#8221;)<br />
+if (substr($this-&gt;Line, 0, 1) &lt;&gt;   "2")<br />
 return false;</p>
 
 <p>return true;</p>
@@ -481,15 +482,15 @@ return false;</p>
 <p>function Quit()<br />
 {</p>
 
-<p>if(fputs($this-&gt;Socket,   &#8220;QUIT\r\n&#8221;)&lt;0){<br />
+<p>if(fputs($this-&gt;Socket,   "QUIT\r\n")&lt;0){<br />
 return false;<br />
 }
 $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
 
-<p>$this-&gt;Status[ &#8220;LASTRESULT&#8221;] = substr($this-&gt;Line, 0, 1);<br />
-$this-&gt;Status[ &#8220;LASTRESULTTXT&#8221;] = substr($this-&gt;Line, 0, 1024);</p>
+<p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br />
+$this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
 
-<p>if ($this-&gt;Status[ &#8220;LASTRESULT&#8221;] &lt;&gt;   &#8220;2&#8221;) return 0;</p>
+<p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return 0;</p>
 
 <p>return 1;<br />
 }
@@ -503,48 +504,48 @@ fclose($this-&gt;Socket);<br />
 <p>怎样使用这个程序的一个示例</p>
 
 <p>$MailTo = new Smtp();<br />
-$MailTo-&gt;SmtpMail(&#8220;Dave@micro-automation.net&#8221;,&#8221;Dave Cramer&#8221;,<br />
-&#8220;Dave@micro-automation.net&#8221;,&#8221;David&#8221;,<br />
-&#8220;Test Mail&#8221;,$MailMessage,&#8221;service.tab&#8221;,0);<br />
+$MailTo-&gt;SmtpMail("Dave@micro-automation.net","Dave Cramer",<br />
+"Dave@micro-automation.net","David",<br />
+"Test Mail",$MailMessage,"service.tab",0);<br />
 $MailTo-&gt;Close();<br />
 $MailTo=null;</p>
 
 <p>*/<br />
 /*<br />
-$pop3 = pop3_open(&#8220;localhost&#8221;, &#8220;110&#8221;);<br />
+$pop3 = pop3_open("localhost", "110");<br />
 if (!$pop3) {<br />
-printf(&#8220;[ERROR] Failed to connect to localhost&lt;BR&gt;\n&#8221;);<br />
+printf("[ERROR] Failed to connect to localhost&lt;BR&gt;\n");<br />
 return 0;<br />
 }</p>
 
-<p>if (!pop3_user($pop3, &#8220;unk&#8221;)) {<br />
-printf(&#8220;[ERROR] Username failed!&lt;BR&gt;\n&#8221;);<br />
+<p>if (!pop3_user($pop3, "unk")) {<br />
+printf("[ERROR] Username failed!&lt;BR&gt;\n");<br />
 return 0;<br />
 }</p>
 
-<p>if (!pop3_pass($pop3, &#8220;secret&#8221;)) {<br />
-printf(&#8220;[ERROR] PASS failed!&lt;BR&gt;\n&#8221;);<br />
+<p>if (!pop3_pass($pop3, "secret")) {<br />
+printf("[ERROR] PASS failed!&lt;BR&gt;\n");<br />
 return 0;<br />
 }</p>
 
 <p>$articles = pop3_list($pop3);<br />
 if (!$articles) {<br />
-printf(&#8220;[ERROR] LIST failed!&lt;BR&gt;\n&#8221;);<br />
+printf("[ERROR] LIST failed!&lt;BR&gt;\n");<br />
 return 0;<br />
 }</p>
 
-<p>for ($i = 1; $i &lt; $articles [&#8220;count&#8221;] + 1; $i++)<br />
+<p>for ($i = 1; $i &lt; $articles ["count"] + 1; $i++)<br />
 {
-printf(&#8220;i=$i&lt;BR&gt;\n&#8221;);<br />
+printf("i=$i&lt;BR&gt;\n");<br />
 $data = pop3_retr($pop3,$i);<br />
 if (!$data) {<br />
-printf(&#8220;data goes wrong on @#$i@#&lt;BR&gt;\n&#8221;);<br />
+printf("data goes wrong on @#$i@#&lt;BR&gt;\n");<br />
 return 0;<br />
 }</p>
 
-<p>for ($j = 0; $j &lt; $data[&#8220;count&#8221;]; $j++)<br />
+<p>for ($j = 0; $j &lt; $data["count"]; $j++)<br />
 {
-printf(&#8220;$data[$j]&lt;BR&gt;\n&#8221;);<br />
+printf("$data[$j]&lt;BR&gt;\n");<br />
 }
 }<br />
 */<br />

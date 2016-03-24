@@ -111,40 +111,40 @@
 main(){<br />
 char tmp;<br />
 __asm__(<br />
-&#8220;movb %1, %%cl;&#8221;<br />
-&#8220;movb %%cl, %%dl;&#8221;<br />
-&#8220;shl $7,%%edx;&#8221;<br />
-&#8220;movb %%cl,%%al;&#8221;<br />
-&#8220;and $2,%%eax;&#8221;<br />
-&#8220;shr $1,%%al;&#8221;<br />
-&#8220;or %%eax,%%edx;&#8221;<br />
-&#8220;movb %%cl,%%al;&#8221;<br />
-&#8220;and $4,%%eax;&#8221;<br />
-&#8220;shl $2,%%eax;&#8221;<br />
-&#8220;or %%eax,%%edx;&#8221;<br />
-&#8220;movb %%cl,%%al;&#8221;<br />
-&#8220;and $8,%%eax;&#8221;<br />
-&#8220;shl $2,%%eax;&#8221;<br />
-&#8220;or %%eax,%%edx;&#8221;<br />
-&#8220;movb %%cl,%%al;&#8221;<br />
-&#8220;and $0x10,%%eax;&#8221;<br />
-&#8220;shl $2,%%eax;&#8221;<br />
-&#8220;or %%eax, %%edx;&#8221;<br />
-&#8220;movb %%cl,%%al;&#8221;<br />
-&#8220;and $0x20,%%eax;&#8221;<br />
-&#8220;shr $2,%%al;&#8221;<br />
-&#8220;or %%eax,%%edx;&#8221;<br />
-&#8220;movb %%cl,%%al;&#8221;<br />
-&#8220;and $0x40,%%eax;&#8221;<br />
-&#8220;shr $4,%%al;&#8221;<br />
-&#8220;or %%eax,%%edx;&#8221;<br />
-&#8220;and $0x80,%%ecx;&#8221;<br />
-&#8220;shr $6,%%cl;&#8221;<br />
-&#8220;or %%ecx,%%edx;&#8221;<br />
-&#8220;movb %%dl, %0;&#8221;<br />
-:&#8221;=r&#8221;(tmp) //tmp变量写出，就是上文中的%0，第0个参数<br />
-:&#8221;r&#8221;(tmp) //tmp写入，就是上文中的%1，第1个参数<br />
-:&#8221;%ecx&#8221;,&#8221;%edx&#8221;);</p>
+"movb %1, %%cl;"<br />
+"movb %%cl, %%dl;"<br />
+"shl $7,%%edx;"<br />
+"movb %%cl,%%al;"<br />
+"and $2,%%eax;"<br />
+"shr $1,%%al;"<br />
+"or %%eax,%%edx;"<br />
+"movb %%cl,%%al;"<br />
+"and $4,%%eax;"<br />
+"shl $2,%%eax;"<br />
+"or %%eax,%%edx;"<br />
+"movb %%cl,%%al;"<br />
+"and $8,%%eax;"<br />
+"shl $2,%%eax;"<br />
+"or %%eax,%%edx;"<br />
+"movb %%cl,%%al;"<br />
+"and $0x10,%%eax;"<br />
+"shl $2,%%eax;"<br />
+"or %%eax, %%edx;"<br />
+"movb %%cl,%%al;"<br />
+"and $0x20,%%eax;"<br />
+"shr $2,%%al;"<br />
+"or %%eax,%%edx;"<br />
+"movb %%cl,%%al;"<br />
+"and $0x40,%%eax;"<br />
+"shr $4,%%al;"<br />
+"or %%eax,%%edx;"<br />
+"and $0x80,%%ecx;"<br />
+"shr $6,%%cl;"<br />
+"or %%ecx,%%edx;"<br />
+"movb %%dl, %0;"<br />
+:"=r"(tmp) //tmp变量写出，就是上文中的%0，第0个参数<br />
+:"r"(tmp) //tmp写入，就是上文中的%1，第1个参数<br />
+:"%ecx","%edx");</p>
 
 <p>//tmp变了;<br />
 }
@@ -178,7 +178,7 @@ __asm__(<br />
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

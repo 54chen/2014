@@ -113,7 +113,7 @@ int nSocket;<br />
 struct ifreq struReq;<br />
 nSocket = socket(PF_INET,SOCK_STREAM,0);<br />
 memset(&amp;struReq,0,sizeof(struReq));<br />
-strncpy(struReq.ifr_name, &#8220;eth0&#8221;, sizeof(struReq.ifr_name));<br />
+strncpy(struReq.ifr_name, "eth0", sizeof(struReq.ifr_name));<br />
 ioctl(nSocket,SIOCGIFHWADDR,&amp;struReq);<br />
 close(nSocket);<br />
 memcpy(mac_addr,(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data),strlen((char<br />
@@ -129,19 +129,19 @@ struct ifreq ifr;<br />
 sock = socket(AF_INET, SOCK_DGRAM, 0);<br />
 if (sock == -1)<br />
 {
-perror(&#8220;socket&#8221;);<br />
-return &#8220;&#8221;;<br />
+perror("socket");<br />
+return "";<br />
 }
-strncpy(ifr.ifr_name, &#8220;eth0&#8221;, sizeof(ifr.ifr_name));<br />
+strncpy(ifr.ifr_name, "eth0", sizeof(ifr.ifr_name));<br />
 if (ioctl(sock, SIOCGIFADDR, &amp;ifr) &lt; 0)<br />
 {
-perror(&#8220;ioctl&#8221;);<br />
-return &#8220;&#8221;;<br />
+perror("ioctl");<br />
+return "";<br />
 }
 memcpy(&amp;sin, &amp;ifr.ifr_addr, sizeof(sin));<br />
 close(sock);<br />
 memcpy(ip_addr,inet_ntoa(sin.sin_addr),strlen(inet_ntoa(sin.sin_addr)));<br />
-return &#8220;&#8221;;<br />
+return "";<br />
 }</p>
  
 <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
@@ -172,7 +172,7 @@ return &#8220;&#8221;;<br />
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/webxiang-guan/'>WEB相关</a>
+    <a class='category' href='/blog/categories/webxiang-guan/'>web相关</a>
   
 </span>
 

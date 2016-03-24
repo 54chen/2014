@@ -118,12 +118,12 @@ server ntp3.alibaba.com</p>
 
 <p>3. 修改/etc/sysconfig/ntpd， 加入-x参数，变成：</p>
 
-<p>OPTIONS=&#8221;-U ntp -x -p /var/run/ntpd.pid&#8221;</p>
+<p>OPTIONS="-U ntp -x -p /var/run/ntpd.pid"</p>
 
 <p>这据说是为db同步所要求的。</p>
 
 <p>4. 首先同步一次时间：<br />
-ntpdate time.nist.gov; hwclock &#8211;systohc</p>
+ntpdate time.nist.gov; hwclock --systohc</p>
 
 <p>如果数据库还要在运行，建议不要这么做。待例行维护时再处理。</p>
 
@@ -131,7 +131,7 @@ ntpdate time.nist.gov; hwclock &#8211;systohc</p>
 /etc/init.d/ntpd start</p>
 
 <p>6. 最后加入到自动启动列表：<br />
-chkconfig &#8211;level 2345 ntpd on</p>
+chkconfig --level 2345 ntpd on</p>
  
 <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
 </div>

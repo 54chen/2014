@@ -1,0 +1,810 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="Ubuntu 10.04 LTS版本下的Empathy MSN群聊显示昵称方法 1.关系普及
+Empathy是个托，python-papyon是个python实现的msn库，telepathy-butterfly是个完成msn功能的python客户端。 2.修改办法
+sudo vim /usr/ &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/posts/31">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/s/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/06/04/ubuntu-1004-lts-version-of-the-empathy-msn-group-chat-under-the-nickname-display-method/">Ubuntu 10.04 LTS版本下的Empathy MSN群聊显示昵称方法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-06-04T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img06.taobaocdn.com/bao/uploaded/i6/T1BulCXhXkXXXYjVM9_072304.jpg" alt="54chen ubuntu empathy msn" />
+<h2><strong>1.关系普及</strong></h2>
+Empathy是个托，python-papyon是个python实现的msn库，telepathy-butterfly是个完成msn功能的python客户端。</p>
+
+<p><h2><strong>2.修改办法</strong></h2>
+sudo vim /usr/share/pyshared/papyon/conversation.py<br />
+查找 if message_type == 这个字符串<br />
+找到内容为：
+<blockquote>if message_type == 'text/plain':<br />
+            msg = ConversationMessage(unicode(message.body, message_encoding),<br />
+                    TextFormat.parse(message_formatting),<br />
+                    self.__last_received_msn_objects)<br />
+            try:<br />
+                display_name = message.get_header('P4-Context')</blockquote></p>
+
+<p>将if判断后try之前中间定义msg这一堆内容修改为如下：</p>
+
+<p><blockquote> try:<br />
+                msg = ConversationMessage(unicode("["+message.get_header('P4-Context')+"]"+message.body, message_encoding),<br />
+                    TextFormat.parse(message_formatting),<br />
+                    self.__last_received_msn_objects)<br />
+            except KeyError:<br />
+                  msg = ConversationMessage(unicode(message.body, message_encoding),<br />
+                    TextFormat.parse(message_formatting),<br />
+                    self.__last_received_msn_objects)</blockquote></p>
+
+<p>保存后重新启动empathy，msn群里就能显示昵称鸟。</p>
+
+<p><img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1_udCXfXjXXbldwg4_053033.jpg" alt="empathy" /></p>
+
+<p><a href="http://www.54chen.com/conversation.py.gz"><font color="red">点击此处下载我的conversation.py文件</font></a></p>
+
+<p>下载下来后执行：</p>
+
+<p><blockquote>chen@54chen:~$ gunzip conversation.py.gz <br />
+chen@54chen:~$ sudo cp conversation.py /usr/share/pyshared/papyon/</blockquote></p>
+
+<p><strong>我的版本是：Empathy 2.30.1</strong>
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/31/participate-mongodb-workshop/">参加mongodb Workshop</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-31T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>29号，星期六，参加了在ThoughtWorks办公室举行的mongodb workshop。<br />
+主讲者Peter Membrey，是个年轻有为的牛人，17岁就获得了RHCE。<br />
+这是一个很小团体的技术会议，人数没有超过20人，来参加的都是有名气的牛人们。会上认识了腾讯超群大侠（还不忘记为他们招聘挖人吼一声），以及甲骨文的黄秋大侠（给人很文雅的感觉:)），以及来自鲜果和新浪的两位大侠（sorry，两位都没带名片，叫不上名字来~hoho~）<br />
+Peter的讲话是全英文的，只能听懂一半，另一半完全靠ppt上的内容。。。不过并不妨碍我们交流~~<br />
+ThoughtWorks的办公室是非常nice的。。。有图有真相。。。（图从网上找的，忘记现场拍照了）<br />
+这是厨房 有点吧台的样子
+<img src="http://info-database.csdn.net/Upload/2008-03-25/kitchen.jpg" alt="thougtworks" /></p>
+
+<p>这是书架，沿着边上全是
+<img src="http://info-database.csdn.net/Upload/2008-03-25/%E4%B9%A6%E6%9E%B6.jpg" alt="thoughtworks" /></p>
+
+<p>这是办公的地方，没有格子
+<img src="http://info-database.csdn.net/Upload/2008-03-25/stand%20up.jpg" alt="thoughtworks" /></p>
+
+<p>另外，创建了一个group，欢迎对no-sql架构有兴趣一起进行深入探讨的同志加入
+<a href="http://groups.google.co.nz/group/dynamo_china">http://groups.google.co.nz/group/dynamo_china</a>
+目前已经看到豆瓣的洪强宁大侠加进来了，更多的大侠正在加入中。。。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/30/54chen-twitter-memo-2010-05-30/">54chen Twitter Memo 2010-05-30</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-30T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+	<li>54chen Twitter memo 2010-05-23 <a href="http://goo.gl/fb/DAGLG" rel="nofollow">http://goo.gl/fb/DAGLG</a> <a href="http://twitter.com/54chen/statuses/14526846294">#</a></li>
+	<li>54chen Twitter memo 2010-05-23 <a href="http://goo.gl/fb/Un4td" rel="nofollow">http://goo.gl/fb/Un4td</a> <a href="http://twitter.com/54chen/statuses/14526846978">#</a></li>
+	<li>是因为昨天凌晨的两场车祸吗，好些个twitter host都不可用了 <a href="http://twitter.com/54chen/statuses/14595083598">#</a></li>
+	<li>我在那里生活了两年，夏天真的是很爽的 blogkid: 上周六晚上，和几个朋友在牡丹园附近吃饭，之后在元大都遗址公园散步。公园里有老人们在唱苏联歌曲，晚风习习，真想住到这样的地方。我想离开西二旗了 <a href="http://twitter.com/54chen/statuses/14597658637">#</a></li>
+	<li>我在那里生活了两年，夏天真的是很爽的 RT @blogkid: 上周六晚上，和几个朋友在牡丹园附近吃饭，之后在元大都遗址公园散步。公园里有老人们在唱苏联歌曲，晚风习习，真想住到这样的地方。我想离开西二旗了 <a href="http://twitter.com/54chen/statuses/14597762771">#</a></li>
+	<li><a href="http://news.qq.com/a/20100524/000842.htm" rel="nofollow">http://news.qq.com/a/20100524/000842.htm</a> 吓人，美的的紫砂煲，家里有一个放着，好在没用 <a href="http://twitter.com/54chen/statuses/14597894107">#</a></li>
+	<li>RT 侯冲:-D  : ZZ:某人的遗书: “存折在密码箱里、密码箱在保险柜里、保险柜钥匙夹在存折里” <a href="http://twitter.com/54chen/statuses/14600055291">#</a></li>
+	<li>被人晃点了吧 退出登录看看 RT @taiwen: 刚才看http://tinyurl.com/25tfagr Thanks”，里面竟然还有我的名字，其他人的被感谢理由都很清楚，唯独我的那部分写的是“Yes! Thank You!”。为什么要感谢我呢？纳 <a href="http://twitter.com/54chen/statuses/14600859873">#</a></li>
+	<li><a href="http://tinyurl.com/35kvtnp" rel="nofollow">http://tinyurl.com/35kvtnp</a>  逼迫一个白求恩式的老外关闭博客、威胁他不准在媒体上出现、否则就驱逐出境，这个国家已经疯了 <a href="http://twitter.com/54chen/statuses/14604387625">#</a></li>
+	<li>看完柴静采访卢安克的视频，心平气和的，你会知道，一个人一生中有追求与没有追求，是大不一样的 <a href="http://twitter.com/54chen/statuses/14604571748">#</a></li>
+	<li>RT Tank:在香港一切准许，除非法律禁止；在新加坡一切禁止，除非法律准许；在台湾一切准许，包括法律禁止；在中国大陆 一切禁止，包括法律准许。 <a href="http://twitter.com/54chen/statuses/14606097657">#</a></li>
+	<li>RT 张章 <a href="http://is.gd/cmL3P" rel="nofollow">http://is.gd/cmL3P</a> 具说曾哥也去日本发展了 <a href="http://twitter.com/54chen/statuses/14608352000">#</a></li>
+	<li>RT @rewinx: 快速跳转到Google SSL 中文版的网址：http://ur.ly/cf4W <a href="http://twitter.com/54chen/statuses/14672445853">#</a></li>
+	<li>MR.分享: 故人西辞富士康，早死投胎去蓝翔。蓝翔毕业去应聘，M的还是富士康    这个太牛B了 <a href="http://twitter.com/54chen/statuses/14675137937">#</a></li>
+	<li>这句要顶 RT @d_yang: 生买不起房，死买不起墓，半生不死又住不起医院。 <a href="http://twitter.com/54chen/statuses/14741896306">#</a></li>
+	<li>大家前半生考过的最低分有多低？ <a href="http://twitter.com/54chen/statuses/14742457798">#</a></li>
+	<li>RT @apker: 35分,高数..  //高数考这点可以原谅 <a href="http://twitter.com/54chen/statuses/14743068174">#</a></li>
+	<li>RT @d_yang: @<a href="http://twitter.com/apker">apker</a> @<a href="http://twitter.com/54chen">54chen</a> 12分, 第一次中考,语文, 我在开场的第10分钟倒下, 住院40天.//这是意外不算，还有更低的吗 <a href="http://twitter.com/54chen/statuses/14743090414">#</a></li>
+	<li>纯洁一顶 RT @taiwen: 所见所闻改变一生，不知不觉断送一生。 <a href="http://twitter.com/54chen/statuses/14749580407">#</a></li>
+	<li>[纯水]庆祝数据开始注入nuclear系统和哥学社整装待发 <a href="http://goo.gl/fb/OgtSZ" rel="nofollow">http://goo.gl/fb/OgtSZ</a> <a href="http://twitter.com/54chen/statuses/14752388924">#</a></li>
+	<li>上天开恩 friendfeed解封了一点点 ssl已经可以访问 <a href="http://twitter.com/54chen/statuses/14754387802">#</a></li>
+	<li>今天焦点访谈和前半生看的焦点访谈都不一样，以前一直都是说一件事，这回先讲拆迁，接着研究大蒜的价格了。 <a href="http://twitter.com/54chen/statuses/14757638844">#</a></li>
+	<li>RT @Fenng: 惜别淘宝，全职创业9RIA.com天地会 <a href="http://is.gd/cqHby" rel="nofollow">http://is.gd/cqHby</a> //吓一跳，一直在等你放你的消息呢，原来是黑羽的消息 <a href="http://twitter.com/54chen/statuses/14803767405">#</a></li>
+	<li>以后再跳楼的，判死刑。//不错的提议 <a href="http://twitter.com/54chen/statuses/14803833066">#</a></li>
+	<li>写了一脚本，可以自动分析可用的twitter host，不知道是应该分享呢，还是应该分享。 <a href="http://twitter.com/54chen/statuses/14825743742">#</a></li>
+	<li>分享一个批量扫描ip地址的shell内涵脚本 <a href="http://goo.gl/fb/bmopn" rel="nofollow">http://goo.gl/fb/bmopn</a> <a href="http://twitter.com/54chen/statuses/14834745498">#</a></li>
+	<li>RT @d_yang: <a href="http://ur.ly/drn0" rel="nofollow">http://ur.ly/drn0</a>   半年前柴静对卢安克的专访//所谓信仰与理想 <a href="http://twitter.com/54chen/statuses/14873940885">#</a></li>
+	<li>今天打开支付宝付账，弹出来一个框框，叫天威诚信证书助手，很黄很暴力，我立即把它关了。 <a href="http://twitter.com/54chen/statuses/14881598776">#</a></li>
+	<li>RT @<a href="http://twitter.com/d_yang">d_yang</a> @<a href="http://twitter.com/54chen">54chen</a> 我觉得有来头, 支付宝可能是被合作的. //向@Fenng求证 <a href="http://twitter.com/54chen/statuses/14882104675">#</a></li>
+	<li>我盯着一个需求横看竖看，多天之后终于看明白了，一个action就可以搞定了。如果不看，此时应该是许多个action了 <a href="http://twitter.com/54chen/statuses/14888894778">#</a></li>
+	<li>@<a href="http://twitter.com/162cm">162cm</a> 兄弟真滋润呀 <a href="http://twitter.com/162cm/statuses/14894187916">in reply to 162cm</a> <a href="http://twitter.com/54chen/statuses/14895438352">#</a></li>
+</ul>
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/27/sharing-a-shell-script/">分享一个批量扫描ip地址的shell内涵脚本</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img01.taobaocdn.com/bao/uploaded/i1/T1IOXBXe8iXXbdtJjb_093433.jpg" alt="内涵人类" />
+<h2><strong>内涵前言</strong></h2>
+假如您在维护上千台服务器，然后通过www.xxx.com发现打不开，然后有部分用户又说是可以打开的，现在要做的事情是找出来哪个机器可以用。
+<h2><strong>内涵第一章 检查原理</strong></h2>
+有许多DNS反查的网站，可以反查你的域名的相关ip地址，然后把这些ip地址循环ping，有返回结果的说明那个服务器可用。比如说just-dnslookup等等网站。具体可以在网上找找。
+<h2><strong>内涵第二章 检查操作</strong></h2>
+在准备好数据后，将结果复制到脚本文件中的temp文件中，然后修改54chenPing.sh中的第二行，将awk中的$3修改为你的数据对应的列数。比如说你复制的内容的第三列的话就写$3，第四列就写$4。
+<h2><strong>内涵第三章 执行</strong></h2>
+#sh 54chenPing.sh<br />
+然后会有结果输出，持续输出返回结果的一个或者多个ip即是可用的服务器。
+<h2><strong>内涵第四章 代码</strong></h2>
+<blockquote>#!/bin/sh<br />
+cat temp | awk '{print $3}' &gt; ip.txt<br />
+FLIST="`cat ip.txt|grep -v "#"`"<br />
+for FILE in `echo "${FLIST}"`<br />
+do<br />
+ping ${FILE}&gt; tmp/${FILE}.txt&amp;<br />
+done<br />
+tail -f tmp/*</blockquote>
+<h2><strong>内涵第五章 下载</strong></h2>
+<a href="http://www.54chen.com/54chenPing.tar.gz">点击下载&gt;&gt;&gt;</a>
+<h2><strong>内涵第六章 备注</strong></h2>
+要经常更新temp文件，参见第一章。要知道哪台服务器是可用的，参见第三章。
+<h2><strong>内涵作者</strong></h2>
+54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。个人技术站点:http://www.54chen.com/ 。可以通过电子邮件 czhttp@gmail.com 联系到他。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/26/water-nuclaer-blog-brother/">[纯水]庆祝数据开始注入nuclear系统和哥学社整装待发</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-26T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/bao/uploaded/i2/T11wdBXn8gXXbWvNA4_052909.jpg" alt="五四陈新闻" />
+二零一零年的五月二十五号，更确定一点来说是五月二十六号这一天，经过半年将近一年的折腾，人人网分步式no-sql系统nuclear正式导入了线上的大型数据（之前也有一些数据在工作了，这次是相当大一部分数据）。</p>
+
+<p>完全清楚nuclear的跳到下一段，Nuclear存储系统，是中国最大的SNS网站人人网下属UGC团队在遇到海量的UGC数据存储需求情况下，开发的在高性能、高可靠、可扩展方面有着优良表现的海量数据存储系统。它参考了dynamo设计文档，并且分析了现存开源no-sql系统的优劣，完整分析了 Cassandra、Voldemort代码的基础之上，在UGC小组的努力下，加入了自动平衡机器负载，简单切换底层引擎等特色而适用的功能，还有相关的附属功能，可以使一个系统从普通的DB轻易将数据移到nuclear集群中来。同时有丰富的管理功能，在使用过程中可以快速掌握任何一个节点的状态。</p>
+
+<p>如果你是人人网用户，此刻你访问的数据也许已经来自于nuclear提供的动力支持，nuclear，让数据流动更智能。纯广告语。。。</p>
+
+<p>特此庆祝，nuclear成功接入大型系统数据。</p>
+
+<p>还是在五月二十六号这一天，哥学社(一个技术组织)第一次面向社会，在PHP兄弟连的技术期刊《草根》连载哥学社几大成员的技术文章，将于6月1日正式发布。</p>
+
+<p>完全明白哥学社的跳到下一段，哥学社是一个自由博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起，官方地址是<a href="http://www.blog-brother.com">http://www.blog-brother.com</a>。</p>
+
+<p>特此庆祝，哥学社正式壮大。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/23/54chen-twitter-memo-2010-05-23-2/">54chen Twitter Memo 2010-05-23</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-23T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+	<li><a href="http://ur.ly/c8v4" rel="nofollow">http://ur.ly/c8v4</a>  qcon北京的ppt 附件打4个压缩包已经准备好，需要的同志，请跟贴留下邮箱群发 <a href="http://twitter.com/54chen/statuses/14135465627">#</a></li>
+	<li>同志们不要直接在twitter上@我，twitter的timeline会使你的邮箱在我的屏幕上一闪而过，而再寻找的时候找不全了，极容易漏掉，so回复一下那个blog是极好的选择:) <a href="http://twitter.com/54chen/statuses/14136084896">#</a></li>
+	<li><a href="http://ur.ly/c8v4" rel="nofollow">http://ur.ly/c8v4</a>  分享qcon 2010的所有ppt  早上发文到现在平均每小时收到5个左右的需求，以后每满5个我就会统一发一次 <a href="http://twitter.com/54chen/statuses/14148001096">#</a></li>
+	<li>@chen_- <a href="http://url.cn/16Dvak" rel="nofollow">http://url.cn/16Dvak</a> 他是个孤儿，没受过什么教育……年轻时一直混社团，也算黑社会头目，后来被判刑，劳改了很多年。 <a href="http://twitter.com/54chen/statuses/14155194972">#</a></li>
+	<li>陈蕾 : 兜里只剩5毛钱了。这5毛钱，抽不起烟吃不起饭，连坐公交都不够，思来想去不知道要怎么花才好，最后决定雇个人上网写文章歌颂我。 <a href="http://twitter.com/54chen/statuses/14197257944">#</a></li>
+	<li>RT 吴汉辰: 从这两天关于天上人间的报道来看，我感觉那位退休的敏感词可能身体健康出现问题了。 <a href="http://twitter.com/54chen/statuses/14201743157">#</a></li>
+	<li>三轮哥，骑得是那般淡定！高端的操作，风骚的走位，闪电的反映，纯意识流，车祸发生瞬间，一个手刹加后轮平滑，犹如过江之鲫般从容潇洒的拒绝了死神的邀请  网友评论北京一车货中的大命三轮车大叔 <a href="http://twitter.com/54chen/statuses/14201894373">#</a></li>
+	<li>这个有意思 请用最简短的字点评 <a href="http://mblogpic.store.qq.com/mblogpic/297213d5058cf5fc4794/2000" rel="nofollow">http://mblogpic.store.qq.com/mblogpic/297213d5058cf5fc4794/2000</a> <a href="http://twitter.com/54chen/statuses/14219621149">#</a></li>
+	<li><a href="http://mblogpic.store.qq.com/mblogpic/e0a3cda7b4cdd23455f0/2000" rel="nofollow">http://mblogpic.store.qq.com/mblogpic/e0a3cda7b4cdd23455f0/2000</a> SBæ¼š以色列馆剪彩 èº®点在剪刀ä <a href="http://twitter.com/54chen/statuses/14281388437">#</a></li>
+	<li>RT 吴坚jackie: 凤姐电话！！13524370601 亲口说的...有没有想挑战一下的...整蛊作战吃饭（惊恐） <a href="http://twitter.com/54chen/statuses/14281845118">#</a></li>
+	<li>RT 周彦伟  : IT:屏幕脸、加班眼、鼠标手、短信指、电脑椎、沙发臀、憋尿肾、经济舱腿、MP3耳、路怒心 <a href="http://twitter.com/54chen/statuses/14289305112">#</a></li>
+	<li>RT 猫扑话题: 今天是国际表白日，在今天13点14分，不要忘记给自己的爱人表白 <a href="http://twitter.com/54chen/statuses/14332893199">#</a></li>
+	<li>[更新]ubuntu 10.04 硬盘安装手记 <a href="http://goo.gl/fb/A0M5z" rel="nofollow">http://goo.gl/fb/A0M5z</a> <a href="http://twitter.com/54chen/statuses/14345271480">#</a></li>
+	<li>[警示]Nginx + PHP CGI的安全漏洞：fix_pathinfo <a href="http://goo.gl/fb/Mwr52" rel="nofollow">http://goo.gl/fb/Mwr52</a> <a href="http://twitter.com/54chen/statuses/14354229838">#</a></li>
+	<li>[警示]Nginx + PHP CGI的安全漏洞：fix_pathinfo  <a href="http://tinyurl.com/3aayd3w" rel="nofollow">http://tinyurl.com/3aayd3w</a> 请转发到使用nginx+php的朋友中，国内大多数网站均发现此漏洞，可以轻而易举拿下服务器 <a href="http://twitter.com/54chen/statuses/14394412930">#</a></li>
+	<li>今天搬工位，正对着门，近来人很容易就能看见。从礼仪学来说，这个座位叫做“上座”。 <a href="http://twitter.com/54chen/statuses/14416381014">#</a></li>
+	<li>@<a href="http://twitter.com/long132">long132</a> MM些很羞怯 不方便坐门口 <a href="http://twitter.com/long132/statuses/14416455627">in reply to long132</a> <a href="http://twitter.com/54chen/statuses/14416735465">#</a></li>
+	<li>RT 侯冲:-D: ZZ：【天上人间】上联：人间种田半年，下联：天上潇洒一日。横批：一炮八千。 <a href="http://twitter.com/54chen/statuses/14416874338">#</a></li>
+	<li>一个同事的状态说，不好好學習，就得去富士康了... <a href="http://twitter.com/54chen/statuses/14417299586">#</a></li>
+	<li>今天一个nginx或者是php的漏洞，弄得满城风雨，年轻的、快速的、轻量的、往往是容易犯错的。java就不会出这样的问题。 <a href="http://twitter.com/54chen/statuses/14419474308">#</a></li>
+	<li>欢迎第四百位followers到来，一看是位高人，@<a href="http://twitter.com/laogao">laogao</a> 老高 <a href="http://twitter.com/54chen/statuses/14420702915">#</a></li>
+</ul>
+</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/20/update-ubuntu-1004-installed-hard-disk-notes/">[更新]ubuntu 10.04 硬盘安装手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-20T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img07.taobaocdn.com/bao/uploaded/i7/T1CCxAXlthXXcwnIIY_025651.jpg" alt="技术娱乐" />
+在过去的两年里，ubuntu发展迅速，快速成为了技术人员居家工作旅行必备系统。54chen从8.04开始从fc系列（RH的后续个人系统）换到ubuntu来使用，期间连续发布了多篇使用ubuntu各个版本的安装和使用手记。54chen作为互联网最早的ubuntu"义务推广员"，一路看到了ubuntu队伍的发展和壮大。</p>
+
+<p>安装的记录：
+<a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/">ubuntu 8.10 desktop版本 硬盘安装手记</a>
+<a rel="bookmark" href="http://www.54chen.com/_linux_/11-return-ubuntu-910-notes-from-the-hard-disk-installation.html">[十一归来]ubuntu 9.10 硬盘安装手记</a>
+还有许多配置相关的手记。</p>
+
+<p>10.04的发布：2010年4月29日(看上去是这样的，四月份发布的都是长期支持的版本，后缀里有一个LTS的标识，同时4月份出的版本往往也是没有啥巨大动作的。)</p>
+
+<p>根据官方总结，Ubuntu 10.04中将会具有以下全新特性：</p>
+
+<p>       快速启动：在几乎所有机型上的启动速度都明显更快，在使用固态硬盘(SSD)的笔记本电脑或者上网本等机型上的速度超快。这意味着用户可以开机后立即进入浏览器，快速访问网站。</p>
+
+<p>　　 起点社交：Ubuntu 10.04LTS桌面版新的“Me Menu”(我的菜单)整合了社交网站如Facebook、Digg、Twitter和Identica，使得各个网站的登录和个人信息更新一次完成。 Me Menu的聊天软件，支持同时登录QQ、MSN、Google Talk等多个应用程序，和朋友或者同事聊天。（没有出现本土化的SNS和微博，墙干净了，没啥用）</p>
+
+<p>　　Ubuntu One：增强的在线服务桌面整合功能意味着用户可以更容易地使用云端服务存储、分享和同步文件及文件夹、浏览器书签和通讯录，使得从个人计算机向个人计算应用的演进更进一步。</p>
+
+<p>　　Ubuntu One音乐库：Ubuntu用户可直接使用默认音乐播放器试听全球巨星和著名乐队的作品。用户购买的乐曲将会直接存储在云端的Ubuntu One存储空间中，并可在自己的多台电脑和音乐播放设备上调用和播放。(限无数字版权管理DRM-Free的音乐)</p>
+
+<p>　　Ubuntu软件中心2.0：使用界面更加简洁友好，轻松完成寻找、安装新的应用程序以及查看和删除已安装程序的过程。用户还可直观辨别来自 Ubuntu、Canonical合作伙伴或者使用 Canonical Launchpad PPA服务的开发人员的所提供的软件。</p>
+
+<p>　　Ubuntu 10.04 上网本版(UNE)：除了标准版本拥有的新功能，上网本用户还能在基于固态硬盘(SSD)设备上享受到超快的启动速度，更快的挂起/恢复速度可以进一步延长电池使用时间，当然还包括针对这些小屏幕定制的业界领先的界面。<br />
+与9.10相比，Amazon机器镜像的事情没有被继续做深，期待10.10（十全十美）的版本中的表现。</p>
+
+<p>以下是安装步骤记录：</p>
+
+<p><strong>下载：</strong></p>
+
+<p><a href="http://releases.ubuntu.com/lucid/">http://releases.ubuntu.com/lucid/</a></p>
+
+<p>大小600M左右，提示一下下，如果有个2G的U盘啥的，用U盘来安装可以省去很多事情（装进U盘，从U盘启动即可安装）。</p>
+
+<p>改名为ubuntu10.iso，放在了D：根目录里，用winrar打开，解压casper文件下的两个文件到c盘根目录。</p>
+
+<p>vmlinuz   和 initrd.lz</p>
+
+<p><strong>winGrub配置：</strong>
+很高兴这个老机器安装了一个fedora core5和win2k，n年前的系统，从来不换系统，有毒杀毒，有病治病。</p>
+
+<p>winGrub的安装见 <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/"><span style="font-size: x-small; font-family: Arial; color: #3366cc;">ubuntu 8.10 desktop版本 硬盘安装手记</span></a> 前半部分内容。</p>
+
+<p>所以系统中已经有一个之前的GRLDR了，现在抄一下boot.ini和menu.lst</p>
+
+<p>C:\boot.ini
+<blockquote>[boot loader]<br />
+timeout=5<br />
+default=multi(0)disk(0)rdisk(0)partition(1)\WINNT<br />
+[operating systems]<br />
+multi(0)disk(0)rdisk(0)partition(1)\WINNT=”Microsoft Windows 2000 Professional” /fastdetect<br />
+C:\GRLDR=”Linux”</blockquote>
+C:\boot\grub\menu.lst
+<blockquote>timeout 15</blockquote></p>
+
+<p>title 1. install Ubuntu10.04<br />
+root (hd0,0)<br />
+kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu10.iso ro quiet splash –<br />
+label check live-install<br />
+initrd (hd0,0)/initrd.lz
+<strong>进入liveCD安装：</strong></p>
+
+<p>重启，先从boot.ini的界面进linux，再从wingrub的界面进 install Ubuntu10.04</p>
+
+<p>一切正常的话，能直接进入LiveCD的桌面了。</p>
+
+<p>然后打开终端，运行：
+<blockquote>umount -l /isodevice</blockquote>
+双击桌面的安装。。。</p>
+
+<p>这台老机器，2个80G的硬盘，全都使用了97%左右的空间（鬼知道装了些什么，难道有过量的毛片），每次到第四步识别分区的时候都要花12分钟左右。</p>
+
+<p><strong>总结：</strong></p>
+
+<p>liveCD一般都中文包不全，很多地方没翻译完，需要更新。<br />
+网速如果不够快，79%进度时最好拔掉网线，因为配置apt时间会过长而不往下面进行。<br />
+没有大的惊喜，期待10.10</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/20/nginx-php-cgi-of-security-hole/">[警示]Nginx + PHP CGI的安全漏洞：fix_pathinfo</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-20T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img05.taobaocdn.com/bao/uploaded/i5/T1.RRAXjVDXXX7OsE8_070026.jpg" alt="php漏洞" /></p>
+
+<p>如果你正在使用nginx+php，请关注。</p>
+
+<p><strong>表像：</strong></p>
+
+<p>具体的重现过程，用php代码修改后缀名后上传，比如说www.xxx.com/1.jpg，访问的时候用www.xxx.com/1.jpg/xxx.php
+<blockquote><strong><span style="color: #ff0000;">这段jpg代码将会被执行！！！</span></strong></blockquote>
+<a href="http://docs.php.net/manual/zh/ini.core.php">http://docs.php.net/manual/zh/ini.core.php</a>
+cgi.fix_pathinfo "1" PHP_INI_ALL 从 PHP 4.3.0 起可用 <strong><span style="color: #ff0000;">请注意：默认为1</span></strong></p>
+
+<p><strong>解决办法：</strong>
+1.修改php.ini中的cgi.cgi.fix_pathinfo为0（<span style="text-decoration: underline;">即使你在php.ini中没有搜到，也要设置，没有搜到表示默认为1</span>）<br />
+2.判断文件上传类型时使用严格的判断，至于怎么判断，参见：<a href="http://www.54chen.com/php-tech/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program.html">http://www.54chen.com/php-tech/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program.html</a>
+3.把nginx的判断正则修改为去除/<br />
+if ( $fastcgi_script_name ~ \..*\/.*php ) {<br />
+return 403;<br />
+}</p>
+
+<p>鸟哥在<a href="http://www.laruence.com/2010/05/20/1495.html">http://www.laruence.com/2010/05/20/1495.html</a>一文中提及此事。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/19/mysql-explain/">Mysql Explain详解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-19T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><p style="text-align: center;"><img class="aligncenter" src="http://img07.taobaocdn.com/bao/uploaded/i7/T1cRdAXeVlXXbDaB72_044910.jpg" alt="mysql explain" /></p></p>
+
+<p><span style="color: #ffffff;">doubanclaimed89ad216b01beaf</span>
+题注：感谢suchasplus兄弟在第一时间提示explain拼写错误~~~:)</p>
+
+<p>对于经常使用mysql的兄弟们，对explain一定不会陌生。当你在一条SELECT语句前放上关键词EXPLAIN，MySQL解释它将如何处理SELECT，提供有关表如何联合和以什么次序的信息。<br />
+借助于EXPLAIN，你可以知道<br />
+1)你什么时候必须为表加入索引以得到一个使用索引找到记录的更快的SELECT。<br />
+2)你也能知道优化器是否以一个最佳次序联结表。为了强制优化器对一个SELECT语句使用一个特定联结次序，增加一个STRAIGHT_JOIN子句。<br />
+官方的关于explain的文档在http://dev.mysql.com/doc/refman/5.1/en/using-explain.html（英文），本文可作为官方文献的不完整通俗读物。
+<h2><strong>使用的方法</strong></h2>
+EXPLAIN tbl_name<br />
+或：<br />
+EXPLAIN [EXTENDED] SELECT select_options</p>
+
+<p>前者可以得出一个表的字段结构等等，后者主要是给出相关的一些索引信息，而今天要讲述的重点是后者。
+<h2>举例</h2>
+mysql&gt; explain select * from event;<br />
++----+-------------+-------+------+---------------+------+---------+------+------+-------+<br />
+| id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra |<br />
++----+-------------+-------+------+---------------+------+---------+------+------+-------+<br />
+|  1 | SIMPLE      | event | ALL  | NULL          | NULL | NULL    | NULL |   13 |       |<br />
++----+-------------+-------+------+---------------+------+---------+------+------+-------+<br />
+1 row in set (0.00 sec)
+<h2><strong>各个属性的含义</strong></h2>
+id<br />
+select查询的序列号</p>
+
+<p>select_type<br />
+select查询的类型，主要是区别普通查询和联合查询、子查询之类的复杂查询。</p>
+
+<p>table<br />
+输出的行所引用的表。</p>
+
+<p>type<br />
+联合查询所使用的类型。<br />
+type显示的是访问类型，是较为重要的一个指标，结果值从好到坏依次是：<br />
+system &gt; const &gt; eq_ref &gt; ref &gt; fulltext &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; index &gt; ALL<br />
+一般来说，得保证查询至少达到range级别，最好能达到ref。</p>
+
+<p>possible_keys<br />
+指出MySQL能使用哪个索引在该表中找到行。如果是空的，没有相关的索引。这时要提高性能，可通过检验WHERE子句，看是否引用某些字段，或者检查字段不是适合索引。</p>
+
+<p>key<br />
+显示MySQL实际决定使用的键。如果没有索引被选择，键是NULL。</p>
+
+<p>key_len<br />
+显示MySQL决定使用的键长度。如果键是NULL，长度就是NULL。文档提示特别注意这个值可以得出一个多重主键里mysql实际使用了哪一部分。</p>
+
+<p>ref<br />
+显示哪个字段或常数与key一起被使用。</p>
+
+<p>rows<br />
+这个数表示mysql要遍历多少数据才能找到，在innodb上是不准确的。</p>
+
+<p>Extra<br />
+如果是Only index，这意味着信息只用索引树中的信息检索出的，这比扫描整个表要快。<br />
+如果是where used，就是使用上了where限制。<br />
+如果是impossible where 表示用不着where，一般就是没查出来啥。<br />
+如果此信息显示Using filesort或者Using temporary的话会很吃力，WHERE和ORDER BY的索引经常无法兼顾，如果按照WHERE来确定索引，那么在ORDER BY时，就必然会引起Using filesort，这就要看是先过滤再排序划算，还是先排序再过滤划算。
+<h2><strong>常见的一些名词解释</strong></h2>
+Using filesort<br />
+MySQL需要额外的一次传递，以找出如何按排序顺序检索行。</p>
+
+<p>Using index<br />
+从只使用索引树中的信息而不需要进一步搜索读取实际的行来检索表中的列信息。</p>
+
+<p>Using temporary<br />
+为了解决查询，MySQL需要创建一个临时表来容纳结果。</p>
+
+<p>ref<br />
+对于每个来自于前面的表的行组合，所有有匹配索引值的行将从这张表中读取</p>
+
+<p>ALL<br />
+完全没有索引的情况，性能非常地差劲。</p>
+
+<p>index<br />
+与ALL相同，除了只有索引树被扫描。这通常比ALL快，因为索引文件通常比数据文件小。</p>
+
+<p>SIMPLE<br />
+简单SELECT(不使用UNION或子查询)
+<h2><strong>关于哥学社</strong></h2>
+<a style="color: #0b3b8c; text-decoration: none;" title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个自由博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。
+<h2><strong>关于五四陈</strong></h2>
+54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br />
+个人技术站点:<a style="color: #0b3b8c; text-decoration: none;" href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 czhttp@gmail.com 联系到他。
+<h2><strong>本文提及的文章</strong></h2>
+<a href="http://dev.mysql.com/doc/refman/5.1/en/using-explain.html">http://dev.mysql.com/doc/refman/5.1/en/using-explain.html</a></p>
+
+<p><a href="http://dev.mysql.com/doc/refman/5.1/zh/optimization.html#explain">http://dev.mysql.com/doc/refman/5.1/zh/optimization.html#explain</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/17/qcon-beijing-2010-related-ppt-download/">Qcon北京2010相关ppt下载</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-05-17T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>QCon是由C4Media媒体集团InfoQ网站主办的全球顶级技术盛会，每年在伦敦、旧金山、东京、北京召开。2009年4月，QCon首次登陆北 京。大会吸引了500多名架构师、项目经理、资深开发者和技术领导者、以及100多家企业的参与，并获得了业界空前的好评！2010年，QCon全球企业 开发大会（北京站）将于4月23日～25日，在北京京仪大酒店举行。大会将开设包括架构、语言、敏捷、SOA、BAAP、案例在内的6大主题，邀请40多 名国内外著名讲师授课，预计将有200多家企业、500多名来自业内的资深人士参会。
+<h4><a title="QCon回忆录" rel="bookmark" href="../architecture/qcon-memoirs.html">QCon回忆录</a></h4>
+<h4><a title="4月24日QCon现场直播流水帖" rel="bookmark" href="../architecture/april-24-live-stream-qcon-posts.html">4月24日QCon现场直播流水帖</a></h4>
+54chen有幸参加并记录了Qcon24日的全过程，上周接到会议的ppt，大小共计90M左右，在网上看到TimYang大侠和blogKid都有提供下载，无赖因为文件太大，反而没有办法持续提供，周末想想，根据以前我发<a title="802.1x代码" href="../8021x">802.1x代码</a>的经验，可以让需要的同志提供email，我转发过去，前提是你要准备个有90M左右空间的邮箱，我是用gamil发过来的，分成了4个部分，一部分20M的附件。慢慢享用吧！需要的同志请留言留下email地址，通过RSS看到本文的同志，如果点feedburner的url被墙的话，请点击下面的地址进来：</p>
+
+<p><a href="http://www.54chen.com/architecture/qcon-beijing-2010-related-ppt-download.html">http://www.54chen.com/architecture/qcon-beijing-2010-related-ppt-download.html</a></p>
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="32">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="30">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

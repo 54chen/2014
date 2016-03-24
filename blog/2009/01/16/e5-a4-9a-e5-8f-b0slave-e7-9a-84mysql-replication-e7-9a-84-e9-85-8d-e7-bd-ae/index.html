@@ -185,17 +185,17 @@
 
 <p>四、在master数据库中添加用于slave1同步的用户，并赋予相关权限：</p>
 
-<p>mysql&gt;GRANT REPLICATION SLAVE ON *.* TO rep@sa_cfengine1 IDENTIFIED BY &#8216;cnrep&#8217;;</p>
+<p>mysql&gt;GRANT REPLICATION SLAVE ON *.* TO rep@sa_cfengine1 IDENTIFIED BY 'cnrep';</p>
 
-<p>mysql&gt;GRANT FILE,SELECT,REPLICATION SLAVE ON *.* TO rep@sa_cfengine1 IDENTIFIED BY &#8216;cnrep&#8217;;</p>
+<p>mysql&gt;GRANT FILE,SELECT,REPLICATION SLAVE ON *.* TO rep@sa_cfengine1 IDENTIFIED BY 'cnrep';</p>
 
 <p> </p>
 
 <p>五、在slave1数据库中添加用于slave2同步的用户，并赋予相关权限：</p>
 
-<p>mysql&gt;GRANT REPLICATION SLAVE ON *.* TO rep1@sa_cfengine2 IDENTIFIED BY &#8216;cnrep&#8217;;</p>
+<p>mysql&gt;GRANT REPLICATION SLAVE ON *.* TO rep1@sa_cfengine2 IDENTIFIED BY 'cnrep';</p>
 
-<p>mysql&gt;GRANT FILE,SELECT,REPLICATION SLAVE ON *.* TO rep1@sa_cfengine2 IDENTIFIED BY &#8216;cnrep&#8217;;</p>
+<p>mysql&gt;GRANT FILE,SELECT,REPLICATION SLAVE ON *.* TO rep1@sa_cfengine2 IDENTIFIED BY 'cnrep';</p>
 
 <p> </p>
 

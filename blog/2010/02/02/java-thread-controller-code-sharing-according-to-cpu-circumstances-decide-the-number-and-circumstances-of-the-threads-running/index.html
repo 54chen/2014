@@ -125,15 +125,15 @@ public double getCpuUsage() throws Exception {<br />
 double cpuUsed = 0;</p>
 
 <p>Runtime rt = Runtime.getRuntime();<br />
-Process p = rt.exec(&#8220;/usr/bin/uptime&#8221;);// 调用系统的“top&#8221;命令<br />
+Process p = rt.exec("/usr/bin/uptime");// 调用系统的“top"命令<br />
 String[] strArray = null;<br />
 BufferedReader in = null;<br />
 try {<br />
 in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br />
 String str = null;<br />
 while ((str = in.readLine()) != null) {<br />
-strArray = str.split(&#8220;load average: &#8220;);<br />
-strArray = strArray[1].split(&#8220;,&#8221;);<br />
+strArray = str.split("load average: ");<br />
+strArray = strArray[1].split(",");<br />
 cpuUsed = Double.parseDouble(strArray[0]);<br />
 }
 } catch (Exception e) {<br />
@@ -154,7 +154,7 @@ public double getMemUsage() throws Exception {</p>
 
 <p>double menUsed = 0;<br />
 Runtime rt = Runtime.getRuntime();<br />
-Process p = rt.exec(&#8220;top -b -n 1&#8221;);// 调用系统的“top&#8221;命令</p>
+Process p = rt.exec("top -b -n 1");// 调用系统的“top"命令</p>
 
 <p>BufferedReader in = null;<br />
 try {<br />
@@ -165,16 +165,16 @@ String[] strArray = null;</p>
 <p>while ((str = in.readLine()) != null) {<br />
 int m = 0;</p>
 
-<p>if (str.indexOf(&#8221; R &#8220;) != -1) {// 只<a href="http://www.54chen.com/internetops/51ditu%e7%ad%89%e7%bd%91%e7%ab%99%e6%8a%80%e6%9c%af%e6%8f%ad%e7%a7%98-%e5%88%a9%e7%94%a8%e5%bc%80%e6%ba%90%e6%a1%86%e6%9e%b6%e6%90%ad%e5%bb%ba%e4%b8%80%e6%95%b4%e5%a5%97%e7%9a%84webgis.html">分析</a>正在运行的进程，top进程本身除外 &amp;&amp;<br />
+<p>if (str.indexOf(" R ") != -1) {// 只<a href="http://www.54chen.com/internetops/51ditu%e7%ad%89%e7%bd%91%e7%ab%99%e6%8a%80%e6%9c%af%e6%8f%ad%e7%a7%98-%e5%88%a9%e7%94%a8%e5%bc%80%e6%ba%90%e6%a1%86%e6%9e%b6%e6%90%ad%e5%bb%ba%e4%b8%80%e6%95%b4%e5%a5%97%e7%9a%84webgis.html">分析</a>正在运行的进程，top进程本身除外 &amp;&amp;<br />
 //<br />
-// System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;3&#8212;&#8212;&#8212;&#8212;&#8212;&#8211;&#8221;);<br />
-strArray = str.split(&#8221; &#8220;);<br />
+// System.out.println("------------------3-----------------");<br />
+strArray = str.split(" ");<br />
 for (String tmp : strArray) {<br />
 if (tmp.trim().length() == 0)<br />
 continue;</p>
 
 <p>if (++m == 10) {<br />
-// 9)&#8211;第10列为mem的使用百分比(RedHat 9)</p>
+// 9)--第10列为mem的使用百分比(RedHat 9)</p>
 
 <p>menUsed += Double.parseDouble(tmp);</p>
 
@@ -201,7 +201,7 @@ public double getDeskUsage() throws Exception {<br />
 double totalHD = 0;<br />
 double usedHD = 0;<br />
 Runtime rt = Runtime.getRuntime();<br />
-Process p = rt.exec(&#8220;df -hl&#8221;);// df -hl 查看<a href="http://www.54chen.com/_linux_/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles.html">硬盘</a>空间</p>
+Process p = rt.exec("df -hl");// df -hl 查看<a href="http://www.54chen.com/_linux_/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles.html">硬盘</a>空间</p>
 
 <p>BufferedReader in = null;<br />
 try {<br />
@@ -212,42 +212,42 @@ while ((str = in.readLine()) != null) {<br />
 int m = 0;<br />
 // if (flag &gt; 0) {<br />
 // flag++;<br />
-strArray = str.split(&#8221; &#8220;);<br />
+strArray = str.split(" ");<br />
 for (String tmp : strArray) {<br />
 if (tmp.trim().length() == 0)<br />
 continue;<br />
 ++m;<br />
-// System.out.println(&#8220;&#8212;-tmp&#8212;-&#8221; + tmp);<br />
-if (tmp.indexOf(&#8220;G&#8221;) != -1) {<br />
+// System.out.println("----tmp----" + tmp);<br />
+if (tmp.indexOf("G") != -1) {<br />
 if (m == 2) {<br />
-// System.out.println(&#8220;&#8212;G&#8212;-&#8221; + tmp);<br />
-if (!tmp.equals(&#8220;&#8221;) &amp;&amp; !tmp.equals(&#8220;0&#8221;))<br />
+// System.out.println("---G----" + tmp);<br />
+if (!tmp.equals("") &amp;&amp; !tmp.equals("0"))<br />
 totalHD += Double.parseDouble(tmp.substring(0,<br />
 tmp.length() - 1)) * 1024;</p>
 
 <p>}<br />
 if (m == 3) {<br />
-// System.out.println(&#8220;&#8212;G&#8212;-&#8221; + tmp);<br />
-if (!tmp.equals(&#8220;none&#8221;) &amp;&amp; !tmp.equals(&#8220;0&#8221;))<br />
+// System.out.println("---G----" + tmp);<br />
+if (!tmp.equals("none") &amp;&amp; !tmp.equals("0"))<br />
 usedHD += Double.parseDouble(tmp.substring(0,<br />
 tmp.length() - 1)) * 1024;</p>
 
 <p>}<br />
 }
-if (tmp.indexOf(&#8220;M&#8221;) != -1) {<br />
+if (tmp.indexOf("M") != -1) {<br />
 if (m == 2) {<br />
-// System.out.println(&#8220;&#8212;M&#8212;&#8221; + tmp);<br />
-if (!tmp.equals(&#8220;&#8221;) &amp;&amp; !tmp.equals(&#8220;0&#8221;))<br />
+// System.out.println("---M---" + tmp);<br />
+if (!tmp.equals("") &amp;&amp; !tmp.equals("0"))<br />
 totalHD += Double.parseDouble(tmp.substring(0,<br />
 tmp.length() - 1));</p>
 
 <p>}<br />
 if (m == 3) {<br />
-// System.out.println(&#8220;&#8212;M&#8212;&#8221; + tmp);<br />
-if (!tmp.equals(&#8220;none&#8221;) &amp;&amp; !tmp.equals(&#8220;0&#8221;))<br />
+// System.out.println("---M---" + tmp);<br />
+if (!tmp.equals("none") &amp;&amp; !tmp.equals("0"))<br />
 usedHD += Double.parseDouble(tmp.substring(0,<br />
 tmp.length() - 1));<br />
-// System.out.println(&#8220;&#8212;-3&#8212;-&#8221; + usedHD);<br />
+// System.out.println("----3----" + usedHD);<br />
 }
 }</p>
 
@@ -266,20 +266,20 @@ return (usedHD / totalHD) * 100;<br />
 //    public static void main(String[] args) throws Exception {<br />
 //        NodeLoadView cpu = new NodeLoadView();<br />
 //        System.out<br />
-//                .println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;cpu used:&#8221; + cpu.getCpuUsage() + &#8220;%&#8221;);<br />
+//                .println("---------------cpu used:" + cpu.getCpuUsage() + "%");<br />
 //        System.out<br />
-//                .println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;mem used:&#8221; + cpu.getMemUsage() + &#8220;%&#8221;);<br />
+//                .println("---------------mem used:" + cpu.getMemUsage() + "%");<br />
 //        System.out<br />
-//                .println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;HD used:&#8221; + cpu.getDeskUsage() + &#8220;%&#8221;);<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;jvm监控&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;-&#8220;);<br />
+//                .println("---------------HD used:" + cpu.getDeskUsage() + "%");<br />
+//        System.out.println("------------jvm监控----------------------");<br />
 //        Runtime lRuntime = Runtime.getRuntime();<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8211;Free Momery:&#8221; + lRuntime.freeMemory()<br />
-//                + &#8220;K&#8221;);<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8211;Max Momery:&#8221; + lRuntime.maxMemory()<br />
-//                + &#8220;K&#8221;);<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8211;Total Momery:&#8221;<br />
-//                + lRuntime.totalMemory() + &#8220;K&#8221;);<br />
-//        System.out.println(&#8220;&#8212;&#8212;&#8212;&#8212;&#8212;Available Processors :&#8221;<br />
+//        System.out.println("--------------Free Momery:" + lRuntime.freeMemory()<br />
+//                + "K");<br />
+//        System.out.println("--------------Max Momery:" + lRuntime.maxMemory()<br />
+//                + "K");<br />
+//        System.out.println("--------------Total Momery:"<br />
+//                + lRuntime.totalMemory() + "K");<br />
+//        System.out.println("---------------Available Processors :"<br />
 //                + lRuntime.availableProcessors());<br />
 //    }<br />
 }
@@ -331,24 +331,24 @@ if (allowRunThreads &gt; allowRunThreadsRef) {<br />
 allowRunThreads = allowRunThreadsRef;<br />
 }
 if (logger.isDebugEnabled()) {<br />
-logger.debug(&#8220;[ThreadScheduler]running Thread:&#8221; + runningThreadMap.size() + &#8220;; waiting Thread:&#8221; + waitingThreadMap.size() + &#8220;; cpu:&#8221; + cpuLoad + &#8221; allowRunThreads:&#8221; + allowRunThreads);<br />
+logger.debug("[ThreadScheduler]running Thread:" + runningThreadMap.size() + "; waiting Thread:" + waitingThreadMap.size() + "; cpu:" + cpuLoad + " allowRunThreads:" + allowRunThreads);<br />
 }</p>
 
 <p>// 检查runningSize个线程的情况，满足条件则启动<br />
 for (int x = 0; x &lt; runningSize; x++) {<br />
-if (waitingThreadMap.get(x+&#8221;&#8220;) != null) {<br />
+if (waitingThreadMap.get(x+"") != null) {<br />
 if (allowRunThreadsRef &lt;= runningThreadMap.size()) {<br />
 break;<br />
 }
-synchronized (waitingThreadMap.get(x+&#8221;&#8220;)) {<br />
-if (!waitingThreadMap.get(x+&#8221;&#8220;).isAlive()) {<br />
-waitingThreadMap.get(x+&#8221;&#8220;).start();<br />
+synchronized (waitingThreadMap.get(x+"")) {<br />
+if (!waitingThreadMap.get(x+"").isAlive()) {<br />
+waitingThreadMap.get(x+"").start();<br />
 }else{<br />
-waitingThreadMap.get(x+&#8221;&#8220;).notify();<br />
+waitingThreadMap.get(x+"").notify();<br />
 }
 }<br />
-runningThreadMap.put(x+&#8221;&#8220;, waitingThreadMap.get(x+&#8221;&#8220;));<br />
-waitingThreadMap.remove(x+&#8221;&#8220;);<br />
+runningThreadMap.put(x+"", waitingThreadMap.get(x+""));<br />
+waitingThreadMap.remove(x+"");<br />
 }
 }<br />
 // 检查runningSize个线程的情况，满足条件则暂停<br />
@@ -356,11 +356,11 @@ for (int x = 0; x &lt; runningSize; x++) {<br />
 if (runningThreadMap.size() &lt;= allowRunThreads) {<br />
 break;<br />
 }
-if (runningThreadMap.get(x+&#8221;&#8220;) != null) {<br />
-synchronized (runningThreadMap.get(x+&#8221;&#8220;)) {<br />
+if (runningThreadMap.get(x+"") != null) {<br />
+synchronized (runningThreadMap.get(x+"")) {<br />
 try {<br />
-if (runningThreadMap.get(x+&#8221;&#8220;).isAlive()) {<br />
-runningThreadMap.get(x+&#8221;&#8220;).wait();<br />
+if (runningThreadMap.get(x+"").isAlive()) {<br />
+runningThreadMap.get(x+"").wait();<br />
 }else{<br />
 continue;<br />
 }
@@ -368,14 +368,14 @@ continue;<br />
 e.printStackTrace();<br />
 }
 }<br />
-waitingThreadMap.put(x+&#8221;&#8220;, runningThreadMap.get(x));<br />
-runningThreadMap.remove(x+&#8221;&#8220;);<br />
+waitingThreadMap.put(x+"", runningThreadMap.get(x));<br />
+runningThreadMap.remove(x+"");<br />
 }
 }<br />
 // 全部跑完，返回<br />
 if (waitingThreadMap.size() == 0 &amp;&amp; runningThreadMap.size() == 0) {<br />
 if (logger.isDebugEnabled()) {<br />
-logger.debug(&#8220;[ThreadScheduler] over.total Threads size:&#8221; + runningSize);<br />
+logger.debug("[ThreadScheduler] over.total Threads size:" + runningSize);<br />
 }
 this.isFinished = true;<br />
 return;<br />
@@ -420,7 +420,7 @@ Map&lt;String, Thread&gt; threadMap = new HashMap&lt;String, Thread&gt;();<br />
 Map&lt;String, Thread&gt; waitThreadMap = new HashMap&lt;String, Thread&gt;();<br />
 for (int j = 0; j &lt; args.length; j++) {<br />
 Thread t = new Runner(j, threadMap);<br />
-waitThreadMap.put(j + &#8220;&#8221;, t);<br />
+waitThreadMap.put(j + "", t);<br />
 }</p>
 
 <p>ThreadScheduler threadScheduler = new ThreadScheduler(threadMap, waitThreadMap);<br />

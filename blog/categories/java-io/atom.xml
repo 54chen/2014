@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Java,io | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/java-io/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-02-02T12:01:13+08:00</updated>
+  <updated>2016-03-24T21:18:45+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -45,7 +45,7 @@
 
 <p>一个连接一个thread的模型想尝试减少强制一个连接给一个thread的阻塞影响，需要掌握剩下的并发连接不再被IO操作在同一个连接上阻塞。当连接些都很短且数据延迟都不是很坏的时候这工作得很好。尽管如此，一旦连接变长且数据连接高延迟，可能性就是，线程些被连接长时间抓住不放，因为新连接的饥饿。如果使用定长的线程池，直到阻塞的线程在阻塞状态中不能被重用以服务新的连接，如果每个新的连接用一个新的线程服务，或者会导致大量的线程会在系统中被产生，这会演变为漂亮的资源争抢，为了完成高并发的负载，而高上下切换消费。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -62,7 +62,7 @@
 </span><span class='line'>  spawn-Thread-and-process(connection);
 </span><span class='line'>}&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
 
 <p>简单的一连接一线程server</p>
 
@@ -86,7 +86,7 @@
 
 <p>Java已经抽象出来平台特殊性系统调用的不同，实现了NIO API。Socket 文件描述符被用Channels和Selector抽象，封装到selection系统调用中。应用程序感兴趣的收集就绪事件，注册到Channel（通常在ServerSocketChannel上accept()就得到一个SocketChannel），注册的内容是Selector，会得到SelectionKey，这个SelectionKey就是作为一个handle，这个handle的作用是hold住Channel和注册信息。然后阻塞的select()调用被设置在Selector，它会返回一系列的SelectionKey，然后一个接一个地被程序所指定的事件处理器所处理。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -169,7 +169,7 @@
 </span><span class='line'>&lt;p>  }
 </span><span class='line'>}&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
 
 <p>简单的非阻塞server</p>
 
@@ -229,7 +229,7 @@
 
 <p>一个简单的echo server实现，下面的例子显示了这种模式（没有事件处理器线程池）。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -417,38 +417,6 @@
 <span class='line-number'>186</span>
 <span class='line-number'>187</span>
 <span class='line-number'>188</span>
-<span class='line-number'>189</span>
-<span class='line-number'>190</span>
-<span class='line-number'>191</span>
-<span class='line-number'>192</span>
-<span class='line-number'>193</span>
-<span class='line-number'>194</span>
-<span class='line-number'>195</span>
-<span class='line-number'>196</span>
-<span class='line-number'>197</span>
-<span class='line-number'>198</span>
-<span class='line-number'>199</span>
-<span class='line-number'>200</span>
-<span class='line-number'>201</span>
-<span class='line-number'>202</span>
-<span class='line-number'>203</span>
-<span class='line-number'>204</span>
-<span class='line-number'>205</span>
-<span class='line-number'>206</span>
-<span class='line-number'>207</span>
-<span class='line-number'>208</span>
-<span class='line-number'>209</span>
-<span class='line-number'>210</span>
-<span class='line-number'>211</span>
-<span class='line-number'>212</span>
-<span class='line-number'>213</span>
-<span class='line-number'>214</span>
-<span class='line-number'>215</span>
-<span class='line-number'>216</span>
-<span class='line-number'>217</span>
-<span class='line-number'>218</span>
-<span class='line-number'>219</span>
-<span class='line-number'>220</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>public class ReactorInitiator {&lt;/p>
@@ -480,66 +448,47 @@
 </span><span class='line'>
 </span><span class='line'>&lt;p> }&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public static void main(String[] args) throws Exception {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>System.out.println("Starting NIO server at port : " +
-</span><span class='line'>  NIO_SERVER_PORT);
-</span><span class='line'>new ReactorInitiator().
-</span><span class='line'>  initiateReactiveServer(NIO_SERVER_PORT);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>&lt;p>  public static void main(String[] args) throws Exception {
+</span><span class='line'>    System.out.println(&ldquo;Starting NIO server at port : &rdquo; +
+</span><span class='line'>      NIO_SERVER_PORT);
+</span><span class='line'>    new ReactorInitiator().
+</span><span class='line'>      initiateReactiveServer(NIO_SERVER_PORT);
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>}&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>public class Dispatcher {&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  private Map&lt;Integer, EventHandler> registeredHandlers =&lt;/p>
+</span><span class='line'>&lt;p>  private Map&lt;Integer, EventHandler> registeredHandlers =
+</span><span class='line'>    new ConcurrentHashMap&lt;Integer, EventHandler>();
+</span><span class='line'>  private Selector demultiplexer;&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>new ConcurrentHashMap&lt;Integer, EventHandler&gt;();
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>&lt;p>  public Dispatcher() throws Exception {
+</span><span class='line'>    demultiplexer = Selector.open();
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  private Selector demultiplexer;&lt;/p>
+</span><span class='line'>&lt;p>  public Selector getDemultiplexer() {
+</span><span class='line'>    return demultiplexer;
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public Dispatcher() throws Exception {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>demultiplexer = Selector.open();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  public Selector getDemultiplexer() {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>return demultiplexer;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  public void registerEventHandler(&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>int eventType, EventHandler eventHandler) {
-</span><span class='line'>registeredHandlers.put(eventType, eventHandler);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>&lt;p>  public void registerEventHandler(
+</span><span class='line'>    int eventType, EventHandler eventHandler) {
+</span><span class='line'>    registeredHandlers.put(eventType, eventHandler);
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  // Used to register ServerSocketChannel with the
 </span><span class='line'>  // selector to accept incoming client connections
-</span><span class='line'>  public void registerChannel(&lt;/p>
+</span><span class='line'>  public void registerChannel(
+</span><span class='line'>    int eventType, SelectableChannel channel) throws Exception {
+</span><span class='line'>    channel.register(demultiplexer, eventType);
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>int eventType, SelectableChannel channel) throws Exception {
-</span><span class='line'>channel.register(demultiplexer, eventType);
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>&lt;p>  public void run() {
+</span><span class='line'>    try {
+</span><span class='line'>      while (true) { // Loop indefinitely
+</span><span class='line'>        demultiplexer.select();&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  public void run() {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>try {
-</span><span class='line'>  while (true) { // Loop indefinitely
-</span><span class='line'>    demultiplexer.select();
-</span><span class='line'>
-</span><span class='line'>    Set&lt;SelectionKey&gt; readyHandles =
+</span><span class='line'>&lt;pre>&lt;code>    Set&lt;SelectionKey&gt; readyHandles =
 </span><span class='line'>      demultiplexer.selectedKeys();
 </span><span class='line'>    Iterator&lt;SelectionKey&gt; handleIterator =
 </span><span class='line'>      readyHandles.iterator();
@@ -588,27 +537,21 @@
 </span><span class='line'>
 </span><span class='line'>&lt;p>public class AcceptEventHandler implements EventHandler {
 </span><span class='line'>  private Selector demultiplexer;
-</span><span class='line'>  public AcceptEventHandler(Selector demultiplexer) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>this.demultiplexer = demultiplexer;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>  public AcceptEventHandler(Selector demultiplexer) {
+</span><span class='line'>    this.demultiplexer = demultiplexer;
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  @Override
-</span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>ServerSocketChannel serverSocketChannel =
-</span><span class='line'> (ServerSocketChannel) handle.channel();
-</span><span class='line'>SocketChannel socketChannel = serverSocketChannel.accept();
-</span><span class='line'>if (socketChannel != null) {
-</span><span class='line'>  socketChannel.configureBlocking(false);
-</span><span class='line'>  socketChannel.register(
-</span><span class='line'>    demultiplexer, SelectionKey.OP_READ);
-</span><span class='line'>}
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {
+</span><span class='line'>    ServerSocketChannel serverSocketChannel =
+</span><span class='line'>     (ServerSocketChannel) handle.channel();
+</span><span class='line'>    SocketChannel socketChannel = serverSocketChannel.accept();
+</span><span class='line'>    if (socketChannel != null) {
+</span><span class='line'>      socketChannel.configureBlocking(false);
+</span><span class='line'>      socketChannel.register(
+</span><span class='line'>        demultiplexer, SelectionKey.OP_READ);
+</span><span class='line'>    }
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>}&lt;/p>
 </span><span class='line'>
@@ -617,20 +560,16 @@
 </span><span class='line'>&lt;p>  private Selector demultiplexer;
 </span><span class='line'>  private ByteBuffer inputBuffer = ByteBuffer.allocate(2048);&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public ReadEventHandler(Selector demultiplexer) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>this.demultiplexer = demultiplexer;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>&lt;p>  public ReadEventHandler(Selector demultiplexer) {
+</span><span class='line'>    this.demultiplexer = demultiplexer;
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  @Override
-</span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {&lt;/p>
+</span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {
+</span><span class='line'>    SocketChannel socketChannel =
+</span><span class='line'>     (SocketChannel) handle.channel();&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>SocketChannel socketChannel =
-</span><span class='line'> (SocketChannel) handle.channel();
-</span><span class='line'>
-</span><span class='line'>socketChannel.read(inputBuffer); // Read data from client
+</span><span class='line'>&lt;pre>&lt;code>socketChannel.read(inputBuffer); // Read data from client
 </span><span class='line'>
 </span><span class='line'>inputBuffer.flip();
 </span><span class='line'>// Rewind the buffer to start reading from the beginning
@@ -656,19 +595,16 @@
 </span><span class='line'>&lt;p>public class WriteEventHandler implements EventHandler {&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  @Override
-</span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>SocketChannel socketChannel =
-</span><span class='line'>  (SocketChannel) handle.channel();
-</span><span class='line'>ByteBuffer inputBuffer = (ByteBuffer) handle.attachment();
-</span><span class='line'>socketChannel.write(inputBuffer);
-</span><span class='line'>socketChannel.close(); // Close connection
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }
+</span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {
+</span><span class='line'>    SocketChannel socketChannel =
+</span><span class='line'>      (SocketChannel) handle.channel();
+</span><span class='line'>    ByteBuffer inputBuffer = (ByteBuffer) handle.attachment();
+</span><span class='line'>    socketChannel.write(inputBuffer);
+</span><span class='line'>    socketChannel.close(); // Close connection
+</span><span class='line'>  }
 </span><span class='line'>}&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
 
 <ul>
 <li>Proactor模式</li>
@@ -691,7 +627,7 @@
 
 <p>让我们来看看如何用新的Java 7里的NIO.2 API来实现这种模式（一个简单的echo server）。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -856,53 +792,15 @@
 <span class='line-number'>163</span>
 <span class='line-number'>164</span>
 <span class='line-number'>165</span>
-<span class='line-number'>166</span>
-<span class='line-number'>167</span>
-<span class='line-number'>168</span>
-<span class='line-number'>169</span>
-<span class='line-number'>170</span>
-<span class='line-number'>171</span>
-<span class='line-number'>172</span>
-<span class='line-number'>173</span>
-<span class='line-number'>174</span>
-<span class='line-number'>175</span>
-<span class='line-number'>176</span>
-<span class='line-number'>177</span>
-<span class='line-number'>178</span>
-<span class='line-number'>179</span>
-<span class='line-number'>180</span>
-<span class='line-number'>181</span>
-<span class='line-number'>182</span>
-<span class='line-number'>183</span>
-<span class='line-number'>184</span>
-<span class='line-number'>185</span>
-<span class='line-number'>186</span>
-<span class='line-number'>187</span>
-<span class='line-number'>188</span>
-<span class='line-number'>189</span>
-<span class='line-number'>190</span>
-<span class='line-number'>191</span>
-<span class='line-number'>192</span>
-<span class='line-number'>193</span>
-<span class='line-number'>194</span>
-<span class='line-number'>195</span>
-<span class='line-number'>196</span>
-<span class='line-number'>197</span>
-<span class='line-number'>198</span>
-<span class='line-number'>199</span>
-<span class='line-number'>200</span>
-<span class='line-number'>201</span>
-<span class='line-number'>202</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>public class ProactorInitiator {
 </span><span class='line'>  static int ASYNC_SERVER_PORT = 4333;&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public void initiateProactiveServer(int port)&lt;/p>
+</span><span class='line'>&lt;p>  public void initiateProactiveServer(int port)
+</span><span class='line'>    throws IOException {&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>throws IOException {
-</span><span class='line'>
-</span><span class='line'>final AsynchronousServerSocketChannel listener =
+</span><span class='line'>&lt;pre>&lt;code>final AsynchronousServerSocketChannel listener =
 </span><span class='line'>  AsynchronousServerSocketChannel.open().bind(
 </span><span class='line'>    new InetSocketAddress(port));
 </span><span class='line'> AcceptCompletionHandler acceptCompletionHandler =
@@ -914,18 +812,17 @@
 </span><span class='line'>
 </span><span class='line'>&lt;p>  }&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public static void main(String[] args) {&lt;/p>
+</span><span class='line'>&lt;p>  public static void main(String[] args) {
+</span><span class='line'>    try {
+</span><span class='line'>       System.out.println(&ldquo;Async server listening on port : &rdquo; +
+</span><span class='line'>         ASYNC_SERVER_PORT);
+</span><span class='line'>       new ProactorInitiator().initiateProactiveServer(
+</span><span class='line'>         ASYNC_SERVER_PORT);
+</span><span class='line'>    } catch (IOException e) {
+</span><span class='line'>     e.printStackTrace();
+</span><span class='line'>    }&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>try {
-</span><span class='line'>   System.out.println("Async server listening on port : " +
-</span><span class='line'>     ASYNC_SERVER_PORT);
-</span><span class='line'>   new ProactorInitiator().initiateProactiveServer(
-</span><span class='line'>     ASYNC_SERVER_PORT);
-</span><span class='line'>} catch (IOException e) {
-</span><span class='line'> e.printStackTrace();
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>// Sleep indefinitely since otherwise the JVM would terminate
+</span><span class='line'>&lt;pre>&lt;code>// Sleep indefinitely since otherwise the JVM would terminate
 </span><span class='line'>while (true) {
 </span><span class='line'>  try {
 </span><span class='line'>    Thread.sleep(Long.MAX_VALUE);
@@ -939,44 +836,30 @@
 </span><span class='line'>}&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>public class AcceptCompletionHandler
-</span><span class='line'>  implements&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>CompletionHandler&lt;AsynchronousSocketChannel, SessionState&gt; {
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>  implements
+</span><span class='line'>    CompletionHandler&lt;AsynchronousSocketChannel, SessionState> {&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  private AsynchronousServerSocketChannel listener;&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public AcceptCompletionHandler(&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>AsynchronousServerSocketChannel listener) {
-</span><span class='line'>this.listener = listener;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>&lt;p>  public AcceptCompletionHandler(
+</span><span class='line'>    AsynchronousServerSocketChannel listener) {
+</span><span class='line'>    this.listener = listener;
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  @Override
-</span><span class='line'>  public void completed(AsynchronousSocketChannel socketChannel,&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>SessionState sessionState) {
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   // accept the next connection
+</span><span class='line'>  public void completed(AsynchronousSocketChannel socketChannel,
+</span><span class='line'>    SessionState sessionState) {
+</span><span class='line'>   // accept the next connection
 </span><span class='line'>   SessionState newSessionState = new SessionState();
 </span><span class='line'>   listener.accept(newSessionState, this);&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>   // handle this connection
 </span><span class='line'>   ByteBuffer inputBuffer = ByteBuffer.allocate(2048);
-</span><span class='line'>   ReadCompletionHandler readCompletionHandler =&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> new ReadCompletionHandler(socketChannel, inputBuffer);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   socketChannel.read(&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> inputBuffer, sessionState, readCompletionHandler);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>   ReadCompletionHandler readCompletionHandler =
+</span><span class='line'>     new ReadCompletionHandler(socketChannel, inputBuffer);
+</span><span class='line'>   socketChannel.read(
+</span><span class='line'>     inputBuffer, sessionState, readCompletionHandler);
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  @Override
 </span><span class='line'>  public void failed(Throwable exc, SessionState sessionState) {
@@ -991,22 +874,18 @@
 </span><span class='line'>&lt;p>   private AsynchronousSocketChannel socketChannel;
 </span><span class='line'>   private ByteBuffer inputBuffer;&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>   public ReadCompletionHandler(&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> AsynchronousSocketChannel socketChannel,
-</span><span class='line'> ByteBuffer inputBuffer) {
-</span><span class='line'> this.socketChannel = socketChannel;
-</span><span class='line'> this.inputBuffer = inputBuffer;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   }&lt;/p>
+</span><span class='line'>&lt;p>   public ReadCompletionHandler(
+</span><span class='line'>     AsynchronousSocketChannel socketChannel,
+</span><span class='line'>     ByteBuffer inputBuffer) {
+</span><span class='line'>     this.socketChannel = socketChannel;
+</span><span class='line'>     this.inputBuffer = inputBuffer;
+</span><span class='line'>   }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>   @Override
-</span><span class='line'>   public void completed(&lt;/p>
+</span><span class='line'>   public void completed(
+</span><span class='line'>     Integer bytesRead, SessionState sessionState) {&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> Integer bytesRead, SessionState sessionState) {
-</span><span class='line'>
-</span><span class='line'> byte[] buffer = new byte[bytesRead];
+</span><span class='line'>&lt;pre>&lt;code> byte[] buffer = new byte[bytesRead];
 </span><span class='line'> inputBuffer.rewind();
 </span><span class='line'> // Rewind the input buffer to read from the beginning
 </span><span class='line'>
@@ -1029,12 +908,9 @@
 </span><span class='line'>&lt;p>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  @Override
-</span><span class='line'>  public void failed(Throwable exc, SessionState attachment) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>//Handle read failure.....
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   }&lt;/p>
+</span><span class='line'>  public void failed(Throwable exc, SessionState attachment) {
+</span><span class='line'>    //Handle read failure&hellip;..
+</span><span class='line'>   }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>}&lt;/p>
 </span><span class='line'>
@@ -1043,26 +919,20 @@
 </span><span class='line'>
 </span><span class='line'>&lt;p>  private AsynchronousSocketChannel socketChannel;&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public WriteCompletionHandler(&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>AsynchronousSocketChannel socketChannel) {
-</span><span class='line'>this.socketChannel = socketChannel;
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>&lt;p>  public WriteCompletionHandler(
+</span><span class='line'>    AsynchronousSocketChannel socketChannel) {
+</span><span class='line'>    this.socketChannel = socketChannel;
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  @Override
-</span><span class='line'>  public void completed(&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>Integer bytesWritten, SessionState attachment) {
-</span><span class='line'>try {
-</span><span class='line'>  socketChannel.close();
-</span><span class='line'>} catch (IOException e) {
-</span><span class='line'>  e.printStackTrace();
-</span><span class='line'>}
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>  public void completed(
+</span><span class='line'>    Integer bytesWritten, SessionState attachment) {
+</span><span class='line'>    try {
+</span><span class='line'>      socketChannel.close();
+</span><span class='line'>    } catch (IOException e) {
+</span><span class='line'>      e.printStackTrace();
+</span><span class='line'>    }
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>  @Override
 </span><span class='line'>  public void failed(Throwable exc, SessionState attachment) {
@@ -1073,28 +943,20 @@
 </span><span class='line'>
 </span><span class='line'>&lt;p>public class SessionState {&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  private Map&lt;String, String> sessionProps =&lt;/p>
+</span><span class='line'>&lt;p>  private Map&lt;String, String> sessionProps =
+</span><span class='line'>    new ConcurrentHashMap&lt;String, String>();&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>new ConcurrentHashMap&lt;String, String&gt;();
-</span><span class='line'>&lt;/code>&lt;/pre>
+</span><span class='line'>&lt;p>   public String getProperty(String key) {
+</span><span class='line'>     return sessionProps.get(key);
+</span><span class='line'>   }&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>   public String getProperty(String key) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> return sessionProps.get(key);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   }&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   public void setProperty(String key, String value) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> sessionProps.put(key, value);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   }&lt;/p>
+</span><span class='line'>&lt;p>   public void setProperty(String key, String value) {
+</span><span class='line'>     sessionProps.put(key, value);
+</span><span class='line'>   }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>}&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
 
 <p>每种类型的事件完成（接受、读、写）都会被一个单独的完成处理器handle，这个处理器实现了CompletionHandler接口（Accept/ Read/
 WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中。额外SessionState参数可以被用于hold客户端的session，待定的状态就可以跨这一系列的完成事件了。</p>
@@ -1106,7 +968,7 @@ WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中�
 
 <p>如果你在考虑实现一个NIO的HTTP服务器，你有福了。Apache HTTPCore包对使用NIO处理HTTP流量提供了优秀的支持。API在内置的用NIO对付http请求处理层之上提供了高层次的抽象。下面给出一个最小化的非阻塞Http服务器实现，任何的GET访问都会返回一个样本输出。</p>
 
-<p><div class='bogus-wrapper'><notextile><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
 <span class='line-number'>3</span>
 <span class='line-number'>4</span>
@@ -1339,66 +1201,24 @@ WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中�
 <span class='line-number'>231</span>
 <span class='line-number'>232</span>
 <span class='line-number'>233</span>
-<span class='line-number'>234</span>
-<span class='line-number'>235</span>
-<span class='line-number'>236</span>
-<span class='line-number'>237</span>
-<span class='line-number'>238</span>
-<span class='line-number'>239</span>
-<span class='line-number'>240</span>
-<span class='line-number'>241</span>
-<span class='line-number'>242</span>
-<span class='line-number'>243</span>
-<span class='line-number'>244</span>
-<span class='line-number'>245</span>
-<span class='line-number'>246</span>
-<span class='line-number'>247</span>
-<span class='line-number'>248</span>
-<span class='line-number'>249</span>
-<span class='line-number'>250</span>
-<span class='line-number'>251</span>
-<span class='line-number'>252</span>
-<span class='line-number'>253</span>
-<span class='line-number'>254</span>
-<span class='line-number'>255</span>
-<span class='line-number'>256</span>
-<span class='line-number'>257</span>
-<span class='line-number'>258</span>
-<span class='line-number'>259</span>
-<span class='line-number'>260</span>
-<span class='line-number'>261</span>
-<span class='line-number'>262</span>
-<span class='line-number'>263</span>
-<span class='line-number'>264</span>
-<span class='line-number'>265</span>
-<span class='line-number'>266</span>
-<span class='line-number'>267</span>
-<span class='line-number'>268</span>
-<span class='line-number'>269</span>
-<span class='line-number'>270</span>
-<span class='line-number'>271</span>
-<span class='line-number'>272</span>
-<span class='line-number'>273</span>
-<span class='line-number'>274</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>public class NHttpServer {&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public void start() throws IOReactorException {&lt;/p>
+</span><span class='line'>&lt;p>  public void start() throws IOReactorException {
+</span><span class='line'>    HttpParams params = new BasicHttpParams();
+</span><span class='line'>    // Connection parameters
+</span><span class='line'>    params.
+</span><span class='line'>      setIntParameter(
+</span><span class='line'>        HttpConnectionParams.SO_TIMEOUT, 60000)
+</span><span class='line'>     .setIntParameter(
+</span><span class='line'>       HttpConnectionParams.SOCKET_BUFFER_SIZE, 8 * 1024)
+</span><span class='line'>     .setBooleanParameter(
+</span><span class='line'>       HttpConnectionParams.STALE_CONNECTION_CHECK, true)
+</span><span class='line'>     .setBooleanParameter(
+</span><span class='line'>       HttpConnectionParams.TCP_NODELAY, true);&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>HttpParams params = new BasicHttpParams();
-</span><span class='line'>// Connection parameters
-</span><span class='line'>params.
-</span><span class='line'>  setIntParameter(
-</span><span class='line'>    HttpConnectionParams.SO_TIMEOUT, 60000)
-</span><span class='line'> .setIntParameter(
-</span><span class='line'>   HttpConnectionParams.SOCKET_BUFFER_SIZE, 8 * 1024)
-</span><span class='line'> .setBooleanParameter(
-</span><span class='line'>   HttpConnectionParams.STALE_CONNECTION_CHECK, true)
-</span><span class='line'> .setBooleanParameter(
-</span><span class='line'>   HttpConnectionParams.TCP_NODELAY, true);
-</span><span class='line'>
-</span><span class='line'>final DefaultListeningIOReactor ioReactor =
+</span><span class='line'>&lt;pre>&lt;code>final DefaultListeningIOReactor ioReactor =
 </span><span class='line'>  new DefaultListeningIOReactor(2, params);
 </span><span class='line'>// Spawns an IOReactor having two reactor threads
 </span><span class='line'>// running selectors. Number of threads here is
@@ -1444,13 +1264,10 @@ WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中�
 </span><span class='line'>
 </span><span class='line'>&lt;p>  }&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>  public static void main(String[] args)&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>throws IOReactorException {
-</span><span class='line'>new NHttpServer().start();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>  }&lt;/p>
+</span><span class='line'>&lt;p>  public static void main(String[] args)
+</span><span class='line'>    throws IOReactorException {
+</span><span class='line'>    new NHttpServer().start();
+</span><span class='line'>  }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>}&lt;/p>
 </span><span class='line'>
@@ -1491,17 +1308,11 @@ WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中�
 </span><span class='line'> public void requestReceived(
 </span><span class='line'>   NHttpServerConnection nHttpServerConnection) {&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p>   HttpRequest request =&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> nHttpServerConnection.getHttpRequest();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   if (request instanceof HttpEntityEnclosingRequest) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> // Handle POST and PUT requests
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   } else {&lt;/p>
+</span><span class='line'>&lt;p>   HttpRequest request =
+</span><span class='line'>     nHttpServerConnection.getHttpRequest();
+</span><span class='line'>   if (request instanceof HttpEntityEnclosingRequest) {
+</span><span class='line'>     // Handle POST and PUT requests
+</span><span class='line'>   } else {&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;pre>&lt;code> ContentOutputBuffer outputBuffer =
 </span><span class='line'>   new SharedOutputBuffer(
@@ -1552,33 +1363,22 @@ WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中�
 </span><span class='line'> }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p> @Override
-</span><span class='line'> public void inputReady(&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>NHttpServerConnection nHttpServerConnection,
-</span><span class='line'>ContentDecoder contentDecoder) {
-</span><span class='line'>// Handle request enclosed entities here by reading
-</span><span class='line'>// them from the channel
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p> }&lt;/p>
+</span><span class='line'> public void inputReady(
+</span><span class='line'>    NHttpServerConnection nHttpServerConnection,
+</span><span class='line'>    ContentDecoder contentDecoder) {
+</span><span class='line'>    // Handle request enclosed entities here by reading
+</span><span class='line'>    // them from the channel
+</span><span class='line'> }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p> @Override
-</span><span class='line'> public void responseReady(&lt;/p>
+</span><span class='line'> public void responseReady(
+</span><span class='line'>    NHttpServerConnection nHttpServerConnection) {&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>NHttpServerConnection nHttpServerConnection) {
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   try {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> nHttpServerConnection.close();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   } catch (IOException e) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> e.printStackTrace();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   }
+</span><span class='line'>&lt;p>   try {
+</span><span class='line'>     nHttpServerConnection.close();
+</span><span class='line'>   } catch (IOException e) {
+</span><span class='line'>     e.printStackTrace();
+</span><span class='line'>   }
 </span><span class='line'> }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p> @Override
@@ -1586,23 +1386,15 @@ WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中�
 </span><span class='line'>   NHttpServerConnection nHttpServerConnection,
 </span><span class='line'>   ContentEncoder encoder) {
 </span><span class='line'>   HttpContext context = nHttpServerConnection.getContext();
-</span><span class='line'>   ContentOutputBuffer outBuf =&lt;/p>
+</span><span class='line'>   ContentOutputBuffer outBuf =
+</span><span class='line'>    (ContentOutputBuffer) context.getAttribute(
+</span><span class='line'>      RESPONSE_SOURCE_BUFFER);&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code>(ContentOutputBuffer) context.getAttribute(
-</span><span class='line'>  RESPONSE_SOURCE_BUFFER);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   try {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> outBuf.produceContent(encoder);
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   } catch (IOException e) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> e.printStackTrace();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   }
+</span><span class='line'>&lt;p>   try {
+</span><span class='line'>     outBuf.produceContent(encoder);
+</span><span class='line'>   } catch (IOException e) {
+</span><span class='line'>     e.printStackTrace();
+</span><span class='line'>   }
 </span><span class='line'> }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p> @Override
@@ -1622,38 +1414,26 @@ WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中�
 </span><span class='line'>&lt;p> @Override
 </span><span class='line'> public void timeout(
 </span><span class='line'>   NHttpServerConnection nHttpServerConnection) {
-</span><span class='line'>   try {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> nHttpServerConnection.close();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   } catch (IOException e) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> e.printStackTrace();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   }
+</span><span class='line'>   try {
+</span><span class='line'>     nHttpServerConnection.close();
+</span><span class='line'>   } catch (IOException e) {
+</span><span class='line'>     e.printStackTrace();
+</span><span class='line'>   }
 </span><span class='line'> }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p> @Override
 </span><span class='line'> public void closed(
 </span><span class='line'>   NHttpServerConnection nHttpServerConnection) {
-</span><span class='line'>   try {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> nHttpServerConnection.close();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   } catch (IOException e) {&lt;/p>
-</span><span class='line'>
-</span><span class='line'>&lt;pre>&lt;code> e.printStackTrace();
-</span><span class='line'>&lt;/code>&lt;/pre>
-</span><span class='line'>
-</span><span class='line'>&lt;p>   }
+</span><span class='line'>   try {
+</span><span class='line'>     nHttpServerConnection.close();
+</span><span class='line'>   } catch (IOException e) {
+</span><span class='line'>     e.printStackTrace();
+</span><span class='line'>   }
 </span><span class='line'> }&lt;/p>
 </span><span class='line'>
 </span><span class='line'>&lt;p>}&lt;/p>
 </span><span class='line'>
-</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></notextile></div></p>
+</span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
 
 <p>IOReactor类将基础地包装了分配器定义，靠的是ServerHandler的实现来处理就绪事件。</p>
 
@@ -1664,7 +1444,7 @@ WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中�
 </ul>
 
 
-<p>（哎呀妈呀，作者话好多，不过很透彻，不得不服&mdash;54chen注～～54chen.com译）</p>
+<p>（哎呀妈呀，作者话好多，不过很透彻，不得不服&ndash;54chen注～～54chen.com译）</p>
 
 <p>IO上有许多的选项可以做，可影响到服务器的扩展性和性能。上面的每种IO都有利有弊，做决定时要考虑扩展性和性能特征，以及利于管理。得到结论，长篇一张关于IO。尽管提建议、改正和你想的评论。所有提及的clients代码都可以从这里下载。</p>
 

@@ -133,8 +133,8 @@
 <blockquote>[profile_demo]</blockquote></p>
 
 <p>ice.slice=/root/zhen.chen/example/demo.ice
-这两行的意思就是，增加一个ice的配置，名字是profile_demo，slice文件是&#8230;demo.ice
-<blockquote><span style="color: #008000;">PHP不能在一个php进程中同时调用多个的ice slice，只能通过在prop文件中写义不同的段，然后在php文件中使用类似Ice_loadProfile(&#8216;profile_demo&#8217;)来告诉ice这次访问是使用的哪一个slice文件，当然，不能在一个文件里同时有两个Ice_loadProfile的，如果有两个接口的调用需求，只能是通过前端的js来发起两次请求才行了。</span></blockquote>
+这两行的意思就是，增加一个ice的配置，名字是profile_demo，slice文件是...demo.ice
+<blockquote><span style="color: #008000;">PHP不能在一个php进程中同时调用多个的ice slice，只能通过在prop文件中写义不同的段，然后在php文件中使用类似Ice_loadProfile('profile_demo')来告诉ice这次访问是使用的哪一个slice文件，当然，不能在一个文件里同时有两个Ice_loadProfile的，如果有两个接口的调用需求，只能是通过前端的js来发起两次请求才行了。</span></blockquote>
 5.把上一节提到的demo.ice文件放到对应的<a href="http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/">目录</a>下</p>
 
 <p>到此，带有ICE的PHP环境建立完成。</p>
@@ -144,19 +144,19 @@
 
 <p>&lt;?php</p>
 
-<p>ini_set(&#8220;display_errors&#8221;, &#8220;1&#8221;);</p>
+<p>ini_set("display_errors", "1");</p>
 
 <p>global $ICE;</p>
 
-<p>Ice_loadProfile(&#8216;profile_demo&#8217;);</p>
+<p>Ice_loadProfile('profile_demo');</p>
 
 <p>try {</p>
 
-<p>$vBase = $ICE-&gt;stringToProxy ( &#8220;TestAdapter:default -p 10000&#8221; );</p>
+<p>$vBase = $ICE-&gt;stringToProxy ( "TestAdapter:default -p 10000" );</p>
 
-<p>$vManager = $vBase-&gt;ice_checkedCast ( &#8220;::Demo::test&#8221; );</p>
+<p>$vManager = $vBase-&gt;ice_checkedCast ( "::Demo::test" );</p>
 
-<p>$vProperties = $vManager-&gt;execute(&#8220;Hello &#8220;,&#8221; world!&#8221;);</p>
+<p>$vProperties = $vManager-&gt;execute("Hello "," world!");</p>
 
 <p>echo $vProperties;</p>
 

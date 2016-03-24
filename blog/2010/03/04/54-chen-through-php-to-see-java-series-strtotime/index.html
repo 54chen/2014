@@ -113,7 +113,7 @@
 
 <p>例子：
 <blockquote>&lt;?php<br />
-echo strtotime(&#8220;2010-3-3 3:3:3&#8221;);<br />
+echo strtotime("2010-3-3 3:3:3");<br />
 ?&gt;</blockquote></p>
 
 <p>将得到结果：</p>
@@ -123,7 +123,7 @@ echo strtotime(&#8220;2010-3-3 3:3:3&#8221;);<br />
 
 <p><strong>第二部分，看JAVA对应的方法</strong>
 <blockquote>try {<br />
-fromUnixTime = <span style="color: #ff0000;"><strong>new java.text.SimpleDateFormat(&#8220;dd/MM/yyyy HH:mm:ss&#8221;).parse(&#8220;01/03/2010 08:00:00&#8221;).getTime();</strong></span>
+fromUnixTime = <span style="color: #ff0000;"><strong>new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("01/03/2010 08:00:00").getTime();</strong></span>
 fromUnixTime /= 1000;<br />
 } catch (ParseException e1) {<br />
 e1.printStackTrace();<br />
@@ -134,10 +134,10 @@ e1.printStackTrace();<br />
 
 <p>先说PHP：
 <blockquote>&lt;?php<br />
-echo date(&#8220;Y-m-d H:i:s&#8221;,1267585383);<br />
+echo date("Y-m-d H:i:s",1267585383);<br />
 ?&gt;</blockquote>
 再说JAVA：
-<blockquote>String date2 = new java.text.SimpleDateFormat(&#8220;dd/MM/yyyy HH:mm:ss&#8221;).format(new Date ((<span style="color: #ff6600;">long</span>)1267585383*1000));<br />
+<blockquote>String date2 = new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date ((<span style="color: #ff6600;">long</span>)1267585383*1000));<br />
 System.out.println(date2);</blockquote>
 注意java中的强转为<a href="http://www.54chen.com/java-ee/java-using-the-bdb-notes-from-berkeley-db-java-api-records.html">long</a>不能丢，否则计算后结果不正确。</p>
  

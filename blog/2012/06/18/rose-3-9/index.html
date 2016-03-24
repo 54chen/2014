@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="3.9.1 其实很简单 添加依赖包:commons-io.jar html中使用 enctype=&#8221;multipart/form-data&#8221;,method=&#8221;POST&#8221; 直接看后端代码吧。 @Post(&#8220;/doUpload&#8221 &hellip;">
+  <meta name="description" content="3.9.1 其实很简单 添加依赖包:commons-io.jar html中使用 enctype="multipart/form-data",method="POST" 直接看后端代码吧。 @Post("/doUpload")&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -104,16 +104,16 @@
 <p><strong>3.9.1 其实很简单</strong></p>
 
 <p>    添加依赖包:commons-io.jar<br />
-    html中使用 enctype=&#8221;multipart/form-data&#8221;,method=&#8221;POST&#8221;<br />
+    html中使用 enctype="multipart/form-data",method="POST"<br />
     直接看后端代码吧。</p>
 
-<p>   <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Post</span><span>(</span><span class="string">&#8220;/doUpload&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;doUpload(</span><span class="annotation">@Param</span><span>(</span><span class="string">&#8220;file&#8221;</span><span>)&nbsp;MultipartFile&nbsp;file)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8221;@&nbsp;upload&nbsp;ok!&#8221;</span><span>&nbsp;+&nbsp;file.getOriginalFilename();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
+<p>   <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Post</span><span>(</span><span class="string">"/doUpload"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;doUpload(</span><span class="annotation">@Param</span><span>(</span><span class="string">"file"</span><span>)&nbsp;MultipartFile&nbsp;file)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@&nbsp;upload&nbsp;ok!"</span><span>&nbsp;+&nbsp;file.getOriginalFilename();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
 
 <p><strong>3.9.2 其他</strong></p>
 
 <p>    可以同时接收所有的文件</p>
 
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">//&nbsp;不声明@Param</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="comment">//&nbsp;files可以是一个数组或者List</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;String&nbsp;upload(MultipartFile[]&nbsp;files)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">&#8220;@ok-&#8221;</span><span>&nbsp;+&nbsp;Arrays.toString(files);&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">//&nbsp;不声明@Param</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="comment">//&nbsp;files可以是一个数组或者List</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;String&nbsp;upload(MultipartFile[]&nbsp;files)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@ok-"</span><span>&nbsp;+&nbsp;Arrays.toString(files);&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
 
 <p>    同时也可以使用@Param传递不同的name。
 </p>

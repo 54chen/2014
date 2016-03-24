@@ -10,7 +10,7 @@
 
   
   <meta name="description" content="3.B.1 SQLParam介绍：DAO方法传递参数 SQLParam作为DAO支持中的参数传递使者，可以传递一个常见的变量，也可以是一个自定义的对象。 比如：
-@SQL(&#8220;insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values& &hellip;">
+@SQL("insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -106,7 +106,7 @@
 
 <p>    SQLParam作为DAO支持中的参数传递使者，可以传递一个常见的变量，也可以是一个自定义的对象。<br />
     比如：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">&#8220;insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t.id,:t.msg)&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;t&#8221;</span><span>)&nbsp;Test&nbsp;test);&nbsp;&nbsp;</span></span></li></ol></div></p>
+<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t.id,:t.msg)"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"t"</span><span>)&nbsp;Test&nbsp;test);&nbsp;&nbsp;</span></span></li></ol></div></p>
 
 <p>    上列中Test对象通过t传递到sql执行中去，并且可以分别使用其中的属性。这感觉是不是很自然？</p>
 
@@ -119,7 +119,7 @@
 <p>    特别是使用mysql开发的广大劳苦大众，常常会使用到auto_increament的字段。<br />
     当一条insert语句在执行的时候，我们常常会去需要拿它的当前的自增id是多少。</p>
 
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@ReturnGeneratedKeys</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="annotation">@SQL</span><span>(</span><span class="string">&#8220;insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t.id,:t.msg)&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;t&#8221;</span><span>)&nbsp;Test&nbsp;test);&nbsp;&nbsp;</span></span></li></ol></div></p>
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@ReturnGeneratedKeys</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="annotation">@SQL</span><span>(</span><span class="string">"insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t.id,:t.msg)"</span><span>)&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"t"</span><span>)&nbsp;Test&nbsp;test);&nbsp;&nbsp;</span></span></li></ol></div></p>
 
 <p>    如上述代码所示，只需要加上一个@ReturnGeneratedKeys即可返回当前的id</p>
 
@@ -138,18 +138,18 @@
         连续的井号（##） 表示后面的变量作字符串连接<br />
         如下例中的partition变量，还请不要误解，分表不是这样做的，下一章会介绍标准的分表设置。</p>
 
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">&#8220;SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;LIMIT&nbsp;:limit&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTests(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;partition&#8221;</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;limit&#8221;</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit);&nbsp;&nbsp;</span></span></li></ol></div></p>
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;LIMIT&nbsp;:limit"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTests(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"limit"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit);&nbsp;&nbsp;</span></span></li></ol></div></p>
 
 <p>语法三：条件选择</p>
 
 <p>    井号if（#if{}）用于表示当条件满足时sql拼接。</p>
 
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">&#8220;SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;#if(:user&gt;0){&nbsp;where&nbsp;user_id=:user&nbsp;}&nbsp;LIMIT&nbsp;:limit&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsIf(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;partition&#8221;</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;limit&#8221;</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;user&#8221;</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;user);&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;#if(:user&gt;0){&nbsp;where&nbsp;user_id=:user&nbsp;}&nbsp;LIMIT&nbsp;:limit"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsIf(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"limit"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"user"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;user);&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
 
 <p>    其他语法：还有for循环，实际使用少。<br />
     典型地，一般的select in查询，可以直接传入list，例如下例中的ids变量：</p>
 
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">&#8220;SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;where&nbsp;user_id&nbsp;in(:ids)&#8221;</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsByIds(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;partition&#8221;</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">&#8220;ids&#8221;</span><span>)&nbsp;List&lt;Integer&gt;&nbsp;ids);&nbsp;&nbsp;</span></span></li></ol></div></p>
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;where&nbsp;user_id&nbsp;in(:ids)"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsByIds(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"ids"</span><span>)&nbsp;List&lt;Integer&gt;&nbsp;ids);&nbsp;&nbsp;</span></span></li></ol></div></p>
 
 <p>文中所提及代码均在<a href=" https://github.com/XiaoMi/rose/tree/master/rose-example"> https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
 常年更新版本在：<a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a></p>

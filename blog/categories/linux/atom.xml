@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Linux | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/linux/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-02-02T12:01:13+08:00</updated>
+  <updated>2016-03-24T21:18:45+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -30,10 +30,10 @@
 <blockquote><p>设置/etc/pptpd.conf中的localip与remoteip，分别表示虚拟出来的双方ip范围。
 <br>设置/etc/ppp/chap-secrets中的用户名密码和连接ip等。
 <br>service pptpd start
-<br>iptables -A FORWARD -p tcp &mdash;syn -s 172.16.36.0/24 -j TCPMSS &mdash;set-mss 1356</p></blockquote></li>
+<br>iptables -A FORWARD -p tcp &ndash;syn -s 172.16.36.0/24 -j TCPMSS &ndash;set-mss 1356</p></blockquote></li>
 <li><p>client上apt-get install安装的pptpsetup，设置好用户名密码，启动vpn连接。</p>
 
-<blockquote><p>/usr/sbin/pptpsetup &mdash;create vpn &mdash;server <em>.</em>.<em>.</em>(server ip) &mdash;username vpn &mdash;password ASDF &mdash;encrypt &mdash;start</p></blockquote></li>
+<blockquote><p>/usr/sbin/pptpsetup &ndash;create vpn &ndash;server <em>.</em>.<em>.</em>(server ip) &ndash;username vpn &ndash;password ASDF &ndash;encrypt &ndash;start</p></blockquote></li>
 <li><p>pptpd v1.4.0</p></li>
 </ul>
 
@@ -351,18 +351,15 @@ char buffer[6]; </p>
 
 
 <p><p>void loop(){<br />
-  if(Serial.available() > 0){<br /></p>
-
-<pre><code>inByte = Serial.read();&lt;br /&gt;
-if(inByte == '#'){&lt;br /&gt;
-  while(pointer &lt; 5){&lt;br /&gt;
-    buffer[pointer] = Serial.read();&lt;br /&gt;
-  }&lt;br /&gt;
-}&lt;br /&gt;
-digitalWrite(LED,HIGH);&lt;br /&gt;
-</code></pre>
-
-<p>  }<br />
+  if(Serial.available() > 0){<br />
+    inByte = Serial.read();<br />
+    if(inByte == &lsquo;#&rsquo;){<br />
+      while(pointer &lt; 5){<br />
+        buffer[pointer] = Serial.read();<br />
+      }<br />
+    }<br />
+    digitalWrite(LED,HIGH);<br />
+  }<br />
 }</p></p>
 
 <p><p>连线：<br />

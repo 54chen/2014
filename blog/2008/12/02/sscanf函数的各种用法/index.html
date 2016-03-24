@@ -13,9 +13,9 @@
 int sscanf( 
 const char *buffer, 
 const char *format [, 
-argument ] &#8230; 
+argument ] ... 
 ); 
-它强大的功能体现在对format的支持上。  sscanf与scanf类似， &hellip;">
+它强大的功能体现在对format的支持上。  sscanf与scanf类似，都是用于输入的， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -111,25 +111,25 @@ argument ] &#8230; 
 int sscanf( <br />
 const char *buffer, <br />
 const char *format [, <br />
-argument ] &#8230; <br />
+argument ] ... <br />
 ); <br />
 它强大的功能体现在对format的<a href="http://www.54chen.com/c/132">支持</a>上。 </p>
 
 <p>sscanf与scanf类似，都是用于<a href="http://www.54chen.com/c/75">输入</a>的，只是后者以屏幕(stdin)为输入源，前者以固定字符串为输入源。 
 <blockquote>　   char str[512] = ; <br />
-　　sscanf(&#8220;123456 &#8221;, &#8221;%s&#8221;, str); <br />
-　　printf(&#8220;str=%s&#8221;, str);</blockquote>
+　　sscanf("123456 ", "%s", str); <br />
+　　printf("str=%s", str);</blockquote>
 <a href="http://www.54chen.com/c/61">输出</a> str=123456
-<blockquote>　   sscanf(&#8220;123456 &#8221;, &#8221;%4s&#8221;, str); <br />
-　　printf(&#8220;str=%s&#8221;, str);</blockquote>
+<blockquote>　   sscanf("123456 ", "%4s", str); <br />
+　　printf("str=%s", str);</blockquote>
 输出 str = 1234
-<blockquote>　　sscanf(&#8220;123456 abcdedf&#8221;, &#8221;%[^ ]&#8221;, str); <br />
-　　printf(&#8220;str=%s&#8221;, str);</blockquote>
+<blockquote>　　sscanf("123456 abcdedf", "%[^ ]", str); <br />
+　　printf("str=%s", str);</blockquote>
 输出 str=123456 (遇到<a href="http://www.54chen.com/c/22">空格</a>为止)
-<blockquote>　　sscanf(&#8220;123456abcdedfBCDEF&#8221;, &#8221;%[^A-Z]&#8221;, str); <br />
-　　printf(&#8220;str=%s&#8221;, str);</blockquote>
+<blockquote>　　sscanf("123456abcdedfBCDEF", "%[^A-Z]", str); <br />
+　　printf("str=%s", str);</blockquote>
 输出 str=123456abcdef (遇到指定<a href="http://www.54chen.com/c/22">字符</a>为止)
-<blockquote>sscanf(mod, &#8220;%s&#8221;, mod);//去除空格</blockquote>
+<blockquote>sscanf(mod, "%s", mod);//去除空格</blockquote>
 </p>
  
 <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
