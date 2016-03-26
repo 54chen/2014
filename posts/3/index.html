@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="安全无小事－－技术团队防守一二三 事情的经过是这样的： 那天在使用某创业团队的APP时，输入完了微博账号还需要他自己的账号，于是就发了条微博， 然后就有人@我是不是在说小米被脱库的事。。。呵呵！ 这里要讨论的是，如何让数千计的开发人员在安全防守安全编程上，得到有效的效果。有人说，我干了xx年， &hellip;">
+  <meta name="description" content="Thrift版本升级调查记录 自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。 代码位置：https:// &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/28/thrift-upgrade/">Thrift版本升级调查记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-28T16:59:27+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg></p>
+
+<p>自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。</p>
+
+<p>代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
+
+<h1>第一轮：编译阶段</h1>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/28/thrift-upgrade/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -534,51 +581,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/03/05/ihaveadream/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/26/nginx-upstream-1-dot-0-to-1-dot-1/">更新nginx版本upstream升级http1.1解决多TIME_WAIT问题</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-26T10:27:02+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><h2>前情提要</h2>
-
-<p>在使用java web container的时候，我们都在前面挡一层nginx，方便使用各种nginx的功能，设置成代理。
-访问特别多的时候发现，服务器上存在大量的TIME_WAIT状态的连接。
-经分析，可能是nginx早期版本的upstream还是使用的1.0的短连接代理，java container老是以1.0的方式主动断开进入TIME_WAIT状态，浪费了大量的连接。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/02/26/nginx-upstream-1-dot-0-to-1-dot-1/">Read on &rarr;</a>
     </footer>
   
 

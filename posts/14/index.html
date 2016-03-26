@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-01-15 http://t.co/OQzzjGtA 有亮点，雷倒了吗？ #
-描述性工作流程是指大多数技术人员不愿意写wiki，只愿意口口相传。必须要写下来才会沉淀。我们团队写wiki标准为“如果你成长了就写下来”。 #
-在facebook， &hellip;">
+  <meta name="description" content="服务接入层小结 接入层
+是指普通用户与核心业务逻辑中间的过程。现在常见的服务接入层，像nginx、lvs、php这些都可以算是。 观点
+一种观点认为：接入的量不应该影响系统的正常运行，也就是不能接入不能处理的用户请求，类似上图中前图。
+另一种观点认为：接入层应该尽量接入所有用户，类似上图中后图 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +76,89 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/18/access-layer/">服务接入层小结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-01-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2evmjXahaXXXXXXXX_!!13078490.jpg" alt="access,layer" width="500/" />
+<strong>接入层</strong>
+是指普通用户与核心业务逻辑中间的过程。现在常见的服务接入层，像nginx、lvs、php这些都可以算是。</p>
+
+<p><strong>观点</strong>
+一种观点认为：接入的量不应该影响系统的正常运行，也就是不能接入不能处理的用户请求，类似上图中前图。<br />
+另一种观点认为：接入层应该尽量接入所有用户，类似上图中后图。</p>
+
+<p><strong>做法</strong>
+nginx：<br />
+nginx如果用做proxy，后端挂其他服务的话，是一个纯粹的NIO server。对用户来说，nginx是长连接（http 1.1），对后端服务来说，nginx是短连接（http 1.0）。</p>
+
+<p><blockquote>default: proxy_connect_timeout 60s; 向后端服务创建连接的超时时间<br />
+default: proxy_read_timeout 60s; 后端返回请求响应超时时间<br />
+default: proxy_send_timeout 60s; 大请求发到后端超时时间</blockquote></p>
+
+<p>nginx通过上面的三个设置，当后端有响应不过来的时候，进行超时处理（记录日志），当发现超时很多了，就需要提升后端的处理能力了。</p>
+
+<p>那么，nginx自身的处理能力是否有上限呢？当然有!</p>
+
+<p><blockquote>worker_processes  1;<br />
+worker_connections  1024;</blockquote></p>
+
+<p>max_clients = worker_processes * worker_connections </p>
+
+<p>当超过max_clients的用户扑上来的时候，如果幸运后端没有能力问题，那就会看到nginx在日志中要求你增加worker的提示。</p>
+
+<p>php-fpm：</p>
+
+<p><blockquote>pm = dynamic/static; dynamic时有最大进程最小进程之说，static时没有。只有一个上限。<br />
+pm.max_children = 50;强制的一个阀门，后面的设置里，进程数不能大于这个。<br />
+pm.start_servers = 20;启动时启动的fastcgi进程。<br />
+pm.min_spare_servers = 5;最小fastcgi进程数量，dynamic有效<br />
+pm.max_spare_servers = 35;最大fastcgi进程数量，dynamic有效</blockquote></p>
+
+<p>php没有异步进程概念，如果要使用php作为接入层，需要自己完成NIO扩大接入能力（接触到的ICE、thrift在php中都是同步操作）。而接入能力就取决于上面的配置。</p>
+
+<p>java:<br />
+java优秀的NIO框架netty。<br />
+servlet3.0实现了异步请求的context，目前还没有在平常框架中进行使用。一般的用法为comet push server，性能未知。<br />
+一般来说，用java做接入层很容易变成了业务层。（但是，为什么不呢？）</p>
+
+<p><blockquote>tomcat 7.0.x提供了servlet3.0的这一特性，CometProcessor interface。<br />
+resin 4.x提供了servlet3.0的这一特性，GenericCometServlet。</blockquote></p>
+
+<p>从名字看，大家都一致性地认为这一特性适合用来做comet server。（理论上可接入无限用户，直到费尽cpu、内存，服务器死机、jvm oom）</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -635,46 +719,6 @@ leveldb适用于大量的key。
 1cpu 8G的机器3个 笔记本运行压力程序 读写比3:1 6并发 1k大小的value  <br />
 PB：2500ops  99.9%的操作在22ms内。<br />
 HTTP: 1000ops  99.9%的操作在30ms内。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/12/18/54chen-twitter-memo-2011-12-18/">54chen Twitter Memo 2011-12-18</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-12-18T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-maven插件编写实例 </ul><a href="http://t.co/S3mz5O7P" rel="nofollow">http://t.co/S3mz5O7P</a> <a href="http://twitter.com/54chen/statuses/146932419235282944" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-12-11 <a href="http://t.co/lOQ3IFaz" rel="nofollow">http://t.co/lOQ3IFaz</a> <a href="http://twitter.com/54chen/statuses/145682264553037824" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   

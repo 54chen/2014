@@ -9,7 +9,12 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="开业大吉-上海滩英文恶搞版  大部分同志已经开始结束春节大假了，新年新开始，愿开业大吉如狂奔大海，一曲英文版 上海滩 送给大家。   春晚的魔术揭秘 魔术这东西知道真像就不好玩了,如果你没有像我一样探查世界真理的精神,那还是不要知道怎么样实现的为妙,知道了就感觉被骗了. 1.橡皮筋 个人认为, &hellip;">
+  <meta name="description" content="Php正则表达式常见 Regex 操作符清单 php的正则表达式反馈了php的功力，下面是操作符的清单，常备重要哦。。。 操作符
+用途 .（句点）
+匹配所有单个字符 ^（脱字符号）
+匹配出现在行或字符串开头的空字符串 $（美元符号）
+匹配出现在行尾的空字符串 A
+匹配大写字母 A a &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +78,113 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/02/06/php%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%B8%B8%E8%A7%81-regex-%E6%93%8D%E4%BD%9C%E7%AC%A6%E6%B8%85%E5%8D%95/">Php正则表达式常见 Regex 操作符清单</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-02-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>php的正则<a href="http://www.54chen.com/c/75">表达式</a>反馈了<a href="http://www.54chen.com/c/157">php</a>的功力，下面是操作符的清单，常备重要哦。。。
+<table class="data-table-2" border="0" cellspacing="0" cellpadding="0" summary="Common regex operators">
+<tbody>
+<tr>
+<th scope="col">操作符</th>
+<th scope="col">用途</th>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">.（句点）</th>
+<td>匹配所有单个字符</td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">^（脱字符号）</th>
+<td>匹配出现在行或字符串开头的空字符串</td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">$（美元符号）</th>
+<td>匹配出现在行尾的空字符串</td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">A</th>
+<td>匹配大写字母 <em>A</em></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">a</th>
+<td>匹配小写字母 <em>a</em></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">\d</th>
+<td>匹配所有一位数字</td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">\D</th>
+<td>匹配所有单个非数字字符</td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">\w</th>
+<td>匹配所有单个字母或数字字符；同义词是 <code>[:alnum:]</code></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">[A-E]</th>
+<td>匹配所有大写的 <em>A、B、C、D</em> 或 <em>E</em></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">[^A-E]</th>
+<td>匹配<strong>除</strong>大写 <em>A、B、C、D</em> 或 <em>E</em> 之外的任何字符</td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">X?</th>
+<td>匹配出现零次或一次的大写字母 <em>X</em></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">X*</th>
+<td>匹配零个或多个大写字母 <em>X</em></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">X+</th>
+<td>匹配一个或多个大写字母 <em>X</em></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">X{n}</th>
+<td>精确匹配 <em>n</em> 个大写字母 <em>X</em></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">X{n,m}</th>
+<td>至少匹配 <em>n</em> 个且不多于 <em>m</em> 个大写字母 <em>X</em>；如果忽略 <em>m</em>，则表达式将尝试匹配至少 <em>n</em> 个 <em>X</em></td>
+</tr>
+<tr>
+<th class="tb-row" align="left" scope="row">(abc|def)+</th>
+<td>匹配一连串的（最少一个）<em>abc</em> 和 <em>def</em>；<em>abc</em> 和 <em>def</em> 将<a href="http://www.54chen.com/c/19">匹配</a></td>
+</tr>
+</tbody></table></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -854,48 +966,6 @@ chkconfig --level 2345 ntpd on</p>
 <p class="MsoNormal"><span lang="EN-US"><span>1.<span>         </span></span></span><span lang="EN-US">Hadoop</span><span>项目主页：</span><span lang="EN-US"><a href="http://hadoop.apache.org/">http://hadoop.apache.org/</a></span></p>
 <p class="MsoNormal"><span lang="EN-US"><span>2.<span>         </span></span></span><span>更多的</span><span lang="EN-US">Hadoop</span><span>应用案例：</span><span lang="EN-US"><a href="http://wiki.apache.org/hadoop/PoweredBy">http://wiki.apache.org/hadoop/PoweredBy</a></span></p>
 <p class="MsoNormal"><span lang="EN-US"><span>3.<span>         </span></span></span><span lang="EN-US">Yahoo</span><span>！</span><span lang="EN-US">Hadoop</span><span>研发团队的</span><span lang="EN-US">Blog</span><span>：</span><span lang="EN-US"><a href="http://developer.yahoo.com/blogs/hadoop">http://developer.yahoo.com/blogs/hadoop</a></span></p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/01/12/%E5%8F%B0%E6%B9%BE%E7%9A%84%E9%9B%B6%E8%9B%8B%E6%9C%88%E5%8F%B0/">台湾的零蛋月台</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-01-12T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><a href="http://www.54chen.com/c/230">搜索一下</a>“零蛋”搜索出来的照片，很拉风的样子，向作者致敬，不知道这简体台湾同胞看得懂不。</p>
-
-<p>一二三 到臺灣 臺灣有個阿里山</p>
-
-<p>有图为证。</p>
-
-<p><a href="http://www.54chen.com/wp-content/uploads/2009/01/3024624937_76d9b601a3.jpg"><img class="alignnone size-full wp-image-396" title="3024624937_76d9b601a3" src="http://www.54chen.com/wp-content/uploads/2009/01/3024624937_76d9b601a3.jpg" alt="" width="411" height="500" border="0" /></a></p>
 </div>
   
   

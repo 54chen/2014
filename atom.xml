@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-03-25T20:34:14+08:00</updated>
+  <updated>2016-03-26T09:44:30+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,78 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[54chen的程序人生]]></title>
+    <link href="http://2014.54chen.com/blog/2016/03/26/my-code/"/>
+    <updated>2016-03-26T08:03:08+08:00</updated>
+    <id>http://2014.54chen.com/blog/2016/03/26/my-code</id>
+    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://chen54.b0.upaiyun.com/css/write-code.jpg></p>
+
+<p>前些天看到了老板的二十年前的文章《程序人生》，地址在这里 <a href="http://t.cn/RqPJYHU">http://t.cn/RqPJYHU</a> ，深有感触，于是也萌发了写一写的想法，看看二十年后，自己的认识是否会有所改变，当然了，即便作为职业码农近十年，很多观点依然不能构成一种完整且保证正确的人生观。</p>
+
+<h2>题记</h2>
+
+<p>如果一定要用几个词来形容程序员的人生观，我想那应该是：坚定、乐观、冷静、钻研。</p>
+
+<h2>坚定</h2>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">如果不能坚定地知道自己喜欢计算机这个事情</span><span class="err">，</span><span class="n">早就干点别的什么去了</span><span class="err">，</span><span class="n">码农这个事情常人看来无味极了</span><span class="err">。</span></code></pre></div>
+
+
+<p>与上一辈程序员相比，时代留给这一辈的机会不同，裕兴、小霸王、步步高成为我们很早就启蒙计算机知识的最佳方式，从小学或者初中起，脑洞大开。</p>
+
+<p>在接触过的好朋友中，凡是从小接触计算机的，在初中高中已经基本可以独立完成一些诸如pascal\c\basic\asp之类的流行技能。他们大多干过如下的事情：1.做个人网站 2.帮教务处做报课系统 3.维护学校bbs（当然了，雷老板是这事情的笔祖了） 4.接些外包小系统赚点外快。</p>
+
+<!--more-->
+
+
+<p>上述这些枯燥的事情中，每件事情，都需要投入极大的兴趣，不计得失，才能取得一点点的成就感。如果没有坚定的想法，多半都半途而废了。</p>
+
+<h2>乐观</h2>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">如果不是乐观的态度</span><span class="err">，</span><span class="n">早被遇到的困难和歧视折磨死了</span><span class="err">。</span></code></pre></div>
+
+
+<p>一个同学，在大连做外包行业的开发工作，毕业后干了两年到了结婚生子的年龄了，什么积蓄也没有，对整个行业失望至极，完全没有方向，回家随便找了个商场当起了销售员。</p>
+
+<p>比起老板阳春白雪的干上一辈子程序的想法，更多看到的是程序员还在温饱线上挣扎的现实。</p>
+
+<p>别说是国内流行的35岁前转管理岗这种说法，光是吃不饱一个问题，不够乐观的程序员，早就已经放弃了这个行业。</p>
+
+<p>对于乐观的人来说，这些都不是事。十年前我在金山实习的时候，工资才够付房租，吃饭还得想办法[笑cry]。</p>
+
+<h2>冷静</h2>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">遇到困难</span><span class="err">，</span><span class="n">冷静地战胜困难</span><span class="err">，</span><span class="n">是程序员的兴奋点</span><span class="err">。</span></code></pre></div>
+
+
+<p>有很多事情，程序员并不担心，这是思维上的习惯。</p>
+
+<p>曾经有过这样的同事，遇到bug找不出来，急得像热锅上的蚂蚁，思维已经完全顾不上想解决的办法，只剩下着急。</p>
+
+<p>如果不够冷静，只会让事情更糟。</p>
+
+<h2>钻研</h2>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="n">浪费一次调查到问题根本原因的机会</span><span class="err">，</span><span class="n">就是浪费生命</span><span class="err">。</span></code></pre></div>
+
+
+<p>这是职业习惯，许多时候程序员要靠这种钻研的过程来吸收新的知识。</p>
+
+<p>许多人反而容易放弃一次可以轻松得到的学习机会，认为很多问题出现了，可能是什么什么原因，然后就结束了。</p>
+
+<p>钻研的习惯要靠很多年才能养成，还要花费大量的时间和精力，要成为人生观的一项，很是艰难。</p>
+
+<p>但在程序员的人生观里，这都是很正常的事情。</p>
+
+<h2>结语</h2>
+
+<p>与老板的程序人生相比，本文主要是说的一个纯粹程序员的人生观。然而，要在中国社会立足，专业的程序员肯定不如专业的企业家或者小老板靠谱。</p>
+
+<p>所以，摆在程序员面前的两条路：1.用专业的程序员态度慢慢积累财富，离开这个国家，去物质丰富的发达国家继续程序人生。2.用我老板的程序人生思路，不要沉浸在程序员的世界里，抬头看看社会需要什么，约三五好友，完成需求，转而进入了"企业家程序人生"行列。</p>
+ <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[C++ Protobuf中set_allocated引起的double Free Core Dump]]></title>
@@ -1951,71 +2023,6 @@ int i = sc.read(buff)</p></blockquote>
 <li>http streaming = http chunked encoding = http keepalive = http 1.1</li>
 </ul>
 
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Thrift版本升级调查记录]]></title>
-    <link href="http://2014.54chen.com/blog/2014/05/28/thrift-upgrade/"/>
-    <updated>2014-05-28T16:59:27+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/05/28/thrift-upgrade</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg></p>
-
-<p>自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。</p>
-
-<p>代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
-
-<h1>第一轮：编译阶段</h1>
-
-<!--more-->
-
-
-<h2>1.jar包为0.9.1的libthrift，cli为0.5.0的thrift。</h2>
-
-<p>gen-java生成，编译失败。</p>
-
-<h2>2.修正为0.9.1 libthrift和thrift cli。</h2>
-
-<p>gen-java生成，编译成功。</p>
-
-<h2>3.修正为0.5.0 libthrift和thrift cli。</h2>
-
-<p>gen-java生成，编译成功。</p>
-
-<h1>第二轮：交叉调用</h1>
-
-<ul>
-<li>client 0.9.1 -> server 0.5.0 一切正常</li>
-<li>client 0.5.0 -> server 0.9.1 一切正常</li>
-</ul>
-
-
-<h1>第三轮：server包不对</h1>
-
-<ul>
-<li>server0.9.1 替换jar为0.5.0 libthrift : server启动失败 Caused by: java.lang.ClassNotFoundException: org.apache.thrift.TBaseProcessor</li>
-<li>server0.5.0 替换jar为0.9.1 libthrift : server启动失败 java.lang.NoSuchMethodError: org.apache.thrift.server.TThreadPoolServer</li>
-</ul>
-
-
-<h1>第四轮：client包不对</h1>
-
-<ul>
-<li>client0.9.1 jar为0.5.0 : client启动失败 java.lang.IncompatibleClassChangeError: class com.xiaomi.miliao.thrift.Hello$Client has interface org.apache.thrift.TServiceClient as super class</li>
-<li>client0.5.0 jar为0.9.1 : client启动失败 java.lang.IncompatibleClassChangeError: Implementing class</li>
-</ul>
-
-
-<h1>结论党</h1>
-
-<ul>
-<li>thrift协议层不会有因为thrift升级而造成的版本的问题。</li>
-<li>thrift多个版本的client无法同时存在。</li>
-<li>thrift多个版本的server也无法同时存在。</li>
-</ul>
-
-
-<p>测试代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
   </entry>
   

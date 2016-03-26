@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-04-18 50亿 吓我一跳 原来是从上衣口袋换到了裤子口袋里了 # 哥学社成立一周,http://tinyurl.com/ye3oqay 已经参加的哥有：腾讯深大、百度鸟哥、盛大坦克、人人网54chen、新浪小Z、奇虎虫zi、 &hellip;">
+  <meta name="description" content="PHP上传进度条深度解析 随着互联网的发展，越来越多的技术开始注重用户体验，以人为本才是长久之道，于是在上传的时候，大家都不再满足一个单一的“浏览”按钮，纷纷推出了带上传进度条的功能。而作为解释型语言的PHP，如何做到对上传文件的检测，如何实现上传进度条以其背后的原理， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,250 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/04/18/php-upload-progress/">PHP上传进度条深度解析</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-04-18T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>随着互联网的发展，越来越多的技术开始注重用户体验，以人为本才是长久之道，于是在上传的时候，大家都不再满足一个单一的“浏览”按钮，纷纷推出了带上传进度条的功能。而作为解释型语言的PHP，如何做到对上传文件的检测，如何实现上传进度条以其背后的原理，54chen将在本文中一步步展开。</p>
+
+<p><strong>一. 实现篇</strong></p>
+
+<p>一般情况，用PHP实现上传进度条就下面两种方法：</p>
+
+<p>1.APC扩展（作者是PHP的创始人，5.2后PHP已经加入APC扩展）</p>
+
+<p>2.PECL扩展模块 uploadprogress</p>
+
+<p>不论是APC还是uploadprogress，都需要编译源码，因为原有的PHP函数根本不可能读取到临时文件夹里的东西。下面来看如何使用以及关键的代码：
+<div id="_mcePaste"><strong>APC实现方法:</strong></div>
+<div id="_mcePaste">1.安装APC</div>
+<div id="_mcePaste">2.配置php.ini，设置参数 apc.rfc1867=1</div>
+<div id="_mcePaste">3.关键代码：</div>
+<blockquote>
+<div id="_mcePaste">if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //上传请求</div>
+<div id="_mcePaste">$status = apc_fetch('upload_' . $_POST['APC_UPLOAD_PROGRESS']);</div>
+<div id="_mcePaste">$status['done'] = 1;</div>
+<div id="_mcePaste">echo json_encode($status);  //输出给用户端页面里的ajax调用，相关文档请自己寻找</div>
+<div id="_mcePaste">exit;</div>
+<div id="_mcePaste">} elseif (isset($_GET['progress_key'])) {   //读取上传进度</div>
+<div id="_mcePaste">$status = <span style="color: #ff0000;">apc_fetch</span>('upload_'.$_GET['progress_key']);</div>
+<div id="_mcePaste">echo json_encode($status);</div>
+<div id="_mcePaste">exit;</div>
+<div id="_mcePaste">}</div></blockquote>
+<div id="_mcePaste"><strong>uploadprogress实现方法：</strong></div>
+<div id="_mcePaste">1.使用PECL 安装uploadprogress</div>
+<div id="_mcePaste">2.php.ini里面设置 uploadprogress.file.filename_template = “/tmp/upd_%s.txt”</div>
+<div id="_mcePaste">3.关键代码：</div>
+<blockquote>
+<div id="_mcePaste">if($_SERVER['REQUEST_METHOD']=='POST') {</div>
+<div id="_mcePaste">if (is_uploaded_file($_FILES['upfile']['tmp_name'])) {</div>
+<div id="_mcePaste">$upload_dir = 'your_path/';</div>
+<div id="_mcePaste">$ext        = strrchr($_FILES['video']['name'], '.');</div>
+<div id="_mcePaste">$sessid     = $_POST['UPLOAD_IDENTIFIER'] ;</div>
+<div id="_mcePaste">$tmpfile    = $upload_dir . $sessid;</div>
+<div id="_mcePaste">$sessfile   = $upload_dir . $sessid .$ext;</div>
+<div id="_mcePaste">if (move_uploaded_file($_FILES['upfile']['tmp_name'],$tmpfile)) {</div>
+<div id="_mcePaste">//上传成功</div>
+<div id="_mcePaste">}</div>
+<div id="_mcePaste">}</div>
+<div id="_mcePaste">} elseif (!empty($_GET['sessid'])) {</div>
+<div id="_mcePaste">header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");</div>
+<div id="_mcePaste">header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");</div>
+<div id="_mcePaste">header("Cache-Control: no-store, no-cache, must-revalidate");</div>
+<div id="_mcePaste">header("Cache-Control: post-check=0, pre-check=0", false);</div>
+<div id="_mcePaste">header("Pragma: no-cache");</div>
+<div id="_mcePaste">header("Content-Type:text/html;charset=UTF-8");</div>
+<div id="_mcePaste">$unique_id = $_GET['sessid'];</div>
+<div id="_mcePaste">$uploadvalues = <span style="color: #ff0000;">uploadprogress_get_info</span>($unique_id);</div>
+<div id="_mcePaste">if (is_array($uploadvalues)) {</div>
+<div id="_mcePaste">echo json_encode($uploadvalues);</div>
+<div id="_mcePaste">} else {</div>
+<div id="_mcePaste">//读取进度失败，另外处理逻辑</div>
+<div id="_mcePaste">}</div>
+<div id="_mcePaste">}</div></blockquote>
+<strong>二. 原理篇 </strong></p>
+
+<p>注意上一篇中的红色函数。</p>
+
+<p>下载到uploadprogress1.0.1进行源码分析，在代码中作了注释。
+<blockquote>static void uploadprogress_file_php_get_info(char * id, zval * return_value)</blockquote></p>
+
+<p>{</p>
+
+<p>char s[1024];</p>
+
+<p>char * filename;</p>
+
+<p>char * template;</p>
+
+<p>FILE *F;</p>
+
+<p>TSRMLS_FETCH();</p>
+
+<p>template = INI_STR("uploadprogress.file.filename_template"); <span style="color: #008000;">&lt;&lt;这里读取设置好的模板</span></p>
+
+<p>if (strcmp(template, "") == 0)  {</p>
+
+<p>return;</p>
+
+<p>} else {</p>
+
+<p>filename = uploadprogress_mk_filename( id, template );<span style="color: #008000;">&lt;&lt;&lt;存在的话，会创建</span></p>
+
+<p>if (!filename) return;</p>
+
+<p>F = VCWD_FOPEN(filename, "rb");</p>
+
+<p>if (F) {</p>
+
+<p>array_init(return_value);</p>
+
+<p>while ( fgets(s, 1000, F) ) {<span style="color: #008000;">&lt;&lt;&lt;从流中读取一字符串 *s结果数据的首地址；1000-1:一次读入数据块的长度,其默认值为1k，即1024;F文件指针</span></p>
+
+<p>char *k, *v, *e;</p>
+
+<p>int index = 0;</p>
+
+<p>e = strchr(s,'='); <span style="color: #008000;">&lt;&lt;&lt;查找字符串s中首次出现字符=的位置</span></p>
+
+<p>if (!e) continue;</p>
+
+<p>*e = 0; /* break the line into 2 parts */</p>
+
+<p>v = e+1;</p>
+
+<p>k = s;</p>
+
+<p>/* trim spaces in front of the name/value */</p>
+
+<p>while (*k &amp;&amp; *k &lt;= 32) k++;</p>
+
+<p>while (*v &amp;&amp; *v &lt;= 32) v++;</p>
+
+<p>/* trim spaces everywhere in the name */</p>
+
+<p>for (e=k; *e; e++) if (*e &lt;= 32) { *e = 0; break; }</p>
+
+<p>/* trim spaces only at the end of the value */</p>
+
+<p>/* http://pecl.php.net/bugs/bug.php?id=14525 */</p>
+
+<p>//for (e=v; *e; e++) if (*e &lt;= 32) { *e = 0; break; }</p>
+
+<p>if (v != NULL) {<span style="color: #008000;">&lt;&lt;&lt;当文件有内容时</span></p>
+
+<p>for (index = strlen(v); index &gt; 0; index--) {</p>
+
+<p>if (v[index] &gt; 32) break;<span style="color: #008000;">&lt;&lt;&lt;累计</span></p>
+
+<p>v[index] = 0;</p>
+
+<p>}</p>
+
+<p>}</p>
+
+<p>add_assoc_string( return_value, k, v, 1 );</p>
+
+<p>}</p>
+
+<p>fclose(F);</p>
+
+<p>}</p>
+
+<p>if (filename) efree(filename);</p>
+
+<p>return;</p>
+
+<p>}</p>
+
+<p>}
+在源码中还能发现:
+<blockquote>PHP_MINIT_FUNCTION(uploadprogress)</blockquote></p>
+
+<p>{</p>
+
+<p>REGISTER_INI_ENTRIES();</p>
+
+<p>php_rfc1867_callback = uploadprogress_php_rfc1867_file;</p>
+
+<p>return SUCCESS;</p>
+
+<p>}
+在MINIT中修改了php_rfc1867_callback，抽取uploadprogress_php_rfc1867_file的关键代码：
+<blockquote>upload_id = emalloc(strlen(*e_data-&gt;value) + 1);</blockquote></p>
+
+<p>strcpy(upload_id, *e_data-&gt;value);</p>
+
+<p>progress-&gt;upload_id = upload_id;</p>
+
+<p>progress-&gt;time_last  = time(NULL);</p>
+
+<p>progress-&gt;speed_average  = 0;</p>
+
+<p>progress-&gt;speed_last     = 0;</p>
+
+<p>progress-&gt;bytes_uploaded = read_bytes;</p>
+
+<p>progress-&gt;files_uploaded = 0;</p>
+
+<p>progress-&gt;est_sec        = 0;</p>
+
+<p>progress-&gt;identifier = uploadprogress_mk_filename(upload_id, template);<span style="color: #008000;">&lt;&lt;&lt;在指定的模板位置放下了临时文件</span></p>
+
+<p>progress-&gt;identifier_tmp = emalloc(strlen( progress-&gt;identifier) + 4);</p>
+
+<p>sprintf( progress-&gt;identifier_tmp, "%s.wr", progress-&gt;identifier );
+关于php_rfc1867_callback是什么，可以看哥学社另一哥鸟哥的分析 <a href="http://www.laruence.com/2008/11/07/586.html">http://www.laruence.com/2008/11/07/586.html</a></p>
+
+<p><strong>三.总结</strong></p>
+
+<p>在探测临时文件大小的时候，APC和 uploadprogress其实是大同小异的方法，先记录，再取大小百分比。</p>
+
+<p>关于哥学社：
+<a style="color: #0b3b8c; text-decoration: none;" title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个自由博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。</p>
+
+<p>关于五四陈：<br />
+54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br />
+个人技术站点:<a style="color: #0b3b8c; text-decoration: none;" href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 czhttp@gmail.com 联系到他。</p>
+
+<p>本文提及的文章：</p>
+
+<p><a href="http://www.php.net/releases/5_2_0.php">http://www.php.net/releases/5_2_0.php</a></p>
+
+<p><a href="http://www.ibm.com/developerworks/cn/opensource/os-php-v525/">http://www.ibm.com/developerworks/cn/opensource/os-php-v525/</a></p>
+
+<p><a href="http://www.laruence.com/2008/11/07/586.html">http://www.laruence.com/2008/11/07/586.html</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -766,63 +1010,6 @@ jarPath = 'gradle'<br />
 <p>cassandra:http://incubator.apache.org/cassandra/</p>
 
 <p>voldemort:http://project-voldemort.com/</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/03/25/renren-video-1017/">[视频]暨大坠楼女生终于清醒，自称不认识坠楼男子！内涵了等</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-03-25T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><strong>[人人网热门视频展播] 由人肉手工选择，每周两到三集连播。复习前面的播放<a href="http://www.54chen.com/category/happy">请进》》》</a>。</strong>
-<strong>近期潜心写代码，nuclear使用于renren-photo迁移，技术文章滞后发稿。</strong></p>
-
-<p><a id="previewLink" title="暨大坠楼女生终于清醒，自称不认识坠楼男子！内涵了……" href="http://share.renren.com/share/GetShare.do?id=1821551813&amp;owner=287286115&amp;from=hotvideo6" target="_blank"><img id="previewImg" src="http://g4.ykimg.com/0100641F464BAA97FBEB0F00937647FFC23024-0559-A9F9-E911-47B79EE62307" alt="" width="220px" height="165px" /></a>
-<ul id="share_hot_video_list">
-	<li class="  current"><a title="孙燕姿+萧亚轩+蔡依林+王力宏+周杰伦+Hebe+Selina 用MV拍了一个电影!" href="http://share.renren.com/share/GetShare.do?id=1812997278&amp;owner=273316500&amp;from=hotvideo1" target="_blank">孙燕姿+萧亚轩+蔡依林+王力宏+周杰伦+H...</a></li>
-	<li class=" "><a title="辽宁9岁男童长31根指头" href="http://share.renren.com/share/GetShare.do?id=1815388096&amp;owner=263511200&amp;from=hotvideo2" target="_blank">辽宁9岁男童长31根指头</a></li>
-	<li class=" "><a title="惊魂鬼片场(爆笑) - 有史以来最好看的鬼片 " href="http://share.renren.com/share/GetShare.do?id=1812461374&amp;owner=267602100&amp;from=hotvideo3" target="_blank">惊魂鬼片场(爆笑) - 有史以来最好看的鬼片</a></li>
-	<li class=" "><a title="张卫平：“这逼一下就丢球了”。  啊哈哈哈" href="http://share.renren.com/share/GetShare.do?id=1813788941&amp;owner=279495200&amp;from=hotvideo4" target="_blank">张卫平：“这逼一下就丢球了”。 啊哈哈哈</a></li>
-	<li class=" "><a title="监控实录嚣张男子手持甘蔗抢网吧" href="http://share.renren.com/share/GetShare.do?id=1813279582&amp;owner=279529900&amp;from=hotvideo5" target="_blank">监控实录嚣张男子手持甘蔗抢网吧</a></li>
-	<li class=" "><a title="暨大坠楼女生终于清醒，自称不认识坠楼男子！内涵了……" href="http://share.renren.com/share/GetShare.do?id=1821551813&amp;owner=287286115&amp;from=hotvideo6" target="_blank">暨大坠楼女生终于清醒，自称不认识坠...</a></li>
-</ul>
-<ul class="video-list clearfix">
-	<li><span class="share-name"><a title="街头女生《sorry sorry》爵士鼓  我靠、太帅了" href="http://share.renren.com/share/GetShare.do?id=1812608304&amp;owner=&amp;from=hotvideo" target="_blank">街头女生《sorry sorry》爵士鼓 ...</a></span><span class="share-num">分享:<em>39674</em></span><span class="float-right"><a onclick="create_share_nosysn(1812608304,238463600,238463600)" href="http://share.renren.com/?_os_type=87#nogo">分享</a></span></li>
-	<li><a class="share-figure" title="Lady GaGa 最新9分半MV 全裸抬腿露私处 只为了证明是女人 （老妈杀了我也要校内首发讲解说明）" href="http://share.renren.com/share/GetShare.do?id=1813204168&amp;owner=250378300&amp;from=hotvideo" target="_blank"><img src="http://g3.ykimg.com/0100641F464B9BABC61392015D597FCDCFA0A2-E5F0-19EB-D094-478EBDE3CD81" alt="" width="120px" height="90px" /><span class="play-icon"> </span></a><span class="share-name"><a title="Lady GaGa 最新9分半MV 全裸抬腿露私处 只为了证明是女人 （老妈杀了我也要校内首发讲解说明）" href="http://share.renren.com/share/GetShare.do?id=1813204168&amp;owner=&amp;from=hotvideo" target="_blank">Lady GaGa 最新9分半MV 全裸抬...</a></span><span class="share-num">分享:<em>28733</em></span><span class="float-right"><a onclick="create_share_nosysn(1813204168,250378300,250378300)" href="http://share.renren.com/?_os_type=87#nogo">分享</a></span></li>
-	<li><a class="share-figure" title="如果你在大学堕落了，请听一听《我相信》" href="http://share.renren.com/share/GetShare.do?id=1808227668&amp;owner=272295500&amp;from=hotvideo" target="_blank"><img src="http://g1.ykimg.com/0100641F4649B7736C0A340187C013A3EC247F-6E61-496D-8721-14DA5C1670D4" alt="" width="120px" height="90px" /><span class="play-icon"> </span></a><span class="share-name"><a title="如果你在大学堕落了，请听一听《我相信》" href="http://share.renren.com/share/GetShare.do?id=1808227668&amp;owner=&amp;from=hotvideo" target="_blank">如果你在大学堕落了，请听一听...</a></span><span class="share-num">分享:<em>77471</em></span><span class="float-right"><a onclick="create_share_nosysn(1808227668,272295500,272295500)" href="http://share.renren.com/?_os_type=87#nogo">分享</a></span></li>
-	<li><a class="share-figure" title="中国军人与美国军人惊人对比 - 视频 - 优酷视频 - 在线观看" href="http://share.renren.com/share/GetShare.do?id=1812485709&amp;owner=87610400&amp;from=hotvideo" target="_blank"><img src="http://g4.ykimg.com/0100641F4648FBEAA75E8A00341DCAFBDC56DD-7835-541F-8A2D-37AC962A41FF" alt="" width="120px" height="90px" /><span class="play-icon"> </span></a><span class="share-name"><a title="中国军人与美国军人惊人对比 - 视频 - 优酷视频 - 在线观看" href="http://share.renren.com/share/GetShare.do?id=1812485709&amp;owner=&amp;from=hotvideo" target="_blank">中国军人与美国军人惊人对比 - ...</a></span><span class="share-num">分享:<em>35507</em></span><span class="float-right"><a onclick="create_share_nosysn(1812485709,87610400,87610400)" href="http://share.renren.com/?_os_type=87#nogo">分享</a></span></li>
-	<li><a class="share-figure" title="奥塞利文怒了。。。凌空架杆！各种赛！一万库叫球！太TM霸气了！！" href="http://share.renren.com/share/GetShare.do?id=1800749405&amp;owner=223514100&amp;from=hotvideo" target="_blank"><img src="http://g4.ykimg.com/0100641F464B8A2AEFFB8500D1B90DF6FBB24D-2605-EC4A-D7F2-1E47C054DEA1" alt="" width="120px" height="90px" /><span class="play-icon"> </span></a><span class="share-name"><a title="奥塞利文怒了。。。凌空架杆！各种赛！一万库叫球！太TM霸气了！！" href="http://share.renren.com/share/GetShare.do?id=1800749405&amp;owner=&amp;from=hotvideo" target="_blank">奥塞利文怒了。。。凌空架杆！...</a></span><span class="share-num">分享:<em>142103</em></span><span class="float-right"><a onclick="create_share_nosysn(1800749405,223514100,223514100)" href="http://share.renren.com/?_os_type=87#nogo">分享</a></span></li>
-	<li><a class="share-figure" title="监控：男子冲入法院60秒杀4人!  猛输出 秒伤高  好生猛的DPS !估计是个毁伤贼。" href="http://share.renren.com/share/GetShare.do?id=1812514923&amp;owner=244851100&amp;from=hotvideo" target="_blank"><img src="http://i21.ku6.com/20103/19/8/1271944633364/8.jpg" alt="" width="120px" height="90px" /><span class="play-icon"> </span></a><span class="share-name"><a title="监控：男子冲入法院60秒杀4人!  猛输出 秒伤高  好生猛的DPS !估计是个毁伤贼。" href="http://share.renren.com/share/GetShare.do?id=1812514923&amp;owner=&amp;from=hotvideo" target="_blank">监控：男子冲入法院60秒杀4人! ...</a></span><span class="share-num">分享:<em>36393</em></span><span class="float-right"><a onclick="create_share_nosysn(1812514923,244851100,244851100)" href="http://share.renren.com/?_os_type=87#nogo">分享</a></span></li>
-	<li><a class="share-figure" title="探索频道—恐怖的中國四川大地震（开头画面很难在CC和谐AV看到）" href="http://share.renren.com/share/GetShare.do?id=1806540181&amp;owner=224825300&amp;from=hotvideo" target="_blank"><img src="http://g1.ykimg.com/0100641F464BA53F90ED7300A2544FD1B96D6A-0B6F-F346-26AE-8045CD048A1B" alt="" width="120px" height="90px" /><span class="play-icon"> </span></a><span class="share-name"><a title="探索频道—恐怖的中國四川大地震（开头画面很难在CC和谐AV看到）" href="http://share.renren.com/share/GetShare.do?id=1806540181&amp;owner=&amp;from=hotvideo" target="_blank">探索频道—恐怖的中國四川大地...</a></span><span class="share-num">分享:<em>29580</em></span><span class="float-right"><a onclick="create_share_nosysn(1806540181,224825300,224825300)" href="http://share.renren.com/?_os_type=87#nogo">分享</a></span></li>
-	<li><a class="share-figure" title="柯南 经典 主题曲锦集（最好听的15首）" href="http://share.renren.com/share/GetShare.do?id=1812477776&amp;owner=283351500&amp;from=hotvideo" target="_blank"><img src="http://g1.ykimg.com/0100641F464B5A2D84EA1B016BD100615AD2D2-4919-C642-8675-A3FA4DC8A5C9" alt="" width="120px" height="90px" /><span class="play-icon"> </span></a><span class="share-name"><a title="柯南 经典 主题曲锦集（最好听的15首）" href="http://share.renren.com/share/GetShare.do?id=1812477776&amp;owner=&amp;from=hotvideo" target="_blank">柯南 经典 主题曲锦集（最好听的...</a></span><span class="share-num">分享:<em>27741</em></span><span class="float-right"><a onclick="create_share_nosysn(1812477776,283351500,283351500)" href="http://share.renren.com/?_os_type=87#nogo">分享</a></span></li>
-</ul></p>
 </div>
   
   

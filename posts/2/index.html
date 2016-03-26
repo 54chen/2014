@@ -9,7 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="如何做一个快速运转的大规模网络开发公司 受《精益创业》 http://www.duokan.com/book/35802 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。 不仅仅是一些令人苦恼的“人的问题”，还有一些，是无从下手、或者不知道未来是怎样的疑惑。 以下，列出一些“ &hellip;">
+  <meta name="description" content="Vpn搭建及pptpd因mtu上传下载慢一例 一、环境及安装 server: centos 6.3 （kvm虚拟机）。
+client: ubuntu 10.04。
+server上yum install安装pptpd，常规设置好ip分配、用户名密码，添加iptables set mss的参数。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +75,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/30/pptpd-scp-slow/">Vpn搭建及pptpd因mtu上传下载慢一例</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-12-30T14:31:30+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img04.taobaocdn.com/imgextra/i4/T1BgpOXhlKXXb04jU7_065317.jpg></p>
+
+<h2>一、环境及安装</h2>
+
+<ul>
+<li>server: centos 6.3 （kvm虚拟机）。</li>
+<li>client: ubuntu 10.04。</li>
+<li><p>server上yum install安装pptpd，常规设置好ip分配、用户名密码，添加iptables set mss的参数。</p>
+
+<blockquote><p>设置/etc/pptpd.conf中的localip与remoteip，分别表示虚拟出来的双方ip范围。
+<br>设置/etc/ppp/chap-secrets中的用户名密码和连接ip等。
+<br>service pptpd start
+<br>iptables -A FORWARD -p tcp &ndash;syn -s 172.16.36.0/24 -j TCPMSS &ndash;set-mss 1356</p></blockquote></li>
+<li><p>client上apt-get install安装的pptpsetup，设置好用户名密码，启动vpn连接。</p>
+
+<blockquote><p>/usr/sbin/pptpsetup &ndash;create vpn &ndash;server <em>.</em>.<em>.</em>(server ip) &ndash;username vpn &ndash;password ASDF &ndash;encrypt &ndash;start</p></blockquote></li>
+<li><p>pptpd v1.4.0</p></li>
+</ul>
+
+
+<h2>二、遇到困难</h2>
+
+<ul>
+<li>scp client_file server 时，速度先很快，级数变慢，最后不动了。</li>
+<li>scp server_file client 时，同上表现。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/12/30/pptpd-scp-slow/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -588,53 +657,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/28/thrift-upgrade/">Thrift版本升级调查记录</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-05-28T16:59:27+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg></p>
-
-<p>自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。</p>
-
-<p>代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
-
-<h1>第一轮：编译阶段</h1>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/28/thrift-upgrade/">Read on &rarr;</a>
     </footer>
   
 

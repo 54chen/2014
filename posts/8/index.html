@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-09-09 cloud foundry之dea代码解读 http://t.co/wr5cdwWA #
-在深入cf之后，感觉cloud foundry的不好的几点：1.模块间内网通讯基本全用http; 2.NATS严重的单点依赖; 3. &hellip;">
+  <meta name="description" content="Cloud Foundry之warden代码解读-part1 简介
+cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。 代码位置在： https://github.com/cloudfoundry/warden &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,74 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/09/14/cloud-foundry-warden-part1/">Cloud Foundry之warden代码解读-part1</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-09-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden" /></p>
+
+<p><strong>简介</strong>
+cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
+
+<p>代码位置在： https://github.com/cloudfoundry/warden<br />
+这一部分也是我最想了解细节的地方，因为在一个paas平台中，资源的隔离才是最有价值的部分。</p>
+
+<p><strong>基础知识</strong>
+<blockquote>rv = unshare(CLONE_NEWNS);</blockquote>
+unshare这个调用，可以把挂载的文件系统设置成只在新的挂载命名空间（mount namespace）中可见。</p>
+
+<p><blockquote>execvp(argv[0], argv);</blockquote>
+execvp()会从PATH 环境变量所指的目录中查找符合参数file 的文件名，找到后便执行该文件，然后将第二个参数argv传给该欲执行的文件。</p>
+
+<p><blockquote>
+shopt -s nullglob</blockquote>
+设置shell环境变量nullglob的值为on，nullglob为on时对于通配符匹配时，若匹配不到时为空（相对应的为通配符本身）。</p>
+
+<p><blockquote>int stat(const char *restrict pathname, struct stat *restrict buf);</blockquote>
+提供文件名字，获取文件对应属性。</p>
+
+<p><blockquote>build-essential软件包</blockquote>
+作用是提供编译程序必须软件包的列表信息，也就是说编译程序有了这个软件包，它才知道 头文件在哪，才知道库函数在哪，还会下载依赖的软件包，最后才组成一个开发环境。</p>
+
+<p><blockquote>工具debootstrap</blockquote>
+可以用于在系统的某个目录中安装一套基本系统，这个基本系统除了一些配置项外，与ubuntu安装程序在安装的第一阶段安装的内容基本相同。这项功能有许多有趣的功能，例如，你可以从某个定制版本的ubuntu Live光盘上通过这个命令快速的在硬盘上安装ubuntu而不需要ubuntu的安装程序，也可以把创建在硬盘上的基本系统目录作为某些涉及系统安全性服务的chroot运行环境，通过chroot进入该目录并调试和运行一些可能修改系统配置的应用程序，作为定制小型系统模板等等。</p>
+
+<p><blockquote>aufs</blockquote>
+一种文件格式，可以mount到目录，同时控制只读和读写。</p>
+
+<p><blockquote>overlayfs</blockquote>
+另一种文件格式，在ubuntu 11.04后开始替代aufs作为官方livecd的文件格式。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -752,84 +820,6 @@ xmpp muc的定义真是非常完整！ <a href="http://twitter.com/54chen/status
 54chen Twitter memo 2012-07-29 <a href="http://t.co/r2SJQxKo" rel="nofollow">http://t.co/r2SJQxKo</a> <a href="http://twitter.com/54chen/statuses/229393311008440320" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/08/01/h2database-easymock-unit-test/">利用h2database和easymock轻松不依赖环境单元测试（rose等spring环境万能）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-08-01T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1LbWjXndsXXccfjjX_085624.jpg" alt="h2database,easymock" />
-<strong>前言</strong>
-写java时间久了，慢慢就变得自信了，也可能是变得懒了，或者是项目进度的原因，test case越写越少，越来越不写了。<br />
-还有一个很大的原因是，DB环境不好搞，老是有垃圾数据，依赖的东西太多，有memcache、有别人的服务，等等等等，都是没有test case良好的理由。</p>
-
-<p>下面将以rose环境下，使用easy mock搞写第三方依赖和h2database搞写DB环境为例子，简单讲述如何轻松测试。</p>
-
-<p>完整代码可以在 <a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a> 下载到。</p>
-
-<p><strong>依赖的包介绍</strong>
-spring-test：提供一些基础的spring环境的支持，如果你不是spring环境，可能不需要。<br />
-h2：一个内存数据库，使用它的原因是，我们的业务大多数时候使用的都是mysql，而h2有一个mysql模式，可以支持绝大多数的mysql的SQL语句。<br />
-easymock：以前在五四陈科学院提到过的利器，用来模拟各种调用的工具。</p>
-
-<p>pom定义为：</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.springframework</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>spring-test</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>2.5.6</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.h2database</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>h2</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.3.163</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.easymock</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>easymockclassextension</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>2.4</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p><strong>基础配置与schema.sql准备</strong>
-在test/resources下我们需要两个关键的文件：applicationContext.xml  与 schema.sql</p>
-
-<p>applicationContext.xml定义了test执行时扫描的情况，同正常运行时使用的配置大同小异。不同在于需要替换db定义中的mysql driver为h2的driver，关键部分：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"driverClassName"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"org.h2.Driver"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">property</span><span>&nbsp;</span><span class="attribute">name</span><span>=</span><span class="attribute-value">"url"</span><span>&nbsp;</span><span class="attribute">value</span><span>=</span><span class="attribute-value">"jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></span></li></ol></div>
-而schema.sql文件定义了初始化的表结构，这个文件的出现是因为h2与mysql还是有一定的语法区别的，不过在我的使用过程中，基本上只有create table的那个引擎声明是不支持的，所以喽，干掉先。</p>
-
-<p><strong>H2下的DAO的Test的代码示例</strong>
-在test case的初始化状态里需要导入schema.sql，代码如下：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>Statement&nbsp;st&nbsp;=&nbsp;conn.createStatement();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st.execute(<span class="string">"drop&nbsp;all&nbsp;objects;"</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st.execute(<span class="string">"runscript&nbsp;from&nbsp;'"</span><span>&nbsp;+&nbsp;</span><span class="keyword">new</span><span>&nbsp;DefaultResourceLoader().getResource(</span><span class="string">"schema.sql"</span><span>).getURL().toString()&nbsp;+&nbsp;</span><span class="string">"'"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;st.close();&nbsp;&nbsp;</span></li></ol></div>
-而如果是spring/rose环境，则可以再加载上context.xml文件，代码如下：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@RunWith</span><span>(SpringJUnit4ClassRunner.</span><span class="keyword">class</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="annotation">@ContextConfiguration</span><span>(locations&nbsp;=&nbsp;</span><span class="string">"classpath:applicationContext.xml"</span><span>)&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;TestDAOTest&nbsp;{&nbsp;&nbsp;</span></span></li></ol></div>
-然后就开始写测试代码：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Test</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;getTestTest()&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;com.chen.model.Test&nbsp;t&nbsp;=&nbsp;testDAO.getTest();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Assert.assertEquals(<span class="number">111</span><span>,&nbsp;t.getId());&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div>
-<strong>
-easymock的代码示例</strong></p>
-
-<p>easymock以前也提到过，这里再提一次：<a href="http://www.54chen.com/java-ee/spring-easymock-tutorial.html">http://www.54chen.com/java-ee/spring-easymock-tutorial.html</a>
-  <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Test</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;getTestTest()&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;com.chen.model.Test&nbsp;t&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;com.chen.model.Test();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.setId(<span class="number">1111</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t.setMsg(<span class="string">"adfadf"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TestDAO&nbsp;testDAO&nbsp;=&nbsp;EasyMock.createMock(<span class="string">"testDAO"</span><span>,&nbsp;TestDAO.</span><span class="keyword">class</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EasyMock.expect(testDAO.getTest()).andReturn(t);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EasyMock.replay(testDAO);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ReflectionTestUtils.setField(service,&nbsp;<span class="string">"testDAO"</span><span>,&nbsp;testDAO,&nbsp;TestDAO.</span><span class="keyword">class</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;t&nbsp;=&nbsp;service.getTest();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;确信使用了mock</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;EasyMock.verify(testDAO);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Assert.assertEquals(<span class="number">1111</span><span>,&nbsp;t.getId());&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p>mock其他东西以此类推。</p>
-
-<p><strong>后序 </strong>
-至此，已经可以mock一切了，你还有什么理由不写test case呢？<br />
-本文完整代码可以在 <a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a> 下载到。</p>
 </div>
   
   

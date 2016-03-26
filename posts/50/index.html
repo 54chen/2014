@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="PHP代码的优与劣 原文作者：Kevin Yank 原文链接：Good and Bad PHP Code             我在SitePoint做面试官的时候一定会问的问题是：你认为PHP代码的优劣体现在哪里？因为这个问题可以让我大体知道应聘者是哪种类型的程序员， &hellip;">
+  <meta name="description" content="乾坤大挪移即将发布 乾坤大挪移即将发布，届时将可以通过以下网址访问： http://www.54chen.com/flip 乾坤大挪移，主要功能就是一个字，倒！（感谢心5提供图片支持） PHP代码的优与劣 原文作者：Kevin Yank 原文链接：Good and Bad PHP Code &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/27/%E4%B9%BE%E5%9D%A4%E5%A4%A7%E6%8C%AA%E7%A7%BB%E5%8D%B3%E5%B0%86%E5%8F%91%E5%B8%83/">乾坤大挪移即将发布</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>乾坤大挪移即将发布，届时将可以通过以下网址访问：</p>
+
+<p><a href="http://www.54chen.com/flip">http://www.54chen.com/flip</a></p>
+
+<p>乾坤大挪移，主要功能就是一个字，倒！（感谢心5提供图片支持）</p>
+
+<p><a href="http://www.54chen.com/wp-content/uploads/2008/11/xo.jpg"><img class="alignnone size-medium wp-image-171" style="border: 0px initial initial;" title="xo" src="http://www.54chen.com/wp-content/uploads/2008/11/xo-224x300.jpg" alt="" width="224" height="300" /></a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -604,202 +646,6 @@ A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不
 	<li>备注：现在就可以直接登入test数据库进行操作了。并且我的权限是最大权限的superuser。 </li>
 </ul>
 </li></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/21/plproxy%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8C/">Plproxy部署手册</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><dt>安装过程如下： </dt><dt>1 安装<a href="http://www.54chen.com/c/109">plproxy</a>：下载<a class="external text" title="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" rel="nofollow" href="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" target="_blank">plproxy</a>.安装完成plproxy后,运行{$PATH_TO_PG}/share/contrib/plproxy.sql </dt><dt>2 建立数据库_proxy； </dt><dt>3 建立plpgsql语言； </dt><dt>4 在_proxy中建立模式plproxy;分配权限 grant all on schema plproxy to &lt;用户&gt;。 </dt><dt>5 建立pgcluster； </dt><dt>
-</dt><dt>
-<pre> --以上步骤sql语句：
- CREATE FUNCTION plpgsql_call_handler () RETURNS language_handler AS
-     '/usr/local/pgsql/lib/plpgsql.so'  LANGUAGE C;</pre></dt></p>
-
-<p> CREATE FUNCTION plpgsql_validator(oid) RETURNS void AS<br />
-     '/usr/local/pgsql/lib/plpgsql.so'  LANGUAGE C;</p>
-
-<p> CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'<br />
-     HANDLER plpgsql_call_handler<br />
-     VALIDATOR plpgsql_validator;</p>
-
-<p> --------------------------------------------------------------------</p>
-
-<p> drop schema if exists plproxy cascade;</p>
-
-<p> create schema plproxy;</p>
-
-<p> grant all on schema plproxy to yahoo;</p>
-
-<p> --------------------------------------------------------------------<br />
- create or replace function plproxy.get_cluster_version(cluster_name text)</p>
-
-<p> returns integer as $$</p>
-
-<p> begin<br />
-     if cluster_name = '&lt;cluster名字&gt;' then</p>
-
-<p> 	return 8;</p>
-
-<p>     end if;</p>
-
-<p>     raise exception 'no such cluster: %', cluster_name;</p>
-
-<p> end; $$ language plpgsql;</p>
-
-<p> --------------------------------------------------------------------  <br />
- create or replace function plproxy.get_cluster_partitions(cluster_name text)</p>
-
-<p> returns setof text as $$</p>
-
-<p> begin</p>
-
-<p>    if cluster_name = '&lt;cluster名字&gt;' then</p>
-
-<p> 	--return next 'host=202.165.97.144 port=6000 user=chry password=chry dbname=chry_134';</p>
-
-<p> 	return next 'host=pg1.sns.cn3.yahoo.com user=yahoo dbname=sns_search';<br />
- 	return next 'host=pg2.sns.cn3.yahoo.com user=yahoo dbname=sns_search';</p>
-
-<p> 	return;</p>
-
-<p>     end if;</p>
-
-<p>     raise exception 'no such cluster: %', cluster_name;</p>
-
-<p> end; $$ language plpgsql;</p>
-
-<p> --------------------------------------------------------------------<br />
- create or replace function plproxy.get_cluster_config(cluster_name text, out key text, out val text)</p>
-
-<p> returns setof record as $$</p>
-
-<p> begin</p>
-
-<p>     key := 'statement_timeout';</p>
-
-<p>     val := 60;</p>
-
-<p>     return next;</p>
-
-<p>     return;</p>
-
-<p> end; $$ language plpgsql;
-<pre><dl>
-<dt>6 建立查询函数 </dt></dl>
-<pre> --在_proxy中建立查询函数:
- CREATE OR REPLACE FUNCTION public.doquery(query text)
- RETURNS setof record AS $$
- CLUSTER '&lt;cluster名字&gt;';
- RUN ON ALL;
- $$ LANGUAGE plproxy;</pre></pre></p>
-
-<p> --------------------------------------------------------------------<br />
- CREATE OR REPLACE FUNCTION public.doquery(urlstr text,query text)<br />
- RETURNS setof record AS $$<br />
- CLUSTER '&lt;cluster名字&gt;';<br />
- RUN ON hashtext(urlstr);<br />
- $$ LANGUAGE plproxy;</p>
-
-<p> --------------------------------------------------------------------  <br />
- CREATE OR REPLACE FUNCTION public.dmlExec(query text)<br />
- RETURNS integer AS $$<br />
- CLUSTER '&lt;cluster名字&gt;';<br />
- RUN ON ALL;<br />
- $$ LANGUAGE plproxy;</p>
-
-<p> --------------------------------------------------------------------<br />
- CREATE OR REPLACE FUNCTION public.dmlExec(urlstr text,query text)<br />
- RETURNS integer AS $$<br />
- CLUSTER '&lt;cluster名字&gt;';<br />
- RUN ON hashtext(urlstr);<br />
- $$ LANGUAGE plproxy;
- 
-<pre> --在所联邦的数据库中建立查询函数:
- CREATE OR REPLACE FUNCTION public.doquery(query text)
- RETURNS SETOF RECORD AS $$
- DECLARE
- row RECORD;
- BEGIN
- for row in execute query loop
- return next row;
- end loop;
- return;
- END;
- $$ LANGUAGE plpgsql;</pre></p>
-
-<p> ----------------------------------------------------------------<br />
- CREATE OR REPLACE FUNCTION public.doquery(urlstr text,query text)<br />
- RETURNS SETOF RECORD AS $$<br />
- DECLARE<br />
- row RECORD;<br />
- BEGIN<br />
- for row in execute query loop<br />
- return next row;<br />
- end loop;<br />
- return;<br />
- END;<br />
- $$ LANGUAGE plpgsql;</p>
-
-<p> ----------------------------------------------------</p>
-
-<p> CREATE OR REPLACE FUNCTION public.dmlExec(query text)<br />
- RETURNS integer AS $$<br />
- DECLARE<br />
- ret integer;<br />
- BEGIN<br />
- execute query;</p>
-
-<p> GET DIAGNOSTICS ret = ROW_COUNT;<br />
- RETURN ret;</p>
-
-<p> END;<br />
- $$ LANGUAGE plpgsql;</p>
-
-<p> ---------------------------------------------------------------<br />
- CREATE OR REPLACE FUNCTION public.dmlExec(urlstr text,query text)<br />
- RETURNS integer AS $$<br />
- DECLARE<br />
- ret integer;<br />
- BEGIN<br />
- execute query;</p>
-
-<p> GET DIAGNOSTICS ret = ROW_COUNT;<br />
- RETURN ret;</p>
-
-<p> END;<br />
- $$ LANGUAGE plpgsql;
-
-</p>
 </div>
   
   
