@@ -4,8 +4,82 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2016-03-26T10:49:16+08:00</pubDate>
+        <pubDate>2016-04-26T21:31:43+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <p>2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。</p>
+
+<p>今天再来看，其实有很多细节，当时真的没考虑（现在也是坑）。</p>
+
+<p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
+
+<!--more-->
+
+
+<h2>细节一 用nginx的proxy_pass代理java上线不平滑</h2>
+
+<p>一个典型的架子，是nginx+resin/tomcat，然后在nginx上设置weight=1 max_fails=3 等等。</p>
+
+<p>在上线的时候，并没有平滑过度的手段（比如修改一下所有nginx配置拿掉一台之类的），所有的上线都是有损的。</p>
+
+<p>庆幸的是，移动互联网native的app，断个一两秒的不服务用户感觉不出来。</p>
+
+<h2>细节二 监控数据很多，有用的很少</h2>
+
+<p>线上故障的情况，不出意外就是一个模块和另一个模块之间发生了什么问题。</p>
+
+<p>过去的几年，我们始终没考虑过抽象出来这种数据。</p>
+
+<p>我们的监控数据全部是以单独一个模块自身的访问数据（qps、响应时长等），常见的问题是别人说访问你慢，访问老失败，你自己一看数据觉得还挺好。</p>
+
+<h2>细节三 为android ios配备了http框架</h2>
+
+<p>如果当时没有paoding-rose，我想我们会考虑做成一个标准的tcp server，中间用pb传输到手机。</p>
+
+<p>这样做的好处，在应对不好的中国移动网络的时候，http束手束脚，而tcp却自由得多。</p>
+
+<p>这一点我同样要点名嘲笑一个微博的客户端，在一样的坑里。</p>
+
+<h2>细节四 选java又没有语言级专家</h2>
+
+<p>如果当时选的是php，我想我们线上的服务在很多年后需要重启的会很少（由于nio或者其他什么泄漏之类的，最后服务就假死了，重启就能管很长时间）。</p>
+
+<p>当然了，现在来看，更倾向于选c/c++，至少老老实实的写不会有太大的坑，跑起来也稳定。</p>
+
+<h2>细节五 过于依赖关系型数据库mysql</h2>
+
+<p>用mysql没有什么错，使用方便，实现业务快。</p>
+
+<p>在中期要做多IDC容灾的时候，没办法了，实在是关系太复杂了，做不了。</p>
+
+<p>如果当时我们全部有key-value的思想，将大量的mysql做的事情放在业务代码里来，做多IDC简直是小菜一碟。</p>
+
+<p>而多IDC在一个互联网业务来看，上量了之后又是多么重要的一件事情。</p>
+
+<h2>细节六 过多使用rabbitmq</h2>
+
+<p>在需要削峰的项目上使用mq无可厚非，但是一个项目到处都在用mq的时候，简直是灾难（想一想，一个大系统，调用谁不清楚，谁在调用也不清楚，只知道自己在消费什么对象）。</p>
+
+<p>后期的时候，要想知道一个模块正在被谁调用基本无从查询了，因为这些开源的mq，根本不会考虑实际运维中的需求，出发点全部是如何快速的使用。</p>
+
+<h2>后记</h2>
+
+<p>细节有点多，坑都还在(还有一些坑已经爬出来了就不列在这里了)，依旧有后继的团队和项目在坑里，如果一个项目立志要做大做强，还是一开始就跳出这些坑吧。</p>
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[过去六年在小米搞(wa)错(keng)的几个技术细节]]></title>
+            <link>http://2014.54chen.com/blog/2016/04/26/mistake-in-six-years/</link>
+            <pubDate>2016-04-26T20:34:54+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2016/04/26/mistake-in-six-years</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -2084,98 +2158,6 @@ int i = sc.read(buff)</p></blockquote>
             <link>http://2014.54chen.com/blog/2014/07/07/explain-tigase/</link>
             <pubDate>2014-07-07T13:47:54+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2014/07/07/explain-tigase</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
-
-<p>最近在研究在中国特色移动互联网下通过性最好的应用层协议办法，看到很多混乱的概念和实现，54chen在对各种名词的历史进行了深度考察，特作记录以做区分。</p>
-
-<h2>HTTP协议历史</h2>
-
-<ul>
-<li>第一个HTTP协议诞生于1989年3月。</li>
-<li>第一个HTTP协议的版本是HTTP 0.9，它的组成极其简单，因为它只允许客户端发送GET这一种请求。</li>
-<li>HTTP协议的第二个版本是HTTP 1.0，直到HTTP 1.0成为最重要的面向事务的应用层协议。该协议对每一次请求/响应，同样是建立并关闭一次连接。</li>
-<li>HTTP协议的第三个版本是HTTP 1.1，它就是目前使用最广泛的协议版本。从HTTP 1.1开始，客户端默认与Web 服务器建立长连接。</li>
-</ul>
-
-
-<h2>原始阶段polling</h2>
-
-<p>最早期的时候，因为没有可以依赖的东西，能用的只有javascript的setInterval，定时循环向服务器发起请求。</p>
-
-<p>优点是：服务器端啥特别的东西都不用准备，直接当http请求处理即可。缺点是：白白浪费大量的请求。</p>
-
-<h2>什么是Comet?</h2>
-
-<p>中文意思彗星，大概是想表示这是一次尾巴会拖很长的请求。</p>
-
-<!--more-->
-
-
-<p>Comet和ajax一样，都是一堆技术的合体叫做Comet（莫非是javascript界很喜欢搞高大上的名词？）。</p>
-
-<h2>初始阶段的Comet</h2>
-
-<ul>
-<li>CometP属于这种（jsonP＋iframe）。</li>
-<li>Frame Comet也属于这种（json＋iframe）。</li>
-<li>ajax Comet也属于这种（ajax）</li>
-<li>HTTP1.1是长连接，而且服务器chunked encoding机制可以让结果部分输出。</li>
-<li>利用HTTP1.1的特性，再配合iframe src到一个url，一旦有数据，通过javascript的top.func()把数据告诉浏览器。</li>
-<li>优点是：比起polling节省了更多的带宽。缺点：用户打开多个浏览器时会占用多条连接，所以必须在server端配合使用非阻塞的http server，同时如果网络不太稳定，容易断掉。</li>
-</ul>
-
-
-<h2>改良版的Comet:long polling</h2>
-
-<ul>
-<li>因为发现网络不稳定容易断的问题。</li>
-<li>改良后，添加了每次请求返回后立即重新发起请求机会－－长轮循。</li>
-<li>优点：比起初始阶段，不容易因网络断了连接，是当今最常见的解决方案。缺点：实在找不到啥缺点，唯一的缺点就是利用了http协议，要是tcp层的，直接连接上收发数据就行了。</li>
-</ul>
-
-
-<h2>双向可通的WebSocket</h2>
-
-<ul>
-<li>前面都是说的http的，html5就来了个WebSocket，WEB也可以进行TCP连接了。</li>
-<li>各浏览器实现略有不同。</li>
-<li>优点：底层连接 缺点：好多浏览器不支持。</li>
-</ul>
-
-
-<h2>BOSH（Bidirectional-streams Over Synchronous HTTP）</h2>
-
-<ul>
-<li>这是xmpp协议里定义的一个扩展协议，实际上也可以归结为Comet技术的合体。</li>
-<li>它同时支持老的polling也支持long polling。</li>
-<li>具体实现中要完成交互协议才行。</li>
-<li>优点：若实现细节可自动适应http 1.0 1.1  缺点：实现要更复杂。</li>
-</ul>
-
-
-<h2>结尾</h2>
-
-<ul>
-<li>各种让人混淆的名词，其实都是在做同一件事情。</li>
-<li>http streaming = http chunked encoding = http keepalive = http 1.1</li>
-</ul>
-
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[bosh vs comet vs long polling vs polling]]></title>
-            <link>http://2014.54chen.com/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/</link>
-            <pubDate>2014-06-30T11:41:42+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>

@@ -9,9 +9,13 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-12-18 maven插件编写实例 http://t.co/S3mz5O7P #
-54chen Twitter memo 2011-12-11 http://t.co/lOQ3IFaz # Maven插件编写实例 概况
-实现一个自定义的类， &hellip;">
+  <meta name="description" content="Riak 1.0.2安装手记 准备三台机器：
+r1
+r2
+r3 准备erlang环境：
+Erlang >= R14B03
+yum install gcc glibc-devel make ncurses-devel openssl-devel
+$ wget http://erlang.org/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +79,86 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/21/riak-1-0-2-install/">Riak 1.0.2安装手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-21T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" />
+<strong>准备三台机器：</strong>
+r1<br />
+r2<br />
+r3</p>
+
+<p><strong>准备erlang环境：</strong>
+Erlang >= R14B03<br />
+yum install gcc glibc-devel make ncurses-devel openssl-devel<br />
+$ wget http://erlang.org/download/otp_src_R14B03.tar.gz<br />
+$ tar zxvf otp_src_R14B03.tar.gz<br />
+$ cd otp_src_R14B03<br />
+$ ./configure && make && sudo make install</p>
+
+<p><strong>git环境(看上去是非必须的)：</strong>
+yum -y install git</p>
+
+<p><strong>下载地址：</strong>
+http://downloads.basho.com.s3-website-us-east-1.amazonaws.com/riak/CURRENT/riak-1.0.2.tar.gz
+<blockquote>
+cd riak-1.0.2<br />
+make rel</blockquote></p>
+
+<p><strong>修改配置文件后启动</strong>
+riak start<br />
+riak-admin join<br />
+过程完全同0.142
+<a href="http://www.54chen.com/_linux_/riak-source-install-run.html">http://www.54chen.com/_linux_/riak-source-install-run.html</a>
+<strong>与0.1.42相比：</strong>
+erlang环境要求R14B03及以上。低版本会出现this emulator supports only up to 149的make错误。</p>
+
+<p><strong>使用leveldb为存储引擎：</strong>
+默认引擎还是bitcask，需要修改配置文件app.config<br />
+{storage_backend, riak_kv_bitcask_backend}<br />
+改为：<br />
+{storage_backend, riak_kv_eleveldb_backend}</p>
+
+<p><strong>官方说明：</strong>
+bitcask适用于key有限，而需要最大量的吞吐量和数据持久化情况。<br />
+leveldb适用于大量的key。
+<strong>
+官方java client压力测试结果：</strong>
+1cpu 8G的机器3个 笔记本运行压力程序 读写比3:1 6并发 1k大小的value  <br />
+PB：2500ops  99.9%的操作在22ms内。<br />
+HTTP: 1000ops  99.9%的操作在30ms内。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -526,65 +610,6 @@ thrift快速入门实例 <a href="http://t.co/rjYGRvHI" rel="nofollow">http://t.
 南京校招有感：学生喜欢android开发职位，以为是用c搞操作系统，不喜欢web相关职位，以为做个网页没有技术含量。简单评价：这个行业入行10年内都是在别人走过的路上踩。 <a href="http://twitter.com/54chen/statuses/135932944882741248" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/11/18/thrift-quick-start/">Thrift快速入门实例</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-11-18T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="facebook thrift" />
-Thrift是Facebook的核心框架之一，使不同的开发语言开发的系统可以通过该框架实现彼此的通信，类似于webservice，但是Thrift提供了近乎变态的效率和开发的方便性，是webservice所不能比拟的。给分布式开发带来了极大的方便。但是这柄利器也有一些不完美。 </p>
-
-<p><strong>安装thrift</strong>
-<blockquote>1、./configure --with-boost=/usr/include<br />
-2、make<br />
-3、make install</blockquote></p>
-
-<p><strong>定义接口文件</strong>
-<div class="chen-hl"><div class="bar"></div><ol class="dp-rb" start="1"><li class="alt"><span><span>vim&nbsp;chen.thrift&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="comment">#!/usr/local/bin/thrift&nbsp;--gen&nbsp;java</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>namespace&nbsp;java&nbsp;com.chen&nbsp;&nbsp;</span></li><li class="alt"><span>service&nbsp;Hello{&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i32&nbsp;hello()&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p><strong>生成代码</strong>
-<div class="chen-hl"><ol class="dp-perl" start="1"><li class="alt"><span><span>thrift&nbsp;--gen&nbsp;java&nbsp;chen.thrift&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>要使用1.6的jdk
-<strong>
-实现server代码：</strong>
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*&nbsp;@author&nbsp;54chen(陈臻)&nbsp;[chenzhen@xiaomi.com&nbsp;czhttp@gmail.com]</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;*&nbsp;@since&nbsp;2011-6-24&nbsp;下午08:11:15</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">package</span><span>&nbsp;com.chen;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">import</span><span>&nbsp;org.apache.thrift.TException;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;HelloImpl&nbsp;</span><span class="keyword">implements</span><span>&nbsp;Hello.Iface&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;HelloImpl()&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;hello()&nbsp;</span><span class="keyword">throws</span><span>&nbsp;TException&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"hello&nbsp;54chen"</span><span>);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="number">0</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p><strong>通过下面的代码启动server</strong>
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>TServerSocket&nbsp;serverTransport&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;TServerSocket(</span><span class="number">7911</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello.Processor&nbsp;processor&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Hello.Processor(</span><span class="keyword">new</span><span>&nbsp;HelloImpl());&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Factory&nbsp;protFactory&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TBinaryProtocol.Factory(</span><span class="keyword">true</span><span>,&nbsp;</span><span class="keyword">true</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TServer&nbsp;server&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TThreadPoolServer(processor,&nbsp;serverTransport,&nbsp;protFactory);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"Starting&nbsp;server&nbsp;on&nbsp;port&nbsp;7911&nbsp;..."</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;server.serve();&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p><strong>通过下面代码启动client</strong>
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>TTransport&nbsp;transport&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;TSocket(</span><span class="string">"localhost"</span><span>,&nbsp;</span><span class="number">7911</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TProtocol&nbsp;protocol&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;TBinaryProtocol(transport);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hello.Client&nbsp;client&nbsp;=&nbsp;<span class="keyword">new</span><span>&nbsp;Hello.Client(protocol);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transport.open();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"Client&nbsp;calls&nbsp;hello()"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.hello();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transport.close();&nbsp;&nbsp;</span></li></ol></div></p>
 </div>
   
   

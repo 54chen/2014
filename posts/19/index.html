@@ -9,10 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Hive 0.7.0代码分析解读 入口：
-bin/hive脚本中，环境检查后执行ext中的cli.sh，进入主类：CliDriver.main。 CliDriver.main:
-把分号隔开命令进cli.processLine，再进processCmd。 processCmd:
-处理quit/ &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2011-07-31 hudson重启jobs丢失：jobs都是定义在$HUDSON_HOME里，缺省~/.hudson，重启前后不相等就会找不到原来的jobs。http://www.54chen.com/java-ee/ci-tool-hudson- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +73,50 @@ bin/hive脚本中，环境检查后执行ext中的cli.sh，进入主类：CliDri
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/31/54chen-twitter-memo-2011-07-31/">54chen Twitter Memo 2011-07-31</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-07-31T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+hudson重启jobs丢失：jobs都是定义在$HUDSON_HOME里，缺省~/.hudson，重启前后不相等就会找不到原来的jobs。http://www.54chen.com/java-ee/ci-tool-hudson-usage.html </ul><a href="http://twitter.com/54chen/statuses/96431803556052993" class="aktt_tweet_time">#</a>
+小成本，大制作；小工具，大效率。 <a href="http://twitter.com/54chen/statuses/96431240693039105" class="aktt_tweet_time">#</a>
+hive 0.7.0代码分析解读 <a href="http://goo.gl/fb/7o7E5" rel="nofollow">http://goo.gl/fb/7o7E5</a> <a href="http://twitter.com/54chen/statuses/96131241954394112" class="aktt_tweet_time">#</a>
+<a href="https://issues.apache.org/jira/browse/HIVE-2181" rel="nofollow">https://issues.apache.org/jira/browse/HIVE-2181</a>  hadoop hive定义的scratch.dir在长时间运行后目录巨大，hive0.8.0将解决这一问题，在hive重启的时候，这办法有点土。 <a href="http://twitter.com/54chen/statuses/95435135268294656" class="aktt_tweet_time">#</a>
+RT 邵峰  : 温：我们不会判你死刑。赖：谢谢总理。温：在外这么多年，想家不想？赖：想，做梦都想。温：我让地方上安排一下，你下午就回家看看，拿着这个。赖接过一张动车一等座票.....你们懂的 <a href="http://twitter.com/54chen/statuses/95315027715821568" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-07-24 <a href="http://goo.gl/fb/DVCZl" rel="nofollow">http://goo.gl/fb/DVCZl</a> <a href="http://twitter.com/54chen/statuses/94949621956231169" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -577,60 +618,6 @@ Ray Ozzie @ Xiaomi office now <a href="http://twitter.com/54chen/statuses/837131
 推荐facebook系列的thrift（通讯框架）、scribe（海量日志server）、hive（hadoop的类SQL tool），用于各种线上应用、离线用户数据挖掘足矣。 <a href="http://twitter.com/54chen/statuses/82784157427707904" class="aktt_tweet_time">#</a>
 54chen Twitter memo 2011-06-19 <a href="http://goo.gl/fb/CysHM" rel="nofollow">http://goo.gl/fb/CysHM</a> <a href="http://twitter.com/54chen/statuses/82272891755966465" class="aktt_tweet_time">#</a>
 
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/06/24/java-log4j-logger-analyzer/">Java Log4j 日志分析工具分享</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-06-24T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img01.taobaocdn.com/imgextra/i1/T1jH1hXjFkXXciRrcW_022533.jpg" alt="log4j,analyzer" />
-java线上项目往往有许多的exception出现了没来得及去看，通过下面的工具，可以在每天早晨上班的时候通过邮件发出头一天出现的异常次数，是提高生产力和提早发现问题的好办法。<br />
-配置：
-<blockquote>
-1.解压到指定目录<br />
- /data/analyze<br />
-2.email发送配置<br />
- vim mail.pl<br />
- 5行，6行，7行，14行 修改为自己的配置<br />
-3.server配置<br />
- ssh-keygen打通ssh<br />
- cd server<br />
- 项目名_server写服务器ip，多个机器一行一个<br />
-4.其他<br />
- 可能会有不相同的log目录地址，看着修改一下shell就行。
-</blockquote>
-*修改自烧饼的脚本，点击下载：
-<a href=" http://ishare.iask.sina.com.cn/f/16530420.html">http://ishare.iask.sina.com.cn/f/16530420.html</a>
 </p>
 </div>
   

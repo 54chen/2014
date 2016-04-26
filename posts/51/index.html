@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Plproxy部署手册 安装过程如下： 1 安装plproxy：下载plproxy.安装完成plproxy后,运行{$PATH_TO_PG}/share/contrib/plproxy.sql 2 建立数据库_proxy； 3 建立plpgsql语言； 4 在_proxy中建立模式plproxy &hellip;">
+  <meta name="description" content="PostgreSQL系统安装(Linux) 1. 到 http://www.postgresql.org下载pg8.2.4 source 2. 编译安装pgsql tar xvfj postgresql-8.2.4.tar.bz2 cd postgresql-8.2.4 ./configure &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/21/postgresql%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85linux/">PostgreSQL系统安装(Linux)</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><li>1. 到 <a class="external text" title="http://www.postgresql.org/" rel="nofollow" href="http://www.postgresql.org/" target="_blank">http://www.postgresql.org</a>下载pg8.2.4 source</li>
+	<li>2. 编译安装<a href="http://www.54chen.com/c/101">pgsql</a>
+<ul>
+	<li>tar xvfj postgresql-8.2.4.tar.bz2</li>
+	<li>cd postgresql-8.2.4</li>
+	<li>./configure --prefix=/home/y/pgsql #注意下一步把这个目录加入你bash的PATH中去</li>
+	<li>gmake</li>
+	<li>sudo gmake install</li>
+	<li>sudo mkdir /home/y/pgsql/data</li>
+	<li>sudo chown yahoo /home/y/pgsql/data</li>
+	<li>sudo -u yahoo /home/y/pgsql/bin/initdb --locale=zh_CN.UTF-8 --encoding=utf8  -D /home/y/pgsql/data</li>
+</ul>
+</li>
+	<li>3.创建数据库
+<ul>
+	<li>cd /home/y/pgsql/bin</li>
+	<li>sudo -u yahoo ./pg_ctl start -D /home/y/pgsql/data #启动服务进程</li>
+	<li>sudo -u yahoo /home/y/pgsql/bin/createdb test　#创建数据库test</li>
+	<li>sudo -u yahoo /home/y/pgsql/bin/psql test</li>
+	<li>test=# create role changxin superuser login ;</li>
+	<li>test=# \q</li>
+	<li>备注：现在就可以直接登入test数据库进行操作了。并且我的权限是最大权限的superuser。 </li>
+</ul>
+</li></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -689,67 +748,6 @@ L 连接<br />
 <p>这就是“东楼kappa女最新视频”</p>
 
 <p>在原来的地方创了最多的访问量！</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/12/svn%E9%87%8C%E7%9A%84branch%E3%80%81trunk%E3%80%81tag%E7%9A%84%E7%94%A8%E5%A4%84/">Svn里的branch、trunk、tag的用处</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-11-12T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2008.11.12 转载请注明原文链接：<a href="http://www.54chen.com/c/83">http://www.54chen.com/c/83</a>]</p>
-
-<p>这只是个说明，你不按说明来办事也不会怎么样，svn照样工作得很好。</p>
-
-<p>branches：分枝</p>
-
-<p>当多个人合作（Sally和John）时，可能有这样的情况出现：John突然有个想法，跟原先的设计不太一致，可能是功能的添加或者日志格式的改进等等，总而言之，这个想法可能需要花一段时间来完成，而这个过程中，John的一些操作可能会影响Sally的工作，John从现有的状态单独出一个project的话，又不能及时得到Sally对已有代码做的修正，而且独立出来的话，John的尝试成功时，跟原来的合并也存在困难。这时最好的实践方法是使用branches。John建立一个自己的branch，然后在里面实验，必要的时候从Sally的trunk里取得更新，或者将自己的阶段成果汇集到trunk中。（svn copy SourceURL/trunk \ DestinationURL/branchName \ -m "Creating a private branch of xxxx/trunk." ）</p>
-
-<p>trunk：主干</p>
-
-<p>主干，一般来说就是开发的主要呆的地方，</p>
-
-<p>tag:</p>
-
-<p>在经过了一段时间的开发后，项目到达了一个里程碑阶段，你可能想记录这一阶段的代码的状态，那么你就需要给代码打上标签。(svn cp <a href="file:///svnroot/mojavescripts/trunk">file:///svnroot/mojavescripts/trunk</a> \ file:///svnroot/mojavescripts/tags/mirrorutils_rel_0_0_1 \<br />
--m "taged mirrorutils_rel_0_0_1")</p>
-
-<p>另有一说，无所谓谁对谁错。</p>
-
-<p>trunk<span>：表示开发时版本存放的目录，即在开发阶段的代码都提交到该目录上。</span></p>
-
-<p>branches<span>：表示发布的版本存放的目录，即项目上线时发布的稳定版本存放在该目录中。</span></p>
-
-<p>tags<span>：表示标签存放的目录。</span></p>
-
-<p><span>在这需要说明下分三个目录的原因，如果项目分为一期、二期、三期等，那么一期上线时的稳定版本就应该在一期完成时将代码</span>copy<span>到</span>branches<span>上，这样二期开发的代码就对一期的代码没有影响，如新增的模块就不会部署到生产环境上。而</span>branches<span>上的稳定的版本就是发布到生产环境上的代码，如果用户使用的过程中发现有</span>bug<span>，则只要在</span>branches<span>上修改该</span>bug<span>，修改完</span>bug<span>后再编译</span>branches<span>上最新的代码发布到生产环境即可。</span>tags<span>的作用是将在</span>branches<span>上修改的</span>bug<span>的代码合并到</span>trank<span>上时创建个版本标识，以后</span>branches<span>上修改的</span>bug<span>代码再合并到</span>trunk<span>上时就从</span>tags<span>的</span>version<span>到</span>branches<span>最新的</span>version<span>合并到</span>trunk<span>，以保证前期修改的</span>bug<span>代码不会在合并。</span></p>
 </div>
   
   

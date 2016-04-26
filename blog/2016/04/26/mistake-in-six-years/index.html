@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>过去六年在小米搞(wa)错(keng)的几个技术细节 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。 今天再来看，其实有很多细节，当时真的没考虑（现在也是坑）。 细节一 用nginx的proxy_pass代理java上线不平滑 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2016/04/26/mistake-in-six-years">
+  <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
+  <link href="http://chen54.b0.upaiyun.com/css/screen-3.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
+	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
+
+  
+
+</head>
+
+<body   >
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/">首页</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/blog/archives">归档</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/video">视频</a>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="/about">关于</a>
+
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">过去六年在小米搞(wa)错(keng)的几个技术细节</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-04-26T20:34:54+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。</p>
+
+<p>今天再来看，其实有很多细节，当时真的没考虑（现在也是坑）。</p>
+
+<p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
+
+<!--more-->
+
+
+<h2>细节一 用nginx的proxy_pass代理java上线不平滑</h2>
+
+<p>一个典型的架子，是nginx+resin/tomcat，然后在nginx上设置weight=1 max_fails=3 等等。</p>
+
+<p>在上线的时候，并没有平滑过度的手段（比如修改一下所有nginx配置拿掉一台之类的），所有的上线都是有损的。</p>
+
+<p>庆幸的是，移动互联网native的app，断个一两秒的不服务用户感觉不出来。</p>
+
+<h2>细节二 监控数据很多，有用的很少</h2>
+
+<p>线上故障的情况，不出意外就是一个模块和另一个模块之间发生了什么问题。</p>
+
+<p>过去的几年，我们始终没考虑过抽象出来这种数据。</p>
+
+<p>我们的监控数据全部是以单独一个模块自身的访问数据（qps、响应时长等），常见的问题是别人说访问你慢，访问老失败，你自己一看数据觉得还挺好。</p>
+
+<h2>细节三 为android ios配备了http框架</h2>
+
+<p>如果当时没有paoding-rose，我想我们会考虑做成一个标准的tcp server，中间用pb传输到手机。</p>
+
+<p>这样做的好处，在应对不好的中国移动网络的时候，http束手束脚，而tcp却自由得多。</p>
+
+<p>这一点我同样要点名嘲笑一个微博的客户端，在一样的坑里。</p>
+
+<h2>细节四 选java又没有语言级专家</h2>
+
+<p>如果当时选的是php，我想我们线上的服务在很多年后需要重启的会很少（由于nio或者其他什么泄漏之类的，最后服务就假死了，重启就能管很长时间）。</p>
+
+<p>当然了，现在来看，更倾向于选c/c++，至少老老实实的写不会有太大的坑，跑起来也稳定。</p>
+
+<h2>细节五 过于依赖关系型数据库mysql</h2>
+
+<p>用mysql没有什么错，使用方便，实现业务快。</p>
+
+<p>在中期要做多IDC容灾的时候，没办法了，实在是关系太复杂了，做不了。</p>
+
+<p>如果当时我们全部有key-value的思想，将大量的mysql做的事情放在业务代码里来，做多IDC简直是小菜一碟。</p>
+
+<p>而多IDC在一个互联网业务来看，上量了之后又是多么重要的一件事情。</p>
+
+<h2>细节六 过多使用rabbitmq</h2>
+
+<p>在需要削峰的项目上使用mq无可厚非，但是一个项目到处都在用mq的时候，简直是灾难（想一想，一个大系统，调用谁不清楚，谁在调用也不清楚，只知道自己在消费什么对象）。</p>
+
+<p>后期的时候，要想知道一个模块正在被谁调用基本无从查询了，因为这些开源的mq，根本不会考虑实际运维中的需求，出发点全部是如何快速的使用。</p>
+
+<h2>后记</h2>
+
+<p>细节有点多，坑都还在(还有一些坑已经爬出来了就不列在这里了)，依旧有后继的团队和项目在坑里，如果一个项目立志要做大做强，还是一开始就跳出这些坑吧。</p>
+ 
+<p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-04-26T20:34:54+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/arch/'>arch</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/03/26/my-code/" title="Previous Post: 54chen的程序人生">&laquo; 54chen的程序人生</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+<a href=/donate>本文接受捐赠</a><br>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  Copyright &copy; 2016 - 54chen -
+
+</footer>
+  
+<p>&nbsp;</p>
+<!-- 多说评论框 start -->
+<div class="ds-thread" data-thread-key="/blog/2016/04/26/mistake-in-six-years/" data-title="过去六年在小米搞(wa)错(keng)的几个技术细节" data-url="http://2014.54chen.com/blog/2016/04/26/mistake-in-six-years/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"54chen"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+<!-- 多说公共JS代码 end -->
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
