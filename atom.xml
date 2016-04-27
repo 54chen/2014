@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-04-26T21:31:43+08:00</updated>
+  <updated>2016-04-27T21:34:12+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -76,6 +76,70 @@
 <h2>后记</h2>
 
 <p>细节有点多，坑都还在(还有一些坑已经爬出来了就不列在这里了)，依旧有后继的团队和项目在坑里，如果一个项目立志要做大做强，还是一开始就跳出这些坑吧。</p>
+
+<hr />
+
+<h2>English version</h2>
+
+<h2>Something wrong in the pass six years at XIAOMI server</h2>
+
+<p>We deployed MILIAO server, which was a sketchy version patched together, in 2010.The first team members that developed at XIAOMI sever-side were less experience in the internet field.</p>
+
+<p>The techlonogy frameworks have broadcasted to every team in XIAOMI after all these years.</p>
+
+<p>And now for a look at the techlonogy details,it was thought too little at that time.</p>
+
+<h2>Detail 1.nginx&rsquo;s pass_proxy which proxied java server is not graceful when deploying </h2>
+
+<p>A typical case is nginx worked with resin or tomcat,and there is a configration like &lsquo;weight=1 max_fails=3&rsquo; in nginx.</p>
+
+<p>There is not graceful when deploying the service.We dont have any load-balance tool.</p>
+
+<p>It is a relief that the users do not know out of service at the native app.</p>
+
+<h2>Detail 2.too many traffic data,too less is useful</h2>
+
+<p>No surprisingly,there is something wrong between one model call another one when it is out of service online.</p>
+
+<p>We have not thought about the model-call traffice data in the pass years.</p>
+
+<p>We have too many data like QPS and percentile but all of them are made by the servce be called rather than the caller.</p>
+
+<p>One question that frequently comes up was that looks all good by data but not good by the caller.</p>
+
+<h2>Detail 3.http framework for Android and Ios</h2>
+
+<p>Without pading-rose framework,I think we would develop a tcp server,which transfer data by protobuffer.</p>
+
+<p>It is better for Chinese network enviroment,because the tcp one is more free than the http one.</p>
+
+<p>The Weibo app is also designed by http.</p>
+
+<h2>Detail 4.java without specialist</h2>
+
+<p>I think the service online is not need restarted now if we had choose php at that time.</p>
+
+<p>Now I prefer c/c++.It is less problem.</p>
+
+<h2>Detail 5.depended too much on RDBS</h2>
+
+<p>It is not wrong that a project is designed by mysql.It is easy and quick.</p>
+
+<p>But it is difficult when you want to take the service to multi-IDC.It is impossible.</p>
+
+<p>Mult-IDC is a easy thing,if we have designed the service by key-value store.The logic must be done in project rather than in mysql.</p>
+
+<p>This is so important when your project have became greater.</p>
+
+<h2>Detail 6.depended too much on rabbitmq</h2>
+
+<p>It is doesnot matter that a peakedness project is designed by mq.It must be a disaster that a usual project is designed by mq everywhere.</p>
+
+<p>It is difficult to find the calling relationship.</p>
+
+<h2>PS</h2>
+
+<p>There are too many details.To avoid the wrong thing if your service will be greater.</p>
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
   </entry>
   
