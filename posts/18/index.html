@@ -9,8 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-09-04 淘宝分布式数据库系统OceanBase观后闲话小记 http://t.co/dn0qS7I #
-今天是狂暴的一天，http://t.co/hTGXSWX http://t.co/iJT4yTd http://t.co/UG3Kv2Y &hellip;">
+  <meta name="description" content="Riak源码阅读手记 运行安装 riak源码阅读手记一 初出茅庐 项目入口
+http://www.54chen.com/_linux_/riak-source.html riak源码阅读手记二 左右开弓 启动
+http://www.54chen.com/_linux_/riak-cource- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,103 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/09/riak-source-install-run/">Riak源码阅读手记 运行安装</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-09T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" />
+riak源码阅读手记一 初出茅庐 项目入口
+<a href="http://www.54chen.com/_linux_/riak-source.html">http://www.54chen.com/_linux_/riak-source.html</a></p>
+
+<p>riak源码阅读手记二 左右开弓 启动
+<a href="http://www.54chen.com/_linux_/riak-cource-code.html">http://www.54chen.com/_linux_/riak-cource-code.html</a></p>
+
+<p><strong>代码运行入口</strong>
+riak-kv/ebin/riak_kv.app文件定义了otp标准项目的结构，一个不错的实例：http://www.iteye.com/topic/342819<br />
+{mod, {riak_kv_app, []}}一行定义了入口。打开riak_kv_app文件：<br />
+-export([start/2,stop/1]).<br />
+定义了两大个方法，start和stop。</p>
+
+<p><strong>先看start:</strong>
+启动riak_kv及相关的server。<br />
+检查系统时间。<br />
+加入系统变量。<br />
+确保设置NWR的值和一些vclock的初始值。<br />
+看storage_backend是否启动。<br />
+在cluster_info中注册。<br />
+启动supervisor。<br />
+全部启动。</p>
+
+<p>stop：application:stop。</p>
+
+<p><strong>跑一把试试：</strong>
+A机：192.168.103.10<br />
+B机：192.168.97.48<br />
+C机：192.168.100.52<br />
+三个节点，已经装好erlang R13B04。
+<strong>先在A机操作</strong>：</p>
+
+<p><blockquote>wget http://downloads.basho.com/riak/riak-0.14/riak-0.14.2.tar.gz<br />
+tar zxvf riak-0.14.2.tar.gz<br />
+cd riak-0.14.2<br />
+make rel</blockquote></p>
+
+<p>然后在rel/riak目录下会有最编译好的节点程序。</p>
+
+<p><blockquote>scp -r rel root@192.168.100.52:/root/<br />
+scp -r rel root@192.168.97.48:/root/</blockquote></p>
+
+<p>cd rel/riak<br />
+ABC三机修改配置：<br />
+vim etc/app.config<br />
+把127.0.0.1修改为对应的ip<br />
+vim etc/vm.args<br />
+同上。</p>
+
+<p>A：bin/riak start<br />
+B:  bin/riak start<br />
+bin/riak-admin join riak@192.168.103.10<br />
+C:  bin/riak start<br />
+bin/riak-admin join riak@192.168.103.10</p>
+
+<p>./riak-admin status</p>
+
+<p>欧了。</p>
+
+<p>此时默认使用bitcask做为存储引擎。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -565,83 +663,6 @@ redmine极速安装手记 <a href="http://goo.gl/fb/5zT5D" rel="nofollow">http:/
 54chen Twitter memo 2011-07-31 <a href="http://goo.gl/fb/0GQ5D" rel="nofollow">http://goo.gl/fb/0GQ5D</a> <a href="http://twitter.com/54chen/statuses/97484589886476288" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/03/redmine-install-fast-detail/">Redmine极速安装手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-03T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1RF46XddFXXXANWHX_084227.jpg" alt="redmine install ubuntu" />
-Redmine是用Ruby开发的基于基于web的项目管理软件，是用ROR框架开发的一套跨平台项目管理系统，系统通过“项目（Project）”的形式把成员、任务（问题）、文档、讨论以及各种形式的资源组织在一起，大家参与更新任务、文档等内容来推动项目的进度，同时系统利用时间线索和各种动态的报表形式来自动给成员汇报项目进度。</p>
-
-<p>机器环境：</p>
-
-<p><blockquote>ubuntu 10.04 dell optiplex 380<br />
-root权限下操作</blockquote></p>
-
-<p>1）apt-get install mysql-client mysqld-server</p>
-
-<p>2)进mysql:</p>
-
-<p><blockquote>create database redmine_default;<br />
-GRANT all ON redmine_default.* TO root@'%' IDENTIFIED BY 'miliao';<br />
-FLUSH PRIVILEGES ;</blockquote></p>
-
-<p>3)apt-get install redmine redmine-mysql subversion libapache2-mod-passenger</p>
-
-<p>4)ln -s /usr/share/redmine/public /var/www/redmine</p>
-
-<p>5)a2enmod passenger</p>
-
-<p>6)chmod a+x /usr/share/redmine/public</p>
-
-<p>7)/etc/apache2/sites-available/default<br />
-增加：</p>
-
-<p><blockquote>&lt;Directory /var/www/redmine&gt;<br />
-RailsBaseURI /redmine<br />
-PassengerResolveSymlinksInDocumentRoot on<br />
-&lt;/Directory&gt;</blockquote></p>
-
-<p>8)/etc/init.d/apache2 restart<br />
-9)打开 http://xxx/redmine</p>
-
-<p>排查问题：<br />
-1） /var/log/redmine下有500的原因<br />
-2）中文乱码问题：</p>
-
-<p><blockquote>上述第8步时，不要着急做配置。把redmine_default整个数据库导出来，替换其中的charset=laitin1为charset=utf8，清空原表重新导入后再用admin/admin登录重新配置。</blockquote></p>
-
-<p></p>
 </div>
   
   

@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-08-08】 美国的vps真是不怎么快，不论怎么优化，到最后还是只剩下一个请求了，还是慢，但是为了能够读取twitter，还是切过去。。。 # 切过dns，静观其效 # 周一是困顿的 # QQ新闻头条：信访办同志上班时间办公室搓麻将。 # &hellip;">
+  <meta name="description" content="为人人设计的分布式key-value系统架构[原创] [作者：陈臻 转载请注明出处：http://www.54chen.com/714-design-for-all-key-value-of-the-distributed-system-architecture-original/ 版本：1.1 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,94 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/08/09/design-for-all-key-value-of-the-distributed-system-architecture-original/">为人人设计的分布式key-value系统架构[原创]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-08-09T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>[作者：陈臻 转载请注明出处：<a href="http://www.54chen.com/714-design-for-all-key-value-of-the-distributed-system-architecture-original/">http://www.54chen.com/714-design-for-all-key-value-of-the-distributed-system-architecture-original/</a> 版本：1.1  2090810]</p>
+
+<p>8.10 增加dev4server组里esx大侠提出的几个代表性问题</p>
+
+<p>这个架构的产生，是为了公司的一个新项目，而后来慢慢变成了解决整个公司的所有问题的一个架构，期间经yahoo的angentZh先生、dev4server组里张立冰先生、盛大的许式伟先生推荐研究了bigtable、Dynamo等很有代表性的分布式架构。</p>
+
+<p>如下图所示：</p>
+
+<p><a href="http://www.54chen.com/wp-content/uploads/2009/08/e7bb98e59bbe1.jpg"><img class="aligncenter size-full wp-image-715" title="e7bb98e59bbe1" src="http://www.54chen.com/wp-content/uploads/2009/08/e7bb98e59bbe1.jpg" alt="" width="500" height="582" /></a></p>
+
+<p>总体：底层以key-value存储，每个节点内作主主互备，节点以<a href="http://www.54chen.com/705-peer-to-peer-distributed-hash-algorithm-in-the-mainstream-of-comparative-analysis-of-the-collection/">一致性哈希</a>存取，哈希所使用的key为relation-key，非直接存取时的key。</p>
+
+<p>step 0：连接客户端收到一个key为relatioin-key_id的存取请求，取出relation-key进行一致性哈希计算，这里是为了让相关的内容都能存在一个节点上，类似bigtable的tablet；</p>
+
+<p>step 1：连接客户端读取最新的配置文件，server.conf。</p>
+
+<p>step 2：根据配置文件寻找正确的节点。</p>
+
+<p>step 3：在B节点之间增加了一个节点A的时候，A前的虚拟<a href="http://www.54chen.com/399-yahoo%e3%80%81tao%e4%ba%91%e8%ae%a1%e7%ae%97%e5%88%a9%e5%99%a8%e4%b9%8b%e2%80%9c%e4%ba%91%e2%80%9d%e7%ab%af%e7%9a%84%e5%b0%8f%e9%a3%9e%e8%b1%a1%e2%80%94hadoop/">节点</a>将寻找不到数据，此时连接客户端会重新读取老的配置文件server.conf.1，根据老的配置，这里的数据会去B节点读取原来的数据，读到的数据会转移到新增加的节点A中。</p>
+
+<p>step 4：增加节点A后，<a href="http://www.54chen.com/379-%e8%bd%bb%e7%82%b9%e9%ad%94%e6%a3%92%ef%bc%8c%e7%9e%ac%e9%97%b4%e5%ae%89%e8%a3%85%e4%b8%8a%e7%99%be%e5%8f%b0%e6%9c%8d%e5%8a%a1%e5%99%a8/">服务器</a>端会同时运行手动的转移脚本，转移脚本直接将B节点中符合A节点的存取规则的数据全部转移，转移结束将操作server.conf.1，进行删除老配置文件的操作。</p>
+
+<p>这个架构的特点：</p>
+
+<p>1.底层的key-value引擎并不特指某种，用cabinet或者是mysql都是可以的；</p>
+
+<p>2.增加或者删除节点都可以是半自动+半手动或者是全手动处理；</p>
+
+<p>3.适合大多数大型网站任何业务。</p>
+
+<p>这个架构的名字：未命名</p>
+
+<p>1. 速度：relation-key存储的方式，使相关性强的数据都在一起，保障批量的速度；</p>
+
+<p>2.容灾：底层master-master同步的DB保障了其中一台出现故障不会影响整个系统；</p>
+
+<p>3.扩展：手动加自动的方式使扩展节点应对自如。
+<h3><span class="mw-headline">Q&amp;A:</span></h3>
+Q:如何发现是找不到数据，而不是数据本来就没有？</p>
+
+<p>A:系统中有server.conf server.conf.1 server.conf.2....只检测历史配置文件，如果手动迁移数据结束，历史配置文件将被删除。<br />
+Q:节点A进入时，是否能有选择的向B所要数据？</p>
+
+<p>A:这里的确是忽略了同一个key的数据的版本控制的问题。如果先执行了手动脚本再存到A结点是正常的，如果先存到A再执行手动脚本，会出现老数据盖了新数据。不知有啥好的idea没?<br />
+Q:所要数据后，何时算完成？因为B可能一直在有新数据生成。</p>
+
+<p>A:如果是新的配置文件上来了，写入B的数据应该就已经是新的规则了，这样，只需要手动执行的脚本循环当前的数据一圈，其中的数据自然是正确无误的了。手动脚本完成后删除老的配置文件标志迁移结束。<br />
+Q:完成后，节点A如何生效？</p>
+
+<p>A:老的配置文件删除前，读数据操作是半生效状态（逐步恢复）；老的配置文件被删除后，A节点的读写都自然生效了。<br />
+Q:容灾，如果节点A掉了，那B上是否有A所保存的信息？</p>
+
+<p>A:一个节点下有至少两个物理实际节点做主主备份，上面是一个带网络检测和自动选取连接的工具，虚拟成一个节点，换句话说，A节点两台机器全部坏掉的可能性这里视为零。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1211,156 +1299,6 @@ USING gin<br />
 <code>$prefix = $wgDBversion &lt; 8.3 ? "'default'," : "'chinesecfg',";</code></p>
 
 <p>大功告成，搜索的时候就使用了bamboo的分词来搜了，如果还有兴趣可以加强175-179行的sql就能得到更加强大的wiki。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/17/postgresql-bamboo-lucene-part2/">[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第二部分</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-07-17T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.7.17 转载请注明原文链接：<a href="http://www.54chen.com/_linux_/postgresql-bamboo-lucene-part2.html">http://www.54chen.com/_linux_/postgresql-bamboo-lucene-part2.html</a> ]</p>
-
-<p>书接上回。上回说<a href="http://www.54chen.com/c/601">到建立好一整套的中文分词和pgsql的环境</a>，这回来说如何搜。</p>
-
-<p><strong>一、基础篇 </strong></p>
-
-<p>本回从一条sql开始：</p>
-
-<p><span class="MsgBodyText">select * from dbname where field_name @@ 'aa|bb' order by rank(field_name, 'aa|bb');</span></p>
-
-<p>从这个sql字面意思讲解：从 dbname这个表中查field_name匹配aa或者是bb的词，并且按照他们的匹配的RANK排序。</p>
-
-<p>基本上明白上面这段话后，来学习四个概念：<strong>tsvector、</strong><strong>tsquery、</strong>@@ 、<strong>gin。</strong></p>
-
-<p>1.<strong>tsvector:</strong></p>
-
-<p>在postgreSQL 8.3自带支持全文检索功能，在之前的版本中需要安装配置tsearch2才能使用。它提供两个数据类型（tsvector,tsquery），并且通过 动态检索自然语言文档的集合，定位到最匹配的查询结果，tsvector正是其中之一。</p>
-
-<p>一个tsvector的值是唯一分词的分类列表，把一话一句词格式化为不同的词条，在进行分词处理的时候，tsvector会自动去掉分词中重复的词条，按照一定的顺序装入。例如</p>
-
-<p>SELECT 'a fat cat sat on a mat and ate a fat rat'::tsvector;<br />
-tsvector<br />
-----------------------------------------------------<br />
-'a' 'on' 'and' 'ate' 'cat' 'fat' 'mat' 'rat' 'sat'</p>
-
-<p>通过tsvector把一个字符串按照空格进行分词，这可以把分词后的词按照出现的次数排成一排（还会按词长度）。</p>
-
-<p>对于英文和中文的全文检索我们还要看下面这条sql:</p>
-
-<p>SELECT to_tsvector('english', 'The Fat Rats');<br />
-to_tsvector<br />
------------------<br />
-'fat':2 'rat':3</p>
-
-<p>to_tsvector函数来是tsvector规格化的，在其中可指定所使用的分词。</p>
-
-<p>2.<strong>tsquery：</strong></p>
-
-<p>顾名思义,tsquery,表示的应该是查询相关的.tsquery是存储用于检索的词条.并且可以联合使用boolean 操作符来连接, &amp; (AND), | (OR), and ! (NOT). 使用括号(),可以强制分为一组.</p>
-
-<p>同时,tsquery 在做搜索的时候,也可以使用权重,并且每个词都可以使用一个或者多个权重标记,这样在检索的时候,会匹配相同权重的信息.跟上面的tsvector相同,tsquery也有一个to_tsquery函数.</p>
-
-<p>3.<strong>@@：</strong></p>
-
-<p>在postgresql中全文检索匹配操作使用@@ <a href="http://www.54chen.com/c/441">操作符</a>,如果一个<br />
-tsvector(document) 匹配到 tsquery(query)则返回true.</p>
-
-<p>看一个简单的例子：</p>
-
-<p>SELECT 'a fat cat sat on a mat and ate a fat rat'::tsvector @@ 'cat &amp; rat'::tsquery;<br />
-?column?<br />
-----------<br />
-t
-我们在处理索引的时候还是要使用他们的函数如下：<br />
-SELECT to_tsvector('fat cats ate fat rats') @@ to_tsquery('fat &amp; rat');<br />
-?column?<br />
-----------<br />
-t
-并且操作符 @@ 可以使用text作为tsvector和tsquery.如下操作符可以使使用的方法</p>
-
-<p>tsvector @@ tsquery<br />
-tsquery  @@ tsvector<br />
-text @@ tsquery<br />
-text @@ text<br />
-上面的前两种我们已经使用过了,但是后两种,<br />
-text @@ tsquery 等同于 to_tsvector(x) @@ y.<br />
-text @@ text 等同于 to_tsvector(x) @@ plainto_tsquery(y).（~）plainto_tsquery在后面讲。。。</p>
-
-<p><strong>4.gin:</strong></p>
-
-<p>gin是一种索引的名称，全文索引用的。</p>
-
-<p>我们可以通过创建gin索引来加速检索速度.例如</p>
-
-<p>CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector('english', body));</p>
-
-<p>创建索引可以有多种方式.索引的创建甚至可以连接两个列:<br />
-CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector('english', title || body));</p>
-
-<p><strong>二、提高篇</strong></p>
-
-<p>基础知识学完了，应该上阵了，为了实现全文检索，我们需要把一个文档创建一个tsvector 格式，并且通过tsquery实现用户的查询，在查询中我们返回一个按照重要性排序的查询结果。</p>
-
-<p>先看一个to_tsquery的sql:</p>
-
-<p>SELECT to_tsquery('english', 'Fat | Rats:AB');<br />
-to_tsquery<br />
-------------------<br />
-'fat' | 'rat':AB</p>
-
-<p>可以看出，to_tsquery函数在处理查询<a href="http://www.54chen.com/c/358">文本</a>的时候，查询文本的单个词之间要使用逻辑操作符（&amp; (AND), | (OR) and ! (NOT)）连接（或者使用括号）。</p>
-
-<p>如果执行下面这条sql就会出错：</p>
-
-<p>SELECT to_tsquery('english', 'Fat  Rats');</p>
-
-<p>plainto_tsquery函数却可以提供一个标准的tsquery，如上面的<a href="http://www.54chen.com/c/216">例子</a>，plainto_tsquery会自动加上逻辑&amp;操作符。<br />
-SELECT plainto_tsquery('english', 'Fat  Rats');</p>
-
-<p>plainto_tsquery<br />
------------------<br />
-'fat' &amp; 'rat'<br />
-但是plainto_tsquery函数不能够识别逻辑操作符和权重标记。<br />
-SELECT plainto_tsquery('english', 'The Fat &amp; Rats:C');<br />
-plainto_tsquery<br />
----------------------<br />
-'fat' &amp; 'rat' &amp; 'c'</p>
-
-<p><strong>三、终结篇</strong></p>
-
-<p>看完上面的一堆后，千言万语汇成一句话，本文主要讲的是一条sql，在加了第一部分里所讲述的扩展后，使用下面的sql，从一个字段中搜一句话，还要排序出来：</p>
-
-<p>select * from tabname where to_tsvector('chinesecfg',textname) @@ plainto_tsquery('搜点啥') order by ts_rank(to_tsvector('chinesecfg',textname),plainto_tsquery('搜点啥')) limit 10;</p>
-
-<p>之前的create table create index就不写了。授人以渔才是关键。</p>
 </div>
   
   

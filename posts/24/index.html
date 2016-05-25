@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-01-23 “我要省电百分之三十”成龙广告的美的空调，看到真功夫的李连杰广告的奥的斯空调，情何以堪哪～ #
-一个比较明智的手段应该是首先按照自顶向下来做，接下来进行目标服务建模，最后是自底向上的现有资产的遗留分析。消息是： &hellip;">
+  <meta name="description" content="[Java]如何优雅读取properties文件-part2 接上part1:http://www.54chen.com/java-ee/java-read-properties-files-part.html
+从数据流到java.util.Properties &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/25/java-read-properties-files-part2/">[Java]如何优雅读取properties文件-part2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-25T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png" alt="java properties" />
+接上part1:<a href="http://www.54chen.com/java-ee/java-read-properties-files-part.html">http://www.54chen.com/java-ee/java-read-properties-files-part.html</a>
+<strong>从数据流到java.util.Properties</strong>
+你应该注意到之前提过的方法只是一半的措施：他们都只返回输入数据流，而并没有类似键值对的返回。幸运的是，把数据加载成一个列表很简单（可以实例化java.util.Properties即可）。因为你会发现你在一再地使用它，搞成几个帮助类是有意义的。</p>
+
+<p>java的内置方法给classpath加载指定的资源有小小的不同也是一件讨厌的事情，特别是当一些资源名字是硬编码但你现在想换另一个加载的方法时。抽取出来一些东西是有意义的，类似斜杠和点作为命名的分隔符等等。干脆一点，帖出我的properties的处理类，代码在这里下载：http://www.javaworld.com/javaqa/2003-08/01-qa-0808-property.html?page=2#resources</p>
+
+<p>［代码略］</p>
+
+<p>在loadProperties方法的javadoc里的注释显示这个方法的输入参数要求非常随意：接受资源名字被任何按照原生的方法设计（除了相关的包外尽量使用Class.getResourceAsStream()）的格式化而且使其本地实现标准化。</p>
+
+<p>短一点的loadProperties() 公用方法决定了哪个类加载器加载资源。下面的解决方法是合理的但并非完美。你应该考虑使用文章"<a href="http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html">Find  a Way Out of the ClassLoader Maze</a>"里提到的技术来代替。</p>
+
+<p>注意有两个条件编译的常量来控制loadProperties的行为，你可以调整它们来适应你的口味：</p>
+
+<p>THROW_ON_LOAD_FAILURE选择loadProperties在找不到资源的情况下是抛异常还是返回空。</p>
+
+<p>LOAD_AS_RESOURCE_BUNDLE 选择资源在查找的时候是绑定资源还是给出的classpath资源。</p>
+
+<p>将LOAD_AS_RESOURCE_BUNDLE设置为true是不好的，除非你是想通过编译到java.util.ResourceBundle的本地化支持得到好处。而且，java内部缓存了资源绑定，所以你可以避免重复地对同样的资源名字进行磁盘文件读写。</p>
+
+<p><strong>更多的事情</strong></p>
+
+<p>我有意省略了一个有趣的classpath资源加载方法，ClassLoader.getResources。尽管它不常使用，但其允许许多有用的选项，这些选项在设计高度定制和简单配置的应用程序非常有用。</p>
+
+<p>我没有在这文章里讨论ClassLoader.getResources是因为它值得专门写一篇文章。碰巧，这个方法与剩下的取得资源的方法联系紧密：Java.net.URLs。你可以使用他们，因为资源描述符要比classpath资源名字符要更通用。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -597,61 +658,6 @@ $sudo service udev restart
 eclispe>run as>android application 选择真实机器。</p>
 
 <p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/12/26/54chen-twitter-memo-2010-12-26/">54chen Twitter Memo 2010-12-26</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-26T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-井岗山市人才多。从革命开始就是。 </ul><a href="http://twitter.com/54chen/statuses/18664634101796864" class="aktt_tweet_time">#</a>
-凤凰传奇和Hao123一样，有一种特质，导致在大城市办公室的白领们还在嘲笑他们的时候，他们已经红遍大江南北。 <a href="http://twitter.com/54chen/statuses/18664076552962048" class="aktt_tweet_time">#</a>
-好记性对一个好程序员很重要。 <a href="http://twitter.com/54chen/statuses/18478349236051968" class="aktt_tweet_time">#</a>
-介绍一个基于NIO的异步框架Cindy - Java <a href="http://twitter.com/54chen/statuses/18159362950307841" class="aktt_tweet_time">#</a>
-iphone正式版的米聊上线了，支持消息push，http://itunes.apple.com/us/app/id410565101?mt=8 <a href="http://twitter.com/54chen/statuses/17917678639382528" class="aktt_tweet_time">#</a>
-RT 一个女人让他的程序员丈夫去商店买东西：你去附近的商店买些面包，如果有鸡蛋的话，买6个回来。20分钟后，这个丈夫买了6个面包回来，他的妻子大吃一惊：你为什么买了6个面包？！ 程序员丈夫回答：因为他们有鸡蛋。 <a href="http://twitter.com/54chen/statuses/17880384423333888" class="aktt_tweet_time">#</a>
-<a href="http://www.miliao.com" rel="nofollow">http://www.miliao.com</a> 买来的域名，前身似乎是个有颜色的聊天的网站，朋友帮试试你的防火墙有没有更新。 <a href="http://twitter.com/54chen/statuses/17838801023934464" class="aktt_tweet_time">#</a>
-[java example]你还在使用while(true) Thread.sleep吗？ <a href="http://goo.gl/fb/UUdvZ" rel="nofollow">http://goo.gl/fb/UUdvZ</a> <a href="http://twitter.com/54chen/statuses/17774058900824064" class="aktt_tweet_time">#</a>
-[java example]你还在使用while(true) Thread.sleep吗？ <a href="http://goo.gl/fb/kgK8X" rel="nofollow">http://goo.gl/fb/kgK8X</a> <a href="http://twitter.com/54chen/statuses/17771205943631872" class="aktt_tweet_time">#</a>
-秘闻惊闻：smthBBS的zixia大侠也在用我们的米聊，哈哈。 <a href="http://twitter.com/54chen/statuses/17569385195507713" class="aktt_tweet_time">#</a>
-外媒：这些伙计绝非那些普通的开发者 <a href="http://twitter.com/54chen/statuses/17482448111665152" class="aktt_tweet_time">#</a>
-贡献两个抓取、模拟登录里常用到搞定js加密的东西：http://www.javaeye.com/topic/643078   <a href="http://www.javaeye.com/topic/644353" rel="nofollow">http://www.javaeye.com/topic/644353</a> <a href="http://twitter.com/54chen/statuses/17413015561310208" class="aktt_tweet_time">#</a>
-猜猜是谁：打乒乓球中搞互联网搞得最好的，搞互联网中打乒乓球打得最好的。 <a href="http://twitter.com/54chen/statuses/17098580208652289" class="aktt_tweet_time">#</a>
-要想在疼讯微博上用api发微博，需要：应用已通过来源字段审核，且用户Oauth授权数 1000 以上，最近连续5天APP全部用户API请求次数均超过10000次/日以上 <a href="http://twitter.com/54chen/statuses/17093854595383296" class="aktt_tweet_time">#</a>
-疼讯微博终于耐不住寂寞了，开放了写的api，实用性很烂。 <a href="http://twitter.com/54chen/statuses/17041239736061952" class="aktt_tweet_time">#</a>
-每个不给页面加favicon的程序员，上辈子都是折翼的天使。 <a href="http://twitter.com/54chen/statuses/16692341226082304" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2010-12-19 <a href="http://goo.gl/fb/acFnk" rel="nofollow">http://goo.gl/fb/acFnk</a> <a href="http://twitter.com/54chen/statuses/16307293440184322" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   
