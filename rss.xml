@@ -4,7 +4,7 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2016-05-25T14:16:10+08:00</pubDate>
+        <pubDate>2016-05-26T12:08:20+08:00</pubDate>
 
         
         <item>
@@ -158,7 +158,7 @@
 
 <h2>Question</h2>
 
-<p>We need to verify the parameters by RSA when we devlop the Google Play apps.There is not any reference codes with c/c++.The java or php example are too many in internet.</p>
+<p>We need to verify the parameters by RSA when we devlop the Google Play apps.There is not any reference codes with c/c++.There are so many java or php examples in the internet.</p>
 
 <h2>How to resolve in java</h2>
 
