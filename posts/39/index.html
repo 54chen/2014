@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-11-21】 网友就网络防火墙和TWITTER提问奥巴马。奥巴马称“一直坚定支持互联网开放使用，非常支持不审查内容”。 # 转自雷铮♥Fish: 我拿着一麻袋钱去上大学，换来了一麻袋书，毕业了，用这些书去换钱，却买不起一个麻袋！ # x200 &hellip;">
+  <meta name="description" content="ubuntu9.10里的firefox不显示DNS Flusher插件的解决办法 ubuntu 9.10里的firefox是3.55版本的，DNS Flusher是个很好用的快速切换dns的插件。 ubuntu下是大小写敏感的，而DNS Flusher的作者似乎只是个windows用户。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/23/ubuntu910-inside-firefox-does-not-display-plug-in-solution-to-dns-flusher/">ubuntu9.10里的firefox不显示DNS Flusher插件的解决办法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-23T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>ubuntu 9.10里的firefox是3.55版本的，DNS Flusher是个很好用的快速切换dns的插件。</p>
+
+<p>ubuntu下是大小写敏感的，而DNS Flusher的作者似乎只是个windows用户。
+<blockquote>修改这个文件：</blockquote></p>
+
+<p>vim /home/cc/.mozilla/firefox/icj6nr4a.default/extensions/{7d575baa-b543-11dc-8314-0800200c9a66}/chrome.manifest
+(根据你的情况自己修改下目录)</p>
+
+<p>然后修改这个文件里的第一行和第二行里的两个overlay，将里面的<strong>dnsFlusher.xul</strong>都改成<strong>dnsflusher.xul</strong>，注意，只修改前面两个overlay，后面的content和skin无需修改。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -730,70 +774,6 @@ http://www.openssl.org/</p>
 
 <p>iptables -I <a href="http://www.54chen.com/230-%e6%b7%ab%e8%8d%a1%e4%b8%80%e4%b8%8b%ef%bc%8c%e4%bd%a0%e5%b0%b1%e7%9f%a5%e9%81%93/">INPUT</a> -p udp --dport 220 -j ACCEPT
 K掉原来的~~搞定！打完收工。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/02/multi-nginx-configuration-of-single-php-fpm-approach-from-academy-of-sciences/">多nginx单php-fpm的配置方法[from科学院]</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-11-02T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>用php fastcgi和nginx搭配的形式是很常见的，在很BT的需求下，可能会需要多个nginx走不同的端口，而进程只用一个php-fpm。</p>
-
-<p>本文所讲的环境比上述一句话还要BT，存在一个<a href="http://www.54chen.com/806-academy-of-sciences-in-recent-years-a-good-article-summing-up/">php</a>-fpm，而且每个nginx都以一个非超级用户所有来进行运行。</p>
-
-<p>这样就存在了一个BT的情况，php-fpm默认不能以root权限运行，而普通用户来运行的话，对其他用户的目录，php-fpm将没有权限，页面在运行php的时候，会提示404。</p>
-
-<p>于是有以下的解决方案：</p>
-
-<p>找到php的源代码 $src_path/sapi/cgi/fpm/fpm_unix.c</p>
-
-<p>在文件顶部增加一个宏定义：#define I_REALLY_WANT_ROOT_PHP</p>
-
-<p>重新 configure make make install</p>
-
-<p>此时再修改<a href="http://www.54chen.com/688-wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes/">php-fpm</a>.conf 将user group都修改成root（经过上面的修改php-fpm已经支持root了）。</p>
-
-<p>重启php-fpm.</p>
-
-<p><a href="http://www.54chen.com/640-mediawiki-pgsql/">配置</a>各nginx.conf：</p>
-
-<p>location ~ .*\.(php|php5)?$<br />
-{
-#fastcgi_pass  unix:/tmp/php-cgi.sock;<br />
-fastcgi_pass  127.0.0.1:9000;<br />
-fastcgi_index index.php;<br />
-include fcgi.conf;<br />
-}</p>
-
-<p>点到即止，不再多说。。。</p>
 </div>
   
   

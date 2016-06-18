@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-12-20】 和老编说起，旧金山的牛B人真的还不少，作为中国IT业的老字号，旧金山，用牛B的方式解释各自的人生，在中国遍地开花。 # 幸福像花儿一样 # 人人网招聘JAVA、AS、C++工程师（科学院特供，两月内有效） 这些都是中高级职位， &hellip;">
+  <meta name="description" content="艾睿网 CMAX（RIA中国）技术峰会归来 演稿分享 感谢junidea、kenshin等牛人的组织和邀请，为这次技术峰会的成功举办感到由衷的高兴，这一群新兴的群体，在一线的朋友们，到场的牛人还有《Flex 3 RIA开发详解与精深实践》作者杨占坡、杨铭、《银光开发者工作室》的魏永超、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/21/arrow-network-cmax-ria-china-technology-summit-returned-to-share-draft-speech/">艾睿网 CMAX（RIA中国）技术峰会归来 演稿分享</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-12-21T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>感谢junidea、kenshin等牛人的组织和邀请，为这次技术峰会的成功举办感到由衷的高兴，这一群新兴的群体，在一线的朋友们，到场的牛人还有《Flex 3 RIA开发详解与精深实践》作者杨占坡、杨铭、《银光开发者工作室》的魏永超、还有出版社和媒体的各位朋友，大家都为各自领域的见解进行了深刻的探讨，在会上我作了《HTTP：RIA REST CLOUD》的分享，同时借此结交了不少各行业兴趣相投的好朋友。</p>
+
+<p>以下是活动海报，还有上海和广州的会场，那边关心RIA的朋友可以关注一下时间：</p>
+
+<p><a href="http://www.airia.cn/cmax2009/welcome.html">http://www.airia.cn/cmax2009/welcome.html</a></p>
+
+<p>我分享的主题的演示稿在下面（请使用firefox打开）：</p>
+
+<p><a href="http://www.54chen.com/ria/200912.xul ">http://www.54chen.com/ria/200912.xul</a></p>
+
+<p>稍候应该还有图片和视频资料送出。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -772,50 +818,6 @@ return b;<br />
 	<li>好疯狂  到处是google wave的邀请 全是用户自发的 这是如何做到的 <a href="http://twitter.com/54chen/statuses/6108741323">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/23/ubuntu910-inside-firefox-does-not-display-plug-in-solution-to-dns-flusher/">ubuntu9.10里的firefox不显示DNS Flusher插件的解决办法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-11-23T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>ubuntu 9.10里的firefox是3.55版本的，DNS Flusher是个很好用的快速切换dns的插件。</p>
-
-<p>ubuntu下是大小写敏感的，而DNS Flusher的作者似乎只是个windows用户。
-<blockquote>修改这个文件：</blockquote></p>
-
-<p>vim /home/cc/.mozilla/firefox/icj6nr4a.default/extensions/{7d575baa-b543-11dc-8314-0800200c9a66}/chrome.manifest
-(根据你的情况自己修改下目录)</p>
-
-<p>然后修改这个文件里的第一行和第二行里的两个overlay，将里面的<strong>dnsFlusher.xul</strong>都改成<strong>dnsflusher.xul</strong>，注意，只修改前面两个overlay，后面的content和skin无需修改。</p>
 </div>
   
   

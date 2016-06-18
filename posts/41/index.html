@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-10-03】 告各网友，校内的账号和开心的账号已经互通，如果发现好友丢了相册日志丢了，那说明您用了开心的密码，再试试别的常用密码登录看看。 # 实在没有办法了，在blog里加了一句话：信曾哥，转载的都给我保留原链接地址 http://www. &hellip;">
+  <meta name="description" content="[十一归来]ubuntu 9.10 硬盘安装手记 很早之前，科学院发布过一篇 ubuntu 8.10 desktop版本 硬盘安装手记 时隔今日，中间经过了一个9.04的beta版本后，又迎来了新的beta版本 9.10最近的发布过程： 2009年10月1日——Beta版本发布 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,128 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/10/08/11-return-ubuntu-910-notes-from-the-hard-disk-installation/">[十一归来]ubuntu 9.10 硬盘安装手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-10-08T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>很早之前，科学院发布过一篇 <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/"><span style="font-size: x-small; color: #3366cc; font-family: Arial;">ubuntu 8.10 desktop版本 硬盘安装手记</span></a> 时隔今日，中间经过了一个9.04的beta版本后，又迎来了新的beta版本</p>
+
+<p>9.10最近的发布过程：</p>
+
+<p>2009年10月1日——Beta版本发布</p>
+
+<p>2009年10月22日——公布发布候选版本</p>
+
+<p>2009年10月29日——Ubuntu 9.10正版版本上架</p>
+
+<p>根据总结，Ubuntu 9.10中将会具有以下全新特性：</p>
+
+<p>1、Ubuntu 9.10中将会添加全新的令人印象更加深刻的启动图形；</p>
+
+<p>2、Ubuntu 9.10将会具有更快的启动速度（“Jaunty Jackalope”曾经在netbook上实现25秒的启动速度，Karmic Koala，尽管里面的动物“树袋熊”速度比较慢，但有望实现更快的启动速度）；</p>
+
+<p>3、Ubuntu 9.10将可以为Netbook更好地整合Moblin技术；</p>
+
+<p>4、Ubuntu 9.10将具有更好的视觉体验；</p>
+
+<p>5、Ubuntu 9.10将通过完整的开源软件来提升服务器版本的云计算性能；</p>
+
+<p>6、Ubuntu 9.10将主要采用Amazon APIs来管理云计算，当然GoGrid APIs 也在考虑中；</p>
+
+<p>7、Ubuntu 9.10中的Canonical 将创建Karmic Koala的标准Amazon机器镜像，本质上就是创建"ready-to-run" 程序，作为Amazon群体的“标准版本”；</p>
+
+<p>8、为了节约资源，Ubuntu 9.10中的休眠和唤醒特性将扩展到服务器版本。
+<blockquote>第七这个太牛B了，单台机器做成云里的一个节点，绝对主流，绝对未来！力顶！</blockquote>
+7号，休假归来，拖一回搞个系统玩。</p>
+
+<p>以下是安装步骤记录：</p>
+
+<p><strong>下载：</strong></p>
+
+<p><a href="http://releases.ubuntu.com/karmic/ubuntu-9.10-beta-desktop-i386.iso">http://releases.ubuntu.com/karmic/ubuntu-9.10-beta-desktop-i386.iso</a></p>
+
+<p>用迅雷啥的来拖，速度还不错，半小时搞到手。</p>
+
+<p>改名为ubuntu9.iso，放在了D：根目录里，用winrar打开，解压casper文件下的两个文件到c盘根目录。</p>
+
+<p>vmlinuz   和 initrd.lz</p>
+
+<p><strong>winGrub配置：</strong>
+很高兴这个老机器安装了一个fedora core5和win2k，n年前的系统，从来不换系统，有毒杀毒，有病治病。</p>
+
+<p>winGrub的安装见 <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/"><span style="font-size: x-small; color: #3366cc; font-family: Arial;">ubuntu 8.10 desktop版本 硬盘安装手记</span></a> 前半部分内容。</p>
+
+<p>所以系统中已经有一个之前的GRLDR了，现在抄一下boot.ini和menu.lst</p>
+
+<p>C:\boot.ini
+<blockquote>[boot loader]<br />
+timeout=5<br />
+default=multi(0)disk(0)rdisk(0)partition(1)\WINNT<br />
+[operating systems]<br />
+multi(0)disk(0)rdisk(0)partition(1)\WINNT="Microsoft Windows 2000 Professional" /fastdetect<br />
+C:\GRLDR="Linux"</blockquote>
+C:\boot\grub\menu.lst
+<blockquote>timeout 15</blockquote></p>
+
+<p>title 1. install Ubuntu9.10<br />
+root (hd0,0)<br />
+kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu9.iso ro quiet splash --<br />
+label check live-install<br />
+initrd (hd0,0)/initrd.lz
+<strong>进入liveCD安装：</strong></p>
+
+<p>重启，先从boot.ini的界面进linux，再从wingrub的界面进 install Ubuntu9.10</p>
+
+<p>一切正常的话，能直接进入LiveCD的桌面了。</p>
+
+<p>然后打开终端，运行：
+<blockquote>umount -l /isodevice</blockquote>
+<span style="color: #ff0000;">千万不要运行：umount -l /cdrom(真的不知道是哪个SB传播的要下这个区，这会导致之后的grub里看不到你装好的ubuntu系统)</span></p>
+
+<p>双击桌面的安装。。。</p>
+
+<p>这台老机器，2个80G的硬盘，全都使用了97%左右的空间（鬼知道装了些什么，难道有过量的毛片），每次到第四步识别分区的时候都要花12分钟左右。</p>
+
+<p><strong>总结：</strong></p>
+
+<p>这个版本的界面美化做得不错，不过grub2没感觉到有多方便，有可能是为了提高开机速度吧。目前为止，中文包不全，很多地方没翻译完。</p>
+
+<p>用QQ for linux 和IBUS的输入法有冲突的感觉，老是动不动挂掉。</p>
+
+<p>版本太新，firefox啥的找个flash插件都困难。</p>
+
+<p>要试的同志，还是再等半个月正式发布。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -805,234 +927,6 @@ location.href =  location.href.replace("old.com","new.com");<br />
 	<li>今天全都被屏了？一个都不说话 <a href="http://twitter.com/54chen/statuses/3753032201">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/09/03/tokyo-cabinet-with-java-concurrent-test-the-performance/">用java并发测试tokyo Cabinet的性能[五四陈手记]</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-09-03T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>Tokyo Cabinet 是日本人 平林幹雄 开发的一款 DBM 数据库，该数据库读写非常快，哈希模式写入100万条数据只需0.643秒，读取100万条数据只需0.773秒，是 Berkeley DB 等 DBM 的几倍。</p>
-
-<p>编译安装tokyocabinet数据库
-<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">wget <a href="http://tokyocabinet.sourceforge.net/tokyocabinet-1.4.28.tar.gz" target="_blank">http://tokyocabinet.sourceforge.net/tokyocabinet-1.4.28.tar.gz</a>
-tar zxvf tokyocabinet-1.4.28.tar.gz<br />
-cd tokyocabinet-1.4.28/<br />
-./configure<br />
-make<br />
-make install<br />
-cd ../</div>
-http://tokyocabinet.sourceforge.net/javapkg/tokyocabinet-java-1.22.tar.gz</p>
-
-<p>下载这个包
-<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">tar zxvf tokyocabinet-java-1.22.tar.gz<br />
-cd tokyocabinet-java-1.22<br />
-./configure<br />
-make<br />
-make install</div>
-install会将libjtokyocabinet.so 和 tokyocabinet.jar放到/usr/lib64下面。</p>
-
-<p>将生成的tokyocabinet.jar拖到本地，新建项目，引用这个jar包。使用如下代码：
-<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">package test;<br />
-import java.util.ArrayList;<br />
-import java.util.HashMap;<br />
-import java.util.List;<br />
-import java.util.Map;<br />
-import java.util.concurrent.atomic.AtomicLong;</div></p>
-
-<p>import tokyocabinet.*;</p>
-
-<p>public class BenchMark {</p>
-
-<p>public static class Stat {<br />
-private AtomicLong _count = new AtomicLong(0);<br />
-private static Stat _instance = new Stat();</p>
-
-<p>public static Stat getInstance() {<br />
-return _instance;<br />
-}</p>
-
-<p>private Stat() {<br />
-_printer = new RatePrinter(_count);<br />
-_printer.setDaemon(true);<br />
-_printer.start();<br />
-}</p>
-
-<p>public void inc() {<br />
-_count.incrementAndGet();<br />
-}</p>
-
-<p>private RatePrinter _printer;</p>
-
-<p>private static class RatePrinter extends Thread {<br />
-private long _last;<br />
-private AtomicLong _c;</p>
-
-<p>public RatePrinter(AtomicLong c) {<br />
-_c = c;<br />
-}</p>
-
-<p>@Override<br />
-public void run() {<br />
-while (true) {<br />
-try {<br />
-long current = _c.get();<br />
-System.out.println("Rate: " + (current - _last)<br />
-+ " req/s");<br />
-_last = current;<br />
-Thread.sleep(1000L);<br />
-} catch (Throwable e) {<br />
-e.printStackTrace();<br />
-}
-}<br />
-}
-}<br />
-}</p>
-
-<p>public static class EchoThread extends Thread {<br />
-private TDB tdb;<br />
-public EchoThread(String ip,String port, int in, ThreadGroup group){<br />
-super(group, "EchoThread-" + in);<br />
-// create the object<br />
-tdb = new TDB();</p>
-
-<p>// open the database<br />
-if(!tdb.open("casket.tct", TDB.OWRITER | TDB.OCREAT)){<br />
-int ecode = tdb.ecode();<br />
-System.err.println("open error: " + tdb.errmsg(ecode));<br />
-}
-}</p>
-
-<p>@Override<br />
-public void run() {<br />
-int index = 0;<br />
-while (true) {<br />
-try {</p>
-
-<p>String pkey = new Long(tdb.genuid()).toString();<br />
-Map cols = new HashMap();<br />
-cols.put("name", "mikio"+index);<br />
-cols.put("age", "30");<br />
-cols.put("lang", "ja,en,c");<br />
-if(!tdb.put(pkey, cols)){<br />
-int ecode = tdb.ecode();<br />
-//System.err.println("put error: " + tdb.errmsg(ecode));<br />
-}</p>
-
-<p>//client.insert("Table1", "name"+index, "Standard1:name", ("name"+index).getBytes("UTF-8"), System.currentTimeMillis(), true);<br />
-//client.get_column("Table1", "name0", "Standard1:name");<br />
-index ++;<br />
-Stat.getInstance().inc();<br />
-} catch (Throwable e) {<br />
-e.printStackTrace();<br />
-break;<br />
-} finally {<br />
-// close the database<br />
-if(!tdb.close()){<br />
-int ecode = tdb.ecode();<br />
-//System.err.println("close error: " + tdb.errmsg(ecode));<br />
-}</p>
-
-<p>}<br />
-}
-}<br />
-}</p>
-
-<p>/**<br />
-* @param args<br />
-* @throws TTransportException<br />
-*/<br />
-public static void main(String[] args){<br />
-if (args.length != 1) {<br />
-System.out<br />
-.println("Usage: Benchmark ");<br />
-System.exit(1);<br />
-}</p>
-
-<p>String ip = args[0];<br />
-String port = args[0];</p>
-
-<p>Integer concurrent = Integer.valueOf(args[0]);<br />
-System.out.println("ip = "+ip+",port = "+port+",concurrent = " + concurrent);</p>
-
-<p>ThreadGroup group = new ThreadGroup("Benchmark");<br />
-List<br />
-threads = new ArrayList<br />
-();<br />
-for (int x = 0; x &lt; concurrent; ++x) {<br />
-Thread t =new EchoThread(ip,port, x, group);<br />
-threads.add(t);<br />
-t.start();<br />
-}
-}</p>
-
-<p>}
-运行结果反馈：
-<table border="1" cellspacing="0">
-<tbody>
-<tr>
-<th>并发</th>
-<th> 随机结果</th>
-<th> 起始文件大小</th>
-<th> 运行中机器情况</th>
-</tr>
-<tr>
-<td>1</td>
-<td>Rate: 255153 req/s</td>
-<td>517k</td>
-<td>load average: 0.53, 0.39, 1.30</td>
-</tr>
-<tr>
-<td>5</td>
-<td>Rate: 505795 req/s - Rate: 909310 req/s</td>
-<td>517k</td>
-<td>load average: 3.89, 1.93, 1.65 Mem:   8195328k total,  8098204k used,    97124k free,  6685284k buffersSwap:  4000144k total,      148k used,  3999996k free,    36852k cached</td>
-</tr>
-<tr>
-<td>10</td>
-<td>Rate: 658089 req/s - Rate: 907266 req/s</td>
-<td>517k</td>
-<td>load average: 5.34, 2.30, 1.81  Mem:   8195328k total,  8112984k used,    82344k free,  6703212k buffersSwap:  4000144k total,      148k used,  3999996k free,    36800k cached</td>
-</tr>
-<tr>
-<td>20</td>
-<td>Rate: 694200 req/s - Rate: 1003093 req/s</td>
-<td>517k</td>
-<td>load average: 9.40, 6.71, 3.62 Mem:   8195328k total,  7423824k used,   771504k free,  6684268k buffersSwap:  4000144k total,      148k used,  3999996k free,    36784k cached</td>
-</tr>
-</tbody></table>
-<a class="external text" title="http://tokyocabinet.sourceforge.net/benchmark.pdf" rel="nofollow" href="http://tokyocabinet.sourceforge.net/benchmark.pdf">官方数据</a>
-<ul>
-	<li> 70W req/s 基本上是一个和谐的值了</li>
-</ul></p>
 </div>
   
   

@@ -9,8 +9,11 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="gitlab3.1升级4.0手记 在过去的几个星期，已经顺利在gitlab中开始了团队的代码合作。http://www.54chen.com/_linux_/github-gitlab.html 圣诞前后Gitlab发布了最新的4.0版本，感觉最大的改动有：
-1.merge &hellip;">
+  <meta name="description" content="Scala入门手记 一、安装环境
+localhost:~ chenzhen$ java -version
+java version "1.6.0_37"
+Java(TM) SE Runtime Environment (build 1.6.0_37-b06-434-11M3909)
+Java &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +77,82 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/01/14/scala-notes/">Scala入门手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-01-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg" alt="scala" />
+<strong>一、安装环境</strong>
+<blockquote>localhost:~ chenzhen$ java -version<br />
+java version "1.6.0_37"<br />
+Java(TM) SE Runtime Environment (build 1.6.0_37-b06-434-11M3909)<br />
+Java HotSpot(TM) 64-Bit Server VM (build 20.12-b01-434, mixed mode)</blockquote>
+如果java没有安装，需要先安装。此处略去N字。
+<a href="http://www.scala-lang.org/downloads">http://www.scala-lang.org/downloads</a>
+下载最新的版本。翻墙自理。</p>
+
+<p>$tar zxvf scala-2.10.0.tgz<br />
+解压后，添加环境变量到配置文件中。
+<blockquote>vim ~/.profile  (or .bashrc)<br />
+export PATH=/Users/chenzhen/scala-2.10.0/bin:$PATH</blockquote></p>
+
+<p><blockquote>localhost:~ chenzhen$ scala -version<br />
+Scala code runner version 2.10.0 -- Copyright 2002-2012, LAMP/EPFL
+</blockquote></p>
+
+<p><strong>二、安装eclipse（4.2）插件</strong>
+site url:
+<blockquote>http://download.scala-ide.org/sdk/e38/scala210/dev/site/</blockquote>
+一路install。</p>
+
+<p><strong>三、hello world</strong>
+跟java项目有点像。
+<blockquote>package com.hello<br />
+object Cz {<br />
+  def main(args: Array[String]) {<br />
+    println("hello world");<br />
+  }<br />
+}</blockquote></p>
+
+<p><strong>四、语法对比速记</strong>
+1.scala的数组与java相比是可变的数据结构。<br />
+2.for(i <- 0 to 2) 这里的向左箭头是指i的范围，两头是闭区间。<br />
+3.list是不可变的，不需要new，list与list之间用:::（三个冒号）可以做连接,::(两个冒号)会产生新的维度的list。<br />
+4.var可变，val不可变。崇尚val，不可变对象和没有副作用的方法。<br />
+5.Unit类似java的void。<br />
+6.object是特殊的class，是单例。<br />
+7.maven也可以搞定scala，但是更好用的是sbt。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -826,116 +905,6 @@ USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT</p>
 <p>stderr:</p>
 
 <p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/09/cloud-foundry-warden-part2/">Cloud Foundry之warden代码解读-part2</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden" /></p>
-
-<p><strong>简介</strong>
-cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
-
-<p>代码位置在： https://github.com/cloudfoundry/warden</p>
-
-<p><strong>代码结构</strong>
-|-- em-warden-client   基于eventmachine的client 依赖 warden-client与warden-protocol 通过 unix socket来通讯<br />
-|-- warden  巨复杂的warden实现，大部分是shell脚本+ruby，还有两个c实现。<br />
-|-- warden-client   客户端驱动，提供与warden的阻塞式通讯client。依赖warden-protocol。其中的V1.rb对各自command进行解析之后的处理。这里有一个v1mode的概念， v1mode使用字符串，转为pb后与其他的一起使用protobuf。  <br />
-`-- warden-protocol  依赖beefcake(protobuf library for Ruby)。protocol下有所有支持的pb生成格式。</p>
-
-<p><strong>小坑：ruby中的send方法</strong>
-send其实就是动态地根据名字调用函数，传递后面的内容作为调用参数，api函数原型为：<br />
-obj.send(symbol [, args...]) => obj</p>
-
-<p>在V1.rb中，所能的convert_xxxx_request方法都是这样被调用到的。</p>
-
-<p><strong>专注warden实现</strong>
-src下四个C程序：<br />
-|-- clone  用来快速复制一个环境  夹杂一堆的shell在其中运行<br />
-|-- iomux  分成两个部分：iomux-spawn把子进程的pid写到stdout来标示它已经做好准备接收连接。在尝试连接之后一直等待。iomux-link是用来根据pid重新link到其上去。<br />
-|-- oom   通过eventfd得到内存不够的通知<br />
-`-- repquota  报告quota使用情况</p>
-
-<p>四个c程序将在编译后复制到root/linux/skeleton/bin中</p>
-
-<p><strong>其他目录：</strong>
-|-- bin  下面有两个脚本文件，用来启动和进入命令行的<br />
-|-- config  下面有一个配置文件，定义了linux下的配置<br />
-|-- lib     所有的ruby代码<br />
-|-- root   各种shell脚本，操作cgroup之类的</p>
-
-<p><strong>启动warden</strong>
-环境：<br />
-chenzhen@ubuntu-chenzhen:~/warden/warden$ lsb_release -a<br />
-No LSB modules are available.<br />
-Distributor ID:	Ubuntu<br />
-Description:	Ubuntu 12.04 LTS<br />
-Release:	12.04<br />
-Codename:	precise</p>
-
-<p><blockquote>$cd warden/warden<br />
-$sudo bundle exec rake setup[config/linux.yml]<br />
-$sudo bundle exec rake warden:start[config/linux.yml]<br />
-$ctrl+z <br />
-$bg<br />
-$sudo bundle exec bin/warden-repl<br />
-$ping<br />
-...pong
-</blockquote></p>
-
-<p><strong>调用过程：</strong></p>
-
-<p><blockquote>bin/warden-repl >> lib/warden/repl.rb >> Warden::Client >> warden.sock  >> lib/warden/server.rb << Warden::Server.run! << Rakefile</blockquote></p>
-
-<p><strong>处理调用：</strong></p>
-
-<p><blockquote>server.rb > ClientConnection > receive_request > process(request) >  process_container_request(request, container) > base.rb >  dispatch(request, &blk) > send(do_method, request, response, &blk) -> linux.rb > do_xxx  > shell script</blockquote></p>
-
-<p><strong>clone.c分析：</strong>
-src/clone/clone.c: main ->  <br />
-	console.c: openpty -> <br />
-clone.c: daemonize -> <br />
-	barrier.c: barrier_open -> <br />
-clone.c: run("./hook-parent-before-clone.sh"); -> <br />
-clone.c: parent_clone_child ->
-	clone.c: pid = clone(start, stack, flags, h); ->
-		clone.c: start() ->
-			console_mount(&h->console, "dev/console"); ->
-			pivot_root ->
-clone.c: run("./hook-parent-after-clone.sh"); ->
-clone.c: barrier_signal(&h->barrier_parent); ->
-clone.c: barrier_wait(&h->barrier_child);  </p>
 </div>
   
   

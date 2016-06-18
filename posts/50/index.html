@@ -9,7 +9,13 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="发布了世界互联网终结计时 有兴趣的朋友请进 http://www.54chen.com/time 著名网站架构设计 WikiPedia 技术架构学习分享 YouTube 的架构扩展 Internet Archive 的海量存储浅析 LinkedIn 架构笔记 Tailrank 网站架构 &hellip;">
+  <meta name="description" content="Sscanf函数的各种用法 sscanf是一个运行时函数，原形很简单： 
+int sscanf( 
+const char *buffer, 
+const char *format [, 
+argument ] ... 
+); 
+它强大的功能体现在对format的支持上。  &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +79,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/12/02/sscanf%E5%87%BD%E6%95%B0%E7%9A%84%E5%90%84%E7%A7%8D%E7%94%A8%E6%B3%95/">Sscanf函数的各种用法</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-12-02T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><div /></p>
+
+<p>sscanf是一个运行时函数，原形很简单： <br />
+int sscanf( <br />
+const char *buffer, <br />
+const char *format [, <br />
+argument ] ... <br />
+); <br />
+它强大的功能体现在对format的<a href="http://www.54chen.com/c/132">支持</a>上。 </p>
+
+<p>sscanf与scanf类似，都是用于<a href="http://www.54chen.com/c/75">输入</a>的，只是后者以屏幕(stdin)为输入源，前者以固定字符串为输入源。 
+<blockquote>　   char str[512] = ; <br />
+　　sscanf("123456 ", "%s", str); <br />
+　　printf("str=%s", str);</blockquote>
+<a href="http://www.54chen.com/c/61">输出</a> str=123456
+<blockquote>　   sscanf("123456 ", "%4s", str); <br />
+　　printf("str=%s", str);</blockquote>
+输出 str = 1234
+<blockquote>　　sscanf("123456 abcdedf", "%[^ ]", str); <br />
+　　printf("str=%s", str);</blockquote>
+输出 str=123456 (遇到<a href="http://www.54chen.com/c/22">空格</a>为止)
+<blockquote>　　sscanf("123456abcdedfBCDEF", "%[^A-Z]", str); <br />
+　　printf("str=%s", str);</blockquote>
+输出 str=123456abcdef (遇到指定<a href="http://www.54chen.com/c/22">字符</a>为止)
+<blockquote>sscanf(mod, "%s", mod);//去除空格</blockquote>
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -597,61 +664,6 @@ code 200 -- 49</pre>
   <div class="entry-content entry-content1"><p>本文只有一个连接 没有那么多内容</p>
 
 <p><a href="http://www.pgsqldb.org/mwiki/index.php/%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AA%E4%BD%BF%E7%94%A8plproxy%E7%9A%84PostgreSQL%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4">http://www.pgsqldb.org/mwiki/index.php/配置一个使用plproxy的PostgreSQL数据库集群</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/21/%E5%BD%93pg%E8%BF%9E%E6%8E%A5%E6%95%B0%E8%BE%BE%E5%88%B0%E4%B8%80%E5%AE%9A%E6%95%B0%E9%87%8F%E6%97%B6%EF%BC%8Cpgsql%E8%BF%9B%E7%A8%8B%E4%BC%9A%E7%BB%88%E6%AD%A2%EF%BC%8C%E6%8A%A5out-of-memory/">当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of Memory</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>Q： 当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of memory<br />
-A：在 Linux 2.4  以及之后的版本里，缺省的虚拟内存的设置对于  PgSQL而言不是最优的(32M)。原因也可能在于内核实现内存提交的方法导致出现了“过提交”内存（具体情况由于没有遇到，不作评述），如果其它进程的内存请求导致系统用光虚拟内存，那么内核可能会立即终止  PGSQL 服务器进程并会出具Out of memory报错，唯一的解救方法只能手工kill掉数据库进程，重启数据库。修改方法为：
-<pre>sysctl -w kernel.shmmax=134217728
-sysctl -w kernel.shmall=2097152
-sysctl -w vm.overcommit_memory=2</pre>
-或者直接echo进proc中去（我个人喜欢比较传统的操作）
-<pre>echo 134217728 &gt;/proc/sys/kernel/shmmax
-echo 2097152 &gt;/proc/sys/kernel/shmall
-echo 2 &gt; /proc/sys/vm/overcommit_memory</pre>
-考虑到并不是每个人都乐意于每次开机都作此操作，最好还是修改/etc/sysctl.config文件添加相应的设置。</p>
-
-<p><a name="Slony.E4.B8.8D.E5.90.8C.E6.AD.A5.E6.95.B0.E6.8D.AE.EF.BC.9F"></a>
-<h3><span class="mw-headline">Slony不同步数据？ </span></h3>
-Q：配置了Slony,并未报错，但数据没同步过来<br />
-A：你要同步的表都设置主键了么，如果没有设主键的Slony配置表的属性的时候要加Serial属性哦</p>
-
-<p><a name="Slony.E5.90.8C.E6.AD.A5.E6.95.B0.E6.8D.AE.E9.9D.9E.E5.B8.B8.E6.85.A2.EF.BC.9F"></a>
-<h3><span class="mw-headline">Slony同步数据非常慢？ </span></h3>
-Q：Slony同步数据非常慢，需要20~30s，且配置Slony的机器上cpu消耗严重？<br />
-A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不错，别设置太低了。</p>
 </div>
   
   
