@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="微信支付api.mch.weixin.qq.com域名解析慢原因：ipv6 有朋友在阿里云主机实现微信支付逻辑时，发现api.mch.weixin.qq.com的解析实在是太慢了。 因此出现了手动修改/etc/hosts的情况，当然了，哪天微信支付要是换个机房肯定要挂。 我们的机房也有相似的同题 &hellip;">
+  <meta name="description" content="小米大树part1:基础架构之痛 题记 无知和弱小不是生存的障碍，傲慢才是。 －－《三体》 缘起 一直想写一系列的笔记，记录整个小米六年的研发工作中实际遇到的困难，以及这一大群人如何不可避免的走向大公司氛围，又如何慢慢打破定势，苦于自己拖延症影响，现在才开始总结。 共分三个部分：基础架构之痛、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +73,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/07/29/mi/">小米大树part1:基础架构之痛</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-07-29T17:11:38+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><h2>题记</h2>
+
+<p>无知和弱小不是生存的障碍，傲慢才是。 －－《三体》</p>
+
+<h2>缘起</h2>
+
+<p>一直想写一系列的笔记，记录整个小米六年的研发工作中实际遇到的困难，以及这一大群人如何不可避免的走向大公司氛围，又如何慢慢打破定势，苦于自己拖延症影响，现在才开始总结。</p>
+
+<p>共分三个部分：基础架构之痛、测试之痛、产品进度之痛。本篇是第一部分。</p>
+
+<p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
+
+<h2>基础</h2>
+
+<p>2010年，第一批服务器工程师来自五湖四海，有金山、微软、谷歌、百度、人人，唯独，没有来自中国最大互联网公司－腾讯。</p>
+
+<p>A君（人物纯属虚构，以求表达效果）从业数年，经验丰富，说：“我觉得我们可以用一些php，简单好招人”，于是开始这样干了。</p>
+
+<p>B君说：“我们还可以用一些java，招人也不太难，现成的东西多”，于是这样操作了。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/29/mi/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -538,61 +597,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/07/17/macos-vim-youcompleteme/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/06/03/are-u-ok/">R U Ok--客户端网络优化实践</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-06-03T16:11:08+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
-
-<p>当愤怒的用户，张牙舞爪地告诉你他遇到问题的时候，往往已经病入膏肓。－－题记</p>
-
-<p>作者同全国各地愤怒的用户亲密接触了很长的时间之后，做出了以下总结，希望对后来的人们能够有一点启发。</p>
-
-<h1>一、用户IP是个不可靠的东西</h1>
-
-<ul>
-<li>在实际的案例中，使用用户的IP地址去IP库里找用户属于哪个地域哪个运营商。</li>
-<li>不幸的是，IP库有可能不准。</li>
-<li>更不幸的是，连IP地址都可能是错的。实际案例中，我们遇到了运营商级别的流量劫持，用户本来是浙江移动，在某些服务器取得的IP居然是江苏电信。</li>
-<li>解决的办法：尽量不依赖IP，用smartDNS。或者多渠道纠正IP地址，使用本地客户端的运营商识别能力＋电话号码地域识别。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/06/03/are-u-ok/">Read on &rarr;</a>
     </footer>
   
 

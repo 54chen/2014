@@ -4,8 +4,108 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2016-06-18T18:24:44+08:00</pubDate>
+        <pubDate>2016-07-30T15:18:51+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <h2>题记</h2>
+
+<p>无知和弱小不是生存的障碍，傲慢才是。 －－《三体》</p>
+
+<h2>缘起</h2>
+
+<p>一直想写一系列的笔记，记录整个小米六年的研发工作中实际遇到的困难，以及这一大群人如何不可避免的走向大公司氛围，又如何慢慢打破定势，苦于自己拖延症影响，现在才开始总结。</p>
+
+<p>共分三个部分：基础架构之痛、测试之痛、产品进度之痛。本篇是第一部分。</p>
+
+<p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
+
+<h2>基础</h2>
+
+<p>2010年，第一批服务器工程师来自五湖四海，有金山、微软、谷歌、百度、人人，唯独，没有来自中国最大互联网公司－腾讯。</p>
+
+<p>A君（人物纯属虚构，以求表达效果）从业数年，经验丰富，说：“我觉得我们可以用一些php，简单好招人”，于是开始这样干了。</p>
+
+<p>B君说：“我们还可以用一些java，招人也不太难，现成的东西多”，于是这样操作了。</p>
+
+<!--more-->
+
+
+<p>C君说：“facebook的thrift也不错，我们需要一个这样的rpc框架”，于是用上了thrift。</p>
+
+<p>D君说：“与客户端最简单，还是用http请求吧，加上json，调起来方便”，于是就http+json了。</p>
+
+<p>E君和F君带来了先进的海外大公司经验，大家都深信不疑。</p>
+
+<p>G君带来了maven，H君带来了git，I君带来了zookeeper，J君带来了memcache，K君带来了scribe，L君带来了hadoop，M君带来了HBase，N君带来了spring。。。</p>
+
+<p>两年之后，诸君磨合成了以java为核心，诸多语言为辅助，看上去哪哪都大厂的基础体系。并且大家都认为可以为各兄弟部门无脑使用了。</p>
+
+<h2>问题</h2>
+
+<p>两年之后，人多事杂，诸君分为多个部门，多个部门都在共用着这一整套基础架构。</p>
+
+<p>有一天，X君在调用Y君的接口出现了速度突然变慢了一倍，从10ms的速度变成了100ms（因为基础架构里没有可用性的计算，X君也是在用户投诉说最外层的API慢，分析之后才发现只有可能是这里慢了）。</p>
+
+<p>X：“Y啊，你的服务不稳定啦，怎么慢了10倍，影响我们的服务啦”。</p>
+
+<p>Y：“不对啊，从基础架构里提供的counter看，我们的服务一切正常，99.9%的请求，都在5ms返回了”。</p>
+
+<p>X：“真的是你这边慢了，你再查查吧”。</p>
+
+<p>Y：“可能是网络有问题吧，我们的服务真的没有问题”。</p>
+
+<p>X无可奈何，Y也觉得自己没有过错，转身，X抱怨了一句：“TMD现在怎么这么官僚啊”。Y也莫名其妙：“草，A这部门的人太找茬了”。</p>
+
+<p>Z君在网络部门，从交换机上看了一下图，“网络一切正常”。</p>
+
+<p>这个技术问题就这样没有了结论。</p>
+
+<h2>原因</h2>
+
+<p>上述的场景在一天又一天演进，慢慢形成了所谓的大公司氛围，除非同一部门的人遇到了问题，很难将一个问题查到根本原因。</p>
+
+<p>而A君遇到的问题，也没有专家团队可以帮忙解决，因为当年引入技术的专家们，分散在各个部门，在为各自的部门方向努力，根本无暇顾及。</p>
+
+<p>靠前人拼凑出来的基础架构里，多年过去也没有可用性这样直接抽象的数据和监控报警。</p>
+
+<h2>X君之痛</h2>
+
+<p>根本的原因，是基础架构里，没有一个CTO的角色，从技术上进行抽象思考，从行政上强迫统一。</p>
+
+<p>腾讯的前CTO张志东应该是个牛逼的人，带领老一辈的技术高人们，没有这么多开源的项目可以借用，所有的东西都要靠自己来抽象。</p>
+
+<p>在没有开源行业的这个大保障（大包袱），腾讯的基础架构抽象得出奇的自然，再经过几代人的修补，已经坚不可破。</p>
+
+<p>而X君这次遇到的问题，痛点在于：1.基础架构里的监控数据无法表达Y君服务的可用性。2.Y君所参考的基础架构里的监控数据也无法认同X君说自己的服务不稳定的现实。3.X君和Y君，都没有意识到，网络也是服务的一环，而不是交给硬件和网络维护部门。4.X和Y君都在使用java，典型的gc问题就可能导致双方的数据全部不可靠。</p>
+
+<h2>打破常规</h2>
+
+<p>在第四五年的时候，已经开始有部门在打破上述的常规：</p>
+
+<p>1.引入C基础架构，排除gc影响，提高吞吐。</p>
+
+<p>2.主动调用方以承诺最大延时得出可用性数据描述被动调用方服务稳定性，并且双方达成一致。</p>
+
+<p>3.除非有明确的原因分析结果，绝不把问题抛向相关团队。</p>
+
+<p>4.每个环节，都有可用性数据，包括客户端。</p>
+
+<p>一句话概括，对于互联网业务，可用性就是一切。</p>
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[小米大树part1:基础架构之痛]]></title>
+            <link>http://2014.54chen.com/blog/2016/07/29/mi/</link>
+            <pubDate>2016-07-29T17:11:38+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2016/07/29/mi</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -2400,63 +2500,6 @@ int i = sc.read(buff)</p></blockquote>
             <link>http://2014.54chen.com/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/</link>
             <pubDate>2014-08-25T21:17:53+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
-
-<p> 最近在研究网络层的接入问题。一些心得记录在下面：</p>
-
-<h2>一、TCP与HTTP</h2>
-
-<ul>
-<li>0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。</li>
-<li>1.TCP传输的数据，绝对是顺序正确、不丢包的数据。否则它一定不会把数据扔给应用层。</li>
-<li>2.从应用层角度，TCP是一个数据流，收到的数据会聚在一起。所以需要应用层去协商数据与数据之间用什么间隔，比如常用的长度标识。</li>
-<li>3.TCP在网络恶劣的情况下，开始启动：拥塞避免算法 与 慢启动算法。而这些都是由一些公式去估计当前网络情况的。</li>
-<li>4.TCP的报文包与我们自己应用层的发的“包”半毛钱关系都没有，数据到了底层还是要切成N块来传送的。</li>
-<li>5.所谓的HTTP比TCP更可靠是错误的。HTTP是应用层协议，实际也是TCP，只不过数据在应用层定义了规则：必须有request\header\body等等。</li>
-<li>6.硬件防火墙一般拦截端口，软件防火墙才拦协议。所以80端口走TCP有不少好处。</li>
-<li>7.HTTP比TCP更可靠的错觉产生的原因是：HTTP请求基本都是每次新开连接，而TCP很少这样做。</li>
-<li>8.TCP就像<!--more-->一条水管。</li>
-<li>9.HTTP就像一条临时的水管，用完就扔了。</li>
-<li>10.移动网络下，抖动会让TCP延迟加倍明显。</li>
-</ul>
-
-
-<h2>二、TCP与WAP</h2>
-
-<ul>
-<li>0.CMWAP\CMNET 是中方特色的区分GPRS方案。</li>
-<li>1.所有WAP都是HTTP代理软件。注意是软件，所以理论是不只是认端口，还认数据头。</li>
-<li>2.各省各自治区的WAP网关是不一样的，甚至连端口都可能不一样。</li>
-<li>3.WAP大多都支持向网关发送CONNECT方法（对应GET、POST等），然后通过这个可以建立TCP数据转发。当然了，人家天天在封。</li>
-<li>4.基本上WAP下只能用HTTP。</li>
-<li>5.谁知道啥时候WAP彻底消失？</li>
-</ul>
-
-
-<h2>三、最后一公里</h2>
-
-<ul>
-<li>0.最惨淡的就是这一公里。各家赚各家的钱，移动网络下运营商割剧，再加上移动基站的硬件技术限制，导致这后果。</li>
-<li>1.移动网络下的CDN就是个明晃晃的骗局。因为再怎么加速，最后这一公里你控制不了。如果政策允许，可以去做一个全国免费WIFI来解决这一难题，如果。</li>
-<li>2.为最后一公里效果不行能做的事情有：转菊花、禁止操作（从产品上解决）。</li>
-</ul>
-
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[中国移动网络下连接的秘密]]></title>
-            <link>http://2014.54chen.com/blog/2014/07/31/connection-secret-in-mobile/</link>
-            <pubDate>2014-07-31T17:44:55+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2014/07/31/connection-secret-in-mobile</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>

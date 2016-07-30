@@ -9,7 +9,12 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="《移动互联网技术挑战》－ssdc 以下是上周末在苏州参加的活动使用的slide，http://softwaresuzhou.org。 看不到的同学请猛击这里 ssdc-移动互联网技术挑战 百人共用企业maven私服nexus迁移搭建手记 三年前，小米的第一个nexus（版本1.8.0） &hellip;">
+  <meta name="description" content="Java 1.6.0_38-b05 Vm 20.13-b02优化手记 基础：
+业务代码
+rose框架（底层是spring）
+resin4
+java 1.6.0_38-b05
+centos Read on &rarr; 《移动互联网技术挑战》－ssdc 以下是上周末在苏州参加的活动使用的slide &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +78,53 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/27/jvm/">Java 1.6.0_38-b05 Vm 20.13-b02优化手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-27T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg" alt="jvm" /></p>
+
+<p><strong>基础：</strong>
+业务代码<br />
+rose框架（底层是spring）<br />
+resin4<br />
+java 1.6.0_38-b05<br />
+centos</p>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/11/27/jvm/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -481,127 +533,6 @@ http://blog.sina.com.cn/s/blog_8a49cc8f0101b03j.html<br />
 </blockquote></p>
 
 <p>*centos系统下测试通过。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/06/arduino-starter-4/">Arduino学习手记四：串行编程</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-06T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>前面几节介绍了一些常见的传感器使用办法，许多人一定会有一种困惑，如果要做一个arduino发微博的例子得怎么做？</p>
-
-<p>本节不是教发微博的。</p>
-
-<p>通过在pc上运行的程序去访问互联网，然后把数据通过usb返给arduino的做法，就是利用了串口的编程办法。</p>
-
-<p>在第一节里（<a href="http://www.54chen.com/_linux_/arduino-starter-1.html">http://www.54chen.com/_linux_/arduino-starter-1.html</a>），我们说到了arduino使用的主要语言是processing。</p>
-
-<p>以下例子均在mac下试验通过，ubuntu应该差不多，windows不知道应该怎么搞。</p>
-
-<p><strong>Processing</strong>
-这是一门目标群体类似设计师的编程语言，非常的极简，语法类似java，java开发者基本不用学习。其IDE：PDE也是极简到了极致。<br />
-PDE(processing IDE)的极简程度令人发指，用习惯了eclipse的同学上来就找的第一个功能就是自动完成，遗憾的是，人家的定义是给设计师们用的，看来工程师们还是回到eclipse的世界去吧。PDE is admirably simple。</p>
-
-<p>十分想用代码自动完成功能的同学，可以试试在eclipse里完成代码：
-<a href="http://t.cn/zH3b2KP">http://t.cn/zH3b2KP</a></p>
-
-<p>其下载和安装都非常简单：http://processing.org/download/下载之后直接使用即可。以mac为例，长得和arduino的IDE基本上一样（应该是说arduino的和它长得基本上一样）。</p>
-
-<p><strong>开始互动之旅</strong></p>
-
-<p>打开PDE，代码如下：
-<blockquote>import processing.serial.*;</blockquote></p>
-
-<p>String cs;<br />
-String buffer = "";</p>
-
-<p>Serial port;</p>
-
-<p>void setup() {<br />
-  println(Serial.list());<br />
-  String arduinoPort = Serial.list()[5];//如果你运行代码后arduino里没反应，需要来调整这个端口号，据机器不同而不同，看上一行代码打印出来的序号哪一个是arduino就写几。<br />
-  port = new Serial(this, arduinoPort, 9600); //link to arduino<br />
-  cs = "#hello";<br />
-}</p>
-
-<p>void draw() {<br />
-  port.write(cs); //send to arduino<br />
-}
-</p>
-
-<p>运行代码，会有提示：
-<blockquote>To use the serial library, first open<br />
-Applications -> Utilities -> Terminal.app<br />
-and enter the following:<br />
-sudo mkdir -p /var/lock<br />
-sudo chmod 777 /var/lock</blockquote></p>
-
-<p>打开终端，对var/lock权限修改。<br />
-再运行，就可以打开一个框框，啥也做不了。</p>
-
-<p><strong>arduino上的代码</strong>
-<blockquote>#define LED 11</blockquote></p>
-
-<p>byte inByte = 0;<br />
-int pointer = 0;<br />
-char buffer[6]; </p>
-
-<p>void setup(){<br />
-  pinMode(LED,OUTPUT); <br />
-  Serial.begin(9600); // open port to 9600<br />
-}</p>
-
-<p>void loop(){<br />
-  if(Serial.available() > 0){<br />
-    inByte = Serial.read();<br />
-    if(inByte == '#'){<br />
-      while(pointer < 5){<br />
-        buffer[pointer] = Serial.read();<br />
-      }<br />
-    }<br />
-    digitalWrite(LED,HIGH);<br />
-  }<br />
-}</p>
-
-<p>连线：<br />
-在数字11连一220欧电阻加一LED灯。</p>
-
-<p>效果：<br />
-启动arduino时，灯不亮，再运行电脑上的代码之后，灯亮了。</p>
-
-<p><strong>通过arduino通知电脑</strong></p>
-
-<p>在arduino中使用Serial.write，在电脑上用port.read()。</p>
-
-<p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1e6d4imgv9xj20rs0xc42o.jpg" alt="arduino processing" /></p>
 </div>
   
   

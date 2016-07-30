@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-07-11 54chen Twitter memo 2010-07-04 http://goo.gl/fb/uMffE # 真想不起来去年是不是也是这么热。。。热爆了 # 当前外面的温度是40.1度 # 哥很有娱乐精神 RT@Fenng: &hellip;">
+  <meta name="description" content="用sphinx轻松搞定方便管理的多节点过亿级数据搜索 概述
+来自俄罗斯的开源全文搜索引擎软件Sphinx，单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级），实测千万级数据在0.0X秒和0.00X秒占大多数。 Sphinx创建索引的速度为： &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +74,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/14/sphinx-data-search/">用sphinx轻松搞定方便管理的多节点过亿级数据搜索</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-07-14T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1tV8GXeprXXaFKjI2_044608.jpg" alt="54chen" /></p>
+
+<p><strong>概述</strong>
+来自俄罗斯的开源全文搜索引擎软件Sphinx，单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级），实测千万级数据在0.0X秒和0.00X秒占大多数。 Sphinx创建索引的速度为：创建100万条记录的索引只需3～4分钟，实测30W线上复杂的blog数据需要5分钟，创建1000万条记录的索引可以在50分钟内完成，实测时间比这个更长得多，而只包含最新10万条记录的增量索引，重建一次只需几十秒，实测十万条在一分钟不到的时间。 Sphinx 是一个基于 GPL 2 协议颁发的免费开源的全文搜索引擎.它是专门为更好的整合脚本语言和SQL数据库而设计的.当前内置的数据源支持直接从连接到的 MySQL 或 PostgreSQL 获取数据, 或者你可以使用 XML 通道结构(XML pipe mechanism , 一种基于 Sphinx 可识别的特殊xml格式的索引通道) 。</p>
+
+<p><strong>sphinx安装</strong>
+安装见 <a href="http://www.54chen.com/_linux_/sphinx-build-stations-with-fast-search-function.html">用Sphinx快速搭建站内搜索功能</a></p>
+
+<p><strong>配置多节点协同工作</strong>
+第一点，原理<br />
+在sphinx.conf中可以配置index段落里的local和agent两个参数，local = blog_1表示使用本地索引名为blog_1的索引，agent = 10.1.1.1:3312:blog_2表示使用10.1.1.1这个机器的3312端口上服务的blog_2索引。这两个参数均可在此段落中重复出现。<br />
+利用这两个参数，可进行节点与节点间的配置。如图1所示，一个searchd服务在接到请求时两种使用索引的示意图。
+<img src="http://img02.taobaocdn.com/imgextra/i2/T1FqFGXcBaXXcM6aMZ_031346.jpg" alt="sphinx 54chen" />
+图1 一个searchd服务在接到请求时两种使用索引的示意图</p>
+
+<p>第二点，架构<br />
+利用agent参数，可以灵活配置去代理取满足搜索条数的超时时间等等。<br />
+如图2，只需要将索引灵活分布，各自除了自己的local索引以外，全部连成相互的agent，使得别的节点也可以得到自己的索引搜索结果，以此得到分布式的处理结果。
+<img src="http://img03.taobaocdn.com/imgextra/i3/T1_aBGXglbXXXdthoZ_032504.jpg" alt="sphinx 54chen" />
+图2 一个简单的分布式搜索的例子</p>
+
+<p>第三点，性能<br />
+分布索引的情况下，实测千万数据量，大致在500qps左右，没有做容灾的方案，如果想容灾，可以考虑将索引做成在某些节点上重复。总得来说，性能还算可以，更具体的架构方案，可能要和具体的业务来分布效果会更好。
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -692,64 +752,6 @@ http://www.54chen.com/document/dynamo-based-systems.html<br />
 http://www.cs.berkeley.edu/~brewer/cs262b-2004/PODC-keynote.pdf<br />
 http://en.wikipedia.org/wiki/Distributed_hash_table<br />
 http://en.wikipedia.org/wiki/Consistent_hashing</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/06/17/tool-for-cross-system-shared-keyboard-and-mouse-share-synergy/">跨系统共享键盘鼠标利器分享：synergy</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-06-17T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1MNNDXetkXXbMtWc5_054611.jpg" alt="世界杯马蜂窝" />
-是这样的张总, ?在家里的电脑上按了CTRL+C，然后在公司的电脑上再按CTRL+V是。。。肯定不行的。即使同一篇文章也不行。不不，多贵的电脑都不行。</p>
-
-<p>--题记</p>
-
-<p>端午归来，特此总结，实现上述难题，靠一利器：synergy</p>
-
-<p>此利器可打通mac\linux\windows任意两者的联系，使两个系统共享鼠标和键盘。下面以ubuntu 10.04与盗版windows XP为例。</p>
-
-<p>首先，在ubuntu下面，建立服务端。<br />
-#sudo apt-get install synergy quicksynergy<br />
-#quicksynergy<br />
-启动后如图所示：
-<img src="http://img05.taobaocdn.com/imgextra/i5/T12x8DXkpcXXaH5Js5_055323.jpg" alt="synergy" />
-只需要填写上下左右中的某一个位置修改成另一台机器的机器名，点击执行，常驻运行即可。</p>
-
-<p>然后，在windows下面，安装客户端。<br />
-Synergy 1.3 Client<br />
-安装运行后如图：
-<img src="http://img08.taobaocdn.com/imgextra/i8/T1N3RDXlpBXXc8W3U5_055747.jpg" alt="Synergy 1.3 " />
-输入Ubuntu机器的ip地址，点Start即可连上两机。</p>
-
-<p>连上之后，可以撤掉在你办公桌面上的一个键盘，鼠标移动到哪个桌面上，键盘针对哪个系统输入，非常好用，还支持复制粘贴，对上班时候用两台电脑的同学非常适用。</p>
 </div>
   
   
