@@ -9,7 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="R U Ok--客户端网络优化实践 当愤怒的用户，张牙舞爪地告诉你他遇到问题的时候，往往已经病入膏肓。－－题记 作者同全国各地愤怒的用户亲密接触了很长的时间之后，做出了以下总结，希望对后来的人们能够有一点启发。 一、用户IP是个不可靠的东西 在实际的案例中， &hellip;">
+  <meta name="description" content="Macos下vim YouCompleteMe快速安装记录 前言 本文记录一次vim改造成eclipse的过程，用起来很爽。
+mac 10.10.4 安装homebrew 1
+ruby -e "$(curl -fsSL https://raw.githubusercontent.com/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +22,7 @@
   
   <link rel="canonical" href="http://2014.54chen.com/posts/2">
   <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
-  <link href="http://chen54.b0.upaiyun.com/css/screen-3.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://chen54.b0.upaiyun.com/css/screen-5.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
   	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
 	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
@@ -45,7 +47,7 @@
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -61,7 +63,7 @@
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:2014.54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -73,6 +75,79 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/07/17/macos-vim-youcompleteme/">Macos下vim YouCompleteMe快速安装记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-07-17T18:05:16+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=https://raw.githubusercontent.com/54chen/54chen.com/master/images/2015/macvim-1.jpg></p>
+
+<h1>前言</h1>
+
+<ul>
+<li>本文记录一次vim改造成eclipse的过程，用起来很爽。</li>
+<li>mac 10.10.4</li>
+</ul>
+
+
+<h1>安装homebrew</h1>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在终端里运行这行命令即可安装homebrew安装工具。</p>
+
+<p>输入一次密码。期间会用到git。</p>
+
+<h1>整一个好用的环境</h1>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>brew rm -f python
+</span><span class='line'>brew rm -f macvim
+</span><span class='line'>brew install python
+</span><span class='line'>brew linkapps python</span></code></pre></td></tr></table></div></figure>
+
+
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/07/17/macos-vim-youcompleteme/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -636,57 +711,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/">小米互娱招java工程师</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-08-25T21:17:53+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png></p>
-
-<h2>序</h2>
-
-<ul>
-<li>这是一个新的时代。</li>
-<li>小米互娱作为一个真正意义上的小米互联网部门，开启小米“铁人三项”中互联网征途。</li>
-<li>这里有众多靠谱的兄弟。</li>
-<li>这里缺更加强大的你的加入。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -934,9 +958,9 @@
 
     </div>
   </div>
-  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/js/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/octopress.js" type="text/javascript"></script>
   Copyright &copy; 2016 - 54chen -
 
 </footer>

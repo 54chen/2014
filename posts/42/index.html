@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-09-05】 向人力推荐了两位牛人 # CCTV报道人人网 http://news.cctv.com/china/20090831/100554.shtml # 今天是万恶的九月一号，历史上的今天，我们都高高兴兴帮着书包去上学。 # &hellip;">
+  <meta name="description" content="[五四陈小技巧]全站换域名时利用nginx和javascript做简单友好的换域名跳转通知 在经过上一波的xiaonei.com转renren.com后，昨夜再次迎来新一波的kaixin-&gt;renren code的过程，期间有域名要求用新的域名，并且要老域名有跳转有提示， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +20,7 @@
   
   <link rel="canonical" href="http://2014.54chen.com/posts/42">
   <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
-  <link href="http://chen54.b0.upaiyun.com/css/screen-3.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://chen54.b0.upaiyun.com/css/screen-5.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
   	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
 	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
@@ -45,7 +45,7 @@
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -61,7 +61,7 @@
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:2014.54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -73,6 +73,81 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/09/54-chen-skills-the-whole-point-for-domain-names-using-nginx-and-javascript-to-do-a-simple-jump-to-inform-the-friendly-exchange-of-domain-names/">[五四陈小技巧]全站换域名时利用nginx和javascript做简单友好的换域名跳转通知</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-09-09T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>在经过上一波的xiaonei.com转renren.com后，昨夜再次迎来新一波的kaixin-&gt;renren code的过程，期间有域名要求用新的域名，并且要老域名有跳转有提示，于是采用了下面的办法。</p>
+
+<p>老域名是 old.com</p>
+
+<p>新域名是 new.com</p>
+
+<p>迁移挂维护的过程就略过了，直接说重点，</p>
+
+<p>第一步，修改nginx.conf，删除原来old.com的定义，增加：
+<blockquote>server {<br />
+listen 80;<br />
+server_name old.com;</blockquote></p>
+
+<p>location / {<br />
+root   /old;<br />
+if (!-e $request_filename){<br />
+rewrite ^/(.*)?$ /index.html?t=$1 last;<br />
+}
+}<br />
+}
+第二步，在/old下放进一个index.html，<a href="http://www.54chen.com/576-54%e9%99%88%e7%a7%91%e5%ad%a6%e9%99%a28021x%e6%ba%90%e4%bb%a3%e7%a0%81%e4%b8%8b%e8%bd%bd/">代码</a>如下：
+<blockquote>&lt;div class="all-error"&gt;</blockquote></p>
+
+<p>&lt;h1&gt;&lt;span&gt;old换名啦！&lt;/span&gt;<br />
+&lt;br&gt;<br />
+原来old更名为new，请放心不会影响您的使用，新的地址为&lt;a href="http://new.com" id="link"&gt;new.c<br />
+om&lt;/a&gt;谢谢您的支持！<br />
+&lt;/h1&gt;<br />
+&lt;p&gt;<br />
+2秒之后自动跳转到新的地址...<br />
+&lt;/p&gt;<br />
+&lt;/div&gt;</p>
+
+<p>&lt;script type="text/javascript"&gt;<br />
+document.getElementById("link").href = location.href.replace("old.com","new.com");<br />
+setTimeout(function(){<br />
+location.href =  location.href.replace("old.com","new.com");<br />
+}, 2000)<br />
+&lt;/script&gt;
+第三步，关机，回家睡觉</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1104,77 +1179,6 @@ JAVA代码将会返回List&lt;Integer&gt;。
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/08/15/%E4%B8%80%E5%91%A8%E5%BA%9F%E8%AF%9D%E6%B1%87%E6%80%BB%E3%80%9054chen-twitter-2009-08-15%E3%80%91/">一周废话汇总【54chen Twitter 2009-08-15】</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-08-15T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-	<li>一口气爬二十六层，虚了 <a href="http://twitter.com/54chen/statuses/3217633442">#</a></li>
-	<li><a href="http://netbar.qq.com/" rel="nofollow">http://netbar.qq.com/</a> QQ网吧 狂汗哪。。。 竟然判断我公司成网吧了 欢迎您来到千橡互联上网服务中心 <a href="http://twitter.com/54chen/statuses/3217971971">#</a></li>
-	<li><a href="http://bit.ly/t0Ooh" rel="nofollow">http://bit.ly/t0Ooh</a>
- 我为校内设计的分布式架构 <a href="http://twitter.com/54chen/statuses/3218463020">#</a></li>
-	<li>RT: @Fenng: 推荐 @<a href="http://twitter.com/xmpp">xmpp</a> 的PPT《分布式Key Value Store漫谈》http://bit.ly/1MDEAV //赞 他来我博客留言 我刚刚过去一页页看完 就见有推 哈哈 <a href="http://twitter.com/54chen/statuses/3221127218">#</a></li>
-	<li>话说校内换人人已经过去一周了  全是ugc的同志们在干活 <a href="http://twitter.com/54chen/statuses/3221526712">#</a></li>
-	<li>我家开着保时捷  撞出一段传奇，反正撞死只判3年，为你刻下回忆，宝马名车都有势力  请不用拘礼  撞几次都没关系，有法律保护你， 杭州欢迎您，让您呼天呛地，跑动的汽车充满着杀气，杭州欢迎您，在天堂里停止呼吸  在斑马线上刷新成绩。杭州欢迎您，有名车谁都了不起  喝了烧酒你就有奇迹 <a href="http://twitter.com/54chen/statuses/3221793432">#</a></li>
-	<li>RT: @d_yang: @<a href="http://twitter.com/iefen">iefen</a> @<a href="http://twitter.com/michaelbibby">michaelbibby</a> @<a href="http://twitter.com/54chen">54chen</a>  较好的坐姿(以我的实际经验来说)：1.调整椅子的高度，使椅子+腿的高度正在可以放在桌子下。2.身体尽可能靠近桌子。3.使用靠枕。4.身体和颈部尽可能靠著椅子的靠背。5.胳膊尽量不要悬空。 <a href="http://twitter.com/54chen/statuses/3221984422">#</a></li>
-	<li>RT: @Fenng: CSDN 这上海英雄会，已经发给我六七封邮件了。//说明你是灰常灰常之英雄 哈哈 <a href="http://twitter.com/54chen/statuses/3222525673">#</a></li>
-	<li>忙了一天，都不知道在忙什么。。。 <a href="http://twitter.com/54chen/statuses/3242591713">#</a></li>
-	<li>RT: @gaochunhui: RT: @huyong: 今晨8时许登录校内，发现如下提示：“你的帐号因不当行为...//企业要生存，谅解，真理永存 <a href="http://twitter.com/54chen/statuses/3242973738">#</a></li>
-	<li>BBS是茶馆，博客是客厅，微博客更像广场。 这个总结好 <a href="http://twitter.com/54chen/statuses/3243044479">#</a></li>
-	<li>RT: @Fenng: PHP 5.2.10 号称稳定版居然也有一个很明显的Bug。'--with-curlwrappers' 编译可以通过，但是 make install 过不去。最后 --without-pear 编译了事.//这个是bug，已经fix在svn代码里了 <a href="http://twitter.com/54chen/statuses/3243160185">#</a></li>
-	<li>专业的QA是不是应该拒绝使用“几乎”“差不多”“可能”等不确定的描述词？ <a href="http://twitter.com/54chen/statuses/3243712729">#</a></li>
-	<li>这个编译php-fpm不指定php.ini位置的同让校内论坛挂了又挂 <a href="http://twitter.com/54chen/statuses/3257148180">#</a></li>
-	<li>这帮人，在/etc/rc.local里加export，以为这样就可以把PHPRC的环境变量加上了。。。 <a href="http://twitter.com/54chen/statuses/3257319510">#</a></li>
-	<li>RT: @d_yang: @<a href="http://twitter.com/54chen">54chen</a> 在生产的服务器上乱搞？//这里没有ops，都是开发人员乱搞 <a href="http://twitter.com/54chen/statuses/3257605381">#</a></li>
-	<li>苹果在华不分成 联通100亿买断500万部iPhone  <a href="http://it.sohu.com%2F20090812%2Fn265889018.shtml" rel="nofollow">http://it.sohu.com%2F20090812%2Fn265889018.shtml</a> 真tmd多的钱 <a href="http://twitter.com/54chen/statuses/3260804633">#</a></li>
-	<li>有一群人在一个google group里激励地讨论着java和c++哪个好。。。 <a href="http://twitter.com/54chen/statuses/3262505715">#</a></li>
-	<li>哪位高人有识别图片上藏语的程序？工作需要 <a href="http://twitter.com/54chen/statuses/3262563167">#</a></li>
-	<li>有一群人在一个google group里激励地讨论着java和c++哪个好。。。//绝大多数都在说：这没什么好讨论的~~~ <a href="http://twitter.com/54chen/statuses/3262619966">#</a></li>
-	<li>国庆训练的家长信 <a href="http://bit.ly/tS2YB" rel="nofollow">http://bit.ly/tS2YB</a> <a href="http://twitter.com/54chen/statuses/3263428168">#</a></li>
-	<li>人人网将于2009年8月14日凌晨0：00-2：00启用新域名，届时网站将暂时无法访问 <a href="http://twitter.com/54chen/statuses/3278595515">#</a></li>
-	<li>校内改名的真实意义！！ <a href="http://www.douban.com/group/topic/7573283/" rel="nofollow">http://www.douban.com/group/topic/7573283/</a>  "我们可以铺天盖地的骂校内是SB, 但现在无法骂校内人人是SB，更无法骂人人是SB，这就是改名的最大意义了....... " <a href="http://twitter.com/54chen/statuses/3279392011">#</a></li>
-	<li>行行色色的路人，总是有半瓶水的响得不行，做到对半瓶水不骄不躁才是真理。 <a href="http://twitter.com/54chen/statuses/3282337373">#</a></li>
-	<li>RT: @long132: Ma de in China! <a href="http://twitter.com/54chen/statuses/3283047381">#</a></li>
-	<li>切啦 <a href="http://twitter.com/54chen/statuses/3298792684">#</a></li>
-	<li><a href="http://bit.ly/U9qzL" rel="nofollow">http://bit.ly/U9qzL</a>
- 水墨神兽 吃蟹图 <a href="http://twitter.com/54chen/statuses/3300949480">#</a></li>
-	<li>RT: @wingoffire: RT: @gowers: 校内网：大胆美女晒男友ML图 真叼，竟然还没被删掉，牛B！http://bit.ly/9ofFH //骗子，明明找不到这个姑娘//少数别有用心的下流的竞争对手发个H图就想搞校内 <a href="http://twitter.com/54chen/statuses/3303084678">#</a></li>
-	<li>纳斯达克上市公司的薪酬，创业公司的氛围。 <a href="http://twitter.com/54chen/statuses/3303127319">#</a></li>
-	<li>一哥们儿说：感谢你们更换域名，我能在公司上校内了！ <a href="http://twitter.com/54chen/statuses/3304324098">#</a></li>
-	<li>他不在麻省理工 就在外省打工 <a href="http://twitter.com/54chen/statuses/3329290093">#</a></li>
-</ul>
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -1422,9 +1426,9 @@ JAVA代码将会返回List&lt;Integer&gt;。
 
     </div>
   </div>
-  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/js/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/octopress.js" type="text/javascript"></script>
   Copyright &copy; 2016 - 54chen -
 
 </footer>

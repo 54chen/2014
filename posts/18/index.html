@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Riak源码阅读手记 与Cassandra相比 riak源码阅读手记一 初出茅庐 项目入口
-http://www.54chen.com/_linux_/riak-source.html riak源码阅读手记二 左右开弓 启动
-http://www.54chen.com/_linux_/riak- &hellip;">
+  <meta name="description" content="Riak源码阅读手记 压力测试 基础环境：
+三个台式机 一次操作：
+操作一段购物车数据，先写包括3个货物的数据，然后取出来，再加上三个后存入。 压力结果：
+1) 10个线程，无连接池化，每次新连接。PBClient。每次req包括上述一次操作里的一写一读一写三次。 Rate: 122 req/s &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -22,7 +23,7 @@ http://www.54chen.com/_linux_/riak- &hellip;">
   
   <link rel="canonical" href="http://2014.54chen.com/posts/18">
   <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
-  <link href="http://chen54.b0.upaiyun.com/css/screen-3.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://chen54.b0.upaiyun.com/css/screen-5.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
   	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
 	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
@@ -47,7 +48,7 @@ http://www.54chen.com/_linux_/riak- &hellip;">
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -63,7 +64,7 @@ http://www.54chen.com/_linux_/riak- &hellip;">
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:2014.54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -75,6 +76,148 @@ http://www.54chen.com/_linux_/riak- &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/09/15/riak-benchmark/">Riak源码阅读手记 压力测试</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-09-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="erlang riak" /></p>
+
+<p><strong>基础环境：</strong>
+三个台式机</p>
+
+<p><strong>一次操作：</strong>
+操作一段购物车数据，先写包括3个货物的数据，然后取出来，再加上三个后存入。</p>
+
+<p><strong>压力结果：</strong>
+1) 10个线程，无连接池化，每次新连接。PBClient。每次req包括上述一次操作里的一写一读一写三次。</p>
+
+<p>Rate: 122 req/s<br />
+Rate: 103 req/s<br />
+Rate: 119 req/s<br />
+Rate: 110 req/s<br />
+Rate: 117 req/s<br />
+Rate: 116 req/s<br />
+Rate: 121 req/s<br />
+Rate: 110 req/s<br />
+Rate: 116 req/s<br />
+Rate: 111 req/s<br />
+Rate: 123 req/s<br />
+Rate: 122 req/s<br />
+Rate: 119 req/s<br />
+Rate: 123 req/s<br />
+Rate: 110 req/s</p>
+
+<p>三个节点平均load为小于1。</p>
+
+<p>2）50个线程，无连接池化，每次新连接。PBClient。每次req包括上述一次操作里的一写一读一写三次。</p>
+
+<p>Rate: 124 req/s<br />
+Rate: 119 req/s<br />
+Rate: 124 req/s<br />
+Rate: 127 req/s<br />
+Rate: 114 req/s<br />
+Rate: 103 req/s<br />
+Rate: 93 req/s<br />
+Rate: 110 req/s<br />
+Rate: 120 req/s<br />
+Rate: 117 req/s<br />
+Rate: 121 req/s<br />
+Rate: 119 req/s<br />
+Rate: 109 req/s</p>
+
+<p>三个节点平均load为1。接入节点load略高。</p>
+
+<p>3）100个线程，无连接池化，每次新连接。PBClient。每次req包括上述一次操作里的一写一读一写三次。</p>
+
+<p>Rate: 89 req/s<br />
+Rate: 109 req/s<br />
+Rate: 97 req/s<br />
+Rate: 108 req/s<br />
+Rate: 105 req/s<br />
+Rate: 105 req/s<br />
+Rate: 105 req/s<br />
+Rate: 106 req/s<br />
+Rate: 104 req/s<br />
+Rate: 106 req/s<br />
+Rate: 103 req/s<br />
+Rate: 91 req/s<br />
+ 
+三个节点平均load为1。接入节点load为大于2。</p>
+
+<p>以上数据为从一个节点打入数据，接入节点负载略高。无池化，在建立连接浪费可能比较多。进行改进，合并发起连接的过程和接入节变成所有节点。</p>
+
+<p>1）三个节点共同接入，最大连接数150，相当于池化连接，150个线程，PBClient。<br />
+Rate: 271 req/s<br />
+Rate: 275 req/s<br />
+Rate: 256 req/s<br />
+Rate: 276 req/s<br />
+Rate: 287 req/s<br />
+Rate: 288 req/s<br />
+Rate: 280 req/s<br />
+Rate: 293 req/s<br />
+Rate: 279 req/s<br />
+Rate: 291 req/s<br />
+Rate: 254 req/s<br />
+Rate: 287 req/s<br />
+Rate: 288 req/s<br />
+Rate: 283 req/s<br />
+Rate: 292 req/s</p>
+
+<p>平均load 1，无明显负载偏移。</p>
+
+<p>2）三个节点共同接入，最大连接数300，相当于池化连接，300个线程，PBClient。<br />
+Rate: 273 req/s<br />
+Rate: 234 req/s<br />
+Rate: 264 req/s<br />
+Rate: 264 req/s<br />
+Rate: 263 req/s<br />
+Rate: 277 req/s<br />
+Rate: 253 req/s<br />
+Rate: 250 req/s<br />
+Rate: 258 req/s<br />
+Rate: 218 req/s<br />
+Rate: 237 req/s<br />
+Rate: 268 req/s<br />
+Rate: 232 req/s<br />
+Rate: 245 req/s<br />
+Rate: 247 req/s</p>
+
+<p>平均load 1.5，无明显负载偏移。</p>
+
+<p>同机器的mysql性能压测结论为：http://www.54chen.com/java-ee/amoeba-benchmark-report.html<br />
+可得到比mysql qps高3倍以上（因为riak的压测中每req为2写1读）。
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -620,91 +763,6 @@ Rebar是一款Erlang的构建工具，使用它可以方便的编译、测试erl
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/08/15/hive-hadoop-blockalreadyexistsexception/">记hadoop故障一例：BlockAlreadyExistsException</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-08-15T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="" />
-hive版本：0.7.0 hadoop版本：0.20.2 <br />
-在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。</p>
-
-<p>在hive执行时留下的蛛丝马迹：
-<blockquote>Failed with exception org.apache.hadoop.hdfs.server.namenode.NotReplicatedYetException: Not replicated yet:/tmp/hive-root/hive_2011-08-15_00-31-02_332_247809173824307798/-ext-10000/access_bucket-2011-08-14_00004<br />
-        at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getAdditionalBlock(FSNamesystem.java:1257)<br />
-        at org.apache.hadoop.hdfs.server.namenode.NameNode.addBlock(NameNode.java:422)<br />
-        at sun.reflect.GeneratedMethodAccessor2037.invoke(Unknown Source)<br />
-        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br />
-        at java.lang.reflect.Method.invoke(Method.java:597)<br />
-        at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:508)<br />
-        at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:959)<br />
-        at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:955)<br />
-        at java.security.AccessController.doPrivileged(Native Method)<br />
-        at javax.security.auth.Subject.doAs(Subject.java:396)<br />
-        at org.apache.hadoop.ipc.Server$Handler.run(Server.java:953)</blockquote></p>
-
-<p>FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.CopyTask</p>
-
-<p>在DN中发现：</p>
-
-<p><blockquote>2011-08-15 00:47:09,138 INFO org.apache.hadoop.hdfs.server.datanode.DataNode: writeBlock blk_8964076545845199727_216399 received exception org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br />
-2011-08-15 00:47:09,138 ERROR org.apache.hadoop.hdfs.server.datanode.DataNode: DatanodeRegistration(192.168.1.23:50010, storageID=DS-52195649-192.168.1.23-50010-1299427987620, infoPort=50075, ipcPort=50020):DataXceiver<br />
-org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br />
-        at org.apache.hadoop.hdfs.server.datanode.FSDataset.writeToBlock(FSDataset.java:983)<br />
-        at org.apache.hadoop.hdfs.server.datanode.BlockReceiver.<init>(BlockReceiver.java:98)<br />
-        at org.apache.hadoop.hdfs.server.datanode.DataXceiver.writeBlock(DataXceiver.java:259)<br />
-        at org.apache.hadoop.hdfs.server.datanode.DataXceiver.run(DataXceiver.java:103)<br />
-        at java.lang.Thread.run(Thread.java:662)</init></blockquote></p>
-
-<p>2011-08-15 00:47:15,366 WARN org.apache.hadoop.util.Shell: Could not get disk usage information<br />
-org.apache.hadoop.util.Shell$ExitCodeException: du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018_216371.meta': No such file or directory<br />
-du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018': No such file or directory</p>
-
-<p>        at org.apache.hadoop.util.Shell.runCommand(Shell.java:195)<br />
-        at org.apache.hadoop.util.Shell.run(Shell.java:134)<br />
-        at org.apache.hadoop.fs.DU.access$200(DU.java:29)<br />
-        at org.apache.hadoop.fs.DU$DURefreshThread.run(DU.java:84)<br />
-        at java.lang.Thread.run(Thread.java:662)</p>
-
-<p> <br />
-看着像是DN写入的时候遇到了服务不响应，google追了一把，发现DN上全都忘记设置ulimit了，汗：<br />
-ulimit -SHn 18912</p>
-
-<p><strong>参考：</strong>
-http://www.cloudera.com/blog/2009/03/configuration-parameters-what-can-you-just-ignore/<br />
-http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/<br />
-http://sudhirvn.blogspot.com/2010/07/hadoop-error-logs-orgapachehadoophdfsse.html
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -952,9 +1010,9 @@ http://sudhirvn.blogspot.com/2010/07/hadoop-error-logs-orgapachehadoophdfsse.htm
 
     </div>
   </div>
-  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/js/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/octopress.js" type="text/javascript"></script>
   Copyright &copy; 2016 - 54chen -
 
 </footer>

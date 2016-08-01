@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-08-14 祝贺@laruence php开发组中唯一的中国人，哥学社的骄傲！ http://www.blog-brother.com/ #
-早上学习了@淘宝褚霸 的erlang心得，一起吃完中饭，现在在听多玩cto通礼分享经验。 # &hellip;">
+  <meta name="description" content="记hadoop故障一例：BlockAlreadyExistsException hive版本：0.7.0 hadoop版本：0.20.2 在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。 在hive执行时留下的蛛丝马迹：
+Failed with exception org.apache &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,7 +21,7 @@
   
   <link rel="canonical" href="http://2014.54chen.com/posts/19">
   <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
-  <link href="http://chen54.b0.upaiyun.com/css/screen-3.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://chen54.b0.upaiyun.com/css/screen-5.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
   	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
 	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
@@ -46,7 +46,7 @@
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -62,7 +62,7 @@
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:2014.54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -74,6 +74,91 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/08/15/hive-hadoop-blockalreadyexistsexception/">记hadoop故障一例：BlockAlreadyExistsException</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-08-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="" />
+hive版本：0.7.0 hadoop版本：0.20.2 <br />
+在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。</p>
+
+<p>在hive执行时留下的蛛丝马迹：
+<blockquote>Failed with exception org.apache.hadoop.hdfs.server.namenode.NotReplicatedYetException: Not replicated yet:/tmp/hive-root/hive_2011-08-15_00-31-02_332_247809173824307798/-ext-10000/access_bucket-2011-08-14_00004<br />
+        at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getAdditionalBlock(FSNamesystem.java:1257)<br />
+        at org.apache.hadoop.hdfs.server.namenode.NameNode.addBlock(NameNode.java:422)<br />
+        at sun.reflect.GeneratedMethodAccessor2037.invoke(Unknown Source)<br />
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br />
+        at java.lang.reflect.Method.invoke(Method.java:597)<br />
+        at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:508)<br />
+        at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:959)<br />
+        at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:955)<br />
+        at java.security.AccessController.doPrivileged(Native Method)<br />
+        at javax.security.auth.Subject.doAs(Subject.java:396)<br />
+        at org.apache.hadoop.ipc.Server$Handler.run(Server.java:953)</blockquote></p>
+
+<p>FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.CopyTask</p>
+
+<p>在DN中发现：</p>
+
+<p><blockquote>2011-08-15 00:47:09,138 INFO org.apache.hadoop.hdfs.server.datanode.DataNode: writeBlock blk_8964076545845199727_216399 received exception org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br />
+2011-08-15 00:47:09,138 ERROR org.apache.hadoop.hdfs.server.datanode.DataNode: DatanodeRegistration(192.168.1.23:50010, storageID=DS-52195649-192.168.1.23-50010-1299427987620, infoPort=50075, ipcPort=50020):DataXceiver<br />
+org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br />
+        at org.apache.hadoop.hdfs.server.datanode.FSDataset.writeToBlock(FSDataset.java:983)<br />
+        at org.apache.hadoop.hdfs.server.datanode.BlockReceiver.<init>(BlockReceiver.java:98)<br />
+        at org.apache.hadoop.hdfs.server.datanode.DataXceiver.writeBlock(DataXceiver.java:259)<br />
+        at org.apache.hadoop.hdfs.server.datanode.DataXceiver.run(DataXceiver.java:103)<br />
+        at java.lang.Thread.run(Thread.java:662)</init></blockquote></p>
+
+<p>2011-08-15 00:47:15,366 WARN org.apache.hadoop.util.Shell: Could not get disk usage information<br />
+org.apache.hadoop.util.Shell$ExitCodeException: du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018_216371.meta': No such file or directory<br />
+du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018': No such file or directory</p>
+
+<p>        at org.apache.hadoop.util.Shell.runCommand(Shell.java:195)<br />
+        at org.apache.hadoop.util.Shell.run(Shell.java:134)<br />
+        at org.apache.hadoop.fs.DU.access$200(DU.java:29)<br />
+        at org.apache.hadoop.fs.DU$DURefreshThread.run(DU.java:84)<br />
+        at java.lang.Thread.run(Thread.java:662)</p>
+
+<p> <br />
+看着像是DN写入的时候遇到了服务不响应，google追了一把，发现DN上全都忘记设置ulimit了，汗：<br />
+ulimit -SHn 18912</p>
+
+<p><strong>参考：</strong>
+http://www.cloudera.com/blog/2009/03/configuration-parameters-what-can-you-just-ignore/<br />
+http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/<br />
+http://sudhirvn.blogspot.com/2010/07/hadoop-error-logs-orgapachehadoophdfsse.html
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -546,73 +631,6 @@ EasyMock.verify(aDAO);
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/07/07/ci-tool-hudson-usage/">持续构建工具hudson使用手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-07-07T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1RgNyXjFsXXXG8Bva_092141.jpg" alt="hudson" />
-hudson是一个强大的持续性构建服务器。（现在开发者们分了一个分支，改叫Jenkins。）我（54chen）在使用过程中的手记如下：
-<strong>下载</strong>
-地址：http://hudson-ci.org/
-<blockquote>wget http://java.net/projects/hudson/downloads/download/war/hudson-2.0.1.war</blockquote>
-速度不咋的，60k/s.
-<strong>先决条件</strong>
-系统：centos 5.5
-<blockquote>resin4下不work，换成了tomcat。</blockquote>
-<blockquote> cp /opt/soft/hudson/hudson-2.0.1.war /opt/soft/apache-tomcat-7.0.16/webapps/</blockquote>
-<strong>遇到的问题</strong>
-1）tomcat使用utf8环境。<br />
- vim tomcat/conf/server.xml<br />
- 找到8080，加入一行 URIEncoding="UTF-8"。</p>
-
-<p>2）maven不工作<br />
-hudson启动后，系统管理里面，设置maven的地址：MAVEN_HOME指到maven的主目录，不是bin目录。</p>
-
-<p>3）svn不工作<br />
-报re_version错误，在你的svn地址的最后面加上@HEAD</p>
-
-<p>4）hudson一切正常后，有svn bug
-<blockquote>FATAL: tried to access method hudson.scm.ChangeLogSet$Entry.setParent(Lhudson/scm/ChangeLogSet;)V from class hudson.scm.SubversionChangeLogSet
-</blockquote></p>
-
-<p>报上面的错误，我（54chen）在http://issues.hudson-ci.org/browse/HUDSON-8885里找到更新新的svn插件即可。进入到系统管理的插件管理中，选中svn 插件，安装更新即可。</p>
-
-<p>5）定时执行<br />
-建立job时，有一个选项是Build Triggers，勾选 Build periodically ，schedule填写：0 10,22 * * *表示每天10/22点执行。</p>
-
-<p>6）重启后jobs丢失<br />
-jobs都是定义在$HUDSON_HOME里的，如果一开始的时候没有设置，jobs将放在~/.hudson下，当重启的时候，可能发生各种找不到原来的jobs的问题，此时需要确定原来的HUDSON_HOME是啥，现在的是啥，如果不一致就会出问题。</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -860,9 +878,9 @@ jobs都是定义在$HUDSON_HOME里的，如果一开始的时候没有设置，j
 
     </div>
   </div>
-  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/js/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/octopress.js" type="text/javascript"></script>
   Copyright &copy; 2016 - 54chen -
 
 </footer>

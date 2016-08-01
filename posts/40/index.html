@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Linux系统更换sshd的方法手记[from科学院] 朋友的服务器让人给黑了，把sshd都给更换了，拿到root用户名密码直接用curl往外传。绝对是老毛子的手法，非常娴熟，入侵涉及的方案有perl服务、c、shell、curl、php exec等等。 在最简单的分析下， &hellip;">
+  <meta name="description" content="Java Nio学习手记[收集] 传统的并发型服务器设计是利用阻塞型网络I/O 以多线程的模式来实现的，然而由于系统常常在进行网络读写时处于阻塞状态，会大大影响系统的性能；自Java1. 4 开始引入了NIO(新I/O) API，通过使用非阻塞型I/O，实现流畅的网络读写操作， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -20,7 +20,7 @@
   
   <link rel="canonical" href="http://2014.54chen.com/posts/40">
   <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
-  <link href="http://chen54.b0.upaiyun.com/css/screen-3.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="http://chen54.b0.upaiyun.com/css/screen-5.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
   	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
 	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
@@ -45,7 +45,7 @@
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -61,7 +61,7 @@
 <form action="http://google.com/search" method="get">
   <fieldset role="search">
     <input type="hidden" name="q" value="site:2014.54chen.com" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+    <input class="search" type="text" name="q" placeholder="Search"/>
   </fieldset>
 </form>
   
@@ -73,6 +73,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/06/notes-from-java-nio-to-learn-to-collect/">Java Nio学习手记[收集]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>传统的并发型服务器设计是利用阻塞型网络I/O 以多线程的模式来实现的，然而由于系统常常在进行网络读写时处于阻塞状态，会大大影响系统的性能；自Java1. 4 开始引入了NIO(新I/O) API，通过使用非阻塞型I/O，实现流畅的网络读写操作，为开发高性能并发型服务器程序提供了一个很好的解决方案。这就是java nio.</p>
+
+<p><strong>传统的阻塞型网络 I/O的不足:</strong></p>
+
+<p>Java 平台传统的I/O 系统都是基于Byte（字节）和Stream（数据流）的，相应的I/O 操作都是阻塞型的，所以服务器程序也采用阻塞型I/O 进行数据的读、写操作。本文以TCP长连接模式来讨论并发型服务器的相关设计，为了实现服务器程序的并发性要求，系统由一个单独的主线程来监听用户发起的连接请求，一直处于阻塞状态；当有用户连接请求到来时，程序都会启一个新的线程来统一处理用户数据的读、写操作。</p>
+
+<p>这种模式的优点是简单、实用、易管理；然而缺点也是显而易见的：由于是为每一个客户端分配一个线程来处理输入、输出数据，其线程与客户机的比例近似为1：1，随着线程数量的不断增加，服务器启动了大量的并发线程，会大大加大系统对线程的管理开销，这将成为吞吐量瓶颈的主要原因；其次由于底层的I/O 操作采用的同步模式，I/O 操作的阻塞管</p>
+
+<p>理粒度是以服务于请求的线程为单位的,有可能大量的线程会闲置,处于盲等状态，造成I/O资源利用率不高，影响整个系统的性能。</p>
+
+<p>对于并发型服务器，系统用在阻塞型I/O 等待和线程间切换的时间远远多于CPU 在内存中处理数据的时间，因此传统的阻塞型I/O 已成为制约系统性能的瓶颈。Java1.4 版本后推出的NIO 工具包，提供了非阻塞型I/O 的异步输入输出机制，为提高系统的性能提供了可实现的基础机制。</p>
+
+<p><strong>NIO:</strong></p>
+
+<p>针对传统I/O 工作模式的不足，NIO 工具包提出了基于Buffer（缓冲区）、Channel（通道）、Selector（选择器）的新模式；Selector（选择器）、可选择的Channel（通道）和SelectionKey（选择键）配合起来使用，可以实现并发的非阻塞型I/O 能力。</p>
+
+<p>Buffer（缓冲器）</p>
+
+<p>Buffer 类是一个抽象类，它有7 个子类分别对应于七种基本的数据类型：ByteBuffer、CharBuffer、DoubleBuffer、FloatBuffer、IntBuffer、LongBuffer 和ShortBuffer。每一个Buffer对象相当于一个数据容器，可以把它看作内存中的一个大的数组，用来存储和提取所有基本类型(boolean 型除外)的数据。Buffer 类的核心是一块内存区，可以直接对其执行与内存有关的操作，利用操作系统特性和能力提高和改善Java 传统I/O 的性能。</p>
+
+<p>Channel（通道）</p>
+
+<p>Channel 被认为是NIO 工具包的一大创新点，是(Buffer)缓冲器和I/O 服务之间的通道，具有双向性，既可以读入也可以写出，可以更高效的传递数据。我们这里主要讨论ServerSocketChannel 和SocketChannel，它们都继承了SelectableChannel，是可选择的通道，分别可以工作在同步和异步两种方式下（这里的可选择不是指可以选择两种工作方式，而是指可以有选择的注册自己感兴趣的事件）。当通道工作在同步方式时，它的功能和编程方法与传统的ServerSocket、Socket 对象相似；当通道工作在异步工作方式时，进行输入输出处理不必等到输入输出完毕才返回，并且可以将其感兴趣的（如：接受操作、连接操作、读出操作、写入操作）事件注册到Selector 对象上，与Selector 对象协同工作可以更有效率的支持和管理并发的网络套接字连接。</p>
+
+<p>Selector（选择器）和SelectionKey（选择键）</p>
+
+<p>各类 Buffer 是数据的容器对象；各类Channel 实现在各类Buffer 与各类I/O 服务间传输数据。Selector 是实现并发型非阻塞I/O 的核心，各种可选择的通道将其感兴趣的事件注册到Selector 对象上，Selector 在一个循环中不断轮循监视这各些注册在其上的Socket 通道。SelectionKey 类则封装了SelectableChannel 对象在Selector 中的注册信息。当Selector 监测到在某个注册的SelectableChannel 上发生了感兴趣的事件时,自动激活产生一个SelectionKey对象,在这个对象中记录了哪一个SelectableChannel 上发生了哪种事件，通过对被激活的SelectionKey 的分析,外界可以知道每个SelectableChannel 发生的具体事件类型,进行相应的处理。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1028,85 +1090,6 @@ sudo /home/zzz/nginx/sbin/nginx</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/10/12/presentation-skills-collection-training-or-technical-analysis-of-the-speech/">[演讲技巧收集]培训或者演讲的技术分析</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-10-12T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><strong>演讲的概念</strong></p>
-
-<p>又叫讲演或演说，是指在公众场所，以有声语言为主要手段，以体态语言为辅助手段，针对某个具体问题，鲜明、完整地发表自己的见解和主张，阐明事理或抒发情感，进行宣传鼓动的一种语言交际活动。</p>
-
-<p>一般做演讲主体的是名人或者有特殊经历的人，以面对公众传播演讲语言达到某种目的。但现在很多高校或社会团体都会举办一些演讲比赛，为了演讲而“演讲”的比赛，是演讲文化的技术化普及化扩展化的体现。</p>
-
-<p><strong>培训的概念</strong></p>
-
-<p>培训是一种有组织的知识传递、技能传递、标准传递、信息传递、信念传递、管理训诫行为。目前国内培训以技能传递为主，时间在侧重上岗前。</p>
-
-<p>为了达到统一的科学<a href="http://www.54chen.com/591-twitter-api-%e4%b8%ad%e6%96%87%e6%96%87%e6%a1%a3-%e5%89%8d%e8%a8%80/">技术</a>规范、标准化作业，通过目标规划设定、知识和信息传递、技能熟练演练、作业达成评测、结果交流公告等现代信息化的流程，让员工通过一定的教育训练技术手段，达到预期的水平提高目标。</p>
-
-<p><strong>总结</strong></p>
-
-<p>对讲师来说，基本上没啥区别。</p>
-
-<p>科学院将会陆续收集一些讲座技巧的文章给大家。
-<h2>演讲时你应该站哪儿</h2>
-在演讲中使用多媒体来辅助已经是很常用的情况了。在使用这些视觉辅助材料时，作为演讲者，你是站在哪儿呢？看看下面的小小分析吧：</p>
-
-<p>自己的座位</p>
-
-<p>你对自己的演讲内容与表达能力缺乏足够的信心。事实上，你根本不想进行研究。你留在自己的位置上，这样是为了逃避观众对你的关注。因为你害怕在别人的注视下，漏洞百出。你选择了留在人群中，大隐隐于世。</p>
-
-<p>笔记本电脑旁</p>
-
-<p>你有做演讲的动机，但仍没有足够的自信。你站在电脑旁希望观众尽量不要把视线集中在你的身上。你看着电脑屏幕或投影荧幕，而尽量避免与观众的视觉接触。</p>
-
-<p><a href="http://www.54chen.com/683-ugc-technical-seminars-in-schools-postgresql-search-slide-sharing/">讲桌</a>后面</p>
-
-<p>你对演讲的内容是有自信的，但对自己的表达能力与个人风格没有什么自信。站在讲座后面，双手摊开抓着讲桌两侧，就像躲避别人的进攻。偶尔你也会用镭射笔指指荧幕，让你觉得自己挺正式和有权威。其实你的内心仍然是挺焦虑的。你依旧担心观众有可能穿透你的防卫，看出你是一个无趣的人。但你也不知道还能做些什么，只能抓住那张讲桌不放，偶尔挥一挥镭射笔。</p>
-
-<p>投影荧幕旁</p>
-
-<p>你对自己的演讲内容、表达能力与<a href="http://www.54chen.com/546-54chen%e5%87%ba%e5%93%81%e6%89%93%e9%85%b1%e6%b2%b9%e5%9c%a8%e7%ba%bf%e4%b8%80%e5%af%b9%e4%b8%80%e5%92%8c%e9%99%8c%e7%94%9f%e4%ba%ba%e8%81%8a%e5%a4%a9%e7%9a%84%e7%bd%91%e7%ab%99/">个人风格</a>都很有自信。多半的时间，你的眼睛看着听众，而不是电脑或荧幕。你是真心想要和观众分享你的想法，你要看到他们的表情，才知道他们听懂了没有。你熟悉自己的投影内容，并不需要经常看着荧幕。你不会躲到观众视线以外的地方，你会让观众不需要转头就可以同时看到你和荧幕上的视觉辅助材料。因为你知道，再炫的幻灯片都只是辅助性的。因为你知道，你才是这场演讲的主角。</p>
-
-<p>所以，做演讲时你应该站在哪儿呢？</p>
-
-<p>这里的基本原则便是，站在观众可以同时看到你和视觉辅助材料，同时你也可以清楚看到所有<a href="http://www.54chen.com/796-11-return-ubuntu-910-notes-from-the-hard-disk-installation/">观众</a>的位置。这个位置并不固定，通常就是荧幕旁。你应该在演讲前提早到达会场，观察下场地的布置，找出一个合适的位置。</p>
-
-<p>无论如何，这些都是原则而非公式。你要灵活应用，而不是照搬。例如有些场地是有舞台的，离听众很远。这时，你就应该站得离观众近一些，这样让他们可以很容易地同时看到你和你的幻灯片（见乔布斯的演讲）。</p>
-
-<p>(出处:<a href="http://www.mifengtd.cn/articles/where-should-you-stay-during-presentation.html">http://www.mifengtd.cn/articles/where-should-you-stay-during-presentation.html</a>)
-<div></div></p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -1354,9 +1337,9 @@ sudo /home/zzz/nginx/sbin/nginx</p>
 
     </div>
   </div>
-  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/s/modernizr-2.0.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/jquery.min.js"></script>
-  <script src="http://chen54.b0.upaiyun.com/s/octopress.js" type="text/javascript"></script>
+  <footer role="contentinfo" class="footer_css">  <script src="http://chen54.b0.upaiyun.com/js/modernizr-2.0.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/jquery.min.js"></script>
+  <script src="http://chen54.b0.upaiyun.com/js/octopress.js" type="text/javascript"></script>
   Copyright &copy; 2016 - 54chen -
 
 </footer>

@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-07-30T15:26:07+08:00</updated>
+  <updated>2016-08-01T16:49:12+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,56 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[小米大树part1.5:基础架构之痛答疑]]></title>
+    <link href="http://2014.54chen.com/blog/2016/08/01/mi1-dot-5/"/>
+    <updated>2016-08-01T14:49:40+08:00</updated>
+    <id>http://2014.54chen.com/blog/2016/08/01/mi1-dot-5</id>
+    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p>上周末发了第一篇，在微博收到了许多朋友的反馈，可能是写得匆忙，没能完整描述，特加1.5，专门针对各位的问题进行答疑。</p>
+
+<p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
+
+<p>原文地址：《小米大树part1:基础架构之痛》| <a href="http://2014.54chen.com/blog/2016/07/29/mi/">http://2014.54chen.com/blog/2016/07/29/mi/</a></p>
+
+<!--more-->
+
+
+<h2>问题一、中央集权</h2>
+
+<p>Q:@浩松 &hellip;为啥我觉得博主还是没有找到原因。这个东西就和为什么要统一度量衡统一文字中央集权虽然不同地方的方言可能有差别一样的，和有没有腾讯的人一点关系都没有啊</p>
+
+<p>A:其实我想表达的，并非是统一度量衡这个问题，发展过程中，大家的度量衡其实是统一的。而更大的问题是，度量衡本身不科学，我们大多数时间在监控一个服务自身的qps\percentile等数值，却没有一个可用性的数值来监控和报警，这是根本点。</p>
+
+<h2>问题二、吹腾讯</h2>
+
+<p>Q:@咩罗 花式吹腾讯&hellip;</p>
+
+<p>A:完全是个无心之举，但从腾讯过去从来不参加开源到现在一点一点放出来技术细节，的确要高于行业水平。回忆一下，已经很久没有遇到QQ大规模故障了。</p>
+
+<h2>问题三、git/memcahce也拿来说</h2>
+
+<p>Q:@沧落海 我靠，git，memcache都能拿来说</p>
+
+<p>A:为什么不能拿来说，git现在是十岁多，我在讲的五六年前的事情，国内还在流行svn，我们的团队还有人连svn都没用过。而memcache，我们引入的实际上是zookeeper和memcache的合体解决方法，做到自动化配置。</p>
+
+<h2>问题四、语言</h2>
+
+<p>Q:@辩图识人生 引入C基础架构，排除gc影响，提高吞吐。&ndash;现在基础平台以c为主？</p>
+
+<p>A:只是部分部门，因为小米还是没有CTO这样的行政岗位，有基础的团队自己会跑在前面，并不强求全公司的基础架构都发生改变。</p>
+
+<h2>问题五、版式</h2>
+
+<p>Q:@Easy 页面的行间距调一下吧……看着好诡异……</p>
+
+<p>A:这是个好问题，顺手调了一下，不知道大家感觉如何。</p>
+
+<h2>预告</h2>
+
+<p>《小米大树part2：测试之痛》大约周末有功夫写，写完就发。大概会记录当时我们如何做不了单元测试、如何做冒烟测试、如何在压力测试上失败，以及如何不测试。</p>
+ <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[小米大树part1:基础架构之痛]]></title>
@@ -2284,67 +2334,6 @@ int i = sc.read(buff)</p></blockquote>
 <li>exchange的类型有一个default，basicPublish没有指定时使用，而且，如果routingKey在指定绑定的时候，会去到绑定的exchange。</li>
 <li>channel.queueDeclare().getQueue() 得到的是一个随机queue，断开连接后即删除。</li>
 <li>当exchange为direct的时候routingKey与bindingKey必须完全一致才能消费消息。</li>
-</ul>
-
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[小米互娱招java工程师]]></title>
-    <link href="http://2014.54chen.com/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/"/>
-    <updated>2014-08-25T21:17:53+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png></p>
-
-<h2>序</h2>
-
-<ul>
-<li>这是一个新的时代。</li>
-<li>小米互娱作为一个真正意义上的小米互联网部门，开启小米“铁人三项”中互联网征途。</li>
-<li>这里有众多靠谱的兄弟。</li>
-<li>这里缺更加强大的你的加入。</li>
-</ul>
-
-
-<!--more-->
-
-
-<h2>寻</h2>
-
-<ul>
-<li>java工程师 1－5年工作经验。</li>
-</ul>
-
-
-<h2>项目</h2>
-
-<ul>
-<li>你可能需要理解Big-endian、Little-endian这种细节。</li>
-<li>你可能需要掌握amqp协议细节。</li>
-<li>你可能需要了解移动网络下出现的异常。</li>
-<li>你可能需要清楚http CONNECT方法的作用。</li>
-<li>你可能需要明白restful的道理。</li>
-<li>你可能应该更加主动地联系54chen at xiaomi dot com。</li>
-</ul>
-
-
-<h2>待遇</h2>
-
-<ul>
-<li>过了技术关，剩下的事情全部和老板直接谈，请畅所欲言。</li>
-<li>欲大展拳脚的同学，是不错的机会。</li>
-<li>抽空过来聊一聊，多次机会多条路。</li>
-</ul>
-
-
-<p> 一些实在的码，麻烦看到的兄弟帮我转：</p>
-
-<ul>
-<li>红米手机1S 电信版 8GB 金属灰HMDX96763527807262227 8.1前</li>
-<li>红米手机1S 移动版 8GB 金属灰HMSY86526398236552885 8.1前</li>
-<li>小米电视2                   MTV240078896615240317 8.1前</li>
-<li>小米平板 16GB 纯白色MPAD59271074707309411         8.1前</li>
-<li>欲要更多，请来简历54chen at xiaomi dot com。</li>
 </ul>
 
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
