@@ -21,7 +21,7 @@
   <link rel="canonical" href="http://2014.54chen.com/blog/2009/04/01/%E5%8E%9F%E5%88%9B%E6%89%93%E5%80%92%E6%8A%95%E7%A5%A8%E4%BD%9C%E5%BC%8A%EF%BC%8C%E5%B7%A7%E7%94%A8flex%E9%98%B2%E5%88%B7%E7%A5%A8">
   <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
   <link href="http://chen54.b0.upaiyun.com/css/screen-5.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="http://chen54.b0.upaiyun.com/fkwb/fkwb.css?v1" type="text/css" rel="stylesheet">  
+  <link href="http://chen54.b0.upaiyun.com/fkwb/fkwb.css?v4" type="text/css" rel="stylesheet">  
   <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
   	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
 	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
@@ -236,7 +236,7 @@ END</p>
 
 </footer>
   
-<div id="content" class="content wc_main"></div>
+<div id="fck_content" class="content wc_main"></div>
 <p>&nbsp;</p>
 <script type="text/javascript">
 (function(){
@@ -251,13 +251,7 @@ $(function(){
     var mid = $("#mid").val();
     var get_url = 'http://www.54chen.com/fkwb/'+mid+'.json';
     if(mid > 0){
-        $.ajax({
-            url: get_url,
-            dataType: 'jsonp',
-            success: function(r) {
-                $("#content").html(r.r);
-            }
-        });
+        $.getJSON(get_url,function(r) {$("#fck_content").html(r.r);});
     }
 });
 window.WBComment.init({

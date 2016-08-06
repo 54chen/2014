@@ -21,7 +21,7 @@
   <link rel="canonical" href="http://2014.54chen.com/blog/2009/04/13/%E5%8E%9F%E5%88%9B%E6%95%B4%E7%90%86%E6%A0%A1%E5%86%85%E7%BD%91cto%E9%BB%84%E6%99%B6%E8%AE%B2%E8%BF%B0%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E5%8F%98%E8%BF%81-54chen%E5%9B%9E%E5%BF%86%E7%89%88">
   <link href="http://chen54.b0.upaiyun.com/s/favicon.png" rel="icon">
   <link href="http://chen54.b0.upaiyun.com/css/screen-5.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="http://chen54.b0.upaiyun.com/fkwb/fkwb.css?v1" type="text/css" rel="stylesheet">  
+  <link href="http://chen54.b0.upaiyun.com/fkwb/fkwb.css?v4" type="text/css" rel="stylesheet">  
   <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
   	<link rel="apple-touch-icon" href="http://chen54.b0.upaiyun.com/s/touch-icon.png" />
 	<link rel="shortcut icon" href="http://chen54.b0.upaiyun.com/s/favicon.ico" />
@@ -210,7 +210,7 @@ Todd从定义BigTable的适用范围开始论述。由于BigTable引入的各种
 
 </footer>
   
-<div id="content" class="content wc_main"></div>
+<div id="fck_content" class="content wc_main"></div>
 <p>&nbsp;</p>
 <script type="text/javascript">
 (function(){
@@ -225,13 +225,7 @@ $(function(){
     var mid = $("#mid").val();
     var get_url = 'http://www.54chen.com/fkwb/'+mid+'.json';
     if(mid > 0){
-        $.ajax({
-            url: get_url,
-            dataType: 'jsonp',
-            success: function(r) {
-                $("#content").html(r.r);
-            }
-        });
+        $.getJSON(get_url,function(r) {$("#fck_content").html(r.r);});
     }
 });
 window.WBComment.init({
