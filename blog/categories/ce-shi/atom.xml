@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 测试 | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/ce-shi/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-08-06T16:45:59+08:00</updated>
+  <updated>2016-08-06T16:54:00+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -97,7 +97,9 @@
 
 <p>一切在向好的方向变化，虽然测试资源也是时不时紧张一下。</p>
 
-<p>一句话概括：测试工作不能省也不能推。</p>
+<p>一句话概括：测试工作不能省也不能推。测试没做好，开发占六成因素，测试占四成。</p>
+
+<p><input type="hidden" id="mid" name="mid" value="4005517720614298" /></p>
 ]]></content>
   </entry>
   
