@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Arch | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/arch/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-08-06T15:04:33+08:00</updated>
+  <updated>2016-08-06T15:27:40+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -140,6 +140,8 @@
 <h2>PS</h2>
 
 <p>There are too many details.To avoid the wrong thing if your service will be greater.</p>
+
+<p><input type="hidden" id="mid" name="mid" value="3968627038512109" /></p>
 ]]></content>
   </entry>
   

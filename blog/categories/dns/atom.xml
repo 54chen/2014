@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Dns | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/dns/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-08-06T15:04:33+08:00</updated>
+  <updated>2016-08-06T15:27:40+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -152,6 +152,8 @@
 <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span>      <span class="mi">43200</span>   <span class="n">IN</span>  <span class="n">SOA</span> <span class="n">ns</span><span class="o">-</span><span class="n">tel1</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span> <span class="n">webmaster</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span> <span class="mi">1293502040</span> <span class="mi">300</span> <span class="mi">600</span> <span class="mi">86400</span> <span class="mi">300</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
 
 <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+
+<p><input type="hidden" id="mid" name="mid" value="3987785364529324" /></p>
 ]]></content>
   </entry>
   

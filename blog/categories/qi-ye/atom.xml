@@ -4,7 +4,7 @@
   <title><![CDATA[Category: 企业 | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/qi-ye/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-08-06T15:04:33+08:00</updated>
+  <updated>2016-08-06T15:27:40+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -60,6 +60,8 @@
 <h2>预告</h2>
 
 <p>《小米大树part2：测试之痛》大约周末有功夫写，写完就发。大概会记录当时我们如何做不了单元测试、如何做冒烟测试、如何在压力测试上失败，以及如何不测试。</p>
+
+<p><input type="hidden" id="mid" name="mid" value="4003741180911627" /></p>
 ]]></content>
   </entry>
   
