@@ -283,11 +283,12 @@ document.write('<iframe id="WBCommentFrame" src="' + url + '" scrolling="no" fra
 </script>
 <script src="http://tjs.sjs.sinajs.cn/open/widget/js/widget/comment.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+function w(r) {$("#fck_content").html(r.r);}
 $(function(){
     var mid = $("#mid").val();
-    var get_url = 'http://www.54chen.com/fkwb/'+mid+'.json?callback=?';
+    var get_url = 'http://www.54chen.com/fkwb/'+mid+'.json';
     if(mid > 0){
-        $.getJSON(get_url,function(r) {$("#fck_content").html(r.r);});
+        $.ajax({url:get_url,dataType: "jsonp");
     }
 });
 window.WBComment.init({
