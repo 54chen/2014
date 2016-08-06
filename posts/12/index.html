@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-05-13 开这些年互联网开发最怕的事情：设立一个专门的QA团队，让研发团队通过不断的开关bug帮助QA团队理解产品需求和架构设计。 #
-54chen Twitter memo 2012-05-06 http://t.co/5RcTU0GG # &hellip;">
+  <meta name="description" content="rose手册第三章三节：controller层：ErrorHandler支持 3.3.1 ErrorHandler的作用
+一般来说传统的编程都会到处去try，特别是java里，try来try去的（如果你用erlang一定就知道，已经知道的可能性，怎么能叫异常？都try了还是让它崩了算了 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,113 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/05/16/rose-3-3/">rose手册第三章三节：controller层：ErrorHandler支持</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-05-16T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" />
+<strong>
+3.3.1 ErrorHandler的作用</strong>
+一般来说传统的编程都会到处去try，特别是java里，try来try去的（如果你用erlang一定就知道，已经知道的可能性，怎么能叫异常？都try了还是让它崩了算了。。。）。<br />
+如果打开你的项目，每个java文件中的代码都有一堆的try，那这时候就是ErrorHandle上阵的时候了。<br />
+ErrorHanle致力于：统一捕捉和处理各种异常，可区分对待和返回；统一的出错体验。<br />
+非常类似做web开发时的500统一出错页面这样的东东。
+<strong>3.3.2 示例</strong></p>
+
+<p><blockquote>/**<br />
+ * @author chenzhen@xiaomi.com<br />
+ * 2010-12-1 <br />
+ */</blockquote></p>
+
+<p>package com.chen.controllers;</p>
+
+<p>import net.paoding.rose.web.ControllerErrorHandler;<br />
+import net.paoding.rose.web.Invocation;</p>
+
+<p>public class ErrorHandler implements ControllerErrorHandler {</p>
+
+<p>    public Object onError(Invocation inv, Throwable ex) throws Throwable {</p>
+
+<p>        // TODO logger.error("handle err:", ex);</p>
+
+<p>        return "@error";<br />
+    }<br />
+}</p>
+
+<p>这是这么简单，不用怀疑！</p>
+
+<p><strong>3.3.3 放在哪里才能生效？</strong>
+放在controllers目录下，和controller们在一起（幸福快乐地生活）。<br />
+一般来讲，ErrorHandler都是用在web项目里，在最快层起作用。<br />
+所有的方法都可以尽情地向处throws Exception了。<br />
+不需要再try了。</p>
+
+<p><blockquote>@Path("")<br />
+public class HelloController {<br />
+    @Get("")<br />
+    public String index2() throws Exception {<br />
+        return "@hello world";<br />
+    }<br />
+}</blockquote></p>
+
+<p><strong>
+3.3.3 有用的例子: 不同的异常类型做不用的事情</strong></p>
+
+<p><blockquote>/**<br />
+ * @author chenzhen@xiaomi.com<br />
+ * 2010-12-1 <br />
+ */</blockquote></p>
+
+<p>package com.chen.controllers;</p>
+
+<p>import net.paoding.rose.web.ControllerErrorHandler;<br />
+import net.paoding.rose.web.Invocation;</p>
+
+<p>public class ErrorHandler implements ControllerErrorHandler {</p>
+
+<p>    public Object onError(Invocation inv, Throwable ex) throws Throwable {</p>
+
+<p>        // TODO logger.error("handle err:", ex);<br />
+        if (ex instanceof RuntimeException) {<br />
+            return "@runtime";<br />
+        }<br />
+        return "@error";<br />
+    }<br />
+}</p>
+
+<p>文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
+文档持续修改版本在 <a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_3">https://github.com/XiaoMi/rose/tree/master/chapter_3_3</a>。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -719,50 +826,6 @@ src/main/resources/applicationContext.xml是spring环境的油门，所有包的
 
   <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
 sonatype维护权限比较有意思，使用jira来管理权限申请过程，rose的jar包很快提交到maven中央仓库，这样在写rose教程第二章的时候不那么费口舌去说什么是maven了。https://t.co/jJ2osdy4 </ul><a href="http://twitter.com/54chen/statuses/188104863153008640" class="aktt_tweet_time">#</a>
-
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/04/01/54chen-twitter-memo-2012-04-01/">54chen Twitter Memo 2012-04-01</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-04-01T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-Introducing Spring for Apache Hadoop | SpringSource Team Blog </ul><a href="http://t.co/IEiB3DBS" rel="nofollow">http://t.co/IEiB3DBS</a> <a href="http://twitter.com/54chen/statuses/186057064420868096" class="aktt_tweet_time">#</a>
-<a href="https://t.co/jJ2osdy4" rel="nofollow">https://t.co/jJ2osdy4</a> rose手册计划 <a href="http://twitter.com/54chen/statuses/186028081155284992" class="aktt_tweet_time">#</a>
-rose手册第一章：入门指引 <a href="http://t.co/IxDPYPAp" rel="nofollow">http://t.co/IxDPYPAp</a> <a href="http://twitter.com/54chen/statuses/185707018663903233" class="aktt_tweet_time">#</a>
-早起的鸟儿有虫吃，2013校园招聘。这回猛。 <a href="http://twitter.com/54chen/statuses/185354104862810113" class="aktt_tweet_time">#</a>
-传统论坛都在禁止“版聊”，而新媒体比如新浪微博恰恰相反，如果泡过BBS，你认为版聊的危害性在于什么？ <a href="http://twitter.com/54chen/statuses/184119812467859458" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2012-03-25 <a href="http://t.co/PiS9qrfX" rel="nofollow">http://t.co/PiS9qrfX</a> <a href="http://twitter.com/54chen/statuses/183734695564017664" class="aktt_tweet_time">#</a>
 
 </p>
 </div>

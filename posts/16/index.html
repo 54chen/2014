@@ -9,8 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-12-04 总有这么些人，成天乐于找个php上传漏洞，传个木马，妈的，又得浪费一天时间打扫卫生。有本事你攻个人人网或者微博主站去。 #
-54chen Twitter memo 2011-11-27 http://t.co/WyG9g8Ki # &hellip;">
+  <meta name="description" content="移动互联网api设计实践 过去一年时间里，都在做中国移动互联网下的API设计工作，所面对的情况可能是最具中国特色的了。如果你在尝试构架一整套的新的API供你的客户端使用，可以尝试以下的几点：
+1）api所使用协议，要能够不怕被加js、加广告和各种代码。
+全国各地的运营商，有习惯挂广告、加代码等等 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +76,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/05/mobile-net-api-design/">移动互联网api设计实践</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-05T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/13078490/T28EicXgtXXXXXXXXX_!!13078490.jpg" alt="api quota perf design" />
+过去一年时间里，都在做中国移动互联网下的API设计工作，所面对的情况可能是最具中国特色的了。如果你在尝试构架一整套的新的API供你的客户端使用，可以尝试以下的几点：
+<strong>1）api所使用协议，要能够不怕被加js、加广告和各种代码。</strong>
+全国各地的运营商，有习惯挂广告、加代码等等，要做的事情就是在客户端做各种解析判断。实践证明，这帮孙子的设备是检测http协议的head头里的content-type，如果是html/text则会加，如果是text/json就不加了，所以，你懂的。</p>
+
+<p><strong>2）api可视化</strong>
+你的app上架了，后端也布好了。然后呢，就天天看下载量。但后端好坏一问三不知。所以在设计api时，要提前回答以下问题：<br />
+1.此时此刻，有多少个app正在调用这些api，每分钟多少个？<br />
+2.他们（api）有快？<br />
+3.能否很简单地通过浏览器快速debug？<br />
+4.能否快速禁止单个用户？</p>
+
+<p><strong>3）链路</strong>
+在幅员辽阔的我国，总是一个地方到一个地方的IDC直接就ping不通（移动互联网下更甚）。于是需要花钱自己打通这些地方，没有专线，只有代理再代理。</p>
+
+<p><strong>4）api quota与perfcounter</strong>
+对api进行quota限制，针对每个api每个人，都有限额。<br />
+这个限制的传统做法：<br />
+1.每天的上限调用次数。每天半夜清空，一天一个量累计。<br />
+2.每分钟的频度。这个防止有恶性的突发情况。<br />
+上述二者，缺一不可。<br />
+perfcounter用于对api的监控设计指标，如果一个api有异常，应当十分灵敏地得出结论，而不是误报连连。
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -550,52 +609,6 @@ test.php
 2.访问的结果
 <img src="http://img01.taobaocdn.com/imgextra/i1/T115OvXmaaXXXqGHYb_092949.jpg" alt="quercus php java" />
 下一记：如何利用java做连接池提供给php使用。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/23/54chen-twitter-memo-2011-10-23/">54chen Twitter Memo 2011-10-23</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-23T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-小米科技2012校园招聘行程更新[确定部分场地] </ul><a href="http://t.co/gIzt1qOT" rel="nofollow">http://t.co/gIzt1qOT</a> <a href="http://twitter.com/54chen/statuses/127322784060805120" class="aktt_tweet_time">#</a>
-有人在使用maven nexus的时候遇到过snapshot目录文件数dailybuild后过多，后面再计算最新文件时超时的问题吗？ <a href="http://twitter.com/54chen/statuses/127299422651555840" class="aktt_tweet_time">#</a>
-<a href="http://t.co/Ya6Loj44" rel="nofollow">http://t.co/Ya6Loj44</a>  riak的nagios监控plugin <a href="http://twitter.com/54chen/statuses/126886561810878464" class="aktt_tweet_time">#</a>
-CAP的正确解法应该是：努力提升P能力，CA二选一，CA不可兼顾。并没有固定P能力之说，以前都谬了。 <a href="http://twitter.com/54chen/statuses/126592038106972160" class="aktt_tweet_time">#</a>
-MIT:Mobile Internet Talk/Miliao Infrastructure Talk/其实是米聊内部技术系列讲座 <a href="http://twitter.com/54chen/statuses/126570420425068544" class="aktt_tweet_time">#</a>
-小米科技2012校园招聘行程 <a href="http://t.co/5IxFut2n" rel="nofollow">http://t.co/5IxFut2n</a> <a href="http://twitter.com/54chen/statuses/126494809815908352" class="aktt_tweet_time">#</a>
-riak源码阅读手记 操作列表及supervisorTree一览 <a href="http://t.co/WAWN6RY2" rel="nofollow">http://t.co/WAWN6RY2</a> <a href="http://twitter.com/54chen/statuses/126207833388744704" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-10-16 <a href="http://t.co/1uHkEdXm" rel="nofollow">http://t.co/1uHkEdXm</a> <a href="http://twitter.com/54chen/statuses/125391706161033216" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   

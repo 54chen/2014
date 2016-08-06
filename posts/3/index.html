@@ -9,10 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="小米互娱招java工程师 序 这是一个新的时代。
-小米互娱作为一个真正意义上的小米互联网部门，开启小米“铁人三项”中互联网征途。
-这里有众多靠谱的兄弟。
-这里缺更加强大的你的加入。 Read on &rarr; 中国移动网络下连接的秘密 最近在研究网络层的接入问题。一些心得记录在下面： 一、 &hellip;">
+  <meta name="description" content="Rabbitmq Java Client Api详解 AMQP AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。 基础概念快速入门 每个rabbitmq-server叫做一个Broker，等着tcp连接进入。
+在rabbitmq- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +75,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/">Rabbitmq Java Client Api详解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-27T15:33:38+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
+
+<h1>AMQP</h1>
+
+<ul>
+<li>AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。</li>
+</ul>
+
+
+<h1>基础概念快速入门</h1>
+
+<ul>
+<li>每个rabbitmq-server叫做一个Broker，等着tcp连接进入。</li>
+<li>在rabbitmq-server进程内有Exchange，定义了这个消息的发送类型。（一对多、直连、多对多等等）</li>
+<li>Queue是进程内的逻辑队列，有多个，有名字。</li>
+<li>Binding联系Exchane与Queue。</li>
+<li>Routing key由生产者指定。Binding key由消费者指定。二者联合决定一条消息的来去。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -557,56 +614,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/04/18/how-to-use-akka-in-java-4/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/17/how-to-use-akka-in-java-3/">Java中使用akka手记三 Cluster详例</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-04-17T20:11:07+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
-
-<h2>一个例子</h2>
-
-<ul>
-<li>同样是typesafe的经典例子。</li>
-<li>例子提供的服务是传输文本。当文本发给frontend节点，它会委派backend节点，backend执行转化任务，把结果返回给原来的客户端。</li>
-<li>新的backend节点和frontend节点，都可以动态地在cluster上增减。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/17/how-to-use-akka-in-java-3/">Read on &rarr;</a>
     </footer>
   
 

@@ -9,9 +9,11 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-10-31 Fusion-io：与SSD不一样的固态技术 听到DBA传来的牛X介质，为之一震。 #
-在360和杀软im打得火热的时候，开源系统突显了全人类智慧的结晶，在ubuntu下，一切都很安宁。 #
-&quot;做企业如做人&quot;，敬佩 &hellip;">
+  <meta name="description" content="Android 开发入门 最近我(54chen)的兴趣都在android上，看到做的软件放到手持设备上的时候，找到了大学时光写delphi、gnome程序时久违的成就感。
+下面是一些手记，这一系列的日志都将记录学习过程。
+手记假设：
+1.开发环境为ubuntu eclipse
+2.你和我( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +78,97 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/11/01/androiddev/">Android 开发入门</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2010-11-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1EQxPXdxHXXXcN3c7_064540.jpg" alt="android2.2" /></p>
+
+<p>最近我(54chen)的兴趣都在android上，看到做的软件放到手持设备上的时候，找到了大学时光写delphi、gnome程序时久违的成就感。<br />
+下面是一些手记，这一系列的日志都将记录学习过程。<br />
+手记假设：<br />
+1.开发环境为ubuntu eclipse<br />
+2.你和我(54chen)一样有几年的java开发经验，对java基础不再进行描述<br />
+3.一开始就是以android2.2开始搞的，不排除后面的3出来，到时再另行通知</p>
+
+<p><strong>一 开发环境搭建</strong>
+要开始开发Hello world，先要准备java环境（略），准备eclipse（略），再在eclipse上用software upadte安装上sdk的tools，再使用sdk的tools来安装platform（现在的最新版本是2.2），官方的文档和下载地址在http://developer.android.com/sdk/installing.html（洋文，被墙）。</p>
+
+<p>因为是ubuntu 10.04，eclipse java都是可以apt-get install eclipse java6-sun-sdk(印象中是openjdk-6-jdk)来安装的。网上有许多切换openjdk到sunjdk的资料，不过提醒一点，这个openjdk似乎也一样可以用，如果切换成sunjdk的话，可能会遇到字体不正常的问题。</p>
+
+<p>eclipse版本：3.5.2 Build id: M20100211-1343<br />
+第一步，要给eclipse安装一个android开发工具包<br />
+在eclipse的install new software上增加site:https://dl-ssl.google.com/android/eclipse/，安装这个传说中的ADT，其作用是一个最最基础的包，依靠这个包再进一步安装。（文件不大，所费时间不长）</p>
+
+<p>第二步，下载SDK基础包：android-sdk_r07-linux_x86.tgz<br />
+http://developer.android.com/sdk/installing.html（洋文，被墙）<br />
+下载后解压。<br />
+假设解压后是/home/chen/下载/android-sdk-linux_x86，在eclipse>windows>proferences中找到Andriod，在SDK Location中写下这个地址。
+<img src="http://img01.taobaocdn.com/imgextra/i1/T1aStPXo4bXXac4jg7_065233.jpg" alt="android" /></p>
+
+<p>第三步，进一步安装需要的平台<br />
+eclipse>windows>Andriod SDK and AVD manager>available packages<br />
+打开后选platform 2.8，里面还有一些别的包，像google的api啥的，是提供你简单调用google map啥的。<br />
+这一步会费很长的时间，东西比较大。</p>
+
+<p><strong>二 第一个android程序 Hello54chen</strong>
+上面环境就ok了，来做第一个程序。<br />
+第一步 创建项目 <br />
+file>new>new Android project<br />
+假设包名为com.chen.hello，类名为Show<br />
+会有一个关键的文件：com.chen.hello.Show<br />
+第二步 修改代码<br />
+打开这个文件，关键代码如下：
+<blockquote>public class Show extends Activity {<br />
+    /** Called when the activity is first created. */<br />
+    @Override<br />
+    public void onCreate(Bundle savedInstanceState) {<br />
+        super.onCreate(savedInstanceState);<br />
+        //setContentView(R.layout.main); 这行是原来的 注释掉，下面是新添加的<br />
+        TextView t = new TextView(this);<br />
+        t.setText("你好，世界");<br />
+        setContentView(t);<br />
+    }<br />
+}</blockquote></p>
+
+<p>第三步 整一个新的AVD（andriod 虚拟设备）<br />
+eclipse>windows>Android SDK and AVD manager>Virtual Devices>new...<br />
+然后起个名，设置下存储大小等等。</p>
+
+<p>第四步 run<br />
+run as android application后，选则刚刚建好的AVD，于是出来一个界面，要等啊等等啊等的，很长时间后，虚拟机才能进来，然后才会显示出来你的结果。
+<img src="http://img01.taobaocdn.com/imgextra/i1/T1W84PXjdjXXaUZi77_064915.jpg" alt="android" /></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -690,60 +783,6 @@ pengyou.com朋友，被QQ收了？ <a href="http://twitter.com/54chen/statuses/2
 54chen Twitter memo 2010-09-26 <a href="http://goo.gl/fb/I8fJi" rel="nofollow">http://goo.gl/fb/I8fJi</a> <a href="http://twitter.com/54chen/statuses/25549877996" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/09/26/web-testing/">越来越懒的中国WEB程序员</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-09-26T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1ZK0MXaRtXXbq.6I8_100927.jpg" alt="54chen" />
-　　在中国的互联网行业，基本上现在的大小公司都有这样一个部门，QA。也没有人论证过为什么要专门出来这样一批队伍，反正大家都这样做了，这样做也不会错到哪里去。</p>
-
-<p><strong>测试工程师释义</strong>
-　　某百科有云：软件开发测试工程师（Software Development Engineer in Test，SDET），一般为具有1-2年经验的测试工程师或程序员。编写自动测试脚本程序并担任测试编程初期的领导工作。进一步拓展编程语言、操作系统、网络与数据库方面的技能。<br />
-　　更有某大型培训公司有云：软件质量的把关者，人才凤毛麟角，薪酬上升空间非常大。<br />
-　　在国外，一般软件测试人员与软件开发人员的岗位设置比例是1：1，微软在开发windows2000时测试开发人员比例高到1.7：1，由此可见软件测试岗位重要性的一斑。</p>
-
-<p><strong>WEB开发是否需要SDET？</strong>
-　　SDET诞生于传统软件开发过程中，由于WEB开发的特殊性，不仅是指定输入指定输出的测试过程，所涉及方向方方面面，十分繁杂。那么，WEB开发是否需要SDET？<br />
-　　一线开发人员的感叹：一个分页bug给我提了4张单。。。上一页，下一页，第一页，最后页，干脆每个页码也配个单吧 。(分页按钮数字都多一或少一了)--转自Willko的微博。<br />
-　　开发一个新产品，由产品提出来个大概，开发出来个大概后，QA再来提细的需求，所谓的测试阶段，只不过是个需求细化的过程。许多开发经理都赞同这个观点，因为：到目前为止，还没有见到这么NB的产品，一下把细节都能想好，描述清楚的。--转自阿罗的微博。<br />
-　　实际上，WEB开发是十分需要SDET的。而且需要比传统开发更加专业的测试开发工程师，像google的做法，由开发人员去兼职测试人员，是一个绝佳的做法。而不专业或者欠专业的QA团队，会导致项目的拖延，开发工程师的懊恼不已、哭笑不得，如果测试团队成员没有两年的开发经验，宁可不要。</p>
-
-<p><strong>WEB开发人员为什么越来越懒了？</strong>
-　　因为有了测试人员，而测试人员的职责就是找出bug所在，开发人员对此没有职责或责任。所以如果你的公司配备了QA团队，那么WEB开发人员正在越来越懒中。而这个时候，如果测试人员没有一两年的开发经验，这样出来的项目极可能出现问题。</p>
-
-<p><strong>建议</strong>
-　　小公司就别折腾了，开发测试一团人全包是最不二的选择。大公司，两个团队继续折腾吧，其慢无比的效率就是大公司的特点。</p>
 </div>
   
   

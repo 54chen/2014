@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-08-06T15:27:40+08:00</updated>
+  <updated>2016-08-06T16:45:59+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,94 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[小米大树part2:测试之痛]]></title>
+    <link href="http://2014.54chen.com/blog/2016/08/06/mi2/"/>
+    <updated>2016-08-06T16:20:19+08:00</updated>
+    <id>http://2014.54chen.com/blog/2016/08/06/mi2</id>
+    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p>痛点太多，竟无从下笔。&ndash;题记</p>
+
+<h2>缘起</h2>
+
+<p>一直想写一系列的笔记，记录整个小米六年的研发工作中实际遇到的困难，以及这一大群人如何不可避免的走向大公司氛围，又如何慢慢打破定势，苦于自己拖延症影响，现在才开始总结。</p>
+
+<p>共分三个部分：基础架构之痛、测试之痛、产品进度之痛。本篇是第二部分。</p>
+
+<p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
+
+<h2>测</h2>
+
+<p>2010年，来自各大公司的ABCD君，都拥有良好的软件工程习惯，测试代码行行见血。即便如此，依旧不能耽搁产品的节奏，于是开始找来专门的测试人员。</p>
+
+<p>E君从事开发测试多年，测试经验丰富，开发只要给个连接服务的框架就可以开工，属于给了原子弹就能上天型。</p>
+
+<!--more-->
+
+
+<p>F君则一直专注在手工测试上，产生一些稀奇古怪的操作方法来帮助找出问题。</p>
+
+<p>A:“我们可以放弃单元测试，只搞好冒烟测试bvt，每日对线上和测试环境发起测试。”</p>
+
+<p>E:“没问题，给我们测试时间，一定可以完成覆盖。”</p>
+
+<p>然后一直时间不够，就在缺少开发测试和覆盖不全的矛盾中度过了两三年。</p>
+
+<p>经常会出现一种情况，新功能上线了，忘记通知测试……或者通知了测试没有人力来写测试代码…</p>
+
+<h2>不测</h2>
+
+<p>测试工程师一直被赶着，本身招聘价位低于开发，再加上稍微能力强一点的测试工程师就想着转为开发，测试这个活就越来越没有动力了，从而矛盾开始加剧了，直到有一天，暴发。</p>
+
+<p>D:“开发的屁股要自己擦！”</p>
+
+<p>E:“测试只提供测试框架技术支持！”</p>
+
+<p>F:“手工测试要提前预约！”</p>
+
+<p>A:“MD现在真大公司！”</p>
+
+<p>于是很多项目，急于上线，没有测试，这些项目都由开发打了保票，所以可以直接上线，当然了，开发也不是万能的，同时也不乏上去线就挂了的。</p>
+
+<h2>不能测</h2>
+
+<p>A:“为啥这个项目上线就挂了？”</p>
+
+<p>B:“因为有个逻辑有瓶颈，线上压力一大就挂了，测试环境没压力看不出来。”</p>
+
+<p>C:“为啥没考虑做压力测试？”</p>
+
+<p>D:“项目太杂乱，模块太多，关系不清，很难做压力测试的环境。”</p>
+
+<p>E:“给我们两个月时间搭环境，做压力测试！”</p>
+
+<p>两个月过去了，压力测试环境卡在了某个基础环境上，迟迟不能解决。算了，不能测不测了。反正我们灰度上线也是一种压测办法…</p>
+
+<p>就这样，度过了一天又一天。</p>
+
+<h2>不测</h2>
+
+<p>四五年后，并没有发生实质性变化。每当开发工程师回头看自己的代码时，经常会被自己吓到，真的有一种刀尖上跳舞的感觉。</p>
+
+<p>一旦大家被自己吓到，想到需要测试的时候，还没开始想办法立马会被错综复杂的服务吓退。</p>
+
+<p>就这样在胆颤心惊中度过一年又一年。</p>
+
+<h2>测</h2>
+
+<p>改变这一切的都是细节。</p>
+
+<p>在上一篇( <a href="http://2014.54chen.com/blog/2016/07/29/mi/">http://2014.54chen.com/blog/2016/07/29/mi/</a> )里提到的基础设施的改进后，模块之间服务之间抽象的很简单，只关心超时-被调用方承诺的最大服务时长，超过为不可用。</p>
+
+<p>在超时确立后，压力测试变得简单，要压测一个服务，只需要将下游服务全部故意超时掉（办法有很多种，比如调度到一个不存在的地方去等超时），此时可以得到此服务的最差表现下的压力情况，这个数据完全可以供线上参考使用。</p>
+
+<p>解决了压力测试的问题之后，我们延用了原来bvt的思路，依旧对服务进行最外围的功能覆盖测试，每次上线前，都依赖bvt的结果进行判断能否上线，不同在于，我们对整体服务的接入逻辑进行了分类，重要的地方提前准备用例，后期加的地方可以慢一点跟进。</p>
+
+<p>一切在向好的方向变化，虽然测试资源也是时不时紧张一下。</p>
+
+<p>一句话概括：测试工作不能省也不能推。</p>
+ <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[小米大树part1.5:基础架构之痛答疑]]></title>
@@ -2173,179 +2261,6 @@ int i = sc.read(buff)</p></blockquote>
 <li>尽可能模拟连接数与发数据人数目标比例。</li>
 <li>平衡压力尽可能长的时间去压有可能会发现累积性问题。</li>
 <li>机器越多越方便。</li>
-</ul>
-
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Rabbitmq Java Client Api详解]]></title>
-    <link href="http://2014.54chen.com/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/"/>
-    <updated>2014-08-27T15:33:38+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/08/27/rabbitmq-java-client-apixiang-jie</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
-
-<h1>AMQP</h1>
-
-<ul>
-<li>AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。</li>
-</ul>
-
-
-<h1>基础概念快速入门</h1>
-
-<ul>
-<li>每个rabbitmq-server叫做一个Broker，等着tcp连接进入。</li>
-<li>在rabbitmq-server进程内有Exchange，定义了这个消息的发送类型。（一对多、直连、多对多等等）</li>
-<li>Queue是进程内的逻辑队列，有多个，有名字。</li>
-<li>Binding联系Exchane与Queue。</li>
-<li>Routing key由生产者指定。Binding key由消费者指定。二者联合决定一条消息的来去。</li>
-</ul>
-
-
-<!--more-->
-
-
-<h1>java client api</h1>
-
-<h2>连接</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ConnectionFactory factory = new ConnectionFactory();
-</span><span class='line'>factory.setHost(hostName);
-</span><span class='line'>Connection conn = factory.newConnection();
-</span><span class='line'>Channel channel = conn.createChannel();</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>以上是得到一个rabbitmq连接最最基础的代码，当然了，还可以设置一些诸如用户名密码的事情。</li>
-<li>最后这个channel就可以用来收和发消息了。</li>
-</ul>
-
-
-<h2>消息者线程池</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>ExecutorService es = Executors.newFixedThreadPool(20);
-</span><span class='line'>Connection conn = factory.newConnection(es);</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>消费者时使用，上述自动开了一20个线程的池来搞。</li>
-</ul>
-
-
-<h2>地址数组</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>Address[] addrArr = new Address[]{ new Address(hostname1, portnumber1)
-</span><span class='line'>                                 , new Address(hostname2, portnumber2)};
-</span><span class='line'>Connection conn = factory.newConnection(addrArr);</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>上述代码如果连hostname1失败了就去hostname2。</li>
-<li>factory.newConnection()会触发这个检测。</li>
-</ul>
-
-
-<h2>声明exchange与queue</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>channel.exchangeDeclare(exchangeName, "direct", true);
-</span><span class='line'>String queueName = channel.queueDeclare().getQueue();
-</span><span class='line'>channel.queueBind(queueName, exchangeName, routingKey);</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>channel.exchangeDeclare 参数有 交换机名字  类型  是否持久化  不使用时是否自动删除 是否是内部的（不能被客户端使用） 其他参数</li>
-<li>channel.queueDeclare 参数有 queue名字 是否持久化 独占的queue（仅供此连接） 不使用时是否自动删除 其他参数</li>
-<li>channel.queueBind 参数有 queue名字 交换机名字 此次绑定使用的路由关键字  其他参数</li>
-</ul>
-
-
-<h2>发出消息</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>byte[] messageBodyBytes = "Hello, world!".getBytes();
-</span><span class='line'>channel.basicPublish(exchangeName, routingKey, null, messageBodyBytes);</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>channel.basicPublish 参数有 要发出的交换机名字  路由关键字 是否强制（设置为true时，找不到收的人时可以通过returnListener返回）  是否立即（其实rabbitmq不支持） 其他属性 消息主体</li>
-</ul>
-
-
-<h2>线程安全</h2>
-
-<ul>
-<li>Channel是线程好全的，但是最好是每个线程里用自己的Channel，因为在单个Channel里排队是有可能慢一些的。</li>
-</ul>
-
-
-<h2>最简单的办法消费消息</h2>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>boolean autoAck = false;
-</span><span class='line'>channel.basicConsume(queueName, autoAck, "myConsumerTag",
-</span><span class='line'>     new DefaultConsumer(channel) {
-</span><span class='line'>         @Override
-</span><span class='line'>         public void handleDelivery(String consumerTag,
-</span><span class='line'>                                    Envelope envelope,
-</span><span class='line'>                                    AMQP.BasicProperties properties,
-</span><span class='line'>                                    byte[] body)
-</span><span class='line'>             throws IOException
-</span><span class='line'>         {
-</span><span class='line'>             String routingKey = envelope.getRoutingKey();
-</span><span class='line'>             String contentType = properties.contentType;
-</span><span class='line'>             long deliveryTag = envelope.getDeliveryTag();
-</span><span class='line'>             // (process the message components here ...)
-</span><span class='line'>             channel.basicAck(deliveryTag, false);
-</span><span class='line'>         }
-</span><span class='line'>     });</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li>一个Channel一个Consumer。</li>
-<li>channel.basicAck 回发ACK 参数 tag 是否多个。</li>
-</ul>
-
-
-<h2>零碎</h2>
-
-<ul>
-<li>channel.basicQos 指定服务质量设置 参数 最大的投送字节数  最大的投送消息数量  设置是否要应用到整个channel（而不是一个消费者）。</li>
-<li>factory.setAutomaticRecoveryEnabled(true) 网络有问题时，好后可自动恢复设置。</li>
-<li>cf.setRequestedHeartbeat(5) 设置心跳时间。</li>
-<li>exchange type可用的值：direct topic headers fanout。</li>
-<li>exchange的类型有一个default，basicPublish没有指定时使用，而且，如果routingKey在指定绑定的时候，会去到绑定的exchange。</li>
-<li>channel.queueDeclare().getQueue() 得到的是一个随机queue，断开连接后即删除。</li>
-<li>当exchange为direct的时候routingKey与bindingKey必须完全一致才能消费消息。</li>
 </ul>
 
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
