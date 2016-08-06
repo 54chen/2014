@@ -304,6 +304,7 @@ $(function(){
     var mid = $("#mid").val();
     var get_url = 'http://www.54chen.com/fkwb/'+mid+'.json';
     if(mid > 0){
+        $("#fck_content").html('<img src=http://chen54.b0.upaiyun.com/loading.gif>');
         $.ajax(
                 {
                     url:get_url,
