@@ -210,7 +210,12 @@ $(function(){
     var mid = $("#mid").val();
     var get_url = 'http://www.54chen.com/fkwb/'+mid+'.json';
     if(mid > 0){
-        $.ajax({url:get_url,dataType: "jsonp");
+        $.ajax(
+                {
+                    url:get_url,
+                    dataType: "jsonp"
+                }
+              );
     }
 });
 window.WBComment.init({
