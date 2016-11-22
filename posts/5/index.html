@@ -9,7 +9,12 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Cassandra的thrift用法学习手记 __English Version__The notes about the usage of Thrift in Cassandra Cassandra在client访问server cluster的时候使用了thrift，在cluster &hellip;">
+  <meta name="description" content="Disruptor Thrift Server连接参数与rps数值影响记录 基础环境
+rmbp
+8G MEM
+Intel(R) Core(TM) i7-3615QM CPU @ 2.30GHz 四核 八线程
+oracle jdk 1.7.0_45 原理
+如上图，是类似tomcat的nio实现过程 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +79,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/">Disruptor Thrift Server连接参数与rps数值影响记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-01-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/0122/267176d6-5ef4-3e0b-937e-c492f5ba7807.jpg" alt="disruptor thrift server" width="450/" /></p>
+
+<p><strong>基础环境</strong>
+rmbp<br />
+8G MEM<br />
+Intel(R) Core(TM) i7-3615QM CPU @ 2.30GHz  四核 八线程<br />
+oracle jdk 1.7.0_45</p>
+
+<p><strong>原理</strong>
+如上图，是类似tomcat的nio实现过程，不过将queue换成了高性能的disruptor，可能会得到更好的性能。可调整参数为numAcceptors，numSelectors，numWorkersPerSelector三个值。<br />
+测试的代码位置在 https://github.com/54chen/disruptor_thrift_server 项目中的BenchmarkTest同时启动一个server，同时对其进行压测。</p>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -485,55 +540,6 @@ cmwap cmnet这样的词语以后应该都会消失在人世间。三年前，经
   
     <footer>
       <a rel="full-article" href="/blog/2013/09/06/xiaomi/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/13/arduino-bl/">Arduino-蓝牙各种版本类型及费用对比</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-13T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://leiphone.qiniudn.com/uploads/09-2/-3/09-25-32-27.jpg" alt="arduino" /></p>
-
-<p><strong>厂商</strong>
-做单芯片系统和蓝牙模块的厂商主要有：Bluegiga（蓝兆），Texas Instruments（德州仪器），Nordic Semiconductor（北欧半导体），Cambridge Silicon Radio（CSR公司），Broadcom Corporation（博通公司），这几家公司，基本掌控了全球所有的蓝牙、无线、voip、音视频解码等核心技术。（技术门槛岗岗的！）</p>
-
-<p><strong>常见类型</strong>
-<em>2.1+EDR</em>
-2004年推出，2006年大量使用。<br />
-http://blog.sina.com.cn/s/blog_8a49cc8f0101b03j.html<br />
-*此款为目前最好用的一款了。</p>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/08/13/arduino-bl/">Read on &rarr;</a>
     </footer>
   
 

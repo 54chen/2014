@@ -9,9 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="移动互联网创业公司的服务器选择 小公司，三五个人，扯开嗓子开干的情况下，不妨参考一下过去我们淌过的坑。
-1.网络
-在中国，网络成本是比较贵的（包括托管费用）。分析你的目标用户，如果用户是特别集中在南方或者是北方，这能省些钱，多线机房还是很贵的。同时，移动互联网，特别是中国特色的情况下， &hellip;">
+  <meta name="description" content="Scribe的生产实践总结 一、scribe是什么
+scribe是facebook开源的分布式日志系统。这里两年前的使用手记。http://www.54chen.com/_linux_/log-server-scribe-helper.html。严格说它只是一个日志处理的节点， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +75,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/10/scribe-on-production/">Scribe的生产实践总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-10T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="scribe" />
+<strong>一、scribe是什么</strong>
+scribe是facebook开源的分布式日志系统。这里两年前的使用手记。<a href="http://www.54chen.com/_linux_/log-server-scribe-helper.html">http://www.54chen.com/_linux_/log-server-scribe-helper.html</a>。严格说它只是一个日志处理的节点，与分布式系统相比差很多复杂的节点间的控制过程。不过也贵在它很精简，不容易出现问题。两年多时间以后，线上还没出现过一例scribed自己crash掉的情况。
+<strong>二、scribe遇到master挂掉</strong>
+生产环境中一般配置为一个primary(type=network)带一个secondary(type=file)，在遇到master挂掉的情况下，会直接写到本地磁盘。<br />
+这个设置有非常多好处，当远程的master恢复了，本地磁盘的这些个日志还会被scribe给送回去。<br />
+日常要监控这个事情的发生也很简单，一行脚本就可以：
+<code>ALERT=`du -sb /tmp/scribe/|awk '{print $1}'`<br />
+if [ ${ALERT} -ge 1024000 ]; then<br />
+  //alert<br />
+fi</code></p>
+
+<p><strong>三、scribe自己挂掉</strong>
+scribe自己挂掉要预防把业务堵死了，一定要用异步线程在写这个日志，如果本地的scribed挂了，那端口一定不在了，在new thrift连接的时候就会失败，可以在这个异步线程中去设定多久再重试，但这就是有损日志的了。<br />
+日常监控一般可以直接看端口还在不在，不过一般不会挂（两年多还没见过）。<br />
+比较文艺的做法可以用他给的ctrl.sh那个python脚本去读取scribed内部的perfcounter来报警。</p>
+
+<p><strong>四、scribe遇到master没挂但是网络不好</strong>
+这个比较难受，网络一堵，很多天都追不上来。而且会出现恶性循环。所以还是要网络给力，最差要能传输不滞留日志。<br />
+我米高人航军大侠搞了一个压缩过的传输scribed改造，还没试用，理论上数据量降了应该有一定缓解。</p>
+
+<p><strong>五、scribe与kafka对比</strong>
+kafka是linkedin开源的一个日志分发系统，scala的，很牛B的一个系统，以cluster、去中心化、高效为特点，比起scribed来说，kafka是航空母舰，scribed是激流勇进那种冲锋舟，各有各的好处。<br />
+从日志收集的需求来看，如果遇到前面4点的故障的话，使用kafka的话，要做的事情还不少。但如果出现中心化的故障的话，还是kafka不怕down机。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -796,60 +854,6 @@ $sudo chmod +x /usr/bin/extMerge</blockquote></p>
 
 <p><blockquote>source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
 </blockquote></p>
-
-<p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/10/29/qcon-hangzhou-2012/">Qcon杭州2012读后感</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-10-29T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>我没有在现场，所以叫读后感，只是看pdf文件之后的总结，如和现场体验有误，以现场为主。
-<img src="http://img01.taobaocdn.com/imgextra/i1/T1pix8XnBbXXXgP6k._082702.jpg" alt="qcon" />
-<strong>给力排行一：云中的资源管控</strong>
-淘宝林昊大师：提到2010年时三分之一的虚拟机peak load小于0.5，LXC重度用户，各种资源隔离的坑都被他们解决了。在进一步做动态调度。<br />
-腾讯CEE系统介绍：产品细节惊人，疑似依赖LXC。<br />
-京东虚拟化：openstack用户、使用传统vm。<br />
-CloudFoundry：完整讲述了实现和演进。<br />
-盛大游戏私有云：在游戏业务中使用，未明显提及虚拟化的事情，猛一看像是做分配机器之类的事情。</p>
-
-<p><strong>给力排行二：大数据hadoop</strong>
-阿里巴巴：3000 Servers，正在演进hadoop as service，原来yahoo维护hadoop的大侠们去了那里，这个方向应该是靠谱的。<br />
-百度：2500 Servers，与阿里方向侧重不一致。当然了，也有可能是集团利益让牛B的构架师发挥不到极致，如果有这种现像存在，可以考虑来小米。（mail to chenzhen at xiaomi dot com 无耻的广告。。。）</p>
-
-<p><strong>给力排行三：工具和思路</strong>
-网易：puppet在运维中的各种使用<br />
-陌陌：移动运维非常赞！让关注变得更简单更快捷，更容易让团队成员关注系统运行。<br />
-支付宝：SOA治理等。</p>
 
 <p></p>
 </div>

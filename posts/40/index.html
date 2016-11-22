@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-11-07】 多谢各位帮转，房子已经找到，现在转租蓟门桥两居中一居，老小区，安静，六层，有空调，装修一般,15平。~~1150/m # 成年人遇到的问题最大的是爱情问题，其次是没有爱情的问题。 # 联合早报：“ &hellip;">
+  <meta name="description" content="人人网内部培训：java并发编程原理-synchronize Volatile-张洁大侠 来自人人网内部培训的最新消息： 北京时间今天下午不明时间，一群人在张洁大侠的培训下，对java并发编程原理-synchronize volatile等进行了激励的讨论和学习。出席本次会议的有。。。 言归正传 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,186 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/11/all-networks-in-house-training-java-concurrent-programming-principles-synchronize-volatile-zhang-jie-heroes/">人人网内部培训：java并发编程原理-synchronize Volatile-张洁大侠</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-11-11T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>来自人人网内部培训的最新消息：</p>
+
+<p>北京时间今天下午不明时间，一群人在张洁大侠的培训下，对java并发编程原理-synchronize volatile等进行了激励的讨论和学习。出席本次会议的有。。。</p>
+
+<p>言归正传，说，并发，就会出现锁。</p>
+
+<p><strong>1.互斥锁实现算法</strong></p>
+
+<p>使用一个并发队列：
+<blockquote>do{</blockquote></p>
+
+<p>pre=head;</p>
+
+<p>newNode-&gt;next=prev;</p>
+
+<p>}while(!cas(head,prev,newNode));
+此代码中<a href="http://www.54chen.com/34-tcp%e8%bf%9e%e6%8e%a5syn-ack-rst-utg-psh-fin/">cas</a>是操作系统提供的compare and swap接口，能保证原子性操作（类似memcache的<a href="http://www.54chen.com/814-tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">cas</a>）。</p>
+
+<p><strong>2.编译器指令优化使内存<a href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">指令</a>重排序与并发编程</strong></p>
+
+<p>并发的程序会受到指令重排序的影响，顺序执行的程序逻辑不会受影响。</p>
+
+<p>例子：
+<blockquote>int a=b=0;</blockquote></p>
+
+<p>Thead1</p>
+
+<p>{</p>
+
+<p>a=1;</p>
+
+<p>b=2</p>
+
+<p>}</p>
+
+<p>Thread2</p>
+
+<p>{</p>
+
+<p>if(b==2)</p>
+
+<p>{</p>
+
+<p>System.out.println(a); //这个a会是多少？</p>
+
+<p>}</p>
+
+<p>}
+上例中Thread2并不一定会打出1来，因为在Thread1中的两个指令会被编译器优化时交换了顺序，出现了与我们想像中不一样的逻辑。</p>
+
+<p><strong>3.增加synchronize抑制内存指令重<span style="font-weight: normal;"><a href="http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/">排序</a></span></strong></p>
+
+<p>synchronize的作用是什么呢，经常都说是同步，市面上的说法是，jvm在运行的时候，变量会在本地有一个内存区，另外还有一个主存区，同步的含义就是将本地的值同步到主存去。</p>
+
+<p>这个说法没有明确的错误，而且在一定程度上还能帮助你理解synchronize的作用，然而内部真正的原因，是利用synchronize建立内存屏障，使其能够抑制内存指令的重排序，从而使并发程序达到我们想像中的逻辑。
+<blockquote>int a=b=0;</blockquote></p>
+
+<p>Thead1</p>
+
+<p>{</p>
+
+<p>synchronized(this)</p>
+
+<p>{</p>
+
+<p>a=1;</p>
+
+<p>b=2;</p>
+
+<p>}</p>
+
+<p>}</p>
+
+<p>Thread2</p>
+
+<p>{</p>
+
+<p>synchronized(this)</p>
+
+<p>{</p>
+
+<p>if(b==2)</p>
+
+<p>{</p>
+
+<p>System.out.println(a); //这个a会是多少？</p>
+
+<p>}</p>
+
+<p>}</p>
+
+<p>}
+这样子，代码就不会有逻辑上的问题。</p>
+
+<p><strong>4.增加volatile建立内存<span style="font-weight: normal;"><a href="http://www.54chen.com/111-plproxy%e9%83%a8%e7%bd%b2%e6%89%8b%e5%86%8c/">屏障</a></span></strong></p>
+
+<p>volatile简化了synchronized，原理是一样的。</p>
+
+<p>在增加了volatile后，那个变量所使用的位置就立起了一道 内存屏障，前后的指令顺序都不可打乱。
+<blockquote>int a=0;</blockquote></p>
+
+<p>volatile  int b=0;</p>
+
+<p>Thead1</p>
+
+<p>{</p>
+
+<p>a=1;</p>
+
+<p>b=2;</p>
+
+<p>}</p>
+
+<p>Thread2</p>
+
+<p>{</p>
+
+<p>if(b==2)</p>
+
+<p>{</p>
+
+<p>System.out.println(a); //这个a会是多少？</p>
+
+<p>}</p>
+
+<p>}
+这就可以简化上一个程序。</p>
+
+<p><strong>5. synchronize的<a href="http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">object</a>（class\this）</strong>
+<blockquote>synchronized(object)</blockquote></p>
+
+<p>{</p>
+
+<p>dosomething();</p>
+
+<p>}
+这里的object其实是为了使用其上的锁，代码等价如：
+<blockquote>object.lock.lock();</blockquote></p>
+
+<p>dosomething();</p>
+
+<p>object.condition.wait();</p>
+
+<p>object.lock.unlock();
+【科学院两小时记忆版资料，非原版ppt内容，其中有误的地方定期更正】</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1000,56 +1180,6 @@ sudo /home/zzz/nginx/sbin/nginx</p>
 	<li>杀千刀的搜狗输入法，我明明设置了不自动升级，又开始每天一升级了。 <a href="http://twitter.com/54chen/statuses/4904823380">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/10/16/academy-of-sciences-in-recent-years-a-good-article-summing-up/">科学院近年好文章总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-10-16T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>彻夜无眠，实在没啥想法，想想干脆把这些年自以为还可以的文章整理一下，给先来的后来的读者们送上一份大餐。
-<h2>三月最受欢迎的十篇文章</h2>
-<ul>
-	<li><a href="../714-design-for-all-key-value-of-the-distributed-system-architecture-original/">为人人设计的分布式key-value系统架构[原创]</a> 这篇文章介绍了早期的人人网云存储雏形，现在看来，呵呵，是有点太搓了。。。</li>
-	<li><a href="../634-%e5%8e%9f%e5%88%9b%e4%bd%bf%e7%94%a8postgresqlbamboo%e6%90%ad%e5%bb%ba%e6%af%94lucene%e6%96%b9%e4%be%bfn%e5%80%8d%e7%9a%84%e5%85%a8%e6%96%87%e6%90%9c%e7%b4%a2-%e7%ac%ac%e4%ba%8c%e9%83%a8%e5%88%86/">[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第二部分</a> 这一篇是使用pgsql做全文索引的搜索引擎的第二部分，不知道为什么第一部分没进前十。。。。大家都只关心故事的结尾的吗。。。</li>
-	<li><a href="../688-wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes/">wordpress nginx php-cgi mysql在128m内存下的vps安装和优化手记[原创]</a> 这篇讲述了本站的总体架构方案，中间参考了张宴同学的流水账。</li>
-	<li><a href="../759-thousand-oaks-school-network-all-network-urgent-flash-as3-engineers-social-game-game-planning/">千橡、校内网、人人网急聘 Flash AS3工程师、Social Game 游戏策划</a> 招聘通知，还是长期有效的，因为人总是来来去去，所以如果你在找工作，不妨一试。</li>
-	<li><a href="../640-mediawiki-pgsql/">[原创]mediawiki安装改进手记-使用mediawikit和postgresql搭建有强大搜索功能的wiki</a> 这是在团队搭建wiki的手记，如果你在为团队搭建wiki,可以参考一下。</li>
-	<li><a href="../736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">LinkIn基于Dynamo设计的系统：伏地魔(voldemort)设计中文文档[我是陈科学院译]-完稿</a> 这是一个比较有名的分布式存储系统，也是我们正在参考的一个系统，基本实现了亚马逊的dynamo系统的特性。</li>
-	<li><a href="../705-peer-to-peer-distributed-hash-algorithm-in-the-mainstream-of-comparative-analysis-of-the-collection/">对等网络中主流分布式哈希算法比较分析[收集]</a> 这是分布式网络中的基本算法收集。</li>
-	<li><a href="../680-google-big-table-similar-to-the-tokyo-cabinet-research-notes/">类似google big table的tokyo cabinet研究记录</a> 这是分布式系统开发前的调研，真是不好意思，人云亦云地把cabinet说成类似google big table，其实差远了。</li>
-	<li><a href="../765-tokyo-cabinet-with-java-concurrent-test-the-performance/">用java并发测试tokyo cabinet的性能[五四陈手记]</a> 开发分布式系统时的性能测试，可以看一看，70万/s的速度。</li>
-	<li><a href="../683-ugc-technical-seminars-in-schools-postgresql-search-slide-sharing/">校内UGC技术讲座：postgreSQL Search slide共享</a>一次讲座的ppt，看来还挺多人看的。</li>
-</ul>
-<!--h2>友情连接</h2--></p>
 </div>
   
   

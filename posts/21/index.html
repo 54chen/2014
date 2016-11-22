@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-06-05 php服务器，需要定期检查一下（eval,shell_exec,passthru,popen,system）：find . -type f -name &quot;*.php&quot; |xargs grep &quot; &hellip;">
+  <meta name="description" content="Java实时日志大文件分析 日志分析时经常会遇到这个问题：一个正在增长中的大文件，要分析新增的每一行的固定内容进行统计并展示啥的。用java的RandomAccessFile盯住文件的末尾，是一个不错的选择，下面的实现，是一个高效的java tail工具，实现类似linux的tail工具的功能。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,199 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/06/07/java-realtime-big-file-tailer/">Java实时日志大文件分析</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-06-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T14z9eXa4fXXXUxOU4_053357.jpg" alt="java logger tailer" />
+日志分析时经常会遇到这个问题：一个正在增长中的大文件，要分析新增的每一行的固定内容进行统计并展示啥的。用java的RandomAccessFile盯住文件的末尾，是一个不错的选择，下面的实现，是一个高效的java tail工具，实现类似linux的tail工具的功能。用来做大日志文件的实时分析，是一个不错的选择。</p>
+
+<p><blockquote>public class LogFileTailer extends Thread {<br />
+    private Logger logger = LoggerFactory.getLogger(LogFileTailer.class);</blockquote></p>
+
+<p>    /**<br />
+     * How frequently to check for file changes; defaults to 5 seconds<br />
+     */<br />
+    private long sampleInterval = 5000;</p>
+
+<p>    /**<br />
+     * The log file to tail<br />
+     */<br />
+    private File logfile;</p>
+
+<p>    /**<br />
+     * Defines whether the log file tailer should include the entire contents of<br />
+     * the exising log file or tail from the end of the file when the tailer<br />
+     * starts<br />
+     */<br />
+    private boolean startAtBeginning = false;</p>
+
+<p>    /**<br />
+     * Is the tailer currently tailing?<br />
+     */<br />
+    private boolean tailing = false;</p>
+
+<p>    /**<br />
+     * Set of listeners<br />
+     */<br />
+    private Set listeners = new HashSet();</p>
+
+<p>    /**<br />
+     * Creates a new log file tailer that tails an existing file and checks the<br />
+     * file for updates every 5000ms<br />
+     */<br />
+    public LogFileTailer(File file) {<br />
+        this.logfile = file;<br />
+    }</p>
+
+<p>    /**<br />
+     * Creates a new log file tailer<br />
+     * <br />
+     * @param file The file to tail<br />
+     * @param sampleInterval How often to check for updates to the log file<br />
+     *            (default = 5000ms)<br />
+     * @param startAtBeginning Should the tailer simply tail or should it<br />
+     *            process the entire file and continue tailing (true) or simply<br />
+     *            start tailing from the end of the file<br />
+     */<br />
+    public LogFileTailer(File file, long sampleInterval, boolean startAtBeginning) {<br />
+        this.logfile = file;<br />
+        this.sampleInterval = sampleInterval;<br />
+    }</p>
+
+<p>    public void addLogFileTailerListener(LogFileTailerListener l) {<br />
+        this.listeners.add(l);<br />
+    }</p>
+
+<p>    public void removeLogFileTailerListener(LogFileTailerListener l) {<br />
+        this.listeners.remove(l);<br />
+    }</p>
+
+<p>    protected void fireNewLogFileLine(String line) {<br />
+        for (Iterator i = this.listeners.iterator(); i.hasNext();) {<br />
+            LogFileTailerListener l = (LogFileTailerListener) i.next();<br />
+            l.newLogFileLine(line);<br />
+        }<br />
+    }</p>
+
+<p>    public void stopTailing() {<br />
+        this.tailing = false;<br />
+    }</p>
+
+<p>    public void run() {<br />
+        long filePointer = 0;</p>
+
+<p>        if (this.startAtBeginning) {<br />
+            filePointer = 0;<br />
+        } else {<br />
+            filePointer = this.logfile.length();<br />
+        }</p>
+
+<p>        try {<br />
+            this.tailing = true;<br />
+            RandomAccessFile file = new RandomAccessFile(logfile, "r");<br />
+            while (this.tailing) {<br />
+                long fileLength = this.logfile.length();<br />
+                if (fileLength < filePointer) {<br />
+                    file = new RandomAccessFile(logfile, "r");<br />
+                    filePointer = 0;<br />
+                }<br />
+                if (fileLength > filePointer) {<br />
+                    file.seek(filePointer);<br />
+                    String line = file.readLine();<br />
+                    while (line != null) {<br />
+                        this.fireNewLogFileLine(line);<br />
+                        line = file.readLine();<br />
+                    }<br />
+                    filePointer = file.getFilePointer();<br />
+                }<br />
+                sleep(this.sampleInterval);<br />
+            }<br />
+            file.close();<br />
+        } catch (IOException e) {<br />
+            logger.error("IO ERROR:", e);<br />
+        } catch (InterruptedException e) {<br />
+            logger.error("InterruptedException:", e);<br />
+        }</p>
+
+<p>    }<br />
+}</p>
+
+<p>使用起来很简单，只需要实现一个LogFileTailerListener后加入到tailer，这个tailer会去自动去执行。</p>
+
+<p>类似：</p>
+
+<p><blockquote>public class Tail implements LogFileTailerListener {<br />
+    /**<br />
+     * The log file tailer<br />
+     */<br />
+    private LogFileTailer tailer;</blockquote></p>
+
+<p>    /**<br />
+     * Creates a new Tail instance to follow the specified file<br />
+     */<br />
+    public Tail(String filename) {<br />
+        tailer = new LogFileTailer(new File(filename), 1000, false);<br />
+        tailer.addLogFileTailerListener(this);<br />
+        tailer.start();<br />
+    }</p>
+
+<p>    /**<br />
+     * A new line has been added to the tailed log file<br />
+     * <br />
+     * @param line The new line that has been added to the tailed log file<br />
+     */<br />
+    public void newLogFileLine(String line) {<br />
+        System.out.println(line);<br />
+    }</p>
+
+<p>  /**<br />
+     * Command-line launcher<br />
+     */<br />
+    public static void main(String[] args) {<br />
+        if (args.length < 1) {<br />
+            System.out.println("Usage: Tail <filename>");<br />
+            System.exit(0);<br />
+        }<br />
+        Tail tail = new Tail(args[0]);<br />
+    }<br />
+}</filename></p>
+
+<p>上面的代码出处：http://www.informit.com/guides/content.aspx?g=java&seqNum=226，我(54chen)对其进行了一些修改，保障出现异常时不会出现死循环。</p>
+
+<p>下载修改后的可用的代码：
+<a href="http://ishare.iask.sina.com.cn/f/15999043.html">http://ishare.iask.sina.com.cn/f/15999043.html</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -550,48 +743,6 @@ mysql中存在大量的更新操作，特别是大字段或者变长字段的频
 许多公司为了表面的节约机器，往往用最差的机器，一机器放最多的业务，剪不断理还乱。昨天kk有句智语：不怕浪费机器，只怕浪费机会。 </ul><a href="http://twitter.com/54chen/statuses/66655511545774081" class="aktt_tweet_time">#</a>
 关于今天，五四陈科学院转：http://www.54chen.com/youth <a href="http://twitter.com/54chen/statuses/65605564566220800" class="aktt_tweet_time">#</a>
 54chen Twitter memo 2011-05-01 <a href="http://goo.gl/fb/sQSiY" rel="nofollow">http://goo.gl/fb/sQSiY</a> <a href="http://twitter.com/54chen/statuses/64517204875542528" class="aktt_tweet_time">#</a>
-
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/01/54chen-twitter-memo-2011-05-01/">54chen Twitter Memo 2011-05-01</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-05-01T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-erlang学习手记 </ul><a href="http://goo.gl/fb/TEZRx" rel="nofollow">http://goo.gl/fb/TEZRx</a> <a href="http://twitter.com/54chen/statuses/62806923703091200" class="aktt_tweet_time">#</a>
-昨天星期天，早上闹钟响了，坚定不移地认为是星期一准备去上班，今天中午居然又坚定不移认为今天是星期六--周六的球打过头了。。。 <a href="http://twitter.com/54chen/statuses/62403392940687360" class="aktt_tweet_time">#</a>
-校庆神马的，最无聊了，都回去过五一吧。 <a href="http://twitter.com/54chen/statuses/61985994282516480" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-04-24 <a href="http://goo.gl/fb/EmZxC" rel="nofollow">http://goo.gl/fb/EmZxC</a> <a href="http://twitter.com/54chen/statuses/61970793751515136" class="aktt_tweet_time">#</a>
 
 </p>
 </div>

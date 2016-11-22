@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[原创]Discuz! BBS缓存整体方案 [ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.6.22 转载请注明原文链接：http://www.54chen.com/c/611 ]
-DZ的缓存方案是经典之作，不论是系统的主动缓存还是帖子内容的被动缓存。在我前面的博文【[原创] &hellip;">
+  <meta name="description" content="[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第一部分 [文章作者：陈臻 本文版本：v1.2 最后修改：2009.7.7 转载请注明原文链接：http://www.54chen.com/_linux_/postgresql-bamboo-lucene- &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +74,160 @@ DZ的缓存方案是经典之作，不论是系统的主动缓存还是帖子内
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/07/01/postgresql-bamboo-lucene-fulltextindex/">[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第一部分</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-07-01T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>[文章作者：陈臻 本文版本：v1.2 最后修改：2009.7.7 转载请注明原文链接：<a href="http://www.54chen.com/_linux_/postgresql-bamboo-lucene-fulltextindex.html">http://www.54chen.com/_linux_/postgresql-bamboo-lucene-fulltextindex.html</a> ]</p>
+
+<p>修正：一些“--”（连续的两个杠）被转成了全角的“-”（一个杠）了，运行不过的试试-变成--</p>
+
+<p><strong>所有用到到包有：</strong></p>
+
+<p><a href="http://www.54chen.com/c/601">cmake</a>-2.6.4.tar.gz (编nlpbamboo用)</p>
+
+<p>CRF++-0.53.tar.gz(同上)</p>
+
+<p>nlpbamboo-1.1.1.tar.bz2（分词用）</p>
+
+<p>postgreSQL-8.3.3.tar.gz（索引用）</p>
+
+<p><strong>安装</strong><a href="http://www.54chen.com/c/101">pgsql</a></p>
+
+<p>tar -zxvf postgreSQL-8.3.3.tar.gz</p>
+
+<p>cd postgre-8.3.3
+<pre>./configure --prefix=/opt/pgsql</pre>
+make<br />
+make install</p>
+
+<p>useradd postgre</p>
+
+<p>chown -R postgre.postgre /opt/pgsql<br />
+su - postgre<br />
+vi ~postgre/.bash_profile<br />
+添加<br />
+export PATH<br />
+PGLIB=/opt/pgsql/lib<br />
+PGDATA=/data/PGSearch<br />
+PATH=$PATH:/opt/pgsql/bin<br />
+MANPATH=$MANPATH:/opt/pgsql/man<br />
+export PGLIB PGDATA PATH MANPATH</p>
+
+<p># mkdir -p /data/PGSearch</p>
+
+<p># chown -R postgre.postgre /data/PGSearch</p>
+
+<p># chown -R postgre.postgre /opt/pgsql
+<pre>#sudo -u postgre /opt/pgsql/bin/initdb --locale=zh_CN.UTF-8 --encoding=utf8 -D /data/PGSearch</pre>
+<pre>#sudo -u postgre /opt/pgsql/bin/postmaster -i -D /data/PGSearch &amp;  //允许网络访问</pre>
+#sudo -u postgre /opt/pgsql/bin/createdb kxgroup<br />
+# vim /data/PGSearch/pg_hba.conf  如下增加可访问的<a href="http://www.54chen.com/c/264">机器</a>：</p>
+
+<p>host    all         all         10.2.19.178 255.255.255.0               trust</p>
+
+<p>#su - postgre</p>
+
+<p>$pg_ctl stop</p>
+
+<p>$postmaster -i -D /data/PGSearch &amp;
+<strong>安装中文分词（Cmake CRF++ bambo</strong><strong>o</strong><strong>)</strong>
+Cmake是为了编译bamboo,CRF++是bamboo依赖的。</p>
+
+<p>tar -zxvf cmake-2.6.4.tar.gz</p>
+
+<p>cd cmake-2.6.4<br />
+./configure<br />
+gmake<br />
+make install</p>
+
+<p>tar -zxvf CRF++-0.53.tar.gz<br />
+cd CRF++-0.53<br />
+./configure<br />
+make<br />
+make install</p>
+
+<p>tar -jxvf nlpbamboo-1.1.1.tar.bz2<br />
+cd nlpbamboo-1.1.1<br />
+mkdir build<br />
+cd build/<br />
+cmake .. -DCMAKE_BUILD_TYPE=release<br />
+make all<br />
+make install</p>
+
+<p>cp index.tar.bz2 /opt/bamboo/<br />
+cd /opt/bamboo/<br />
+tar -jxvf index.tar.bz2</p>
+
+<p>#/opt/bamboo/bin/bamboo</p>
+
+<p>如果出现：</p>
+
+<p>ERROR: libcrfpp.so.0: cannot open shared object file: No such file or directory</p>
+
+<p>就执行：</p>
+
+<p>ln -s /usr/local/lib/libcrfpp.so.* /usr/lib/<br />
+ldconfig</p>
+
+<p><strong>增加上中文分词扩展到pgsql</strong></p>
+
+<p>#vim /root/.bash_profile 也增加：</p>
+
+<p>PGLIB=/opt/pgsql/lib<br />
+PGDATA=/data/PGSearch<br />
+PATH=$PATH:/opt/pgsql/bin<br />
+MANPATH=$MANPATH:/opt/pgsql/man<br />
+export PGLIB PGDATA PATH MANPATH</p>
+
+<p>#source ~/.bash_profile</p>
+
+<p>cd /opt/bamboo/exts/postgres/chinese_parser/<br />
+make<br />
+make install</p>
+
+<p>su - postgre<br />
+cd /opt/pgsql/share/contrib/<br />
+touch /opt/pgsql/share/tsearch_data/chinese_utf8.stop<br />
+psql kxgroup<br />
+\i chinese_parser.sql 导入</p>
+
+<p>再执行下面的sql，已经可以将一段话分词了：</p>
+
+<p><pre>SELECT to_tsvector('chinesecfg', '结果在命令行下执行bamboo才知道');</pre></p>
+
+<p>先到这里，下一部分讲述对TEXT字段进行索引和查询，完整构造一整个<a href="http://www.54chen.com/c/591">搜索</a>引擎。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -777,70 +930,6 @@ PRIMARY KEY ( `id` )<br />
 <p><em>其实再进一步第五第六阶段，就是无法预想的未来了，也许有什么突飞猛进的科学技术发明也说不好。</em>
 <blockquote>今天和yahoo的agentZhang（openResty作者）聊起，他说到第五个阶段其实应该是BigTable，的确很强大，来自google的作品。不过美中不足的是，它并不像我相像中的那样能够顺利过渡到第五阶段。以下论述来自infoQ:<br />
 Todd从定义BigTable的适用范围开始论述。由于BigTable引入的各种代价，只有在以下情况下使用BigTable才能带来益处：a)需要伸缩到巨量的用户数，b)更新与读取操作相比比例很小。Todd还着重强调为了“优化读取速度和可伸缩性”，所采取的理论路线与关系数据库中的做法存在根本的分歧，很可能初看起来是违背直觉甚至相当冒险的。</blockquote></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/04/08/gae-java%E6%94%AF%E6%8C%81%E8%AF%95%E7%94%A8%E6%89%8B%E8%AE%B0/">Gae Java支持试用手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-04-08T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>一直都对gae冷眼旁观，今天得知支持java，甚是兴奋，是否暗示python也向java低头了，记一篇手记，送给万千不怕功夫网的同志。</p>
-
-<p>首先用你的GAE账号登录<a href="http://appengine.google.com/start/newtos">http://appengine.google.com/start/newtos</a>，当然，如果你没有GAE账号的话，得申请一下，过程要用手机接验证码，传说是不要钱的。</p>
-
-<p><label for="tos_accept">I accept these terms.</label> 点上，发送submit。</p>
-
-<p>登录进GAE，有一个明显的黄条提醒：<strong>Interested in trying our new Java language support? <a href="/promo/java_runtime">Learn more</a></strong></p>
-
-<p>点learn more进去后Sign up to try Google App Engine for Java。<a href="http://code.google.com/appengine/downloads.html">downloading the  SDK.</a>这是SDK下载。</p>
-
-<p>点sign me up。</p>
-
-<p>Thanks for signing up. Once your account is activated, you will receive an email  with more information.</p>
-
-<p>然后等待激活java支持，激活了会有邮件通知。</p>
-
-<p>====</p>
-
-<p>google 提供了一个eclipse的插件，十分好用，遗憾之处在于，update install相当的慢，公司的网络也一度最快为1k/s...</p>
-
-<p>下面是此次Google Campfire上关于GAE的一些有用的链接：</p>
-
-<p><a href="https://www.google.com/accounts/ServiceLogin?service=ah&amp;continue=http://appengine.google.com/_ah/login%3Fcontinue%3Dhttp://appengine.google.com/promo/java_runtime&amp;ltmpl=ae&amp;sig=24474c1f4b9cfe7c7c69bdede481ebac" target="_blank">申请试用GAE for JAVA的链接页面</a></p>
-
-<p><a href="http://google-code-updates.blogspot.com/2009/04/new-features-for-app-engine-announced.html" target="_blank">Google Code Blog上介绍GAE的最新功能</a></p>
-
-<p><a href="http://code.google.com/campfire/" target="_blank">Google  Campfire首页介绍GAE JAVA</a></p>
-
-<p><a href="http://code.google.com/appengine/docs/java/gettingstarted/" target="_blank">GAE JAVA的入门指南</a></p>
 </div>
   
   

@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-08-06T18:10:12+08:00</updated>
+  <updated>2016-11-22T18:31:21+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -12,6 +12,98 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[小米大树part3:产品进度之痛]]></title>
+    <link href="http://2014.54chen.com/blog/2016/11/22/mi3/"/>
+    <updated>2016-11-22T14:26:58+08:00</updated>
+    <id>http://2014.54chen.com/blog/2016/11/22/mi3</id>
+    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p>这是小米大树系列第三部分，前两部分见：</p>
+
+<p><a href="http://2014.54chen.com/blog/2016/08/06/mi2/">http://2014.54chen.com/blog/2016/08/06/mi2/</a>  《小米大树part2:测试之痛》</p>
+
+<p><a href="http://2014.54chen.com/blog/2016/08/01/mi1-dot-5/">http://2014.54chen.com/blog/2016/08/01/mi1-dot-5/</a>  《小米大树part1.5:基础架构之痛答疑》</p>
+
+<p><a href="http://2014.54chen.com/blog/2016/07/29/mi/">http://2014.54chen.com/blog/2016/07/29/mi/</a>   《小米大树part1:基础架构之痛》</p>
+
+<p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
+
+<p>一直想写一系列的笔记，记录整个小米六年的研发工作中实际遇到的困难，以及这一大群人如何不可避免的走向大公司氛围，又如何慢慢打破定势。</p>
+
+<!--more-->
+
+
+<p>作为开发人员，实在是难以启齿吐槽产品经理，以至于很久没有补上第三篇。－－题记</p>
+
+<h2>引子</h2>
+
+<p>十年前的互联网公司，大多数还没有这个岗位。如今人人都是产品经理的年代，烂大街的灵光一现的点子，不知所谓的需求描述，不着边际的实际操作，无人问津的后续跟进，直接造就了产品太烂、进度缓慢。</p>
+
+<h2>一句话需求</h2>
+
+<p>A君是产品，从业多年，下过海创过业，身经百战。</p>
+
+<p>A：我们的用户经常在这里出现了问题，我觉得要把这里拿掉，做成xxx的。</p>
+
+<p>开发B：好啊，我觉得也是。</p>
+
+<p>一个月过去了，A君遇到用户投诉，问B：当时说过的xxx怎么没有做啊？</p>
+
+<p>B一脸懵B：纳尼，我以为你只是随口说说。</p>
+
+<p>好的产品，不会提一句话需求，落实到文档到交互到协调到执行，才是好产品。</p>
+
+<h2>老板的需求</h2>
+
+<p>C君刚从某211高等学府毕业，茫然投身于产品事业，从业一段时间发现开发同学很懒，需求经常被开发追问为什么。</p>
+
+<p>一次偶然机会C君发现只要说需求来自x总，开发基本不再问，效率很高，久而久之，来自y总、来自z总就成了基本功了。</p>
+
+<p>C：这个需求是z总提的，我也不知道为什么。</p>
+
+<p>开发D：z总提的，你也需要知道为什么呀，z总也是用户，你这样的实现是不是真的解决了用户的问题？不要做传话筒。</p>
+
+<p>好的产品，不会把老板的需求挂在嘴边，会进一步挖掘用户真正的需求，据理力争。</p>
+
+<h2>忘记了的需求</h2>
+
+<p>产品E君，身兼数职，事情太多。</p>
+
+<p>E：这个需求的详细文档在xxx，分析也比较清楚，开发时间也已经给出，剩下就看大家的了。</p>
+
+<p>然后就没有然后了。</p>
+
+<p>一段时间过去了，无人再问津。</p>
+
+<p>突然有一天有人问起，xxx需求怎么还没做出来。</p>
+
+<p>做出来了，因产品太忙无人验收这个需求，一直没有合主干。。。</p>
+
+<p>一个好的产品，绝不会忘记自己提过的需求。</p>
+
+<h2>让步的需求</h2>
+
+<p>x功能，由于对系统架构改动太大，迟迟没有动工。</p>
+
+<p>产品对需求丝毫不让步，和开发天天讨论不休，却没有结论。</p>
+
+<p>产品F：这个需求只是为了试一试，谁也不知道有没有人用，我们先按简单的方案来搞吧。</p>
+
+<p>一个好的产品，一定会区分“试一试需求”和“all in需求”，并且提前告知开发。</p>
+
+<h2>无人验收的需求</h2>
+
+<p>一个y功能，不知道哪个产品君提出的，开发做完了，由于赶时间测试也马虎通过了。</p>
+
+<p>线上发现了问题，回滚，重新改逻辑，重新找bug，重新上线，浪费了大量的人员和时间。</p>
+
+<p>这一点，是产品的意识问题，互联网产品如果承担一部分测试工作（我们叫做验收功能），从越早环节发现问题影响越小、成本越低。</p>
+
+<h2>后记</h2>
+
+<p>黑猫白猫，好产品坏产品，只要是从用户出发的产品，都不孬。</p>
+ <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[小米大树part2:测试之痛]]></title>
@@ -2176,93 +2268,6 @@ int i = sc.read(buff)</p></blockquote>
 <ul>
 <li>结合java nio的selector机制，要对read为0的情况进行统计处理。</li>
 <li>同一源过多的read为0，意味着网络不好，或者恶意攻击。</li>
-</ul>
-
- <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[网络IO型程序压力测试要点]]></title>
-    <link href="http://2014.54chen.com/blog/2014/11/04/network-load-test/"/>
-    <updated>2014-11-04T18:23:05+08:00</updated>
-    <id>http://2014.54chen.com/blog/2014/11/04/network-load-test</id>
-    <content type="html"><![CDATA[<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br> <p><img src=http://chen54.b0.upaiyun.com/20141104/20141104.jpg></p>
-
-<h1>一.突破客户端端口数限制</h1>
-
-<ul>
-<li>这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。</li>
-<li>现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（2<sup>16</sup>=65536）</li>
-<li>但是从计算机网络的发展来看，端口长度定义同IPv4定义一样，都是当时的同志们拍脑袋的结果。</li>
-</ul>
-
-
-<h2>突破的办法</h2>
-
-<ul>
-<li>一个机器绑定多个IP地址。</li>
-<li>搞无数机器或者虚拟机。</li>
-</ul>
-
-
-<!--more-->
-
-
-<h1>二.防止gc影响测试结论</h1>
-
-<ul>
-<li>如果压力程序为java，要小心full gc导致单次请求时间加长。</li>
-<li>从java角度，随时jstat -gcutil跟踪client的情况，很有必要。</li>
-</ul>
-
-
-<h2>一些推荐的参数</h2>
-
-<ul>
-<li>24G的机器: -XX:ParallelCMSThreads=8 -Xms12G -Xmx12G -XX:PermSize=128m -XX:MaxPermSize=512m -XX:MaxDirectMemorySize=1280m</li>
-<li>细节慢慢调。</li>
-<li>如果业务逻辑不重的情况，gc未必有这么明显的影响。</li>
-</ul>
-
-
-<h1>三.防止客户端性能问题影响结论</h1>
-
-<ul>
-<li>随时关注client的cpu load mem的情况。</li>
-<li>loading test过程中由于client的性能问题，经常会影响结论。</li>
-</ul>
-
-
-<h2>推荐的办法</h2>
-
-<ul>
-<li>定时记录各项数据，对比观察。</li>
-</ul>
-
-
-<h1>四.防止客户端线程数过多</h1>
-
-<ul>
-<li>因为要模拟大量用户，很有可能去启动大量的线程。</li>
-<li>线程的数量太多后基本都是自己先挂了。</li>
-</ul>
-
-
-<h2>解决</h2>
-
-<ul>
-<li>用循环来近似模拟多用户。</li>
-<li>使用scala akka erlang这样的并发模型。</li>
-</ul>
-
-
-<h1>五.其他一些细节</h1>
-
-<ul>
-<li>同时连接数与同时发数据人数是两个天壤之别的数，前者对系统影响很小，后者的增长才是系统的压力所在。</li>
-<li>尽可能模拟连接数与发数据人数目标比例。</li>
-<li>平衡压力尽可能长的时间去压有可能会发现累积性问题。</li>
-<li>机器越多越方便。</li>
 </ul>
 
  <br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a> ]]></content>

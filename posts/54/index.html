@@ -9,8 +9,11 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="智能DNS配置过程 注：对于配置智能DNS，主要用途为：1、解决网通与电信问题 2、实现区域规划（不同区域访问各自最近的服务器），下面以解决网通与电信连接问题的配置。至于实现2的功能，只需稍加更改即可。
-一、DNS服务器安装 &hellip;">
+  <meta name="description" content="64位ubuntu wine1.0 安装qq 环境比较特殊 注意是64的i386就不要看了
+{安装wine:}
+1.添加签名
+wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -
+2. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +78,97 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/07/29/64%E4%BD%8Dubuntu-wine10-%E5%AE%89%E8%A3%85qq/">64位ubuntu wine1.0 安装qq</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>环境比较特殊 注意是64的i386就不要看了<br />
+{安装wine:}<br />
+1.添加签名<br />
+wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -<br />
+2.更新WINE源<br />
+sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/hardy.list -O /etc/apt/sources.list.d/winehq.list<br />
+3.更新软件包<br />
+sudo apt-get update<br />
+4.安装WINE<br />
+sudo apt-get install wine</p>
+
+<p>{设置wine:}</p>
+
+<p>Wine快速设置 deb包 for amd64的下载地址是：</p>
+
+<p><a href="http://ubuntu-tweak.googlecode.com/files/wine-ubuntu_amd64.deb">http://ubuntu-tweak.googlecode.com/files/wine-ubuntu_amd64.deb</a></p>
+
+<p>顺便再加上之前的for i386的：</p>
+
+<p><a href="http://ubuntu-tweak.googlecode.com/files/wine-ubuntu.deb">http://ubuntu-tweak.googlecode.com/files/wine-ubuntu.deb </a>
+{使用QQ}
+<span class="postbody"><span style="font-weight: bold;">Wine的版本</span>:<br />
+Wine 1.0 (默认中文补丁,有打过补丁的Wine1.0下载,见下面)<br />
+windowssux已经把8.04-32bits的deb包(包括中文补丁)做出来了，在<a class="postlink" href="http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/" target="_blank">http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/</a>。<br />
+登录的用户名和密码在<a class="postlink" href="http://forum.ubuntu.org.cn/viewtopic.php?t=9685" target="_blank">http://forum.ubuntu.org.cn/viewtopic.php?t=9685</a>。</span></p>
+
+<p><span style="font-weight: bold;">Wine的注册表</span>
+修改过的内容如下,请给这个文件保存成QQ2007.reg<br />
+REGEDIT4<br />
+[HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe]<br />
+"Version"="vista"<br />
+[HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe\DllOverrides]<br />
+"riched20"="native"<br />
+"riched32"="native"</p>
+
+<p>并使用下列命令导入<br />
+#regedit QQ2007.reg</p>
+
+<p><span style="font-weight: bold;">替换DLL文件</span>
+需要的 dll:: mfc42.dll msvcp60.dll 给上面的这二个dll放到~/.wine/drive_c/windows/system32/目录中<br />
+下面下载的那个qq2007beta1kb5_0.0.2007_x86.tgz中也有,也可以从windows的系统中找</p>
+
+<p><span style="font-weight: bold;">安装方法</span>
+下载:<a class="postlink" href="http://linuxfire.com.cn/%7Ehuahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz" target="_blank">http://linuxfire.com.cn/~huahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz</a>
+解压后,只使用这个中的那个QQ,原wine之类的配置文件不要了.</p>
+
+<p><span style="font-weight: bold;">运行</span>
+可以建一个下面这样的快捷方式,注意修复你的路径为你自己的.<br />
+env WINEPREFIX="/home/fukai/.wine" wine "Z:\home\fukai\qq2007beta1kb5\QQ\QQ.exe"</p>
+
+<p><span style="font-weight: bold;">在安装和使用程序时的注意事项</span>
+现发现的bug有快捷键不能用,视频有时会死机,传文件之类都非常正常</p>
+
+<p>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝<br />
+有空的时候再研究下一键安装 linux qq<br />
+为今天听到的马化腾说linux qq是假消息的消息默哀</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1451,122 +1545,6 @@ return 0;<br />
 
 
   <div class="entry-content entry-content1"><p><span>应该注意避免在查询中让<strong style="color: black; background-color: #ffff66;">MySQL</strong>进行自动<strong style="color: black; background-color: #ff9999;">类型转换</strong>，因为转换过程也会使索引变得不起作用。</span></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2007/10/29/liteim-freeplusu002639s-get-ip-code/">LiteIM/FreePlus的取IP代码</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2007-10-29T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><pre>这是LiteIM/FreePlus的取IP代码,感兴趣的朋友看看吧.
-runjin的是汇编版本,这是c版本,希望有更多的人能读懂.后来者,愿它对你有益.闪了.
-源码：
-static const DWORD UnknownSig=0x1E3A86BA;
-static const LPSTR  szQQUSER_DYNAMIC_DATA="QQUSER_DYNAMIC_DATA";
-typedef void( *pPrepareDynData)(LPVOID IQQData,LPSTR szCmd,const DWORD* szSig,LPVOID* pDynamicData);
-VOID PrepareData(LPVOID IQQData,LPVOID* pDynamicData)
-{
-    pPrepareDynData PrepareDynData=(pPrepareDynData)*(LONG *)(*(LONG *)IQQData+0x54);
-    PrepareDynData(IQQData,szQQUSER_DYNAMIC_DATA,&amp;UnknownSig,pDynamicData);
-}</pre></p>
-
-<p>DWORD GetDyncDWORD(LPVOID DynamicData, int iOffset,LPCSTR szCmd)<br />
-{
-    DWORD dwRet=0;<br />
-    __asm<br />
-    {<br />
-        lea eax,dwRet<br />
-        push eax<br />
-        push szCmd<br />
-        mov eax, DynamicData<br />
-        push eax<br />
-        mov ecx,[eax]<br />
-        mov eax,ecx<br />
-        add eax,iOffset<br />
-        call [eax]<br />
-    }<br />
-    return dwRet;<br />
-}</p>
-
-<p>static const LPSTR  szdwRecentIP="dwRecentIP";<br />
-static const LPSTR  szdwIP="dwIP";<br />
-static const LPSTR  szdwC2CIP="dwC2CIP";<br />
-DWORD GetIP(DWORD Uin)<br />
-{
-    DWORD dwRet=0;<br />
-    LPVOID IQQData=NULL;<br />
-    if (!GetFriendQQData(g_IQQCore,Uin,&amp;IQQData)) return dwRet;<br />
-    LPVOID DynamicData=NULL;<br />
-    PrepareData(IQQData,&amp;DynamicData);<br />
-    if (NULL==DynamicData) return dwRet;<br />
-    dwRet=GetDyncDWORD(DynamicData,0x34,szdwC2CIP);//ecx+18<br />
-    if (dwRet) return dwRet;<br />
-    dwRet=GetDyncDWORD(DynamicData,0x34,szdwIP);<br />
-    if (dwRet) return dwRet;<br />
-    dwRet=GetDyncDWORD(DynamicData,0x34,szdwRecentIP);<br />
-    return dwRet;<br />
-}</p>
-
-<p>static const LPSTR  szwRecentPort="wRecentPort";<br />
-static const LPSTR  szwPort= "wPort";<br />
-static const LPSTR  szwC2CPort= "wC2CPort";<br />
-DWORD GetPort(DWORD Uin)<br />
-{
-    DWORD dwRet=0;<br />
-    LPVOID IQQData=NULL;<br />
-    if (!GetFriendQQData(g_IQQCore,Uin,&amp;IQQData)) return dwRet;<br />
-    LPVOID DynamicData=NULL;<br />
-    PrepareData(IQQData,&amp;DynamicData);<br />
-    if (NULL==DynamicData) return dwRet;<br />
-    dwRet=GetDyncDWORD(DynamicData,0x30,szwC2CPort);//ecx+14<br />
-    if (dwRet) return dwRet;<br />
-    dwRet=GetDyncDWORD(DynamicData,0x30,szwPort);<br />
-    if (dwRet) return dwRet;<br />
-    dwRet=GetDyncDWORD(DynamicData,0x30,szwRecentPort);<br />
-    return dwRet;<br />
-}</p>
-
-<p>static const LPSTR  szwProcotol = "wProcotol";<br />
-DWORD GetVer(DWORD Uin)<br />
-{
-    DWORD dwRet=0;<br />
-    LPVOID IQQData=NULL;<br />
-    if (!GetFriendQQData(g_IQQCore,Uin,&amp;IQQData)) return dwRet;<br />
-    LPVOID DynamicData=NULL;<br />
-    PrepareData(IQQData,&amp;DynamicData);<br />
-    if (NULL==DynamicData) return dwRet;<br />
-    dwRet=GetDyncDWORD(DynamicData,0x30,szwProcotol);<br />
-    return dwRet;<br />
-}
-出处：ye-soft 作者：asaki</p>
 </div>
   
   

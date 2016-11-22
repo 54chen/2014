@@ -9,9 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Java中使用akka手记三 Cluster详例 一个例子 同样是typesafe的经典例子。
-例子提供的服务是传输文本。当文本发给frontend节点，它会委派backend节点，backend执行转化任务，把结果返回给原来的客户端。
-新的backend节点和frontend节点， &hellip;">
+  <meta name="description" content="Java中使用akka手记四 用法速查 Actor UntypedActor actor的基类，继承并实现onReceive方法就可以得到一个Actor。
+Props 配置类，用Props.create可以创建一个按指定配置生成的Actor。
+Props的推荐实践，创建Actor时， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +76,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/18/how-to-use-akka-in-java-4/">Java中使用akka手记四 用法速查</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-04-18T15:37:25+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
+
+<h2>Actor</h2>
+
+<ul>
+<li>UntypedActor actor的基类，继承并实现onReceive方法就可以得到一个Actor。</li>
+<li>Props 配置类，用Props.create可以创建一个按指定配置生成的Actor。</li>
+<li>Props的推荐实践，创建Actor时，搞一个static的Props.create方法。可以少写不少重复代码。</li>
+<li>system.actorOf 会创建顶级的actor，将被系统监控。</li>
+<li>getContext().acrtorOf 会创建子actor。</li>
+<li>ActorRef 由actorOf产生，可以是一个网络actor。</li>
+<li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在>做路由、负载均衡、备份时非常有用。ask会拦住reply消息直接给onsuccess等，sender不会再得到reply。</li>
+<li>Inbox 当actor不能满足需要时，可以使用inbox，比如收多个回复，watch其他actor的生命周期。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/18/how-to-use-akka-in-java-4/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -525,56 +580,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/02/11/foreign-to-beijing/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/">Disruptor Thrift Server连接参数与rps数值影响记录</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-01-22T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/0122/267176d6-5ef4-3e0b-937e-c492f5ba7807.jpg" alt="disruptor thrift server" width="450/" /></p>
-
-<p><strong>基础环境</strong>
-rmbp<br />
-8G MEM<br />
-Intel(R) Core(TM) i7-3615QM CPU @ 2.30GHz  四核 八线程<br />
-oracle jdk 1.7.0_45</p>
-
-<p><strong>原理</strong>
-如上图，是类似tomcat的nio实现过程，不过将queue换成了高性能的disruptor，可能会得到更好的性能。可调整参数为numAcceptors，numSelectors，numWorkersPerSelector三个值。<br />
-测试的代码位置在 https://github.com/54chen/disruptor_thrift_server 项目中的BenchmarkTest同时启动一个server，同时对其进行压测。</p>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/">Read on &rarr;</a>
     </footer>
   
 

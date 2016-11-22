@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="移动互联网api设计实践 过去一年时间里，都在做中国移动互联网下的API设计工作，所面对的情况可能是最具中国特色的了。如果你在尝试构架一整套的新的API供你的客户端使用，可以尝试以下的几点：
-1）api所使用协议，要能够不怕被加js、加广告和各种代码。
-全国各地的运营商，有习惯挂广告、加代码等等 &hellip;">
+  <meta name="description" content="Velocity2011讲师经验总结及velocity2011的ppt下载 总结：
+1）会场有点小，比较热
+2）讲的东西为了照顾更多人，比较片面，如果有想听深入的同学，可以参加我们哥学社的吃喝会。
+3）会上遇到了douban强宁大侠、安全宝的冯大侠、还有一位来自清华的主任、 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +77,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/12/07/velocity-china-2011-ppt-dow/">Velocity2011讲师经验总结及velocity2011的ppt下载</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-12-07T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="velocity" /></p>
+
+<p>总结：<br />
+1）会场有点小，比较热<br />
+2）讲的东西为了照顾更多人，比较片面，如果有想听深入的同学，可以参加我们<a href="http://blog-brother.com" target="_blank">哥学社</a>的吃喝会。<br />
+3）会上遇到了douban强宁大侠、安全宝的冯大侠、还有一位来自清华的主任、以及各位一线的朋友恕不能一一列出，深感荣幸。</p>
+
+<p><div style="width:425px" id="__ss_10490088"><strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/54chen/ss-10490088" title="互联网创业服务器运维工具集">互联网创业服务器运维工具集</a></strong><object id="__sse10490088" width="425" height="355"><param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-111206183925-phpapp01&stripped_title=ss-10490088&userName=54chen" /><param name="allowFullScreen" value="true" /><param name="allowScriptAccess" value="always" /><param name="wmode" value="transparent" /><embed name="__sse10490088" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-111206183925-phpapp01&stripped_title=ss-10490088&userName=54chen" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="transparent" width="425" height="355"></embed></object><div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/54chen">zhen chen</a>.</div></div></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -540,75 +584,6 @@ quercus记录：php和java的混合型项目建立手记 <a href="http://t.co/4e
 54chen Twitter memo 2011-10-23 <a href="http://t.co/8rSaWP0i" rel="nofollow">http://t.co/8rSaWP0i</a> <a href="http://twitter.com/54chen/statuses/127925747586306048" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/10/25/quercus-notes-php-java-mixed-projects/">Quercus记录：php和java的混合型项目建立手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2011-10-25T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>创业公司参与项目的人口众多、背景不一，目前市场上的主流方向为php与java，很多时候java工程师恨铁不成钢，php工程师也无可奈何。于是便有了此文，讲述如何使用quercus创建php java混合型项目。</p>
-
-<p><strong>quercus是什么？</strong>
-quercus是Caucho公司针对php语言的java实现，100%完成了php5的解析。是resin内建支持的功能。同时，因为使用了resin，使得php可以很容易得到连接池、分布式session、负载均衡等功能。使用resin的php项目可以更加安全，不存在很多fastcgi的问题。</p>
-
-<p><strong>性能如何？</strong>
-官方：用mediawiki与drupal来做实验，要比mod_php快<strong>4</strong>倍。<br />
-有一个编译选项，在resin专业版里支持，可以把php转成java class，得到更高性能。</p>
-
-<p><strong>新建一个java项目混合php项目</strong>
-web.xml是关键，里面声明了*.php文件的访问都以com.caucho.quercus.servlet.QuercusServlet来执行。</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span>&nbsp;</span><span class="attribute">version</span><span>=</span><span class="attribute-value">"1.0"</span><span>&nbsp;</span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">"UTF-8"</span><span class="tag">?&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">web-app</span><span>&nbsp;</span><span class="attribute">xmlns:xsi</span><span>=</span><span class="attribute-value">"http://www.w3.org/2001/XMLSchema-instance"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">xmlns</span><span>=</span><span class="attribute-value">"http://java.sun.com/xml/ns/javaee"</span><span>&nbsp;</span><span class="attribute">xmlns:web</span><span>=</span><span class="attribute-value">"http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">xsi:schemaLocation</span><span>=</span><span class="attribute-value">"http://java.sun.com/xml/ns/javaee&nbsp;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">id</span><span>=</span><span class="attribute-value">"WebApp_ID"</span><span>&nbsp;</span><span class="attribute">version</span><span>=</span><span class="attribute-value">"2.5"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">display-name</span><span class="tag">&gt;</span><span>testquercus</span><span class="tag">&lt;/</span><span class="tag-name">display-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">welcome-file-list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">welcome-file</span><span class="tag">&gt;</span><span>index.html</span><span class="tag">&lt;/</span><span class="tag-name">welcome-file</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">welcome-file</span><span class="tag">&gt;</span><span>index.php</span><span class="tag">&lt;/</span><span class="tag-name">welcome-file</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">welcome-file-list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>Quercus&nbsp;Servlet</span><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span><span>com.caucho.quercus.servlet.QuercusServlet</span><span class="tag">&lt;/</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">servlet</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>Quercus&nbsp;Servlet</span><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span><span>*.php</span><span class="tag">&lt;/</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">web-app</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>所有的php文件放在webapp下，所有的java文件还放到java目录里。</p>
-
-<p>如何混合java到php中?<br />
-在java目录新建类Test54Chen，生成后位置：<br />
-WEB-INF/classes/com/chen/FrameWork.class
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*&nbsp;@author&nbsp;54chen(陈臻)&nbsp;[chenzhen@xiaomi.com&nbsp;czhttp@gmail.com]</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;*&nbsp;@since&nbsp;2011-10-25&nbsp;下午08:40:49</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">package</span><span>&nbsp;com.chen;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;FrameWork&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;go(String&nbsp;who)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;who&nbsp;+&nbsp;</span><span class="string">"&nbsp;gogogo!"</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div>
-在webapp新建php文件：<br />
-test.php
-<div class="chen-hl"><div class="bar"></div><ol class="dp-c" start="1"><li class="alt"><span><span>&lt;?php&nbsp;&nbsp;</span></span></li><li class=""><span>import&nbsp;com.chen.FrameWork;&nbsp;&nbsp;</span></li><li class="alt"><span><span class="vars">$f</span><span>&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;FrameWork();&nbsp;&nbsp;</span></span></li><li class=""><span>var_dump(<span class="vars">$f</span><span>-&gt;go(</span><span class="string">"ohohoh"</span><span>));&nbsp;&nbsp;</span></span></li><li class="alt"><span>?&gt;&nbsp;&nbsp;</span></li></ol></div>
-配置到resin中：<br />
-目标文件夹指到webapp。</p>
-
-<p>访问：test.php</p>
-
-<p>截图：<br />
-1.整个项目的情况
-<img src="http://img04.taobaocdn.com/imgextra/i4/T1dG1wXjBcXXa0Lrvb_092913.jpg" alt="quercus" />
-2.访问的结果
-<img src="http://img01.taobaocdn.com/imgextra/i1/T115OvXmaaXXXqGHYb_092949.jpg" alt="quercus php java" />
-下一记：如何利用java做连接池提供给php使用。</p>
 </div>
   
   

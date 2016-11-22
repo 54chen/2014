@@ -9,10 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Redis 测试办法tclsh入门手记 一 什么是tclsh
-tool command language
-terminal control language
-看上去两个都是。tcl和c语言有着天然的亲缘关系，相近的数据类型与控制结构，通过规范的 api，可以比较方便的用c进行tcl的扩展开发， &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2012-07-22 看来还需要一章写rose单元测试的，漏了。 #
+夏天的下午听张楚的歌写代码是很爽的事情。 #
+创业公司的工程师一定要有“野性”，敢于对自己的代码负责，我在上一家公司任职的时候，大量的工程师写完代码之后，基本不会保障自测，直接扔给测试组 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +76,50 @@ terminal control language
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/22/54chen-twitter-memo-2012-07-22/">54chen Twitter Memo 2012-07-22</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-22T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+看来还需要一章写rose单元测试的，漏了。 </ul><a href="http://twitter.com/54chen/statuses/225888028277751808" class="aktt_tweet_time">#</a>
+夏天的下午听张楚的歌写代码是很爽的事情。 <a href="http://twitter.com/54chen/statuses/225874131822972928" class="aktt_tweet_time">#</a>
+创业公司的工程师一定要有“野性”，敢于对自己的代码负责，我在上一家公司任职的时候，大量的工程师写完代码之后，基本不会保障自测，直接扔给测试组，轮子就是这么越转越慢，甚至他们养成习惯之后很难改掉，所有的代码都十分依赖另一个人来查问题。 <a href="http://twitter.com/54chen/statuses/225072923852013568" class="aktt_tweet_time">#</a>
+redis 测试办法tclsh入门手记 <a href="http://t.co/uARTrrla" rel="nofollow">http://t.co/uARTrrla</a> <a href="http://twitter.com/54chen/statuses/224796453900517377" class="aktt_tweet_time">#</a>
+逐渐收到来自各处的mail询问rose的各种看似古怪的问题，典型的：1.很久不升级了？ 升级说明在开发，现在很稳定。 2.使用sql拼接容易造成sql注入等问题，尽量使用规范的preparestatement。3.只内置了velocity和jsp，通过后缀是vm还是jsp来区别。 <a href="http://twitter.com/54chen/statuses/224749739902640128" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-07-15 <a href="http://t.co/M36ripIz" rel="nofollow">http://t.co/M36ripIz</a> <a href="http://twitter.com/54chen/statuses/224316774945005569" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -638,52 +681,6 @@ rose手册第三章七节：controller层：上传文件 <a href="http://t.co/Ah
 <p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">//&nbsp;不声明@Param</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="comment">//&nbsp;files可以是一个数组或者List</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;String&nbsp;upload(MultipartFile[]&nbsp;files)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@ok-"</span><span>&nbsp;+&nbsp;Arrays.toString(files);&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
 
 <p>    同时也可以使用@Param传递不同的name。
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/17/54chen-twitter-memo-2012-06-17/">54chen Twitter Memo 2012-06-17</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-17T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-现代中国互联网产品的拼杀到技术上最终都到了sql的拼杀，抛开框架层面的东西，大面上来说，还需要大量的写sql的人员，新的职业，就叫做SQLer吧。肯定有人不愿意了叫SQLer，工作多年还能写出二分查找、双向链表反序的不在此列。 </ul><a href="http://twitter.com/54chen/statuses/213888569226444802" class="aktt_tweet_time">#</a>
-@<a href="http://twitter.com/javasoze" class="aktt_username">javasoze</a> we too, haha <a href="http://twitter.com/54chen/statuses/213860061020303361" class="aktt_tweet_time">#</a>
-搞后台的遇到的最苦逼的事情No.1：线上挂了，N多用户等着，经理老板在屁股后头问怎么回事，MD技术选型时图新鲜，觉得不会挂，这下SB了，从源代码开始解起。 [所幸这事工作中还没遇到过，在大学里搞BBS时天天干这事] <a href="http://twitter.com/54chen/statuses/213555037253804032" class="aktt_tweet_time">#</a>
-rose手册第三章八节：controller层：门户必备pipe支持 <a href="http://t.co/A0T2v2f3" rel="nofollow">http://t.co/A0T2v2f3</a> <a href="http://twitter.com/54chen/statuses/213543614226247681" class="aktt_tweet_time">#</a>
-@<a href="http://twitter.com/javasoze" class="aktt_username">javasoze</a> Derby doesn&#039;t support auto_increament.H2Database is better than it. <a href="http://twitter.com/54chen/statuses/213169813982429185" class="aktt_tweet_time">#</a>
-看你的右手中指第一个关节近食指的一面，是不是茧要厚些，这是你好好学习的象征。 <a href="http://twitter.com/54chen/statuses/213166295917658112" class="aktt_tweet_time">#</a>
-mysql要是能够提供一个纯java的内存数据库，那对写test case会提供巨大的帮助。 <a href="http://twitter.com/54chen/statuses/213130547990499329" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2012-06-10 <a href="http://t.co/VQwbDOst" rel="nofollow">http://t.co/VQwbDOst</a> <a href="http://twitter.com/54chen/statuses/211638344310992896" class="aktt_tweet_time">#</a>
-
 </p>
 </div>
   

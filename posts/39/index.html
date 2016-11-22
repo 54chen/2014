@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[科学院手记]人人网新鲜事分享现场转播 讲座已经开始，现在是人人网牛人张洁介绍。 ---- 现在是新鲜事后台架构牛人铁安在讲解新鲜事要完成的功能： 将一个用户产生的内容实时发送给与他相关的一群人。 尽可能地帮助用户保存内容。 现在面临的挑战 分发压力：5000W*100 &hellip;">
+  <meta name="description" content="一周废话汇总【54chen Twitter 2009-12-06】 http://www.baidu.com/s?wd=%B7%B9%B7%F1 百度搜“饭否” 你可以看到两个竞价排名欺压着可怜的饭否。 # nuclear - 人人网海量数据储存系统 吹风中 # &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/06/54chen-twitter-2009-12-06/">一周废话汇总【54chen Twitter 2009-12-06】</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2009-12-06T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+	<li><a href="http://www.baidu.com/s?wd=%B7%B9%B7%F1" rel="nofollow">http://www.baidu.com/s?wd=%B7%B9%B7%F1</a> 百度搜“饭否” 你可以看到两个竞价排名欺压着可怜的饭否。 <a href="http://twitter.com/54chen/statuses/6193332845">#</a></li>
+	<li>nuclear - 人人网海量数据储存系统 吹风中 <a href="http://twitter.com/54chen/statuses/6259002387">#</a></li>
+	<li>人人网新鲜事架构分享现场直播进行中 <a href="http://www.54chen.com/844-net-new-to-live-for-all-to-share/" rel="nofollow">http://www.54chen.com/844-net-new-to-live-for-all-to-share/</a> <a href="http://twitter.com/54chen/statuses/6263794154">#</a></li>
+	<li>人固有一死，或死于甲流，或死于甲流疫苗~ <a href="http://twitter.com/54chen/statuses/6265347761">#</a></li>
+	<li>转自侯 少 亭: 在星巴克，我点着一杯卡布基诺，在这群安静的装逼侠对我侧目的时候华丽的打开我的橘子iphone， 刹那间整个星巴克被一首高亢而又悲凉的《月亮之上》所笼罩 <a href="http://twitter.com/54chen/statuses/6295197417">#</a></li>
+	<li>@ is_llei 缺图 实说那个图也不咋样 <a href="http://twitter.com/54chen/statuses/6300342870">#</a></li>
+	<li>转自杨钞浇: 毛主席语录第三十八章 第五节 第二十七句： 不以结婚为目的的谈恋爱 都是耍流氓！ 毛主席万岁。:- <a href="http://twitter.com/54chen/statuses/6327120259">#</a></li>
+	<li>基于自动化原理的信号负反馈拟合最相关内容推荐 绝对有搞头的东西 <a href="http://twitter.com/54chen/statuses/6328956499">#</a></li>
+</ul>
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -626,186 +672,6 @@ initrd (hd0,0)/initrd.lz
 	<li>太白金星：娘娘为何闷闷不乐呢？王母娘娘：哎，最近发现玉帝老是心不在焉，时不时的往人间看。后来我才知道原来是在看美女。太白金星：是呀，不光玉帝，很多神仙也在偷看，只怪人间的女子衣服穿的越来越少，裙子越来越短。王母娘娘：那就降大雪冻冻他们吧。太白金星：好，臣这就去办。 <a href="http://twitter.com/54chen/statuses/5675785224">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/11/all-networks-in-house-training-java-concurrent-programming-principles-synchronize-volatile-zhang-jie-heroes/">人人网内部培训：java并发编程原理-synchronize Volatile-张洁大侠</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2009-11-11T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>来自人人网内部培训的最新消息：</p>
-
-<p>北京时间今天下午不明时间，一群人在张洁大侠的培训下，对java并发编程原理-synchronize volatile等进行了激励的讨论和学习。出席本次会议的有。。。</p>
-
-<p>言归正传，说，并发，就会出现锁。</p>
-
-<p><strong>1.互斥锁实现算法</strong></p>
-
-<p>使用一个并发队列：
-<blockquote>do{</blockquote></p>
-
-<p>pre=head;</p>
-
-<p>newNode-&gt;next=prev;</p>
-
-<p>}while(!cas(head,prev,newNode));
-此代码中<a href="http://www.54chen.com/34-tcp%e8%bf%9e%e6%8e%a5syn-ack-rst-utg-psh-fin/">cas</a>是操作系统提供的compare and swap接口，能保证原子性操作（类似memcache的<a href="http://www.54chen.com/814-tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">cas</a>）。</p>
-
-<p><strong>2.编译器指令优化使内存<a href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">指令</a>重排序与并发编程</strong></p>
-
-<p>并发的程序会受到指令重排序的影响，顺序执行的程序逻辑不会受影响。</p>
-
-<p>例子：
-<blockquote>int a=b=0;</blockquote></p>
-
-<p>Thead1</p>
-
-<p>{</p>
-
-<p>a=1;</p>
-
-<p>b=2</p>
-
-<p>}</p>
-
-<p>Thread2</p>
-
-<p>{</p>
-
-<p>if(b==2)</p>
-
-<p>{</p>
-
-<p>System.out.println(a); //这个a会是多少？</p>
-
-<p>}</p>
-
-<p>}
-上例中Thread2并不一定会打出1来，因为在Thread1中的两个指令会被编译器优化时交换了顺序，出现了与我们想像中不一样的逻辑。</p>
-
-<p><strong>3.增加synchronize抑制内存指令重<span style="font-weight: normal;"><a href="http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/">排序</a></span></strong></p>
-
-<p>synchronize的作用是什么呢，经常都说是同步，市面上的说法是，jvm在运行的时候，变量会在本地有一个内存区，另外还有一个主存区，同步的含义就是将本地的值同步到主存去。</p>
-
-<p>这个说法没有明确的错误，而且在一定程度上还能帮助你理解synchronize的作用，然而内部真正的原因，是利用synchronize建立内存屏障，使其能够抑制内存指令的重排序，从而使并发程序达到我们想像中的逻辑。
-<blockquote>int a=b=0;</blockquote></p>
-
-<p>Thead1</p>
-
-<p>{</p>
-
-<p>synchronized(this)</p>
-
-<p>{</p>
-
-<p>a=1;</p>
-
-<p>b=2;</p>
-
-<p>}</p>
-
-<p>}</p>
-
-<p>Thread2</p>
-
-<p>{</p>
-
-<p>synchronized(this)</p>
-
-<p>{</p>
-
-<p>if(b==2)</p>
-
-<p>{</p>
-
-<p>System.out.println(a); //这个a会是多少？</p>
-
-<p>}</p>
-
-<p>}</p>
-
-<p>}
-这样子，代码就不会有逻辑上的问题。</p>
-
-<p><strong>4.增加volatile建立内存<span style="font-weight: normal;"><a href="http://www.54chen.com/111-plproxy%e9%83%a8%e7%bd%b2%e6%89%8b%e5%86%8c/">屏障</a></span></strong></p>
-
-<p>volatile简化了synchronized，原理是一样的。</p>
-
-<p>在增加了volatile后，那个变量所使用的位置就立起了一道 内存屏障，前后的指令顺序都不可打乱。
-<blockquote>int a=0;</blockquote></p>
-
-<p>volatile  int b=0;</p>
-
-<p>Thead1</p>
-
-<p>{</p>
-
-<p>a=1;</p>
-
-<p>b=2;</p>
-
-<p>}</p>
-
-<p>Thread2</p>
-
-<p>{</p>
-
-<p>if(b==2)</p>
-
-<p>{</p>
-
-<p>System.out.println(a); //这个a会是多少？</p>
-
-<p>}</p>
-
-<p>}
-这就可以简化上一个程序。</p>
-
-<p><strong>5. synchronize的<a href="http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">object</a>（class\this）</strong>
-<blockquote>synchronized(object)</blockquote></p>
-
-<p>{</p>
-
-<p>dosomething();</p>
-
-<p>}
-这里的object其实是为了使用其上的锁，代码等价如：
-<blockquote>object.lock.lock();</blockquote></p>
-
-<p>dosomething();</p>
-
-<p>object.condition.wait();</p>
-
-<p>object.lock.unlock();
-【科学院两小时记忆版资料，非原版ppt内容，其中有误的地方定期更正】</p>
 </div>
   
   
