@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Qcon杭州2012读后感 我没有在现场，所以叫读后感，只是看pdf文件之后的总结，如和现场体验有误，以现场为主。 给力排行一：云中的资源管控
-淘宝林昊大师：提到2010年时三分之一的虚拟机peak load小于0.5，LXC重度用户，各种资源隔离的坑都被他们解决了。在进一步做动态调度。 &hellip;">
+  <meta name="description" content="Git Svn使用手记 以下是一个淡疼的记录，因为从linkedin归来的宝秋叔大力推荐git，而我们现在的代码大多在svn中，所以就有了这一段故事。 一、同步回来svn $git svn clone https://miliaocode/repos/project -T trunk -b &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +74,135 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/11/15/git-svn/">Git Svn使用手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-11-15T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1L56.XfNeXXasdY75_054835.jpg" alt="git" /></p>
+
+<p>以下是一个淡疼的记录，因为从linkedin归来的宝秋叔大力推荐git，而我们现在的代码大多在svn中，所以就有了这一段故事。</p>
+
+<p><strong>一、同步回来svn</strong></p>
+
+<p><blockquote>$git svn clone https://miliaocode/repos/project -T trunk -b branches -t tags</blockquote></p>
+
+<p>然后进入漫长的等待。<br />
+-T trunk -b branches -t tags 告诉 Git 该 Subversion 仓库遵循了基本的分支和标签命名法则。如果你的目录下没有三个标准目录的话还是不要加了。</p>
+
+<p><strong>二、完成同步之后</strong></p>
+
+<p><blockquote>localhost:xxx chenzhen$ git branch -a<br />
+* master<br />
+  remotes/git-svn<br />
+localhost:xxx chenzhen$ git show-ref<br />
+ecf28daf78732c0538a99e206bd9e6e32cbd1ff3 refs/heads/master<br />
+ecf28daf78732c0538a99e206bd9e6e32cbd1ff3 refs/remotes/git-svn</blockquote></p>
+
+<p>远程的svn只作为一个远程的分支存在。</p>
+
+<p><strong>三、使用</strong>
+$cd xxx<br />
+$vim yyy<br />
+$git commit -am 'Adding git-svn instructions to the README'<br />
+这一步是提交到本地，还可以用各种分支之类的都是对本地的操作。</p>
+
+<p><strong>四、注意</strong>
+$git svn rebase<br />
+这一步应该经常被执行，防止出现空洞，因为svn会在服务器端进行merge。而git却不会。<br />
+避免使用merge和直接提交，多rebase后再提交。<br />
+和svn关联的分支能不用则不用。</p>
+
+<p><strong>五、提交</strong>
+$git svn dcommit</p>
+
+<p><strong>六、文件忽略</strong>
+一些忽略文件在svn中是有的，而git中会有一个文件在记录它。<br />
+$git svn show-ignore<br />
+$git svn create-ignore<br />
+第二条命令会创建.gitignore文件，但这对于 svn用户来说太难看了。于是可以如下操作：
+<blockquote>$ git svn show-ignore > .git/info/exclude</blockquote></p>
+
+<p><strong>七、剩下</strong>
+剩下的就是git的事情了，你在本地怎么玩，怎么开源，怎么发远程的，不再影响内部svn用户了。</p>
+
+<p><blockquote>11月20日补充内容：</blockquote></p>
+
+<p><strong>八、git merge工具设置</strong>
+到http://www.perforce.com/perforce/downloads/component.html下载并安装p4merge工具（比较好用的双窗口diff工具）。<br />
+建立一个merge命令调用它：<br />
+$sudo vim /usr/bin/extMerge
+<blockquote>#!/bin/sh<br />
+/Applications/p4merge.app/Contents/MacOS/p4merge $*<br />
+$sudo chmod +x /usr/bin/extMerge</blockquote></p>
+
+<p>修改~/.gitconfig文件：</p>
+
+<p><blockquote>[merge]<br />
+        tool = extMerge<br />
+[merge "tool"]<br />
+        cmd = extMerge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"<br />
+[mergetool]<br />
+        trustExitCode = false</blockquote></p>
+
+<p>这样就可以在rebase的时候自动弹出来merge工具进行修改。</p>
+
+<p><strong>九、与review board发code review的协作</strong>
+当完成代码的编写后，可以在本地招行git commit -am 'some thing'，然后需要发code review的话，就需要一段脚本来帮忙了。</p>
+
+<p>http://mojodna.net/2009/02/24/my-work-git-workflow.html 这哥们写了一份，在mac下的有些格式需要调整。Baoqiu更新了源码，我们米的同学可以来信索取最新的代码。</p>
+
+<p>此脚本为git-svn-diff，放在/usr/bin下之后chmod +x /usr/bin/git-svn-diff。</p>
+
+<p>修改~/.gitconfig，添加如下内容:</p>
+
+<p><blockquote>[alias]<br />
+  svn-diff = !git-svn-diff
+</blockquote></p>
+
+<p>然后就可以用了，</p>
+
+<p><blockquote>$git svn-diff > patch
+</blockquote></p>
+
+<p><strong>十、git命令的自动完成</strong>
+如果你是用的xcode里的git，那可能自动完成是不能使用的，你可以自己试试git ch<tab><tab>，如果有提示的放忽略本节。<br />
+如果没有，vim ~/.profile添加：</tab></tab></p>
+
+<p><blockquote>source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
+</blockquote></p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -747,89 +875,6 @@ cloud foundry之router代码解读 <a href="http://t.co/ICavjNUs" rel="nofollow"
 今天继续阅读cf代码，ruby的代码虽然简单，可惜不是虚拟机形式的，效率差了点。 <a href="http://twitter.com/54chen/statuses/243551429858582528" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/09/07/cloud-foundry-dea/">Cloud Foundry之dea代码解读</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-09-07T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloudfoundry" /></p>
-
-<p><strong>简介</strong>
-cloudfoundry是vmvare推出来的开源PaaS平台，dea（DropletExecution Agent）是其应用运行的环境，一个DEA可以启动多个应用。<br />
-代码位置在： https://github.com/cloudfoundry/dea<br />
-这一部分也是我最想了解细节的地方，因为在一个paas平台中，资源的隔离才是最有价值的部分。</p>
-
-<p><strong>历史</strong>
-初始版的dea基本不控制系统资源，然后基于cgroup搞了一个warden（真正的资源隔离是它，下节再述），程序运行容器。cf希望warden运行在多个平台上，所以没有直接使用LXC。
-<strong>代码</strong>
-代码入口在lib/dea.rb:</p>
-
-<p><blockquote>EM.epoll<br />
-EM.run {<br />
-  agent = DEA::Agent.new(config)<br />
-  agent.run()<br />
-}</blockquote></p>
-
-<p>EM是ruby有名的eventmachine，是一个事件驱动网络框架，从java程序员的角度，可以理解有点像mina，也可以认为有点像erlang的gen_server。</p>
-
-<p>然后进到lib/dea/agent.rb:</p>
-
-<p><blockquote>NATS.start(:uri => @nats_uri) do ...</blockquote></p>
-
-<p>里面注册了各种各样的收到对应消息干什么活的定义，我们来看其中几条线：<br />
-1. 收到update:<br />
-        NATS.subscribe('dea.update') { |msg| process_dea_update(msg) }<br />
-上一句是说收到update的指令， process_dea_update里面关键的一句：<br />
-	register_instance_with_router(instance, :uris => (uris - current_uris))<br />
-通过NATS告诉router，新的app来了。</p>
-
-<p>2.收到start:<br />
-	NATS.subscribe("dea.#{uuid}.start") { |msg| process_dea_start(msg) }<br />
-在process_dea_start里面：<br />
-	start_operation = lambda do... 把app下载回来，修改好权限什么的。<br />
-	下面用了fiber（它是ruby里的协程，用来达到异步线程的效果，但是开销要比线程低）：<br />
-	f = Fiber.new do..<br />
-	f.resume<br />
-在协程中，最关键的调用：<br />
-	stage_app_dir(bits_file, bits_uri, sha1, tgz_file, instance_dir, runtime)<br />
-		bind_local_runtime(instance_dir, runtime)<br />
-			startup_contents.gsub!('%VCAP_LOCAL_RUNTIME%', runtime['executable']) // 替换运行时路径 <br />
-			File.open(startup, 'w') { |f| f.write(new_startup) } #写入运行的脚本<br />
- 一切就绪之后，调用先前准备好的lambda:<br />
-          start_operation.call<br />
-然后去运行各种shell命令，包括启动应用。</p>
-
-<p>__EOF__</p>
 </div>
   
   

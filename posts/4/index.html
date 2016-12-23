@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Java中使用akka手记四 用法速查 Actor UntypedActor actor的基类，继承并实现onReceive方法就可以得到一个Actor。
-Props 配置类，用Props.create可以创建一个按指定配置生成的Actor。
-Props的推荐实践，创建Actor时， &hellip;">
+  <meta name="description" content="线上JVM调查工具:JCPU和JMEM 之前的jkiller改名为jcpu，然后再加上jmem，齐活了，线上要再遇到问题，内存和CPU之外的也没啥其他办法了。 JMEM https://github.com/54chen/jmem 用来定位莫名其妙的堆外内存问题。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +74,55 @@ Props的推荐实践，创建Actor时， &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/05/07/jvm-cpu-mem-tools/">线上JVM调查工具:JCPU和JMEM</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-05-07T17:05:13+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
+
+<p>之前的jkiller改名为jcpu，然后再加上jmem，齐活了，线上要再遇到问题，内存和CPU之外的也没啥其他办法了。</p>
+
+<h2>JMEM</h2>
+
+<p><a href="https://github.com/54chen/jmem">https://github.com/54chen/jmem</a></p>
+
+<p>用来定位莫名其妙的堆外内存问题。首先还是要先用jmap之类的看清楚是否是JVM堆内问题了再用此神物。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/05/07/jvm-cpu-mem-tools/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -530,56 +577,6 @@ Props的推荐实践，创建Actor时， &hellip;">
   
     <footer>
       <a rel="full-article" href="/blog/2014/02/13/new-year-10-day/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/02/11/foreign-to-beijing/">2014年外地车牌转北京攻略</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2014-02-11T19:30:03+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/0211/28322841.jpg" alt="2014年外地车牌转北京攻略 外转京"></p>
-
-<h2>先决条件</h2>
-
-<ul>
-<li>北京市工作居住证</li>
-<li>北京小汽车指标（不管是摇中号了还是置换）</li>
-<li>外地车一辆（别太破）</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/02/11/foreign-to-beijing/">Read on &rarr;</a>
     </footer>
   
 

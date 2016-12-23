@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-07-22 看来还需要一章写rose单元测试的，漏了。 #
-夏天的下午听张楚的歌写代码是很爽的事情。 #
-创业公司的工程师一定要有“野性”，敢于对自己的代码负责，我在上一家公司任职的时候，大量的工程师写完代码之后，基本不会保障自测，直接扔给测试组 &hellip;">
+  <meta name="description" content="Zookeeper客户端curator使用手记 一、简介 curator是Netflix公司开源的一个Zookeeper client library，用于简化zookeeper客户端编程，包含一下几个模块： curator-client - zookeeper client封装， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +74,73 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/07/25/zookeeper-curator/">Zookeeper客户端curator使用手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2012-07-25T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13M02XbRXXXX4FVU4_051626.jpg" alt="zookeeper" />
+<strong>一、简介</strong>
+    curator是Netflix公司开源的一个Zookeeper client library，用于简化zookeeper客户端编程，包含一下几个模块：</p>
+
+<p>    curator-client - zookeeper client封装，用于取代原生的zookeeper客户端，提供一些非常有用的客户端特性<br />
+    curator-framework - zookeeper api的高层封装，大大简化zookeeper客户端编程，添加了例如zookeeper连接管理、重试机制等<br />
+    curator-recipes - zookeeper recipes 基于curator-framework的实现（除2PC以外）</p>
+
+<p>    从github和maven上的消息来看，1.0.1的版本已经十分稳定，相对应的zk版本是3.3.x，还在开发中的版本是1.1.x，对应的版本是zk3.4.x。
+<strong>二、依赖</strong></p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.netflix.curator</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>curator-framework</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0.1</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p><strong>
+三、代码讲解</strong></p>
+
+<p>    以下代码以CuratorFramework为例：<br />
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">static</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;main(String[]&nbsp;args)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;Exception&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;path&nbsp;=&nbsp;<span class="string">"/test_path"</span><span>;&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;CuratorFramework&nbsp;client&nbsp;=&nbsp;CuratorFrameworkFactory.builder().connectString(<span class="string">"zookeeper.n.miliao.com:2181"</span><span>).namespace(</span><span class="string">"/brokers"</span><span>).retryPolicy(</span><span class="keyword">new</span><span>&nbsp;RetryNTimes(Integer.MAX_VALUE,&nbsp;</span><span class="number">1000</span><span>)).connectionTimeoutMs(</span><span class="number">5000</span><span>).build();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;启动&nbsp;上面的namespace会作为一个最根的节点在使用时自动创建</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.start();&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;创建一个节点</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.create().forPath(<span class="string">"/head"</span><span>,&nbsp;</span><span class="keyword">new</span><span>&nbsp;</span><span class="keyword">byte</span><span>[</span><span class="number">0</span><span>]);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;异步地删除一个节点</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.delete().inBackground().forPath(<span class="string">"/head"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;创建一个临时节点</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(<span class="string">"/head/child"</span><span>,&nbsp;</span><span class="keyword">new</span><span>&nbsp;</span><span class="keyword">byte</span><span>[</span><span class="number">0</span><span>]);&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;取数据</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.getData().watched().inBackground().forPath(<span class="string">"/test"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;检查路径是否存在</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.checkExists().forPath(path);&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;异步删除</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.delete().inBackground().forPath(<span class="string">"/head"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;注册观察者，当节点变动时触发</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.getData().usingWatcher(<span class="keyword">new</span><span>&nbsp;Watcher()&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;process(WatchedEvent&nbsp;event)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println(<span class="string">"node&nbsp;is&nbsp;changed"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}).inBackground().forPath(<span class="string">"/test"</span><span>);&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comment">//&nbsp;结束使用</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;client.close();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
+
+<p><strong>四、方法说明
+</strong>
+    create(): 发起一个create操作. 可以组合其他方法 (比如mode 或background) 最后以forPath()方法结尾<br />
+    delete(): 发起一个删除操作. 可以组合其他方法(version 或background) 最后以forPath()方法结尾<br />
+    checkExists(): 发起一个检查ZNode 是否存在的操作. 可以组合其他方法(watch 或background) 最后以forPath()方法结尾<br />
+    getData(): 发起一个获取ZNode数据的操作. 可以组合其他方法(watch, background 或get stat) 最后以forPath()方法结尾<br />
+    setData(): 发起一个设置ZNode数据的操作. 可以组合其他方法(version 或background) 最后以forPath()方法结尾<br />
+    getChildren(): 发起一个获取ZNode子节点的操作. 可以组合其他方法(watch, background 或get stat) 最后以forPath()方法结尾<br />
+    inTransaction(): 发起一个ZooKeeper事务. 可以组合create, setData, check, 和/或delete 为一个操作, 然后commit() 提交 </p>
+
+<p><strong>五、五四陈点评</strong></p>
+
+<p>相比zookeeper常用的zkClient的确是平易近人了，上手容易，理解轻松，语法优美，至于是不是各种情况都处理了，还得靠实践检验。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -628,59 +693,6 @@ rose手册第三章七节：controller层：上传文件 <a href="http://t.co/Ah
 三十岁前你养成习惯，三十岁后习惯养成你。 <a href="http://twitter.com/54chen/statuses/214570646166974464" class="aktt_tweet_time">#</a>
 54chen Twitter memo 2012-06-17 <a href="http://t.co/zBXFE46s" rel="nofollow">http://t.co/zBXFE46s</a> <a href="http://twitter.com/54chen/statuses/214174844374368258" class="aktt_tweet_time">#</a>
 
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/06/18/rose-3-9/">Rose手册第三章九节：controller层：上传文件</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-06-18T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" /></p>
-
-<p><strong>3.9.1 其实很简单</strong></p>
-
-<p>    添加依赖包:commons-io.jar<br />
-    html中使用 enctype="multipart/form-data",method="POST"<br />
-    直接看后端代码吧。</p>
-
-<p>   <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Post</span><span>(</span><span class="string">"/doUpload"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;doUpload(</span><span class="annotation">@Param</span><span>(</span><span class="string">"file"</span><span>)&nbsp;MultipartFile&nbsp;file)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@&nbsp;upload&nbsp;ok!"</span><span>&nbsp;+&nbsp;file.getOriginalFilename();&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p><strong>3.9.2 其他</strong></p>
-
-<p>    可以同时接收所有的文件</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">//&nbsp;不声明@Param</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="comment">//&nbsp;files可以是一个数组或者List</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;String&nbsp;upload(MultipartFile[]&nbsp;files)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@ok-"</span><span>&nbsp;+&nbsp;Arrays.toString(files);&nbsp;&nbsp;</span></span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p>    同时也可以使用@Param传递不同的name。
 </p>
 </div>
   

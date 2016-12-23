@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="[java]用httpclient做压力测试时Too Many Open Files的解决办法 在工作过程中，用httpclient去压测一个web api，发现压一小段时间就出现了Too many open files。
-实际上，HttpClient建立Socket时 ，post. &hellip;">
+  <meta name="description" content="[Flash]建立socket安全策略文件服务器 前因
+Flash被广泛应用于互联网各个方面，是因为它提供了各种各样的特性，其中很重要的一点就是，可以用flash建立TCP连接到服务器然后交换数据。从网络管理员的观点看，一个互联网的服务器能够连接进到内网里来，是一个很恐怖的事情， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/01/11/setting-up-a-socket-policy-file-server/">[Flash]建立socket安全策略文件服务器</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2011-01-11T00:00:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://www.adobe.com/content/dam/Adobe/en/devnet/authors/large/l/logo_flashplayer_lg.jpg.adimg.mw.138.png" alt="flash 安全" /></p>
+
+<p><strong>前因</strong>
+Flash被广泛应用于互联网各个方面，是因为它提供了各种各样的特性，其中很重要的一点就是，可以用flash建立TCP连接到服务器然后交换数据。从网络管理员的观点看，一个互联网的服务器能够连接进到内网里来，是一个很恐怖的事情，所以flash搞出来一个安全策略文件。</p>
+
+<p><strong>改变</strong>
+Flash Player 9,0,124,0 版本对这个策略文件进行了两个重大改变：一是所有的端口都需要在策略文件里声明了，以前的版本只需要1024以下的端口需要进行声明；二是可以集中到843端口进行集中式的托管了。Flash Player 9,0,124,0建立的socket连接，会先去请求843端口，如果这个端口没有策略文件，则会去你要连接的端口本身请求策略文件，如果二者都没有，则会被拒绝连接。</p>
+
+<p><strong>控制过程解读</strong>
+1.Flash Player先到请求的843端口请求策略文件，如果没有，进行第2步，如果site-control为none则拒绝掉，如果site-control为all则进行第2步。<br />
+2.如果在AS中写了Security.loadPolicyFile() ，（<font color="red">它并不是一定生效的，必须在843端口的声明中允许引用其他的策略文件后才能生效</font>），开始读取策略。<br />
+3.最后一步是检测要连接的端口是否有权限，这步检测要在843端口中声明需要检测端口才会去做，如果843声明了而策略文件里没有，则会被拒绝。</p>
+
+<p><code>庆亮哥小更正：请求843和你的指定端口后，会访问当前访问域名下是否有crossdomain.xml文件，如果你的端口不是80，那么请求最多可能三次。</code></p>
+
+<p><strong>万能脚本</strong>
+这个兄弟是adobe的开发人员吧，搞了两个脚本，一个perl的一个是python的，两个都好用，可以很简单地在服务器上搞起来843的守候进程。<br />
+像下面这样执行就OK了：
+<blockquote><code>./flashpolicyd.pl --file=../policyfile.xml --port=843 <br />
+./flashpolicyd.py --file=../policyfile.xml --port=843</code></blockquote></p>
+
+<p><strong>猛击哪里下载</strong>
+<a href="http://www.adobe.com/content/dotcom/en/devnet/flashplayer/articles/socket_policy_files/_jcr_content/articlePrerequistes/multiplefiles/node_1277808777771/file.res/flashpolicyd_v0.6%5B1%5D.zip">这里</a></p>
+
+<p><strong>参考文档：</strong>
+<a href="http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html">http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -560,59 +621,6 @@ apt-get install openSSL<br />
 图4 我建立的端口转发<br />
 回车，输入192.168.1.1的密码，大功告成，成功利用端口转发打通了andriod手机共享usb0共享上网时的ssh。<br />
 关于ssh tunnel，详细见：<a href="http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html">http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/12/12/54chen-twitter-memo-2010-12-12/">54chen Twitter Memo 2010-12-12</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2010-12-12T00:00:00+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-寻了一圈各种机器人自动回复的技术，最后我决定用mysql的select like，这是一个艰难的决定。 </ul><a href="http://twitter.com/54chen/statuses/13516416774840320" class="aktt_tweet_time">#</a>
-消息称千橡互动淘米网已启动美国IPO计划  <a href="http://tech.163.com/10/1210/16/6NIA532K000915BF.html" rel="nofollow">http://tech.163.com/10/1210/16/6NIA532K000915BF.html</a> <a href="http://twitter.com/54chen/statuses/13164795729551361" class="aktt_tweet_time">#</a>
-找到你了：　erl -eval &#039;mnesia:info().&#039; -noshell -s init stop <a href="http://twitter.com/54chen/statuses/13066075130302464" class="aktt_tweet_time">#</a>
-<a href="http://mi.xiaomi.com/来自@小米科技" rel="nofollow">http://mi.xiaomi.com/来自@小米科技</a> 的又一力作，米聊，智能机时代的沟通方式。欢迎朋友们加我米聊号：110005。 <a href="http://twitter.com/54chen/statuses/12835808687951872" class="aktt_tweet_time">#</a>
-在敲下每一行代码的同时，我都在思考如何让它更加清晰，以致我不会被后来的维护者骂爹。 <a href="http://twitter.com/54chen/statuses/12774990583693313" class="aktt_tweet_time">#</a>
-6年前有幸在大学里自己和同学利用jabber搞的IM有着一万多的用户，xmpp的影响至今还在，甚慰。 <a href="http://twitter.com/54chen/statuses/12772053048369152" class="aktt_tweet_time">#</a>
-Immutable变量, 无共享内存，Process交换数据通过消息传递实现等，这些特性在多核CPU下具有先天优势 <a href="http://twitter.com/54chen/statuses/12770068123353088" class="aktt_tweet_time">#</a>
-@小米，来自微软Bing的pascal大侠有句话：开源技术只用 1 出问题搞得定的 2 大公司在用的；这是一位智者的感言，供创业者参考。 <a href="http://twitter.com/54chen/statuses/12730247925469185" class="aktt_tweet_time">#</a>
-<a href="http://www.54chen.com/architecture/ganglia-nagios-install.html" rel="nofollow">http://www.54chen.com/architecture/ganglia-nagios-install.html</a> ganglia安装手记，饭间功夫发一下，全文完成于公交车上android手机@小米便签软件。 <a href="http://twitter.com/54chen/statuses/12728603846385664" class="aktt_tweet_time">#</a>
-企业服务器监控及报警配置打造（ganglia and nagios）-part 1 <a href="http://goo.gl/fb/OuFoU" rel="nofollow">http://goo.gl/fb/OuFoU</a> <a href="http://twitter.com/54chen/statuses/12717404559777792" class="aktt_tweet_time">#</a>
-kill -15 $(ps -ef|grep Process_name|awk &#039; { print $2 } &#039;) <a href="http://twitter.com/54chen/statuses/12445952333840384" class="aktt_tweet_time">#</a>
-各位大牛，讨论一下，svn里是不是应该保留.project\.bulild\.setting文件？理由？ <a href="http://twitter.com/54chen/statuses/12015294339874816" class="aktt_tweet_time">#</a>
-小米科技工作第三周：java新项目X2，php老项目X1，bash新项目X2，erlang项目X0.1。#创业公司要高产# <a href="http://twitter.com/54chen/statuses/11684889699024897" class="aktt_tweet_time">#</a>
-通过android wifi打通逆向通道ssh上网，这是一件多么值得写一篇博客记录一下的事情哇。 <a href="http://twitter.com/54chen/statuses/11664036290625536" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2010-12-05 <a href="http://goo.gl/fb/sM0qa" rel="nofollow">http://goo.gl/fb/sM0qa</a> <a href="http://twitter.com/54chen/statuses/11234686466527232" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   
