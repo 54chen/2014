@@ -4,7 +4,7 @@
   <title><![CDATA[五四陈科学院]]></title>
   <link href="http://2014.54chen.com/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-12-23T11:51:18+08:00</updated>
+  <updated>2016-12-23T18:35:11+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -163,7 +163,9 @@
 
 <p>重点三，android developer网站一定要用英文版，中文的翻译版本不知道是哪年翻译的了，好多东西没有。<a href="https://developer.android.com/google/play/billing/billing_integrate.html">https://developer.android.com/google/play/billing/billing_integrate.html</a> 最后一段，讲了要在服务器做的事情（ras x.509 balabala&hellip;）。（大量的单机游戏直接就在本地做这个验证了，这真是一个路不拾遗的好时代～～～）</p>
 
-<p>重点四，漏单处理，客户端要在本地主动查询拥有的货品状态，主动complete，与苹果不同，手工的要多一点。</p>
+<p>重点四，漏单处理，客户端要在本地主动查询拥有的货品状态，主动commit，与苹果不同，手工的要多一点。</p>
+
+<p>重点五，注意android市场的版本号不要太低，如果用户在其他渠道拿到一个版本号更大的包，是不能支付成功的！</p>
 
 <p><br>2) 坏账<br></p>
 
