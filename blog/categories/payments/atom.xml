@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Payments | 五四陈科学院]]></title>
   <link href="http://2014.54chen.com/blog/categories/payments/atom.xml" rel="self"/>
   <link href="http://2014.54chen.com/"/>
-  <updated>2016-12-23T18:35:11+08:00</updated>
+  <updated>2016-12-26T09:53:13+08:00</updated>
   <id>http://2014.54chen.com/</id>
   <author>
     <name><![CDATA[54chen]]></name>
@@ -224,6 +224,8 @@
 <p><br>3) 靠谱度评分<br></p>
 
 <p>codapay2分，doku 2.1分，他两都是当地的支付商家，doku的接口多一些，多0.1分。</p>
+
+<p><input type="hidden" id="mid" name="mid" value="4055819258140259" /></p>
 ]]></content>
   </entry>
   
