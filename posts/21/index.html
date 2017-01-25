@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-06-12 2011-06-12 00:00:00 +0800 高考应该是结束了吧，许多年后你还会因为梦中发现自己没有带2B铅笔进考场而惊醒吗？ #
-ubuntu 10.04 Empathy很久以前不能上之后，今天试了试居然上去了，大悟， &hellip;">
+  <meta name="description" content="Hive迁移hadoop Namenode时遇到的问题 2011-06-14 00:00:00 +0800 使用了一段时间的hive和hadoop，在迁移datanode时很容易，要迁移namenode，hive里就闹情绪了。更改namenode后，在hive中运行select &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +74,59 @@ ubuntu 10.04 Empathy很久以前不能上之后，今天试了试居然上去了
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/06/14/hive-hadoop-namenode-problem/">Hive迁移hadoop Namenode时遇到的问题</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-06-14T00:00:00+08:00" pubdate data-updated="true">2011-06-14 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_OqfXfNnXXbx.crb_093330.jpg" alt="hadoop hive namenode 迁移" /></p>
+
+<p>使用了一段时间的hive和hadoop，在迁移datanode时很容易，要迁移namenode，hive里就闹情绪了。更改namenode后，在hive中运行select 依旧指向之前的namenode地址。</p>
+
+<p>要如何解决呢，具体操作如下：<br />
+1.复制打包老的namenode<br />
+2.复制打包老的namenode的hdfs目录<br />
+3.到新机器准备好：修改master的值 复制到各节点 修改hive的定义<br />
+4.hive这里使用了mysql来保存metadata<br />
+因为这些信息会被写死在hive的DBS和SBS表里，下面是关键的一步：<br />
+进入mysql，执行下面的sql，
+<blockquote>update DBS set DB_LOCATION_URI=REPLACE(DB_LOCATION_URI,'old host','new host');<br />
+update SDS set LOCATION=REPLACE(LOCATION,'old host','new host');</blockquote></p>
+
+<p>启动，一切正常了！迁移hive namenode成功。</p>
+
+<p></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -722,48 +774,6 @@ mysql中存在大量的更新操作，特别是大字段或者变长字段的频
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/15/54chen-twitter-memo-2011-05-15/">54chen Twitter Memo 2011-05-15</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-05-15T00:00:00+08:00" pubdate data-updated="true">2011-05-15 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-硬件为王，软件为帝–记突增的访问 </ul><a href="http://goo.gl/fb/UJiZB" rel="nofollow">http://goo.gl/fb/UJiZB</a> <a href="http://twitter.com/54chen/statuses/69437779473477632" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-05-08 <a href="http://goo.gl/fb/H5bJh" rel="nofollow">http://goo.gl/fb/H5bJh</a> <a href="http://twitter.com/54chen/statuses/67050175335636992" class="aktt_tweet_time">#</a>
-技术架构在公司初创时需要快准狠选入，否则日积月累，重构工作痛苦而漫长，老板头疼时已晚，架构体系，人人网王志亮大侠做得很出色，让几百人舒服地写放心代码。 <a href="http://twitter.com/54chen/statuses/67035329642770433" class="aktt_tweet_time">#</a>
-
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -990,6 +1000,10 @@ mysql中存在大量的更新操作，特别是大字段或者变长字段的频
   
     
       <a href="/posts/55">55</a>
+    
+  
+    
+      <a href="/posts/56">56</a>
     
   
 

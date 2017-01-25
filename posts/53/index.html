@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Perl笔记 2008-11-05 00:00:00 +0800 [文章作者：陈臻 本文版本：v1.2 最后修改：2008.11.5 转载请注明原文链接：http://www.54chen.com/c/75] 系统学习perl，基础问题复习期间，先提问题，再回答 1.@和$和%以及&amp; &hellip;">
+  <meta name="description" content="一句话记录备忘 2008-11-07 00:00:00 +0800 apache或者yapache的虚拟主机设置时，出现许多个VirtualHost在一台机器时，只显示第一个VirtualHost的目录，这时需要在conf中增加一行NameVirtualHost * Perl笔记 2008-11 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,43 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/07/%E4%B8%80%E5%8F%A5%E8%AF%9D%E8%AE%B0%E5%BD%95%E5%A4%87%E5%BF%98/">一句话记录备忘</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2008-11-07T00:00:00+08:00" pubdate data-updated="true">2008-11-07 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>apache或者yapache的虚拟主机设置时，出现许多个VirtualHost在一台机器时，只显示第一个VirtualHost的目录，这时需要在conf中增加一行NameVirtualHost *</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1886,55 +1923,6 @@ printf("$data[$j]&lt;BR&gt;\n");<br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/07/29/wine-%E8%BF%90%E8%A1%8C-tm-pv4%E7%89%88%E6%9C%AC/">Wine 运行 Tm Pv4版本</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true">2008-07-29 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>wget <a href="http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe">http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe</a></p>
-
-<p>用wine运行安装程序： wine tm2008preview4_sp2_chs.exe<br />
-安装完成后，并不能运行，缺少一些dll。将tm2008目录下SysDir目录下的各个子目录（Microsoft.VC80.ATL等5个子目录）下的所有dll文件拷贝到tm2008下的Bin目录中。将windows<br />
-xp下的system32目录下的msxml3.dll, msxml3r.dll, riched32.dll,<br />
-riched20.dll文件拷贝到.wine/drive_c/windows/system32/目录中。<br />
-运行winecfg，在library标签页下，添加msxml3、riched32、riched20。<br />
-然后就可以运行tm2008了。</p>
-
-<p>如果遇到中文乱码，注意做如下配置：<br />
-1 如果用的英文locale，记得改成中文再启动wine。即export LANG=zh_CN.UTF-8<br />
-2 配置中文字体。将windows下的simsun.ttc拷贝到~/.fonts/目录下，然后运行regedit，修改HKEY_LOCAL_MACHINE\Software\Microsoft\Windows<br />
-NT\CurrentVersion\FontSubstitutes\ 下的所有键值，将他们都改成SimSun。</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -2161,6 +2149,10 @@ NT\CurrentVersion\FontSubstitutes\ 下的所有键值，将他们都改成SimSun
   
     
       <a href="/posts/55">55</a>
+    
+  
+    
+      <a href="/posts/56">56</a>
     
   
 

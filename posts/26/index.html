@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-12-12 2010-12-12 00:00:00 +0800 寻了一圈各种机器人自动回复的技术，最后我决定用mysql的select like，这是一个艰难的决定。 #
-消息称千橡互动淘米网已启动美国IPO计划 http://tech.163. &hellip;">
+  <meta name="description" content="把手机当无线网卡-andriod Usb0 Ssh Tunnle 2010-12-16 00:00:00 +0800 小公司人员增长快，随着台式机日益加多，网速越来越慢，而wifi使用者却还不慢。于是就有了本文。
+android手机通过usb共享网络很简单， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/12/16/ssh-tunnle-andriod-usb0/">把手机当无线网卡-andriod Usb0 Ssh Tunnle</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-12-16T00:00:00+08:00" pubdate data-updated="true">2010-12-16 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>小公司人员增长快，随着台式机日益加多，网速越来越慢，而wifi使用者却还不慢。于是就有了本文。<br />
+android手机通过usb共享网络很简单，只需要连上usb线后在手机设置里找到共享手机网络，打开即可。但是本文并非教如何连接usb线的。
+<img src="http://img02.taobaocdn.com/imgextra/i2/T1JkFUXotsXXXHh4o2_044309.jpg" alt="ssh tunnel" />
+图1 usb绑定设置pc共享android手机上网<br />
+ubuntu共享上网后，会发现连接不了线上的ssh，会等半天，报出no ruote。猜测是因为andriod手机的安全设置所致。其实本文重点讲如何ssh的。<br />
+先用android下载一个支持ssh的工具：connectbot。</p>
+
+<p>打开软件，同时打开ubuntu，执行下面的语句安装sshd服务：<br />
+apt-get install openSSL<br />
+然后启动sshd服务。<br />
+在connectbot中填写ubuntu机器ip，输入密码，ssh到ubuntu机器。
+<img src="http://img02.taobaocdn.com/imgextra/i2/T1.6VUXeBEXXafGOk2_044426.jpg" alt="connectbot" />
+图2 用connectBot登录pc</p>
+
+<p>这时按下菜单键，选择端口转发。选远端端口，填写2222，转发到192.168.1.1:22，确定以后，这个转发就建立了。
+<img src="http://img03.taobaocdn.com/imgextra/i3/T186VUXfFEXXbkLO.2_044528.jpg" alt="connectbot端口转发" />
+图3 connectBot端口转发<br />
+然后到ubuntu上执行ssh 127.0.0.1 -p2222
+<img src="http://img03.taobaocdn.com/imgextra/i3/T15AhUXk4yXXcLijU2_044624.jpg" alt="ssh tunnel" />
+图4 我建立的端口转发<br />
+回车，输入192.168.1.1的密码，大功告成，成功利用端口转发打通了andriod手机共享usb0共享上网时的ssh。<br />
+关于ssh tunnel，详细见：<a href="http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html">http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -694,94 +752,6 @@ ccav2的谈话节目，老是以相同的嘉宾，嘉宾都是职业的了 <a hr
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/11/11/renren/">相逢的人会再相逢</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-11-11T00:00:00+08:00" pubdate data-updated="true">2010-11-11 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1uTBQXnxDXXbu5to9_102749.jpg" alt="离开人人网" />
-一将功成万骨枯。我从金山到雅虎淘宝再到人人网，现在又到了离开的时间。</p>
-
-<p>在微博和twitter很多关心我去向的朋友应该都已经知道了，我已经离开了人人网UGC团队（<a href="http://ugc.renren.com">http://ugc.renren.com</a>)，加入了一个创业团队小米工作室(<a href="http://www.xiaomi.com">http://www.xiaomi.com</a>)。</p>
-
-<p>过去的两年里，印象最深的是一个个的极客，每一位在记忆中都是宝贵的片段，共同筑起了这些年完整的回忆。</p>
-
-<p>张洁，老极客一名，现在已南下广州，在人人有很长一段时间合作，在人人底层的代码中还经常能看见他的签名。对各种技术保留着独特的目光和见解，nuclear的名字和起源就是他这位极客。</p>
-
-<p>王志亮，赫赫有名的疱丁分词作者，人人网的web框架作者（十分遗憾的是我答应在程序员杂志写写这个开源框架特色的，却没能完成就要离开了），很长时间里我们团队都在是和这位大侠学习框架的新功能和提新需求。</p>
-
-<p>启荣，数天下mysqlDBA，无出启荣之右者。此话出处不详，但的确如此，启荣大侠，人人网头号dba，坚定而妖娆的目光说明了实力。</p>
-
-<p>桃子，新生代的dba，爱好广泛，工作上长期被我这边骚扰，mysql经验丰富。</p>
-
-<p>张章，稳若泰山的头儿，传说精通心理学（江湖传闻），风格温文而雅，勤修历史，带领部分ugc兄弟秘密成立了糯米网。</p>
-
-<p>昊哥，java经验丰富，对项目开发控制管理颇有研究，scrum实施推广者。</p>
-
-<p>烧饼，校内十剑之一。老java人，天生奇骨，拥有shell绝技，ugc所有服务器都是烧饼维护的。</p>
-
-<p>龙哥，绿野爱好者，各种登山露营控，对项目模块层次设计满足古怪需求钻研透彻。</p>
-
-<p>亮哥，恶搞分子，算法基本功相当了得，有各种的小道国家形势消息（并且都已部分得到验证）。</p>
-
-<p>友明，稳重的已婚人士，毕业至今，已经对分布式搜索经验很有积累。</p>
-
-<p>陈蕾，老perl爱好者，超级具有大师级的合作精神，很有爱有两只小猫叫烟囱和挠挠。</p>
-
-<p>小威，准已婚人士，毕业至今成长迅速，注重不长膘常健身，基础知识扎实。</p>
-
-<p>文哲，已婚仍邪恶人士，总能从各种状态中挖出最黄的意思。</p>
-
-<p>明星，超极客产品研究人员，非一般的极致追求人员，精益求精的互联网重度使用哥。</p>
-
-<p>伟博，XOA（人人网SOA框架）作者，对JAVA理解深入，成熟的外表有一颗追求极致的心。</p>
-
-<p>波波，js深度患者，对大小问题手到病除，可以说是没有解决不了的问题。</p>
-
-<p>林总，号js小神童，对前端技术深入摸底，对as同样介于牛a与牛c之间。</p>
-
-<p>靖威，忙碌于全站的页面速度和统一标准，对全站页面的琐碎事情态度相当nice。</p>
-
-<p>涛哥，拥有带三个表的潜力，和蔼可亲，一接触便知涛哥深藏的功力。</p>
-
-<p>志昂，态度温和的常总，常年被一群审核的mm跟踪，能完成各种bt的搜出来删除的需求。</p>
-
-<p>昌总，万花丛中的昌总，有无穷的耐心和爱心，是qa典范。</p>
-
-<p>原谅我没有提到的各位，由于时间和篇幅，无法将所有极客一一呈现。</p>
-
-<p>江湖很小，相逢的人会再相逢。他日江湖相逢，再当杯酒言欢。</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -1008,6 +978,10 @@ ccav2的谈话节目，老是以相同的嘉宾，嘉宾都是职业的了 <a hr
   
     
       <a href="/posts/55">55</a>
+    
+  
+    
+      <a href="/posts/56">56</a>
     
   
 

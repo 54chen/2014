@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Rose手册第三章九节：controller层：上传文件 2012-06-18 00:00:00 +0800 3.9.1 其实很简单 添加依赖包:commons-io.jar html中使用 enctype="multipart/form-data",method="POST" 直接看后端代码吧 &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2012-06-24 2012-06-24 00:00:00 +0800 有写ansi C的人吗，都用tclsh做测试吗？ #
+rose手册第三章七节：controller层：上传文件 http://t.co/AhYPKs9o # &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/06/24/54chen-twitter-memo-2012-06-24/">54chen Twitter Memo 2012-06-24</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-06-24T00:00:00+08:00" pubdate data-updated="true">2012-06-24 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+有写ansi C的人吗，都用tclsh做测试吗？ </ul><a href="http://twitter.com/54chen/statuses/215411410182737920" class="aktt_tweet_time">#</a>
+rose手册第三章七节：controller层：上传文件 <a href="http://t.co/AhYPKs9o" rel="nofollow">http://t.co/AhYPKs9o</a> <a href="http://twitter.com/54chen/statuses/214651693332303872" class="aktt_tweet_time">#</a>
+一群人揉吧揉吧出来的产品与一个霸权主义老大整出来的产品哪个更靠谱？ <a href="http://twitter.com/54chen/statuses/214610214190714880" class="aktt_tweet_time">#</a>
+三十岁前你养成习惯，三十岁后习惯养成你。 <a href="http://twitter.com/54chen/statuses/214570646166974464" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2012-06-17 <a href="http://t.co/zBXFE46s" rel="nofollow">http://t.co/zBXFE46s</a> <a href="http://twitter.com/54chen/statuses/214174844374368258" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -594,79 +639,6 @@ rose手册第三章五节：controller层：统一的参数验证办法 </ul><a 
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/05/24/rose-3-5/">Rose手册第三章五节：controller层：统一的参数验证办法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2012-05-24T00:00:00+08:00" pubdate data-updated="true">2012-05-24 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" />
-<strong>
-3.5.1 用来做什么</strong>
-----------------<br />
-* 我们把的参数验证办法叫ParamValidator<br />
-* 一般来说，像比如说验证http传来的参数是不是为空呀啥的（发挥你的想象力）。<br />
-* 好处在于不用再重复地写if else</p>
-
-<p><strong>3.5.2 怎么用</strong>
-------------<br />
-* 来看一个例子，验证用户的参数不可为空(灰常灰常的实用)：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;NotBlankParamValidator&nbsp;</span><span class="keyword">implements</span><span>&nbsp;ParamValidator&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">boolean</span><span>&nbsp;supports(ParamMetaData&nbsp;metaData)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;metaData.getAnnotation(NotBlank.</span><span class="keyword">class</span><span>)&nbsp;!=&nbsp;</span><span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="annotation">@Override</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;Object&nbsp;validate(ParamMetaData&nbsp;metaData,&nbsp;Invocation&nbsp;inv,&nbsp;Object&nbsp;target,&nbsp;Errors&nbsp;errors)&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;paramName&nbsp;=&nbsp;metaData.getParamName();&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String&nbsp;value&nbsp;=&nbsp;inv.getParameter(paramName);&nbsp;&nbsp;</span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">if</span><span>&nbsp;(StringUtils.isBlank(value))&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@参数不能为空"</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="keyword">null</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p><strong>解读：</strong></p>
-
-<p>* 放到controllers下<br />
-* 实现ParamValidator<br />
-* 实现supports方法，这个方法用来做判断是否要验证当前得到的http参数，一般都用个注解来判断比较文艺<br />
-* 实现validate方法，这里是主要逻辑<br />
- * metaData里放的是参数的原型<br />
- * inv是rose的基础调用<br />
- * target是这个参数的最后解析结果，参看上一节里提到的东西<br />
- * errors是这个参数解析时出来的错误<br />
-* NotBlank是一个自己定义的annotation</p>
-
-<p><strong>3.5.3 使用时action长什么样？</strong>
-----------------------<br />
-* 下面的代码是action中使用时长的样子:</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@Get</span><span>(</span><span class="string">"/notBlank"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;String&nbsp;notBlank(</span><span class="annotation">@NotBlank</span><span>&nbsp;</span><span class="annotation">@Param</span><span>(</span><span class="string">"messages"</span><span>)&nbsp;String&nbsp;messages)&nbsp;</span><span class="keyword">throws</span><span>&nbsp;Exception&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;</span><span class="string">"@hello&nbsp;world"</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>}&nbsp;&nbsp;</span></li></ol></div></p>
-
-<p><strong>解读：</strong>
-* 当遇到NotBlank注解的参数时，会自动执行参数判断<br />
-* 如果messages为空，则会得到“参数不能为空”的返回</p>
-
-<p>文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
-文档持续修改版本在 <a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_5">https://github.com/XiaoMi/rose/tree/master/chapter_3_5</a>。</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -893,6 +865,10 @@ rose手册第三章五节：controller层：统一的参数验证办法 </ul><a 
   
     
       <a href="/posts/55">55</a>
+    
+  
+    
+      <a href="/posts/56">56</a>
     
   
 

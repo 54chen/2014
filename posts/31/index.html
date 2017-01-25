@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-06-27 2010-06-27 00:00:00 +0800 54chen Twitter memo 2010-06-20 http://goo.gl/fb/Z8mwX # 通管局最新要求，所有网站现在实行实名制。要求：1， &hellip;">
+  <meta name="description" content="近期分布式相关文章汇总 2010-07-01 00:00:00 +0800 号外：http://url.cn/0ThU83 infoQ的线下技术活动Qclub本周六在知春路京仪大酒店举行，我给沙龙参会者分享来自人人网nuclear的开发经验以及如何运用在RIA上. 1. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/07/01/summary-of-recent-articles-distributed/">近期分布式相关文章汇总</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-07-01T00:00:00+08:00" pubdate data-updated="true">2010-07-01 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><blockquote>号外：<a href="http://url.cn/0ThU83">http://url.cn/0ThU83</a> infoQ的线下技术活动Qclub本周六在知春路京仪大酒店举行，我给沙龙参会者分享来自人人网nuclear的开发经验以及如何运用在RIA上.</blockquote></p>
+
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T13RhEXodpXXbEtyLa_121502.jpg" alt="五四陈科学院总结" /></p>
+
+<p>1.<a href="http://www.54chen.com/_linux_/54chen-s-nosql.html">54chen解读NoSQL代表Dynamo</a>
+这篇文章颇费了心思从构思到成文，把dynamo原理描述得还算是清楚。</p>
+
+<p>2.<a href="http://www.54chen.com/architecture/april-24-live-stream-qcon-posts.html">4月24日QCon现场直播流水帖</a>
+这篇是在QCon大会上现场记录的一些不算是太完整的笔记</p>
+
+<p>4.<a href="http://www.54chen.com/java-ee/java-thread-controller-code-sharing-according-to-cpu-circumstances-decide-the-number-and-circumstances-of-the-threads-running.html">java线程控制器代码分享-根据cpu情况决定线程运行数量和情况</a>
+一个根据cpu来执行的线程控制器实现，评论中有高人改进方案。</p>
+
+<p>5.<a href="http://www.54chen.com/java-ee/jdbc-socketread0-locked-in-mind-a-mysql-unknown-bug.html">jdbc socketRead0 locked 记一个Mysql的不明bug</a>
+在开发nuclear过程中遇到的一个jdbc的bug</p>
+
+<p>6.<a href="http://www.54chen.com/document/dynamo-based-systems.html">LinkIn基于Dynamo设计的系统：伏地魔(voldemort)设计中文文档[我是陈科学院译]-完稿</a>
+54chen翻译的一个来自国外SNS网站的分布式存储系统文档</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -757,81 +811,6 @@ Synergy 1.3 Client<br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/06/04/ubuntu-1004-lts-version-of-the-empathy-msn-group-chat-under-the-nickname-display-method/">Ubuntu 10.04 LTS版本下的Empathy MSN群聊显示昵称方法</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-06-04T00:00:00+08:00" pubdate data-updated="true">2010-06-04 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img06.taobaocdn.com/bao/uploaded/i6/T1BulCXhXkXXXYjVM9_072304.jpg" alt="54chen ubuntu empathy msn" />
-<h2><strong>1.关系普及</strong></h2>
-Empathy是个托，python-papyon是个python实现的msn库，telepathy-butterfly是个完成msn功能的python客户端。</p>
-
-<p><h2><strong>2.修改办法</strong></h2>
-sudo vim /usr/share/pyshared/papyon/conversation.py<br />
-查找 if message_type == 这个字符串<br />
-找到内容为：
-<blockquote>if message_type == 'text/plain':<br />
-            msg = ConversationMessage(unicode(message.body, message_encoding),<br />
-                    TextFormat.parse(message_formatting),<br />
-                    self.__last_received_msn_objects)<br />
-            try:<br />
-                display_name = message.get_header('P4-Context')</blockquote></p>
-
-<p>将if判断后try之前中间定义msg这一堆内容修改为如下：</p>
-
-<p><blockquote> try:<br />
-                msg = ConversationMessage(unicode("["+message.get_header('P4-Context')+"]"+message.body, message_encoding),<br />
-                    TextFormat.parse(message_formatting),<br />
-                    self.__last_received_msn_objects)<br />
-            except KeyError:<br />
-                  msg = ConversationMessage(unicode(message.body, message_encoding),<br />
-                    TextFormat.parse(message_formatting),<br />
-                    self.__last_received_msn_objects)</blockquote></p>
-
-<p>保存后重新启动empathy，msn群里就能显示昵称鸟。</p>
-
-<p><img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1_udCXfXjXXbldwg4_053033.jpg" alt="empathy" /></p>
-
-<p><a href="http://www.54chen.com/conversation.py.gz"><font color="red">点击此处下载我的conversation.py文件</font></a></p>
-
-<p>下载下来后执行：</p>
-
-<p><blockquote>chen@54chen:~$ gunzip conversation.py.gz <br />
-chen@54chen:~$ sudo cp conversation.py /usr/share/pyshared/papyon/</blockquote></p>
-
-<p><strong>我的版本是：Empathy 2.30.1</strong>
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -1058,6 +1037,10 @@ chen@54chen:~$ sudo cp conversation.py /usr/share/pyshared/papyon/</blockquote><
   
     
       <a href="/posts/55">55</a>
+    
+  
+    
+      <a href="/posts/56">56</a>
     
   
 

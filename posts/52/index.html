@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Pgpool安装 2008-11-21 00:00:00 +0800 下载地址：http://pgfoundry.org/projects/pgpool/
-文件为：pgpool-II-2.0.1.tar，tar xvfj pgpool-II-2.0.1.tar
-在pgpool-II-2.0. &hellip;">
+  <meta name="description" content="Pgsql如何控制来自其他电脑的连接？ 2008-11-21 00:00:00 +0800 缺省情况下，PostgreSQL只允许来自本机且通过 unix 域套接字或TCP/IP方式的连接。你只有在修改了配置文件postgresql.conf中的listen_addresses，且也在配置文件$ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +74,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/21/pgsql%E5%A6%82%E4%BD%95%E6%8E%A7%E5%88%B6%E6%9D%A5%E8%87%AA%E5%85%B6%E4%BB%96%E7%94%B5%E8%84%91%E7%9A%84%E8%BF%9E%E6%8E%A5%EF%BC%9F/">Pgsql如何控制来自其他电脑的连接？</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true">2008-11-21 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul>
+	<li>缺省情况下，<a href="http://www.54chen.com/c/101">PostgreSQL</a>只允许来自本机且通过 unix  域套接字或TCP/IP方式的连接。你只有在修改了配置文件postgresql.conf中的listen_addresses，且也在配置文件$PGDATA/pg_hba.conf中打开了  基于远程电脑（ host-based ）的身份认证，并重新启动<a href="http://www.54chen.com/c/101">PostgreSQL</a>，否则其他电脑是不能与你的<a href="http://www.54chen.com/c/101">PostgreSQL</a>服务器进行<a href="http://www.54chen.com/c/89">连接</a>的。</li>
+	<li>将postgresql.conf中的listen_addresses设为：listen_addresses = '*'</li>
+	<li>在pg_hba.conf中加入访问<a href="http://www.54chen.com/c/89">数据库</a>的服务器的IP。如，IP=10.62.130.136，在pg_hba.conf的最后加入 host all  all 10.62.130.136/32 trust</li>
+</ul>
+<!-- end content --></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -576,43 +616,6 @@ L 连接<br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/07/%E4%B8%80%E5%8F%A5%E8%AF%9D%E8%AE%B0%E5%BD%95%E5%A4%87%E5%BF%98/">一句话记录备忘</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2008-11-07T00:00:00+08:00" pubdate data-updated="true">2008-11-07 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>apache或者yapache的虚拟主机设置时，出现许多个VirtualHost在一台机器时，只显示第一个VirtualHost的目录，这时需要在conf中增加一行NameVirtualHost *</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -839,6 +842,10 @@ L 连接<br />
   
     
       <a href="/posts/55">55</a>
+    
+  
+    
+      <a href="/posts/56">56</a>
     
   
 

@@ -9,9 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="有关socket Read 2014-11-18 20:37:49 +0800 实际开发中，网络程序最可能遇到的就是数据没收到、收到错误数据这样诡异的问题.
-很多时候，都是由于对socket read的细节理解的不一致，导致了程序前后的矛盾。
-下面详细阐述整个read的过程。 Read on & &hellip;">
+  <meta name="description" content="如何做一个快速运转的大规模网络开发公司 2014-12-11 11:12:21 +0800 受《精益创业》 http://www.duokan.com/book/35802 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。 不仅仅是一些令人苦恼的“人的问题”，还有一些， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +74,79 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/12/11/how-to-big-network/">如何做一个快速运转的大规模网络开发公司</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-12-11T11:12:21+08:00" pubdate data-updated="true">2014-12-11 11:12:21 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20141211/thinking.jpg></p>
+
+<p>受《精益创业》 <a href="http://www.duokan.com/book/35802">http://www.duokan.com/book/35802</a> 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。</p>
+
+<p>不仅仅是一些令人苦恼的“人的问题”，还有一些，是无从下手、或者不知道未来是怎样的疑惑。</p>
+
+<p>以下，列出一些“看得见的未来”，因为是一些系统已经在线上服务过亿的用户，如果你在思考相同的问题，也许会有一些用处。</p>
+
+<h1>一.流程与制度</h1>
+
+<h2>1.代码质量</h2>
+
+<ul>
+<li>没有经过适量单元测试的代码，不能发起code review。</li>
+<li>codereview:每行code都经过超过两双眼睛阅读。</li>
+<li>没有经过code review的代码不能进入代码库。</li>
+<li>没有经过完整bvt测试的代码，不能merge到线上分支。</li>
+<li>没有完成上述流程的代码，不应该被用户访问到。</li>
+</ul>
+
+
+<h2>2.故障报告</h2>
+
+<ul>
+<li>实际上最有效的制度是postmortem制度，但往往在国内被称为“故障报告”。</li>
+<li>如果在你的公司里，《故障报告》与工资是挂钩的，恭喜你，制度用错了。</li>
+<li>故障报告的本意，是让发生的故障告诉所有的人，让所有的工程师都学到，这次故障的起因是什么、如何避免。</li>
+<li>故障报告绝对不是用来惩罚和警告你犯错了。</li>
+<li>不情愿的故障报告，宣告了这个制度在你司实施的失败。</li>
+<li>经常性的重复的故障报告，一定是制度没有彻底实施或者招聘人员眼神错了（眼神错的几率小之又小）。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/12/11/how-to-big-network/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -581,58 +652,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/05/25/security/">安全无小事－－技术团队防守一二三</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-05-25T13:56:31+08:00" pubdate data-updated="true">2014-05-25 13:56:31 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>事情的经过是这样的：</p>
-
-<p>那天在使用某创业团队的APP时，输入完了微博账号还需要他自己的账号，于是就发了条微博，</p>
-
-<p><img width="450" src=http://chen54.b0.upaiyun.com/20140525/1.png></p>
-
-<p>然后就有人@我是不是在说小米被脱库的事。。。呵呵！</p>
-
-<p>这里要讨论的是，如何让数千计的开发人员在安全防守安全编程上，得到有效的效果。有人说，我干了xx年，手上从来没有一个项目出过安全漏洞; 还有人说，我一个人做的x项目，也从来没有出现过安全漏洞; 呵呵，集体的智慧不由个人意志来控制，木桶漏水取决于最短的一块。</p>
-
-<h1>一、内防</h1>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/05/25/security/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -859,6 +878,10 @@
   
     
       <a href="/posts/55">55</a>
+    
+  
+    
+      <a href="/posts/56">56</a>
     
   
 

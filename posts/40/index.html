@@ -9,7 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-11-14】 2009-11-14 00:00:00 +0800 流感开始了，大批的兄弟倒下 # 我从知道有爱情这么回事以来，樱木没和晴子好，宜静没有嫁大雄，新一也没有娶小兰，就连Li lei和Han meimei到现在也没结果... &hellip;">
+  <meta name="description" content="X200 ntfs硬盘安装ubuntu9.10正式版手记 2009-11-17 00:00:00 +0800 09年10月31日，9.10发布了正式版本，科学院曾经出过两篇硬盘安装的手记，一个是8的一个是9.10测试版本的。地址是：
+[十一归来]ubuntu 9.10 硬盘安装手记
+ubuntu &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +76,80 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/17/x200-ntfs-hard-disk-to-install-the-official-version-of-notes-from-ubuntu910/">X200 ntfs硬盘安装ubuntu9.10正式版手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-11-17T00:00:00+08:00" pubdate data-updated="true">2009-11-17 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>09年10月31日，9.10发布了正式版本，科学院曾经出过两篇硬盘安装的手记，一个是8的一个是9.10测试版本的。地址是：
+<a rel="bookmark" href="http://www.54chen.com/796-11-return-ubuntu-910-notes-from-the-hard-disk-installation/">[十一归来]ubuntu 9.10 硬盘安装手记</a>
+<a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/">ubuntu 8.10 desktop版本 硬盘安装手记</a></p>
+
+<p>先说平时我们用wingrub安装的时候，是不支持ntfs的，只能用grub for dos的grldr文件(grub4dos的这个文件支持ntfs)。</p>
+
+<p>下载iso文件：ubuntu-9.10-desktop-i386.iso</p>
+
+<p>同上一文，我列出使用的boot.ini和menu.lst:</p>
+
+<p>boot.ini
+<blockquote>[boot loader]<br />
+timeout=30<br />
+default=multi(0)disk(0)rdisk(0)partition(1)\WINDOWS<br />
+[operating systems]<br />
+multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professional" /noexecute=optin /fastdetect<br />
+C:\GRLDR="wingrub"</blockquote>
+menu.lst
+<blockquote>timeout 10</blockquote></p>
+
+<p>title Windows at (hd0,0)<br />
+root (hd0,0)<br />
+chainloader +1</p>
+
+<p>title install Ubuntu9.10<br />
+root (hd0,0)<br />
+kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu-9.10-desktop-i386.iso ro quiet splash –<br />
+label check live-install<br />
+initrd (hd0,0)/initrd.lz
+然后，iso文件放在D盘，用RAR打开iso文件，解压出来initrd.lz和vmlinuz两个文件。</p>
+
+<p>重启电脑，进入desktop，双击安装。</p>
+
+<p>最后的时候运行一下umount -l /isodevice</p>
+
+<p>安装结束后，重启进系统，中文不全，选择一下最快的源，联网下语言包。</p>
+
+<p>thinpad x200 所有硬件全部正常可使用。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1153,50 +1229,6 @@ sudo /home/zzz/nginx/sbin/nginx</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/10/24/54chen-twitter-2009-10-24/">一周废话汇总【54chen Twitter 2009-10-24】</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-10-24T00:00:00+08:00" pubdate data-updated="true">2009-10-24 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-	<li>我帅的时候不做家务，做家务的时候不挣钱，挣钱的时候太花心，花心的时候没有安全感，有安全感的时候不浪漫，浪漫的时候不顾家，顾家的时候没出息，有出息的时候不体贴，体贴的时候又不帅 <a href="http://twitter.com/54chen/statuses/5036220979">#</a></li>
-	<li>有时候收一束花是很幸福，收不到花是幸福，如果天天收，就成了假幸福了。 <a href="http://twitter.com/54chen/statuses/5038354424">#</a></li>
-	<li>问：那些阳光的、意气风发的男生都在哪里啊？答：他们都长大了，成了颓废男人了... <a href="http://twitter.com/54chen/statuses/5060606070">#</a></li>
-	<li>北京求租北三环到东三环，两居或者两居中的一居。多谢帮转 <a href="http://twitter.com/54chen/statuses/5087066748">#</a></li>
-	<li>很久很久以前，谎言和真实在河边洗澡，谎言先洗好，穿了真实的衣服离开，真实却不肯穿谎言的衣服。后来，在人们的眼里，只有穿着真实衣服的谎言，却很难接受赤裸裸的真实。 <a href="http://twitter.com/54chen/statuses/5088652471">#</a></li>
-</ul>
-</p>
-</div>
-  
-  
-
-
-    </article>
-  
 
 
 <div class="pagination">
@@ -1423,6 +1455,10 @@ sudo /home/zzz/nginx/sbin/nginx</p>
   
     
       <a href="/posts/55">55</a>
+    
+  
+    
+      <a href="/posts/56">56</a>
     
   
 
