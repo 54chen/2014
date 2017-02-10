@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="“先进的互联互通技术”--使用ice联通php和java [Part 1 Server] 2009-09-25 00:00:00 +0800 PHP没有中间件，导致了对很多麻烦。比如，对数据库的操作必须要链接数据库，然后做SQL操作。WEB程序直接操作数据库的方法， &hellip;">
+  <meta name="description" content="一周废话汇总【54chen Twitter 2009-09-26】 2009-09-26 00:00:00 +0800 又是周一，什么时候公司的bug才能没有，项目才能有板有眼，大家才能不再盲目乱加班了，公司就成熟了 # 周一一定要看美女：http://www.54chen.com/3 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/26/%E4%B8%80%E5%91%A8%E5%BA%9F%E8%AF%9D%E6%B1%87%E6%80%BB%E3%80%9054chen-twitter-2009-09-26%E3%80%91/">一周废话汇总【54chen Twitter 2009-09-26】</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-09-26T00:00:00+08:00" pubdate data-updated="true">2009-09-26 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+	<li>又是周一，什么时候公司的bug才能没有，项目才能有板有眼，大家才能不再盲目乱加班了，公司就成熟了 <a href="http://twitter.com/54chen/statuses/4137756494">#</a></li>
+	<li>周一一定要看美女：http://www.54chen.com/3  看完了神清气爽精神好  处理公务效率高 建议企业内部每周组织观看 <a href="http://twitter.com/54chen/statuses/4138660837">#</a></li>
+	<li>人人网（这里一定要加括号（校内网））22日0时开始维护，周知。 <a href="http://twitter.com/54chen/statuses/4142977930">#</a></li>
+	<li>同志们熬了一通宵是辛苦，不过就现在这情形，估计都是白熬了 <a href="http://twitter.com/54chen/statuses/4168714188">#</a></li>
+	<li>路遇一超短裙mm弯腰，引一群男士回头，社会主义真美好！ <a href="http://twitter.com/54chen/statuses/4304740941">#</a></li>
+	<li>听说大家的翻墙都不行了，我这个还行吧 哦哈哈哈 <a href="http://twitter.com/54chen/statuses/4358162361">#</a></li>
+	<li>@<a href="http://twitter.com/long132">long132</a> @<a href="http://twitter.com/WonLen">WonLen</a> 兄弟些这么饥渴呀 还不都在外面嘛 <a href="http://twitter.com/54chen/statuses/4358601644">#</a></li>
+</ul>
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -958,146 +1004,6 @@ t.start();<br />
 3.  协助项目负责人和主策划，按时按质完成项目进度</p>
 
 <p>工作地点：北京 请符合要求者与czhttp@gmail.com联系</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/08/25/java-using-the-bdb-notes-from-berkeley-db-java-api-records/">java使用bdb手记（Berkeley DB Java Api记录）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-08-25T00:00:00+08:00" pubdate data-updated="true">2009-08-25 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>在线Berkeley DB Java Edition API：</p>
-
-<p><a href="http://www.oracle.com/technology/documentation/berkeley-db/je/java/index.html">http://www.oracle.com/technology/documentation/berkeley-db/je/java/index.html</a></p>
-
-<p>Berkeley DB是一个开放源代码的内嵌式数据库管理系统，能够为应用程序提供高性能的数据管理服务。应用它程序员只需要调用一些简单的API就可以完成对数据的访问和管理。与常用的数据库管理系统（如MySQL和Oracle等）有所不同，在Berkeley DB中并没有数据库服务器的概念。应用程序不需要事先同数据库服务建立起网络连接，而是通过内嵌在程序中的Berkeley DB函数库来完成对数据的保存、查询、修改和删除等操作。</p>
-
-<p>用java来操作BDB，需要jar包je-3.3.62.jar
-<blockquote>import java.io.File;</blockquote></p>
-
-<p>import com.sleepycat.je.Database;<br />
-import com.sleepycat.je.DatabaseConfig;<br />
-import com.sleepycat.je.DatabaseEntry;<br />
-import com.sleepycat.je.DatabaseException;<br />
-import com.sleepycat.je.Environment;<br />
-import com.sleepycat.je.EnvironmentConfig;<br />
-import com.sleepycat.je.LockMode;<br />
-import com.sleepycat.je.OperationStatus;</p>
-
-<p>public class MyBerkeleyDB {</p>
-
-<p>private Environment env;<br />
-private Database db;</p>
-
-<p>public MyBerkeleyDB() {</p>
-
-<p>}</p>
-
-<p>public void setUp(String path, long cacheSize) {<br />
-EnvironmentConfig envConfig = new EnvironmentConfig();<br />
-envConfig.setAllowCreate(true);<br />
-envConfig.setCacheSize(cacheSize);<br />
-try {<br />
-env = new Environment(new File(path),envConfig);<br />
-} catch (DatabaseException e) {<br />
-e.printStackTrace();<br />
-}
-}</p>
-
-<p>public void open(String dbName) {<br />
-DatabaseConfig dbConfig = new DatabaseConfig();<br />
-dbConfig.setAllowCreate(true);<br />
-try {<br />
-db = env.openDatabase(null, dbName, dbConfig);<br />
-} catch (DatabaseException e) {<br />
-e.printStackTrace();<br />
-}
-}</p>
-
-<p>public void close() {<br />
-try {<br />
-if(db != null) {<br />
-db.close();<br />
-}
-if(env != null) {<br />
-env.close();<br />
-}
-} catch (DatabaseException e) {<br />
-e.printStackTrace();<br />
-}
-}</p>
-
-<p>public String get(String key) throws Exception {<br />
-DatabaseEntry queryKey = new DatabaseEntry();<br />
-DatabaseEntry value = new DatabaseEntry();<br />
-queryKey.setData(key.getBytes("UTF-8"));</p>
-
-<p>OperationStatus status = db.get(null, queryKey, value,<br />
-LockMode.DEFAULT);<br />
-if (status == OperationStatus.SUCCESS) {<br />
-return new String(value.getData());<br />
-}
-return null;<br />
-}</p>
-
-<p>public boolean put(String key, String value) throws Exception {<br />
-byte[] theKey = key.getBytes("UTF-8");<br />
-byte[] theValue = value.getBytes("UTF-8");<br />
-OperationStatus status = db.put(null, new DatabaseEntry(theKey),<br />
-new DatabaseEntry(theValue));<br />
-if(status == OperationStatus.SUCCESS) {<br />
-return true;<br />
-}
-return false;<br />
-}</p>
-
-<p>public static void main(String[] args) {<br />
-MyBerkeleyDB mbdb = new MyBerkeleyDB();<br />
-mbdb.setUp("C:\\bdb", 1000000);<br />
-mbdb.open("myDB");<br />
-System.out.println("开始向Berkeley DB中存入数据...");<br />
-for(int i=0; i&lt;20; i++) {<br />
-try {<br />
-String key = "myKey"+i;<br />
-String value = "myValue"+i;<br />
-System.out.println("[" + key + ":" + value + "]");<br />
-mbdb.put(key , value);<br />
-} catch (Exception e) {<br />
-e.printStackTrace();<br />
-}
-}<br />
-mbdb.close();</p>
-
-<p>}
-取出和删除 不言自明</p>
 </div>
   
   

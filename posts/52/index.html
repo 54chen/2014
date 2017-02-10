@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Pgsql如何控制来自其他电脑的连接？ 2008-11-21 00:00:00 +0800 缺省情况下，PostgreSQL只允许来自本机且通过 unix 域套接字或TCP/IP方式的连接。你只有在修改了配置文件postgresql.conf中的listen_addresses，且也在配置文件$ &hellip;">
+  <meta name="description" content="Plproxy部署手册 2008-11-21 00:00:00 +0800 安装过程如下： 1 安装plproxy：下载plproxy.安装完成plproxy后,运行{$PATH_TO_PG}/share/contrib/plproxy.sql 2 建立数据库_proxy； 3 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,203 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/21/plproxy%E9%83%A8%E7%BD%B2%E6%89%8B%E5%86%8C/">Plproxy部署手册</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true">2008-11-21 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><dt>安装过程如下： </dt><dt>1 安装<a href="http://www.54chen.com/c/109">plproxy</a>：下载<a class="external text" title="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" rel="nofollow" href="http://pgfoundry.org/frs/download.php/1919/plproxy-2.0.7.tar.gz" target="_blank">plproxy</a>.安装完成plproxy后,运行{$PATH_TO_PG}/share/contrib/plproxy.sql </dt><dt>2 建立数据库_proxy； </dt><dt>3 建立plpgsql语言； </dt><dt>4 在_proxy中建立模式plproxy;分配权限 grant all on schema plproxy to &lt;用户&gt;。 </dt><dt>5 建立pgcluster； </dt><dt>
+</dt><dt>
+<pre> --以上步骤sql语句：
+ CREATE FUNCTION plpgsql_call_handler () RETURNS language_handler AS
+     '/usr/local/pgsql/lib/plpgsql.so'  LANGUAGE C;</pre></dt></p>
+
+<p> CREATE FUNCTION plpgsql_validator(oid) RETURNS void AS<br />
+     '/usr/local/pgsql/lib/plpgsql.so'  LANGUAGE C;</p>
+
+<p> CREATE TRUSTED PROCEDURAL LANGUAGE 'plpgsql'<br />
+     HANDLER plpgsql_call_handler<br />
+     VALIDATOR plpgsql_validator;</p>
+
+<p> --------------------------------------------------------------------</p>
+
+<p> drop schema if exists plproxy cascade;</p>
+
+<p> create schema plproxy;</p>
+
+<p> grant all on schema plproxy to yahoo;</p>
+
+<p> --------------------------------------------------------------------<br />
+ create or replace function plproxy.get_cluster_version(cluster_name text)</p>
+
+<p> returns integer as $$</p>
+
+<p> begin<br />
+     if cluster_name = '&lt;cluster名字&gt;' then</p>
+
+<p> 	return 8;</p>
+
+<p>     end if;</p>
+
+<p>     raise exception 'no such cluster: %', cluster_name;</p>
+
+<p> end; $$ language plpgsql;</p>
+
+<p> --------------------------------------------------------------------  <br />
+ create or replace function plproxy.get_cluster_partitions(cluster_name text)</p>
+
+<p> returns setof text as $$</p>
+
+<p> begin</p>
+
+<p>    if cluster_name = '&lt;cluster名字&gt;' then</p>
+
+<p> 	--return next 'host=202.165.97.144 port=6000 user=chry password=chry dbname=chry_134';</p>
+
+<p> 	return next 'host=pg1.sns.cn3.yahoo.com user=yahoo dbname=sns_search';<br />
+ 	return next 'host=pg2.sns.cn3.yahoo.com user=yahoo dbname=sns_search';</p>
+
+<p> 	return;</p>
+
+<p>     end if;</p>
+
+<p>     raise exception 'no such cluster: %', cluster_name;</p>
+
+<p> end; $$ language plpgsql;</p>
+
+<p> --------------------------------------------------------------------<br />
+ create or replace function plproxy.get_cluster_config(cluster_name text, out key text, out val text)</p>
+
+<p> returns setof record as $$</p>
+
+<p> begin</p>
+
+<p>     key := 'statement_timeout';</p>
+
+<p>     val := 60;</p>
+
+<p>     return next;</p>
+
+<p>     return;</p>
+
+<p> end; $$ language plpgsql;
+<pre><dl>
+<dt>6 建立查询函数 </dt></dl>
+<pre> --在_proxy中建立查询函数:
+ CREATE OR REPLACE FUNCTION public.doquery(query text)
+ RETURNS setof record AS $$
+ CLUSTER '&lt;cluster名字&gt;';
+ RUN ON ALL;
+ $$ LANGUAGE plproxy;</pre></pre></p>
+
+<p> --------------------------------------------------------------------<br />
+ CREATE OR REPLACE FUNCTION public.doquery(urlstr text,query text)<br />
+ RETURNS setof record AS $$<br />
+ CLUSTER '&lt;cluster名字&gt;';<br />
+ RUN ON hashtext(urlstr);<br />
+ $$ LANGUAGE plproxy;</p>
+
+<p> --------------------------------------------------------------------  <br />
+ CREATE OR REPLACE FUNCTION public.dmlExec(query text)<br />
+ RETURNS integer AS $$<br />
+ CLUSTER '&lt;cluster名字&gt;';<br />
+ RUN ON ALL;<br />
+ $$ LANGUAGE plproxy;</p>
+
+<p> --------------------------------------------------------------------<br />
+ CREATE OR REPLACE FUNCTION public.dmlExec(urlstr text,query text)<br />
+ RETURNS integer AS $$<br />
+ CLUSTER '&lt;cluster名字&gt;';<br />
+ RUN ON hashtext(urlstr);<br />
+ $$ LANGUAGE plproxy;
+ 
+<pre> --在所联邦的数据库中建立查询函数:
+ CREATE OR REPLACE FUNCTION public.doquery(query text)
+ RETURNS SETOF RECORD AS $$
+ DECLARE
+ row RECORD;
+ BEGIN
+ for row in execute query loop
+ return next row;
+ end loop;
+ return;
+ END;
+ $$ LANGUAGE plpgsql;</pre></p>
+
+<p> ----------------------------------------------------------------<br />
+ CREATE OR REPLACE FUNCTION public.doquery(urlstr text,query text)<br />
+ RETURNS SETOF RECORD AS $$<br />
+ DECLARE<br />
+ row RECORD;<br />
+ BEGIN<br />
+ for row in execute query loop<br />
+ return next row;<br />
+ end loop;<br />
+ return;<br />
+ END;<br />
+ $$ LANGUAGE plpgsql;</p>
+
+<p> ----------------------------------------------------</p>
+
+<p> CREATE OR REPLACE FUNCTION public.dmlExec(query text)<br />
+ RETURNS integer AS $$<br />
+ DECLARE<br />
+ ret integer;<br />
+ BEGIN<br />
+ execute query;</p>
+
+<p> GET DIAGNOSTICS ret = ROW_COUNT;<br />
+ RETURN ret;</p>
+
+<p> END;<br />
+ $$ LANGUAGE plpgsql;</p>
+
+<p> ---------------------------------------------------------------<br />
+ CREATE OR REPLACE FUNCTION public.dmlExec(urlstr text,query text)<br />
+ RETURNS integer AS $$<br />
+ DECLARE<br />
+ ret integer;<br />
+ BEGIN<br />
+ execute query;</p>
+
+<p> GET DIAGNOSTICS ret = ROW_COUNT;<br />
+ RETURN ret;</p>
+
+<p> END;<br />
+ $$ LANGUAGE plpgsql;
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -564,51 +761,6 @@ L 连接<br />
 <p>tags<span>：表示标签存放的目录。</span></p>
 
 <p><span>在这需要说明下分三个目录的原因，如果项目分为一期、二期、三期等，那么一期上线时的稳定版本就应该在一期完成时将代码</span>copy<span>到</span>branches<span>上，这样二期开发的代码就对一期的代码没有影响，如新增的模块就不会部署到生产环境上。而</span>branches<span>上的稳定的版本就是发布到生产环境上的代码，如果用户使用的过程中发现有</span>bug<span>，则只要在</span>branches<span>上修改该</span>bug<span>，修改完</span>bug<span>后再编译</span>branches<span>上最新的代码发布到生产环境即可。</span>tags<span>的作用是将在</span>branches<span>上修改的</span>bug<span>的代码合并到</span>trank<span>上时创建个版本标识，以后</span>branches<span>上修改的</span>bug<span>代码再合并到</span>trunk<span>上时就从</span>tags<span>的</span>version<span>到</span>branches<span>最新的</span>version<span>合并到</span>trunk<span>，以保证前期修改的</span>bug<span>代码不会在合并。</span></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/11/09/perl-workshop-2008-%E5%BD%92%E6%9D%A5/">Perl Workshop 2008 归来</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2008-11-09T00:00:00+08:00" pubdate data-updated="true">2008-11-09 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>perl workshop 2008 归来</p>
-
-<p>1.四十分钟的演讲中agent的演讲最具有吸引力，老何的演讲最生动。</p>
-
-<p>2.关于0penResty的角色部分没讲完是个遗憾，以后实际运用的时候还得在公司问agent。</p>
-
-<p>3.english的talk也会站着听了一会儿，完全听不懂。</p>
-
-<p>4.照片欠奉</p>
 </div>
   
   

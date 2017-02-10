@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-09-05 2010-09-05 00:00:00 +0800 54chen Twitter memo 2010-08-29 http://goo.gl/fb/UWJQE # 28日夜，哥学社小聚，有百度鸟哥、百度ps哥、金山烂叶、新浪小Z、 &hellip;">
+  <meta name="description" content="用搜索的倒排轻松搞定“好友的文章”类相关推荐功能 2010-09-06 00:00:00 +0800 在SNS网站中，“好友的相册”、“好友的日志”、“好友常去的小组”，这样的功能到处都是，如果处理不当，对整个系统的压力都会非同小可。
+这里介绍一种利用sphinx的搜索天性，倒排索引群中的人， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,88 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/09/06/search-friends-airticle-function/">用搜索的倒排轻松搞定“好友的文章”类相关推荐功能</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-09-06T00:00:00+08:00" pubdate data-updated="true">2010-09-06 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T1MQxKXkpmXXcK5RZ8_071520.jpg" alt="54chen" /></p>
+
+<p>在SNS网站中，“好友的相册”、“好友的日志”、“好友常去的小组”，这样的功能到处都是，如果处理不当，对整个系统的压力都会非同小可。<br />
+这里介绍一种利用sphinx的搜索天性，倒排索引群中的人，然后把好友的XX功能化解为或关系的搜索，下面是是一些记录。关于sphinx的安装，详细见54chen之前的一些手记：<a href="http://www.54chen.com/tag/sphinx">http://www.54chen.com/tag/sphinx</a>
+<strong>第一步，制造随机数据</strong>
+这里为方便理解，作一个假设的场景，要索引的字段缩减到2个字段，字段1是目标id，表示相册id\日志id\小组id等等，字段2是一个text，里面以逗号隔开记录了所有的和这个目标id有关系的人的id号，大致如下所示：</p>
+
+<p>id 	members<br />
+1 	1,2,3,4,5,6</p>
+
+<p>这样一个表，标识了id为1的一个目标，都有什么用户和他有关。比如可以表示：id为1的群都有12345这五个人加过；id为1的相册都有12345这五个人看过；id为1的相册都有12345这五个人回复过，等等。<br />
+下面代码片段所做之事，是将10万条记录插入到表中，表的members的记录在五千条内随机，里的人id从1到50000随机产生，这样，基本能够模拟一个中型应用的水平了。
+<blockquote>
+$db = new DLConnection();<br />
+$sql = "INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES";<br />
+$dot = "";<br />
+for ($i=0;$i<100000;$i++)<br />
+{
+    $dot2 = "";<br />
+    $sql2 = "";<br />
+    for ($j=0;$j<rand(1,5000);$j++){<br />
+        $x = rand(1,50000);<br />
+        $sql2 .= $dot2.$x;<br />
+        $dot2 = ",";<br />
+    }<br />
+    $sql .= $dot."('$i', '$sql2')";<br />
+    $dot = ",";<br />
+    <br />
+    if ($i%1000==0) {<br />
+    	$db->Execute($sql);<br />
+    	$sql = "INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES";<br />
+    	$dot = "";<br />
+    }<br />
+}
+</blockquote></p>
+
+<p><strong>第二步，压力测试搜索性能</strong>
+代码太长不帖了，使用java开启100个线程100个连接到sphinx，sphinx建立索引后，只起一个节点。<br />
+搜索的时候，关键的几点：<br />
+1. int mode = SphinxClient.SPH_MATCH_BOOLEAN; 使用布尔方式查询<br />
+2.随机产生1到1000个用户id，id为1到50000之间的随机一个，多个之间用|（或）连接</p>
+
+<p><strong>结论</strong>
+sphinx的搜索性能还是基本满意，在压力测试的时候看后台的query log可以发现，绝大多数的查询在100ms左右，当然，因为随机的原因，也会出现一些3秒5秒的查询，但这是个案，在普通用户中出现的可能性不大。<br />
+此方案的适用性正在进一步优化中。
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -655,93 +738,6 @@ big_pipe.onPageletArrive({id: “pagelet_composer”, content=&lt;HTML&gt;, css=
 	<li>使用maven的profiles自动设置log4j线上环境和测试环境区别 <a href="http://goo.gl/fb/el7ti" rel="nofollow">http://goo.gl/fb/el7ti</a> <a href="http://twitter.com/54chen/statuses/20302051164">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/08/04/maven-profiles-log4j/">使用maven的profiles自动设置log4j线上环境和测试环境区别</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-08-04T00:00:00+08:00" pubdate data-updated="true">2010-08-04 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img06.taobaocdn.com/imgextra/i6/T12CBHXXpLXXcRqLZ7_064514.jpg" alt="程序猿" /></p>
-
-<p><strong>前言</strong>
-Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具. 　　如果你已经有十次输入同样的Ant  targets来编译你的代码、jar或者war、生成javadocs，你一定会自问，是否有一个重复性更少却能同样完成该工作的方法。Maven便提 供了这样一种选择，将你的注意力从作业层转移到项目管理层。Maven项目已经能够知道如何构建和捆绑代码，运行测试，生成文档并宿主项目网页.<br />
-项目的主页地址为：http://maven.apache.org/</p>
-
-<p><strong>深入</strong>
-Profiles是maven的一个很关键的术语：profile是用来定义一些在build lifecycle中使用的environmental variations，profile可以设置成在不同的环境下激活不同的profile（例如：不同的OS激活不同的profile，不同的JVM激活不同的profile，不同的dabase激活不同的profile等等）。</p>
-
-<p><strong>实例</strong>
-测试机环境，搞一个文件，比如说/data/test。<br />
-线上环境，不搞这个文件。<br />
-然后pom在project下如下写法：
-<blockquote>&lt;profiles&gt;<br />
-&lt;profile&gt;<br />
-&lt;id&gt;produce&lt;/id&gt;<br />
-&lt;activation&gt;<br />
-&lt;activeByDefault&gt;false&lt;/activeByDefault&gt;<br />
-&lt;file&gt;<br />
-&lt;missing&gt;/data/test&lt;/missing&gt;<br />
-&lt;/file&gt;<br />
-&lt;/activation&gt;<br />
-&lt;properties&gt;<br />
-&lt;log4j.log.path&gt;/opt/logs/xxx.log&lt;/log4j.log.path&gt;<br />
-&lt;log4j.debug.level&gt;error&lt;/log4j.debug.level&gt;<br />
-&lt;/properties&gt;<br />
-&lt;/profile&gt;<br />
-&lt;profile&gt;<br />
-&lt;id&gt;dev&lt;/id&gt;<br />
-&lt;activation&gt;<br />
-&lt;activeByDefault&gt;true&lt;/activeByDefault&gt;<br />
-&lt;/activation&gt;<br />
-&lt;properties&gt;<br />
-&lt;log4j.log.path&gt;/opt/logs/xxx.log&lt;/log4j.log.path&gt;<br />
-&lt;log4j.debug.level&gt;debug&lt;/log4j.debug.level&gt;<br />
-&lt;/properties&gt;<br />
-&lt;/profile&gt;<br />
-&lt;/profiles&gt;</blockquote>
-<strong>log4j.xml文件设置</strong>
-为了配合maven的设置属性，需要将log4j中使用的声明用成变量，片段举例：
-<blockquote>﻿&lt;logger name="com.xx.xx.xx.xx" additivity="false"&gt;<br />
-&lt;level value="${log4j.debug.level}"/&gt;<br />
-&lt;appender-ref ref="dao"/&gt;<br />
-&lt;/logger&gt;</blockquote></p>
-
-<p>&lt;root&gt;<br />
-&lt;level value="${log4j.debug.level}"/&gt;<br />
-&lt;appender-ref ref="service"/&gt;<br />
-&lt;/root&gt;
-<strong>解释</strong>
-这样，在运行mvn进行build项目的时候，如果线上环境，测试到/data/test文件是missing的，则会激活对应的设置，以此来达到线上环境改成error级别，而测试环境为debug级别。</p>
 </div>
   
   

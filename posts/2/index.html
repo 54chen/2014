@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="C++ Protobuf中set_allocated引起的double Free Core Dump 2016-03-24 16:09:04 +0800 在c++中使用protobuf的时候，大多数元素，我们可以直接set_xxx，如果有嵌套进去一个对象， &hellip;">
+  <meta name="description" content="54chen的程序人生 2016-03-26 08:03:08 +0800 前些天看到了老板的二十年前的文章《程序人生》，地址在这里 http://t.cn/RqPJYHU ，深有感触，于是也萌发了写一写的想法，看看二十年后，自己的认识是否会有所改变，当然了，即便作为职业码农近十年， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,63 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/03/26/my-code/">54chen的程序人生</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2016-03-26T08:03:08+08:00" pubdate data-updated="true">2016-03-26 08:03:08 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/css/write-code.jpg></p>
+
+<p>前些天看到了老板的二十年前的文章《程序人生》，地址在这里 <a href="http://t.cn/RqPJYHU">http://t.cn/RqPJYHU</a> ，深有感触，于是也萌发了写一写的想法，看看二十年后，自己的认识是否会有所改变，当然了，即便作为职业码农近十年，很多观点依然不能构成一种完整且保证正确的人生观。</p>
+
+<h2>题记</h2>
+
+<p>如果一定要用几个词来形容程序员的人生观，我想那应该是：坚定、乐观、冷静、钻研。</p>
+
+<h2>坚定</h2>
+
+<div class="highlight"><pre><code class="language-java" data-lang="java"><span class="c1">//如果不能坚定地知道自己喜欢计算机这个事情，早就干点别的什么去了，码农这个事情常人看来无味极了。</span></code></pre></div>
+
+
+<p>与上一辈程序员相比，时代留给这一辈的机会不同，裕兴、小霸王、步步高成为我们很早就启蒙计算机知识的最佳方式，从小学或者初中起，脑洞大开。</p>
+
+<p>在接触过的好朋友中，凡是从小接触计算机的，在初中高中已经基本可以独立完成一些诸如pascal\c\basic\asp之类的流行技能。他们大多干过如下的事情：1.做个人网站 2.帮教务处做报课系统 3.维护学校bbs（当然了，雷老板是这事情的鼻祖了） 4.接些外包小系统赚点外快。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/03/26/my-code/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -613,74 +670,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/02/04/enhancements-in-java-io/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/12/30/pptpd-scp-slow/">Vpn搭建及pptpd因mtu上传下载慢一例</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-12-30T14:31:30+08:00" pubdate data-updated="true">2014-12-30 14:31:30 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://img04.taobaocdn.com/imgextra/i4/T1BgpOXhlKXXb04jU7_065317.jpg></p>
-
-<h2>一、环境及安装</h2>
-
-<ul>
-<li>server: centos 6.3 （kvm虚拟机）。</li>
-<li>client: ubuntu 10.04。</li>
-<li><p>server上yum install安装pptpd，常规设置好ip分配、用户名密码，添加iptables set mss的参数。</p>
-
-<blockquote><p>设置/etc/pptpd.conf中的localip与remoteip，分别表示虚拟出来的双方ip范围。
-<br>设置/etc/ppp/chap-secrets中的用户名密码和连接ip等。
-<br>service pptpd start
-<br>iptables -A FORWARD -p tcp &ndash;syn -s 172.16.36.0/24 -j TCPMSS &ndash;set-mss 1356</p></blockquote></li>
-<li><p>client上apt-get install安装的pptpsetup，设置好用户名密码，启动vpn连接。</p>
-
-<blockquote><p>/usr/sbin/pptpsetup &ndash;create vpn &ndash;server <em>.</em>.<em>.</em>(server ip) &ndash;username vpn &ndash;password ASDF &ndash;encrypt &ndash;start</p></blockquote></li>
-<li><p>pptpd v1.4.0</p></li>
-</ul>
-
-
-<h2>二、遇到困难</h2>
-
-<ul>
-<li>scp client_file server 时，速度先很快，级数变慢，最后不动了。</li>
-<li>scp server_file client 时，同上表现。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/12/30/pptpd-scp-slow/">Read on &rarr;</a>
     </footer>
   
 

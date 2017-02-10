@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Thrift最佳实践:版本与兼容 2011-09-28 00:00:00 +0800 十分苦逼的api提供过程。一次提供，终身负责制。 "API design is like sex: Make one mistake and support it for the rest of your &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2011-10-02 2011-10-02 00:00:00 +0800 riak java client针对riak1.0.0的rc1昨天才发出来，想尝鲜还需要时日，官方的宣传以http为主，实际使用时pb才是王道。 #
+北京时间1号凌晨4点，riak &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/10/02/54chen-twitter-memo-2011-10-02/">54chen Twitter Memo 2011-10-02</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-02T00:00:00+08:00" pubdate data-updated="true">2011-10-02 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+riak java client针对riak1.0.0的rc1昨天才发出来，想尝鲜还需要时日，官方的宣传以http为主，实际使用时pb才是王道。 </ul><a href="http://twitter.com/54chen/statuses/119968694590914561" class="aktt_tweet_time">#</a>
+北京时间1号凌晨4点，riak 1.0 正式发布。此版本经2年时间15次RC，话说我也贡献了一个bug。这次改动实际上弱化了bitcask，巧妙利用了leveldb完成了Secondary Indexes。http://t.co/TI4z1Ymh （左右键翻页） <a href="http://twitter.com/54chen/statuses/119966091257724930" class="aktt_tweet_time">#</a>
+@<a href="http://twitter.com/rednaxelafx" class="aktt_username">rednaxelafx</a> @turingbook OceanBase不能算作一类，tair beansdb nuclear或多或少都有dynamo的影子，而oceanbase已经很不一样了。 <a href="http://twitter.com/54chen/statuses/119006561682194433" class="aktt_tweet_time">#</a>
+“API design is like sex: Make one mistake and support it for the rest of your life.” – @<a href="http://twitter.com/joshbloch" class="aktt_username">joshbloch</a> <a href="http://twitter.com/54chen/statuses/118969033658875904" class="aktt_tweet_time">#</a>
+thrift最佳实践:版本与兼容 <a href="http://t.co/419R7gYk" rel="nofollow">http://t.co/419R7gYk</a> <a href="http://twitter.com/54chen/statuses/118953744787451904" class="aktt_tweet_time">#</a>
+riak坏处：不好debug,节点关系变化是危险的,默认使用的bitcask所有的key都维护在内存里,List-keys操作可能会搞死一个集群。 <a href="http://twitter.com/54chen/statuses/118619267276091392" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-09-25 <a href="http://t.co/jIjRPKtr" rel="nofollow">http://t.co/jIjRPKtr</a> <a href="http://twitter.com/54chen/statuses/117776523532046336" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -827,60 +874,6 @@ bin/riak-admin join riak@192.168.103.10</p>
 54chen Twitter memo 2011-08-28 <a href="http://t.co/ODJthD5" rel="nofollow">http://t.co/ODJthD5</a> <a href="http://twitter.com/54chen/statuses/107636762741964801" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/01/taobao-oceanbase-intro/">淘宝分布式数据库系统OceanBase观后闲话小记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-09-01T00:00:00+08:00" pubdate data-updated="true">2011-09-01 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>http://code.taobao.org/trac/OceanBase/wiki/intro<br />
-讲得还比较细。</p>
-
-<p><strong>数据模型：</strong>
-oceanBase采用类似cassandra的tablet/sstable数据模型实现，简单说就是bigtable的数据模型。</p>
-
-<p><strong>系统目标：</strong>
-其目标比较明确，是一个强CA类系统，P（分区能力）。目标是强一致性、高可用性，分区能力稍弱。从文档上看，他们并不担心的快速的数据增长量。</p>
-
-<p><strong>去中心化：</strong>
-见图：
-<img src="http://code.taobao.org/trac/OceanBase/raw-attachment/wiki/intro/test.JPG" alt="taobao oceanbase" />
-RootServer/UpdateServer是一个中心节点，这个有死翘翘的可能性（好吧，他们搞了一主一备）。</p>
-
-<p><strong>支持的操作：</strong>
-基础的merge/join都可以，一般使用上是够用了。DDL DML的定义基本上是还需要发展的。另外如果开源出来了，广泛项目使用意义上，还需要支持UDF user defined function，实际上把mysql文档实现一遍就ok了。</p>
-
-<p><strong>继续观望，欢迎抛砖。向开源的项目致敬。</strong></p>
 </div>
   
   
