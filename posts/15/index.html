@@ -9,9 +9,11 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="服务接入层小结 2012-01-18 00:00:00 +0800 接入层
-是指普通用户与核心业务逻辑中间的过程。现在常见的服务接入层，像nginx、lvs、php这些都可以算是。 观点
-一种观点认为：接入的量不应该影响系统的正常运行，也就是不能接入不能处理的用户请求，类似上图中前图。 &hellip;">
+  <meta name="description" content="Maven库nexus拖不到jar包小记 2012-01-30 00:00:00 +0800 使用maven，nexus是个不错的选择。
+最常见的问题：
+1.SNAPSHOT拿不到最新的包。
+2.明明在maven central库里搜索到的包，却提示Missing。
+3. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +78,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/01/30/maven-nexus-jar-note/">Maven库nexus拖不到jar包小记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-01-30T00:00:00+08:00" pubdate data-updated="true">2012-01-30 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://maven.apache.org/images/maventxt_logo_200.gif" alt="maven,nexus" />
+使用maven，nexus是个不错的选择。
+<strong>最常见的问题：</strong>
+<blockquote>1.SNAPSHOT拿不到最新的包。<br />
+2.明明在maven central库里搜索到的包，却提示Missing。<br />
+3.plugin提示Missing。
+</blockquote></p>
+
+<p><strong>1.SNAPSHOT拿不到最新的包。</strong>
+这个问题往往得nexus+hudson造成的。因为daily build导致与日俱增的jar包堆积在一个文件夹下，文件数目过多，导致在取最新的包时超时了。<br />
+解决办法：<br />
+浏览器打开nexus， login->scheduled tasks->add，添加一个定时清理目录的计划任务即可。最后一个选项“remove if released”需要慎重，平时开发可能不是特别正规的时候可能会snapshot和release都需要。</p>
+
+<p><strong>2.明明在maven central库里搜索到的包，却提示Missing。</strong>
+网上大多数说法都是index失败了，个人经验实际不然(当然不排除你的问题就是index失败)。<br />
+当nexus.log里没有任何异常时，请注意以下内容：<br />
+在central搜索时，如果只有pom没有jar，那说明这个依赖的项目可能有多个依赖，一定要加上<type>pom</type>，默认是jar。</p>
+
+<p><strong>3.plugin提示Missing。</strong>
+通常原因是：nexus设置的搜索顺序有问题。<br />
+login->Public Repositories -> configuration<br />
+左边的是正在使用的定义好的仓库组，右边是可以使用的，正确的顺序应该是先在Release找，然后Snapshots，然后3rd party，最后才去外网下（这时nexus才拖下来新的jar/pom）。
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -648,87 +709,6 @@ riak 1.0.2安装手记 <a href="http://t.co/NicpziqY" rel="nofollow">http://t.co
 54chen Twitter memo 2011-12-18 <a href="http://t.co/MXEOS4pN" rel="nofollow">http://t.co/MXEOS4pN</a> <a href="http://twitter.com/54chen/statuses/148215178234822656" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/12/21/riak-1-0-2-install/">Riak 1.0.2安装手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-12-21T00:00:00+08:00" pubdate data-updated="true">2011-12-21 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" />
-<strong>准备三台机器：</strong>
-r1<br />
-r2<br />
-r3</p>
-
-<p><strong>准备erlang环境：</strong>
-Erlang >= R14B03<br />
-yum install gcc glibc-devel make ncurses-devel openssl-devel<br />
-$ wget http://erlang.org/download/otp_src_R14B03.tar.gz<br />
-$ tar zxvf otp_src_R14B03.tar.gz<br />
-$ cd otp_src_R14B03<br />
-$ ./configure && make && sudo make install</p>
-
-<p><strong>git环境(看上去是非必须的)：</strong>
-yum -y install git</p>
-
-<p><strong>下载地址：</strong>
-http://downloads.basho.com.s3-website-us-east-1.amazonaws.com/riak/CURRENT/riak-1.0.2.tar.gz
-<blockquote>
-cd riak-1.0.2<br />
-make rel</blockquote></p>
-
-<p><strong>修改配置文件后启动</strong>
-riak start<br />
-riak-admin join<br />
-过程完全同0.142
-<a href="http://www.54chen.com/_linux_/riak-source-install-run.html">http://www.54chen.com/_linux_/riak-source-install-run.html</a>
-<strong>与0.1.42相比：</strong>
-erlang环境要求R14B03及以上。低版本会出现this emulator supports only up to 149的make错误。</p>
-
-<p><strong>使用leveldb为存储引擎：</strong>
-默认引擎还是bitcask，需要修改配置文件app.config<br />
-{storage_backend, riak_kv_bitcask_backend}<br />
-改为：<br />
-{storage_backend, riak_kv_eleveldb_backend}</p>
-
-<p><strong>官方说明：</strong>
-bitcask适用于key有限，而需要最大量的吞吐量和数据持久化情况。<br />
-leveldb适用于大量的key。
-<strong>
-官方java client压力测试结果：</strong>
-1cpu 8G的机器3个 笔记本运行压力程序 读写比3:1 6并发 1k大小的value  <br />
-PB：2500ops  99.9%的操作在22ms内。<br />
-HTTP: 1000ops  99.9%的操作在30ms内。</p>
 </div>
   
   

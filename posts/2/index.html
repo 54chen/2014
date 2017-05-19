@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen的程序人生 2016-03-26 08:03:08 +0800 前些天看到了老板的二十年前的文章《程序人生》，地址在这里 http://t.cn/RqPJYHU ，深有感触，于是也萌发了写一写的想法，看看二十年后，自己的认识是否会有所改变，当然了，即便作为职业码农近十年， &hellip;">
+  <meta name="description" content="过去六年在小米搞(wa)错(keng)的几个技术细节 2016-04-26 20:34:54 +0800 2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。 今天再来看，其实有很多细节， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/04/26/mistake-in-six-years/">过去六年在小米搞(wa)错(keng)的几个技术细节</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2016-04-26T20:34:54+08:00" pubdate data-updated="true">2016-04-26 20:34:54 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。</p>
+
+<p>今天再来看，其实有很多细节，当时真的没考虑（现在也是坑）。</p>
+
+<p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/04/26/mistake-in-six-years/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -617,59 +663,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/03/04/update-gcc-version-in-mac/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/02/04/enhancements-in-java-io/">Java IO在各版本中的提高</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2015-02-04T15:22:29+08:00" pubdate data-updated="true">2015-02-04 15:22:29 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
-
-<h1>JDK8中的提高</h1>
-
-<p>在标准的（java.nio.charset.Charset）和扩展的charset实现方面，有许多改进。包括：</p>
-
-<ul>
-<li>SelectorProvider在Solaris上有新实现（基于Solaris事件端口机制）。这种SelectorProvider有可能在一些工作负荷下有可能会提升性能和扩展性。/dev/poll这种SelectorProvider依旧是默认的。要使用Solaris事件端口机制，启动的时候要设置系统属性java.nio.channels.spi.Selector为sun.nio.ch.EventPortSelectorProvider。</li>
-<li>将<JDK_HOME>/jre/lib/charsets.jar文件大小减小。</li>
-<li>java.lang.String(byte[], *)构造函数和java.lang.String.getBytes()方法的性能改善。</li>
-</ul>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/02/04/enhancements-in-java-io/">Read on &rarr;</a>
     </footer>
   
 

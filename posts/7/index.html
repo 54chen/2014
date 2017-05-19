@@ -9,9 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="创业启示录 2013-06-27 00:00:00 +0800 创业公司之痛
-某某公司上市，A君扯旗创业，由A君朋友OR亲戚投资人投资，拉走某某公司原团队人马十几号人。
-第一个月，山盟海誓。有某资源，可做某大事。大家走起。git、svn、php、java、rabbitmq、tomcat、 &hellip;">
+  <meta name="description" content="Arduino学习手记一：基础知识 2013-07-02 00:00:00 +0800 历史
+arduino是一个商标。
+2005年诞生于意大利一个设计学校。然后学生和老师们一起把它开源了。
+教科书上一般说，arduino是一个开源电子原型制作平台，包括一个简单易用的电路板和一个软件开发环境。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -76,6 +77,110 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/02/arduino-starter-1/">Arduino学习手记一：基础知识</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-07-02T00:00:00+08:00" pubdate data-updated="true">2013-07-02 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><strong>历史</strong>
+arduino是一个商标。<br />
+2005年诞生于意大利一个设计学校。然后学生和老师们一起把它开源了。<br />
+教科书上一般说，arduino是一个开源电子原型制作平台，包括一个简单易用的电路板和一个软件开发环境。<br />
+它与android除了长得像之外，没有半毛钱关系。</p>
+
+<p><strong>开发环境</strong>
+http://arduino.cc<br />
+这个算是官方网站吧，可以下载到开发环境。<br />
+http://arduino.cc/en/Main/Software<br />
+有各种环境下的，我下了一个mac下的。</p>
+
+<p>版本号有1.0.×与1.5.×的，看上去1.0的就够用了，1.5系列的还是beta，怕遇到麻烦。看release note，1.5的似乎在有意兼容更多的东西。</p>
+
+<p>下载就可以用了，一个小小的窗口。
+<img src="http://img.taobaocdn.com/bao/uploaded/i1/18490026877451529/T197hwFlFgXXXXXXXX_!!2-item_pic.png" alt="arduino" width="350/" /></p>
+
+<p><strong>认电路板</strong>
+某宝上有各种品牌的版子，不过大家的基准是一样的：</p>
+
+<p>14个数字引脚，这些数字引脚可以在程序中设置是输入还是输出。<br />
+GND 地线。<br />
+AREF 输入参考电压。<br />
+6个模拟输入引脚，这些引脚可以用来读取各种模拟信号的值，比如说读某感应器的值，在程序中转化为0到1023的值。<br />
+6个模拟输出引脚。</p>
+
+<p>电路板可以接usb，也可以接外接的电源。</p>
+
+<p>长得像这样，每个引脚下板上写了字，多余的引脚暂时还不知道做什么用的。
+<img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e68gtth2bcj20p118g7ab.jpg" alt="arduino" /></p>
+
+<p><strong>arduino IDE</strong>
+arduino的编程语言是一种叫做processing的语言改编而来的。他的作为是当你上传到arduino的时候，自动变成c语言。</p>
+
+<p><strong>代码</strong></p>
+
+<p><blockquote>#define LED 13</blockquote></p>
+
+<p>void setup()<br />
+{
+  pinMode(LED,OUTPUT);<br />
+}</p>
+
+<p>void loop()<br />
+{
+  digitalWrite(LED,HIGH);<br />
+  delay(50);<br />
+  digitalWrite(LED,LOW);<br />
+  delay(50);<br />
+  digitalWrite(LED,HIGH);<br />
+  delay(50);<br />
+  digitalWrite(LED,LOW);<br />
+  delay(50);<br />
+  digitalWrite(LED,HIGH);<br />
+  delay(50);<br />
+  digitalWrite(LED,LOW);<br />
+  delay(2000);<br />
+}</p>
+
+<p>一个setup 和一个 loop，是每个ardunio程序的标准格式。setup会执行一次，loop会一直不断地执行。<br />
+pinMode函数，是用来指定引脚的作用，输出还是输入。<br />
+digitalWrite函数，用来向指定的引脚输入数据（高还是低电压）。<br />
+LED灯接到GND和13引脚（LED短脚接地）。<br />
+点击arduino IDE上的upload，会看到led灯一闪一闪的。</p>
+
+<p><strong>公式</strong></p>
+
+<p>电阻＝电压/电流</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -722,61 +827,6 @@ sudo -u gitlab -H bundle exec rake gitlab:enable_namespaces RAILS_ENV=production
 <p><blockquote>铁一般的事实说明：一定要先在3.1下把groups设置去掉之后再来打开namespace支持。</blockquote></p>
 
 <p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/12/14/continuous-deployment/">五步构建持续性部署(CD)</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2012-12-14T00:00:00+08:00" pubdate data-updated="true">2012-12-14 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://atlassian.wpengine.netdna-cdn.com/developer/assets_c/2011/02/ContinuousDeployment-thumb-400x277-6250.png" alt="cd" /></p>
-
-<p>错误被发现的时间越迟，修复的难度越高，代价也最昂贵。如果工程师在敲下代码的时候就发现了问题，那修复的成本几 乎为零。如果编译器捕获了bug，它对开放时间造成的影响就是以分钟计的。如果bug进入了产品，而且在一段时间内没有被发现，找到bug、修复bug的 代价就会让人觉得难以承受。千年虫问题就是一个典型的例子。<br />
-----题记 from http://www.infoq.com/news/2009/03/Continuous-Deployment</p>
-
-<p>持续部署的目标是通过减少批量工作的大小，并加快团队工作的节奏，帮助开发团队在其开发流程中消除浪费。这使团队能够一直处于一种可持续的平稳流状态， 让团队更容易去创新、试验，并达到可持续的生产率。</p>
-
-<p>下面是来自Eric的五步构建快速部署的办法：
-<strong>1.CI服务器。</strong>持续性部署的前提是持续性构建。我们需要一个地方去做单元测试、功能测试、集成测试和所有测试。这些事情会在每次commit之后进行。一定要确保所有的test在10到30分钟内全部跑完。如果不可能做到，那就将它们进行归类。</p>
-
-<p><strong>2.代码控制提交脚本。</strong>不管是svn还是git，都有各种hook的勾子程序，在每次commit前嵌入检查逻辑。这概念来自于传统意义上的“生产线”，一旦在线上的产品发现问题，将停止进入，进入暂停阶段。修好之后继续运转。如果1中的持续构建有一个test case不能过，那这个脚本要能够阻止再来的commit。简单地说，就是让代码能够检查的bug代码不能进入。</p>
-
-<p><strong>3.简洁的发布工具。</strong>不需要多复杂的工具，只需要每个人都遵守的、简单的办法，同时要遵循CI没通过就不能使用的原则。</p>
-
-<p><strong>4.实时的报警。</strong>不管多好的部署，都会有bug的存在。最讨厌的事情是部署了很久之后bug才出来。要抓住这些讨厌的bug，需要一个监控平台，出错的时候能够立即发现，找出bug。推荐使用nagios来加上自定义的数据进行监控，建议只要一两个关键数据，而且一定要报警准确。坚持一个原则就是，一旦报警，停止提交与发布。</p>
-
-<p><strong>5.寻根问底。</strong>这一步是方法学，多问为什么，可以让这个流程变得自我学习和成熟。比如：为什么没有在部署早期发现？为什么nagios没有报警？为什么没有在CI时发现？然后找到答案，改进这个过程。</p>
-
-<p>再辅以上周在velocity上Etsy的操作过程，<strong>staging环境</strong>，让影响程度可控。更加细节一些，你需要对业务所处的<strong>层次进行划分</strong>，处于越上层的项目改动，越可以CD。</p>
 </div>
   
   

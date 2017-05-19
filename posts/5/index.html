@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="更新nginx版本upstream升级http1.1解决多TIME_WAIT问题 2014-02-26 10:27:02 +0800 前情提要 在使用java web container的时候，我们都在前面挡一层nginx，方便使用各种nginx的功能，设置成代理。
-访问特别多的时候发现， &hellip;">
+  <meta name="description" content="中大型移动互联网公司技术架构选择 2014-03-05 16:09:52 +0800 总体思考 总结这些年经验，进行构架演进的方向选择时，大致要做到下面的目标： 可快速开发部署 （五分钟写出来一个经过测试的hello world并可访问/调用，并可在公网访问）
+天然可扩展（业务层无状态， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/05/ihaveadream/">中大型移动互联网公司技术架构选择</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-03-05T16:09:52+08:00" pubdate data-updated="true">2014-03-05 16:09:52 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><h2>总体思考</h2>
+
+<p>总结这些年经验，进行构架演进的方向选择时，大致要做到下面的目标：</p>
+
+<ul>
+<li>可快速开发部署 （五分钟写出来一个经过测试的hello world并可访问/调用，并可在公网访问）</li>
+<li>天然可扩展（业务层无状态，尽可能全部放到最后）</li>
+<li>自动化（内存不足了，除了报警，应该自动加点机器进去; 新的项目，基础代码应该都不用写，自动生成即可）</li>
+<li>框架化（公共层面的东西尽可能框架化，一层类似日志、counter、trace，应该不需要开发再写一行代码即默认打开）</li>
+<li>量化（所有的调用都应该有percentile与rps，透明反馈服务质量，跟踪系统更是可以模拟用户进行系统内部）</li>
+<li>同构化（因为搞两套的成本巨大，整体应该越来越趋同于同一种语言）</li>
+<li>硬件虚拟化（整个平台应该对进程透明下面的硬件情况）</li>
+<li>版本化、灰度化（所有的软件都应该在线上有明确的版本，且上线过程是一点点灰度上）</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/05/ihaveadream/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -506,52 +562,6 @@ centos</p>
   
     <footer>
       <a rel="full-article" href="/blog/2013/11/01/maven-nexus-notes/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/10/17/mi-trap/">移动互联网系统架构十大陷阱</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-10-17T00:00:00+08:00" pubdate data-updated="true">2013-10-17 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg" alt="移动互联网十宗罪" /></p>
-
-<p>过去的三年，54chen一直奋斗在中国移动互联网一线，历经各种坑爹的情况。以下特做记录。</p>
-
-<p><strong>Top 1.时不我待 连通性 </strong>
-cmwap cmnet这样的词语以后应该都会消失在人世间。三年前，经常性地有移不动联不通手机连不上服务器机房的情况。两年前，这种情况要好了一些。一年前，改善很多。现在还存在。相信未来会越来越好，时代在召唤！解法，花钱找有“背景”的机房。</p>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/10/17/mi-trap/">Read on &rarr;</a>
     </footer>
   
 
