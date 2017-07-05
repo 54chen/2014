@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2012-08-05 2012-08-05 00:00:00 +0800 利用h2database和easymock轻松不依赖环境单元测试（rose等spring环境万能） http://t.co/4w5Hudmv #
-印度的人们会不会特别想移民中国 &hellip;">
+  <meta name="description" content="Testing and Mocking in spring2.5: Static Class、maven Site、cobertura 2012-08-11 00:00:00 +0800 spring 2.5 与 junit 4.4
+Spring 2.5.x不能用JUnit 4.5+. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,123 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2012/08/11/spring-static-class-maven-cobertura-site/">Testing and Mocking in spring2.5: Static Class、maven Site、cobertura</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-08-11T00:00:00+08:00" pubdate data-updated="true">2012-08-11 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="mock spring static class cobertura" />
+<strong>spring 2.5 与 junit 4.4</strong>
+Spring 2.5.x不能用JUnit 4.5+.如果把使用了spring-test 2.5 的testcase升级到 junit 4.5会得到NoClassDefFoundError:</p>
+
+<p><blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br />
+org/junit/Assume$AssumptionViolatedException<br />
+java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException 
+</blockquote></p>
+
+<p>这是spring-test 2.5.x的一个bug. 其与JUnit 4.5不一致. 只能使用4.0-4.4.<br />
+或者就是自己打patch.
+<a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
+
+<p><strong>EasyMock 与 static Class</strong>
+EasyMock未提到是否支持static methods.功能类经常是static的，是因为没有上下文环境依赖，但如果一定要mock他们，可以选择powerMock.</p>
+
+<p><strong>PowerMock、static Class、junit、spring</strong>
+PowerMock 需要你添加 '@RunWith(PowerMockRunner.class)'.但 sping-test 需要你添加 '@RunWith(SpringJUnit4ClassRunner.class)'.
+<a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
+如果junit 4.7,PowerMock将RunWith替换为:<br />
+    @Rule<br />
+    public PowerMockRule rule = new PowerMockRule();<br />
+http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
+
+<p><strong>冲突</strong>
+Spring 2.5.x不能用JUnit 4.5+, 而PowerMockRule 只能用 JUnit 4.7.<br />
+基本上在Java + Spring 2.5 & JUnit 4.4环境下没啥简单的办法去mock static class了.</p>
+
+<p><strong>maven site 与 cobertura</strong>
+当你运行 'mvn site' or  'mvn sonar:sonar', 在spring项目中你可能会得到:<br />
+NoSuchBeanDefinitionException</p>
+
+<p>第一个答案:<br />
+在test的application文件中添加:</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>第二个答案:<br />
+'mvn site' 与 'mvn sonar:sonar' 会生成类在目录 ./generated-classes/cobertura 中.确保你想autowire的类都在正确的目录下扫描.</p>
+
+<p>-----------</p>
+
+<p><strong>spring 2.5 and junit 4.4</strong>
+Spring 2.5.x is incompatible with JUnit 4.5+.If you upgrade to junit 4.5,all of your test case which uses the SpringJUnit4ClassRunner will get a NoClassDefFoundError:</p>
+
+<p><blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br />
+org/junit/Assume$AssumptionViolatedException<br />
+java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException<br />
+ </blockquote></p>
+
+<p>It is an known issue with spring-test 2.5.x. It is incompatible with JUnit 4.5. Use 4.0-4.4.<br />
+Or you can try the patch in the issue tracker.
+<a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
+
+<p><strong>EasyMock and static Class</strong>
+EasyMock doesn't mention static methods.Utility methods should be most of the time static as they have no context and no dependencies.But when you need to mock it,you can you choose PowerMock.</p>
+
+<p><strong>PowerMock、static Class、junit、spring</strong>
+PowerMock need you add '@RunWith(PowerMockRunner.class)' to your test code.But sping-test need you add '@RunWith(SpringJUnit4ClassRunner.class)'.
+<a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
+With junit 4.7,PowerMock can replace RunWith to:<br />
+    @Rule<br />
+    public PowerMockRule rule = new PowerMockRule();<br />
+http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
+
+<p><strong>conflict</strong>
+Spring 2.5.x is incompatible with JUnit 4.5+, and that PowerMockRule is compatible with JUnit 4.7.<br />
+Basically, There isn't an easy way to do this in Java + Spring 2.5 & JUnit 4.4 at the moment.</p>
+
+<p><strong>maven site and cobertura</strong>
+When you run 'mvn site' or  'mvn sonar:sonar' with spring project,you may get the error:<br />
+NoSuchBeanDefinitionException</p>
+
+<p>The first answer:<br />
+In your test application context add the line:</p>
+
+<p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span>&nbsp;</span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+
+<p>The second answer:<br />
+The 'mvn site' or 'mvn sonar:sonar' will generates class in ./generated-classes/cobertura.Make sure the classes that you want to autowire is all scan in right folder.
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -603,95 +720,6 @@ rose手册第三章B节：DAO层：DAO进阶：SQLParm支持和表达式SQL </ul
 54chen Twitter memo 2012-07-01 <a href="http://t.co/cOzvPr8A" rel="nofollow">http://t.co/cOzvPr8A</a> <a href="http://twitter.com/54chen/statuses/219250977742663680" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/07/05/rose-3-b/">rose手册第三章B节：DAO层：DAO进阶：SQLParm支持和表达式SQL</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2012-07-05T00:00:00+08:00" pubdate data-updated="true">2012-07-05 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose" /></p>
-
-<p><strong>3.B.1 SQLParam介绍：DAO方法传递参数</strong></p>
-
-<p>    SQLParam作为DAO支持中的参数传递使者，可以传递一个常见的变量，也可以是一个自定义的对象。<br />
-    比如：
-<div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t.id,:t.msg)"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;<span class="keyword">public</span><span>&nbsp;</span><span class="keyword">void</span><span>&nbsp;insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"t"</span><span>)&nbsp;Test&nbsp;test);&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>    上列中Test对象通过t传递到sql执行中去，并且可以分别使用其中的属性。这感觉是不是很自然？</p>
-
-<p>    当然，如果是一个int、long、String等自在不言中。</p>
-
-<p>    当是list时，会有自动的batch操作，将sql拆为多条sql执行。这个小技巧会在后面的章节里讲。平时很少用到。
-<strong>
-3.B.2 ReturnGeneratedKeys介绍：返回刚刚插入的ID号</strong></p>
-
-<p>    特别是使用mysql开发的广大劳苦大众，常常会使用到auto_increament的字段。<br />
-    当一条insert语句在执行的时候，我们常常会去需要拿它的当前的自增id是多少。</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@ReturnGeneratedKeys</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="annotation">@SQL</span><span>(</span><span class="string">"insert&nbsp;into&nbsp;test&nbsp;(id,msg)&nbsp;values&nbsp;(:t.id,:t.msg)"</span><span>)&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">int</span><span>&nbsp;insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"t"</span><span>)&nbsp;Test&nbsp;test);&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>    如上述代码所示，只需要加上一个@ReturnGeneratedKeys即可返回当前的id</p>
-
-<p><strong>3.B.2 表达式的支持</strong></p>
-
-<p>    多变的业务需求决定了我们的sql是复杂的，需要有条件地执行。<br />
-    如果每种条件都去写DAO中的SQL，那DAO的变得很大。<br />
-    常常会有动态产生sql的需求。</p>
-
-<p>    jade支持一些常规的表达式。</p>
-
-<p>    语法一：常见的变量赋值<br />
-        冒号（:）表示这是一个变量，比如上面的例子里的 :t.id，它会被一个值替换。</p>
-
-<p>    语法二：字符串连接<br />
-        连续的井号（##） 表示后面的变量作字符串连接<br />
-        如下例中的partition变量，还请不要误解，分表不是这样做的，下一章会介绍标准的分表设置。</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;LIMIT&nbsp;:limit"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTests(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"limit"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit);&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>语法三：条件选择</p>
-
-<p>    井号if（#if{}）用于表示当条件满足时sql拼接。</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;#if(:user&gt;0){&nbsp;where&nbsp;user_id=:user&nbsp;}&nbsp;LIMIT&nbsp;:limit"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsIf(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"limit"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;limit,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"user"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;user);&nbsp;&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>    其他语法：还有for循环，实际使用少。<br />
-    典型地，一般的select in查询，可以直接传入list，例如下例中的ids变量：</p>
-
-<p><div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT&nbsp;user_id,&nbsp;device_token&nbsp;FROM&nbsp;test_##(:partition)&nbsp;where&nbsp;user_id&nbsp;in(:ids)"</span><span>)&nbsp;&nbsp;</span></span></li><li class=""><span><span class="keyword">public</span><span>&nbsp;List&lt;Test&gt;&nbsp;getTestsByIds(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>)&nbsp;</span><span class="keyword">int</span><span>&nbsp;partition,&nbsp;</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"ids"</span><span>)&nbsp;List&lt;Integer&gt;&nbsp;ids);&nbsp;&nbsp;</span></span></li></ol></div></p>
-
-<p>文中所提及代码均在<a href=" https://github.com/XiaoMi/rose/tree/master/rose-example"> https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br />
-常年更新版本在：<a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a></p>
 </div>
   
   

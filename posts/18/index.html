@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-10-09 2011-10-09 00:00:00 +0800 十一回来，小米米聊team吸各路php好手，一到两年经验的大侠们，团队主要方向:php java erlang，如果你有计划在php以外的领域有所建树，请速来：chenzhen at &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2011-10-16 2011-10-16 00:00:00 +0800 http://t.co/ubbcGIuv http service test case首选。 #
+http://t.co/eJXNz8pe web test利器，还有更利的吗？ # &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,49 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/10/16/54chen-twitter-memo-2011-10-16/">54chen Twitter Memo 2011-10-16</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-10-16T00:00:00+08:00" pubdate data-updated="true">2011-10-16 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+</ul><a href="http://t.co/ubbcGIuv" rel="nofollow">http://t.co/ubbcGIuv</a>  http service test case首选。 <a href="http://twitter.com/54chen/statuses/124111980297596928" class="aktt_tweet_time">#</a>
+<a href="http://t.co/eJXNz8pe" rel="nofollow">http://t.co/eJXNz8pe</a> web test利器，还有更利的吗？ <a href="http://twitter.com/54chen/statuses/124105952273235968" class="aktt_tweet_time">#</a>
+riak-java-client 1.0.0 released；跟进riak1.0的同志们，可以更新了！ <a href="http://twitter.com/54chen/statuses/124034768999432192" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-10-09 <a href="http://t.co/2FTs3k7n" rel="nofollow">http://t.co/2FTs3k7n</a> <a href="http://twitter.com/54chen/statuses/122856471498203136" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -774,104 +818,6 @@ riak源码阅读手记 运行安装 </ul><a href="http://t.co/L5ocH6k" rel="nofo
 54chen Twitter memo 2011-09-04 <a href="http://t.co/J7xsiSU" rel="nofollow">http://t.co/J7xsiSU</a> <a href="http://twitter.com/54chen/statuses/110172375898800129" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/09/09/riak-source-install-run/">Riak源码阅读手记 运行安装</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-09-09T00:00:00+08:00" pubdate data-updated="true">2011-09-09 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak" />
-riak源码阅读手记一 初出茅庐 项目入口
-<a href="http://www.54chen.com/_linux_/riak-source.html">http://www.54chen.com/_linux_/riak-source.html</a></p>
-
-<p>riak源码阅读手记二 左右开弓 启动
-<a href="http://www.54chen.com/_linux_/riak-cource-code.html">http://www.54chen.com/_linux_/riak-cource-code.html</a></p>
-
-<p><strong>代码运行入口</strong>
-riak-kv/ebin/riak_kv.app文件定义了otp标准项目的结构，一个不错的实例：http://www.iteye.com/topic/342819<br />
-{mod, {riak_kv_app, []}}一行定义了入口。打开riak_kv_app文件：<br />
--export([start/2,stop/1]).<br />
-定义了两大个方法，start和stop。</p>
-
-<p><strong>先看start:</strong>
-启动riak_kv及相关的server。<br />
-检查系统时间。<br />
-加入系统变量。<br />
-确保设置NWR的值和一些vclock的初始值。<br />
-看storage_backend是否启动。<br />
-在cluster_info中注册。<br />
-启动supervisor。<br />
-全部启动。</p>
-
-<p>stop：application:stop。</p>
-
-<p><strong>跑一把试试：</strong>
-A机：192.168.103.10<br />
-B机：192.168.97.48<br />
-C机：192.168.100.52<br />
-三个节点，已经装好erlang R13B04。
-<strong>先在A机操作</strong>：</p>
-
-<p><blockquote>wget http://downloads.basho.com/riak/riak-0.14/riak-0.14.2.tar.gz<br />
-tar zxvf riak-0.14.2.tar.gz<br />
-cd riak-0.14.2<br />
-make rel</blockquote></p>
-
-<p>然后在rel/riak目录下会有最编译好的节点程序。</p>
-
-<p><blockquote>scp -r rel root@192.168.100.52:/root/<br />
-scp -r rel root@192.168.97.48:/root/</blockquote></p>
-
-<p>cd rel/riak<br />
-ABC三机修改配置：<br />
-vim etc/app.config<br />
-把127.0.0.1修改为对应的ip<br />
-vim etc/vm.args<br />
-同上。</p>
-
-<p>A：bin/riak start<br />
-B:  bin/riak start<br />
-bin/riak-admin join riak@192.168.103.10<br />
-C:  bin/riak start<br />
-bin/riak-admin join riak@192.168.103.10</p>
-
-<p>./riak-admin status</p>
-
-<p>欧了。</p>
-
-<p>此时默认使用bitcask做为存储引擎。</p>
-
-<p></p>
 </div>
   
   

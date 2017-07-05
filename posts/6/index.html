@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="移动互联网系统架构十大陷阱 2013-10-17 00:00:00 +0800 过去的三年，54chen一直奋斗在中国移动互联网一线，历经各种坑爹的情况。以下特做记录。 Top 1.时不我待 连通性 cmwap cmnet这样的词语以后应该都会消失在人世间。三年前， &hellip;">
+  <meta name="description" content="百人共用企业maven私服nexus迁移搭建手记 2013-11-01 00:00:00 +0800 三年前，小米的第一个nexus（版本1.8.0）在一台dell的办公机上安装完成。域名为http://www.a.com。 三年后，a.com时不时已经慢得不行了。特别一到周一， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,55 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/01/maven-nexus-notes/">百人共用企业maven私服nexus迁移搭建手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-11-01T00:00:00+08:00" pubdate data-updated="true">2013-11-01 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img class="alignnone" title="nexus" src="http://chen54.b0.upaiyun.com/1101/nexus200x50.png" alt="nexus" width="200" height="55" /></p>
+
+<p>三年前，小米的第一个nexus（版本1.8.0）在一台dell的办公机上安装完成。域名为http://www.a.com。</p>
+
+<p>三年后，a.com时不时已经慢得不行了。特别一到周一，大家都在update snapshot的时候，完全陷入一种无尽的痛苦中。</p>
+
+<p>然后弄来了一台专业server做这事情，域名为http://www.b.com。版本到官网一看，已经2.64了。日新月异！</p>
+
+<p>看升级文档顿时没了兴趣考虑升级，全新从零安装。</p>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/11/01/maven-nexus-notes/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -820,104 +869,6 @@ void numd()<br />
 } </p>
 
 <p></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/03/arduino-starter-2-led/">Arduino学习手记二：写程序控制灯控制蜂鸣器红外</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-07-03T00:00:00+08:00" pubdate data-updated="true">2013-07-03 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><a href="http://www.54chen.com/_linux_/arduino-starter-1.html">在上一节中</a>，初步领会了基础精神，对电路板和ide有了一点感觉。<br />
-这里的目标是完成一个电路，通过红外传感头，用摇控器控制LED灯和蜂鸣器。</p>
-
-<p><strong>Arduino Libraries</strong>
-arduino库函数，是一堆c/c++写的代码库，一般用来做一些固定的事情，对arduino的能力进行扩展，有点像php里的各种扩展，当然你也可以实现自己的库。</p>
-
-<p>在arduino代码中要使用库的时候，依次选sketch->import Library->xxx，它会自动在代码头上加上#include的代码。</p>
-
-<p>同时，也可以下载一个library.zip包，依次选择sketch->import Library->add Library，然后就加入了新的库。</p>
-
-<p>要在arduino IDE环境中删除一个已经引入的库，1.0.5及以上版本的IDE需要去～/documents/arduino/libraries下删除对应的目录(相传windows在C:/.../我的文档/arduino/libraries)。</p>
-
-<p><strong>IRremote库简介</strong>
-官方网站：<a href="http://www.pjrc.com/teensy/td_libs_IRremote.html">http://www.pjrc.com/teensy/td_libs_IRremote.html</a>
-作者：Ken Shirriff<br />
-作用：接收和发送红外控制的代码库</p>
-
-<p><strong>接线</strong>
-GND接线略去不提，220欧电阻＋LED灯之后，将LED接数字11。<br />
-蜂鸣器接数字10。<br />
-红外OUT接数字8。</p>
-
-<p>这里要提一下，红外接收头的圆鼓包的一面面向自己，最左一脚为OUT，中间为GND，最右为5V。</p>
-
-<p>如图所示：
-<img src="http://ww3.sinaimg.cn/bmiddle/663fba41jw1e68t7z3gr6j20f10qodgt.jpg" alt="arduino" /></p>
-
-<p><strong>程序</strong>
-<blockquote>#include <irremote.h /></blockquote></p>
-
-<p>#define LED 11<br />
-#define BIZZER 10<br />
-#define IR_IN 8 //红外接收</p>
-
-<p>IRrecv irrecv(IR_IN);   // 定义IRrecv 对象来接收红外线信号<br />
-decode_results results;   //解码结果放在decode_results构造的对象results里</p>
-
-<p>void setup()<br />
-{
-  pinMode(BIZZER,OUTPUT); <br />
-  pinMode(LED,OUTPUT); <br />
-  Serial.begin(9600);<br />
-  irrecv.enableIRIn(); // Start the receiver<br />
-}</p>
-
-<p>void loop()<br />
-{
-  if (irrecv.decode(&results)) {<br />
-    Serial.println(results.value, HEX);<br />
-    irrecv.resume(); // Receive the next value<br />
-    digitalWrite(BIZZER,HIGH);<br />
-    digitalWrite(LED,HIGH);<br />
-    delay(50);</p>
-
-<p>    digitalWrite(BIZZER,LOW);<br />
-    digitalWrite(LED,LOW);<br />
-    delay(1050);<br />
-  } <br />
-}</p>
-
-<p><strong>效果</strong>
-按摇控器，蜂鸣器响一下同时灯闪一下。IRemote简化了大量的代码。</p>
 </div>
   
   

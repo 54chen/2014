@@ -9,8 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="中大型移动互联网公司技术架构选择 2014-03-05 16:09:52 +0800 总体思考 总结这些年经验，进行构架演进的方向选择时，大致要做到下面的目标： 可快速开发部署 （五分钟写出来一个经过测试的hello world并可访问/调用，并可在公网访问）
-天然可扩展（业务层无状态， &hellip;">
+  <meta name="description" content="Io不再神秘 2014-03-12 10:27:15 +0800 本文译自 http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/
+原作者：Buddhika Chamith
+译者：54chen &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +76,59 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/12/io-demystified/">Io不再神秘</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-03-12T10:27:15+08:00" pubdate data-updated="true">2014-03-12 10:27:15 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><ul>
+<li>本文译自 <a href="http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/">http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/</a></li>
+<li>原作者：Buddhika Chamith</li>
+<li>译者：54chen</li>
+</ul>
+
+
+<p>随着所有的在高可用服务器设计上的炒作，以及nodejs背后的风行，我想关注一些IO的设计模式，却一起没有足够的时间。现在正在完成的一些研究，我想最好记下这些资料以备查。让我们跳上IO bus兜风去。</p>
+
+<h2>各种各样的I/O</h2>
+
+<p>根据操作的阻塞或非阻塞类型，以及IO的准备就绪、完成事件通知的同步和异步类型，一共有四种不同方式的IO。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/03/12/io-demystified/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -514,55 +568,6 @@ centos</p>
 </p>
 </div>
   
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/01/maven-nexus-notes/">百人共用企业maven私服nexus迁移搭建手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-11-01T00:00:00+08:00" pubdate data-updated="true">2013-11-01 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img class="alignnone" title="nexus" src="http://chen54.b0.upaiyun.com/1101/nexus200x50.png" alt="nexus" width="200" height="55" /></p>
-
-<p>三年前，小米的第一个nexus（版本1.8.0）在一台dell的办公机上安装完成。域名为http://www.a.com。</p>
-
-<p>三年后，a.com时不时已经慢得不行了。特别一到周一，大家都在update snapshot的时候，完全陷入一种无尽的痛苦中。</p>
-
-<p>然后弄来了一台专业server做这事情，域名为http://www.b.com。版本到官网一看，已经2.64了。日新月异！</p>
-
-<p>看升级文档顿时没了兴趣考虑升级，全新从零安装。</p>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/11/01/maven-nexus-notes/">Read on &rarr;</a>
-    </footer>
   
 
 

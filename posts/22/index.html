@@ -9,10 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="巧用交换机，瞬间切流量 2011-05-20 00:00:00 +0800 需求：
-1号机服务移到2号机，然后要把1号机搬走。 原理：
-交换机有ip对应mac地址的缓存，只需复制到ip和mac，可以在机房内的局域网里瞬间切换到另一个机器上。 操作：
-1）在2号机准备好1号机的服务，并测试通过。 &hellip;">
+  <meta name="description" content="54chen Twitter Memo 2011-05-22 2011-05-22 00:00:00 +0800 巧用交换机，瞬间切流量 http://goo.gl/fb/IH8Me #
+Linux top命令看cpu百分比时，shift+i可以关闭Irix mode， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +75,48 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/22/54chen-twitter-memo-2011-05-22/">54chen Twitter Memo 2011-05-22</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-05-22T00:00:00+08:00" pubdate data-updated="true">2011-05-22 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
+巧用交换机，瞬间切流量 </ul><a href="http://goo.gl/fb/IH8Me" rel="nofollow">http://goo.gl/fb/IH8Me</a> <a href="http://twitter.com/54chen/statuses/71428676557881345" class="aktt_tweet_time">#</a>
+Linux top命令看cpu百分比时，shift+i可以关闭Irix mode，这时候看到的cpu才是占用系统总数的百分比，你被疑惑了多少年？ <a href="http://twitter.com/54chen/statuses/70817850998259712" class="aktt_tweet_time">#</a>
+54chen Twitter memo 2011-05-15 <a href="http://goo.gl/fb/8fsSv" rel="nofollow">http://goo.gl/fb/8fsSv</a> <a href="http://twitter.com/54chen/statuses/69583560293625856" class="aktt_tweet_time">#</a>
+
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -610,151 +650,6 @@ QCon2011讲师经验总结及QCon2011的ppt下载 <a href="http://goo.gl/fb/mY61
 54chen Twitter memo 2011-04-10 <a href="http://goo.gl/fb/SWaie" rel="nofollow">http://goo.gl/fb/SWaie</a> <a href="http://twitter.com/54chen/statuses/56894905515126785" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/04/13/hadoop-hive-scribe-log/">用hadoop Hive协同scribe Log用户行为分析方案</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-04-13T00:00:00+08:00" pubdate data-updated="true">2011-04-13 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img02.taobaocdn.com/imgextra/i2/T1sUV8Xk4sXXablPM9_104155.jpg" alt="hadoop,hive,scribe" />
-scribe 是facebook 开源的分布式日志系统，在其示例配置中，并发量可达到max_msg_per_second=2000000。54chen使用手记见：<a href="http://www.54chen.com/java-ee/log-server-scribe-helper.html">http://www.54chen.com/java-ee/log-server-scribe-helper.html</a>
-hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供完整的sql查询功能，可以将sql语句转换为 MapReduce任务进行运行。54chen使用手记见：<a href="http://www.54chen.com/_linux_/hive-hadoop-how-to-install.html">http://www.54chen.com/_linux_/hive-hadoop-how-to-install.html</a>
-下面来讲述二者合成的使用办法：
-<strong>创建和scribe格式相符的hive table</strong>
-bin/hive
-<blockquote>&gt; create table log(active string,uuid string,ip string,dt string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;</blockquote>
-<strong>加载数据</strong></p>
-
-<p><blockquote>&gt;LOAD DATA LOCAL INPATH '/opt/soft/hadoop-0.20.2/hive-0.7.0/data/log-2011-04-13*' OVERWRITE INTO TABLE log;</blockquote></p>
-
-<p>查询</p>
-
-<p><blockquote>&gt;select count(*) from  log group by uuid;</blockquote></p>
-
-<p>进入mapreduce计算，过了一会儿，结果出来了。</p>
-
-<p><strong>修改已经定义数据格式</strong>
-cutter.py 数据自定义脚本,从标准输入拿到数据后输出到标准输出<br />
-cd bin/<br />
-./hive
-<blockquote>&gt;add file /opt/soft/hadoop-0.20.2/hive-0.7.0/bin/hive-shell/cutter.py;<br />
-&gt;select transform (active,uuid,ip,dt) using 'python cutter.py' as (active,uuid,ip,dt) from log limit 1;</blockquote>
-<strong>得到格式化后的结果</strong>
-<blockquote>&gt;create table log_new(active string,uuid string,ip string,dt string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;<br />
-&gt;INSERT OVERWRITE TABLE log_new select transform (active,uuid,ip,dt) using 'python cutter.py' as (active,uuid,ip,time) from log;</blockquote>
-<strong>以hive server运行(thrift的server)</strong>
-<blockquote>bin/hive --service hiveserver</blockquote>
-默认以thrift service在10000启动服务。</p>
-
-<p><strong>用标准的thrift-jdbc来连接hive</strong>
-<blockquote>public class HiveJdbcClient {<br />
-private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";</blockquote></p>
-
-<p>/**<br />
-* @param args<br />
-* @throws SQLException<br />
-*/<br />
-public static void main(String[] args) throws SQLException {<br />
-try {<br />
-Class.forName(driverName);<br />
-} catch (ClassNotFoundException e) {<br />
-e.printStackTrace();<br />
-System.exit(1);<br />
-}
-Connection con = DriverManager.getConnection("jdbc:hive://192.168.100.52:10000/default", "", "");<br />
-Statement stmt = con.createStatement();</p>
-
-<p>ResultSet res = stmt.executeQuery("select count(distinct uuid) from usage_new where active='user_login_succ'");<br />
-if (res.next()) {<br />
-System.out.println(res.getString(1));<br />
-}
-}</p>
-
-<p>}
-<strong>依赖的jar包(maven pom)</strong></p>
-
-<p><blockquote>
-&lt;dependency&gt;<br />
-&lt;groupId&gt;hadoop&lt;/groupId&gt;<br />
-&lt;artifactId&gt;hive-jdbc&lt;/artifactId&gt;<br />
-&lt;version&gt;0.7.0&lt;/version&gt;<br />
-&lt;/dependency&gt;<br />
-&lt;dependency&gt;<br />
-&lt;groupId&gt;hadoopl&lt;/groupId&gt;<br />
-&lt;artifactId&gt;hive-metastore&lt;/artifactId&gt;<br />
-&lt;version&gt;0.7.0&lt;/version&gt;<br />
-&lt;/dependency&gt;</blockquote></p>
-
-<p>&lt;dependency&gt;<br />
-&lt;groupId&gt;hadoop&lt;/groupId&gt;<br />
-&lt;artifactId&gt;hive-exec&lt;/artifactId&gt;<br />
-&lt;version&gt;0.7.0&lt;/version&gt;<br />
-&lt;/dependency&gt;</p>
-
-<p>&lt;dependency&gt;<br />
-&lt;groupId&gt;hadoop&lt;/groupId&gt;<br />
-&lt;artifactId&gt;hive-service&lt;/artifactId&gt;<br />
-&lt;version&gt;0.7.0&lt;/version&gt;<br />
-&lt;/dependency&gt;<br />
-&lt;dependency&gt;<br />
-&lt;groupId&gt;org.apache.thrift&lt;/groupId&gt;<br />
-&lt;artifactId&gt;thrift&lt;/artifactId&gt;<br />
-&lt;version&gt;0.5.0-xiaomi&lt;/version&gt;<br />
-&lt;/dependency&gt;<br />
-&lt;dependency&gt;<br />
-&lt;groupId&gt;facebook&lt;/groupId&gt;<br />
-&lt;artifactId&gt;thrift-fb303&lt;/artifactId&gt;<br />
-&lt;version&gt;0.5.0&lt;/version&gt;<br />
-&lt;/dependency&gt;</p>
-
-<p>&lt;dependency&gt;<br />
-&lt;groupId&gt;hadoop&lt;/groupId&gt;<br />
-&lt;artifactId&gt;hadoop-core&lt;/artifactId&gt;<br />
-&lt;version&gt;0.20.2&lt;/version&gt;<br />
-&lt;/dependency&gt;</p>
-
-<p>&lt;dependency&gt;<br />
-&lt;groupId&gt;xerces&lt;/groupId&gt;<br />
-&lt;artifactId&gt;xercesImpl&lt;/artifactId&gt;<br />
-&lt;version&gt;2.9.1&lt;/version&gt;<br />
-&lt;/dependency&gt;<br />
-&lt;dependency&gt;<br />
-&lt;groupId&gt;xalan&lt;/groupId&gt;<br />
-&lt;artifactId&gt;xalan&lt;/artifactId&gt;<br />
-&lt;version&gt;2.7.1&lt;/version&gt;<br />
-&lt;/dependency&gt;</p>
-
-<p></p>
 </div>
   
   

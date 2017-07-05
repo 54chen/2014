@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-03-07 2010-03-07 00:00:00 +0800 病来如山倒。。。 # 为期5天的感冒生涯快要结束了，终于可以清醒上推了~~~ # [RT计划]李伟博☭: 美国的学者都很重视中国军队的发展，他们不怕我们军队的现代化， &hellip;">
+  <meta name="description" content="如何让squid 2.6.STABLE21输出Content-Encoding: Gzip 2010-03-08 00:00:00 +0800 问题描述： 一个WEB服务器，跑nginx 0.6。前端一squid 2.6代理。用户访问先经过squid。 现需要squid服务器输出gzip压缩。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,65 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/03/08/how-to-make-squid-26stable21-output-content-encoding-gzip/">如何让squid 2.6.STABLE21输出Content-Encoding: Gzip</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-03-08T00:00:00+08:00" pubdate data-updated="true">2010-03-08 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><strong>问题描述：</strong></p>
+
+<p>一个WEB服务器，跑<a href="http://www.54chen.com/architecture/wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes.html">nginx </a>0.6。前端一squid 2.6代理。用户访问先经过squid。</p>
+
+<p>现需要squid服务器输出gzip压缩。</p>
+
+<p><strong><span style="color: #000000;">问题解决方案：</span></strong></p>
+
+<p>原来的nginx已经支持<a href="http://www.54chen.com/_linux_/linux-system-replacement-method-sshd-notes-from-from-academy-of-sciences.html">gzip</a>，修改或者增加nginx.conf中内容（打开nginx的gzip支持附后）：</p>
+
+<p>gzip_http_version 1.0;<br />
+gzip_vary on;<br />
+add_header Vary Accept-Encoding;</p>
+
+<p>清空原来的squid对应的缓存，新缓存即是带了gzip的header。</p>
+
+<p><span style="color: #000000;"><strong>参考文献：</strong></span></p>
+
+<p><a href="http://wiki.nginx.org/NginxHttpGzipModule">http://wiki.nginx.org/NginxHttpGzipModule</a></p>
+
+<p><strong>附录：</strong></p>
+
+<p><a href="http://www.54chen.com/architecture/wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes.html">如何打开gzip，【优化php\nginx】 一段。</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -628,201 +687,6 @@ done</blockquote>
 	<li>用java操作bdb的方法记录二 <a href="http://www.54chen.com/java-ee/bdb-method-of-operation-with-the-java-record-2.html" rel="nofollow">http://www.54chen.com/java-ee/bdb-method-of-operation-with-the-java-record-2.html</a> 优化后的BDB参数读取和写入的速度都在1.5W/s左右 <a href="http://twitter.com/54chen/statuses/9379170469">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/02/20/bdb-method-of-operation-with-the-java-record-2/">用java操作bdb的方法记录二</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-02-20T00:00:00+08:00" pubdate data-updated="true">2010-02-20 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>在科学院之前的一篇文章中，介绍过普通的操作BDB的方法，见：
-<h1><a href="http://www.54chen.com/java-ee/java-using-the-bdb-notes-from-berkeley-db-java-api-records.html">java使用bdb手记（Berkeley DB Java api记录）</a></h1>
-下文记录的是利用BDB的事务来完成的一个put和一个get方法的代码。其速度与原始的操作方法相当。</p>
-
-<p>================================================代码段==============================</p>
-
-<p>/**<br />
-* @author zhen.chen<br />
-* @createTime 2010-2-20 上午10:43:31<br />
-*/<br />
-package com.renren.nuclear.storage;</p>
-
-<p>import java.io.File;<br />
-import java.util.ArrayList;<br />
-import java.util.List;</p>
-
-<p>import com.sleepycat.je.Cursor;<br />
-import com.sleepycat.je.Database;<br />
-import com.sleepycat.je.DatabaseConfig;<br />
-import com.sleepycat.je.DatabaseEntry;<br />
-import com.sleepycat.je.DatabaseException;<br />
-import com.sleepycat.je.Environment;<br />
-import com.sleepycat.je.EnvironmentConfig;<br />
-import com.sleepycat.je.LockMode;<br />
-import com.sleepycat.je.OperationStatus;<br />
-import com.sleepycat.je.Transaction;</p>
-
-<p>public class Test {<br />
-private static Environment env;<br />
-private static Database db;<br />
-private static long cacheSize = 1000 * 1024 * 1024;<br />
-private static String path = "./bdb/";</p>
-
-<p>public static void main(String[] args) {<br />
-EnvironmentConfig envConfig = new EnvironmentConfig();<br />
-envConfig.setTransactional(true);<br />
-envConfig.setAllowCreate(true);<br />
-envConfig.setCacheSize(cacheSize);<br />
-try {<br />
-env = new Environment(new File(path), envConfig);<br />
-} catch (DatabaseException e) {</p>
-
-<p>}<br />
-open("nuclear");</p>
-
-<p>//写入<br />
-put("aa","aaa");</p>
-
-<p>//取出<br />
-get("aa");</p>
-
-<p>}</p>
-
-<p>/**<br />
-* 写入操作<br />
-* @author www.54chen.com<br />
-* @createTime 2010-2-20 上午11:04:43<br />
-*/<br />
-public static void put(String key, String value){<br />
-// open("nuclear");<br />
-byte[] theKey = key.getBytes();<br />
-byte[] theValue = value.getBytes();<br />
-OperationStatus status = null;<br />
-Transaction transaction = null;<br />
-Cursor cursor = null;<br />
-boolean succeeded = false;<br />
-try {<br />
-transaction = env.beginTransaction(null, null);<br />
-cursor = db.openCursor(transaction, null);<br />
-status = cursor.put(new DatabaseEntry(theKey), new DatabaseEntry(theValue));<br />
-if (status != OperationStatus.SUCCESS){<br />
-// TODO<br />
-}</p>
-
-<p>succeeded = true;<br />
-} catch (DatabaseException e) {</p>
-
-<p>} finally {<br />
-attemptClose(cursor);<br />
-if (succeeded)<br />
-attemptCommit(transaction);<br />
-else<br />
-attemptAbort(transaction);<br />
-}
-}</p>
-
-<p>/**<br />
-* 取出操作<br />
-* @author www.54chen.com<br />
-* @createTime 2010-2-20 上午11:04:51<br />
-*/<br />
-public static List&lt;String&gt; get(String key){<br />
-ArrayList&lt;String&gt; nuclearStorageValue = new ArrayList&lt;String&gt;();</p>
-
-<p>DatabaseEntry queryKey = new DatabaseEntry();<br />
-DatabaseEntry value = new DatabaseEntry();<br />
-queryKey.setData(key.getBytes());<br />
-Cursor cursor = null;<br />
-try {<br />
-cursor = db.openCursor(null, null);<br />
-for(OperationStatus status = cursor.getSearchKey(queryKey, value, LockMode.READ_UNCOMMITTED); status == OperationStatus.SUCCESS; status = cursor.getNextDup(queryKey,value,LockMode.RMW)) {<br />
-nuclearStorageValue.add(value.getData().toString());<br />
-}
-} catch (DatabaseException e) {</p>
-
-<p>} finally {<br />
-attemptClose(cursor);<br />
-}
-return nuclearStorageValue;<br />
-}</p>
-
-<p>/**<br />
-* 打开DB<br />
-* @author www.54chen.com<br />
-* @createTime 2010-2-20 上午11:01:48<br />
-*/<br />
-private static void open(String dbName) {<br />
-DatabaseConfig dbConfig = new DatabaseConfig();<br />
-dbConfig.setAllowCreate(true);<br />
-dbConfig.setTransactional(true);<br />
-try {<br />
-db = env.openDatabase(null, dbName, dbConfig);<br />
-} catch (DatabaseException e) {<br />
-e.printStackTrace();<br />
-}
-}</p>
-
-<p>private static void attemptClose(Cursor cursor) {<br />
-try {<br />
-if (cursor != null)<br />
-cursor.close();<br />
-} catch (DatabaseException e) {<br />
-// TODO logger<br />
-}
-}</p>
-
-<p>private static void attemptCommit(Transaction transaction) {<br />
-try {<br />
-transaction.commit();<br />
-} catch (DatabaseException e) {<br />
-attemptAbort(transaction);<br />
-// TODO logger<br />
-}
-}</p>
-
-<p>private static void attemptAbort(Transaction transaction) {<br />
-try {<br />
-transaction.abort();<br />
-} catch (Exception e) {<br />
-// TODO logger<br />
-}
-}<br />
-}</p>
-
-<p>============================================代码结束==================================</p>
-
-<p>代码是用游标操作bdb的例子，在使用的时候可以在其基础上继续进一步修改。</p>
-
-<p>PS：人人网Nuclear系统的BDB引擎将可能会使用这样的操作方法，目前我还在做速度上的调优，待有新的结果将第一时间公布给大家。</p>
 </div>
   
   

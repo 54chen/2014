@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="过去六年在小米搞(wa)错(keng)的几个技术细节 2016-04-26 20:34:54 +0800 2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。 今天再来看，其实有很多细节， &hellip;">
+  <meta name="description" content="在c/c++中解决SHA1WithRSA/ras/X509的过程记录 2016-05-25 12:13:25 +0800 这里记录了一种简单的办法，在遇到写c/c++找不到答案时的最简单找代码办法。 方法是：google找php怎么解决，大把的答案，然后看php源代码是怎么用c实现的。 Read &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/05/25/a-story-about-sha1withrsa-slash-ras-slash-x509-with-c-slash-c-plus-plus/">在c/c++中解决SHA1WithRSA/ras/X509的过程记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2016-05-25T12:13:25+08:00" pubdate data-updated="true">2016-05-25 12:13:25 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>这里记录了一种简单的办法，在遇到写c/c++找不到答案时的最简单找代码办法。</p>
+
+<p><img src=http://chen54.b0.upaiyun.com/20141211/thinking.jpg></p>
+
+<p>方法是：google找php怎么解决，大把的答案，然后看php源代码是怎么用c实现的。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/05/25/a-story-about-sha1withrsa-slash-ras-slash-x509-with-c-slash-c-plus-plus/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -558,111 +604,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/04/13/serivce-design/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/03/04/update-gcc-version-in-mac/">Mac下更新gcc版本</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2015-03-04T14:51:29+08:00" pubdate data-updated="true">2015-03-04 14:51:29 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
-
-<ul>
-<li>用ports升级，比较容易。</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>localhost:hello chenzhen$ port search gcc
-</span><span class='line'>apple-gcc40 @5494 (lang)
-</span><span class='line'>    Apple's version of gcc 4.0
-</span><span class='line'>
-</span><span class='line'>apple-gcc42 @5666.3_14 (lang)
-</span><span class='line'>    Apple's version of gcc 4.2
-</span><span class='line'>
-</span><span class='line'>arm-aout-gcc @3.3.6 (cross, devel)
-</span><span class='line'>    gcc cross-compilers for arm-aout, with newlib runtime library.
-</span><span class='line'>
-</span><span class='line'>arm-elf-gcc @4.7.3 (cross, devel)
-</span><span class='line'>    gcc cross-compilers for arm-elf, with newlib runtime library.
-</span><span class='line'>
-</span><span class='line'>arm-elf-gcc3 @3.4.6_2 (cross, devel)
-</span><span class='line'>    gcc 3.x cross-compilers for arm-elf, with newlib runtime library.
-</span><span class='line'>
-</span><span class='line'>arm-none-eabi-gcc @4.7.3_1 (cross, devel)
-</span><span class='line'>    The GNU compiler collection for arm-none-eabi
-</span><span class='line'>
-</span><span class='line'>arm-none-linux-gnueabi-gcc @2005q3-2 (cross, devel)
-</span><span class='line'>    gcc 3.x cross-compilers for arm-none-linux-gnueabi.
-</span><span class='line'>
-</span><span class='line'>arm-rtems-gcc @4.2.3 (cross, devel)
-</span><span class='line'>    gcc cross-compilers for arm-rtems, with newlib runtime library.
-</span><span class='line'>
-</span><span class='line'>avr-gcc @4.9.1 (cross, devel)
-</span><span class='line'>    The GNU compiler collection for avr</span></code></pre></td></tr></table></div></figure>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/03/04/update-gcc-version-in-mac/">Read on &rarr;</a>
     </footer>
   
 
