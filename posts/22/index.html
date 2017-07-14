@@ -9,8 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-05-22 2011-05-22 00:00:00 +0800 巧用交换机，瞬间切流量 http://goo.gl/fb/IH8Me #
-Linux top命令看cpu百分比时，shift+i可以关闭Irix mode， &hellip;">
+  <meta name="description" content="Maven打jar包自动生成run脚本-appassembler插件的使用 2011-05-24 00:00:00 +0800 关键配置：
+&lt;plugin&gt;
+&lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+&lt;artifactId &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +77,65 @@ Linux top命令看cpu百分比时，shift+i可以关闭Irix mode， &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/05/24/maven-jar-auto-run-bash/">Maven打jar包自动生成run脚本-appassembler插件的使用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-05-24T00:00:00+08:00" pubdate data-updated="true">2011-05-24 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://ww1.sinaimg.cn/bmiddle/569f6ce8jw1dhi9e5bj6wj.jpg" alt="" /></p>
+
+<p>关键配置：
+<blockquote>&lt;plugin&gt;<br />
+&lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;<br />
+&lt;artifactId&gt;appassembler-maven-plugin&lt;/artifactId&gt;<br />
+&lt;version&gt;1.1.1&lt;/version&gt;<br />
+&lt;configuration&gt;<br />
+&lt;programs&gt;<br />
+&lt;program&gt;<br />
+&lt;mainClass&gt;com.chen.logtailer.Tail&lt;/mainClass&gt;<br />
+&lt;name&gt;app&lt;/name&gt;<br />
+&lt;/program&gt;<br />
+&lt;/programs&gt;<br />
+&lt;/configuration&gt;<br />
+&lt;/plugin&gt;</blockquote></p>
+
+<p>#mvn package appassembler:assemble</p>
+
+<p>#sh target/appassembler/bin/app</p>
+
+<p><strong>优点：</strong>
+不需要管理各种run的脚本，自动生成。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -607,49 +668,6 @@ gprs来访者中，许多ip都会瞬时漂移到69.28.58.*，奇怪的事情。 
 
 <p>9.经验：<br />
  sqoop做了一些mysqldump时的map reduce，所以速度会比单纯的dump后load快。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/04/17/54chen-twitter-memo-2011-04-17/">54chen Twitter Memo 2011-04-17</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-04-17T00:00:00+08:00" pubdate data-updated="true">2011-04-17 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-用hadoop hive协同scribe log用户行为分析方案 </ul><a href="http://goo.gl/fb/tspKg" rel="nofollow">http://goo.gl/fb/tspKg</a> <a href="http://twitter.com/54chen/statuses/57997254421774336" class="aktt_tweet_time">#</a>
-hadoop0.20.0很诡异，log4j debug级别时，at org.apache.hadoop.conf.Configuration.&lt;init&gt;(Configuration.java:211)会打一个假的异常。。。是何用意？ <a href="http://twitter.com/54chen/statuses/57352891106734081" class="aktt_tweet_time">#</a>
-QCon2011讲师经验总结及QCon2011的ppt下载 <a href="http://goo.gl/fb/mY61v" rel="nofollow">http://goo.gl/fb/mY61v</a> <a href="http://twitter.com/54chen/statuses/57238551632420865" class="aktt_tweet_time">#</a>
-54chen Twitter memo 2011-04-10 <a href="http://goo.gl/fb/SWaie" rel="nofollow">http://goo.gl/fb/SWaie</a> <a href="http://twitter.com/54chen/statuses/56894905515126785" class="aktt_tweet_time">#</a>
-
-</p>
 </div>
   
   

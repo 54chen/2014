@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-08-29】 2009-08-29 00:00:00 +0800 伏地魔会力翻译中 # LinkIn基于Dynamo设计的系统：伏地魔(voldemort)设计中文文档[我是陈科学院译]-完稿 http://www.54chen.com &hellip;">
+  <meta name="description" content="用java并发测试tokyo Cabinet的性能[五四陈手记] 2009-09-03 00:00:00 +0800 Tokyo Cabinet 是日本人 平林幹雄 开发的一款 DBM 数据库，该数据库读写非常快，哈希模式写入100万条数据只需0.643秒，读取100万条数据只需0.773秒，是 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,235 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/09/03/tokyo-cabinet-with-java-concurrent-test-the-performance/">用java并发测试tokyo Cabinet的性能[五四陈手记]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-09-03T00:00:00+08:00" pubdate data-updated="true">2009-09-03 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>Tokyo Cabinet 是日本人 平林幹雄 开发的一款 DBM 数据库，该数据库读写非常快，哈希模式写入100万条数据只需0.643秒，读取100万条数据只需0.773秒，是 Berkeley DB 等 DBM 的几倍。</p>
+
+<p>编译安装tokyocabinet数据库
+<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">wget <a href="http://tokyocabinet.sourceforge.net/tokyocabinet-1.4.28.tar.gz" target="_blank">http://tokyocabinet.sourceforge.net/tokyocabinet-1.4.28.tar.gz</a>
+tar zxvf tokyocabinet-1.4.28.tar.gz<br />
+cd tokyocabinet-1.4.28/<br />
+./configure<br />
+make<br />
+make install<br />
+cd ../</div>
+http://tokyocabinet.sourceforge.net/javapkg/tokyocabinet-java-1.22.tar.gz</p>
+
+<p>下载这个包
+<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">tar zxvf tokyocabinet-java-1.22.tar.gz<br />
+cd tokyocabinet-java-1.22<br />
+./configure<br />
+make<br />
+make install</div>
+install会将libjtokyocabinet.so 和 tokyocabinet.jar放到/usr/lib64下面。</p>
+
+<p>将生成的tokyocabinet.jar拖到本地，新建项目，引用这个jar包。使用如下代码：
+<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">package test;<br />
+import java.util.ArrayList;<br />
+import java.util.HashMap;<br />
+import java.util.List;<br />
+import java.util.Map;<br />
+import java.util.concurrent.atomic.AtomicLong;</div></p>
+
+<p>import tokyocabinet.*;</p>
+
+<p>public class BenchMark {</p>
+
+<p>public static class Stat {<br />
+private AtomicLong _count = new AtomicLong(0);<br />
+private static Stat _instance = new Stat();</p>
+
+<p>public static Stat getInstance() {<br />
+return _instance;<br />
+}</p>
+
+<p>private Stat() {<br />
+_printer = new RatePrinter(_count);<br />
+_printer.setDaemon(true);<br />
+_printer.start();<br />
+}</p>
+
+<p>public void inc() {<br />
+_count.incrementAndGet();<br />
+}</p>
+
+<p>private RatePrinter _printer;</p>
+
+<p>private static class RatePrinter extends Thread {<br />
+private long _last;<br />
+private AtomicLong _c;</p>
+
+<p>public RatePrinter(AtomicLong c) {<br />
+_c = c;<br />
+}</p>
+
+<p>@Override<br />
+public void run() {<br />
+while (true) {<br />
+try {<br />
+long current = _c.get();<br />
+System.out.println("Rate: " + (current - _last)<br />
++ " req/s");<br />
+_last = current;<br />
+Thread.sleep(1000L);<br />
+} catch (Throwable e) {<br />
+e.printStackTrace();<br />
+}
+}<br />
+}
+}<br />
+}</p>
+
+<p>public static class EchoThread extends Thread {<br />
+private TDB tdb;<br />
+public EchoThread(String ip,String port, int in, ThreadGroup group){<br />
+super(group, "EchoThread-" + in);<br />
+// create the object<br />
+tdb = new TDB();</p>
+
+<p>// open the database<br />
+if(!tdb.open("casket.tct", TDB.OWRITER | TDB.OCREAT)){<br />
+int ecode = tdb.ecode();<br />
+System.err.println("open error: " + tdb.errmsg(ecode));<br />
+}
+}</p>
+
+<p>@Override<br />
+public void run() {<br />
+int index = 0;<br />
+while (true) {<br />
+try {</p>
+
+<p>String pkey = new Long(tdb.genuid()).toString();<br />
+Map cols = new HashMap();<br />
+cols.put("name", "mikio"+index);<br />
+cols.put("age", "30");<br />
+cols.put("lang", "ja,en,c");<br />
+if(!tdb.put(pkey, cols)){<br />
+int ecode = tdb.ecode();<br />
+//System.err.println("put error: " + tdb.errmsg(ecode));<br />
+}</p>
+
+<p>//client.insert("Table1", "name"+index, "Standard1:name", ("name"+index).getBytes("UTF-8"), System.currentTimeMillis(), true);<br />
+//client.get_column("Table1", "name0", "Standard1:name");<br />
+index ++;<br />
+Stat.getInstance().inc();<br />
+} catch (Throwable e) {<br />
+e.printStackTrace();<br />
+break;<br />
+} finally {<br />
+// close the database<br />
+if(!tdb.close()){<br />
+int ecode = tdb.ecode();<br />
+//System.err.println("close error: " + tdb.errmsg(ecode));<br />
+}</p>
+
+<p>}<br />
+}
+}<br />
+}</p>
+
+<p>/**<br />
+* @param args<br />
+* @throws TTransportException<br />
+*/<br />
+public static void main(String[] args){<br />
+if (args.length != 1) {<br />
+System.out<br />
+.println("Usage: Benchmark ");<br />
+System.exit(1);<br />
+}</p>
+
+<p>String ip = args[0];<br />
+String port = args[0];</p>
+
+<p>Integer concurrent = Integer.valueOf(args[0]);<br />
+System.out.println("ip = "+ip+",port = "+port+",concurrent = " + concurrent);</p>
+
+<p>ThreadGroup group = new ThreadGroup("Benchmark");<br />
+List<br />
+threads = new ArrayList<br />
+();<br />
+for (int x = 0; x &lt; concurrent; ++x) {<br />
+Thread t =new EchoThread(ip,port, x, group);<br />
+threads.add(t);<br />
+t.start();<br />
+}
+}</p>
+
+<p>}
+运行结果反馈：
+<table border="1" cellspacing="0">
+<tbody>
+<tr>
+<th>并发</th>
+<th> 随机结果</th>
+<th> 起始文件大小</th>
+<th> 运行中机器情况</th>
+</tr>
+<tr>
+<td>1</td>
+<td>Rate: 255153 req/s</td>
+<td>517k</td>
+<td>load average: 0.53, 0.39, 1.30</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Rate: 505795 req/s - Rate: 909310 req/s</td>
+<td>517k</td>
+<td>load average: 3.89, 1.93, 1.65 Mem:   8195328k total,  8098204k used,    97124k free,  6685284k buffersSwap:  4000144k total,      148k used,  3999996k free,    36852k cached</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Rate: 658089 req/s - Rate: 907266 req/s</td>
+<td>517k</td>
+<td>load average: 5.34, 2.30, 1.81  Mem:   8195328k total,  8112984k used,    82344k free,  6703212k buffersSwap:  4000144k total,      148k used,  3999996k free,    36800k cached</td>
+</tr>
+<tr>
+<td>20</td>
+<td>Rate: 694200 req/s - Rate: 1003093 req/s</td>
+<td>517k</td>
+<td>load average: 9.40, 6.71, 3.62 Mem:   8195328k total,  7423824k used,   771504k free,  6684268k buffersSwap:  4000144k total,      148k used,  3999996k free,    36784k cached</td>
+</tr>
+</tbody></table>
+<a class="external text" title="http://tokyocabinet.sourceforge.net/benchmark.pdf" rel="nofollow" href="http://tokyocabinet.sourceforge.net/benchmark.pdf">官方数据</a>
+<ul>
+	<li> 70W req/s 基本上是一个和谐的值了</li>
+</ul></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -948,45 +1177,6 @@ RewriteRule ^feed/?([_0-9a-z-]+)?/?$ <a href="http://feeds.feedburner.com/-about
   rewrite ^/feed/$ <a href="http://feeds.feedburner.com/-aboutJavaAndPhp">http://feeds.feedburner.com/-aboutJavaAndPhp</a> redirect;<br />
 }</blockquote>
 都是302跳，可能对seo不是太好，不过可能是对一些rss客户端比较好。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/08/14/knowledge-and-power/">知识与力量</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-08-14T00:00:00+08:00" pubdate data-updated="true">2009-08-14 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><span style="font-size: medium;">联合利华引进了一条香皂包装生产线，结果发现这条生产线有个缺陷：常常会有盒子里没 装入香皂。总不能把空盒子卖给顾客啊，他们只好请了一个学自动化的博士后设计一个方案来分拣空的香皂盒。博士后拉起了一个十几人的科 研攻关小组，综合采用了机械、微电子、自动化、X射线探测等技术，花了几十万，成功解决了问题。每当生产线上有空香皂盒通过，两旁的探测器会检测到，并且 驱动一只机械手把空皂盒推走。 中国南方有个乡镇企业也买了同样的生产线，老板发现这个问题后大为发火，找了个小工来说你TMD给我把这个搞定。小工果然想出了办法：他在生产线旁边放了 台风扇猛吹，空皂盒自然会被吹走.</span></p>
-
-<p>转老故事一个，发散下思维，凡事换个方式想问题。</p>
 </div>
   
   

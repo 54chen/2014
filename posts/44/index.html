@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="为人人设计的分布式key-value系统架构[原创] 2009-08-09 00:00:00 +0800 [作者：陈臻 转载请注明出处：http://www.54chen.com/714-design-for-all-key-value-of-the-distributed-system- &hellip;">
+  <meta name="description" content="知识与力量 2009-08-14 00:00:00 +0800 联合利华引进了一条香皂包装生产线，结果发现这条生产线有个缺陷：常常会有盒子里没 装入香皂。总不能把空盒子卖给顾客啊，他们只好请了一个学自动化的博士后设计一个方案来分拣空的香皂盒。博士后拉起了一个十几人的科 研攻关小组，综合采用了机械 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,45 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/08/14/knowledge-and-power/">知识与力量</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-08-14T00:00:00+08:00" pubdate data-updated="true">2009-08-14 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><span style="font-size: medium;">联合利华引进了一条香皂包装生产线，结果发现这条生产线有个缺陷：常常会有盒子里没 装入香皂。总不能把空盒子卖给顾客啊，他们只好请了一个学自动化的博士后设计一个方案来分拣空的香皂盒。博士后拉起了一个十几人的科 研攻关小组，综合采用了机械、微电子、自动化、X射线探测等技术，花了几十万，成功解决了问题。每当生产线上有空香皂盒通过，两旁的探测器会检测到，并且 驱动一只机械手把空皂盒推走。 中国南方有个乡镇企业也买了同样的生产线，老板发现这个问题后大为发火，找了个小工来说你TMD给我把这个搞定。小工果然想出了办法：他在生产线旁边放了 台风扇猛吹，空皂盒自然会被吹走.</span></p>
+
+<p>转老故事一个，发散下思维，凡事换个方式想问题。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1155,161 +1194,6 @@ http://tokyocabinet.sourceforge.net/tokyoproducts.pdf<br />
   <div class="entry-content entry-content1"><p>RT</p>
 
 <p>血雨腥风的历史，不明真相的围观群众，受人控制的组织者，矫情的演说。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/07/21/mediawiki-pgsql/">[原创]mediawiki安装改进手记-使用mediawikit和postgresql搭建有强大搜索功能的wiki</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-07-21T00:00:00+08:00" pubdate data-updated="true">2009-07-21 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>[ 文章作者：陈臻 本文版本：v1.1 最后修改：2009.7.28 转载请注明原文链接：<a href="http://www.54chen.com/c/640">http://www.54chen.com/c/640</a> ]</p>
-
-<p>在yahoo工程技术部，最有趣的事情当属打开工程技术部的wiki，慢慢阅读来自前辈们的大作。</p>
-
-<p>yahoo以前使用的是twiki，后来更换了mediawiki，扩展了postgresql的搜索，使mediawiki的搜索功能得到了加强，这里，记录下我在校内搭建一整套的手记：</p>
-
-<p><strong>第一步.准备php和postgresql环境</strong></p>
-
-<p>大环境：因为是内部系统，所以图省事，WEB使用的是一个<a href="http://www.54chen.com/c/372">ubuntu</a>的机器，安装这些丝毫不用费力了。就是先用apt安装php、nginx，源码包安装lighttpd取<span style="font-size: x-small;"><a href="http://www.54chen.com/c/640"><span style="font-size: x-small;">spawn-cgi</span></a>一枚备用。源码包安装postgresql8.3.3。</span></p>
-
-<p>#apt-get install php5 php5-pgsql php5-mbstring php5-cgi</p>
-
-<p>#apt-get install nginx</p>
-
-<p>#wget <a href="http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz">http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz</a>
-#tar -xvf lighttpd-1.4.19.tar.gz<br />
-#cd lighttpd-1.4.19/<br />
-#./configure<br />
-#make<br />
-#cp src/spawn-fcgi /usr/local/bin/spawn-fcgi</p>
-
-<p>(这里图快，没使用php-fpm)</p>
-
-<p>#adduser www</p>
-
-<p>#spawn-fcgi -a 127.0.0.1 -p 9000 -C 5 -u www-data -g www-data -f /usr/bin/php-cgi</p>
-
-<p>修改php.ini文件<br />
-cgi.fix_pathinfo=1; 这样php-cgi方能正常使用SCRIPT_FILENAME这个变量</p>
-
-<p>在/etc/nginx/sites-enable/default中添加以下代码</p>
-
-<p>server {<br />
-listen 80; //端口<br />
-server_name wiki.54chen.com; //虚拟域名<br />
-access_log /var/log/nginx/hwiki.54chen.com.access.log; //访问日志<br />
-location / {<br />
-root /home/wiki.54chen.com; //size根目录<br />
-index index.php;<br />
-}
-location ~ \.php$ { #php fastcgi的配置<br />
-fastcgi_pass 127.0.0.1:9000; #php fastcgi的代理端口与ip<br />
-fastcgi_index index.php;<br />
-fastcgi_param SCRIPT_FILENAME /home/wiki.54chen.com$fastcgi_script_name; #要处理的php文件的路径<br />
-include /etc/nginx/fastcgi_params; #fastcgi的参数文件地址<br />
-}
-}</p>
-
-<p>启动
-<pre>/etc/init.d/nginx start</pre>
-大功告成！</p>
-
-<p>postgresql的安装请进<span style="font-size: x-small; color: #3366cc;"><a href="http://www.54chen.com/c/601"><span style="font-size: x-small; color: #3366cc;">使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第一部分</span></a></span></p>
-
-<p><strong>第二步.安装mediawiki</strong></p>
-
-<p>#wget <a href="http://downloads.sourceforge.net/sourceforge/wikipedia/mediawiki-1.8.2.tar.gz?use_mirror=jaist">http://downloads.sourceforge.net/sourceforge/wikipedia/mediawiki-1.8.2.tar.gz?use_mirror=jaist</a></p>
-
-<p>#解压到/home/wiki.54chen.com</p>
-
-<p>通过浏览器访问安装，安装时选择postgresql.</p>
-
-<p>将wiki目录下connfig目录中的LocalSettings.php剪切到wiki目录中，把$wgEnableUploads = false;改为$wgEnableUploads = true;（这样允许上传图片了），还有就是把Wiki的Logo改成您所需要的$wgLogo = "$wgStylePath/common/images/wiki.png"。</p>
-
-<p><strong>第三步.修改meidawiki及修改sql</strong>
-1.修改DB<br />
-按标题搜的触发器修改为
-<code>CREATE OR REPLACE FUNCTION mediawiki.ts2_page_title()<br />
-RETURNS "trigger" AS<br />
-$BODY$<br />
-BEGIN<br />
-IF TG_OP = 'INSERT' THEN<br />
-NEW.titlevector = to_tsvector('chinesecfg',COALESCE(REPLACE(NEW.page_title,'/',' '),''));<br />
-ELSIF NEW.page_title != OLD.page_title THEN<br />
-NEW.titlevector := to_tsvector('chinesecfg',COALESCE(REPLACE(NEW.page_title,'/',' '),''));<br />
-END IF;<br />
-RETURN NEW;<br />
-END;<br />
-$BODY$<br />
-LANGUAGE 'plpgsql' VOLATILE;<br />
-ALTER FUNCTION mediawiki.ts2_page_title() OWNER TO wikiuser;</code></p>
-
-<p>按内容搜索的触发器修改为
-<code>
-CREATE OR REPLACE FUNCTION mediawiki.ts2_page_text()<br />
-RETURNS "trigger" AS<br />
-$BODY$<br />
-BEGIN<br />
-IF TG_OP = 'INSERT' THEN<br />
-NEW.textvector = to_tsvector('chinesecfg',COALESCE(NEW.old_text,''));<br />
-ELSIF NEW.old_text != OLD.old_text THEN<br />
-NEW.textvector := to_tsvector('chinesecfg',COALESCE(NEW.old_text,''));<br />
-END IF;<br />
-RETURN NEW;<br />
-END;<br />
-$BODY$<br />
-LANGUAGE 'plpgsql' VOLATILE;<br />
-ALTER FUNCTION mediawiki.ts2_page_text() OWNER TO wikiuser;</code></p>
-
-<p>对标题的索引修改
-<code>
-drop index ts2_page_title;<br />
-CREATE INDEX ts2_page_title<br />
-ON mediawiki.page<br />
-USING gin<br />
-(titlevector);</code></p>
-
-<p>对内容的索引修改
-<code>
-drop index ts2_page_text;<br />
-CREATE INDEX ts2_page_text<br />
-ON mediawiki.pagecontent<br />
-USING gin<br />
-(textvector);</code></p>
-
-<p>修改 includes/SearchPosgres.php 146行：
-<code>$prefix = $wgDBversion &lt; 8.3 ? "'default'," : "'chinesecfg',";</code></p>
-
-<p>大功告成，搜索的时候就使用了bamboo的分词来搜了，如果还有兴趣可以加强175-179行的sql就能得到更加强大的wiki。</p>
 </div>
   
   

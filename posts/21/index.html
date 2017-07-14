@@ -9,8 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2011-06-26 2011-06-26 00:00:00 +0800 java log4j 日志分析工具分享 http://goo.gl/fb/GiLWg #
-http://wenku.baidu.com/view/ &hellip;">
+  <meta name="description" content="Mediawiki脚本自动发内容实现 2011-07-01 00:00:00 +0800 相信很多公司都是在使用mediawiki做内部team的知识管理，同时也有一些边边角角的脚本去做诸如上线、报警一类的工作。经常会有这样的需求：在上线的时候自动更新wiki的一页内容。 实现起来很简单， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +74,89 @@ http://wenku.baidu.com/view/ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2011/07/01/mediawiki-scripts-auto-post/">Mediawiki脚本自动发内容实现</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2011-07-01T00:00:00+08:00" pubdate data-updated="true">2011-07-01 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://img04.taobaocdn.com/imgextra/i4/T1r11iXhVkXXX_.NQ8_100702.jpg" alt="mediawiki auto post" /></p>
+
+<p>相信很多公司都是在使用mediawiki做内部team的知识管理，同时也有一些边边角角的脚本去做诸如上线、报警一类的工作。经常会有这样的需求：在上线的时候自动更新wiki的一页内容。</p>
+
+<p>实现起来很简单，只需要一个curl即可，mediawiki提供了http restful的接口，在api.php上，可以做很多事情，下面是实际使用的举例。</p>
+
+<p>目标：上线脚本最后执行一下记录，更新wiki里的一页做为上线记录，Online logging包换的元素有：日期，项目，版本号，机器。</p>
+
+<p>环境：安装了 curl的机器</p>
+
+<p><strong>实现细节（wiki.sh）：</strong>
+<blockquote>#! /bin/sh<br />
+OPS_APP=$1<br />
+shift<br />
+OPS_REV=$1<br />
+shift<br />
+OPS_SERVER=$1<br />
+OPS_TIME=`date`<br />
+echo "\nwrite to wiki"</blockquote></p>
+
+<p>TOKEN=`curl -s -d 'action=login&lgname=你的用户名&lgpassword=你的密码&format=json' http://你的wiki域名/wiki/api.php -D cookies.txt -b cookies.txt | sed -e 's/.*token":"//' -e 's/".*//'`</p>
+
+<p>curl -s -d "action=login&lgname=你的用户名&lgpassword=你的密码&lgtoken=${TOKEN}&format=json" http://你的wiki域名/wiki/api.php -b cookies.txt -D cookies.txt > result</p>
+
+<p>RET=`curl -s 'http://你的wiki域名/wiki/api.php?action=query&prop=info&intoken=edit&titles=Online_logging&indexpageids=&format=json' -b cookies.txt -D cookies.txt `</p>
+
+<p>ETOKEN=`echo ${RET}|sed -e 's/.*token":"//' -e 's/".*//' -e 's/+/%2B/g'`<br />
+ETOKEN=`echo ${ETOKEN}|sed -e 's/\\\\/%5C/g'`<br />
+TIME=`echo ${RET}|sed -e 's/.*starttimestamp":"//' -e 's/".*//'`<br />
+URL="action=edit&title=Online_logging&section=0&appendtext=%0A|${OPS_TIME}||${OPS_APP}||${OPS_REV}||${OPS_SERVER} %0A |-&summary=robot change&starttimestamp=${TIME}&token=${ETOKEN}&format=json"</p>
+
+<p>curl -s -d "${URL}" http://你的wiki域名/wiki/api.php -b cookies.txt -D cookies.txt > result<br />
+echo "\n**write successful**\n"
+</p>
+
+<p><strong>具体使用：</strong>
+首先新建一个名字为Online_logging的页面，内容如下：
+<blockquote>{|border="1" cellspacing="0" <br />
+|-<br />
+! 日期 || 项目 || 版本号 || 机器<br />
+|-</blockquote></p>
+
+<p><blockquote>sh wiki.sh 项目 版本号 服务器ip</blockquote></p>
+
+<p><strong>api参考：</strong>
+http://www.mediawiki.org/wiki/API:Login
+</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -699,65 +781,6 @@ maven打jar包自动生成run脚本-appassembler插件的使用 <a href="http://
 54chen Twitter memo 2011-05-22 <a href="http://goo.gl/fb/pDT9c" rel="nofollow">http://goo.gl/fb/pDT9c</a> <a href="http://twitter.com/54chen/statuses/72119224809689088" class="aktt_tweet_time">#</a>
 
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2011/05/24/maven-jar-auto-run-bash/">Maven打jar包自动生成run脚本-appassembler插件的使用</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2011-05-24T00:00:00+08:00" pubdate data-updated="true">2011-05-24 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://ww1.sinaimg.cn/bmiddle/569f6ce8jw1dhi9e5bj6wj.jpg" alt="" /></p>
-
-<p>关键配置：
-<blockquote>&lt;plugin&gt;<br />
-&lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;<br />
-&lt;artifactId&gt;appassembler-maven-plugin&lt;/artifactId&gt;<br />
-&lt;version&gt;1.1.1&lt;/version&gt;<br />
-&lt;configuration&gt;<br />
-&lt;programs&gt;<br />
-&lt;program&gt;<br />
-&lt;mainClass&gt;com.chen.logtailer.Tail&lt;/mainClass&gt;<br />
-&lt;name&gt;app&lt;/name&gt;<br />
-&lt;/program&gt;<br />
-&lt;/programs&gt;<br />
-&lt;/configuration&gt;<br />
-&lt;/plugin&gt;</blockquote></p>
-
-<p>#mvn package appassembler:assemble</p>
-
-<p>#sh target/appassembler/bin/app</p>
-
-<p><strong>优点：</strong>
-不需要管理各种run的脚本，自动生成。</p>
 </div>
   
   

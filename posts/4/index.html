@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Tigase代码框架解读 2014-07-07 13:47:54 +0800 在java下实现的xmpp开源实现，除了openfire外，tigase是另一个牛逼的项目。
-实际的实验室压力下，50万人同时在线的单机，tigase的gc情况要优于openfire， &hellip;">
+  <meta name="description" content="tigase网络核心SockThread详解 2014-07-09 16:03:33 +0800 总述 SocketThread类是一个很底层的类，在初始化时调用了Selector.open（clientsSel）。
+socketReadThread nThread个 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/09/tigase-sockthread/">tigase网络核心SockThread详解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-07-09T16:03:33+08:00" pubdate data-updated="true">2014-07-09 16:03:33 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140710/logo.png></p>
+
+<h2>总述</h2>
+
+<ul>
+<li>SocketThread类是一个很底层的类，在初始化时调用了Selector.open（clientsSel）。</li>
+<li>socketReadThread nThread个</li>
+<li>socketWriteThread nThread个</li>
+<li>ResultsListener nThread个</li>
+<li>completionService一个，池化线程nThread个，在sockThread.run里被submit，ResultsListener里进行completionService.take().get()取出执行结果。</li>
+<li>forCompletion有序队列一个，在socketThread.run里开始add，同一方法立即被从最小依次取出，然后submit给completionService。</li>
+<li>waiting有序队列一个，recreateSelector阶段存在add，最大来源是addSocketService静态方法，在socketThread.run最后阶段的addAllWaiting时注册Channel时把waiting里的IOService取出做为附加对象绑定。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/09/tigase-sockthread/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -559,57 +614,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/04/14/how-to-use-akka-in-java/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/03/19/how-to-use-phonegap/">Phonegap试用手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-03-19T23:31:04+08:00" pubdate data-updated="true">2014-03-19 23:31:04 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140318/chart.png></p>
-
-<h2>phoneGap是什么？</h2>
-
-<p>就是个壳子，方便原来做web开发的同学快速切入移动端开发。
-本手记最终将生成“五四陈科学院”android版本和ios版本。</p>
-
-<h2>安装</h2>
-
-<p>基础环境是rmbp，有java环境，有xcode环境。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/03/19/how-to-use-phonegap/">Read on &rarr;</a>
     </footer>
   
 

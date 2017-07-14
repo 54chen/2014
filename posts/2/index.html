@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="在c/c++中解决SHA1WithRSA/ras/X509的过程记录 2016-05-25 12:13:25 +0800 这里记录了一种简单的办法，在遇到写c/c++找不到答案时的最简单找代码办法。 方法是：google找php怎么解决，大把的答案，然后看php源代码是怎么用c实现的。 Read &hellip;">
+  <meta name="description" content="微信支付api.mch.weixin.qq.com域名解析慢原因：ipv6 2016-06-18 16:56:47 +0800 有朋友在阿里云主机实现微信支付逻辑时，发现api.mch.weixin.qq.com的解析实在是太慢了。 因此出现了手动修改/etc/hosts的情况，当然了， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/18/wexin-resolve-slowly/">微信支付api.mch.weixin.qq.com域名解析慢原因：ipv6</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2016-06-18T16:56:47+08:00" pubdate data-updated="true">2016-06-18 16:56:47 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>有朋友在阿里云主机实现微信支付逻辑时，发现api.mch.weixin.qq.com的解析实在是太慢了。</p>
+
+<p>因此出现了手动修改/etc/hosts的情况，当然了，哪天微信支付要是换个机房肯定要挂。</p>
+
+<p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
+
+<p>我们的机房也有相似的同题，专门记录一下。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/18/wexin-resolve-slowly/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -556,54 +604,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2015/06/03/are-u-ok/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/04/13/serivce-design/">大规模业务服务器开发总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2015-04-13T10:00:00+08:00" pubdate data-updated="true">2015-04-13 10:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
-
-<h1>大比小好</h1>
-
-<p>开发阶段，服务不稳定，一个大服务不如一堆小服务; 运维阶段，服务都稳定了，一堆小服务又不如一个大服务。</p>
-
-<p>大规模的时候了，如果能够一个进程搞定的，尽量不要拆两个进程。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/04/13/serivce-design/">Read on &rarr;</a>
     </footer>
   
 
