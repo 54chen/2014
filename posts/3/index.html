@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="大规模业务服务器开发总结 2015-04-13 10:00:00 +0800 大比小好 开发阶段，服务不稳定，一个大服务不如一堆小服务; 运维阶段，服务都稳定了，一堆小服务又不如一个大服务。 大规模的时候了，如果能够一个进程搞定的，尽量不要拆两个进程。 Read on &rarr; &hellip;">
+  <meta name="description" content="R U Ok--客户端网络优化实践 2015-06-03 16:11:08 +0800 当愤怒的用户，张牙舞爪地告诉你他遇到问题的时候，往往已经病入膏肓。－－题记 作者同全国各地愤怒的用户亲密接触了很长的时间之后，做出了以下总结，希望对后来的人们能够有一点启发。 一、用户IP是个不可靠的东西 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/06/03/are-u-ok/">R U Ok--客户端网络优化实践</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2015-06-03T16:11:08+08:00" pubdate data-updated="true">2015-06-03 16:11:08 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
+
+<p>当愤怒的用户，张牙舞爪地告诉你他遇到问题的时候，往往已经病入膏肓。－－题记</p>
+
+<p>作者同全国各地愤怒的用户亲密接触了很长的时间之后，做出了以下总结，希望对后来的人们能够有一点启发。</p>
+
+<h1>一、用户IP是个不可靠的东西</h1>
+
+<ul>
+<li>在实际的案例中，使用用户的IP地址去IP库里找用户属于哪个地域哪个运营商。</li>
+<li>不幸的是，IP库有可能不准。</li>
+<li>更不幸的是，连IP地址都可能是错的。实际案例中，我们遇到了运营商级别的流量劫持，用户本来是浙江移动，在某些服务器取得的IP居然是江苏电信。</li>
+<li>解决的办法：尽量不依赖IP，用smartDNS。或者多渠道纠正IP地址，使用本地客户端的运营商识别能力＋电话号码地域识别。</li>
+</ul>
+
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/06/03/are-u-ok/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -636,61 +692,6 @@
   
     <footer>
       <a rel="full-article" href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/07/31/connection-secret-in-mobile/">中国移动网络下连接的秘密</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-07-31T17:44:55+08:00" pubdate data-updated="true">2014-07-31 17:44:55 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
-
-<p> 最近在研究网络层的接入问题。一些心得记录在下面：</p>
-
-<h2>一、TCP与HTTP</h2>
-
-<ul>
-<li>0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。</li>
-<li>1.TCP传输的数据，绝对是顺序正确、不丢包的数据。否则它一定不会把数据扔给应用层。</li>
-<li>2.从应用层角度，TCP是一个数据流，收到的数据会聚在一起。所以需要应用层去协商数据与数据之间用什么间隔，比如常用的长度标识。</li>
-<li>3.TCP在网络恶劣的情况下，开始启动：拥塞避免算法 与 慢启动算法。而这些都是由一些公式去估计当前网络情况的。</li>
-<li>4.TCP的报文包与我们自己应用层的发的“包”半毛钱关系都没有，数据到了底层还是要切成N块来传送的。</li>
-<li>5.所谓的HTTP比TCP更可靠是错误的。HTTP是应用层协议，实际也是TCP，只不过数据在应用层定义了规则：必须有request\header\body等等。</li>
-<li>6.硬件防火墙一般拦截端口，软件防火墙才拦协议。所以80端口走TCP有不少好处。</li>
-<li>7.HTTP比TCP更可靠的错觉产生的原因是：HTTP请求基本都是每次新开连接，而TCP很少这样做。</li>
-<li>8.TCP就像</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/07/31/connection-secret-in-mobile/">Read on &rarr;</a>
     </footer>
   
 

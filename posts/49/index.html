@@ -9,7 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="如何解决时间同步引起oracle 不稳定的问题 2009-01-17 00:00:00 +0800 数据库服务器的时间与真实时间一旦出现差异，就要对数据库服务器进行时间同步。很多地方都把ntpdate放到cron中，5分钟自动同步一次。然而，这么做，常常会引会数据库ORA-01555，甚至db &hellip;">
+  <meta name="description" content="如何建立自己的Apache扩展 2009-01-19 00:00:00 +0800   假设有一个扩展Apache功能的模块mod_foo.c ，使用下列命令，可以将C源程序编译为共享模块，以在运行时加载到Apache服务器中： $ apxs -c mod_foo.c
+/path/to/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +75,94 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/01/19/%E5%A6%82%E4%BD%95%E5%BB%BA%E7%AB%8B%E8%87%AA%E5%B7%B1%E7%9A%84apache%E6%89%A9%E5%B1%95/">如何建立自己的Apache扩展</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-01-19T00:00:00+08:00" pubdate data-updated="true">2009-01-19 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p> </p>
+
+<p>假设有一个扩展Apache功能的模块<code>mod_foo.c</code> ，使用下列命令，可以将C源程序编译为共享模块，以在运行时加载到Apache服务器中：
+<div class="example" /></p>
+
+<p><code> $ apxs -c mod_foo.c<br />
+/path/to/libtool --mode=compile gcc ... -c mod_foo.c<br />
+/path/to/libtool --mode=link gcc ... -o mod_foo.la mod_foo.slo<br />
+$ _ </code>
+然后，必须修改Apache的配置，以确保有一个<code class="directive">LoadModule </code>指令来加载此共享对象。为了简化这一步骤，<code>apxs</code> 可以自动进行该操作，以安装此共享对象到"modules"目录，并更新<code><a href="http://www.54chen.com/c/148">httpd</a>.conf</code> 文件，命令如下：
+<div class="example" /></p>
+
+<p><code> $ apxs -i -a mod_foo.la<br />
+/path/to/instdso.sh mod_foo.la /path/to/apache/modules<br />
+/path/to/libtool --mode=install cp mod_foo.la /path/to/apache/modules       ...       chmod 755 /path/to/apache/modules/mod_foo.so<br />
+[activating module 'foo' in /path/to/apache/conf/httpd.conf]<br />
+$ _ </code>
+如果配置文件中尚不存在，会增加下列的行：
+<div class="example" /></p>
+
+<p><code> LoadModule foo_module modules/mod_foo.so </code>
+如果你希望默认禁用此模块，可以使用 <code>-A</code> 选项，即：
+<div class="example" /></p>
+
+<p><code> $ apxs -i -A mod_foo.c </code>
+要快速测试apxs机制，可以建立一个Apache模块样板及其对应的Makefile ：
+<div class="example" /></p>
+
+<p><code> $ apxs -g -n foo<br />
+Creating [DIR]  foo<br />
+Creating [FILE] foo/Makefile<br />
+Creating [FILE] foo/modules.mk<br />
+Creating [FILE] foo/mod_foo.c<br />
+Creating [FILE] foo/.deps<br />
+$ _ </code>
+然后，立即可以编译此样板模块为共享对象并加载到<a href="http://www.54chen.com/c/26">Apache</a>服务器中：
+<div class="example" /></p>
+
+<p><code> $ cd foo<br />
+$ make all reload<br />
+apxs -c mod_foo.c<br />
+/path/to/libtool --mode=compile gcc ... -c mod_foo.c<br />
+/path/to/libtool --mode=link gcc ... -o mod_foo.la mod_foo.slo<br />
+apxs -i -a -n "foo" mod_foo.la<br />
+/path/to/instdso.sh mod_foo.la /path/to/apache/modules<br />
+/path/to/libtool --mode=install cp mod_foo.la /path/to/apache/modules       ...       chmod 755 /path/to/apache/modules/mod_foo.so<br />
+[activating module 'foo' in /path/to/apache/conf/httpd.conf]<br />
+apachectl restart<br />
+/path/to/apache/sbin/apachectl restart: httpd not running, trying to start<br />
+[Tue Mar 31 11:27:55 1998] [debug] mod_so.c(303): loaded module foo_module<br />
+/path/to/apache/sbin/apachectl restart: httpd started<br />
+$ _</code></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -944,61 +1033,6 @@ initrd (hd0,0)/initrd.gz</p>
 <p>ThinkPad 系列，调整屏幕亮度，请使用“首选项”-“电源管理”.亮度选择那个条是反的。试了就知道了。</p>
 
 <p>完毕。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/12/29/java-ee%E4%B8%AD%E5%90%84%E7%A7%8D%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6/">Java EE中各种打包文件</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2008-12-29T00:00:00+08:00" pubdate data-updated="true">2008-12-29 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>1.EJB-JAR包：后缀为.jar</p>
-
-<p>EJB模块，包含有Session Bean，Message Driver Bean，Entity  Bean；管理这些Bean业务的为EntityManager，而EntityManager由EntityManagerFactory产生。通过配置persistence.xml配置这些Bean。</p>
-
-<p>2.WAR包：后缀为.war</p>
-
-<p>web模块，包括开发java  web的所有文件如：JSP，Servlet，JSF，javascrpit，web.xml，图片，音乐，flash资源等等；如果需要在war中应用EntityBean，可以配置一下persistence.xml然后将EntityBean打包进war包中。。war描述文件web.xml放在WEB-INF文件下。</p>
-
-<p>3.EAR包：后缀为.ear</p>
-
-<p>实际上就是j2ee应用中的各种文档或模块，包括：EJB模块，WEB模块，RAR模块，CAR模块等。可以说它是开发项目的最终包，其他开发过程的模块最终会以.ear的包形式来实施应用。ear包中一个非常重要的描述文件为application.xml，它放在META-INF文件下。</p>
-
-<p>4.CAR包：后缀为.jar</p>
-
-<p>应用客户端模块，包含在客户端独立运行的类和访问的JDBC，JMS，JAXP，JAAS，以及 EJB客户端需要的类等。</p>
-
-<p>5.RAR包：后缀为.rar</p>
-
-<p>这个包应该比较好理解，它是资源适配器模块，包括java连接器，帮助库函数，以及其他一些相关资源。</p>
 </div>
   
   

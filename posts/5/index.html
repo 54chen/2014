@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Phonegap试用手记 2014-03-19 23:31:04 +0800 phoneGap是什么？ 就是个壳子，方便原来做web开发的同学快速切入移动端开发。
-本手记最终将生成“五四陈科学院”android版本和ios版本。 安装 基础环境是rmbp，有java环境，有xcode环境。 &hellip;">
+  <meta name="description" content="Java中使用akka手记一 2014-04-14 21:38:24 +0800 什么是actor? Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。
+它由Carl Hewitt于上世纪70年代早期提出， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,62 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/04/14/how-to-use-akka-in-java/">Java中使用akka手记一</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-04-14T21:38:24+08:00" pubdate data-updated="true">2014-04-14 21:38:24 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
+
+<h2>什么是actor?</h2>
+
+<ul>
+<li>Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。</li>
+<li>它由Carl Hewitt于上世纪70年代早期提出，目的是为了解决分布式编程中一系列的编程问题。</li>
+<li>Actor模型的本质已经被强调了无数遍：万物皆Actor。Actor之间只有发送消息这一种通信方式。</li>
+<li>一个Actor如何处理多个Actor的请求呢？它先建立一个消息队列，每次收到消息后，就放入队列，而它每次也从队列中取出消息体来处理。通常我们都使得这个过程是循环的。让Actor可以时刻处理发送来的消息。</li>
+</ul>
+
+
+<h2>什么是akka?</h2>
+
+<p>Akka是一个用Scala编写的库，用于简化编写容错的、高可伸缩性的Java和Scala的Actor模型应用。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/04/14/how-to-use-akka-in-java/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -527,54 +583,6 @@ http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。<
   
     <footer>
       <a rel="full-article" href="/blog/2013/11/30/bluno/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/11/27/jvm/">Java 1.6.0_38-b05 Vm 20.13-b02优化手记</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-11-27T00:00:00+08:00" pubdate data-updated="true">2013-11-27 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg" alt="jvm" /></p>
-
-<p><strong>基础：</strong>
-业务代码<br />
-rose框架（底层是spring）<br />
-resin4<br />
-java 1.6.0_38-b05<br />
-centos</p>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/11/27/jvm/">Read on &rarr;</a>
     </footer>
   
 

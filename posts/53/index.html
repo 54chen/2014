@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="短片：叫你别往这儿舔[48秒] 2008-11-13 00:00:00 +0800 “东楼kappa女最新视频” 2008-11-12 00:00:00 +0800 东楼kappa女 到底是什么东东呢 研究啊研究 发扬了传统的大无谓的精神 终于bt搜索下来一个 一看 绝对不是 再搜 再看 “ &hellip;">
+  <meta name="description" content="一种在sns系统中统一应用平台的方式 2008-11-18 00:00:00 +0800 SNS:概念略，像开心、校内等，今天要研究的是他们的应用程序的实施方案。 如果你和我一样在考虑如何简单的完成一套共享的能用的应用可扩展平台（看上去有点绕，不过它的确就是这样的）。 首先， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,99 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2008/11/18/%E4%B8%80%E7%A7%8D%E5%9C%A8sns%E7%B3%BB%E7%BB%9F%E4%B8%AD%E7%BB%9F%E4%B8%80%E5%BA%94%E7%94%A8%E5%B9%B3%E5%8F%B0%E7%9A%84%E6%96%B9%E5%BC%8F/">一种在sns系统中统一应用平台的方式</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2008-11-18T00:00:00+08:00" pubdate data-updated="true">2008-11-18 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>SNS:概念略，像开心、校内等，今天要研究的是他们的应用程序的实施方案。</p>
+
+<p>如果你和我一样在考虑如何简单的完成一套共享的能用的应用可扩展平台（看上去有点绕，不过它的确就是这样的）。</p>
+
+<p><strong>首先，我们需要在apache的rewrite上做一点手脚：</strong>
+<p style="padding-left: 30px;"><strong><span style="font-weight: normal;">RewriteEngine On</span></strong></p>
+<p style="padding-left: 60px;"> </p>
+<p style="padding-left: 30px;">RewriteRule ^/+apps/([^/]+)$ /apps/app.php?%{QUERY_STRING}&amp;__app_path=$1 [L,PT]</p>
+<p style="padding-left: 30px;">RewriteRule ^/+apps/([^/]+)/+([^/]*)$ /apps/app.php?%{QUERY_STRING}&amp;__app_path=$1&amp;__app_page=$2 [L,PT]</p></p>
+
+<p>这样，就可以将一个请求为http://url/apps/a.php?a=x的地址发给http://url/apps/app.php?a=x&amp;__app_path=apps/a.php</p>
+
+<p>请注意，这里多出了两个GET变量！</p>
+
+<p><strong>第二步，我们需要建立一个框架的入口，也就是实际访问的时候用的apps/app.php</strong></p>
+
+<p>apps/app.php(以下代码只供参考使用，未验证bug)</p>
+
+<p>&lt;?php</p>
+
+<p>$__app_path = trim($_GET('__app_path'));</p>
+
+<p>$__app_page = trim($_GET('__app_page'));</p>
+
+<p>/*</p>
+
+<p>* 此处可添加一个CONFIG</p>
+
+<p>*/</p>
+
+<p>if(!$__app_page)</p>
+
+<p><span> </span>$__app_page = "index.php";</p>
+
+<p><span> </span>$file_path = "./".$__app_path."/".$__app_page;</p>
+
+<p>include($file_path);</p>
+
+<p>?&gt;</p>
+
+<p><strong>第三，建立我们的hello world!</strong></p>
+
+<p>进入apps/hello(没有则创建之)，建立新文件index.php</p>
+
+<p>&lt;?php</p>
+
+<p>echo 'hello world!';</p>
+
+<p>?&gt;</p>
+
+<p><strong>第四步，也许还可以扩展</strong></p>
+
+<p>这一步所考虑的是，如果应用的代码不在同一个服务器里，也就是说，跨域名的应用服务，应当怎么做。</p>
+
+<p>修改apps/app.php</p>
+
+<p>使用curl扩展这一功能，又或者直接iframe?这涉及更高要讨论的东西，例如权限和数据。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1303,66 +1396,6 @@ net_quit (GtkAction * action)<br />
 
 <p>* Date: the Mid-Autumn Festival of 2008<br />
 ***/</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2008/09/14/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3%E7%A0%81%E5%A4%A7/">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part1）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2008-09-14T00:00:00+08:00" pubdate data-updated="true">2008-09-14 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><p class="cnt">/***<br />
-* Author: cc0cc<br />
-* E-mail: cc0cc@126.com<br />
-* WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
-* Date: the Mid-Autumn Festival of 2008<br />
-***/<br />
-概要：这个软件是三年前的时候在学校里写的，主要目的是给广大的Linuxers一个上网的机会，不过后来在我推出后官方又出了个Linux下的拔号二进制包。
-<p class="cnt">PS:神州数码的局域网拔号软件在各大高校使用很多，有不少小区也是，一般官方发布的会有一定的限制。。。</p></p>
-
-<p><p class="cnt">熟悉802.1x协议的过程，对网络编程的学习也有一定的提高。<br />
-代码中的ASM汇编部分代码取自北航的高手xdkui（目前在MS就职），在此一并感谢他的努力hack。<br />
-声明：本代码只供学习使用，完全遵循计算机软件保护条例。</p>
-
-<p>1.开发环境：<br />
-gtk+/gnome<br />
-Anjuta+Glade<br />
-2.文件树（截图）：
-<div class="cnt"><a href="http://www.54chen.com/wp-content/uploads/2008/11/f53990fba317f23b4f4aeaba.png"><img class="alignnone size-full wp-image-67" title="f53990fba317f23b4f4aeaba" src="http://www.54chen.com/wp-content/uploads/2008/11/f53990fba317f23b4f4aeaba.png" alt="" width="236" height="701" /></a></div>
-<div class="cnt">/***<br />
-* Author: cc0cc<br />
-* E-mail: cc0cc@126.com<br />
-* WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a></div>
-<div class="cnt">* Date: the Mid-Autumn Festival of 2008<br />
-***/</div></p></p></p>
 </div>
   
   

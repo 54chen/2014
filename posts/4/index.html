@@ -9,8 +9,8 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="tigase网络核心SockThread详解 2014-07-09 16:03:33 +0800 总述 SocketThread类是一个很底层的类，在初始化时调用了Selector.open（clientsSel）。
-socketReadThread nThread个 &hellip;">
+  <meta name="description" content="中国移动网络下连接的秘密 2014-07-31 17:44:55 +0800 最近在研究网络层的接入问题。一些心得记录在下面： 一、TCP与HTTP 0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。
+1.TCP传输的数据，绝对是顺序正确、不丢包的数据。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +75,61 @@ socketReadThread nThread个 &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/07/31/connection-secret-in-mobile/">中国移动网络下连接的秘密</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2014-07-31T17:44:55+08:00" pubdate data-updated="true">2014-07-31 17:44:55 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
+
+<p> 最近在研究网络层的接入问题。一些心得记录在下面：</p>
+
+<h2>一、TCP与HTTP</h2>
+
+<ul>
+<li>0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。</li>
+<li>1.TCP传输的数据，绝对是顺序正确、不丢包的数据。否则它一定不会把数据扔给应用层。</li>
+<li>2.从应用层角度，TCP是一个数据流，收到的数据会聚在一起。所以需要应用层去协商数据与数据之间用什么间隔，比如常用的长度标识。</li>
+<li>3.TCP在网络恶劣的情况下，开始启动：拥塞避免算法 与 慢启动算法。而这些都是由一些公式去估计当前网络情况的。</li>
+<li>4.TCP的报文包与我们自己应用层的发的“包”半毛钱关系都没有，数据到了底层还是要切成N块来传送的。</li>
+<li>5.所谓的HTTP比TCP更可靠是错误的。HTTP是应用层协议，实际也是TCP，只不过数据在应用层定义了规则：必须有request\header\body等等。</li>
+<li>6.硬件防火墙一般拦截端口，软件防火墙才拦协议。所以80端口走TCP有不少好处。</li>
+<li>7.HTTP比TCP更可靠的错觉产生的原因是：HTTP请求基本都是每次新开连接，而TCP很少这样做。</li>
+<li>8.TCP就像</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2014/07/31/connection-secret-in-mobile/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -558,62 +613,6 @@ socketReadThread nThread个 &hellip;">
   
     <footer>
       <a rel="full-article" href="/blog/2014/04/16/how-to-use-akka-in-java-2/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2014/04/14/how-to-use-akka-in-java/">Java中使用akka手记一</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2014-04-14T21:38:24+08:00" pubdate data-updated="true">2014-04-14 21:38:24 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
-
-<h2>什么是actor?</h2>
-
-<ul>
-<li>Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。</li>
-<li>它由Carl Hewitt于上世纪70年代早期提出，目的是为了解决分布式编程中一系列的编程问题。</li>
-<li>Actor模型的本质已经被强调了无数遍：万物皆Actor。Actor之间只有发送消息这一种通信方式。</li>
-<li>一个Actor如何处理多个Actor的请求呢？它先建立一个消息队列，每次收到消息后，就放入队列，而它每次也从队列中取出消息体来处理。通常我们都使得这个过程是循环的。让Actor可以时刻处理发送来的消息。</li>
-</ul>
-
-
-<h2>什么是akka?</h2>
-
-<p>Akka是一个用Scala编写的库，用于简化编写容错的、高可伸缩性的Java和Scala的Actor模型应用。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2014/04/14/how-to-use-akka-in-java/">Read on &rarr;</a>
     </footer>
   
 

@@ -9,7 +9,7 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="多nginx单php-fpm的配置方法[from科学院] 2009-11-02 00:00:00 +0800 用php fastcgi和nginx搭配的形式是很常见的，在很BT的需求下，可能会需要多个nginx走不同的端口，而进程只用一个php-fpm。 本文所讲的环境比上述一句话还要BT， &hellip;">
+  <meta name="description" content="Linux系统更换sshd的方法手记[from科学院] 2009-11-04 00:00:00 +0800 朋友的服务器让人给黑了，把sshd都给更换了，拿到root用户名密码直接用curl往外传。绝对是老毛子的手法，非常娴熟，入侵涉及的方案有perl服务、c、shell、curl、php &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +74,89 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/11/04/linux-system-replacement-method-sshd-notes-from-from-academy-of-sciences/">Linux系统更换sshd的方法手记[from科学院]</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-11-04T00:00:00+08:00" pubdate data-updated="true">2009-11-04 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>朋友的服务器让人给黑了，把sshd都给更换了，拿到root用户名密码直接用curl往外传。绝对是老毛子的手法，非常娴熟，入侵涉及的方案有<a href="http://www.54chen.com/79-perl-workshop-2008-%e5%bd%92%e6%9d%a5/">perl</a>服务、c、shell、curl、php exec等等。</p>
+
+<p>在最简单的分析下，采取更换sshd服务的办法来去除老毛子的垃圾sshd.</p>
+
+<p>第一步、下载、安装
+<blockquote>wget -c "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-5.0p1.tar.gz"</blockquote></p>
+
+<p>tar zxvf openssh-5.0p1.tar.gz<br />
+cd openssh-5.0p1
+请确认Zlib和OpenSSL的版本:<br />
+openssh-5.0p1要求Zlib的版本在1.2.1.2以上,<a href="http://www.54chen.com/809-tsinghua-huambo-fist-of-fury-review-environmental-elements-lamp/">OpenSSL</a>版本在0.9.6以上.下面是Zlib和 OpenSSL的官方地址:<br />
+http://www.gzip.org/zlib/<br />
+http://www.openssl.org/</p>
+
+<p>在安装过程中我遇到了zlib的版本过低。从上边的网址去下一个 zlib-1.2.3.tar.gz
+<blockquote>tar zxvf zlib-1.2.3.tar.gz</blockquote></p>
+
+<p>cd zlib-1.2.3</p>
+
+<p>./configure</p>
+
+<p>make &amp;&amp; make install
+然后重新进入 openssh-5.0p1:
+<blockquote>./configure --sysconfdir=/etc/ssh</blockquote></p>
+
+<p>make</p>
+
+<p>这一步后面很牛B，要去到那个修改过的openssh的目录里 make uninstall (就是要把老毛子的病毒sshd给全部rm掉),然后再执行下面的步骤：</p>
+
+<p>make install
+第二步、配置启动革新</p>
+
+<p>新安装的sshd都在/usr/local/sbin/sshd，老的在/usr/sbin/sshd，ps能看到老的还在跑（当然还在跑，不跑你还能连着ssh操作吗~~·）</p>
+
+<p>修改配置文件，让新的sshd在新的端口启动：
+<blockquote>vi /etc/ssh/sshd_config</blockquote></p>
+
+<p>Port 220</p>
+
+<p>然后启动新的sshd:</p>
+
+<p>/usr/local/ssh/sbin/sshd -f /etc/ssh/sshd_config</p>
+
+<p>注意打开下iptable:</p>
+
+<p>iptables -I <a href="http://www.54chen.com/230-%e6%b7%ab%e8%8d%a1%e4%b8%80%e4%b8%8b%ef%bc%8c%e4%bd%a0%e5%b0%b1%e7%9f%a5%e9%81%93/">INPUT</a> -p udp --dport 220 -j ACCEPT
+K掉原来的~~搞定！打完收工。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1028,50 +1111,6 @@ sudo /home/zzz/nginx/sbin/nginx</p>
 
 <p>(出处:<a href="http://www.mifengtd.cn/articles/where-should-you-stay-during-presentation.html">http://www.mifengtd.cn/articles/where-should-you-stay-during-presentation.html</a>)
 <div></div></p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/10/10/%E4%B8%80%E5%91%A8%E5%BA%9F%E8%AF%9D%E6%B1%87%E6%80%BB%E3%80%9054chen-twitter-2009-10-10%E3%80%91/">一周废话汇总【54chen Twitter 2009-10-10】</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-10-10T00:00:00+08:00" pubdate data-updated="true">2009-10-10 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><ul class="aktt_tweet_digest">
-	<li>收到一封很牛B的简历，发在了垃圾邮件里，看来是发了不少封。 <a href="http://twitter.com/54chen/statuses/4726793434">#</a></li>
-	<li>大假之后上班，感觉真的不一样，哪里不一样？ceo要辞职 <a href="http://twitter.com/54chen/statuses/4728293583">#</a></li>
-	<li>接上一推，是谣传 <a href="http://twitter.com/54chen/statuses/4728306262">#</a></li>
-	<li>陈一舟: 研究复杂系统规律是高科技公司成功关键 <a href="http://twitter.com/54chen/statuses/4729997404">#</a></li>
-	<li>今年获诺贝尔物理学奖的，高锟先生获得成功的关键两步：1948年，上海解放前夕，从上海移居香港；1996年，香港回归前夕，从香港移居美国。这昭示了中国知识分子取得成功的必要条件：有多远滚多远。 <a href="http://twitter.com/54chen/statuses/4730916269">#</a></li>
-</ul>
-</p>
 </div>
   
   

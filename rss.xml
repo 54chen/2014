@@ -4,8 +4,58 @@
         <description><![CDATA[五四陈科学院]]></description>
         <title><![CDATA[五四陈科学院]]></title>
         <link>http://2014.54chen.com/</link>
-        <pubDate>2017-07-17T10:07:25+08:00</pubDate>
+        <pubDate>2017-07-27T10:51:07+08:00</pubDate>
 
+        
+        <item>
+            <description>
+                <![CDATA[
+<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
+                <p>This is a quick guide explaining how to run GUI app in docker on mac osx.</p>
+
+<p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
+
+<!--more-->
+
+
+<h2>step 1.install two important tools</h2>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#brew cask install xquartz</span>
+
+<span class="cp">#brew install socat</span></code></pre></div>
+
+
+<h2>step 2.run socat</h2>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">socat</span> <span class="n">TCP</span><span class="o">-</span><span class="nl">LISTEN</span><span class="p">:</span><span class="mi">6001</span><span class="p">,</span><span class="n">reuseaddr</span><span class="p">,</span><span class="n">fork</span> <span class="n">UNIX</span><span class="o">-</span><span class="nl">CLIENT</span><span class="p">:</span><span class="err">\</span><span class="s">&quot;$DISPLAY</span><span class="se">\&quot;</span><span class="s"> &amp;</span></code></pre></div>
+
+
+<h2>step 3.see what your real en* by ifconfig</h2>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#ifconfig</span></code></pre></div>
+
+
+<p>You can see en0 en1 en2 and so on,choose a right one which has the right IP addrass.</p>
+
+<p>step 4.run docker</p>
+
+<div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">-</span><span class="n">e</span> <span class="n">XAUTHORITY</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">xauth</span> <span class="o">-</span><span class="n">v</span> <span class="o">~/</span><span class="p">.</span><span class="nl">Xauthority</span><span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">xauth</span> <span class="o">-</span><span class="n">e</span> <span class="n">DISPLAY</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">ifconfig</span> <span class="n">en3</span> <span class="o">|</span> <span class="n">grep</span> <span class="err">&#39;</span><span class="n">inet</span> <span class="err">&#39;</span><span class="o">|</span><span class="n">awk</span> <span class="err">&#39;</span><span class="p">{</span><span class="n">print</span> <span class="err">$</span><span class="mi">2</span><span class="p">}</span><span class="err">&#39;</span><span class="p">)</span><span class="o">:</span><span class="mi">1</span> <span class="o">--</span><span class="n">net</span> <span class="n">host</span> <span class="o">--</span><span class="n">volume</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span><span class="o">:/</span><span class="n">workspace</span> <span class="n">fastercnn</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span></code></pre></div>
+
+
+<p>attention: You must modify the DISPLAY,replace the &ldquo;ifconfig en*&rdquo; by the one which choosed in step 3.</p>
+
+<p>Good luck!</p>
+
+<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
+                ]]>
+            </description>
+            <title><![CDATA[How to run GUI app in docker on osx]]></title>
+            <link>http://2014.54chen.com/blog/2017/07/27/docker-gui-osx/</link>
+            <pubDate>2017-07-27T10:11:29+08:00</pubDate>
+            <guid isPermaLink="false">http://2014.54chen.com/blog/2017/07/27/docker-gui-osx</guid>
+
+            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
+        </item>
         
         <item>
             <description>
@@ -2741,106 +2791,6 @@
             <link>http://2014.54chen.com/blog/2015/07/17/macos-vim-youcompleteme/</link>
             <pubDate>2015-07-17T18:05:16+08:00</pubDate>
             <guid isPermaLink="false">http://2014.54chen.com/blog/2015/07/17/macos-vim-youcompleteme</guid>
-
-            <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
-        </item>
-        
-        <item>
-            <description>
-                <![CDATA[
-<a href="http://www.54chen.com"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif"></a><br>以下内容由<a href="http://www.54chen.com">[五四陈科学院]</a>提供<br>
-                <p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
-
-<p>当愤怒的用户，张牙舞爪地告诉你他遇到问题的时候，往往已经病入膏肓。－－题记</p>
-
-<p>作者同全国各地愤怒的用户亲密接触了很长的时间之后，做出了以下总结，希望对后来的人们能够有一点启发。</p>
-
-<h1>一、用户IP是个不可靠的东西</h1>
-
-<ul>
-<li>在实际的案例中，使用用户的IP地址去IP库里找用户属于哪个地域哪个运营商。</li>
-<li>不幸的是，IP库有可能不准。</li>
-<li>更不幸的是，连IP地址都可能是错的。实际案例中，我们遇到了运营商级别的流量劫持，用户本来是浙江移动，在某些服务器取得的IP居然是江苏电信。</li>
-<li>解决的办法：尽量不依赖IP，用smartDNS。或者多渠道纠正IP地址，使用本地客户端的运营商识别能力＋电话号码地域识别。</li>
-</ul>
-
-
-<!--more-->
-
-
-<h1>二、用户不是傻子，他其实都知道自己网络是好是坏</h1>
-
-<ul>
-<li>许多案例，用户都会告诉你，他的QQ是好的、微信是好的，为什么你不行？你不行！</li>
-<li>看用户日志，感觉用户在撒谎。</li>
-<li>然而这并没有什么卵用。</li>
-<li>知道真相眼泪掉下来：用户在坏网络下时并不会反馈，而从坏网络－>好网络时，你如果还在原来的状态下，你不行，用户就愤怒了。</li>
-<li>解决的办法：维护好socket的connect init->connecting->connected状态，任何用户的手动操作，1）天线没变，除了connected状态外，都要转圈; 2）天线变了，除了connected状态外，都要重新开始。</li>
-</ul>
-
-
-<h1>三、用户的愤怒，还因为反应慢</h1>
-
-<ul>
-<li>当socket正在创建时，用户手动重发一个数据，往往是采取转菊花和感叹号两个办法。</li>
-<li>对用户的行为硬碰硬（立即感叹号），会立即引发用户的愤怒。</li>
-<li>对用户的行为超过一定时间的转对抗（菊花），超过10秒即会引发用户的愤怒。</li>
-<li>解决的办法：设置合适的timeout值。wifi下：connect timeout 1s，send data timeout 1s（明显的大数据包要区别对待）。4g/3g/2g下：connect timeout 1s，send data timeout 10s（明显的大数据包要区别对待）</li>
-<li>connect timeout的情况处理：重新发起connect。换IP。</li>
-<li>send data timeout的情况处理：重新发数据2次。reconnect new ip。</li>
-</ul>
-
-
-<h1>四、遇到了localDNS问题－不解析、乱解析</h1>
-
-<ul>
-<li>dns问题最好的办法：方案中不用dns。退而选之，少用dns。</li>
-</ul>
-
-
-<h1>五、遇到了运营商加广告</h1>
-
-<ul>
-<li>一般运营商只对http加广告</li>
-<li>二逼运营商还对tcp加广告</li>
-<li>解决的办法：parse数据失败时，reconnect新的地方。</li>
-</ul>
-
-
-<h1>六、遇到了协议、端口拦截</h1>
-
-<ul>
-<li>常见问题</li>
-<li>一个协议不行，换另一个。tcp|udp->http->websocket</li>
-<li>一个端口不行，换另一个。80->443->8080->14000</li>
-</ul>
-
-
-<h1>七、遇到了EPIPE\ECONNRESET</h1>
-
-<ul>
-<li>与服务器的连接中断后，send一次数据过去，如果能够到服务器，且服务器已经关了，会回一个RST，RST到了客户端，客户端此时read数据，将遇到ECONNRESET。</li>
-<li>与服务器的连接中断后，send数据时时如果已经通过RST得到对方关了，返回EPIPE。</li>
-<li>以功夫网为例，ECONNRESET的原因，是海外势力被发现后根本收不到数据或者数据乱了，就从server上关掉了socket，再过去的包就会回RST，我们再读就会显示ECONNRESET。</li>
-<li>解决办法：只有timeout值得重试，其他都reconnect吧。</li>
-</ul>
-
-
-<h1>八、总结</h1>
-
-<ul>
-<li>要想用户不愤怒，网坏时可坏，但网好要他也好。（迅速恢复）</li>
-<li>客户端各种适应环境。</li>
-</ul>
-
-
-<br>想快点找到作者也可以到Twitter上留言: <a href="https://www.twitter.com/54chen" target="_blank">@54chen</a><br>或者你懒得带梯子上墙，请到新浪微博：<a href="http://t.sina.com.cn/54chen" target="_blank">@54chen</a>
-                ]]>
-            </description>
-            <title><![CDATA[R u ok--客户端网络优化实践]]></title>
-            <link>http://2014.54chen.com/blog/2015/06/03/are-u-ok/</link>
-            <pubDate>2015-06-03T16:11:08+08:00</pubDate>
-            <guid isPermaLink="false">http://2014.54chen.com/blog/2015/06/03/are-u-ok</guid>
 
             <source url="http://2014.54chen.com/rss.xml"><![CDATA[五四陈科学院]]></source>
         </item>
