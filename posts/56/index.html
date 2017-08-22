@@ -9,7 +9,10 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="intel汇编与AT＆T的区别 2006-10-26 00:00:00 +0800 [文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.26 转载请注明原文链接：http://www.54chen.com/c/30] 在设计mynet的时候用到这个，其实二者区别不是太多， &hellip;">
+  <meta name="description" content="NFS使用记录 2006-11-17 00:00:00 +0800 第一步：#serviceconf
+第二步：启动portmap和nfs(每次修改exports都要重启nfs才会生效)
+第三步：#vi /etc/exports
+第四步：/root 202.199.159.193(rw) &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -28,6 +31,7 @@
 
   
 
+  <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
 </head>
 
 <body   >
@@ -74,6 +78,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2006/11/17/nfs-usage-records/">NFS使用记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2006-11-17T00:00:00+08:00" pubdate data-updated="true">2006-11-17 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>第一步：#serviceconf<br />
+第二步：启动portmap和nfs(每次修改exports都要重启nfs才会生效)<br />
+第三步：#vi /etc/exports<br />
+第四步：/root 202.199.159.193(rw)<br />
+option:<br />
+ro 只读<br />
+rw 读写<br />
+noaccess 无权<br />
+第五步：在202.199.159.193这个IP的机器上，#mount 10.10.138.192:/root cc0cc/(如果不行可以试试把10.10.138.192的iptables关掉)<br />
+提示：由于它的认证机制是基于IP地址的,因而容易被ip-spoofing攻击.一般除非必要不要打开这项服务.</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>

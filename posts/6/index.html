@@ -9,12 +9,12 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="Java 1.6.0_38-b05 Vm 20.13-b02优化手记 2013-11-27 00:00:00 +0800 基础：
-业务代码
-rose框架（底层是spring）
-resin4
-java 1.6.0_38-b05
-centos Read on &rarr; 《移动互联网技术挑战》－ &hellip;">
+  <meta name="description" content="BLUNO试用手记 2013-11-30 00:00:00 +0800 准备工作
+rmbp
+BLUNO ×1
+Android 4.3+ Devices with BLE or IOS 7.0+ Devices
+Accessory Shield with Arduino ×1
+Micro USB &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -33,6 +33,7 @@ centos Read on &rarr; 《移动互联网技术挑战》－ &hellip;">
 
   
 
+  <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
 </head>
 
 <body   >
@@ -79,6 +80,54 @@ centos Read on &rarr; 《移动互联网技术挑战》－ &hellip;">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/11/30/bluno/">BLUNO试用手记</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2013-11-30T00:00:00+08:00" pubdate data-updated="true">2013-11-30 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
+<strong>准备工作</strong>
+rmbp<br />
+BLUNO ×1<br />
+Android 4.3+ Devices with BLE or IOS 7.0+ Devices<br />
+Accessory Shield with Arduino ×1<br />
+Micro USB cable x1<br />
+http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。</p>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/11/30/bluno/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -493,59 +542,6 @@ http://blog.sina.com.cn/s/blog_8a49cc8f0101b03j.html<br />
     <footer>
       <a rel="full-article" href="/blog/2013/08/08/open-hard/">Read on &rarr;</a>
     </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/25/jvm-cpu-load-high-script/">线上jvm进程CPU Load高排查脚本-jkiller</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2013-07-25T00:00:00+08:00" pubdate data-updated="true">2013-07-25 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png" alt="java" />
-<strong>jkiller</strong>
-如果遇到线上java进程占用过多的cpu，可以用这个脚本来帮助你快速找到代码的问题。</p>
-
-<p><a href="https://github.com/54chen/jkiller">https://github.com/54chen/jkiller</a></p>
-
-<p><strong>使用过程</strong></p>
-
-<p>先用top或者是jps定位占用cpu过多的java进程的pid是多少。</p>
-
-<p>然后执行如下过程即可得到结论：</p>
-
-<p><blockquote>#wget https://raw.github.com/54chen/jkiller/master/jkiller.sh && chmod +x jkiller.sh<br />
-#sh jkiller.sh [pid]
-</blockquote></p>
-
-<p>*centos系统下测试通过。</p>
-</div>
-  
   
 
 

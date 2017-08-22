@@ -9,7 +9,19 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="一周废话汇总【54chen Twitter 2009-11-28】 2009-11-28 00:00:00 +0800 支付宝不支持ubuntu firefox3.55? # 前台看到一个应聘java的，居然是老妈带来在前台帮着登记 # 转文章故意去掉出处的小人，我代表中国一线的原创作者BS你 &hellip;">
+  <meta name="description" content="当幸福来敲门 2009-12-01 00:00:00 +0800 我们都一样
+一样的善良
+一样为需要的人打造一个天堂
+歌声是翅膀
+唱出了希望
+所有的付出只因爱的力量
+和你一样
+我们都一样
+谁在最需要的时候轻轻拍着我肩膀
+谁在最快乐的时候愿意和我分享
+日子那么长
+我在你身旁
+见证你成长 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -28,6 +40,7 @@
 
   
 
+  <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
 </head>
 
 <body   >
@@ -74,6 +87,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2009/12/01/the-pursuit-of-happyness/">当幸福来敲门</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2009-12-01T00:00:00+08:00" pubdate data-updated="true">2009-12-01 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p>我们都一样<br />
+一样的善良<br />
+一样为需要的人打造一个天堂<br />
+歌声是翅膀<br />
+唱出了希望<br />
+所有的付出只因爱的力量<br />
+和你一样<br />
+我们都一样<br />
+谁在最需要的时候轻轻拍着我肩膀<br />
+谁在最快乐的时候愿意和我分享<br />
+日子那么长<br />
+我在你身旁<br />
+见证你成长<br />
+永远为你鼓掌</p>
+
+<p>因为失去过，所以才懂得珍惜，因为失去过，所以才怕再次失去，因为失去过，所以才懂得享受幸福。</p>
+
+<p>当幸福来敲门</p>
+
+<p>史密斯先生随手提的笨重的仪器，具有压垮脆弱人生巨大的负荷，压抑的感觉充满心灵，持续不断。</p>
+
+<p>当幸福来敲门的时候</p>
+
+<p>最后喘出的气息，天高云淡的感觉，豁然开朗，理解幸福与快乐，学会幸福与快乐。</p>
+
+<p>一月之后，是新的一年，心情超好，呼，好久没有喘气的感觉。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -688,69 +763,6 @@ initrd (hd0,0)/initrd.lz
 	<li>转自陈一舟: 千橡竟然还有这么多光棍!?囧-窘迫 要解决。 <a href="http://twitter.com/54chen/statuses/5469271797">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2009/11/06/notes-from-java-nio-to-learn-to-collect/">Java Nio学习手记[收集]</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2009-11-06T00:00:00+08:00" pubdate data-updated="true">2009-11-06 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p>传统的并发型服务器设计是利用阻塞型网络I/O 以多线程的模式来实现的，然而由于系统常常在进行网络读写时处于阻塞状态，会大大影响系统的性能；自Java1. 4 开始引入了NIO(新I/O) API，通过使用非阻塞型I/O，实现流畅的网络读写操作，为开发高性能并发型服务器程序提供了一个很好的解决方案。这就是java nio.</p>
-
-<p><strong>传统的阻塞型网络 I/O的不足:</strong></p>
-
-<p>Java 平台传统的I/O 系统都是基于Byte（字节）和Stream（数据流）的，相应的I/O 操作都是阻塞型的，所以服务器程序也采用阻塞型I/O 进行数据的读、写操作。本文以TCP长连接模式来讨论并发型服务器的相关设计，为了实现服务器程序的并发性要求，系统由一个单独的主线程来监听用户发起的连接请求，一直处于阻塞状态；当有用户连接请求到来时，程序都会启一个新的线程来统一处理用户数据的读、写操作。</p>
-
-<p>这种模式的优点是简单、实用、易管理；然而缺点也是显而易见的：由于是为每一个客户端分配一个线程来处理输入、输出数据，其线程与客户机的比例近似为1：1，随着线程数量的不断增加，服务器启动了大量的并发线程，会大大加大系统对线程的管理开销，这将成为吞吐量瓶颈的主要原因；其次由于底层的I/O 操作采用的同步模式，I/O 操作的阻塞管</p>
-
-<p>理粒度是以服务于请求的线程为单位的,有可能大量的线程会闲置,处于盲等状态，造成I/O资源利用率不高，影响整个系统的性能。</p>
-
-<p>对于并发型服务器，系统用在阻塞型I/O 等待和线程间切换的时间远远多于CPU 在内存中处理数据的时间，因此传统的阻塞型I/O 已成为制约系统性能的瓶颈。Java1.4 版本后推出的NIO 工具包，提供了非阻塞型I/O 的异步输入输出机制，为提高系统的性能提供了可实现的基础机制。</p>
-
-<p><strong>NIO:</strong></p>
-
-<p>针对传统I/O 工作模式的不足，NIO 工具包提出了基于Buffer（缓冲区）、Channel（通道）、Selector（选择器）的新模式；Selector（选择器）、可选择的Channel（通道）和SelectionKey（选择键）配合起来使用，可以实现并发的非阻塞型I/O 能力。</p>
-
-<p>Buffer（缓冲器）</p>
-
-<p>Buffer 类是一个抽象类，它有7 个子类分别对应于七种基本的数据类型：ByteBuffer、CharBuffer、DoubleBuffer、FloatBuffer、IntBuffer、LongBuffer 和ShortBuffer。每一个Buffer对象相当于一个数据容器，可以把它看作内存中的一个大的数组，用来存储和提取所有基本类型(boolean 型除外)的数据。Buffer 类的核心是一块内存区，可以直接对其执行与内存有关的操作，利用操作系统特性和能力提高和改善Java 传统I/O 的性能。</p>
-
-<p>Channel（通道）</p>
-
-<p>Channel 被认为是NIO 工具包的一大创新点，是(Buffer)缓冲器和I/O 服务之间的通道，具有双向性，既可以读入也可以写出，可以更高效的传递数据。我们这里主要讨论ServerSocketChannel 和SocketChannel，它们都继承了SelectableChannel，是可选择的通道，分别可以工作在同步和异步两种方式下（这里的可选择不是指可以选择两种工作方式，而是指可以有选择的注册自己感兴趣的事件）。当通道工作在同步方式时，它的功能和编程方法与传统的ServerSocket、Socket 对象相似；当通道工作在异步工作方式时，进行输入输出处理不必等到输入输出完毕才返回，并且可以将其感兴趣的（如：接受操作、连接操作、读出操作、写入操作）事件注册到Selector 对象上，与Selector 对象协同工作可以更有效率的支持和管理并发的网络套接字连接。</p>
-
-<p>Selector（选择器）和SelectionKey（选择键）</p>
-
-<p>各类 Buffer 是数据的容器对象；各类Channel 实现在各类Buffer 与各类I/O 服务间传输数据。Selector 是实现并发型非阻塞I/O 的核心，各种可选择的通道将其感兴趣的事件注册到Selector 对象上，Selector 在一个循环中不断轮循监视这各些注册在其上的Socket 通道。SelectionKey 类则封装了SelectableChannel 对象在Selector 中的注册信息。当Selector 监测到在某个注册的SelectableChannel 上发生了感兴趣的事件时,自动激活产生一个SelectionKey对象,在这个对象中记录了哪一个SelectableChannel 上发生了哪种事件，通过对被激活的SelectionKey 的分析,外界可以知道每个SelectableChannel 发生的具体事件类型,进行相应的处理。</p>
 </div>
   
   
