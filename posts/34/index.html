@@ -9,7 +9,9 @@
   <meta name="author" content="54chen">
 
   
-  <meta name="description" content="54chen Twitter Memo 2010-05-02 2010-05-02 00:00:00 +0800 今天在丰台讲课未能到场远送，祝一路平安！@Fenng: 恭贺QCon大会圆满闭幕！我不得不去机场了，再见各位！#QCon # 现场的同志们，出酒店来看看，打雷了下雨了，快收衣服 &hellip;">
+  <meta name="description" content="从php核心代码看require和include的区别 2010-05-05 00:00:00 +0800 前言
+五一长假归来，休息长时间很有点不习惯，回到北京已经有些不适应了。
+见到鸟哥的一文：深入理解PHP之require/include顺序 http://www.laruence.com/ &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +77,127 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2010/05/05/php-require-include/">从php核心代码看require和include的区别</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2010-05-05T00:00:00+08:00" pubdate data-updated="true">2010-05-05 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content entry-content1"><p><strong>前言</strong>
+五一长假归来，休息长时间很有点不习惯，回到北京已经有些不适应了。<br />
+见到鸟哥的一文：深入理解PHP之require/include顺序 <a href="http://www.laruence.com/2010/05/04/1450.html">http://www.laruence.com/2010/05/04/1450.html</a>
+忍不住继续再深入了一下下，在此记录一下深入的过程，以供以后查阅。</p>
+
+<p><strong>普及</strong>
+在php手册中：
+<blockquote>require() is identical to include()  except upon failure it will also produce a fatal E_ERROR  level error. In other words, it will halt the script whereas include() only emits a warning (E_WARNING) which allows the script to continue.</blockquote>
+就是说在失败的时候，require是会中止php运行的，而include是可以继续运行的。<br />
+倒底有什么样的区别呢？我们带着这个疑问来一起进入PHP的核心代码。<br />
+下面是一个PHP运行过程的图（这个图是出自哪里的？鸟哥画的？）
+<img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1I1NzXa4xXXcL7xo6_062051.jpg" alt="php " /></p>
+
+<p><blockquote>补习一下：lex是代码扫描器，扫描代码用的，yacc是Yet Another Compiler Compiler，作用是把任何一种代码的语法转成yacc语法，yacc就是解析器（真TMD绕）。<br />
+lex在c下的后缀是*.l  yacc是*.y</blockquote></p>
+
+<p><strong>正题</strong>
+下面看操作记录：
+<blockquote>cc@cc-laptop:/opt/workspace$ svn checkout http://svn.php.net/repository/php/php-src/branches/PHP_5_3 php-src-5.3<br />
+从svn取最新的php源代码。
+</blockquote>
+开始深入：
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.l" -exec grep -Hn "require_once" {} \;<br />
+./Zend/zend_language_scanner.l:1093:"require_once" {<br />
+寻找lex代码扫描器文件中出现require_once的地方，zend_language_scanner.l的1093行。<br />
+1093  "require_once" {<br />
+1094         return T_REQUIRE_ONCE;<br />
+1095 }</blockquote></p>
+
+<p>然后再搜一下T_REQUIRE_ONCE,
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.y" -exec grep -Hn "T_INCLUDE" {} \;<br />
+./Zend/zend_language_parser.y:52:%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE<br />
+./Zend/zend_language_parser.y:985:	|	T_INCLUDE expr 			{ zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
+./Zend/zend_language_parser.y:986:	|	T_INCLUDE_ONCE expr 	{ zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }</blockquote></p>
+
+<p>在985行附近，有这样一群代码：
+<blockquote>internal_functions_in_yacc:<br />
+T_ISSET '(' isset_variables ')' { $$ = $3; }<br />
+|       T_EMPTY '(' variable ')'        { zend_do_isset_or_isempty(ZEND_ISEMPTY, &amp;$$, &amp;$3 TSRMLS_CC); }<br />
+|       T_INCLUDE expr                  { zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
+|       T_INCLUDE_ONCE expr     { zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
+|       T_EVAL '(' expr ')'     { zend_do_include_or_eval(ZEND_EVAL, &amp;$$, &amp;$3 TSRMLS_CC); }<br />
+|       T_REQUIRE expr                  { zend_do_include_or_eval(ZEND_REQUIRE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
+|       T_REQUIRE_ONCE expr             { zend_do_include_or_eval(ZEND_REQUIRE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br />
+;</blockquote></p>
+
+<p>于是乎，我们需要继续深入寻找zend_do_include_or_eval，
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.c" -exec grep -Hn "zend_do_include_or_eval" {} \;<br />
+./Zend/zend_compile.c:4317:void zend_do_include_or_eval(int type, znode *result, const znode *op1 TSRMLS_DC) /*  */</blockquote></p>
+
+<p>zend_do_include_or_eval中组装了一个结构体，ZEND_INCLUDE_OR_EVAL。</p>
+
+<p>再在zend_vm_def.h中找到ZEND_VM_HANDLER(73, ZEND_INCLUDE_OR_EVAL, CONST|TMP|VAR|CV, ANY)：<br />
+switch (Z_LVAL(opline-&gt;op2.u.constant)) {代码略}</p>
+
+<p>中间关键的一句是：<br />
+new_op_array = compile_filename(Z_LVAL(opline-&gt;op2.u.constant), inc_filename TSRMLS_CC);</p>
+
+<p>在zend_complie.h文件中:<br />
+ZEND_API zend_op_array *compile_filename(int type, zval *filename TSRMLS_DC);</p>
+
+<p>这个函数定义在zend_language_scaner.l文件中，找出最核心的代码：
+<blockquote>if (open_file_for_scanning(file_handle TSRMLS_CC)==FAILURE) {<br />
+// require与include的差别：错误信息的显示级别（有bailout和无bailout）<br />
+if (type==ZEND_REQUIRE) {   //require时<br />
+zend_message_dispatcher(ZMSG_FAILED_REQUIRE_FOPEN, file_handle-&gt;filename TSRMLS_CC);<br />
+zend_bailout();<br />
+} else {<br />
+zend_message_dispatcher(ZMSG_FAILED_INCLUDE_FOPEN, file_handle-&gt;filename TSRMLS_CC);<br />
+}
+compilation_successful=0;<br />
+} else {代码略}</blockquote></p>
+
+<p>继续追踪zend_message_dispatcher可以在main/main.c文件中找到php_message_handler_for_zend函数：</p>
+
+<p><blockquote>//include输出错误信息时的级别为：E_WARNING<br />
+		case ZMSG_FAILED_INCLUDE_FOPEN:<br />
+			php_error_docref("function.include" TSRMLS_CC, E_WARNING, "Failed opening '%s' for inclusion (include_path='%s')", php_strip_url_passwd((char *) data), STR_PRINT(PG(include_path)));<br />
+			break;<br />
+		//require输出错误信息时的级别为：E_COMPILE_ERROR<br />
+代码略
+</blockquote></p>
+
+<p><strong>总结</strong>
+和开头PHP手册所说完全一致，require和include的区别在于，出现错误时，一个是error一个是warning。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -1075,74 +1198,6 @@ memcached for reads</p>
 	<li>哥你裸求的时候多求一个 RT @Skiyo: 冰天雪地裸求邀请码 <a href="http://twitter.com/54chen/statuses/11861174966">#</a></li>
 </ul>
 </p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2010/04/08/blog-brother-society/">中国博客协会挨踢技术专业委员会"哥学社"正式成立</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2010-04-08T00:00:00+08:00" pubdate data-updated="true">2010-04-08 00:00:00 +0800</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content entry-content1"><p><img src="http://img07.taobaocdn.com/bao/uploaded/i7/T1QY0xXnxCXXcomUwT_013320.jpg" alt="哥学社" /></p>
-
-<p><span style="color: #ff0000;">最新的成员列表和任务列表都会记录在 </span><a href="http://www.54chen.com/blog-brother"><span style="color: #ff0000;">http://www.54chen.com/blog-brother</span></a>
-<div id="text1" class="text">中国博客协会挨踢技术专业委员会"哥学社"今日在北京成立。中国博客协会无会长、盛大代表坦克、人人网代表54chen分别在会上做了演讲。来自三大运营商的代表表示将全力支持哥学社开展工作，提升哥学社挨踢技术水平。</div></p>
-
-<p>有容乃大在发言中总结出，回眸2009年，技术博客频发，发了又发、信息重复等非传统博客问题十分突出，网络恶意行为的趋利化特征日益明显，黑客个体、地下产业链等方面的问题都给挨踢技术带来了严峻挑战，技术整体形势日趋严峻。哥学社的成立，将有助于对发博客探讨技术提供规范化有效化管理，更好地为遇到难题解决不了的兄弟提供决策依据，有助于互联网各公司对解决方案做出全面客观的评定。大家希望，哥学社要充分发挥学社作为各大公司间的桥梁纽带作用，代表企业积极主动向大家反映他们的合理诉求，维护企业利益，促进企业和谐发展。</p>
-
-<p>大家还就如何做好当前的工作提出了几点规则：一要切实增强每个会员工作的责任感、紧迫感和使命感，凡参加必须提出博客议题；二要深入开展博客内容建设，定时定量挑选有意义的博客议题进行发挥；三要充分发挥学会的支撑作用，到处宣扬，拉新鲜血液入会；四要积极拓展博客工作的服务范围，不仅仅局限在挨踢技术；五要大力开展自己博客的自律，积极主动提议题、发内容。<br />
-作者：郭庆婧    来源：人民邮电报    转自：http://www.c114.net/news/16/a495168.html</p>
-
-<p>现有议题：<br />
-1.mysql explain全解<br />
-2.shorturl算法方案<br />
-3.tokyo cabinet使用<br />
-4.no-sql原理</p>
-
-<p>现有成员列表：<br />
-54chen http://www.54chen.com<br />
-Tank http://skiyo.cn<br />
-虫zi  http://www.xiaoxiaozi.com<br />
-show  http://www.showframework.com<br />
-风雪之隅  http://www.laruence.com/<br />
-Zoro http://t.sina.com.cn/10514</p>
-
-<p>加入 哥学社 需要的条件：<br />
-1.有博客 2.有理想 3.哥</p>
-
-<p>如果满足，请联系czhttp@gmail.com或者留言。<br />
-如果不满足，想知道什么，请投递 czhttp@gmail.com 或者留言。
-<a href="https://groups.google.com/group/kissext">一个临时沟通的google group(为防墙，加s)</a></p>
-
-<p><span style="color: #ff0000;">最新的成员列表和任务列表都会记录在 </span><a href="http://www.54chen.com/blog-brother"><span style="color: #ff0000;">http://www.54chen.com/blog-brother</span></a></p>
 </div>
   
   
