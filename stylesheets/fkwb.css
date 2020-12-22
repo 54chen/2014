@@ -1,0 +1,16 @@
+.content{border:0px;background:url('/images/noise.png?1391844950') top left;padding-left: 55px;padding-right: 55px;font-size:14px;line-height:180%}
+.content .list_box{border:0px}
+.content .WB_face{float: left;overflow: hidden;}
+.content .WB_face img{width:30px;height:30px}
+.content .list_con{margin: 0px 0px 0px 40px;position: relative;}
+.content .WB_handle,.content .W_tips,.content .WB_cardpage{display:none}
+.content .clearfix{clear:both}
+.content .WB_func,.content .WB_func a{color:#ccc;font-size:12px;float:left}
+.content .WB_from{float:left}
+.content .list_li{height:auto!important;height:45px;min-height:45px;}
+.content .list_li{margin: 0px 0px -1px;padding: 5px 0px 7px;border-style: dotted;border-width: 1px 0 0 0;border-color:#D9D9D9;clear:both}
+.content .WB_text a{color:#eb7350;text-decoration:none}
+.W_icon_vipstyle{width: 14px;height: 14px;vertical-align: -2px;margin-left: 3px;}
+.content .WB_emotion ul {list-style-type:none; margin:0;width:100%;}
+.content .WB_emotion ul li {width:40px; float:left;}
+.content .WB_emotion {padding-left: 52px;background-image: url("http://chen54.b0.upaiyun.com/like.jpg");background-size: 50px 15px;height: auto!important;height: 45px;min-height: 45px;background-repeat: no-repeat;}
