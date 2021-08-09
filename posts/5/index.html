@@ -1,0 +1,870 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Java中使用akka手记三 Cluster详例 2014-04-17 20:11:07 +0800 一个例子 同样是typesafe的经典例子。
+  例子提供的服务是传输文本。当文本发给frontend节点，它会委派backend节点，backend执行转化任务，把结果返回给原来的客户端。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/5">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/04/17/how-to-use-akka-in-java-3/">Java中使用akka手记三 Cluster详例</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-04-17T20:11:07+08:00" pubdate data-updated="true">2014-04-17 20:11:07 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/20140415/akka_logo.png"></p>
+  
+  <h2>一个例子</h2>
+  
+  <ul>
+  <li>同样是typesafe的经典例子。</li>
+  <li>例子提供的服务是传输文本。当文本发给frontend节点，它会委派backend节点，backend执行转化任务，把结果返回给原来的客户端。</li>
+  <li>新的backend节点和frontend节点，都可以动态地在cluster上增减。</li>
+  </ul>
+  
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/04/17/how-to-use-akka-in-java-3/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/04/16/how-to-use-akka-in-java-2/">Java中使用akka手记二 Cluster</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-04-16T15:12:32+08:00" pubdate data-updated="true">2014-04-16 15:12:32 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/20140415/20140415.jpg"></p>
+  
+  <h2>基础知识</h2>
+  
+  <ul>
+  <li><p>2.3.2的cluster还有些想实现的东西没有实现，包括：actor分区（负载均衡） actor handoff（临时故障时的actor处理） actor重新平衡（增减节点时有用） actor状态复制机制（类似做M/S作用）</p></li>
+  <li><p>2.3.2的cluster已经有的能力有：节点－集群－leader节点; membership; gossip协议同步状态; VECTOR CLOCKS保障顺序; 失败检测－节点不可达算法; seed节点－新节点加入时可以向这些节点发消息，但也是可以向任意成员发的; membership生命周期有joining up leaving exiting removed unreachable几种状态。</p></li>
+  </ul>
+  
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/04/16/how-to-use-akka-in-java-2/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/04/14/how-to-use-akka-in-java/">Java中使用akka手记一</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-04-14T21:38:24+08:00" pubdate data-updated="true">2014-04-14 21:38:24 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/20140415/20140415.jpg"></p>
+  
+  <h2>什么是actor?</h2>
+  
+  <ul>
+  <li>Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。</li>
+  <li>它由Carl Hewitt于上世纪70年代早期提出，目的是为了解决分布式编程中一系列的编程问题。</li>
+  <li>Actor模型的本质已经被强调了无数遍：万物皆Actor。Actor之间只有发送消息这一种通信方式。</li>
+  <li>一个Actor如何处理多个Actor的请求呢？它先建立一个消息队列，每次收到消息后，就放入队列，而它每次也从队列中取出消息体来处理。通常我们都使得这个过程是循环的。让Actor可以时刻处理发送来的消息。</li>
+  </ul>
+  
+  
+  <h2>什么是akka?</h2>
+  
+  <p>Akka是一个用Scala编写的库，用于简化编写容错的、高可伸缩性的Java和Scala的Actor模型应用。</p>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/04/14/how-to-use-akka-in-java/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/03/19/how-to-use-phonegap/">Phonegap试用手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-03-19T23:31:04+08:00" pubdate data-updated="true">2014-03-19 23:31:04 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/20140318/chart.png"></p>
+  
+  <h2>phoneGap是什么？</h2>
+  
+  <p>就是个壳子，方便原来做web开发的同学快速切入移动端开发。
+  本手记最终将生成“五四陈科学院”android版本和ios版本。</p>
+  
+  <h2>安装</h2>
+  
+  <p>基础环境是rmbp，有java环境，有xcode环境。</p>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/03/19/how-to-use-phonegap/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/03/12/io-demystified/">Io不再神秘</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-03-12T10:27:15+08:00" pubdate data-updated="true">2014-03-12 10:27:15 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<ul>
+  <li>本文译自 <a href="http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/">http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/</a>
+</li>
+  <li>原作者：Buddhika Chamith</li>
+  <li>译者：54chen</li>
+  </ul>
+  
+  
+  <p>随着所有的在高可用服务器设计上的炒作，以及nodejs背后的风行，我想关注一些IO的设计模式，却一起没有足够的时间。现在正在完成的一些研究，我想最好记下这些资料以备查。让我们跳上IO bus兜风去。</p>
+  
+  <h2>各种各样的I/O</h2>
+  
+  <p>根据作的阻塞或非阻塞类型，以及IO的准备就绪、完成事件通知的同步和异步类型，一共有四种不同方式的IO。</p>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/03/12/io-demystified/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/03/05/ihaveadream/">中大型移动互联网公司技术架构选择</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-03-05T16:09:52+08:00" pubdate data-updated="true">2014-03-05 16:09:52 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<h2>总体思考</h2>
+  
+  <p>总结这些年经验，进行构架演进的方向选择时，大致要做到下面的目标：</p>
+  
+  <ul>
+  <li>可快速开发部署 （五分钟写出来一个经过测试的hello world并可访问/调用，并可在公网访问）</li>
+  <li>天然可扩展（业务层无状态，尽可能全部放到最后）</li>
+  <li>自动化（内存不足了，除了报警，应该自动加点机器进去; 新的项目，基础代码应该都不用写，自动生成即可）</li>
+  <li>框架化（公共层面的东西尽可能框架化，一层类似日志、counter、trace，应该不需要开发再写一行代码即默认打开）</li>
+  <li>量化（所有的调用都应该有percentile与rps，透明反馈服务质量，跟踪系统更是可以模拟用户进行系统内部）</li>
+  <li>同构化（因为搞两套的成本巨大，整体应该越来越趋同于同一种语言）</li>
+  <li>硬件虚拟化（整个平台应该对进程透明下面的硬件情况）</li>
+  <li>版本化、灰度化（所有的软件都应该在线上有明确的版本，且上线过程是一点点灰度上）</li>
+  </ul>
+  
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/03/05/ihaveadream/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/02/26/nginx-upstream-1-dot-0-to-1-dot-1/">更新nginx版本upstream升级http1.1解决多TIME_WAIT问题</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-02-26T10:27:02+08:00" pubdate data-updated="true">2014-02-26 10:27:02 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<h2>前情提要</h2>
+  
+  <p>在使用java web container的时候，我们都在前面挡一层nginx，方便使用各种nginx的功能，设置成代理。
+  访问特别多的时候发现，服务器上存在大量的TIME_WAIT状态的连接。
+  经分析，可能是nginx早期版本的upstream还是使用的1.0的短连接代理，java container老是以1.0的方式主动断开进入TIME_WAIT状态，浪费了大量的连接。</p>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/02/26/nginx-upstream-1-dot-0-to-1-dot-1/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/02/13/new-year-10-day/">过年十天技术阅读推荐汇总</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-02-13T11:34:08+08:00" pubdate data-updated="true">2014-02-13 11:34:08 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。</p>
+  
+  <ul>
+  <li>@温高铁</li>
+  </ul>
+  
+  
+  <p>各种数据库连接池性能对比 <a href="http://t.cn/zjVqSNg">http://t.cn/zjVqSNg</a> 结论:1) Druid是性能最好的数据库连接池，tomcat-jdbc和druid性能接近。2)proxool在激烈并发时会抛异常，完全不靠谱。 3) c3p0和proxool都相当慢，慢到影响sql执行效率的地步。4) bonecp性能并不优越，采用LinkedTransferQueue并没有能够获得性能提升</p>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/02/13/new-year-10-day/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/02/11/foreign-to-beijing/">2014年外地车牌转攻略</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-02-11T19:30:03+08:00" pubdate data-updated="true">2014-02-11 19:30:03 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/0211/28322841.jpg" alt="2014年外地车牌转攻略 外转京"></p>
+  
+  <h2>先决条件</h2>
+  
+  <ul>
+  <li>工作居住证</li>
+  <li>小汽车指标（不管是摇中号了还是置换）</li>
+  <li>外地车一辆（别太破）</li>
+  </ul>
+  
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/02/11/foreign-to-beijing/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/">Disruptor Thrift Server连接参数与rps数值影响记录</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-01-22T00:00:00+08:00" pubdate data-updated="true">2014-01-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/0122/267176d6-5ef4-3e0b-937e-c492f5ba7807.jpg" alt="disruptor thrift server" width="450/"></p>
+  
+  <p><strong>基础环境</strong>
+  rmbp<br>
+  8G MEM<br>
+  Intel(R) Core(TM) i7-3615QM CPU @ 2.30GHz  四核 八线程<br>
+  oracle jdk 1.7.0_45</p>
+  
+  <p><strong>原理</strong>
+  如上图，是类似tomcat的nio实现过程，不过将queue换成了高性能的disruptor，可能会得到更好的性能。可调整参数为numAcceptors，numSelectors，numWorkersPerSelector三个值。<br>
+  测试的代码位置在 https://github.com/54chen/disruptor_thrift_server 项目中的BenchmarkTest同时启动一个server，同时对其进行压测。</p>
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/4">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <em>5</em>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/6">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

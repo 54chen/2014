@@ -1,0 +1,471 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>LinkIn基于Dynamo设计的系统：伏地魔(voldemort)设计中文文档[我是陈科学院译]-完稿 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="原文地址：http://project-voldemort.com/design.php 翻译：陈臻 http://www.54chen.com 我是陈科学院 版本：1.0 日期：2009-8-25
+  Key-Value存储
+  为了实现高性能和高可用性，我们只允许非常简单的键值数据存取。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/08/23/dynamo-based-systems">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">LinkIn基于Dynamo设计的系统：伏地魔(voldemort)设计中文文档[我是陈科学院译]-完稿</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-08-23T00:00:00+08:00" pubdate data-updated="true">2009-08-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p></p>
+<blockquote>原文地址：http://project-voldemort.com/design.php</blockquote>
+  
+  <p>翻译：陈臻 http://www.54chen.com 我是陈科学院</p>
+  
+  <p>版本：1.0</p>
+  
+  <p>日期：2009-8-25
+  </p>
+<h2>Key-Value存储</h2>
+  为了实现高性能和高可用性，我们只允许非常简单的键值数据存取。key和value可以是list和map的复杂类型，但美中不足的是只有以下的查询是有效的：
+  <blockquote>
+  <pre>value = store.get(key)
+  store.put(key, value)
+  store.delete(key)</pre>
+  </blockquote>
+  这可不是解决了所有的问题，其实做了许多的取舍：
+  <h3>缺点</h3>
+  没有复杂的查询过滤器
+  
+  <p>所有的联合查询必须在代码实现</p>
+  
+  <p>没有外键的结构</p>
+  
+  <p>没有触发器和视图
+  </p>
+<h3>优点</h3>
+  只有高效的查询可用，性能是可想像的
+  
+  <p>容易分布到集群</p>
+  
+  <p>不管怎样，面向服务常常不允许外键的结构，并且强制在代码中实现联合（因为和数据相关的key这个关系 在另一个服务中维护着）</p>
+  
+  <p>使用关系型数据库你必须要有一个缓存层用来扩展读作，不过这个缓存层很典型地强制你使用了key-value的存储系统</p>
+  
+  <p>为了性能，最后不得不使用xml或者是其他不够正规的一砣文本</p>
+  
+  <p>使逻辑和存储分离清晰（出于性能原因，SQL鼓励将商业逻辑和存储作混在一起）</p>
+  
+  <p>没有对象-关系数据的丢失匹配问题</p>
+  
+  <p>数据模型的详细的讨论将在下面给出。
+  </p>
+<h2>系统架构</h2>
+  代码中的每层实现了简单的put get和delete作的接口。每一层都会负责一个方法，诸如tcp/ip网络通信、序列化、版本冲突解决、内部结点路由等等。例如路由层负责发起一个作，比方说是Put，并且分发给N个存储并行执行复制，同是要捕获所有的失败。
+  
+  <p><img src="http://project-voldemort.com/images/logical_arch.png" alt="">图1</p>
+  
+  <p>保持每一层意味着可以混合和匹配使用以满足运行中不同的需求。例如，我们可以增加一个压缩层，将字节值的压缩水平降低到序列化之下。同样，在将数据路由到分区的时候我们可以做灵活的智能路由。硬件负载均衡的http客户端（用ruby写的）这项工作可以在客户端做（smart的客户端），也可以在服务端做成傻瓜式的使用。要把网络层放在路由层的上面还是下面，我们需要做的是一件简单的事情。</p>
+  
+  <p><img src="http://project-voldemort.com/images/physical_arch.png" alt="">图2</p>
+  
+  <p>在上图中“Load Bal.”是指负载均衡的硬件或者是轮循软件负载均衡器，“Partition-aware routing”是存储的内部路由。从传延迟角度来看，越少的跳是件好事（因为，嗯，这样就跳得少了），从吞吐量的角度来说也是件好事（因为可预见的瓶颈更少了），但是需要把路由信息放到栈顶（例如，客户端必须是java的而且还要使用我们的库）。最后，最右的图中，http-rpc发送到服务的请求被路由到了包含正确数据的机器（如果有的话），因此，在一个单独的复制读的简单的情况下，机器必须能够直接从本地bdb线程内部获取数据。</p>
+  
+  <p>这一灵活性使得高性能的配置成为可能。在存储中，磁盘的访问是一个的最大的性能冲击，第二个是网络的跳数。靠分区数据和尽可能缓存数据，可以避免磁盘访问。网络跳数需要架构的灵活性来消除。请注意在上图中，我们可以用不同的配置文件来执行3跳2跳和1跳的远程服务。要获得非常高的性能，就必须路由服务直接找到正确的服务器。
+  </p>
+<h3>数据分区和复制</h3>
+  数据必须分区到一个集群的所有服务器上，使没有任何一台单一的服务器需要保存所有的数据集。即便数据可以在一个单独的磁盘上存下，磁盘访问小值数据的时候是受寻找时候所控制，因此分区有改善缓存性能的作用，它依靠把热的数据集分成更小的块，能够（希望能够）整个地放到那个存有整个分区的服务器内存里。这就意味着，在集群里的机器是不可以互换的，请求必须被路由到保存有所请求的数据的机器，而不只是随便地到某一台可用的机器上。
+  
+  <p>同样，因为负载过重或者是维护原因的停机，服务器经常会不可用。如果有S台机器并且每台机器一天有p的概率会独自挂掉，因此一天里一台机器丢失数据的概率为1 - (1 - <em>p</em>)<sup><em>s</em></sup>，显然，鉴于这一事实，我们不能将数据只保存在一台机器上，或者说，数据丢失的概率与群集中的数量成反比。</p>
+  
+  <p>最简单的方式来完成这件事是，将数据分成S个分区（每个机器一个），并且在R台机器上面保存键为K的值的拷贝。用K这个键来关联R台机器的一种方法是，设a=K%S，然后将这个值保存在机器a，a+1，a+2，...a+r。因此，对于任何的概率p，你都可以选择一个合适的复制因子R，来达到一个可接受的够低的数据丢失的概率。</p>
+  
+  <p>这个系统有个非常漂亮的特性，那就是任何人只要知道数据的key就可以计算到数据所处的位置，系统允许我们以peer-to-peer的方式做数据寻找，而不需要联系一个装有所有的key到服务器的映射信息的元数据服务器。</p>
+  
+  <p>当从集群中添加、删除机器时（这样说是因为我们购买新的硬件或服务器临时关闭），上述方法会导致缺点。在这种情况下，d会被改变，数据会在机器之间迁移。假如d不变，那负载不会平均地从原来删除的或者是坏了的机器分布到集群中剩余的部分。</p>
+  
+  <p>一致性哈希是一种避免这种问题的技术，我们用它来计算每个key在集群中所处的位置。使用这种技术，伏地魔有了这样的特性，当一台机器挂了的时候，负载可以平均地分布到集群中剩余的机器。同样，当增加一台机器给一个有S台机器的集群时，只有1/(<em>S</em>+1)的机器上的值需要迁移到新机器。</p>
+  
+  <p>为了形象化一致性哈希方法，我们可以看到，用可能出现的整数哈希值，这样，环就从0开始，顺着环旋转到2^31-1。这个环被平均分成Q个分区，Q&gt;&gt;S，这样S个机器中的每个，都能分到Q/S个分区。一个key用任何一种哈希算法映射到环上，然后我们顺时针看分区找到第一个唯一的R节点，计算出一个负责这个key的R个所有机器的列表。下面这个图画出了ABCD四个机器的一个哈希环。箭头表示key映射到哈希环，结果给出当R为3时对应的保存了那个key的值的所有机器的列表。</p>
+  
+  <p><img src="http://project-voldemort.com/images/hash_ring.png" alt="">图3
+  </p>
+<h2>数据格式化和查询</h2>
+  在关系数据库中的数据被分成二维表。在这里它的等价物是“存储”，如果数据不是必须成表，我们不使用字表结构（一个值可以包括列表，以及不需要考虑严格的关系型的映射）。每个key都有一个唯一的存储，并且每个key都最多只能有一个值。
+  <h3>查询</h3>
+  伏地魔系统支持哈希表的语义，因此一个单独的值可以一次进行修改，同时可以按照主键查询。因为可以通过主键来切分，这使得通过机器做分布式非常简单。
+  
+  <p>请注意，虽然我们不支持一对多的关系，但我们支持把列表做为值，这样也就完成了同样的事情，因此存储一个合理数量的有关联的值成为可能。这相当于一个java.util.Map的值是一个java.util.List。在大多数情况下，这样不规范来做是一个巨大的性能改善，因为只需要一个单独的磁盘寻址过程。但对于非常大的一个一对多关系（例如，而一个key映射到数千万的value），必须保存在机器上，再通过游标慢吞吞地过一遍，这样子是不实际的。这（很少见），必须将他们分成子查询或以其他方式在应用层处理。</p>
+  
+  <p>查询简单可能是一种优势，因为每个查询都有非常可预测的性能，很容易将服务的性能拆分成存储作的数量份，它执行并迅速估计负载。相反，SQL查询往往不透明，而且执行计划是数据依赖的，因此很难估计一条给定的SQL在实际负载下的数据中还能很好地执行（特别是对于一项新的功能，既没有数据也没有负载的情况下）。</p>
+  
+  <p>此外，有三个作接口，使得在整个存储层之上的透明层成为可能，并且在单元测试中使用模拟存储，它的实现不过是一个HashMap的模拟。这样可使得单元测试在特殊的容器或者是环境之外，会更加实用。
+  </p>
+<h3>数据模型和序列化</h3>
+  在伏地魔系统中，序列化是可插拔的，因此你可以使用一个弄好的序列化方法同时也可以简单也写自己的。在伏地魔系统的最底层，数据格式是只包括key和value的字节数组。高层次的数据格式化是每个存储都设置的配置选项，处理字节到对象的转变时，依靠实现序列化类，所有格式的数据都可支持。这样做要确保客户端的字节序列正确。
+  
+  <p>通过输入在存储上的配置文件，我们可以广泛地支持以下各种类型:</p>
+  
+  <p>json--二进制，类型的JSON数据模型，支持列表，地图，日期，布尔值和各种精度数字。这是唯一的一种可以从字节&lt;-&gt;对象和字符串&lt;-&gt;对象映射的序列化的类型。这就意味着，它可以和SQL相互作用（例如通过命令行客户端）。我们当前的产品设计中使用了一种有类型的、压缩的、结构检查的类Json格式；但这并没有特殊的状态，对于其他的应用软件来说，其他的序列化机制可能会更好。</p>
+  
+  <p>字符串--只保存原生的字条串类型。对xml数据块比较有用。</p>
+  
+  <p>java序列化--我们的老朋友java序列化。当你保存许多的java对象之前，请确认了解java序列化所提供的兼容性保证。</p>
+  
+  <p>protobuf--Protocol buffers是来自的代码生成的序列化格式，这可能是条不错的道，如果你不需要命令行访问的话。</p>
+  
+  <p>identity--这个类型有效地禁止了序列化，将返回给你确切的byte[]</p>
+  
+  <p>字符串和identity的序列化都是相当的不言自明。Protocol Buffers最好的说明应该是来说。因此本节的剩余部分讲述json背后的机制。
+  </p>
+<h3>json序列化类型详解</h3>
+  可能会有三种状态的数据会驻留，我们希望能够在它们之间进行转换：
+  
+  <p>在内存中的数据结构，例如一个User对象；</p>
+  
+  <p>持久性和网络传输的字节；</p>
+  
+  <p>文本表示：DBA在检查特定的值和在线升级时不需要写新的代码是非常重要的。</p>
+  
+  <p>SQL基本上就通过文本查询格式化来达到标准化，程序来处理这些字符串和程序所使用的内部数据结构的映射关系。这是传统的对象关系映射的问题。</p>
+  
+  <p>对于存储来说，json是一个优秀的数据模型，因为它支持了所有编程语言中的数据类型（字符串，数字，列表/数组，以及对象/哈希表）。问题在于，它是本质上是少结构的。对于任何存储问题最常见的情况，是有使用完全相同的格式保存的N行数据（包括有相同的列），在这种情况下，用json是一种浪费，因为它每一行都带有数据的格式。同样，我们希望能够数据的表单声明，避免错拼了列保存了脏数据。为了避免这种情况，我们要给每个存储上的key和value都分配一个结构，这个结构要能描述什么允许保存，以及怎么样转成字节和从字节转成数据。使用如下的类型，json本身就可以指定结构：
+  </p>
+<pre>int8, int16, int32, int64, float32, float64,string, date, object, bytes, boolean, object, array
+  例如，如果我希望一个存储包含字符串，我指定那个表的类型为：
+   "string"
+  请注意，此类型的定义本身就是有效的JSON。
+  JAVA代码取到数据的时候就是字符串类型的。
+  如果我期望存储包含一个整数列表，例如，会员ID，我可以指定类型：
+  ["int32"]
+  JAVA代码将会返回List&lt;Integer&gt;。
+  如果我期望存储包含一个简单的用户对象，可以定义的类型：
+  {"fname":"string", "lname":"string", "id":"int32", "emails":["string"]}
+  这里JAVA代码将返回 Map&lt;String,Object&gt; ，包含了每个给出的key，以及对应的值。
+  下面是所有允许的类型：</pre>
+  <table class="data-table" border="1">
+  <tbody>
+  <tr>
+  <th>type</th>
+  <th>storable substyles</th>
+  <th>bytes used</th>
+  <th>Java type</th>
+  <th>example JSON</th>
+  <th>example type definition</th>
+  </tr>
+  <tr>
+  <td>number</td>
+  <td>int8, int16, int32, int64, float32, float64, date</td>
+  <td>8, 16, 32, 64, 32, 64, 32</td>
+  <td>Byte, Short, Integer, Long Float, Double, Date</td>
+  <td>1</td>
+  <td>"int32"</td>
+  </tr>
+  <tr>
+  <td>string</td>
+  <td>string, bytes</td>
+  <td>2 + length of string or bytes</td>
+  <td>String, byte[]</td>
+  <td>"hello"</td>
+  <td>"string"</td>
+  </tr>
+  <tr>
+  <td>boolean</td>
+  <td>boolean</td>
+  <td>1</td>
+  <td>Boolean</td>
+  <td>true</td>
+  <td>"boolean"</td>
+  </tr>
+  <tr>
+  <td>object</td>
+  <td>object</td>
+  <td>1 + size of contents</td>
+  <td>Map&lt;String,Object&gt;</td>
+  <td>{"key1": 1, "key2":"2", "key3":false}</td>
+  <td>{"name":"string", "height":"int16"}</td>
+  </tr>
+  <tr>
+  <td>array</td>
+  <td>array</td>
+  <td>size * sizeof(type)</td>
+  <td>List&lt;?&gt;</td>
+  <td>[1, 2, 3]</td>
+  <td>["int32"]</td>
+  </tr>
+  </tbody>
+</table>
+  从这个意义上来说，类型定义是一套在标准json上的限制集，这样能使序列化高效执行（通过分段重复的字段，并且压缩数字），并且允许基础数据正确性检测。
+  
+  <p>请注意，即使一个值可能有不同的字段，但只支持依赖存储时定义的key来查询。</p>
+  
+  <p>为了帮助结构的发展，这JSON实现了版本，允许数据的逐步迁移的结构。数据总是以最新的结构来写，但是，读的时候要可以用任何一种写的时候用的结构。这样做可以在结构迁移的时候不需要停下服务来取数据。
+  </p>
+<h3>一致性和版本化</h3>
+  当多个同步的写到多个分布的机器（甚至是多个数据中心），数据的一致性成了一个难题。传统的解决这个问题是分布式事务，但这些都是缓慢（由于很多跳）和脆弱的，因为他们要求所有服务器将可用于处理。如果应用程序运行在多个数据中心，而跨数据中心作的延迟将会非常地高，特别地，任何一个算法要提及大于百分之五十的机器都能保证一致性将会非常困难。
+  
+  <p>其他的解决办法是容忍不一致的可能性，并在读取时解决不一致。这就是这里所探讨的。</p>
+  
+  <p>应用程序通常只读、修改、更新序列时，修改数据。例如，一个用户往他的账号里增加一个email，我们必须先搞到用户对象，增加email，然后把新的值写回到db。数据库的事务是这个问题的解决方案，但当事务跨越多个页面的加载时（有可能加载完也可能没完，并且可能在指定的时间片里完成），这并不是一个真正的选项。</p>
+  
+  <p>当所有的update不存在时，给定的key的值是一致的，所有的读作都将会返回一个相同的值。在只读世界中，数据被以一致性的方法创建并且永不改变。当我们增加了写作、复制，会遇到问题：现在我们需要更新在多个机器上的多份数据，并且要让所有的东东都保持一致。在机器故障面前，这样做很困难，在网络分区的面前，这样做被证明是不可能的（例如分区的情况，A和B可以互通，C和D可以互通，但是A、B与C、D并不能互通 ）。</p>
+  
+  <p>下面有些方法，靠不同的保证和折衷性能来达到一致性：</p>
+  
+  <p>两步提交--这是一个锁协议，包括在机器之间两轮的协作。它是完全一致的，但不能兼容出错，而且很慢。</p>
+  
+  <p>Paxos式的共识--这是一个在一个值上达成共识的协议，能够更多地兼容出错。</p>
+  
+  <p>读修复--前两种方法防止永久不一致。这种方法在写的时候写入所有的不一致版本，在读的时候检测所有的冲突并且解决问题。这不涉及协调工作，是完全兼容出错的，但可能需要额外的应用程序逻辑来解决冲突。</p>
+  
+  <p>我们使用版本和读修复。这有一个最好的可用性保证，和最高的性能（N次复制只需要W次的网络往返写，W可以配置成小于N的值）。两步提交需要2N次的阻塞网络往返。Paxos变化有很大不同，但相比两步提交也差不多。</p>
+  
+  <p>许多的细节，以下文件借自亚马逊</p>
+  
+  <p>这里有一些很好的写关于这个问题的东东：
+  </p>
+<ul>
+  	<li><a href="http://hnr.dnsalias.net/wordpress/?p=51">Consistency in Amazon's Dynamo</a></li>
+  	<li><a href="http://research.microsoft.com/users/lamport/pubs/paxos-simple.pdf">Paxos Made Simple</a></li>
+  	<li><a href="http://en.wikipedia.org/wiki/Two-phase_commit_protocol">Two-phase commit</a></li>
+  	<li><a href="http://www.allthingsdistributed.com/2008/12/eventually_consistent.html">The meaning's of eventual consistency (by Amazon's CTO Werner Vogels)</a></li>
+  </ul>
+  <h3>分布式系统中的版本</h3>
+  一个简单的版本控制系统只是乐观锁定--我们保存一个唯一的计数器或者是时钟值在每一片数据上，并且只允许更新数据的时候才能更新这个值。
+  
+  <p>在集中式的数据库中这运行良好，但在一个机器时好时坏、复制需要时间的分布式系统中，它就挂了。对于这种用法，一个单一的值不能保存足够的写入，以便我们丢弃老的版本。考虑下面的一系列指令：
+  </p>
+<pre>#两个机器同时取一个相同的值
+  [client 1] get(1234) =&gt; {"name":"jay", "email":"jay.kreps@linkedin.com"}
+  [client 2] get(1234) =&gt; {"name":"jay", "email":"jay.kreps@linkedin.com"}</pre>
+  
+  <p>#1客户端作了一次对name的修改并且put了一下<br>
+  [client 1] put(1234, {"name":"jay kreps", "email":"jay.kreps@linkedin.com"})<br>
+  #2客户端作了一次对email的修改也put了一下<br>
+  [client 2] put(1234, {"name":"jay", "email":"jay.kreps@yahoo.com"})</p>
+  
+  <p>#现在我们有了以下的冲突版本<br>
+  {"name":"jay", "email":"jay.kreps@linkedin.com"}<br>
+  {"name":"jay kreps", "email":"jay.kreps@linkedin.com"}<br>
+  {"name":"jay", "email":"jay.kreps@yahoo.com"}
+  在这个模型中，后面两次的写入使原值不再可用（因为是基于原值的修改）。尽管如此，我们没有规则来告诉服务器是要抛弃对name的修改，还是对email的修改。因此我们需要一个版本系统来允许我们检测重写和抛弃老版本内容，同时也要能检测冲突并且让客户去解决。</p>
+  
+  <p>解决这个问题的一个答案是靠传说中的向量时钟版本。一个向量时钟在每次写机器的时候都保持一个计数器，在两个版本冲突和一个版本成功或者是比另一个新的时候，我们能计算它。</p>
+  
+  <p>向量时钟是一个服务器和版本对的列表：
+  </p>
+<pre> [1:45,2:3,5:55]</pre>
+  从这个版本能够看出对那个写的数字来说这是一台主服务器。
+  
+  <p>对i来说v1继承自v2，<em>v1<sub>i</sub></em> &gt; <em>v2<sub>i</sub></em>。如果 <em>v1</em> &gt; <em>v2</em>和<em>v1</em> &lt; <em>v2</em>都不满足，那么v1和v2同现，也就是冲突了。下面是两个冲突的版本的例子：
+  </p>
+<pre>	[1:2,2:1]
+  	[1:1,2:2]</pre>
+  我们的版本结构定义了一个偏序，而简单的乐观锁是一个全序。
+  <h3>路由参数</h3>
+  任何持久存储的系统都需要回答的一个问题就是“我的东西存在哪里”。如果我们有一个集中的数据库，这是一个简单的问题，因为答案总是“它们在数据库里的某个地方”。在一个键分离的系统中，可能在在多台机器有所需要的数据。当我们执行读作的时候，我们至少需要从一台机器去取数据，当我们写的时候，我们需要写到N个复制去。
+  
+  <p>因此，有三个参数的问题：
+  </p>
+<ul>
+  	<li>
+<em>N</em> - 复制的次数</li>
+  	<li>
+<em>R</em> - 读数据的节点数</li>
+  	<li>
+<em>W</em> -写成功的分区数</li>
+  </ul>
+  请注意，如果<em>R</em> + <em>W</em> &gt; <em>N</em>能够保证我们“读我们所写”。如果w=0，那么写作是不阻塞的，写成功是没有保障的。取作和删除作既不是立即一致的，也不是孤立的。这意思是说：如果一个put/delete作要成功，需要W个节点都进行了同样的作；然而，如果写失败了（这样说是因为极少数的节点能够马上完成作），那状态就是不确定的了。如果一个put/delete作成功了，那最后这个值都会变成最终的值，但如果没有成功的这个值将会失效。如果客户端要确保这个状态，必须在一次写作失败后再发起一次写作。
+  <h3>持久层</h3>
+  持久存储我们默认使用JAVA版的BDB。MYSQL和内存存储也同样支持。要添加一个新的持久化实现，你需要实现put\get\delete，并且要提供一个本地存储的值的迭代程序。
+  <h3>批量计算数据支持</h3>
+  数据最密集的存储需求之一是在我们的系统批量计算关于成员和内容的数据。这份工作常常涉及到实体之间的关系（比如说有关系的用户、相关的新闻文章等），那这样N个实体就会增长出<em>N</em><sup>2</sup>个关系来。在LinkIn的一个实例是用户网络，如果要为所有用户准确保存会在12TB的范围。批量数据处理通常比随机访问更有效率，也就意味着批量处理的数据可以被实际系统简单地访问。Hadoop极大地扩充了这一点。我们正在开源伏地魔的后端持久化的东东，它支持非常高效的只读访，还能解建立、发布以及管理大量的、只读地指计算数据集等许多痛苦的事情。
+  
+  <p>处理批量计算的大多数痛苦来自于从数据仓库或者是hadoop传输数据到线上系统的“推送”的过程。在传统DB这意味着在线上机器重建新数据的索引。做数以百万计的insert和update作一般不会所有都很高效地执行，通常在一个sql数据库里数据需要被布到一个新的表中，当新表建立完毕，再交换回来替换当前数据。比数百万计的单独的update作来说这样做更好，但是，当同时服务于真实环境时，这仍然意味着线上系统现正为新的数据集（或者是performa）兴建许多GB的索引。仅此一点可能需要数小时或数天，并可能会毁了实时查询的性能。有人想搞定这个问题，通过将数据库级别的swap换出（比如说，有一个在线的DB和一个离线的DB，进行交换），但这要求做许多事并且意味着你将只有一半的硬件正在使用。伏地魔依靠尽可能的离线重建自身的索引（在hadoop之上或者其他），然后简单地推送给线上机器并且透明地进行交换。
+  </p>
+<h2>参考文献</h2>
+  <ul>
+  	<li> <a href="http://s3.amazonaws.com/AllThingsDistributed/sosp/amazon-dynamo-sosp2007.pdf"> Dynamo: Amazon's Highly Available Key-Value Store </a> — 	 This is the original!</li>
+  	<li> <a href="https://research.microsoft.com/en-us/um/people/lamport/pubs/time-clocks.pdf"> Time, Clocks, and the Ordering of Events in a Distributed System </a> — 	 This is the template for the versioning system</li>
+  	<li> <a href="http://www.allthingsdistributed.com/2008/12/eventually_consistent.html"> Eventual Consistency Revisited </a> Very interesting discussion on Werner Vogels' blog on the developers interaction with the storage system and what the tradeoffs mean in practical terms.</li>
+  	<li> <a href="http://portal.acm.org/citation.cfm?id=564601">Brewer's conjecture and the feasibility of consistent, available, partition-tolerant web services</a> — Consistency, Availability, Partition-tolerance choose two.</li>
+  	<li> <a href="http://www.oracle.com/technology/products/berkeley-db/pdf/berkeley-db-perf.pdf">Berkeley DB performance</a> — A somewhat biased overview of bdb performance.</li>
+  	<li> <a href="http://labs..com/papers/bigtable-osdi06.pdf">'s Bigtable</a> — For comparison, a very different approach.</li>
+  	<li> <a href="http://www.cs.brown.edu/%7Eugur/fits_all.pdf"> One Size Fit's All: An Idea Whose Time Has Come and Gone </a> — Very interesting paper by the creator of Ingres, Postgres and Vertica</li>
+  	<li> <a href="http://www.cs.brown.edu/%7Eugur/osfa.pdf"> One Size Fits All? - Part 2, Benchmarking Results </a> — Benchmarks to go with the above paper</li>
+  	<li> <a href="http://hnr.dnsalias.net/wordpress/?p=51"> Consistency in Amazon's Dynamo </a> — A good blog post on Dynamo</li>
+  	<li> <a href="http://research.microsoft.com/users/lamport/pubs/paxos-simple.pdf"> Paxos Made Simple </a>
+</li>
+  	<li> <a href="http://en.wikipedia.org/wiki/Two-phase_commit_protocol">Two-phase commit</a> — Wikipedia description.</li>
+  </ul>
+  【翻译真累人 <a href="http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/</a> 】
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-08-23T00:00:00+08:00" pubdate data-updated="true">2009-08-23 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2009/08/23/i-am-the-chen-version-distributed-storage-system-documentation-translation-program-voldemort-lightcloud-dynamo/" title="Next Post: [我是陈版]分布式存储系统文档翻译计划-voldemort,lightCloud,dynamo">[我是陈版]分布式存储系统文档翻译计划-voldemort,lightCloud,dynamo »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

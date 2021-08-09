@@ -1,0 +1,214 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>线上JVM调查工具:JCPU和JMEM - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="之前的jkiller改名为jcpu，然后再加上jmem，齐活了，线上要再遇到问题，内存和CPU之外的也没啥其他办法了。 JMEM https://github.com/54chen/jmem 用来定位莫名其妙的堆外内存问题。首先还是要先用jmap之类的看清楚是否是JVM堆内问题了再用此神物。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/05/07/jvm-cpu-mem-tools">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">线上JVM调查工具:JCPU和JMEM</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-05-07T17:05:13+08:00" pubdate data-updated="true">2014-05-07 17:05:13 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png"></p>
+  
+  <p>之前的jkiller改名为jcpu，然后再加上jmem，齐活了，线上要再遇到问题，内存和CPU之外的也没啥其他办法了。</p>
+  
+  <h2>JMEM</h2>
+  
+  <p><a href="https://github.com/54chen/jmem">https://github.com/54chen/jmem</a></p>
+  
+  <p>用来定位莫名其妙的堆外内存问题。首先还是要先用jmap之类的看清楚是否是JVM堆内问题了再用此神物。</p>
+  
+  <!--more-->
+  
+  
+  <p> jmem.sh 用来靠gdb找到够大的内存块，直接dump到文件里。然后肉眼看吧。。。反正我没看出来，祝你好运。</p>
+  
+  <p> pmap2stack.sh 弄出来大块的内存地址后，尝试在各种stack中帮你grep出来可以读东东。</p>
+  
+  <h2>JCPU</h2>
+  
+  <p><a href="https://github.com/54chen/jcpu">https://github.com/54chen/jcpu</a></p>
+  
+  <p>这个之前有介绍过，就是cpu占得比较猛的进程，直接打出来里面最费CPU的前五个堆栈。</p>
+  
+  <p>具体用法都在项目的README上。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-05-07T17:05:13+08:00" pubdate data-updated="true">2014-05-07 17:05:13 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/04/18/how-to-use-akka-in-java-4/" title="Previous Post: java中使用akka手记四 用法速查">« java中使用akka手记四 用法速查</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/05/25/security/" title="Next Post: 安全无小事－－技术团队防守一二三">安全无小事－－技术团队防守一二三 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

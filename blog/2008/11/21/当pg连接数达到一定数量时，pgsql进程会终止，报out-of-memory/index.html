@@ -1,0 +1,214 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of Memory - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Q： 当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of memory
+  A：在 Linux 2.4 以及之后的版本里，缺省的虚拟内存的设置对于 PgSQL而言不是最优的(32M)。原因也可能在于内核实现内存提交的方法导致出现了“过提交”内存（具体情况由于没有遇到，不作评述）， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/11/21/%E5%BD%93pg%E8%BF%9E%E6%8E%A5%E6%95%B0%E8%BE%BE%E5%88%B0%E4%B8%80%E5%AE%9A%E6%95%B0%E9%87%8F%E6%97%B6%EF%BC%8Cpgsql%E8%BF%9B%E7%A8%8B%E4%BC%9A%E7%BB%88%E6%AD%A2%EF%BC%8C%E6%8A%A5out-of-memory">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of Memory</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true">2008-11-21 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>Q： 当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of memory<br>
+  A：在 Linux 2.4  以及之后的版本里，缺省的虚拟内存的设置对于  PgSQL而言不是最优的(32M)。原因也可能在于内核实现内存提交的方法导致出现了“过提交”内存（具体情况由于没有遇到，不作评述），如果其它进程的内存请求导致系统用光虚拟内存，那么内核可能会立即终止  PGSQL 服务器进程并会出具Out of memory报错，唯一的解救方法只能手工kill掉数据库进程，重启数据库。修改方法为：
+  </p>
+<pre>sysctl -w kernel.shmmax=134217728
+  sysctl -w kernel.shmall=2097152
+  sysctl -w vm.overcommit_memory=2</pre>
+  或者直接echo进proc中去（我个人喜欢比较传统的作）
+  <pre>echo 134217728 &gt;/proc/sys/kernel/shmmax
+  echo 2097152 &gt;/proc/sys/kernel/shmall
+  echo 2 &gt; /proc/sys/vm/overcommit_memory</pre>
+  考虑到并不是每个人都乐意于每次开机都作此作，最好还是修改/etc/sysctl.config文件添加相应的设置。
+  
+  <p><a name="Slony.E4.B8.8D.E5.90.8C.E6.AD.A5.E6.95.B0.E6.8D.AE.EF.BC.9F"></a>
+  </p>
+<h3><span class="mw-headline">Slony不同步数据？ </span></h3>
+  Q：配置了Slony,并未报错，但数据没同步过来<br>
+  A：你要同步的表都设置主键了么，如果没有设主键的Slony配置表的属性的时候要加Serial属性哦
+  
+  <p><a name="Slony.E5.90.8C.E6.AD.A5.E6.95.B0.E6.8D.AE.E9.9D.9E.E5.B8.B8.E6.85.A2.EF.BC.9F"></a>
+  </p>
+<h3><span class="mw-headline">Slony同步数据非常慢？ </span></h3>
+  Q：Slony同步数据非常慢，需要20~30s，且配置Slony的机器上cpu消耗严重？<br>
+  A：检查slony同步的时间间隔，默认是10000微妙，这个数值还不错，别设置太低了。
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true">2008-11-21 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/11/21/%E4%BD%BF%E7%94%A8plproxy%E5%92%8Cpgbouncer%E5%AE%8C%E6%88%90%E5%88%86%E5%B8%83%E5%BC%8F%E5%A4%84%E7%90%86/" title="Previous Post: 使用plproxy和pgbouncer完成分布式处理">« 使用plproxy和pgbouncer完成分布式处理</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/11/21/%E9%85%8D%E7%BD%AE%E4%B8%80%E4%B8%AA%E4%BD%BF%E7%94%A8plproxy%E7%9A%84postgresql%E6%95%B0%E6%8D%AE%E5%BA%93%E9%9B%86%E7%BE%A4/" title="Next Post: 配置一个使用plproxy的PostgreSQL数据库集群">配置一个使用plproxy的PostgreSQL数据库集群 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

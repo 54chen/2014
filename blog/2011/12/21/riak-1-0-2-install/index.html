@@ -1,0 +1,237 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Riak 1.0.2安装手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="准备三台机器：
+  r1
+  r2
+  r3 准备erlang环境：
+  Erlang &gt;= R14B03
+  yum install gcc glibc-devel make ncurses-devel openssl-devel
+  $ wget http://erlang.org/download/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/12/21/riak-1-0-2-install">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Riak 1.0.2安装手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-21T00:00:00+08:00" pubdate data-updated="true">2011-12-21 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak">
+  <strong>准备三台机器：</strong>
+  r1<br>
+  r2<br>
+  r3</p>
+  
+  <p><strong>准备erlang环境：</strong>
+  Erlang &gt;= R14B03<br>
+  yum install gcc glibc-devel make ncurses-devel openssl-devel<br>
+  $ wget http://erlang.org/download/otp_src_R14B03.tar.gz<br>
+  $ tar zxvf otp_src_R14B03.tar.gz<br>
+  $ cd otp_src_R14B03<br>
+  $ ./configure &amp;&amp; make &amp;&amp; sudo make install</p>
+  
+  <p><strong>git环境(看上去是非必须的)：</strong>
+  yum -y install git</p>
+  
+  <p><strong>下载地址：</strong>
+  http://downloads.basho.com.s3-website-us-east-1.amazonaws.com/riak/CURRENT/riak-1.0.2.tar.gz
+  </p>
+<blockquote>
+  cd riak-1.0.2<br>
+  make rel</blockquote>
+  
+  <p><strong>修改配置文件后启动</strong>
+  riak start<br>
+  riak-admin join<br>
+  过程完全同0.142
+  <a href="http://www.54chen.com/_linux_/riak-source-install-run.html">http://www.54chen.com/_linux_/riak-source-install-run.html</a>
+  <strong>与0.1.42相比：</strong>
+  erlang环境要求R14B03及以上。低版本会出现this emulator supports only up to 149的make错误。</p>
+  
+  <p><strong>使用leveldb为存储引擎：</strong>
+  默认引擎还是bitcask，需要修改配置文件app.config<br>
+  {storage_backend, riak_kv_bitcask_backend}<br>
+  改为：<br>
+  {storage_backend, riak_kv_eleveldb_backend}</p>
+  
+  <p><strong>官方说明：</strong>
+  bitcask适用于key有限，而需要最大量的吞吐量和数据持久化情况。<br>
+  leveldb适用于大量的key。
+  <strong>
+  官方java client压力测试结果：</strong>
+  1cpu 8G的机器3个 笔记本运行压力程序 读写比3:1 6并发 1k大小的value  <br>
+  PB：2500ops  99.9%的作在22ms内。<br>
+  HTTP: 1000ops  99.9%的作在30ms内。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-21T00:00:00+08:00" pubdate data-updated="true">2011-12-21 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

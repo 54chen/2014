@@ -1,0 +1,210 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>硬件为王，软件为帝--记突增的访问 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="五一归来两周，精力都放在了因为服务器压力突增而来的各种鸡飞狗跳的事情上，今天总结一下，算是对过去两周的总结，希望对各创业团队有所借鉴。
+  1.访问突增，连锁反应
+  最先开始出现问题的，是在小负载下没有出现的问题，在大压力时，只要DB一堵，表像就会是循环锁死。
+  解决之道：
+  服务要有清晰的架构， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/05/15/king-of-the-server">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">硬件为王，软件为帝--记突增的访问</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-05-15T00:00:00+08:00" pubdate data-updated="true">2011-05-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1pM1bXgdlXXapI9ra_122249.jpg" alt="mysql" width="250">
+  五一归来两周，精力都放在了因为服务器压力突增而来的各种鸡飞狗跳的事情上，今天总结一下，算是对过去两周的总结，希望对各创业团队有所借鉴。<br>
+  1.访问突增，连锁反应<br>
+  最先开始出现问题的，是在小负载下没有出现的问题，在大压力时，只要DB一堵，表像就会是循环锁死。<br>
+  解决之道：<br>
+  服务要有清晰的架构，开发规范里一定要有明确的架构层次规范，最好还有代码的层次规范。</p>
+  
+  <p>2.mysql设计不合理，压力指数增加<br>
+  mysql中存在大量的更新作，特别是大字段或者变长字段的频繁更新，导致磁盘io居高不下，慢查询越来越多。<br>
+  硬解决之道：<br>
+         raid卡加电，开启raid写缓存：一般服务器的raid卡都没有开启，开启是有一定用处的，但有一个前提，不是待续的高写入，否则这个写缓存是没有意义的。电池充电时无法缓存，一般三个月充一次电。<br>
+         转微博：FusionioChina 回复 @YauzZ:多一个故障点。多一份丢数据的可能。而且目前有Raid卡的内存做到1GB。丢不起呀。(5月11日 23:29) <br>
+         从raid分到多个盘、盘柜，都是从硬件上用多硬盘分担的好方案。<br>
+        <br>
+  软解决之道：<br>
+         写方案建立mysql隔离层，在写入前预先处理，类似软件缓存方案，效果明显，修改复杂。</p>
+  
+  <p>3.后续可做<br>
+         灵活的中间层数据层切换逻辑，让负载可以随时转移、分隔，基本可以达到“人傻钱多，万事不愁”。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-05-15T00:00:00+08:00" pubdate data-updated="true">2011-05-15 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2011/05/20/h3c-load-balance/" title="Next Post: 巧用交换机，瞬间切流量">巧用交换机，瞬间切流量 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

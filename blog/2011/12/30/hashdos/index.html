@@ -1,0 +1,220 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>年终攻击hashDos-哈希表多碰撞实现拒绝服务-破解办法 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="起因：
+  Wed, 28 Dec 2011 22:28:16 GMT apache tomcat公布了一个安全漏洞。
+  http://mail-archives.apache.org/mod_mbox/www-announce/201112.mbox/%3C4EFB9800.5010106@ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/12/30/hashdos">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">年终攻击hashDos-哈希表多碰撞实现拒绝服务-破解办法</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-30T00:00:00+08:00" pubdate data-updated="true">2011-12-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><strong>起因：</strong>
+  Wed, 28 Dec 2011 22:28:16 GMT apache tomcat公布了一个安全漏洞。<br>
+  http://mail-archives.apache.org/mod_mbox/www-announce/201112.mbox/%3C4EFB9800.5010106@apache.org%3E</p>
+  
+  <p><strong>漏洞原理：</strong>
+  依靠相应语言的hashtable/hashmap实现过程（request多为此结构），当不同的key存入时如果hash值相等则以链表方式连接在前面。此漏洞利用碰撞相同的hash值得到一个长链表，重新get时，map的计算过程会将时间复杂度巨增，原来一个简单的过程将变成一个很费cpu的过程。</p>
+  
+  <p><strong>影响到的：</strong>
+  最快时间tomcat公布了解决办法。<br>
+  php进行了升级。<br>
+  ms也发了公告http://technet.microsoft.com/en-us/security/bulletin/ms11-100。</p>
+  
+  <p><strong>解决办法：</strong>
+  <strong>tomcat</strong>
+  <strong>临时办法：</strong>
+  默认大小2097152，当maxPostSize=0时，不限制；maxPostSize=20971520时，为20M，改为一个小于10k的值，<strong>所有版本可用</strong>，会影响用户。
+  <strong>持久办法：</strong>
+  用新的版本，maxParameterCount默认值1000。
+  <strong>nginx</strong>
+  <strong>临时办法：</strong>
+  默认的最大请求body大小为8m，修改设置client_max_body_size=10k；此招为各种情况下万金油，会影响用户。
+  <strong>持久办法：</strong>
+  暂无，应该很快会有max_request_count的参数。
+  <strong>php</strong>
+  <strong>持久办法：</strong>
+  php升级到5.3.9，5.2需要打patch。详细见：http://www.laruence.com/2011/12/30/2440.html</p>
+  
+  <p><strong>后记</strong>
+  54chen人肉构造打到php，php立马100%，转到java（resin+spring+rose），轻松化解，没有反应。</p>
+  
+  <p><img src="http://img05.taobaocdn.com/bao/uploaded/i5/T1.RRAXjVDXXX7OsE8_070026.jpg" alt="hashDos,important"></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-30T00:00:00+08:00" pubdate data-updated="true">2011-12-30 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2011/12/31/spicy-fish-2011-2/" title="Next Post: 水煮鱼杯2011年度不得不总结的十件事">水煮鱼杯2011年度不得不总结的十件事 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,310 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第一部分 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[文章作者：陈臻 本文版本：v1.2 最后修改：2009.7.7 转载请注明原文链接：http://www.54chen.com/_linux_/postgresql-bamboo-lucene-fulltextindex.html ] 修正：一些“--”（连续的两个杠）被转成了全角的“-”（ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/07/01/postgresql-bamboo-lucene-fulltextindex">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第一部分</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-01T00:00:00+08:00" pubdate data-updated="true">2009-07-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[文章作者：陈臻 本文版本：v1.2 最后修改：2009.7.7 转载请注明原文链接：<a href="http://www.54chen.com/_linux_/postgresql-bamboo-lucene-fulltextindex.html">http://www.54chen.com/_linux_/postgresql-bamboo-lucene-fulltextindex.html</a> ]</p>
+  
+  <p>修正：一些“--”（连续的两个杠）被转成了全角的“-”（一个杠）了，运行不过的试试-变成--</p>
+  
+  <p><strong>所有用到到包有：</strong></p>
+  
+  <p><a href="http://www.54chen.com/c/601">cmake</a>-2.6.4.tar.gz (编nlpbamboo用)</p>
+  
+  <p>CRF++-0.53.tar.gz(同上)</p>
+  
+  <p>nlpbamboo-1.1.1.tar.bz2（分词用）</p>
+  
+  <p>postgreSQL-8.3.3.tar.gz（索引用）</p>
+  
+  <p><strong>安装</strong><a href="http://www.54chen.com/c/101">pgsql</a></p>
+  
+  <p>tar -zxvf postgreSQL-8.3.3.tar.gz</p>
+  
+  <p>cd postgre-8.3.3
+  </p>
+<pre>./configure --prefix=/opt/pgsql</pre>
+  make<br>
+  make install
+  
+  <p>useradd postgre</p>
+  
+  <p>chown -R postgre.postgre /opt/pgsql<br>
+  su - postgre<br>
+  vi ~postgre/.bash_profile<br>
+  添加<br>
+  export PATH<br>
+  PGLIB=/opt/pgsql/lib<br>
+  PGDATA=/data/PGSearch<br>
+  PATH=$PATH:/opt/pgsql/bin<br>
+  MANPATH=$MANPATH:/opt/pgsql/man<br>
+  export PGLIB PGDATA PATH MANPATH</p>
+  
+  <p># mkdir -p /data/PGSearch</p>
+  
+  <p># chown -R postgre.postgre /data/PGSearch</p>
+  
+  <p># chown -R postgre.postgre /opt/pgsql
+  </p>
+<pre>#sudo -u postgre /opt/pgsql/bin/initdb --locale=zh_CN.UTF-8 --encoding=utf8 -D /data/PGSearch</pre>
+  <pre>#sudo -u postgre /opt/pgsql/bin/postmaster -i -D /data/PGSearch &amp;  //允许网络访问</pre>
+  #sudo -u postgre /opt/pgsql/bin/createdb kxgroup<br>
+  # vim /data/PGSearch/pg_hba.conf  如下增加可访问的<a href="http://www.54chen.com/c/264">机器</a>：
+  
+  <p>host    all         all         10.2.19.178 255.255.255.0               trust</p>
+  
+  <p>#su - postgre</p>
+  
+  <p>$pg_ctl stop</p>
+  
+  <p>$postmaster -i -D /data/PGSearch &amp;
+  <strong>安装中文分词（Cmake CRF++ bambo</strong><strong>o</strong><strong>)</strong>
+  Cmake是为了编译bamboo,CRF++是bamboo依赖的。</p>
+  
+  <p>tar -zxvf cmake-2.6.4.tar.gz</p>
+  
+  <p>cd cmake-2.6.4<br>
+  ./configure<br>
+  gmake<br>
+  make install</p>
+  
+  <p>tar -zxvf CRF++-0.53.tar.gz<br>
+  cd CRF++-0.53<br>
+  ./configure<br>
+  make<br>
+  make install</p>
+  
+  <p>tar -jxvf nlpbamboo-1.1.1.tar.bz2<br>
+  cd nlpbamboo-1.1.1<br>
+  mkdir build<br>
+  cd build/<br>
+  cmake .. -DCMAKE_BUILD_TYPE=release<br>
+  make all<br>
+  make install</p>
+  
+  <p>cp index.tar.bz2 /opt/bamboo/<br>
+  cd /opt/bamboo/<br>
+  tar -jxvf index.tar.bz2</p>
+  
+  <p>#/opt/bamboo/bin/bamboo</p>
+  
+  <p>如果出现：</p>
+  
+  <p>ERROR: libcrfpp.so.0: cannot open shared object file: No such file or directory</p>
+  
+  <p>就执行：</p>
+  
+  <p>ln -s /usr/local/lib/libcrfpp.so.* /usr/lib/<br>
+  ldconfig</p>
+  
+  <p><strong>增加上中文分词扩展到pgsql</strong></p>
+  
+  <p>#vim /root/.bash_profile 也增加：</p>
+  
+  <p>PGLIB=/opt/pgsql/lib<br>
+  PGDATA=/data/PGSearch<br>
+  PATH=$PATH:/opt/pgsql/bin<br>
+  MANPATH=$MANPATH:/opt/pgsql/man<br>
+  export PGLIB PGDATA PATH MANPATH</p>
+  
+  <p>#source ~/.bash_profile</p>
+  
+  <p>cd /opt/bamboo/exts/postgres/chinese_parser/<br>
+  make<br>
+  make install</p>
+  
+  <p>su - postgre<br>
+  cd /opt/pgsql/share/contrib/<br>
+  touch /opt/pgsql/share/tsearch_data/chinese_utf8.stop<br>
+  psql kxgroup<br>
+  \i chinese_parser.sql 导入</p>
+  
+  <p>再执行下面的sql，已经可以将一段话分词了：</p>
+  
+  <p></p>
+<pre>SELECT to_tsvector('chinesecfg', '结果在命令行下执行bamboo才知道');</pre>
+  
+  <p>先到这里，下一部分讲述对TEXT字段进行索引和查询，完整构造一整个<a href="http://www.54chen.com/c/591">搜索</a>引擎。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-01T00:00:00+08:00" pubdate data-updated="true">2009-07-01 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/linux/">linux</a>, <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/06/22/%E5%8E%9F%E5%88%9Bdiscuz-bbs%E7%BC%93%E5%AD%98%E6%95%B4%E4%BD%93%E6%96%B9%E6%A1%88/" title="Previous Post: [原创]Discuz! BBS缓存整体方案">« [原创]Discuz! BBS缓存整体方案</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

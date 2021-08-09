@@ -1,0 +1,815 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[54chen原创]简单好用的土办法抗击洋鬼子对wordpress系统的广告灌入 2010-08-23 00:00:00 +0800 自升级wordpress3.0以后，一切风调雨顺，自上周起，被洋鬼子的广告肉机盯上了，平均每三五分钟一条广告，评论内容大致相同，评论ip来自五湖四海，各不相同。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/30">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/08/23/easy-method-to-antispam-wordpress/">[54chen原创]简单好用的土办法抗击洋鬼子对wordpress系统的广告灌入</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-23T00:00:00+08:00" pubdate data-updated="true">2010-08-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1c3hJXb8pXXcVO1Z._112132.jpg" alt="54chen"></p>
+  
+  <p>自升级wordpress3.0以后，一切风调雨顺，自上周起，被洋鬼子的广告肉机盯上了，平均每三五分钟一条广告，评论内容大致相同，评论ip来自五湖四海，各不相同。<br>
+  虽然说akismet是wordpress中antispam无二的选择，但是akismet那个验证码让人很纠结，于是只能自己山寨一把了。
+  <strong>土办法步骤一 转发默认评论地址</strong>
+  常见的洋鬼子的广告肉机，都是利用了wordpress公开的post地址来做到脚本灌入的，其默认地址是wp-comments-post.php，第一步要做的是，怎么这个地址（以nginx为例）：<br>
+  rewrite ^/wp\-comments\-post\.php$ http://www.54chen.com/ last;</p>
+  
+  <p><strong>土办法步骤二 伪造假地址</strong>
+  既然第一步中的真实地址无法访问了，那第二步肯定是假冒出来可以访问的地址：<br>
+  if (!-e $request_filename){<br>
+  rewrite ^/wc([0-9]+)\.html$ /wp-comments-post.php?54chen=$1 last;<br>
+  }</p>
+  
+  <p><strong>土办法步骤三 javascript制造假post</strong>
+  完成上面两步之后 ，最后一步就是将原来的comments.php修改post action的地址为伪造的地址，为了更加有效果，使用js来产生随机的wc1234.html即可：<br>
+  在评论的form中增加onsubmit="chenAntiSpam()" name="commentform"；<br>
+  再增加js:</p>
+  
+  <p>&lt;script type="text/javascript"&gt;<br>
+  function chenAntiSpam() {<br>
+   var param ='wc'+Math.round(Math.random()*1000)+'.html';<br>
+   document.commentform.action = 'http://www.54chen.com/'+param;<br>
+  &lt;/script&gt;</p>
+  
+  <p>大功告成，有效防住了洋鬼子的灌。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/08/22/54chen-notes-annotation-interceptor-design/">[54chen开发日记]注解和拦截器实现权限通用模型的设计实践</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-22T00:00:00+08:00" pubdate data-updated="true">2010-08-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1uu8JXcxbXXXYIGZ2_043201.jpg" alt="54chen">
+  ------------------英文大爱-----------------------</p>
+  
+  <p>        在近期的开发过程中，有使用到拦截器来实现权限控制，使用这种设计方案，可以很好地分离权限与系统本身的功能，让开发过程更加关注系统的核心功能，同时可以很容易做到开发时的任务划分，同时使项目代码的可读性大大提升。先来普及几个相关的名词：</p>
+  
+  <p>1.<strong>AOP</strong>：是OOP的延续，是（Aspect Oriented Programming）的缩写，意思是面向切面编程，也有叫面向方面编程，不过切面更加形象。可以通过预编译方式和运行期动态代理实现在不修改源代码的情况下给程序动态统一添加功能的一种技术。AOP实际是GoF设计模式的延续，设计模式孜孜不倦追求的是调用者和被调用者之间的解耦，AOP可以说也是这种目标的一种实现。</p>
+  
+  <p>2.<strong>GoF</strong>：《Design Patterns: Elements of Reusable Object-Oriented  Software》（即《设计模式》一书），由 Erich Gamma、Richard Helm、Ralph Johnson 和 John  Vlissides 合著（Addison-Wesley，1995）。这几位作者常被称为"四人组（Gang of  Four）"，而这本书也就被称为"四人组（或 GoF）"书。话说为首的Erich Gamma，在QCon的大会上54chen也有半面之缘。</p>
+  
+  <p><strong>权限模型的常量定义</strong></p>
+  
+  <p>        一个系统里最常见的需求莫过于权限、角色，事实上往往这样子的需求和系统本身的功能又是没有太多关联的。按照常规的做法，我们需要两个类，一个表明都有什么权限（例如：删除帖子权限、编辑帖子权限，等等）;另一个类表明，各个角色都有什么权限。这样子相当于定义了一个权限和角色模型。</p>
+  
+  <p><strong>拦截器与注解</strong></p>
+  
+  <p>        拦截器（Invocation）在在流行的开源框架中很常见，依赖的技术就是Java的动态代理。许多流行的框架都提供实现拦截器的接口，可以很简单就实现一个拦截器，此文不表如何实现。注解（Annotations）是JAVA在5.0后引入的特性，它引入的目的是为了替代一些简单的配置到java代码里，而不用原来的xml。</p>
+  
+  <p><strong>注解请求示例</strong></p>
+  
+  <p>        一般的框架，都会有一个controller类，以下用伪代码表示：
+  <code>
+  public class ThreadsController{<br>
+  @PriCheckRequired({MemberPrivilegeIdentity.CREATE_THREAD})<br>
+  public String createThread(){<br>
+  return "createThread";<br>
+  }</code>
+          如代码中所示，一个controller里的一个method对应一个url请求（例中所示为创建帖子）。我们只需要在其方法上标注@PriCheckRequired({MemberPrivilegeIdentity.CREATE_THREAD})，PriCheckRequired就是注解，其传递了一个信息MemberPrivilegeIdentity.CREATE_THREAD，这也就是前文说的权限类中的创建帖子权限。
+  <strong>拦截器工作</strong>
+          拦截器一般都是实现一个框架提供的接口来实现，常用框架都支持。<br>
+  可以想像在拦截器里要做的事情：
+  </p>
+<blockquote>1.根据规定好的request请求的参数，取到用户属于哪个角色。<br>
+  2.根据controller中注解，取到当前要判断的权限。<br>
+  3.对比用户角色是否有注解中的权限，如果有，放行，反之拦截。
+  </blockquote>
+  <strong>代码实现</strong>
+  拦截器的代码实现与框架有关:<br>
+  rose框架如何实现拦截器请看<a href="http://code..com/p/paoding-rose/wiki/Rose_Code_Fragment_Interceptor">http://code..com/p/paoding-rose/wiki/Rose_Code_Fragment_Interceptor</a>;另外spring等都可以简单实现拦截器。
+  
+  <p><strong>篇末</strong>
+          这种方式可以做的事情还有许多，例如cache等公共模块的地方，都可以使用，对开发速度、任务划分、代码重用程度都有非常适用的地方。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/08/14/rose-pipe-http-54chen/">Rose Pipe–一次对http技术的伟大革新实现（54chen乱弹版）</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-14T00:00:00+08:00" pubdate data-updated="true">2010-08-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img class="alignnone" src="http://img07.taobaocdn.com/imgextra/i7/T1cjJIXiJxXXaTrOk6_062158.jpg" alt="" width="450" height="335"></p>
+  
+  <p>网站速度一直是互联网公司所关注的核心目标之一，作为SNS网站更是这样。来自世界第一大的打不开的SNS网站的工程师日志中提到，BigPipe: Pipelining web pages for high performance。
+  </p>
+<blockquote>原文在外，豆瓣有存根，地址为<a href="http://9.douban.com/site/entry/139173635/">http://9.douban.com/site/entry/139173635/</a>。</blockquote>
+  
+  <p>来自infoq的一篇资料报道：<a href="http://www.infoq.com/cn/news/2010/08/bigpipe--optimize">http://www.infoq.com/cn/news/2010/08/bigpipe--optimize</a>
+  它本意是充分利用http，将用户感受到的延迟时间降低<span style="color: #ff0000;">一半</span>，是如何做到的呢，下面由54chen流水记账一篇解释实现原理。院内曾经由人人网架构师王志亮大侠发表过一篇文章，地址是<a href="http://www.54chen.com/architecture/rose-open-source-portal-framework.html">http://www.54chen.com/architecture/rose-open-source-portal-framework.html</a>，本文将以此例中的项目举例。
+  <strong>HTTP协议</strong>
+  HTTP是一个客户端和服务器端请求和应答的标准，尽管TCP/IP协议是互联网上最流行的应用，HTTP协议并没有规定必须使用它和（基于）它支持的层。 事实上，HTTP可以在任何其他互联网协议上，或者在其他网络上实现。HTTP只假定（其下层协议提供）可靠的传输，任何能够提供这种保证的协议都可以被其使用。<br>
+  在这里重新解释HTTP是为了后面做铺垫，一次http访问的过程如下：<br>
+  1.打开一个连接后，客户机把请求消息送到服务器的停留端口上，完成提出请求动作；<br>
+  2.服务器在处理完客户的请求之后，要向客户机发送响应消息；<br>
+  3.客户和服务器双方都可以通过关闭套接字来结束TCP/IP对话。<br>
+  在使用java的ServletResponse的时候，往往都是如下的作返回结果到用户：
+  </p>
+<blockquote>out.write(sb.toString());<br>
+  out.flush();<br>
+  out.close();</blockquote>
+  <strong>传统的WEB请求</strong>
+  
+  <p>以图1为例，一个WEB项目往往由不同的部分组成，不同的格局里往往需要从不同的数据表里去取不同的数据。
+  <img src="http://img07.taobaocdn.com/bao/uploaded/i7/T1M_hCXiplXXXZgsbb_123302.jpg" alt="renren page">
+  图1 人人网公共主页页面</p>
+  
+  <p>一个用户来访问这个页面，按照传统的做法，其流程图可能是如图2这样的。
+  <img src="http://img02.taobaocdn.com/imgextra/i2/T15jFIXbxsXXc0QmZW_024631.jpg" alt="54chen:rose pipe">
+  图2 一个传统的http请求过程<br>
+  在图2中可以看到，一次打开网站页面的过程中，请求发到后端进行了处理（1和2步），只有当后端的取数据作（2步）全部完成的时候，才可能进入第3步，向用户返回组装好的html页。如果说图1中一共有四个模块，对应后台有四条sql语句的话，那么，必须这四条sql语句全部返回了结果，才可能让用户看到页面。</p>
+  
+  <p><strong>pipe</strong>
+  pipe技术充分利用了前后端技术。将一个页面里的多个模块分成不同的window，多线程取数据的作，然后再充分利用http请求的连接，将原来的输出，从一次flush变成多次flush：
+  </p>
+<blockquote>out.write(“基础的dom”);<br>
+  out.flush();<br>
+  //数据一准备好时<br>
+  out.write(“js带数据一”);<br>
+  out.flush();<br>
+  //数据十二准备好时<br>
+  out.write(“js带数据二”);<br>
+  out.flush();<br>
+  out.close();</blockquote>
+  其过程如图3所示：
+  <img src="http://img05.taobaocdn.com/imgextra/i5/T13kJIXaNaXXatZfg2_044035.jpg" alt="54chen:rose pipe">
+  图3 pipe的请求过程<br>
+  借用big pipe的代码，第一次是输出的：
+  
+  <p><code>&lt;div&gt;<br>
+  &lt;div id=”left_column”&gt;<br>
+  &lt;div id=”pagelet_navigation”&gt;&lt;/div&gt;<br>
+  &lt;/div&gt;<br>
+  &lt;div id=”middle_column”&gt;<br>
+  &lt;div id=”pagelet_composer”&gt;&lt;/div&gt;<br>
+  &lt;div id=”pagelet_stream”&gt;&lt;/div&gt;<br>
+  &lt;/div&gt;<br>
+  &lt;div id=”right_column”&gt;<br>
+  &lt;div id=”pagelet_pymk”&gt;&lt;/div&gt;<br>
+  &lt;div id=”pagelet_ads”&gt;&lt;/div&gt;<br>
+  &lt;div id=”pagelet_connect”&gt;&lt;/div&gt;<br>
+  &lt;/div&gt;<br>
+  &lt;/div&gt;</code></p>
+  
+  <p>当有了完整的dom结构时，浏览器就会开始显示没有数据的框架了。</p>
+  
+  <p>后面的数据每次都以js继续发送到页面中，浏览器收到即开始写入：
+  <code>
+  &lt;script type="text/javascript"&gt;<br>
+  big_pipe.onPageletArrive({id: “pagelet_composer”, content=&lt;HTML&gt;, css=[..], js=[..], …})<br>
+  &lt;/script&gt;</code></p>
+  
+  <p><strong>性能</strong>
+  这种显示方式的性能，再借用的图来表示之，如图4：
+  <img src="http://sphotos.ak.fbcdn.net/hphotos-ak-snc3/hs539.snc3/30586_396772147199_9445547199_3988332_604391_n.jpg" alt=":pipe"></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/08/04/maven-profiles-log4j/">使用maven的profiles自动设置log4j线上环境和测试环境区别</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-04T00:00:00+08:00" pubdate data-updated="true">2010-08-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img06.taobaocdn.com/imgextra/i6/T12CBHXXpLXXcRqLZ7_064514.jpg" alt="程序猿"></p>
+  
+  <p><strong>前言</strong>
+  Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具. 　　如果你已经有十次输入同样的Ant  targets来编译你的代码、jar或者war、生成javadocs，你一定会自问，是否有一个重复性更少却能同样完成该工作的方法。Maven便提 供了这样一种选择，将你的注意力从作业层转移到项目管理层。Maven项目已经能够知道如何构建和捆绑代码，运行测试，生成文档并宿主项目网页.<br>
+  项目的主页地址为：http://maven.apache.org/</p>
+  
+  <p><strong>深入</strong>
+  Profiles是maven的一个很关键的术语：profile是用来定义一些在build lifecycle中使用的environmental variations，profile可以设置成在不同的环境下激活不同的profile（例如：不同的OS激活不同的profile，不同的JVM激活不同的profile，不同的dabase激活不同的profile等等）。</p>
+  
+  <p><strong>实例</strong>
+  测试机环境，搞一个文件，比如说/data/test。<br>
+  线上环境，不搞这个文件。<br>
+  然后pom在project下如下写法：
+  </p>
+<blockquote>&lt;profiles&gt;<br>
+  &lt;profile&gt;<br>
+  &lt;id&gt;produce&lt;/id&gt;<br>
+  &lt;activation&gt;<br>
+  &lt;activeByDefault&gt;false&lt;/activeByDefault&gt;<br>
+  &lt;file&gt;<br>
+  &lt;missing&gt;/data/test&lt;/missing&gt;<br>
+  &lt;/file&gt;<br>
+  &lt;/activation&gt;<br>
+  &lt;properties&gt;<br>
+  &lt;log4j.log.path&gt;/opt/logs/xxx.log&lt;/log4j.log.path&gt;<br>
+  &lt;log4j.debug.level&gt;error&lt;/log4j.debug.level&gt;<br>
+  &lt;/properties&gt;<br>
+  &lt;/profile&gt;<br>
+  &lt;profile&gt;<br>
+  &lt;id&gt;dev&lt;/id&gt;<br>
+  &lt;activation&gt;<br>
+  &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;<br>
+  &lt;/activation&gt;<br>
+  &lt;properties&gt;<br>
+  &lt;log4j.log.path&gt;/opt/logs/xxx.log&lt;/log4j.log.path&gt;<br>
+  &lt;log4j.debug.level&gt;debug&lt;/log4j.debug.level&gt;<br>
+  &lt;/properties&gt;<br>
+  &lt;/profile&gt;<br>
+  &lt;/profiles&gt;</blockquote>
+  <strong>log4j.xml文件设置</strong>
+  为了配合maven的设置属性，需要将log4j中使用的声明用成变量，片段举例：
+  <blockquote>﻿&lt;logger name="com.xx.xx.xx.xx" additivity="false"&gt;<br>
+  &lt;level value="${log4j.debug.level}"/&gt;<br>
+  &lt;appender-ref ref="dao"/&gt;<br>
+  &lt;/logger&gt;</blockquote>
+  
+  <p>&lt;root&gt;<br>
+  &lt;level value="${log4j.debug.level}"/&gt;<br>
+  &lt;appender-ref ref="service"/&gt;<br>
+  &lt;/root&gt;
+  <strong>解释</strong>
+  这样，在运行mvn进行build项目的时候，如果线上环境，测试到/data/test文件是missing的，则会激活对应的设置，以此来达到线上环境改成error级别，而测试环境为debug级别。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/07/29/sphinx-install-and-configure-notes/">Sphinx安装配置手记（中文分词54chen支持版）</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-07-29T00:00:00+08:00" pubdate data-updated="true">2010-07-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1SgBHXhVsXXXh3Jw6_061254.jpg" alt="">
+  *从小培养华丽丽的山寨*/&gt;
+  <strong>介绍</strong></p>
+  
+  <p>Sphinx[英] [sfɪŋks] [美] [sfɪŋks]</p>
+  
+  <p>出自俄罗斯的开源全文搜索引擎软件Sphinx，单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级）。Coreseek是一款基于Sphinx的开源检索引擎，支持Tb级的全文数据索引，专门为中文用户提供免费开源的中文全文检索系统。</p>
+  
+  <p><strong>下载</strong></p>
+  
+  <p>   wget http://www.coreseek.cn/uploads/csft/3.2/csft-3.2.12.tar.gz<br>
+     wget http://www.coreseek.cn/uploads/csft/3.2/mmseg-3.2.12.tar.gz</p>
+  
+  <p><strong>解压</strong></p>
+  
+  <p>   tar -zxvf mmseg-3.2.12.tar.gz<br>
+     tar -zxvf csft-3.2.12.tar.gz</p>
+  
+  <p><strong>中文依赖下载和安装</strong></p>
+  
+  <p> wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.13.tar.gz<br>
+   tar zxvf libiconv-1.13.tar.gz<br>
+   cd libiconv-1.13/<br>
+   ./configure --with-libiconv-prefix<br>
+   make<br>
+   make install</p>
+  
+  <p><strong>建立系统动态链接</strong></p>
+  
+  <p>在/etc/ld.so.conf中加一行/usr/local/lib，运行ldconfig。 ld.so.conf和ldconfig是维护系统动态链接库的。真不明白为什么iconv库安装时不把这一步也做了</p>
+  
+  <p><strong>安装mmseg分词</strong></p>
+  
+  <p> cd mmseg-3.2.12<br>
+   yum -y install glibc-common libtool autoconf automake mysql-devel expat-devel<br>
+   aclocal<br>
+   libtoolize –force<br>
+   automake –add-missing<br>
+   autoconf<br>
+   autoheader<br>
+   ./configure –prefix=/usr/local/mmseg3<br>
+   make<br>
+   make install<br>
+   cp -f src/*/*.h /usr/local/mmseg3/include/mmseg/</p>
+  
+  <p><strong>安装sphinx</strong></p>
+  
+  <p> cd ..<br>
+   cd csft-3.2.12<br>
+   aclocal<br>
+   libtoolize –force<br>
+   automake –add-missing<br>
+   autoconf<br>
+   autoheader<br>
+   perl -pi -e ’s/lpthread/lpthread -liconv/g’ src/Makefile*<br>
+   ./configure –prefix=/usr/local/coreseek –enable-id64 –without-python –with-mysql –with-mmseg –with-mmseg-includes=/usr/local/mmseg3/include/mmseg/ –with-mmseg-libs=/usr/local/mmseg3/lib/<br>
+   perl -pi -e ’s/lpthread/lpthread -liconv/g’ src/Makefile*<br>
+   make<br>
+   make install<br>
+   cd /usr/local/coreseek/etc/<br>
+   cp sphinx.conf.dist csft.conf</p>
+  
+  <p><strong>修改配置中文支持</strong></p>
+  
+  <p> vim csft.conf</p>
+  
+  <p>找到charset_type行，修改为：</p>
+  
+  <p> charset_dictpath        = /usr/local/coreseek/dict/<br>
+   charset_type            = zh_cn.utf-8</p>
+  
+  <p><strong>生成字典：</strong></p>
+  
+  <p> cd /root/install/mmseg-3.2.12/data/<br>
+   /usr/local/mmseg3/bin/mmseg -u unigram.txt <br>
+   mkdir -p /usr/local/coreseek/dict/<br>
+   mv unigram.txt.uni /usr/local/coreseek/dict/uni.lib</p>
+  
+  <p><strong>增加mmseg配置：</strong></p>
+  
+  <p> vim /usr/local/coreseek/dict/mmseg.ini<br>
+  mmseg.ini配置：（请将其放置到词典文件uni.lib所在的目录，并在文件结尾空两行）</p>
+  
+  <p> [mmseg] <br>
+   merge_number_and_ascii=0; 	;合并英文和数字 abc123/x<br>
+   number_and_ascii_joint=-; 	;定义可以连接英文和数字的字符<br>
+   compress_space=1; 		;暂不支持<br>
+   seperate_number_ascii=0;	;就是将字母和数字打散</p>
+  
+  <p><strong>索引</strong>
+   touch /data/exceptions.txt<br>
+   bin/indexer –all</p>
+  
+  <p><strong>搜中文</strong>
+   bin/search 我爱
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/29">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <em>30</em>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/31">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

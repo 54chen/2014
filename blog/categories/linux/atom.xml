@@ -1,0 +1,702 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Linux | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/linux/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+      
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[Vpn搭建及pptpd因mtu上传下载慢一例]]></title>
+      <link href="https://www.54chen.com/blog/2014/12/30/pptpd-scp-slow/"/>
+      <updated>2014-12-30T14:31:30+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/12/30/pptpd-scp-slow</id>
+      <content type="html"><![CDATA[<p><img src=http://img04.taobaocdn.com/imgextra/i4/T1BgpOXhlKXXb04jU7_065317.jpg></p>
+  
+  <h2>一、环境及安装</h2>
+  
+  <ul>
+  <li>server: centos 6.3 （kvm虚拟机）。</li>
+  <li>client: ubuntu 10.04。</li>
+  <li><p>server上yum install安装pptpd，常规设置好ip分配、用户名密码，添加iptables set mss的参数。</p>
+  
+  <blockquote><p>设置/etc/pptpd.conf中的localip与remoteip，分别表示虚拟出来的双方ip范围。
+  <br>设置/etc/ppp/chap-secrets中的用户名密码和连接ip等。
+  <br>service pptpd start
+  <br>iptables -A FORWARD -p tcp &ndash;syn -s 172.16.36.0/24 -j TCPMSS &ndash;set-mss 1356</p></blockquote></li>
+  <li><p>client上apt-get install安装的pptpsetup，设置好用户名密码，启动vpn连接。</p>
+  
+  <blockquote><p>/usr/sbin/pptpsetup &ndash;create vpn &ndash;server <em>.</em>.<em>.</em>(server ip) &ndash;username vpn &ndash;password ASDF &ndash;encrypt &ndash;start</p></blockquote></li>
+  <li><p>pptpd v1.4.0</p></li>
+  </ul>
+  
+  
+  <h2>二、遇到困难</h2>
+  
+  <ul>
+  <li>scp client_file server 时，速度先很快，级数变慢，最后不动了。</li>
+  <li>scp server_file client 时，同上表现。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <ul>
+  <li>因为server处在vm中（某云主机）。</li>
+  <li>server最后的公网ip并不在eth0，而是由母机网卡决定。</li>
+  <li>server的iptable看上去并不生效。</li>
+  </ul>
+  
+  
+  <h2>三、联想</h2>
+  
+  <ul>
+  <li>vpn慢的原因，最大可能是虚拟出的网络mtu大过了中间的网络mtu值。</li>
+  <li>猜测是双方的虚拟网卡上的mtu与实际的网络有差别。</li>
+  <li>分别在server client执行netstat -i。</li>
+  <li>可以看到ppp0默认的mtu值都在1496左右（真实网卡是1500），找到真凶。</li>
+  </ul>
+  
+  
+  <h2>四、解决</h2>
+  
+  <ul>
+  <li>server: /etc/ppp/options.pptpd 最后一行添加 mtu 1300，解决下载慢。</li>
+  <li><p>client: ifconfig ppp0 mtu 1300 解决上传慢的问题。</p></li>
+  <li><p>MTU:Maximum Transmission Unit 网络上传送的最大数据包，单位字节，默认一般是1500。</p></li>
+  <li>大于mtu的包，在系统层会被拆成多个来发。</li>
+  <li>各层级的网络路由设备，会协商大家的mtu，选择一个最小的。</li>
+  <li>协商mtu的时候要发送ICMP包，很多厂商的防火会关闭它的传输（防ddos等）。真凶在此。</li>
+  <li>在无法实现协商mtu的时候，各种事件都会影响mtu的确定，实际表现为在传大文件的时候，寻找mtu的过程中，数据包丢了。原理在此。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[BLUNO试用手记]]></title>
+      <link href="https://www.54chen.com/blog/2013/11/30/bluno/"/>
+      <updated>2013-11-30T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/11/30/bluno</id>
+      <content type="html"><![CDATA[<p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno" />
+  <strong>准备工作</strong>
+  rmbp<br />
+  BLUNO ×1<br />
+  Android 4.3+ Devices with BLE or IOS 7.0+ Devices<br />
+  Accessory Shield with Arduino ×1<br />
+  Micro USB cable x1<br />
+  http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。</p>
+  
+  
+  <!-- more -->
+  
+  
+  <p><strong>通过AT指令配置BLUNO的蓝牙属性</strong>
+  1.把BLUNO上的AT开关，从NORMAL拔到AT<br />
+  2.连接BLUNO到电脑，打开CoolTerm<br />
+  3.CoolTerm -> Options -> baud rate -> 115200 -> ok<br />
+  4. Connect<br />
+  5. Connection -> send String<br />
+  6.弹出来的框框可以输入AT指令了<br />
+  注意：Port要选择USBmodem***，因为电脑有延迟，如果没出来，可以拔了重新插入micro usb线，然后点下面的Re-scan。<br />
+  7.（注意每个指令末尾要加回车）send之后，后面如果提示OK，表示发送成功，其他的提示或者没有提示，回到3。</p>
+  
+  
+  
+  
+  <p><strong>常见AT指令集</strong>
+  AT+NAME=?   －  你叫啥名字<br />
+  AT+NAME=54CHEN_110005  － 把你的名字改为54CHEN_110005<br />
+  AT+MAC=? - 你的mac地址是多少<br />
+  AT+RESTART －去死吧<br />
+  AT+CONN_INTERVAL=? －多少秒搞一次尝试连接？</p>
+  
+  
+  
+  
+  <p><strong>设置好BLUNO</strong>
+  Input : AT+ROLE=ROLE_PERIPHERAL<CR+LF>  Answer(Return):OK  // 角色调整为周边设备，相对于设备，从机的概念？<br />
+  Input : AT+FSM=FSM_TRANS_USB_COM_BLE<CR+LF> Answer(Return):OK //通过usb传输</p>
+  
+  
+  
+  
+  <p>然后把AT开关从AT转为NORMAL，断电。</p>
+  
+  
+  
+  
+  <p><strong>上传代码</strong>
+  1.Accessory Shield插到BLUNO上，通电。<br />
+  2.下载PlainProtocol：http://www.dfrobot.com.cn/download/PlainProtocol.zip<br />
+  3.打开arduino IDE -> sketch->import library->add library，选择刚刚下载的包<br />
+  4.在arduino IDE中写代码。</p>
+  
+  
+  
+  
+  <p><strong>板子介绍</strong>
+  BLUNO<br />
+  内置BLE（低功耗蓝牙）模块的arduino板子。<br />
+  Accessory Shield with Arduino <br />
+  不知道哪位神仙想出来的大杂烩板子，上面有：128x64 OLED显示屏，喇叭一个，DHT11温度湿度传感器，1.5A继电器一枚，螺旋电位器一枚，RGB LED灯一颗。 </p>
+  
+  
+  
+  
+  <p>__等再研究清楚点之后再续写arduino代码__</p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Arduino-蓝牙各种版本类型及费用对比]]></title>
+      <link href="https://www.54chen.com/blog/2013/08/13/arduino-bl/"/>
+      <updated>2013-08-13T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/08/13/arduino-bl</id>
+      <content type="html"><![CDATA[<p><img src="http://leiphone.qiniudn.com/uploads/09-2/-3/09-25-32-27.jpg" alt="arduino" /></p>
+  
+  
+  
+  
+  <p><strong>厂商</strong>
+  做单芯片系统和蓝牙模块的厂商主要有：Bluegiga（蓝兆），Texas Instruments（德州仪器），Nordic Semiconductor（北欧半导体），Cambridge Silicon Radio（CSR公司），Broadcom Corporation（博通公司），这几家公司，基本掌控了全球所有的蓝牙、无线、voip、音视频解码等核心技术。（技术门槛岗岗的！）</p>
+  
+  
+  
+  
+  <p><strong>常见类型</strong>
+  <em>2.1+EDR</em>
+  2004年推出，2006年大量使用。<br />
+  http://blog.sina.com.cn/s/blog_8a49cc8f0101b03j.html<br />
+  *此款为目前最好用的一款了。</p>
+  
+  
+  <!-- more -->
+  
+  
+  <p><em>3.0</em>
+  2009年推出。升级的秘密在于，在需要的时候，其会调用wifi协议，传输速度提升8倍。</p>
+  
+  
+  
+  
+  <p><em>4.0（BLE）</em>
+  2010年推出。低功耗、提升传输距离为60米。android4.3才宣布完整支持。<br />
+  http://www.cnblogs.com/zdz8207/archive/2012/10/17/bluetooth_ble_android.html</p>
+  
+  
+  
+  
+  <p>http://redbearlab.com/bleshield/ 北欧半导体生产，只支持从模式。<br />
+  *此款为最烧包的款了。</p>
+  
+  
+  
+  
+  <p><strong>费用</strong>
+  所有使用蓝牙技术的产品都应该通过BQB专利认证，才能拥有蓝牙技术的使用权，当然，国内是比较少人去做的，但使用了蓝牙技术的产品出口到欧盟、佬等一些发达，在通关时不能提供这个蓝牙BQB认证，货会被当地海关扣压，因为你的货侵犯了蓝牙的专利权。<br />
+  蓝牙认证是没有期限的，只要您认证过的产品没有更改它的认证模块及软件版本，就会一直有效，所以，既然没有期限，那么在http://www.bluetooth.org查询得到的产品，都是有效的。<br />
+  但是，如果您申请蓝牙认证时是以“小企业”的名义去申请BQB认证（即$5000两个QDID，免会员年费），那么第二个QDID的是要在18个月以内申请第二款产品的BQB，如果18月内没申请，那这个QDID就费掉了。BQB的费用初次申请7500USD,以后每年5000USD的会费，针对型号负责。</p>
+  
+  
+  
+  
+  <p>最新的费用：https://www.bluetooth.org/zh-cn/test-qualification/qualification-overview/fees</p>
+  
+  
+  
+  
+  <p>能找到的好消息是：所有采用 TI CC254x 蓝牙低功耗系统单晶片 （SoC） 解决方案的使用者皆可使用 TI BLE-Stack 1.2，并可免专利费。找不到BLE不收专利费的消息，猜测是谣传。</p>
+  
+  
+  
+  
+  <p></p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Arduino学习手记四：串行编程]]></title>
+      <link href="https://www.54chen.com/blog/2013/07/06/arduino-starter-4/"/>
+      <updated>2013-07-06T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/07/06/arduino-starter-4</id>
+      <content type="html"><![CDATA[<p>前面几节介绍了一些常见的传感器使用办法，许多人一定会有一种困惑，如果要做一个arduino发微博的例子得怎么做？</p>
+  
+  
+  
+  
+  <p>本节不是教发微博的。</p>
+  
+  
+  
+  
+  <p>通过在pc上运行的程序去访问互联网，然后把数据通过usb返给arduino的做法，就是利用了串口的编程办法。</p>
+  
+  
+  
+  
+  <p>在第一节里（<a href="http://www.54chen.com/_linux_/arduino-starter-1.html">http://www.54chen.com/_linux_/arduino-starter-1.html</a>），我们说到了arduino使用的主要语言是processing。</p>
+  
+  
+  
+  
+  <p>以下例子均在mac下试验通过，ubuntu应该差不多，windows不知道应该怎么搞。</p>
+  
+  
+  
+  
+  <p><strong>Processing</strong>
+  这是一门目标群体类似设计师的编程语言，非常的极简，语法类似java，java开发者基本不用学习。其IDE：PDE也是极简到了极致。<br />
+  PDE(processing IDE)的极简程度令人发指，用习惯了eclipse的同学上来就找的第一个功能就是自动完成，遗憾的是，人家的定义是给设计师们用的，看来工程师们还是回到eclipse的世界去吧。PDE is admirably simple。</p>
+  
+  
+  
+  
+  <p>十分想用代码自动完成功能的同学，可以试试在eclipse里完成代码：
+  <a href="http://t.cn/zH3b2KP">http://t.cn/zH3b2KP</a></p>
+  
+  
+  
+  
+  <p>其下载和安装都非常简单：http://processing.org/download/下载之后直接使用即可。以mac为例，长得和arduino的IDE基本上一样（应该是说arduino的和它长得基本上一样）。</p>
+  
+  
+  
+  
+  <p><strong>开始互动之旅</strong></p>
+  
+  
+  
+  
+  <p>打开PDE，代码如下：
+  <blockquote>import processing.serial.*;</blockquote></p>
+  
+  
+  
+  
+  <p>String cs;<br />
+  String buffer = "";</p>
+  
+  
+  
+  
+  <p>Serial port;</p>
+  
+  
+  
+  
+  <p>void setup() {<br />
+    println(Serial.list());<br />
+    String arduinoPort = Serial.list()[5];//如果你运行代码后arduino里没反应，需要来调整这个端口号，据机器不同而不同，看上一行代码打印出来的序号哪一个是arduino就写几。<br />
+    port = new Serial(this, arduinoPort, 9600); //link to arduino<br />
+    cs = "#hello";<br />
+  }</p>
+  
+  
+  
+  
+  <p>void draw() {<br />
+    port.write(cs); //send to arduino<br />
+  }
+  </p>
+  
+  
+  
+  
+  <p>运行代码，会有提示：
+  <blockquote>To use the serial library, first open<br />
+  Applications -> Utilities -> Terminal.app<br />
+  and enter the following:<br />
+  sudo mkdir -p /var/lock<br />
+  sudo chmod 777 /var/lock</blockquote></p>
+  
+  
+  
+  
+  <p>打开终端，对var/lock权限修改。<br />
+  再运行，就可以打开一个框框，啥也做不了。</p>
+  
+  
+  
+  
+  <p><strong>arduino上的代码</strong>
+  <blockquote>#define LED 11</blockquote></p>
+  
+  
+  
+  
+  <p>byte inByte = 0;<br />
+  int pointer = 0;<br />
+  char buffer[6]; </p>
+  
+  
+  
+  
+  <p>void setup(){<br />
+    pinMode(LED,OUTPUT); <br />
+    Serial.begin(9600); // open port to 9600<br />
+  }</p>
+  
+  
+  
+  
+  <p><p>void loop(){<br />
+    if(Serial.available() > 0){<br />
+      inByte = Serial.read();<br />
+      if(inByte == &lsquo;#&rsquo;){<br />
+        while(pointer &lt; 5){<br />
+          buffer[pointer] = Serial.read();<br />
+        }<br />
+      }<br />
+      digitalWrite(LED,HIGH);<br />
+    }<br />
+  }</p></p>
+  
+  <p><p>连线：<br />
+  在数字11连一220欧电阻加一LED灯。</p></p>
+  
+  <p><p>效果：<br />
+  启动arduino时，灯不亮，再运行电脑上的代码之后，灯亮了。</p></p>
+  
+  <p><p><strong>通过arduino通知电脑</strong></p></p>
+  
+  <p><p>在arduino中使用Serial.write，在电脑上用port.read()。</p></p>
+  
+  <p><p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1e6d4imgv9xj20rs0xc42o.jpg" alt="arduino processing" /></p></p>
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Arduino学习手记三：八位数码管]]></title>
+      <link href="https://www.54chen.com/blog/2013/07/04/arduino-starter-3/"/>
+      <updated>2013-07-04T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/07/04/arduino-starter-3</id>
+      <content type="html"><![CDATA[<p><img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e69op40p20j205308daa0.jpg" alt="8位数码管" /></p>
+  
+  
+  
+  
+  <p>上图是八位数码管里各二极管和引脚的关系。</p>
+  
+  
+  
+  
+  <p>一共两个正极（接＋5v），剩下的8个脚，哪个是低电平时管就亮，于是就可以凑出来数字。这个小数点可以用来区分正反。</p>
+  
+  
+  
+  
+  <p><strong>数字0数字1引脚对程序upload的影响</strong>
+  如果你将数码管接到了数字0和数字1上，那很遗憾，每次upload的时候，你都要拔下来才行。因为数据交互借用了这两个脚做事情。</p>
+  
+  
+  
+  
+  <p>如果你的IDE出现avrdude: stk500_recv(): programmer is not responding的提示的时候，注意看看你的数字0和数字1是不是插着东西。</p>
+  
+  
+  
+  
+  <p><strong>八位数码管的连线</strong>
+  数字：<br />
+  a-12<br />
+  b-13<br />
+  c-2<br />
+  d-3<br />
+  e-4<br />
+  f-5<br />
+  g-6<br />
+  DP-7</p>
+  
+  
+  
+  
+  <p>剩下的两个正极同时接到＋5v上。</p>
+  
+  
+  
+  
+  <p>这里a和b故意让开0和1，方便开发过程，不需要拔来拔去的。</p>
+  
+  
+  
+  
+  <p><strong>显示的代码</strong>
+  <blockquote>void num9()<br />
+  {
+    digitalWrite(pin0,LOW);     //显示9<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,LOW);<br />
+    digitalWrite(pin4,HIGH);<br />
+    digitalWrite(pin5,LOW);<br />
+    digitalWrite(pin6,LOW);<br />
+    digitalWrite(pin7,HIGH);<br />
+  } </blockquote></p>
+  
+  
+  
+  
+  <p>以上是一个数字9的显示。</p>
+  
+  
+  
+  
+  <p><strong>完整的代码</strong>
+  以下是在第二节里的代码和连线基础上的加强版本 <a href="http://www.54chen.com/_linux_/arduino-starter-2-led.html">http://www.54chen.com/_linux_/arduino-starter-2-led.html</a>。<br />
+  代码完成了在摇控器上按数字几，在八位管上显示数字几。</p>
+  
+  
+  
+  
+  <p>连线需要先按照第二节中的连线之后，再加上本节的连线。</p>
+  
+  
+  
+  
+  <p>效果图：
+  <img src="http://ww1.sinaimg.cn/bmiddle/663fba41jw1e6alqahzl5j20p118gjw7.jpg" alt="八位数码管" /></p>
+  
+  
+  
+  
+  <p><blockquote>#include <irremote.h /></blockquote></p>
+  
+  
+  
+  
+  <p>#define LED 11<br />
+  #define BIZZER 10<br />
+  #define IR_IN 8 //红外接收</p>
+  
+  
+  
+  
+  <p>IRrecv irrecv(IR_IN);   // 定义IRrecv 对象来接收红外线信号<br />
+  decode_results results;   //解码结果放在decode_results构造的对象results里</p>
+  
+  
+  
+  
+  <p>int pin0=12;  //设置蜂鸣器数字接口<br />
+  int pin1=13;<br />
+  int pin2=2; <br />
+  int pin3=3; <br />
+  int pin4=4; <br />
+  int pin5=5; <br />
+  int pin6=6; <br />
+  int pin7=7; <br />
+  void setup()<br />
+    pinMode(BIZZER,OUTPUT); <br />
+    pinMode(LED,OUTPUT); <br />
+    pinMode(pin0,OUTPUT);<br />
+    pinMode(pin1,OUTPUT);<br />
+    pinMode(pin2,OUTPUT);<br />
+    pinMode(pin3,OUTPUT);<br />
+    pinMode(pin4,OUTPUT);<br />
+    pinMode(pin5,OUTPUT);<br />
+    pinMode(pin6,OUTPUT);<br />
+    pinMode(pin7,OUTPUT);<br />
+    Serial.begin(9600);<br />
+    irrecv.enableIRIn(); // Start the receiver<br />
+    numd();<br />
+  }</p>
+  
+  
+  
+  
+  <p>void loop()<br />
+  { <br />
+    if (irrecv.decode(&results)) <br />
+    {<br />
+      switch(results.value)<br />
+      {<br />
+      case 0xFD00FF:<br />
+        numd();<br />
+        break;<br />
+      case 0xFD30CF:<br />
+        num0();<br />
+        break;<br />
+      case 0xFD08F7:<br />
+        num1();<br />
+        break;<br />
+      case 0xFD8877:<br />
+        num2();<br />
+        break;  <br />
+      case 0xFD48B7:<br />
+        num3();<br />
+        break;<br />
+      case 0xFD28D7:<br />
+        num4();<br />
+        break;<br />
+      case 0xFDA857:<br />
+        num5();<br />
+        break;<br />
+      case 0xFD6897:<br />
+        num6();<br />
+        break;<br />
+      case 0xFD18E7:<br />
+        num7();<br />
+        break;<br />
+      case 0xFD9867:<br />
+        num8();<br />
+        break;<br />
+      case 0xFD58A7:<br />
+        num9();<br />
+        break;<br />
+      case 0xFD40BF:<br />
+        digitalWrite(BIZZER,HIGH);<br />
+        delay(50);<br />
+        digitalWrite(BIZZER,LOW);   <br />
+        break;<br />
+      default:<br />
+        Serial.println(results.value, HEX);   <br />
+        digitalWrite(LED,HIGH);<br />
+        delay(50);<br />
+        digitalWrite(LED,LOW);<br />
+      }<br />
+      irrecv.resume(); // Receive the next value<br />
+    }<br />
+  }</p>
+  
+  
+  
+  
+  <p>void num0()<br />
+  {
+    digitalWrite(pin0,LOW); //显示0<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,LOW);<br />
+    digitalWrite(pin4,LOW);<br />
+    digitalWrite(pin5,LOW);<br />
+    digitalWrite(pin6,HIGH);<br />
+    digitalWrite(pin7,HIGH);<br />
+  void num1()<br />
+  {
+    digitalWrite(pin0,HIGH);     //显示1<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,HIGH);<br />
+    digitalWrite(pin4,HIGH);<br />
+    digitalWrite(pin5,HIGH);<br />
+    digitalWrite(pin6,HIGH);<br />
+    digitalWrite(pin7,HIGH);<br />
+    digitalWrite(pin0,HIGH);<br />
+  void num2()<br />
+  {
+    digitalWrite(pin0,LOW);        //显示2<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,HIGH);<br />
+    digitalWrite(pin3,LOW);<br />
+    digitalWrite(pin4,LOW);<br />
+    digitalWrite(pin5,HIGH);<br />
+    digitalWrite(pin6,LOW);<br />
+    digitalWrite(pin7,HIGH);<br />
+  }
+  void num3()<br />
+  {
+    digitalWrite(pin0,LOW);     //显示3<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,LOW);<br />
+    digitalWrite(pin4,HIGH);<br />
+    digitalWrite(pin5,HIGH);<br />
+    digitalWrite(pin6,LOW);<br />
+    digitalWrite(pin7,HIGH);<br />
+  }
+  void num4()<br />
+  {
+    digitalWrite(pin0,HIGH);    //显示4<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,HIGH);<br />
+    digitalWrite(pin4,HIGH);<br />
+    digitalWrite(pin5,LOW);<br />
+    digitalWrite(pin6,LOW);<br />
+    digitalWrite(pin7,HIGH);<br />
+  } <br />
+  void num5()<br />
+  {
+    digitalWrite(pin0,LOW);      //显示5<br />
+    digitalWrite(pin1,HIGH);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,LOW);<br />
+    digitalWrite(pin4,HIGH);<br />
+    digitalWrite(pin5,LOW);<br />
+    digitalWrite(pin6,LOW);<br />
+    digitalWrite(pin7,HIGH);<br />
+  } <br />
+  void num6()<br />
+  {
+    digitalWrite(pin0,LOW);     //显示6<br />
+    digitalWrite(pin1,HIGH);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,LOW);<br />
+    digitalWrite(pin4,LOW);<br />
+    digitalWrite(pin5,LOW);<br />
+    digitalWrite(pin6,LOW);<br />
+    digitalWrite(pin7,HIGH);<br />
+  } <br />
+  void num7()<br />
+  {
+    digitalWrite(pin0,LOW);     //显示7<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,HIGH);<br />
+    digitalWrite(pin4,HIGH);<br />
+    digitalWrite(pin5,HIGH);<br />
+    digitalWrite(pin6,HIGH);<br />
+    digitalWrite(pin7,HIGH);<br />
+  } <br />
+  void num8()<br />
+  {
+    digitalWrite(pin0,LOW);     //显示8<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,LOW);<br />
+    digitalWrite(pin4,LOW);<br />
+    digitalWrite(pin5,LOW);<br />
+    digitalWrite(pin6,LOW);<br />
+    digitalWrite(pin7,HIGH);<br />
+  } <br />
+  void num9()<br />
+  {
+    digitalWrite(pin0,LOW);     //显示9<br />
+    digitalWrite(pin1,LOW);<br />
+    digitalWrite(pin2,LOW);<br />
+    digitalWrite(pin3,LOW);<br />
+    digitalWrite(pin4,HIGH);<br />
+    digitalWrite(pin5,LOW);<br />
+    digitalWrite(pin6,LOW);<br />
+    digitalWrite(pin7,HIGH);<br />
+  } <br />
+  void numd()<br />
+  {
+    digitalWrite(pin0,HIGH);     //显示点DP<br />
+    digitalWrite(pin1,HIGH);<br />
+    digitalWrite(pin2,HIGH);<br />
+    digitalWrite(pin3,HIGH);<br />
+    digitalWrite(pin4,HIGH);<br />
+    digitalWrite(pin5,HIGH);<br />
+    digitalWrite(pin6,HIGH);<br />
+    digitalWrite(pin7,LOW);<br />
+  } </p>
+  
+  
+  
+  
+  <p></p>
+  
+  ]]></content>
+    </entry>
+  </feed>

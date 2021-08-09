@@ -1,0 +1,241 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>BLUNO试用手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="准备工作
+  rmbp
+  BLUNO ×1
+  Android 4.3+ Devices with BLE or IOS 7.0+ Devices
+  Accessory Shield with Arduino ×1
+  Micro USB cable x1
+  http://freeware.the-meiers. …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/11/30/bluno">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">BLUNO试用手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-11-30T00:00:00+08:00" pubdate data-updated="true">2013-11-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1eb32fj6co0j218g0p1q82.jpg" alt="bluno">
+  <strong>准备工作</strong>
+  rmbp<br>
+  BLUNO ×1<br>
+  Android 4.3+ Devices with BLE or IOS 7.0+ Devices<br>
+  Accessory Shield with Arduino ×1<br>
+  Micro USB cable x1<br>
+  http://freeware.the-meiers.org  下载安装简化串口调节工具CoolTerm。</p>
+  <!-- more -->
+  <p><strong>通过AT指令配置BLUNO的蓝牙属性</strong>
+  1.把BLUNO上的AT开关，从NORMAL拔到AT<br>
+  2.连接BLUNO到电脑，打开CoolTerm<br>
+  3.CoolTerm -&gt; Options -&gt; baud rate -&gt; 115200 -&gt; ok<br>
+  4. Connect<br>
+  5. Connection -&gt; send String<br>
+  6.弹出来的框框可以输入AT指令了<br>
+  注意：Port要选择USBmodem***，因为电脑有延迟，如果没出来，可以拔了重新插入micro usb线，然后点下面的Re-scan。<br>
+  7.（注意每个指令末尾要加回车）send之后，后面如果提示OK，表示发送成功，其他的提示或者没有提示，回到3。</p>
+  
+  <p><strong>常见AT指令集</strong>
+  AT+NAME=?   －  你叫啥名字<br>
+  AT+NAME=54CHEN_110005  － 把你的名字改为54CHEN_110005<br>
+  AT+MAC=? - 你的mac地址是多少<br>
+  AT+RESTART －去死吧<br>
+  AT+CONN_INTERVAL=? －多少秒搞一次尝试连接？</p>
+  
+  <p><strong>设置好BLUNO</strong>
+  Input : AT+ROLE=ROLE_PERIPHERAL<cr>	Answer(Return):OK  // 角色调整为周边设备，相对于设备，从机的概念？<br>
+  Input : AT+FSM=FSM_TRANS_USB_COM_BLE<cr>	Answer(Return):OK //通过usb传输</cr></cr></p>
+  
+  <p>然后把AT开关从AT转为NORMAL，断电。</p>
+  
+  <p><strong>上传代码</strong>
+  1.Accessory Shield插到BLUNO上，通电。<br>
+  2.下载PlainProtocol：http://www.dfrobot.com.cn/download/PlainProtocol.zip<br>
+  3.打开arduino IDE -&gt; sketch-&gt;import library-&gt;add library，选择刚刚下载的包<br>
+  4.在arduino IDE中写代码。</p>
+  
+  <p><strong>板子介绍</strong>
+  BLUNO<br>
+  内置BLE（低功耗蓝牙）模块的arduino板子。<br>
+  Accessory Shield with Arduino <br>
+  不知道哪位神仙想出来的大杂烩板子，上面有：128x64 OLED显示屏，喇叭一个，DHT11温度湿度传感器，1.5A继电器一枚，螺旋电位器一枚，RGB LED灯一颗。 </p>
+  
+  <p>__等再研究清楚点之后再续写arduino代码__</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-11-30T00:00:00+08:00" pubdate data-updated="true">2013-11-30 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/11/27/jvm/" title="Previous Post: java 1.6.0_38-b05 vm 20.13-b02优化手记">« java 1.6.0_38-b05 vm 20.13-b02优化手记</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2013/12/30/cassandra-thrift/" title="Next Post: Cassandra的thrift用法学习手记">Cassandra的thrift用法学习手记 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,552 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>用java并发测试tokyo Cabinet的性能[重大更正篇] - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="在前面一篇文章
+  用java并发测试tokyo cabinet的性能[五四陈手记] 提到了测试tc的效率问题，最后的结论是70W/s，由于当时的错误，导致了一些严重影响大家的结论，如今本着认真治学，谨慎小心的态度，重新公布最新的代码和结论，还望受影响的同志们不要发烧。。。 首先， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/10/27/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">用java并发测试tokyo Cabinet的性能[重大更正篇]</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-27T00:00:00+08:00" pubdate data-updated="true">2009-10-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>在前面一篇文章
+  <a rel="bookmark" href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">用java并发测试tokyo cabinet的性能[五四陈手记]</a></p>
+  
+  <p>提到了测试tc的效率问题，最后的结论是70W/s，由于当时的错误，导致了一些严重影响大家的结论，如今本着认真治学，谨慎小心的态度，重新公布最新的代码和结论，还望受影响的同志们不要发烧。。。</p>
+  
+  <p>首先，总结上一次为什么会犯错的原因：</p>
+  
+  <p>1. 测试代码有问题，TDB db = new TDB();不能放在线程中去new，也许是tc实现的问题，详细原因没有去研究。</p>
+  
+  <p>2.赶着时间测，把写入的时候的结果直接给屏了。</p>
+  
+  <p>重新公布新的测试代码：
+  </p>
+<blockquote>package test;</blockquote>
+  
+  <p>import java.util.ArrayList;</p>
+  
+  <p>import java.util.HashMap;</p>
+  
+  <p>import java.util.List;</p>
+  
+  <p>import java.util.Map;</p>
+  
+  <p>import java.util.Random;</p>
+  
+  <p>import java.util.concurrent.atomic.AtomicLong;</p>
+  
+  <p>import tokyocabinet.*;</p>
+  
+  <p>public class BenchMark {</p>
+  
+  <p><span> </span>private static List&lt;TDB&gt; dbList = new ArrayList&lt;TDB&gt;();</p>
+  
+  <p><span> </span>public static class Stat {</p>
+  
+  <p><span> </span>private AtomicLong _count = new AtomicLong(0);</p>
+  
+  <p><span> </span>private static Stat _instance = new Stat();</p>
+  
+  <p><span> </span>public static Stat getInstance() {</p>
+  
+  <p><span> </span>return _instance;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>private Stat() {</p>
+  
+  <p><span> </span>_printer = new RatePrinter(_count);</p>
+  
+  <p><span> </span>_printer.setDaemon(true);</p>
+  
+  <p><span> </span>_printer.start();</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>public void inc() {</p>
+  
+  <p><span> </span>_count.incrementAndGet();</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>private RatePrinter _printer;</p>
+  
+  <p><span> </span>private static class RatePrinter extends Thread {</p>
+  
+  <p><span> </span>private long _last;</p>
+  
+  <p><span> </span>private AtomicLong _c;</p>
+  
+  <p><span> </span>public RatePrinter(AtomicLong c) {</p>
+  
+  <p><span> </span>_c = c;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>@Override</p>
+  
+  <p><span> </span>public void run() {</p>
+  
+  <p><span> </span>while (true) {</p>
+  
+  <p><span> </span>try {</p>
+  
+  <p><span> </span>long current = _c.get();</p>
+  
+  <p><span> </span>System.out.println("Rate: " + (current - _last) + " req/s");</p>
+  
+  <p><span> </span>_last = current;</p>
+  
+  <p><span> </span>Thread.sleep(1000L);</p>
+  
+  <p><span> </span>} catch (Throwable e) {</p>
+  
+  <p><span> </span>e.printStackTrace();</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>public static class EchoThread extends Thread {</p>
+  
+  <p><span> </span>// private TDB tdb;</p>
+  
+  <p><span> </span>public EchoThread(String ip, String port, int in, ThreadGroup group) {</p>
+  
+  <p><span> </span>super(group, "EchoThread-" + in);</p>
+  
+  <p><span> </span>// // create the object</p>
+  
+  <p><span> </span>// TDB tdb = new TDB();</p>
+  
+  <p><span> </span>//</p>
+  
+  <p><span> </span>// // open the database</p>
+  
+  <p><span> </span>// if(!tdb.open("casket"+in+".tct", TDB.OWRITER | TDB.OCREAT)){</p>
+  
+  <p><span> </span>// int ecode = tdb.ecode();</p>
+  
+  <p><span> </span>// System.err.println("open error: " + tdb.errmsg(ecode));</p>
+  
+  <p><span> </span>// }</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>@Override</p>
+  
+  <p><span> </span>public void run() {</p>
+  
+  <p><span> </span>int index = 0;</p>
+  
+  <p><span> </span>// create the object</p>
+  
+  <p><span> </span>Random r = new Random();</p>
+  
+  <p><span> </span>// open the database</p>
+  
+  <p>//<span> </span>if (!tdb.open("casket" + Thread.currentThread().getId() + ".tct", TDB.OWRITER | TDB.OCREAT)) {</p>
+  
+  <p>//<span> </span>int ecode = tdb.ecode();</p>
+  
+  <p>//<span> </span>System.err.println("open error: " + tdb.errmsg(ecode));</p>
+  
+  <p>//<span> </span>}</p>
+  
+  <p><span> </span>while (true) {</p>
+  
+  <p><span> </span>try {</p>
+  
+  <p><span> </span>TDB tdb = dbList.get(0);</p>
+  
+  <p><span> </span>String pkey = index + "asdf";</p>
+  
+  <p><span> </span>Map&lt;String, String&gt; cols = new HashMap&lt;String, String&gt;();</p>
+  
+  <p><span> </span>cols.put("name", "mikio" + index);</p>
+  
+  <p><span> </span>cols.put("age", "30");</p>
+  
+  <p><span> </span>cols.put("lang", "ja,en,c");</p>
+  
+  <p><span> </span>if (!tdb.put(pkey, cols)) {</p>
+  
+  <p><span> </span>int ecode = tdb.ecode();</p>
+  
+  <p><span> </span>System.err.println("put error: " + tdb.errmsg(ecode) + " key:" + pkey + "  value:" + cols);</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>// client.insert("Table1", "name"+index, "Standard1:name",</p>
+  
+  <p><span> </span>// ("name"+index).getBytes("UTF-8"),</p>
+  
+  <p><span> </span>// System.currentTimeMillis(), true);</p>
+  
+  <p><span> </span>// client.get_column("Table1", "name0", "Standard1:name");</p>
+  
+  <p><span> </span>index++;</p>
+  
+  <p><span> </span>Stat.getInstance().inc();<span> </span></p>
+  
+  <p><span> </span>} catch (Throwable e) {</p>
+  
+  <p><span> </span>e.printStackTrace();</p>
+  
+  <p><span> </span>break;</p>
+  
+  <p><span> </span>} finally {</p>
+  
+  <p><span> </span>// close the database</p>
+  
+  <p><span> </span>//if (!tdb.close()) {</p>
+  
+  <p><span> </span>//int ecode = tdb.ecode();</p>
+  
+  <p><span> </span>// System.err.println("close error: " +</p>
+  
+  <p><span> </span>// tdb.errmsg(ecode));</p>
+  
+  <p><span> </span>//}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>/**</p>
+  
+  <p><span> </span> * @param args</p>
+  
+  <p><span> </span> * @throws TTransportException</p>
+  
+  <p><span> </span> */</p>
+  
+  <p><span> </span>public static void main(String[] args) {</p>
+  
+  <p><span> </span>if (args.length != 1) {</p>
+  
+  <p><span> </span>System.out.println("Usage: Benchmark &lt;concurrent&gt;");</p>
+  
+  <p><span> </span>System.exit(1);</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>String ip = args[0];</p>
+  
+  <p><span> </span>String port = args[0];</p>
+  
+  <p><span> </span>Integer concurrent = Integer.valueOf(args[0]);</p>
+  
+  <p><span> </span>System.out.println("ip = " + ip + ",port = " + port + ",concurrent = " + concurrent);</p>
+  
+  <p><span> </span>ThreadGroup group = new ThreadGroup("Benchmark");</p>
+  
+  <p><span> </span>List&lt;Thread&gt; threads = new ArrayList&lt;Thread&gt;();</p>
+  
+  <p><span> </span>for (int i = 0; i &lt; concurrent; i++) {</p>
+  
+  <p><span> </span>TDB db = new TDB();</p>
+  
+  <p><span> </span>//db.optimize();</p>
+  
+  <p><span> </span>if (!db.open("./test" + i + ".tdb", TDB.OCREAT | TDB.OWRITER)) {</p>
+  
+  <p><span> </span>int ecode = db.ecode();</p>
+  
+  <p><span> </span>System.err.println("open error: " + TDB.errmsg(ecode));</p>
+  
+  <p><span> </span>continue;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>dbList.add(db);</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>for (int x = 0; x &lt; concurrent; ++x) {</p>
+  
+  <p><span> </span>Thread t = new EchoThread(ip, port, x, group);</p>
+  
+  <p><span> </span>threads.add(t);</p>
+  
+  <p><span> </span>t.start();</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p>}
+  对比上一次的代码，能够发现，1.new TDB的过程扔进了Thread.start之前；2.在thread中使用一个全局的变量来获取当前的对象。</p>
+  
+  <p>启十个进程，全往第一个里写：</p>
+  
+  <p>concurrent = 10</p>
+  
+  <p>Rate: 25 req/s</p>
+  
+  <p>Rate: 119617 req/s</p>
+  
+  <p>Rate: 130620 req/s</p>
+  
+  <p>Rate: 144202 req/s</p>
+  
+  <p>Rate: 120458 req/s</p>
+  
+  <p>Rate: 112809 req/s</p>
+  
+  <p>Rate: 120800 req/s</p>
+  
+  <p>Rate: 122290 req/s</p>
+  
+  <p>Rate: 119526 req/s</p>
+  
+  <p>Rate: 111189 req/s</p>
+  
+  <p>Rate: 112483 req/s</p>
+  
+  <p>Rate: 109138 req/s</p>
+  
+  <p>Rate: 115648 req/s</p>
+  
+  <p>Rate: 119419 req/s</p>
+  
+  <p>Rate: 105558 req/s</p>
+  
+  <p>Rate: 110230 req/s</p>
+  
+  <p>Rate: 116507 req/s</p>
+  
+  <p>Rate: 105367 req/s</p>
+  
+  <p>Rate: 103781 req/s</p>
+  
+  <p>Rate: 106618 req/s</p>
+  
+  <p>Rate: 107698 req/s</p>
+  
+  <p>Rate: 116768 req/s</p>
+  
+  <p>Rate: 107244 req/s</p>
+  
+  <p>保持在10w/s的写入速度，到达30s左右以后，数据急转直下：</p>
+  
+  <p>Rate: 48060 req/s</p>
+  
+  <p>Rate: 6901 req/s</p>
+  
+  <p>Rate: 4987 req/s</p>
+  
+  <p>Rate: 46229 req/s</p>
+  
+  <p>Rate: 46686 req/s</p>
+  
+  <p>Rate: 45402 req/s</p>
+  
+  <p>Rate: 6271 req/s</p>
+  
+  <p>Rate: 810 req/s</p>
+  
+  <p>Rate: 33895 req/s</p>
+  
+  <p>Rate: 46548 req/s</p>
+  
+  <p>Rate: 47025 req/s</p>
+  
+  <p>Rate: 6995 req/s</p>
+  
+  <p>Rate: 860 req/s</p>
+  
+  <p>这，就是tc的table表在写入一个<a href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">ArrayList</a>的真实速度（4核8G）。</p>
+  
+  <p>官方发言的100W只需要0.4s，说的是写入的hash表，而且数据是纯线性的数字。</p>
+  
+  <p>提升速度和稳定的办法，和张宴兄弟商量，b+tree类型的数据稳定一些，设置tctdbsetxmsiz也能解决燃眉之急。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-27T00:00:00+08:00" pubdate data-updated="true">2009-10-27 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/10/24/tsinghua-huambo-fist-of-fury-review-environmental-elements-lamp/" title="Previous Post: 清华万博-精武门 lamp环境内容回顾">« 清华万博-精武门 lamp环境内容回顾</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

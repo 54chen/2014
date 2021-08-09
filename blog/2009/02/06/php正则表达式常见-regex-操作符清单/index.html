@@ -1,0 +1,281 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Php正则表达式常见 Regex 作符清单 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="php的正则表达式反馈了php的功力，下面是作符的清单，常备重要哦。。。 作符
+  用途 .（句点）
+  匹配所有单个字符 ^（脱字符号）
+  匹配出现在行或字符串开头的空字符串 $（美元符号）
+  匹配出现在行尾的空字符串 A
+  匹配大写字母 A a
+  匹配小写字母 a \d
+  匹配所有一位数字 \D …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/02/06/php%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%B8%B8%E8%A7%81-regex-%E6%93%8D%E4%BD%9C%E7%AC%A6%E6%B8%85%E5%8D%95">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Php正则表达式常见 Regex 作符清单</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-02-06T00:00:00+08:00" pubdate data-updated="true">2009-02-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>php的正则<a href="http://www.54chen.com/c/75">表达式</a>反馈了<a href="http://www.54chen.com/c/157">php</a>的功力，下面是作符的清单，常备重要哦。。。
+  </p>
+<table class="data-table-2" border="0" cellspacing="0" cellpadding="0" summary="Common regex operators">
+  <tbody>
+  <tr>
+  <th scope="col">作符</th>
+  <th scope="col">用途</th>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">.（句点）</th>
+  <td>匹配所有单个字符</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">^（脱字符号）</th>
+  <td>匹配出现在行或字符串开头的空字符串</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">$（美元符号）</th>
+  <td>匹配出现在行尾的空字符串</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">A</th>
+  <td>匹配大写字母 <em>A</em>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">a</th>
+  <td>匹配小写字母 <em>a</em>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">\d</th>
+  <td>匹配所有一位数字</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">\D</th>
+  <td>匹配所有单个非数字字符</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">\w</th>
+  <td>匹配所有单个字母或数字字符；同义词是 <code>[:alnum:]</code>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">[A-E]</th>
+  <td>匹配所有大写的 <em>A、B、C、D</em> 或 <em>E</em>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">[^A-E]</th>
+  <td>匹配<strong>除</strong>大写 <em>A、B、C、D</em> 或 <em>E</em> 之外的任何字符</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">X?</th>
+  <td>匹配出现零次或一次的大写字母 <em>X</em>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">X*</th>
+  <td>匹配零个或多个大写字母 <em>X</em>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">X+</th>
+  <td>匹配一个或多个大写字母 <em>X</em>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">X{n}</th>
+  <td>精确匹配 <em>n</em> 个大写字母 <em>X</em>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">X{n,m}</th>
+  <td>至少匹配 <em>n</em> 个且不多于 <em>m</em> 个大写字母 <em>X</em>；如果忽略 <em>m</em>，则表达式将尝试匹配至少 <em>n</em> 个 <em>X</em>
+</td>
+  </tr>
+  <tr>
+  <th class="tb-row" align="left" scope="row">(abc|def)+</th>
+  <td>匹配一连串的（最少一个）<em>abc</em> 和 <em>def</em>；<em>abc</em> 和 <em>def</em> 将<a href="http://www.54chen.com/c/19">匹配</a>
+</td>
+  </tr>
+  </tbody>
+</table>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-02-06T00:00:00+08:00" pubdate data-updated="true">2009-02-06 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/02/03/%E5%BC%80%E4%B8%9A%E5%A4%A7%E5%90%89-%E4%B8%8A%E6%B5%B7%E6%BB%A9%E8%8B%B1%E6%96%87%E6%81%B6%E6%90%9E%E7%89%88/" title="Previous Post: 开业大吉-上海滩英文恶搞版">« 开业大吉-上海滩英文恶搞版</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/02/12/lighttpd-%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95/" title="Next Post: Lighttpd 插件开发方法">Lighttpd 插件开发方法 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,279 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>企业服务器监控及报警配置打造（ganglia and Nagios）-part 1 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="系统简介：
+  Ganglia 是 UC Berkeley 发起的一个开源监视项目，设计用于测量数以千计的节点。每台计算机都运行一个收集和发送度量数据（如处理器速度、内存使用量等）的名为 gmond 的守护进程。它将从作系统和指定主机中收集。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/12/09/ganglia-nagios-install">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">企业服务器监控及报警配置打造（ganglia and Nagios）-part 1</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-12-09T00:00:00+08:00" pubdate data-updated="true">2010-12-09 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1G.0TXXlhXXa1KzfX_115619.jpg" alt="ganglia 54chen nagios">
+  </p>
+<blockquote>系统简介：<br>
+  Ganglia 是 UC Berkeley 发起的一个开源监视项目，设计用于测量数以千计的节点。每台计算机都运行一个收集和发送度量数据（如处理器速度、内存使用量等）的名为 gmond 的守护进程。它将从作系统和指定主机中收集。接收所有度量数据的主机可以显示这些数据并且可以将这些数据的精简表单传递到层次结构中。正因为有这种层次结构模式，才使得 Ganglia 可以实现良好的扩展。gmond 带来的系统负载非常少，这使得它成为在集群中各台计算机上运行的一段代码，而不会影响用户性能。</blockquote>
+  我（54chen）的服务器作系统:centos 5.5 x86_64 （六十四位centOS 5.5）
+  <strong>第一步，修改yum源</strong>
+  # cd /etc/yum.repos.d/<br>
+  #vim dag.repo<br>
+  写出如下信息：
+  <blockquote>[dag]<br>
+  name=Dag RPM Repository for Red Hat Enterprise Linux<br>
+  baseurl=http://apt.sw.be/redhat/el$releasever/en/$basearch/dag<br>
+  gpgcheck=1<br>
+  gpgkey=http://dag.wieers.com/rpm/packages/RPM-GPG-KEY.dag.txt<br>
+  enabled=1</blockquote>
+  <strong>第二步，通过yum安装所有依赖</strong>
+  yum -y install apr-devel apr-util check-devel cairo-devel pango-devel libxml2-devel \<br>
+  rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-devel \<br>
+  python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br>
+  pcre pcre-devel libpcre libconfuse libart_lgpl-develyum -y install apr-devel apr-util check-devel cairo-devel pango-devel libxml2-devel \<br>
+  rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-devel \<br>
+  python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br>
+  pcre pcre-devel libpcre libconfuse libart_lgpl-devel
+  <strong>第三步，通过yum安装rrdtool（画图的数据存储）</strong>
+  yum install -y rrdtool perl-rrdtool rrdtool-develyum install -y rrdtool perl-rrdtool rrdtool-devel
+  
+  <p><strong>第四步，通过rpm安装libconfuse依赖</strong>
+  </p>
+<blockquote>wget http://download.fedora.redhat.com/pub/epel/5/x86_64/libconfuse-2.5-4.el5.x86_64.rpm<br>
+  wget http://download.fedora.redhat.com/pub/epel/5/x86_64/libconfuse-devel-2.5-4.el5.x86_64.rpm<br>
+  rpm -ivh libconfuse-2.5-4.el5.x86_64.rpm<br>
+  rpm -ivh libconfuse-devel-2.5-4.el5.x86_64.rpm</blockquote>
+  <strong>第五步，下载源码安装</strong>
+  <blockquote>wget http://cdnetworks-kr-1.dl.sourceforge.net/project/ganglia/ganglia%20monitoring%20core/3.1.7/ganglia-3.1.7.tar.gz<br>
+  tar zxvf ganglia-3.1.7.tar.gz<br>
+  cd ganglia-3.1.7<br>
+  ./configure --with-gmetad --sysconfdir=/etc/ganglia<br>
+  make<br>
+  make install</blockquote>
+  <strong>第六步，安装 nginx php环境 略去（54chen的老文章里有多个安装nginx-php的文章，自查之。右侧有搜索框） </strong>
+  <blockquote>cp -a web/* /var/www/html/ganglia/<br>
+  cp gmetad/gmetad.init /etc/init.d/gmetad<br>
+  cp gmond/gmond.init /etc/init.d/gmond<br>
+  gmond -t | tee /etc/ganglia/gmond.conf<br>
+  mkdir -p /var/lib/ganglia/rrds<br>
+  chown nobody:nobody /var/lib/ganglia/rrds</blockquote>
+  <strong>第七步，启动gmond gmetad</strong>
+  <blockquote>/etc/init.d/gmond start<br>
+  /etc/init.d/gmetad start</blockquote>
+  <strong>Q&amp;A</strong>
+  1.gmetad错误处理<br>
+  检查 /var/lib/ganglia/rrds 是否建立 以及权限是不是正确
+  
+  <p>2.配置名称等不生效的原因<br>
+  gmetad/gmond restart可能会不起作用，直接kill.</p>
+  
+  <p>3.gmond起不来的原因<br>
+  udp设置有问题，多播模式，请修改那个默认的ip地址（那是一个不存在的地址，用来广播的，gmeta会从广播里抓出来分析），同一组cluster的机器使用同一个广播ip地址</p>
+  
+  <p>4.节点安装gmond（客户端）：不再需要rrdtool，不需要gmetad支持
+  </p>
+<blockquote>rpm -ivh libconfuse-2.5-4.el5.x86_64.rpm<br>
+  rpm -ivh libconfuse-devel-2.5-4.el5.x86_64.rpm</blockquote>
+  
+  <p>yum -y install apr-devel apr-util check-devel cairo-devel pango-devel libxml2-devel \<br>
+  rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-devel \<br>
+  python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br>
+  pcre pcre-devel libpcre libconfuse libart_lgpl-develyum -y install apr-devel apr-util check-devel cairo-devel pango-devel libxml2-devel \<br>
+  rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-devel \<br>
+  python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br>
+  pcre pcre-devel libpcre libconfuse libart_lgpl-devel</p>
+  
+  <p>./configure --prefix=/opt/soft/ganglia --sysconfdir=/opt/soft/ganglia/etc/<br>
+  make<br>
+  make install</p>
+  
+  <p>/opt/soft/ganglia/sbin/gmond --default_config &gt; /opt/soft/ganglia/etc/gmond.conf
+  修改cluster_name和多播的那个莫名其妙的ip地址启动即可。</p>
+  
+  <p>5.安装完成后为什么都正常只有空图却没有显示各节点的数据？<br>
+  我（54chen）被这个问题搞了半天，最后才发现是因为各节点的服务器时间有问题，<br>
+  * */2 * * * ntpdate time.windows.com放到crontab里，或者是直接执行一下ntpdate time.windows.com。</p>
+  
+  <p>6.为什么各个cluster的服务器互相乱窜？<br>
+  一定要注意，不同的cluster多播到各个不同的ip去，比如ABCD是一组，那全到239.2.11.71，而FGH是另一组，那就全到239.2.11.72。</p>
+  
+  <p>7.为什么gmond内外网ip地址乱串？<br>
+  在我的集群中，eth0 是我的系统的公共 IP 地址。但是，监视服务器将通过 eth1 与私有集群网络中的节点进行通信。我需要确保 Ganglia 使用的多点传送将与 eth1 绑定在一起。这可以通过创建 /etc/sysconfig/network-scripts/route-eth1 文件来完成。添加 239.2.11.71 dev eth1 内容。<br>
+  然后您可以使用 service network restart 重新启动网络并确保路由器显示此 IP 通过 eth1。注：您应当使用 239.2.11.71，因为这是 ganglia 的默认多点传送通道。如果使用其他通道或者增加更多通道，请更改它。</p>
+  
+  <p>8.为什么gmond里输出的xml里什么关键的数据也没有？<br>
+  注意看iptables,执行一下iptables -F试试。<br>
+  下一part讲述nagios搭配ganglia的报警设置。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-12-09T00:00:00+08:00" pubdate data-updated="true">2010-12-09 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

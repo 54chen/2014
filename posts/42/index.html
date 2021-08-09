@@ -1,0 +1,1067 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[五四陈科学院]校内相册发展过程及核心技术分析爆料 2009-10-13 00:00:00 +0800 信春哥，转载的都给我注明出处：http://www.54chen.com/801-54-chen-academy-schools-the-development-process-and-the …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/42">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/10/13/54-chen-academy-schools-the-development-process-and-the-album-broke-the-heart-of-technical-analysis/">[五四陈科学院]校内相册发展过程及核心技术分析爆料</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-13T00:00:00+08:00" pubdate data-updated="true">2009-10-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>信春哥，转载的都给我注明出处：<a href="http://www.54chen.com/801-54-chen-academy-schools-the-development-process-and-the-album-broke-the-heart-of-technical-analysis/">http://www.54chen.com/801-54-chen-academy-schools-the-development-process-and-the-album-broke-the-heart-of-technical-analysis/</a></p>
+  
+  <p><strong>前言</strong></p>
+  
+  <p>感谢人人网曾经的吕威大侠、现在的文斌大侠、谢龙大侠对<a href="http://www.54chen.com/759-thousand-oaks-school-network-all-network-urgent-flash-as3-engineers-social-game-game-planning/">人人网</a>相册的不朽贡献，是吕威大侠精益求精的专研才有如此优秀的上传方案。</p>
+  
+  <p><strong>第一章 相册瓶颈所在</strong></p>
+  
+  <p>1.用户上传海量数据是一个头疼的事情，每天上千万的数量，又因为互联网的特殊性，会出现高峰期和低潮期，以每天10，000，000张图片来计算，高的时候，每秒上传有可能会在上千张，而低的时候可忽略不计。</p>
+  
+  <p>2.因为产品不同，往往上传一张原始的照片会需要压缩成四五张不同大小的图片。这个压缩过程相当消费cpu。</p>
+  
+  <p>相信有同一问题的应该有：QQ空间，网易相册，新浪博客，flikr等等。</p>
+  
+  <p><strong>第二章 校内相册的发展和</strong></p>
+  
+  <p>第一阶段，原始社会。</p>
+  
+  <p>在第一阶段，我们过着刀耕火种的生活，java代码上传+jmagick压缩，其结果就是，再多的服务器，也搞不定越来越多的访问量。</p>
+  
+  <p>第二阶段，具有封建气息的<a href="http://www.54chen.com/11-%e5%a4%a7%e5%ad%a6%e7%94%9f%e5%88%9b%e4%b8%9a%e6%a1%88%e4%be%8b%e5%88%86%e6%9e%90%e8%ae%b2%e7%a8%bf%e6%95%b4%e7%90%86/">资本</a>社会。</p>
+  
+  <p>这一阶段，我们痛定思痛啦，服务常常挂啊，怎么办？怎么办，当然是分布式处理，分析下原因，原来挂是因为cpu太高，用户上传一图压成四图，太费劲了。干脆传到其他cpu多的机器去。</p>
+  
+  <p>说时迟那时快，我们挽起袖子，一个分布式的上传压缩过程就出来了。。。</p>
+  
+  <p>所使用的方法：</p>
+  
+  <p><a href="http://www.54chen.com/wp-content/uploads/2009/10/qqe688aae59bbee69caae591bde5908d.jpg"><img class="alignnone size-full wp-image-802" title="qqe688aae59bbee69caae591bde5908d" src="http://www.54chen.com/wp-content/uploads/2009/10/qqe688aae59bbee69caae591bde5908d.jpg" alt="" width="373" height="231"></a></p>
+  
+  <p>结果发现。。。没啥改观。。。</p>
+  
+  <p>第三阶段，完全没有社会气息的共产社会。</p>
+  
+  <p>春风吹满地，齐心协力跨世纪。</p>
+  
+  <p>在吕威大侠的精心研究下，使用了以下的方案，将性能提高了<strong>3.5</strong>倍，同样数目的照片以前上传如需要100秒的，现在35秒即可以搞定。</p>
+  
+  <p><strong>第三章 校内相册核心技术</strong></p>
+  
+  <p>先上无码图：</p>
+  
+  <p><a href="http://www.54chen.com/wp-content/uploads/2009/10/qqe688aae59bbee69caae591bde5908d1.jpg"><img class="alignnone size-full wp-image-803" title="qqe688aae59bbee69caae591bde5908d1" src="http://www.54chen.com/wp-content/uploads/2009/10/qqe688aae59bbee69caae591bde5908d1.jpg" alt="" width="466" height="230"></a></p>
+  
+  <p>看明白没，没看明白？好 继续看内容吧：</p>
+  
+  <p>1)nginx:最前端服务器,负责接受来自client的上传文件请求及其他的相前web页面<a href="http://www.54chen.com/714-design-for-all-key-value-of-the-distributed-system-architecture-original/">请求</a>,把文件上传请求转发给lighttpd,把web页面请求转发给resin</p>
+  
+  <p>2)lighttpd:负责接受所有文件上传,并把请求交给fastcgi处理(此处的fastcgi可以是本机可以是网络,目前用的是本机)，其实lighttpd完全可以取代nginx,把文件上传请求交给fastcgi,把其他请求交给resin处理,不过为了平稳过渡和平常重启,仍然用了nginx,</p>
+  
+  <p>3)fastcgi:接受来自webserver的文件上传请求,处理并返回结果给webserver,多进程,可以由lighttpd启动,也可以由spawn-fcgi来启动,不过后者在fastcgi进程死掉的情况下不能自动重启,所以目前采用前者。fastcgi的上传代码很常规，压缩的代码使用了<span style="font-family: Arial; font-size: xx-small;"><span lang="EN-US">interl</span></span><span style="font-family: 宋体; font-size: xx-small;"><span>的</span></span><span style="font-family: Arial; font-size: xx-small;"><span lang="EN-US">icc</span></span><span style="font-family: 宋体; font-size: xx-small;"><span>和</span></span><span style="font-family: Arial; font-size: xx-small;"><span lang="EN-US">ipp的作，对性能提升非常明显。</span></span></p>
+  
+  <p><strong>第四章 目前还没有第四章 等待开源吧</strong></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/10/12/presentation-skills-collection-training-or-technical-analysis-of-the-speech/">[演讲技巧收集]培训或者演讲的技术分析</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-12T00:00:00+08:00" pubdate data-updated="true">2009-10-12 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><strong>演讲的概念</strong></p>
+  
+  <p>又叫讲演或演说，是指在公众场所，以有声语言为主要手段，以体态语言为辅助手段，针对某个具体问题，鲜明、完整地发表自己的见解和主张，阐明事理或抒发情感，进行宣传鼓动的一种语言交际活动。</p>
+  
+  <p>一般做演讲主体的是名人或者有特殊经历的人，以面对公众传播演讲语言达到某种目的。但现在很多高校或社会团体都会举办一些演讲比赛，为了演讲而“演讲”的比赛，是演讲文化的技术化普及化扩展化的体现。</p>
+  
+  <p><strong>培训的概念</strong></p>
+  
+  <p>培训是一种有组织的知识传递、技能传递、标准传递、信息传递、信念传递、管理训诫行为。目前国内培训以技能传递为主，时间在侧重上岗前。</p>
+  
+  <p>为了达到统一的科学<a href="http://www.54chen.com/591-weibo-api-%e4%b8%ad%e6%96%87%e6%96%87%e6%a1%a3-%e5%89%8d%e8%a8%80/">技术</a>规范、标准化作业，通过目标规划设定、知识和信息传递、技能熟练演练、作业达成评测、结果交流公告等现代信息化的流程，让员工通过一定的教育训练技术手段，达到预期的水平提高目标。</p>
+  
+  <p><strong>总结</strong></p>
+  
+  <p>对讲师来说，基本上没啥区别。</p>
+  
+  <p>科学院将会陆续收集一些讲座技巧的文章给大家。
+  </p>
+<h2>演讲时你应该站哪儿</h2>
+  在演讲中使用多媒体来辅助已经是很常用的情况了。在使用这些视觉辅助材料时，作为演讲者，你是站在哪儿呢？看看下面的小小分析吧：
+  
+  <p>自己的座位</p>
+  
+  <p>你对自己的演讲内容与表达能力缺乏足够的信心。事实上，你根本不想进行研究。你留在自己的位置上，这样是为了逃避观众对你的关注。因为你害怕在别人的注视下，漏洞百出。你选择了留在人群中，大隐隐于世。</p>
+  
+  <p>笔记本电脑旁</p>
+  
+  <p>你有做演讲的动机，但仍没有足够的自信。你站在电脑旁希望观众尽量不要把视线集中在你的身上。你看着电脑屏幕或投影荧幕，而尽量避免与观众的视觉接触。</p>
+  
+  <p><a href="http://www.54chen.com/683-ugc-technical-seminars-in-schools-postgresql-search-slide-sharing/">讲桌</a>后面</p>
+  
+  <p>你对演讲的内容是有自信的，但对自己的表达能力与个人风格没有什么自信。站在讲座后面，双手摊开抓着讲桌两侧，就像躲避别人的进攻。偶尔你也会用镭射笔指指荧幕，让你觉得自己挺正式和有权威。其实你的内心仍然是挺焦虑的。你依旧担心观众有可能穿透你的防卫，看出你是一个无趣的人。但你也不知道还能做些什么，只能抓住那张讲桌不放，偶尔挥一挥镭射笔。</p>
+  
+  <p>投影荧幕旁</p>
+  
+  <p>你对自己的演讲内容、表达能力与<a href="http://www.54chen.com/546-54chen%e5%87%ba%e5%93%81%e6%89%93%e9%85%b1%e6%b2%b9%e5%9c%a8%e7%ba%bf%e4%b8%80%e5%af%b9%e4%b8%80%e5%92%8c%e9%99%8c%e7%94%9f%e4%ba%ba%e8%81%8a%e5%a4%a9%e7%9a%84%e7%bd%91%e7%ab%99/">个人风格</a>都很有自信。多半的时间，你的眼睛看着听众，而不是电脑或荧幕。你是真心想要和观众分享你的想法，你要看到他们的表情，才知道他们听懂了没有。你熟悉自己的投影内容，并不需要经常看着荧幕。你不会躲到观众视线以外的地方，你会让观众不需要转头就可以同时看到你和荧幕上的视觉辅助材料。因为你知道，再炫的幻灯片都只是辅助性的。因为你知道，你才是这场演讲的主角。</p>
+  
+  <p>所以，做演讲时你应该站在哪儿呢？</p>
+  
+  <p>这里的基本原则便是，站在观众可以同时看到你和视觉辅助材料，同时你也可以清楚看到所有<a href="http://www.54chen.com/796-11-return-ubuntu-910-notes-from-the-hard-disk-installation/">观众</a>的位置。这个位置并不固定，通常就是荧幕旁。你应该在演讲前提早到达会场，观察下场地的布置，找出一个合适的位置。</p>
+  
+  <p>无论如何，这些都是原则而非公式。你要灵活应用，而不是照搬。例如有些场地是有舞台的，离听众很远。这时，你就应该站得离观众近一些，这样让他们可以很容易地同时看到你和你的幻灯片（见乔布斯的演讲）。</p>
+  
+  <p>(出处:<a href="http://www.mifengtd.cn/articles/where-should-you-stay-during-presentation.html">http://www.mifengtd.cn/articles/where-should-you-stay-during-presentation.html</a>)
+  </p>
+<div></div>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/10/08/11-return-ubuntu-910-notes-from-the-hard-disk-installation/">[十一归来]ubuntu 9.10 硬盘安装手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-08T00:00:00+08:00" pubdate data-updated="true">2009-10-08 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>很早之前，科学院发布过一篇 <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/"><span style="font-size: x-small; color: #3366cc; font-family: Arial;">ubuntu 8.10 desktop版本 硬盘安装手记</span></a> 时隔今日，中间经过了一个9.04的beta版本后，又迎来了新的beta版本</p>
+  
+  <p>9.10最近的发布过程：</p>
+  
+  <p>2009年10月1日——Beta版本发布</p>
+  
+  <p>2009年10月22日——公布发布候选版本</p>
+  
+  <p>2009年10月29日——Ubuntu 9.10正版版本上架</p>
+  
+  <p>根据总结，Ubuntu 9.10中将会具有以下全新特性：</p>
+  
+  <p>1、Ubuntu 9.10中将会添加全新的令人印象更加深刻的启动图形；</p>
+  
+  <p>2、Ubuntu 9.10将会具有更快的启动速度（“Jaunty Jackalope”曾经在netbook上实现25秒的启动速度，Karmic Koala，尽管里面的动物“树袋熊”速度比较慢，但有望实现更快的启动速度）；</p>
+  
+  <p>3、Ubuntu 9.10将可以为Netbook更好地整合Moblin技术；</p>
+  
+  <p>4、Ubuntu 9.10将具有更好的视觉体验；</p>
+  
+  <p>5、Ubuntu 9.10将通过完整的开源软件来提升服务器版本的云计算性能；</p>
+  
+  <p>6、Ubuntu 9.10将主要采用Amazon APIs来管理云计算，当然GoGrid APIs 也在考虑中；</p>
+  
+  <p>7、Ubuntu 9.10中的Canonical 将创建Karmic Koala的标准Amazon机器镜像，本质上就是创建"ready-to-run" 程序，作为Amazon群体的“标准版本”；</p>
+  
+  <p>8、为了节约资源，Ubuntu 9.10中的休眠和唤醒特性将扩展到服务器版本。
+  </p>
+<blockquote>第七这个太牛B了，单台机器做成云里的一个节点，绝对主流，绝对未来！力顶！</blockquote>
+  7号，休假归来，拖一回搞个系统玩。
+  
+  <p>以下是安装步骤记录：</p>
+  
+  <p><strong>下载：</strong></p>
+  
+  <p><a href="http://releases.ubuntu.com/karmic/ubuntu-9.10-beta-desktop-i386.iso">http://releases.ubuntu.com/karmic/ubuntu-9.10-beta-desktop-i386.iso</a></p>
+  
+  <p>用迅雷啥的来拖，速度还不错，半小时搞到手。</p>
+  
+  <p>改名为ubuntu9.iso，放在了D：根目录里，用winrar打开，解压casper文件下的两个文件到c盘根目录。</p>
+  
+  <p>vmlinuz   和 initrd.lz</p>
+  
+  <p><strong>winGrub配置：</strong>
+  很高兴这个老机器安装了一个fedora core5和win2k，n年前的系统，从来不换系统，有杀，有病治病。</p>
+  
+  <p>winGrub的安装见 <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/"><span style="font-size: x-small; color: #3366cc; font-family: Arial;">ubuntu 8.10 desktop版本 硬盘安装手记</span></a> 前半部分内容。</p>
+  
+  <p>所以系统中已经有一个之前的GRLDR了，现在抄一下boot.ini和menu.lst</p>
+  
+  <p>C:\boot.ini
+  </p>
+<blockquote>[boot loader]<br>
+  timeout=5<br>
+  default=multi(0)disk(0)rdisk(0)partition(1)\WINNT<br>
+  [operating systems]<br>
+  multi(0)disk(0)rdisk(0)partition(1)\WINNT="Microsoft Windows 2000 Professional" /fastdetect<br>
+  C:\GRLDR="Linux"</blockquote>
+  C:\boot\grub\menu.lst
+  <blockquote>timeout 15</blockquote>
+  
+  <p>title 1. install Ubuntu9.10<br>
+  root (hd0,0)<br>
+  kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu9.iso ro quiet splash --<br>
+  label check live-install<br>
+  initrd (hd0,0)/initrd.lz
+  <strong>进入liveCD安装：</strong></p>
+  
+  <p>重启，先从boot.ini的界面进linux，再从wingrub的界面进 install Ubuntu9.10</p>
+  
+  <p>一切正常的话，能直接进入LiveCD的桌面了。</p>
+  
+  <p>然后打开终端，运行：
+  </p>
+<blockquote>umount -l /isodevice</blockquote>
+  <span style="color: #ff0000;">千万不要运行：umount -l /cdrom(真的不知道是哪个SB传播的要下这个区，这会导致之后的grub里看不到你装好的ubuntu系统)</span>
+  
+  <p>双击桌面的安装。。。</p>
+  
+  <p>这台老机器，2个80G的硬盘，全都使用了97%左右的空间（鬼知道装了些什么，难道有过量的毛片），每次到第四步识别分区的时候都要花12分钟左右。</p>
+  
+  <p><strong>总结：</strong></p>
+  
+  <p>这个版本的界面美化做得不错，不过grub2没感觉到有多方便，有可能是为了提高开机速度吧。目前为止，中文包不全，很多地方没翻译完。</p>
+  
+  <p>用QQ for linux 和IBUS的输入法有冲突的感觉，老是动不动挂掉。</p>
+  
+  <p>版本太新，firefox啥的找个flash插件都困难。</p>
+  
+  <p>要试的同志，还是再等半个月正式发布。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/09/27/the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/">“先进的互联互通技术”–使用ice联通php和java [Part 2 Client]</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-27T00:00:00+08:00" pubdate data-updated="true">2009-09-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>[信曾哥，转载的都给我保留原链接地址：<a href="http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/">http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/</a>]</p>
+  
+  <p>这一part的目标是建立起ice的php环境，以及写PHP代码调用上一part中的10000端口的java代码。</p>
+  
+  <p>在part 1中，我们建立了一个Server在10000端口等着我们，地址见 <a href="http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/">http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/</a></p>
+  
+  <p><strong>建立带ice的PHP环境</strong></p>
+  
+  <p>不管是nginx+php-cgi还是别的啥，这里只表述php编译过程。
+  </p>
+<blockquote><strong><span style="color: #ff0000;">本例以 Ice 3.2.1为例 下载的位置和参考的文档都在下面</span></strong></blockquote>
+  
+  <p><a href="http://www.zeroc.com/download_3_2_1.html">http://www.zeroc.com/download_3_2_1.html</a></p>
+  
+  <p><a href="http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592">http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592</a>
+  1.下载IcePHP包，进行编译。在此之前，你还需要安装Ice，记好使用3.2.1版本，如果你是用的tar.gz包，在/opt/Ice-3.2.1/，如果是rpm包，在/usr/下。</p>
+  
+  <p>2.运行 export ICE_HOME=/opt/Ice-3.2.1</p>
+  
+  <p>设置好ICE_HOME后进IcePHP目录直接make  make install。</p>
+  
+  <p>此时在/opt/IcePHP-3.2.1/lib64下有产生IcePHP.so（也就是传说中的PHP扩展的so文件了）</p>
+  
+  <p>3.vi /etc/php.ini</p>
+  
+  <p>在任意位置增加两行：
+  </p>
+<blockquote>extension=IcePHP.so</blockquote>
+  
+  <p>ice.profiles = /etc/ice.prop
+  4.准备/etc/ice.prop
+  </p>
+<blockquote>vi /etc/ice.prop</blockquote>
+  加入以下两行：
+  <blockquote>[profile_demo]</blockquote>
+  
+  <p>ice.slice=/root/zhen.chen/example/demo.ice
+  这两行的意思就是，增加一个ice的配置，名字是profile_demo，slice文件是...demo.ice
+  </p>
+<blockquote><span style="color: #008000;">PHP不能在一个php进程中同时调用多个的ice slice，只能通过在prop文件中写义不同的段，然后在php文件中使用类似Ice_loadProfile('profile_demo')来告诉ice这次访问是使用的哪一个slice文件，当然，不能在一个文件里同时有两个Ice_loadProfile的，如果有两个接口的调用需求，只能是通过前端的js来发起两次请求才行了。</span></blockquote>
+  5.把上一节提到的demo.ice文件放到对应的<a href="http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/">目录</a>下
+  
+  <p>到此，带有ICE的PHP环境建立完成。</p>
+  
+  <p><strong>写PHP的客户端来调用 java里的Demo.test.excute方法</strong>
+  </p>
+<blockquote>vi Demo.php</blockquote>
+  
+  <p>&lt;?php</p>
+  
+  <p>ini_set("display_errors", "1");</p>
+  
+  <p>global $ICE;</p>
+  
+  <p>Ice_loadProfile('profile_demo');</p>
+  
+  <p>try {</p>
+  
+  <p>$vBase = $ICE-&gt;stringToProxy ( "TestAdapter:default -p 10000" );</p>
+  
+  <p>$vManager = $vBase-&gt;ice_checkedCast ( "::Demo::test" );</p>
+  
+  <p>$vProperties = $vManager-&gt;execute("Hello "," world!");</p>
+  
+  <p>echo $vProperties;</p>
+  
+  <p>} catch ( Exception $vError ) {</p>
+  
+  <p>print_r($vError);</p>
+  
+  <p>}</p>
+  
+  <p>?&gt;
+  注意全角半角。</p>
+  
+  <p>通过浏览器访问<a href="http://www.54chen.com/469-dyang%e5%90%8c%e5%bf%97%e7%9a%84%e6%97%a0%e5%90%8d%e6%b0%8f%e7%9a%84%e4%bb%a3%e7%a0%81%e5%ad%a6%e4%b9%a0%e8%ae%b0%e5%bd%95-flex-2d-rpg%e6%b8%b8%e6%88%8fdemo/">Demo</a>.php</p>
+  
+  <p>你是不是看到了久违的Hello World!了呢？</p>
+  
+  <p>截图：</p>
+  
+  <p><img class="alignnone size-full wp-image-785" style="border: 1px solid black;" title="qqe688aae59bbee69caae591bde5908d" src="http://www.54chen.com/wp-content/uploads/2009/09/qqe688aae59bbee69caae591bde5908d.jpg" alt="" width="397" height="112"></p>
+  
+  <p>ice、php和java的关系架构图：</p>
+  
+  <p><img class="alignnone size-full wp-image-786" style="border: 1px solid black;" title="qqe688aae59bbee69caae591bde5908d1" src="http://www.54chen.com/wp-content/uploads/2009/09/qqe688aae59bbee69caae591bde5908d1.jpg" alt="" width="435" height="233"></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/09/25/the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/">“先进的互联互通技术”--使用ice联通php和java [Part 1 Server]</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-25T00:00:00+08:00" pubdate data-updated="true">2009-09-25 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>PHP没有中间件，导致了对很多麻烦。比如，对数据库的作必须要链接数据库，然后做SQL作。WEB程序直接作数据库的方法，这样会带来很多人为因素的事故隐患，以及管理上的麻烦，尤其是对大型的网站应用来说。规范的模式应该是，WEB程序传递参数到一个服务程序上，由该服务程序进行判断并最终作数据库或者其它数据文件，这样做到了明确权限控制，和业务类型集中管理。去年伴随着ICE的推出，<a href="http://www.54chen.com/611-%e5%8e%9f%e5%88%9bdiscuz-bbs%e7%bc%93%e5%ad%98%e6%95%b4%e4%bd%93%e6%96%b9%e6%a1%88/">PHP</a>终于有了可以使用的中间件。在PHP的发展史上，应该是一个里程碑。</p>
+  
+  <p><strong>ICE入门</strong></p>
+  
+  <p>ICE（Internet Communications Engine 网络通讯引擎），是由Corba原核心成员开发的一个开源中间件，据称其各种性能完全优于Corba。除此之外，我们第一次见到了直接支持PHP的中间件。</p>
+  
+  <p>ICE的安装，去http://www.zeroc.com/download.html 下载一个Ice针对PHP的安装包，按照说明安装上。</p>
+  
+  <p>ICE的使用：使用Slice（ICE的一种简单语法脚本），编写一个xx.ice文件。可以使用slice2cpp或slice2java等生成一个cpp或java的ICE框架程序，然后在这个框架程序中进行代码编写。ICE在PHP的应用继承了PHP的一贯传统——简单，只需要在php.ini中加载该xx.ice，在PHP中就可以使用了。
+  </p>
+<blockquote>ICE在PHP应用中的缺点，无法使用PHP编写Server端，其实这也是PHP的一个缺陷——没有完善的多进程和多线程管理机制。因此，Server端可以采用ICE所支持的其它语言进行编写，比如JAVA/C++/VB/PYTHON等。</blockquote>
+  <strong>开始传说中的“互联互通” </strong>
+  <blockquote><strong><span style="color: #ff0000;">本例以 Ice 3.2.1为例 下载的位置和参考的文档都在下面</span></strong></blockquote>
+  
+  <p><a href="http://www.zeroc.com/download_3_2_1.html">http://www.zeroc.com/download_3_2_1.html</a></p>
+  
+  <p><a href="http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592">http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592</a>
+  ICE其实是一个网络框架，入门说明中说了，PHP不能用来做服务端，在这里我们使用java来做服务端，用php来连java，达到传说中的“互联互通”。</p>
+  
+  <p>我们的服务端用Linux，客户端也用Linux（纯废话）。JAVA环境的搭建不在表述了。</p>
+  
+  <p>在下载可以看出来，服务器支持yum或者是rpm是多么幸福的一件事情，或者搞一份tar.gz的包下来configure make make install，大概也就是这样。好了这样子就表示安装结束了。。。
+  </p>
+<blockquote>安装之后的Ice相关路径:</blockquote>
+  
+  <p>slice2cpp,slice2java在/usr/bin/下</p>
+  
+  <p>Ice.jar 存储于 /usr/share/java/下</p>
+  
+  <p>相关的Ice的库存储于/usr/lib下.
+  第1步，建立<a href="http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">服务器</a>端的demo.<span class="hilite1">ice</span>的文件（注意代码里的半全角，如果是全角自行转成半角）：
+  </p>
+<blockquote>module Demo{</blockquote>
+  
+  <p>interface test{</p>
+  
+  <p>string   execute(string mth,string cmd);</p>
+  
+  <p>};</p>
+  
+  <p>};
+  第2步，执行: <span class="hilite2">slice2java</span> demo.<span class="hilite1">ice</span> 生成一堆文件。。。</p>
+  
+  <p>第3步，动手干活</p>
+  
+  <p>上一步执行完会在当前目录产生一个Demo目录,目录下自动生成:<br>
+  -rw-r--r--  1 root root 2316  4月 15 17:01 _testDelD.java<br>
+  -rw-r--r--  1 root root  560  4月 15 17:01 _testDel.java<br>
+  -rw-r--r--  1 root root 1929  4月 15 17:01 _testDelM.java<br>
+  -rw-r--r--  1 root root 4177  4月 15 17:01 _testDisp.java<br>
+  -rw-r--r--  1 root root 1070  4月 15 17:01 testHolder.java<br>
+  -rw-r--r--  1 root root  488  4月 15 17:01 test.java<br>
+  -rw-r--r--  1 root root  481  4月 15 17:01 _testOperations.java<br>
+  -rw-r--r--  1 root root  460  4月 15 17:01 _testOperationsNC.java<br>
+  -rw-r--r--  1 root root 5418  4月 15 17:01 testPrxHelper.java<br>
+  -rw-r--r--  1 root root  569  4月 15 17:01 testPrxHolder.java<br>
+  -rw-r--r--  1 root root  567  4月 15 17:01 testPrx.java<br>
+  到目前为止,demo.<span class="hilite1">ice</span>所以<span class="hilite1">Ice</span>接口部分的定义以及相关依赖都已经自动生成.</p>
+  
+  <p>我们要实现自己的execute方法,覆盖testPrx.java的同名<a href="http://www.54chen.com/272-%e5%a6%82%e4%bd%95%e5%af%b9%e4%bb%98%e6%97%a0%e8%89%af%e6%87%92%e6%83%b0ops%e7%9a%84%e5%8f%af%e8%80%bb%e7%9a%84%e9%99%90%e6%b5%81%e6%8e%aa%e6%96%bd/">方法</a>:
+  </p>
+<blockquote>//TestImp.java</blockquote>
+  
+  <p>package Demo;</p>
+  
+  <p>import Ice.Current;</p>
+  
+  <p>public class TestImp extends _testDisp{</p>
+  
+  <p><span> </span>public String execute(String mth, String cmd, Current __current) {</p>
+  
+  <p><span> </span>// TODO Auto-generated method stub</p>
+  
+  <p><span> </span>return mth+cmd;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p>}
+  第4步，建立一个Server服务在10000<a href="http://www.54chen.com/264-%e7%94%a8iptables%e5%81%9a%e4%b8%a4%e6%9c%ba%e4%b9%8b%e9%97%b4%e7%9a%84%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91/">端口</a>进行侦听
+  </p>
+<blockquote>//Server.java</blockquote>
+  
+  <p>package Demo;</p>
+  
+  <p>public class Server {</p>
+  
+  <p><span> </span>public static void main(String[] args) {</p>
+  
+  <p><span> </span>int status = 0;</p>
+  
+  <p><span> </span>Ice.Communicator ic = null;</p>
+  
+  <p><span> </span>try {</p>
+  
+  <p><span> </span>ic = Ice.Util.initialize(args);</p>
+  
+  <p><span> </span>Ice.ObjectAdapter adapter = ic.createObjectAdapterWithEndpoints(</p>
+  
+  <p><span> </span>"TestAdapter", "default -p 10000");</p>
+  
+  <p><span> </span>Ice.Object object = new TestImp();</p>
+  
+  <p><span> </span>adapter.add(object, ic.stringToIdentity("TestAdapter"));</p>
+  
+  <p><span> </span>adapter.activate();</p>
+  
+  <p><span> </span>ic.waitForShutdown();</p>
+  
+  <p><span> </span>} catch (Ice.LocalException e) {</p>
+  
+  <p><span> </span>e.printStackTrace();</p>
+  
+  <p><span> </span>status = 1;</p>
+  
+  <p><span> </span>} catch (Exception e) {</p>
+  
+  <p><span> </span>System.err.println(e.getMessage());</p>
+  
+  <p><span> </span>status = 1;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>if (ic != null) {</p>
+  
+  <p><span> </span>// Clean up</p>
+  
+  <p><span> </span>//</p>
+  
+  <p><span> </span>try {</p>
+  
+  <p><span> </span>ic.destroy();</p>
+  
+  <p><span> </span>} catch (Exception e) {</p>
+  
+  <p><span> </span>System.err.println(e.getMessage());</p>
+  
+  <p><span> </span>status = 1;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>System.exit(status);</p>
+  
+  <p><span> </span>}</p>
+  
+  <p>}
+  以上大部分代码都是框架生成，你只需要在里面填写TODO。把这个代码拖回来用eclipse打成jar包，注意，需要依赖ice.jar这个包，这个包可以在<a href="http://www.54chen.com">官方</a>网站下载到。<a href="http://www.zeroc.com/download_3_2_1.html">http://www.zeroc.com/download_3_2_1.html</a></p>
+  
+  <p>生成DemoServer.ajr后传到服务器，运行java -cp ./:Ice.jar:DemoServer.jar Demo.Server</p>
+  
+  <p>运行成功的条件是Ice.jar和DemoServer.jar都在一个目录里。（Ice.jar从下载地址下载）</p>
+  
+  <p>Server运行之后监听于10000端口，需要修改iptables，允许其他机器可以连接。<br>
+  编辑 iptables<br>
+  vi /etc/sysconfig/iptables
+  </p>
+<blockquote>
+<span>-A RH-Firewall-</span><span class="number">1</span><span>-INPUT -m state --state NEW -m tcp -p tcp --dport </span><span class="number">10000</span><span> -j ACCEPT </span>
+</blockquote>
+  <strong>继续深入互联互通</strong>
+  
+  <p>这一节完成了Server，一个10000端口的Server在等待着我们用PHP来联通中。下一节，我们将讲述：IcePHP环境的搭建，PHP调用Ice如何与JAVA互联互通，以及一个完整的Demo，保存好本节的代码，后面还有用处。[未完待续] </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/09/15/54-chen-java-magic-weapon-maven-project-management-and-the-nexus/">[五四陈]java项目管理神兵利器maven和nexus使用手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-15T00:00:00+08:00" pubdate data-updated="true">2009-09-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>"尽管 Ant 对于构建 Java 程序而言是事实上的标准工具，但这个工具在许多方面都不胜任项目管理任务。相反，Ant 提供的东西，Maven（出自 Apache Jakarta 项目的高级项目管理工具）都能提供，而且更多。" --转自IBM开发者网络</p>
+  
+  <p><strong>适用场景</strong></p>
+  
+  <p>如果你的项目互相有jar包的依赖，WEB-INF/lib下有大量杂乱的jar包，svn里lib目录下时常要更新东西，并且你为此伤透了脑筋，团队战斗力无法提升，那么，你就需要这两样利器了。</p>
+  
+  <p><strong>主角出场 windows环境居多</strong></p>
+  
+  <p><a href="http://maven.apache.org/">http://maven.apache.org/</a> 项目的主页，有洋文</p>
+  
+  <p><a href="http://maven.apache.org/download.html">http://maven.apache.org/download.html</a> 下载的地方</p>
+  
+  <p>安装的说明-好yy的居然有中文！</p>
+  
+  <p><a href="http://www.sonatype.com/books/maven-book/reference_zh/installation.html">http://www.sonatype.com/books/maven-book/reference_zh/installation.html</a></p>
+  
+  <p>大概意思就是下一个包然后设置环境变量。主要目的就是让你的本地环境能够执行mvn。</p>
+  
+  <p><strong>跑龙套的出场 linux环境犹佳</strong></p>
+  
+  <p><a href="http://nexus.sonatype.org/">http://nexus.sonatype.org/</a> 项目的主页，有洋文</p>
+  
+  <p><a href="http://nexus.sonatype.org/downloads/">http://nexus.sonatype.org/downloads/</a> 下载的地方</p>
+  
+  <p>安装的说明</p>
+  
+  <p><a href="http://www.sonatype.com/books/nexus-book/reference/install.html">http://www.sonatype.com/books/nexus-book/reference/install.html</a></p>
+  
+  <p>就是下一个包然后以webserver方式运行下。主要目录是让你的jar包能有个放处。</p>
+  
+  <p>类似 ./bin/jsw/macosx-universal-32/nexus start</p>
+  
+  <p>安装的视频
+  <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="400" height="225" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowfullscreen" value="true">
+<param name="allowscriptaccess" value="always">
+<param name="src" value="http://vimeo.com/moogaloop.swf?clip_id=1875558&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1">
+<embed type="application/x-shockwave-flash" width="400" height="225" src="http://vimeo.com/moogaloop.swf?clip_id=1875558&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" allowscriptaccess="always" allowfullscreen="true"></embed></object></p>
+  
+  <p>全屏才能看清楚.</p>
+  
+  <p>跑龙套的近照 默认密码是 admin/admin123</p>
+  
+  <p><a href="http://www.sonatype.com/books/nexus-book/reference/figs/web/repository-manager_nexus-login.png"><img class="alignnone" src="http://www.sonatype.com/books/nexus-book/reference/figs/web/repository-manager_nexus-login.png" alt="" width="803" height="457"></a></p>
+  
+  <p><strong>剧本</strong></p>
+  
+  <p>主角其实是个客户端工具，所有的功能都集中于一个命令：mvn</p>
+  
+  <p>例如：运行cmd 进入项目文件夹 mvn package 将项目打包  mvn install 将项目包安装到本地仓库 mvn deploy 向包布到跑龙套那个东东上面。</p>
+  
+  <p>mvn命令还有很多强大的功能，具体见 <a href="http://www.sonatype.com/books/maven-book/reference_zh/public-book.html">http://www.sonatype.com/books/maven-book/reference_zh/public-book.html</a></p>
+  
+  <p>跑龙套那个其实才算得上第二主角，它是一个强大的服务器端，它管理着你所有原来在svn里的lib下的所有jar包。并且很重要的一点，它能通过web界面搜索。</p>
+  
+  <p>这样，只要大家都使用和发布snapshot版本的jar包，不需要再另行通知更新jar包，开发的人搞好直接mvn deploy，使用的人在mvn -U clean package 自然就拖下最新的包，默契不在话下。</p>
+  
+  <p>这一切，都来源于pom组织的强大定义。【全剧终】</p>
+  
+  <p><strong>鸣谢</strong></p>
+  
+  <p>和人民</p>
+  
+  <p>老毛子精细的技术活</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/41">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <em>42</em>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/43">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

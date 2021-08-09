@@ -1,0 +1,92 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Socket | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/socket/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[有关socket Read]]></title>
+      <link href="https://www.54chen.com/blog/2014/11/18/about-socket-read/"/>
+      <updated>2014-11-18T20:37:49+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/11/18/about-socket-read</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140710/logo.png></p>
+  
+  <ul>
+  <li>实际开发中，网络程序最可能遇到的就是数据没收到、收到错误数据这样诡异的问题.</li>
+  <li>很多时候，都是由于对socket read的细节理解的不一致，导致了程序前后的矛盾。</li>
+  <li>下面详细阐述整个read的过程。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h1>一、从c的角度</h1>
+  
+  <blockquote><p>ssize_t read(int fd,void *buf,size_t nbyte)</p></blockquote>
+  
+  <ul>
+  <li>read函数是负责从fd中读取内容.</li>
+  <li>当读成功时, read返回实际所读的字节数</li>
+  <li><p>如果返回的值是0 表示已经读到文件的结束了,小于0表示出现了错误。</p></li>
+  <li><p>可以同时检查errno:</p></li>
+  <li>如果错误为EINTR(值为4)说明读是由中断引起的</li>
+  <li>如果是ECONNREST表示网络连接出了问题</li>
+  </ul>
+  
+  
+  <h1>二、从协议角度</h1>
+  
+  <ul>
+  <li>TCP协议是面向流的</li>
+  <li>read和write调用的返回值往往小于参数指定的字节数。</li>
+  <li>对于read调用，如果接收缓冲区中有20字节，请求读100个字节，就会返回20。</li>
+  <li>对于write调用，如果请求写100个字节，而发送缓冲区中只有20个字节的空闲位置，那么write会阻塞，直到把100个字节全部交给发送缓冲区才返回，但如果socket文件描述符有O_NONBLOCK标志，则write不阻塞，直接返回20。</li>
+  </ul>
+  
+  
+  <h1>三、从java的角度</h1>
+  
+  <blockquote><p>SocketChannel sc = (SocketChannel) sk.channel();
+  int i = sc.read(buff)</p></blockquote>
+  
+  <ul>
+  <li>SocketChannel.read 有数据时返回数据长度。</li>
+  <li>如果返回的值是0 表示已经读到文件的结束了,小于0表示出现了错误（继承自C）。</li>
+  <li>而linux的函数是针对文件fd出现的定义，如果是网络时，EOF的界限十分模糊。</li>
+  </ul>
+  
+  
+  <h1>四、从kernel的角度</h1>
+  
+  <blockquote><p>static int unix_stream_recvmsg(struct kiocb <em>iocb, struct socket </em>sock,
+              struct msghdr *msg, size_t size,
+              int flags)</p></blockquote>
+  
+  <ul>
+  <li><a href="http://blog.chinaunix.net/uid-23629988-id-3035613.html">http://blog.chinaunix.net/uid-23629988-id-3035613.html</a></li>
+  <li>这篇文章的主人详细分析了整个过程。</li>
+  <li>当网卡上没有数据时，返回为0。</li>
+  <li>另外在对端单独close write或者自己单独close read时，也返回0。</li>
+  <li>当数据取完了，且出现意外的系统调用，比如网卡故障，返回－1。</li>
+  </ul>
+  
+  
+  <h1>五、从java nio的框架角度</h1>
+  
+  <ul>
+  <li>结合java nio的selector机制，要对read为0的情况进行统计处理。</li>
+  <li>同一源过多的read为0，意味着网络不好，或者恶意攻击。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

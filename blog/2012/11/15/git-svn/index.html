@@ -1,0 +1,331 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Git Svn使用手记 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="以下是一个淡疼的记录，因为从linkedin归来的宝秋叔大力推荐git，而我们现在的代码大多在svn中，所以就有了这一段故事。 一、同步回来svn $git svn clone https://miliaocode/repos/project -T trunk -b branches -t …">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2012/11/15/git-svn">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="touch-icon.png">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+  
+
+  <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+</head>
+
+<body>
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+    <a href="/">首页</a>
+    <a href="/blog/archives">归档</a>
+    <a href="/video">视频</a>
+    <a href="/about">关于</a>
+
+    <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com">
+    <input class="search" type="text" name="q" placeholder="Search">
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com">
+    <input class="search" type="text" name="q" placeholder="Search">
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Git Svn使用手记</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-11-15T00:00:00+08:00" pubdate data-updated="true">2012-11-15 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1L56.XfNeXXasdY75_054835.jpg" alt="git"></p>
+
+<p>以下是一个淡疼的记录，因为从linkedin归来的宝秋叔大力推荐git，而我们现在的代码大多在svn中，所以就有了这一段故事。</p>
+
+<p><strong>一、同步回来svn</strong></p>
+
+<p></p>
+<blockquote>$git svn clone https://miliaocode/repos/project -T trunk -b branches -t tags</blockquote>
+
+<p>然后进入漫长的等待。<br>
+-T trunk -b branches -t tags 告诉 Git 该 Subversion 仓库遵循了基本的分支和标签命名法则。如果你的目录下没有三个标准目录的话还是不要加了。</p>
+
+<p><strong>二、完成同步之后</strong></p>
+
+<p></p>
+<blockquote>localhost:xxx chenzhen$ git branch -a<br>
+* master<br>
+  remotes/git-svn<br>
+localhost:xxx chenzhen$ git show-ref<br>
+ecf28daf78732c0538a99e206bd9e6e32cbd1ff3 refs/heads/master<br>
+ecf28daf78732c0538a99e206bd9e6e32cbd1ff3 refs/remotes/git-svn</blockquote>
+
+<p>远程的svn只作为一个远程的分支存在。</p>
+
+<p><strong>三、使用</strong>
+$cd xxx<br>
+$vim yyy<br>
+$git commit -am 'Adding git-svn instructions to the README'<br>
+这一步是提交到本地，还可以用各种分支之类的都是对本地的操作。</p>
+
+<p><strong>四、注意</strong>
+$git svn rebase<br>
+这一步应该经常被执行，防止出现空洞，因为svn会在服务器端进行merge。而git却不会。<br>
+避免使用merge和直接提交，多rebase后再提交。<br>
+和svn关联的分支能不用则不用。</p>
+
+<p><strong>五、提交</strong>
+$git svn dcommit</p>
+
+<p><strong>六、文件忽略</strong>
+一些忽略文件在svn中是有的，而git中会有一个文件在记录它。<br>
+$git svn show-ignore<br>
+$git svn create-ignore<br>
+第二条命令会创建.gitignore文件，但这对于 svn用户来说太难看了。于是可以如下操作：
+</p>
+<blockquote>$ git svn show-ignore &gt; .git/info/exclude</blockquote>
+
+<p><strong>七、剩下</strong>
+剩下的就是git的事情了，你在本地怎么玩，怎么开源，怎么发远程的，不再影响内部svn用户了。</p>
+
+<p></p>
+<blockquote>11月20日补充内容：</blockquote>
+
+<p><strong>八、git merge工具设置</strong>
+到http://www.perforce.com/perforce/downloads/component.html下载并安装p4merge工具（比较好用的双窗口diff工具）。<br>
+建立一个merge命令调用它：<br>
+$sudo vim /usr/bin/extMerge
+</p>
+<blockquote>#!/bin/sh<br>
+/Applications/p4merge.app/Contents/MacOS/p4merge $*<br>
+$sudo chmod +x /usr/bin/extMerge</blockquote>
+
+<p>修改~/.gitconfig文件：</p>
+
+<p></p>
+<blockquote>[merge]<br>
+        tool = extMerge<br>
+[merge "tool"]<br>
+        cmd = extMerge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"<br>
+[mergetool]<br>
+        trustExitCode = false</blockquote>
+
+<p>这样就可以在rebase的时候自动弹出来merge工具进行修改。</p>
+
+<p><strong>九、与review board发code review的协作</strong>
+当完成代码的编写后，可以在本地招行git commit -am 'some thing'，然后需要发code review的话，就需要一段脚本来帮忙了。</p>
+
+<p>http://mojodna.net/2009/02/24/my-work-git-workflow.html 这哥们写了一份，在mac下的有些格式需要调整。Baoqiu更新了源码，我们米的同学可以来信索取最新的代码。</p>
+
+<p>此脚本为git-svn-diff，放在/usr/bin下之后chmod +x /usr/bin/git-svn-diff。</p>
+
+<p>修改~/.gitconfig，添加如下内容:</p>
+
+<p></p>
+<blockquote>[alias]<br>
+  svn-diff = !git-svn-diff
+</blockquote>
+
+<p>然后就可以用了，</p>
+
+<p></p>
+<blockquote>$git svn-diff &gt; patch
+</blockquote>
+
+<p><strong>十、git命令的自动完成</strong>
+如果你是用的xcode里的git，那可能自动完成是不能使用的，你可以自己试试git ch<tab><tab>，如果有提示的放忽略本节。<br>
+如果没有，vim ~/.profile添加：</tab></tab></p>
+
+<p></p>
+<blockquote>source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
+</blockquote>
+
+<p></p>
+ 
+<p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+<img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+<br>
+<a href="http://2014.54chen.com/donate/">捐赠说明</a>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2012-11-15T00:00:00+08:00" pubdate data-updated="true">2012-11-15 00:00:00 +0800</time>
+      
+
+<span class="categories">
+  
+    <a class="category" href="/blog/categories/linux/">linux</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2012/10/29/qcon-hangzhou-2012/" title="Previous Post: qcon杭州2012读后感">« qcon杭州2012读后感</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2012/11/23/github-gitlab/" title="Next Post: 企业github之高仿选择－gitlab使用实录">企业github之高仿选择－gitlab使用实录 »</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite">
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/jquery.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  Copyright © 2017 - 54chen -
+
+</footer>
+  
+<div id="fck_content" class="content wc_main"></div>
+<p> </p>
+<script type="text/javascript">
+(function(){
+var url = "http://widget.weibo.com/distribution/comments.php?width=0&url=auto&border=1&appkey=2501389980&dpc=1";
+url = url.replace("url=auto", "url=" + document.URL); 
+document.write('<iframe id="WBCommentFrame" src="' + url + '" scrolling="no" frameborder="0" style="width:100%"></iframe>');
+})();
+</script>
+<script src="http://tjs.sjs.sinajs.cn/open/widget/js/widget/comment.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+function w(r) {$("#fck_content").html(r.r);}
+$(function(){
+    var mid = $("#mid").val();
+    var get_url = 'http://www.54chen.com/fkwb/'+mid+'.js';
+    if(mid > 0){
+        $("#fck_content").html('<img src=http://chen54.b0.upaiyun.com/loading.gif>');
+        $.ajax(
+                {
+                    url:get_url,
+                    dataType: "jsonp"
+                }
+              );
+    }
+});
+window.WBComment.init({
+    "id": "WBCommentFrame"
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

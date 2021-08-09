@@ -1,0 +1,602 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="越来越懒的WEB程序员 2010-09-26 00:00:00 +0800 　　在的互联网行业，基本上现在的大小公司都有这样一个，QA。也没有人论证过为什么要专门出来这样一批队伍，反正大家都这样做了，这样做也不会错到哪里去。 测试工程师释义
+  　　某百科有云：软件开发测试工程师（ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/29">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/09/26/web-testing/">越来越懒的WEB程序员</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-09-26T00:00:00+08:00" pubdate data-updated="true">2010-09-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1ZK0MXaRtXXbq.6I8_100927.jpg" alt="54chen">
+  　　在的互联网行业，基本上现在的大小公司都有这样一个，QA。也没有人论证过为什么要专门出来这样一批队伍，反正大家都这样做了，这样做也不会错到哪里去。</p>
+  
+  <p><strong>测试工程师释义</strong>
+  　　某百科有云：软件开发测试工程师（Software Development Engineer in Test，SDET），一般为具有1-2年经验的测试工程师或程序员。编写自动测试脚本程序并担任测试编程初期的工作。进一步拓展编程语言、作系统、网络与数据库方面的技能。<br>
+  　　更有某大型培训公司有云：软件质量的把关者，人才凤毛麟角，薪酬上升空间非常大。<br>
+  　　在，一般软件测试人员与软件开发人员的岗位设置比例是1：1，微软在开发windows2000时测试开发人员比例高到1.7：1，由此可见软件测试岗位重要性的一斑。</p>
+  
+  <p><strong>WEB开发是否需要SDET？</strong>
+  　　SDET诞生于传统软件开发过程中，由于WEB开发的特殊性，不仅是指定输入指定输出的测试过程，所涉及方向方方面面，十分繁杂。那么，WEB开发是否需要SDET？<br>
+  　　一线开发人员的感叹：一个分页bug给我提了4张单。。。上一页，下一页，第一页，最后页，干脆每个页码也配个单吧 。(分页按钮数字都多一或少一了)--转自Willko的微博。<br>
+  　　开发一个新产品，由产品提出来个大概，开发出来个大概后，QA再来提细的需求，所谓的测试阶段，只不过是个需求细化的过程。许多开发经理都赞同这个观点，因为：到目前为止，还没有见到这么NB的产品，一下把细节都能想好，描述清楚的。--转自阿罗的微博。<br>
+  　　实际上，WEB开发是十分需要SDET的。而且需要比传统开发更加专业的测试开发工程师，像的做法，由开发人员去兼职测试人员，是一个绝佳的做法。而不专业或者欠专业的QA团队，会导致项目的拖延，开发工程师的懊恼不已、哭笑不得，如果测试团队成员没有两年的开发经验，宁可不要。</p>
+  
+  <p><strong>WEB开发人员为什么越来越懒了？</strong>
+  　　因为有了测试人员，而测试人员的职责就是找出bug所在，开发人员对此没有职责或责任。所以如果你的公司配备了QA团队，那么WEB开发人员正在越来越懒中。而这个时候，如果测试人员没有一两年的开发经验，这样出来的项目极可能出现问题。</p>
+  
+  <p><strong>建议</strong>
+  　　小公司就别折腾了，开发测试一团人全包是最不二的选择。大公司，两个团队继续折腾吧，其慢无比的效率就是大公司的特点。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/09/17/about-login-project/">大型网站登录项目的重要性</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-09-17T00:00:00+08:00" pubdate data-updated="true">2010-09-17 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>互联网最不缺少的就是复制，为什么佬一个行业的网站都是一家独大？有人说是因为他们上网的人少，先入为主的效果比较大，后面进入市场的网站基本都存活不久。</p>
+  
+  <p>而在国内，大家都在把皮毛抄来抄去，真正的核心却是抄不去的，比如说登录。</p>
+  
+  <p><strong>登录，垃圾广告的第一关</strong>
+  网站大了，自然被一堆的spam盯上，少量的spam不会怎么样，但是到处是牛皮蘚一样的广告，给网站的正常用户的感觉可想而知。<br>
+  大多数网站针对这些spam有着以下的一堆策略：<br>
+  1.anti Spam项目针对各种各样的关键词一概禁止发 坏处：关键词越来越多性能越来越差。<br>
+  2.举报项目让自觉的用户去举报  坏处：往往还没有举报用户就走掉了。<br>
+  3.对发送次数过多的用户判断发送次数，次数过多的出验证码  坏处：正常用户也可能会被影响。</p>
+  
+  <p><strong>看国内网站的登录</strong>
+  1）豆瓣：登录强度指数1<br>
+  无https，无验证码，无加密，用代码模拟登录http://www.douban.com/login轻而易举，不知为何在豆瓣似乎看不到诸如淘宝商城之类的广告，看来另有人肉在？求验证。<br>
+  2）人人网：登录强度指数1<br>
+  薄弱原因，未统一入口，无加密，http://3g.renren.com/login.do?fx=0&amp;autoLogin=true无https，无验证码，用代码模拟登录非常简单，淘宝小广告、陌生人加好友现象普遍存在（也可能是我经常用的缘故）。<br>
+  3）百度：登录强度指数2<br>
+  采用两次取票，https传送，比前两位稍强，但对于执意要模拟登录来说，丝毫没有增加难度，只是多发几次请求而已。<br>
+  4）腾讯：登录强度指数4<br>
+  这个最强，统一前后端，统一入口，虽未启用https，但传输有前端md5_3加密，传输密文，另有三次取cookies拼串过程，外搭地域、特定用户名出图形验证码（图形一出，卡死一片，经常登录QQ时出来的你的QQ号有异常，请输入验证码即是），要破此登录，限制相当多。美中不足之处，只要不达到出图形验证的阀门，要模拟也是易事，所以此阀门需要相当精妙。<br>
+  （以上研究结果按照2010年9月16日线上研究得出）</p>
+  
+  <p><strong>搞一个什么样的登录是最有用的？</strong>
+  这当然是充分想像，人在使用鼠标的时候会怎么用，程序肯定是还达不到人工智能的程度的。<br>
+  用类似QQ的图形验证码，识别图形与写点模拟登录的代码档次就不一样了。<br>
+  要做好登录，只需要做好跳出图形验证码的条件即可。<br>
+  比如腾讯：外国IP跳图形（老毛子野广告多，肉机也多）、登录过多跳图形（一般人没事也不会登录退出登录退出地作）、IP转换过大跳图形（你不可能一天当中一下子从去到佬）<br>
+  还可以增加：<br>
+  没有reffer跳图形（当然了，基本上只是防掉一小部分不法分子）<br>
+  cookies定时更换重新计算 <br>
+  曾经疑似机器人随机跳图形，一次未正确定义为机器人，三次正确后取消定义<br>
+  ！@#￥%￥#%……
+  <font color="#ffffff">BANGCB3619347602D5A119E40D35XIANGUO</font></p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/09/06/search-friends-airticle-function/">用搜索的倒排轻松搞定“好友的文章”类相关推荐功能</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-09-06T00:00:00+08:00" pubdate data-updated="true">2010-09-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1MQxKXkpmXXcK5RZ8_071520.jpg" alt="54chen"></p>
+  
+  <p>在SNS网站中，“好友的相册”、“好友的日志”、“好友常去的小组”，这样的功能到处都是，如果处理不当，对整个系统的压力都会非同小可。<br>
+  这里介绍一种利用sphinx的搜索天性，倒排索引群中的人，然后把好友的XX功能化解为或关系的搜索，下面是是一些记录。关于sphinx的安装，详细见54chen之前的一些手记：<a href="http://www.54chen.com/tag/sphinx">http://www.54chen.com/tag/sphinx</a>
+  <strong>第一步，制造随机数据</strong>
+  这里为方便理解，作一个假设的场景，要索引的字段缩减到2个字段，字段1是目标id，表示相册id\日志id\小组id等等，字段2是一个text，里面以逗号隔开记录了所有的和这个目标id有关系的人的id号，大致如下所示：</p>
+  
+  <p>id 	members<br>
+  1 	1,2,3,4,5,6</p>
+  
+  <p>这样一个表，标识了id为1的一个目标，都有什么用户和他有关。比如可以表示：id为1的群都有12345这五个人加过；id为1的相册都有12345这五个人看过；id为1的相册都有12345这五个人回复过，等等。<br>
+  下面代码片段所做之事，是将10万条记录插入到表中，表的members的记录在五千条内随机，里的人id从1到50000随机产生，这样，基本能够模拟一个中型应用的水平了。
+  </p>
+<blockquote>
+  $db = new DLConnection();<br>
+  $sql = "INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES";<br>
+  $dot = "";<br>
+  for ($i=0;$i&lt;100000;$i++)<br>
+      $dot2 = "";<br>
+      $sql2 = "";<br>
+      for ($j=0;$j<rand></rand>
+          $x = rand(1,50000);<br>
+          $sql2 .= $dot2.$x;<br>
+          $dot2 = ",";<br>
+      }<br>
+      $sql .= $dot."('$i', '$sql2')";<br>
+      $dot = ",";<br>
+      <br>
+      if ($i%1000==0) {<br>
+      	$db-&gt;Execute($sql);<br>
+      	$sql = "INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES";<br>
+      	$dot = "";<br>
+      }<br>
+  </blockquote>
+  
+  <p><strong>第二步，压力测试搜索性能</strong>
+  代码太长不帖了，使用java开启100个线程100个连接到sphinx，sphinx建立索引后，只起一个节点。<br>
+  搜索的时候，关键的几点：<br>
+  1. int mode = SphinxClient.SPH_MATCH_BOOLEAN; 使用布尔方式查询<br>
+  2.随机产生1到1000个用户id，id为1到50000之间的随机一个，多个之间用|（或）连接</p>
+  
+  <p><strong>结论</strong>
+  sphinx的搜索性能还是基本满意，在压力测试的时候看后台的query log可以发现，绝大多数的查询在100ms左右，当然，因为随机的原因，也会出现一些3秒5秒的查询，但这是个案，在普通用户中出现的可能性不大。<br>
+  此方案的适用性正在进一步优化中。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/08/24/slideshow-dev-exp/">[演稿分享]人人网开发一站式体验</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-24T00:00:00+08:00" pubdate data-updated="true">2010-08-24 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>在公司给应届生开发入门的演讲稿，都是一些常见工具的简单介绍，大公司组织入门培训对新人进入角色不可或缺，对缩短熟悉工作岗位时间非常重要，如果有条件组织，任何公司组织这样的培训都有意义。<br>
+  美中不足的几点：<br>
+  1.培训通知三无：无讲师简介、无培训内容介绍、无适合人员介绍；<br>
+  2.时间安排不适合在工作时间最集中（事情最多）的时候；<br>
+  3.参会人员资料掌握不足；<br>
+  4.参会邀请不使用outlook的“会议提醒”，提前通知的会议只能让有兴趣的人靠记忆记住。
+  </p>
+<div style="width:425px" id="__ss_5044844"><object id="__sse5044844" width="425" height="355"><param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-100824062239-phpapp01&amp;stripped_title=ss-5044844">
+<param name="allowFullScreen" value="true">
+<param name="allowScriptAccess" value="always">
+<embed name="__sse5044844" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-100824062239-phpapp01&amp;stripped_title=ss-5044844" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="355"></embed></object></div>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/28">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <em>29</em>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/30">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

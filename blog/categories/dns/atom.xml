@@ -1,0 +1,158 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Dns | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/dns/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[微信支付api.mch.weixin.qq.com域名解析慢原因：ipv6]]></title>
+      <link href="https://www.54chen.com/blog/2016/06/18/wexin-resolve-slowly/"/>
+      <updated>2016-06-18T16:56:47+08:00</updated>
+      <id>https://www.54chen.com/blog/2016/06/18/wexin-resolve-slowly</id>
+      <content type="html"><![CDATA[<p>有朋友在阿里云主机实现微信支付逻辑时，发现api.mch.weixin.qq.com的解析实在是太慢了。</p>
+  
+  <p>因此出现了手动修改/etc/hosts的情况，当然了，哪天微信支付要是换个机房肯定要挂。</p>
+  
+  <p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
+  
+  <p>我们的机房也有相似的同题，专门记录一下。</p>
+  
+  <!--more-->
+  
+  
+  <h2>表象</h2>
+  
+  <p>代码里用curl来请求微信，经常超时，这时使用wget试验：</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mo">01</span> <span class="n">tmp</span><span class="p">]</span><span class="err">#</span> <span class="n">wget</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span>
+  <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="mi">2016</span><span class="o">-</span><span class="mo">06</span><span class="o">-</span><span class="mi">18</span> <span class="mi">14</span><span class="o">:</span><span class="mi">51</span><span class="o">:</span><span class="mo">03</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span>  <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://api.mch.weixin.qq.com/&quot;</span><span class="o">&gt;</span><span class="nl">http</span><span class="p">:</span><span class="c1">//api.mch.weixin.qq.com/&lt;/a&gt;</span>
+  <span class="n">Resolving</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span>  <span class="err">域名解析很久不出来</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>测试确认是ipv6问题</h2>
+  
+  <p>给wget加上-4，强制使用ipv4，如果很快，那基本上确定是ipv6惹的祸了。</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mo">01</span> <span class="n">tmp</span><span class="p">]</span><span class="err">#</span> <span class="n">wget</span> <span class="o">-</span><span class="mi">4</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span>
+  <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="mi">2016</span><span class="o">-</span><span class="mo">06</span><span class="o">-</span><span class="mi">18</span> <span class="mi">17</span><span class="o">:</span><span class="mo">03</span><span class="o">:</span><span class="mi">52</span><span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span>  <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://api.mch.weixin.qq.com/&quot;</span><span class="o">&gt;</span><span class="nl">http</span><span class="p">:</span><span class="c1">//api.mch.weixin.qq.com/&lt;/a&gt;</span>
+  <span class="n">Resolving</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span> <span class="mf">123.151.71.149</span><span class="p">,</span> <span class="mf">123.151.79.109</span>
+  <span class="n">Connecting</span> <span class="n">to</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="o">|</span><span class="mf">123.151.71.149</span><span class="o">|:</span><span class="mi">80</span><span class="o">&amp;</span><span class="n">hellip</span><span class="p">;</span> <span class="n">connected</span><span class="p">.</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>代码分析</h2>
+  
+  <p>专门写个代码来测试ipv6的解析，用到系统函数getaddrinfo:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">stdio</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">string</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">netdb</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&lt;</span><span class="n">iostream</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">sys</span><span class="o">/</span><span class="n">types</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">sys</span><span class="o">/</span><span class="n">types</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">sys</span><span class="o">/</span><span class="n">socket</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">arpa</span><span class="o">/</span><span class="n">inet</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">using</span> <span class="n">namespace</span> <span class="n">std</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">struct</span> <span class="n">addrinfo</span> <span class="n">hints</span><span class="p">,</span><span class="o">*</span><span class="n">answer</span><span class="p">,</span><span class="o">*</span><span class="n">curr</span><span class="p">,</span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+  
+  <span class="kt">int</span> <span class="n">error</span><span class="p">;</span>
+  
+  <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">hints</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">hints</span><span class="p">);</span>
+  <span class="n">hints</span><span class="p">.</span><span class="n">ai_family</span> <span class="o">=</span> <span class="n">AF_INET6</span><span class="p">;</span><span class="c1">//AF_UNSPEC; // use AF_INET6 to force IPv6</span>
+  <span class="n">hints</span><span class="p">.</span><span class="n">ai_socktype</span> <span class="o">=</span> <span class="n">SOCK_STREAM</span><span class="p">;</span><span class="c1">//SOCK_DGRAM; // SOCK_STREAM</span>
+  
+  <span class="k">if</span> <span class="p">((</span><span class="n">error</span> <span class="o">=</span> <span class="n">getaddrinfo</span><span class="p">(</span><span class="s">&quot;api.mch.weixin.qq.com&quot;</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">hints</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">answer</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">&quot;getaddrinfo: %s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">gai_strerror</span><span class="p">(</span><span class="n">error</span><span class="p">));</span>
+      <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="n">cout</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="s">&quot;Success with a URL</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">;</span>
+  
+  <span class="kt">char</span> <span class="n">ipstr</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+  <span class="k">for</span> <span class="p">(</span><span class="n">curr</span> <span class="o">=</span> <span class="n">answer</span><span class="p">;</span> <span class="n">curr</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">ai_next</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">inet_ntop</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;(((</span><span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="o">*</span><span class="p">)(</span><span class="n">curr</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">ai_addr</span><span class="p">))</span><span class="o">-&amp;</span><span class="n">gt</span><span class="p">;</span><span class="n">sin_addr</span><span class="p">),</span><span class="n">ipstr</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+      <span class="n">printf</span><span class="p">(</span><span class="s">&quot;%s</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">ipstr</span><span class="p">);</span>
+  <span class="p">}</span>
+  
+  <span class="n">freeaddrinfo</span><span class="p">(</span><span class="n">answer</span><span class="p">);</span>
+  
+  
+  <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>包含头文件</p>
+  
+  <p>netdb.h</p>
+  
+  <p>函数原型</p>
+  
+  <p>int getaddrinfo( const char <em>hostname, const char </em>service, const struct addrinfo *hints, struct addrinfo **result );</p>
+  
+  <p>参数说明</p>
+  
+  <p>hints：可以是一个空指针，也可以是一个指向某个addrinfo结构体的指针，调用者在这个结构中填入关于期望返回的信息类型的暗示。举例来说：如果指定的服务既支持TCP也支持UDP，那么调用者可以把hints结构中的ai_socktype成员设置成SOCK_DGRAM使得返回的仅仅是适用于数据报套接口的信息。而是否ipv6则由ai_family决定。</p>
+  
+  <p>result：本函数通过result指针参数返回一个指向addrinfo结构体链表的指针。</p>
+  
+  <p>返回值：0——成功，非0——出错</p>
+  
+  <h2>测试结果</h2>
+  
+  <p>ai_family为ipv6时，只会寻找ipv6的解析结果，一般域名也没设置。ai_family为AF_UNSPEC时，会先ipv6再ipv4的，而api.mch.weixin.qq.com这个域名的ipv6解析出奇的慢（qq.com却不慢，原因见后）。</p>
+  
+  <h2>解决办法</h2>
+  
+  <p>如果是curl，c可以强制指定ipv4，使用curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);</p>
+  
+  <p>其他语言的也参考此法。</p>
+  
+  <h2>测试代码下载</h2>
+  
+  <p><a href="https://github.com/54chen/dns_test">https://github.com/54chen/dns_test</a></p>
+  
+  <h2>深层原因分析</h2>
+  
+  <p>nslookup -query=AAAA api.mch.weixin.qq.com -debug 是找不到解析的（指定的AAAA就是ipv6），然后会发现一个SOA声明和他的上级weixin.qq.com有一个ipv6的CNAME，到了minorshort.weixin.qq.com，而这域名又是没有ipv6的解析的。</p>
+  
+  <p>目测ipv6找解析时是在这个SOA和CNAME的地方打圈了，微信的同学们是不是考虑让大伙好过一点，把这些个域名的ipv6设置去掉。</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">dig</span> <span class="err">@</span><span class="n">ns</span><span class="o">-</span><span class="n">tel1</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span> <span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span> <span class="n">AAAA</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span>      <span class="mi">43200</span>   <span class="n">IN</span>  <span class="n">SOA</span> <span class="n">ns</span><span class="o">-</span><span class="n">tel1</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span> <span class="n">webmaster</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span> <span class="mi">1293502040</span> <span class="mi">300</span> <span class="mi">600</span> <span class="mi">86400</span> <span class="mi">300</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p><input type="hidden" id="mid" name="mid" value="3987785364529324" /></p>
+  ]]></content>
+    </entry>
+    
+  </feed>

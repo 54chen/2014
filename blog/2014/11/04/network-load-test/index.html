@@ -1,0 +1,271 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>网络IO型程序压力测试要点 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="一.突破客户端端口数限制 这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。
+  现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（216=65536）
+  但是从计算机网络的发展来看，端口长度定义同IPv4定义一样，都是当时的同志们拍脑袋的结果。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/11/04/network-load-test">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">网络IO型程序压力测试要点</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-11-04T18:23:05+08:00" pubdate data-updated="true">2014-11-04 18:23:05 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://chen54.b0.upaiyun.com/20141104/20141104.jpg"></p>
+  
+  <h1>一.突破客户端端口数限制</h1>
+  
+  <ul>
+  <li>这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。</li>
+  <li>现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（2<sup>16</sup>=65536）</li>
+  <li>但是从计算机网络的发展来看，端口长度定义同IPv4定义一样，都是当时的同志们拍脑袋的结果。</li>
+  </ul>
+  
+  
+  <h2>突破的办法</h2>
+  
+  <ul>
+  <li>一个机器绑定多个IP地址。</li>
+  <li>搞无数机器或者虚拟机。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h1>二.防止gc影响测试结论</h1>
+  
+  <ul>
+  <li>如果压力程序为java，要小心full gc导致单次请求时间加长。</li>
+  <li>从java角度，随时jstat -gcutil跟踪client的情况，很有必要。</li>
+  </ul>
+  
+  
+  <h2>一些推荐的参数</h2>
+  
+  <ul>
+  <li>24G的机器: -XX:ParallelCMSThreads=8 -Xms12G -Xmx12G -XX:PermSize=128m -XX:MaxPermSize=512m -XX:MaxDirectMemorySize=1280m</li>
+  <li>细节慢慢调。</li>
+  <li>如果业务逻辑不重的情况，gc未必有这么明显的影响。</li>
+  </ul>
+  
+  
+  <h1>三.防止客户端性能问题影响结论</h1>
+  
+  <ul>
+  <li>随时关注client的cpu load mem的情况。</li>
+  <li>loading test过程中由于client的性能问题，经常会影响结论。</li>
+  </ul>
+  
+  
+  <h2>推荐的办法</h2>
+  
+  <ul>
+  <li>定时记录各项数据，对比观察。</li>
+  </ul>
+  
+  
+  <h1>四.防止客户端线程数过多</h1>
+  
+  <ul>
+  <li>因为要模拟大量用户，很有可能去启动大量的线程。</li>
+  <li>线程的数量太多后基本都是自己先挂了。</li>
+  </ul>
+  
+  
+  <h2>解决</h2>
+  
+  <ul>
+  <li>用循环来近似模拟多用户。</li>
+  <li>使用scala akka erlang这样的并发模型。</li>
+  </ul>
+  
+  
+  <h1>五.其他一些细节</h1>
+  
+  <ul>
+  <li>同时连接数与同时发数据人数是两个天壤之别的数，前者对系统影响很小，后者的增长才是系统的压力所在。</li>
+  <li>尽可能模拟连接数与发数据人数目标比例。</li>
+  <li>平衡压力尽可能长的时间去压有可能会发现累积性问题。</li>
+  <li>机器越多越方便。</li>
+  </ul>
+  
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-11-04T18:23:05+08:00" pubdate data-updated="true">2014-11-04 18:23:05 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/network/">network</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/" title="Previous Post: rabbitmq java client api详解">« rabbitmq java client api详解</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/11/18/about-socket-read/" title="Next Post: 有关socket read">有关socket read »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

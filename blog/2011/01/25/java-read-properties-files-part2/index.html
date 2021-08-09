@@ -1,0 +1,213 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[Java]如何优雅读取properties文件-part2 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="接上part1:http://www.54chen.com/java-ee/java-read-properties-files-part.html
+  从数据流到java.util.Properties
+  你应该注意到之前提过的方法只是一半的措施：他们都只返回输入数据流，而并没有类似键值对的返回。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/01/25/java-read-properties-files-part2">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[Java]如何优雅读取properties文件-part2</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-25T00:00:00+08:00" pubdate data-updated="true">2011-01-25 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png" alt="java properties">
+  接上part1:<a href="http://www.54chen.com/java-ee/java-read-properties-files-part.html">http://www.54chen.com/java-ee/java-read-properties-files-part.html</a>
+  <strong>从数据流到java.util.Properties</strong>
+  你应该注意到之前提过的方法只是一半的措施：他们都只返回输入数据流，而并没有类似键值对的返回。幸运的是，把数据加载成一个列表很简单（可以实例化java.util.Properties即可）。因为你会发现你在一再地使用它，搞成几个帮助类是有意义的。</p>
+  
+  <p>java的内置方法给classpath加载指定的资源有小小的不同也是一件讨厌的事情，特别是当一些资源名字是硬编码但你现在想换另一个加载的方法时。抽取出来一些东西是有意义的，类似斜杠和点作为命名的分隔符等等。干脆一点，帖出我的properties的处理类，代码在这里下载：http://www.javaworld.com/javaqa/2003-08/01-qa-0808-property.html?page=2#resources</p>
+  
+  <p>［代码略］</p>
+  
+  <p>在loadProperties方法的javadoc里的注释显示这个方法的输入参数要求非常随意：接受资源名字被任何按照原生的方法设计（除了相关的包外尽量使用Class.getResourceAsStream()）的格式化而且使其本地实现标准化。</p>
+  
+  <p>短一点的loadProperties() 公用方法决定了哪个类加载器加载资源。下面的解决方法是合理的但并非完美。你应该考虑使用文章"<a href="http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html">Find  a Way Out of the ClassLoader Maze</a>"里提到的技术来代替。</p>
+  
+  <p>注意有两个条件编译的常量来控制loadProperties的行为，你可以调整它们来适应你的口味：</p>
+  
+  <p>THROW_ON_LOAD_FAILURE选择loadProperties在找不到资源的情况下是抛异常还是返回空。</p>
+  
+  <p>LOAD_AS_RESOURCE_BUNDLE 选择资源在查找的时候是绑定资源还是给出的classpath资源。</p>
+  
+  <p>将LOAD_AS_RESOURCE_BUNDLE设置为true是不好的，除非你是想通过编译到java.util.ResourceBundle的本地化支持得到好处。而且，java内部缓存了资源绑定，所以你可以避免重复地对同样的资源名字进行磁盘文件读写。</p>
+  
+  <p><strong>更多的事情</strong></p>
+  
+  <p>我有意省略了一个有趣的classpath资源加载方法，ClassLoader.getResources。尽管它不常使用，但其允许许多有用的选项，这些选项在设计高度定制和简单配置的应用程序非常有用。</p>
+  
+  <p>我没有在这文章里讨论ClassLoader.getResources是因为它值得专门写一篇文章。碰巧，这个方法与剩下的取得资源的方法联系紧密：Java.net.URLs。你可以使用他们，因为资源描述符要比classpath资源名字符要更通用。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-25T00:00:00+08:00" pubdate data-updated="true">2011-01-25 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

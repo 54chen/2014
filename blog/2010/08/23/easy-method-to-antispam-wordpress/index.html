@@ -1,0 +1,215 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[54chen原创]简单好用的土办法抗击洋鬼子对wordpress系统的广告灌入 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="自升级wordpress3.0以后，一切风调雨顺，自上周起，被洋鬼子的广告肉机盯上了，平均每三五分钟一条广告，评论内容大致相同，评论ip来自五湖四海，各不相同。
+  虽然说akismet是wordpress中antispam无二的选择，但是akismet那个验证码让人很纠结，于是只能自己山寨一把了 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/08/23/easy-method-to-antispam-wordpress">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[54chen原创]简单好用的土办法抗击洋鬼子对wordpress系统的广告灌入</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-23T00:00:00+08:00" pubdate data-updated="true">2010-08-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1c3hJXb8pXXcVO1Z._112132.jpg" alt="54chen"></p>
+  
+  <p>自升级wordpress3.0以后，一切风调雨顺，自上周起，被洋鬼子的广告肉机盯上了，平均每三五分钟一条广告，评论内容大致相同，评论ip来自五湖四海，各不相同。<br>
+  虽然说akismet是wordpress中antispam无二的选择，但是akismet那个验证码让人很纠结，于是只能自己山寨一把了。
+  <strong>土办法步骤一 转发默认评论地址</strong>
+  常见的洋鬼子的广告肉机，都是利用了wordpress公开的post地址来做到脚本灌入的，其默认地址是wp-comments-post.php，第一步要做的是，怎么这个地址（以nginx为例）：<br>
+  rewrite ^/wp\-comments\-post\.php$ http://www.54chen.com/ last;</p>
+  
+  <p><strong>土办法步骤二 伪造假地址</strong>
+  既然第一步中的真实地址无法访问了，那第二步肯定是假冒出来可以访问的地址：<br>
+  if (!-e $request_filename){<br>
+  rewrite ^/wc([0-9]+)\.html$ /wp-comments-post.php?54chen=$1 last;<br>
+  }</p>
+  
+  <p><strong>土办法步骤三 javascript制造假post</strong>
+  完成上面两步之后 ，最后一步就是将原来的comments.php修改post action的地址为伪造的地址，为了更加有效果，使用js来产生随机的wc1234.html即可：<br>
+  在评论的form中增加onsubmit="chenAntiSpam()" name="commentform"；<br>
+  再增加js:</p>
+  
+  <p>&lt;script type="text/javascript"&gt;<br>
+  function chenAntiSpam() {<br>
+   var param ='wc'+Math.round(Math.random()*1000)+'.html';<br>
+   document.commentform.action = 'http://www.54chen.com/'+param;<br>
+  }
+  &lt;/script&gt;</p>
+  
+  <p>大功告成，有效防住了洋鬼子的灌。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-23T00:00:00+08:00" pubdate data-updated="true">2010-08-23 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2010/08/24/slideshow-dev-exp/" title="Next Post: [演稿分享]人人网开发一站式体验">[演稿分享]人人网开发一站式体验 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

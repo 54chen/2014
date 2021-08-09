@@ -1,0 +1,339 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Php | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/php/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+      
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[年终攻击hashDos-哈希表多碰撞实现拒绝服务-破解办法]]></title>
+      <link href="https://www.54chen.com/blog/2011/12/30/hashdos/"/>
+      <updated>2011-12-30T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2011/12/30/hashdos</id>
+      <content type="html"><![CDATA[<p><strong>起因：</strong>
+  Wed, 28 Dec 2011 22:28:16 GMT apache tomcat公布了一个安全漏洞。<br />
+  http://mail-archives.apache.org/mod_mbox/www-announce/201112.mbox/%3C4EFB9800.5010106@apache.org%3E</p>
+  
+  
+  
+  
+  <p><strong>漏洞原理：</strong>
+  依靠相应语言的hashtable/hashmap实现过程（request多为此结构），当不同的key存入时如果hash值相等则以链表方式连接在前面。此漏洞利用碰撞相同的hash值得到一个长链表，重新get时，map的计算过程会将时间复杂度巨增，原来一个简单的过程将变成一个很费cpu的过程。</p>
+  
+  
+  
+  
+  <p><strong>影响到的：</strong>
+  最快时间tomcat公布了解决办法。<br />
+  php进行了升级。<br />
+  ms也发了公告http://technet.microsoft.com/en-us/security/bulletin/ms11-100。</p>
+  
+  
+  
+  
+  <p><strong>解决办法：</strong>
+  <strong>tomcat</strong>
+  <strong>临时办法：</strong>
+  默认大小2097152，当maxPostSize=0时，不限制；maxPostSize=20971520时，为20M，改为一个小于10k的值，<strong>所有版本可用</strong>，会影响用户。
+  <strong>持久办法：</strong>
+  用新的版本，maxParameterCount默认值1000。
+  <strong>nginx</strong>
+  <strong>临时办法：</strong>
+  默认的最大请求body大小为8m，修改设置client_max_body_size=10k；此招为各种情况下万金油，会影响用户。
+  <strong>持久办法：</strong>
+  暂无，应该很快会有max_request_count的参数。
+  <strong>php</strong>
+  <strong>持久办法：</strong>
+  php升级到5.3.9，5.2需要打patch。详细见：http://www.laruence.com/2011/12/30/2440.html</p>
+  
+  
+  
+  
+  <p><strong>后记</strong>
+  54chen人肉构造打到php，php立马100%，转到java（resin+spring+rose），轻松化解，没有反应。</p>
+  
+  
+  
+  
+  <p><img src="http://img05.taobaocdn.com/bao/uploaded/i5/T1.RRAXjVDXXX7OsE8_070026.jpg" alt="hashDos,important" /></p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Quercus记录：php使用连接池访问数据库]]></title>
+      <link href="https://www.54chen.com/blog/2011/11/04/quercus-php-connect-pool/"/>
+      <updated>2011-11-04T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2011/11/04/quercus-php-connect-pool</id>
+      <content type="html"><![CDATA[<p><img src="http://www.caucho.com/wp-content/themes/caucho/images/caucho-logo.png" alt="java php quercus" />
+  上周记录了如何用quercus建立混合型项目。
+  <a href="http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html">http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html</a>
+  这里来说说与数据库的访问，使用jndi得到连接池的好处。</p>
+  
+  
+  
+  
+  <p><strong>JNDI</strong>
+  (Java Naming and Directory Interface)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI SPI的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互。</p>
+  
+  
+  
+  
+  <p><strong>正题</strong>
+  在quercus中可以随意使用mysql_connect与mysql_pconnect两个方法来连接数据库。<br />
+  当在web.xml定义得有database相关的消息时，mysql_connect与mysql_pconnect都会自动忽略里面的参数设置，直接使用web.xml的定义。</p>
+  
+  
+  
+  
+  <p><strong>添加jndi设置：</strong>
+  vim WEB-INF/web.xml
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span>&nbsp;</span><span class="attribute">version</span><span>=</span><span class="attribute-value">"1.0"</span><span>&nbsp;</span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">"utf-8"</span><span class="tag">?&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">web-app</span><span>&nbsp;&nbsp;</span><span class="attribute">xmlns</span><span>=</span><span class="attribute-value">"http://caucho.com/ns/resin"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>truth&nbsp;application</span><span class="tag">&lt;/</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">database</span><span>&nbsp;</span><span class="attribute">jndi-name</span><span>=</span><span class="attribute-value">"jdbc/mysql"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">"com.mysql.jdbc.Driver"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://192.168.1.5:3306/truth?</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">true</span><span>&amp;amp;</span><span class="attribute">characterEncoding</span><span>=</span><span class="attribute-value">utf</span><span>-8</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>你的用户名</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>你的密码</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">init-param</span><span>&nbsp;</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;</span><span class="comments">&lt;!--实践证明这个是不管用的，因为quercus写土了，全用的latin1字符集，后面再说--&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+  使用的是resin4，需要继续在web.xml的servlet段里增加：
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>database</span><span class="tag">&lt;/</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;/</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+  这里注意，param-value与上面的jndi-name对应，mysql_connnect函数在web.xml里有这个init-param的定义的时候，将使用对应的jndi的设置。由此可得到连接池的好处。</p>
+  
+  
+  
+  
+  <p>上面的例子只使用了jdbc的基础驱动，如果向下面的配置，自然就得到了pool:
+  <strong>例子1:</strong>
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;</span><span class="tag">&lt;</span><span class="tag-name">type</span><span class="tag">&gt;</span><span>com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource</span><span class="tag">&lt;/</span><span class="tag-name">type</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://localhost:3306/dbname</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>username</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>password</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">init-param</span><span>&nbsp;</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+  
+  
+  
+  
+  <p><strong>例子2:</strong>
+      <div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">driver</span><span>&nbsp;</span><span class="attribute">type</span><span>=</span><span class="attribute-value">"org.gjt.mm.mysql.Driver"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://localhost:3306/test</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">prepared-statement-cache-size</span><span class="tag">&gt;</span><span>8</span><span class="tag">&lt;/</span><span class="tag-name">prepared-statement-cache-size</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">max-connections</span><span class="tag">&gt;</span><span>20</span><span class="tag">&lt;/</span><span class="tag-name">max-connections</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">max-idle-time</span><span class="tag">&gt;</span><span>30s</span><span class="tag">&lt;/</span><span class="tag-name">max-idle-time</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+  
+  
+  
+  
+  <p>这些简单的配置，都可以让php轻松跑在连接池上。
+  <strong>问题所在：</strong>
+  quercus写土了，没有在用户设置为unicode的时候来解析用户的输入，到处是hard code的latin1。（本来在GAE里使用这东西的人挺多的，可惜吧，AGE被盾了，然后quercus反馈latin1问题的人也不多，唉。）
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span>com.caucho.quercus.lib.db.JdbcConnectionResource:&nbsp;</span><span class="number">94</span><span>&nbsp;&nbsp;</span><span class="number">348</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>com.caucho.quercus.lib.db.Mysqli:<span class="number">229</span><span>&nbsp;&nbsp;</span></span></li></ol></div>
+  上面三处修改为utf8即可。</p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Quercus记录：php和java的混合型项目建立手记]]></title>
+      <link href="https://www.54chen.com/blog/2011/10/25/quercus-notes-php-java-mixed-projects/"/>
+      <updated>2011-10-25T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2011/10/25/quercus-notes-php-java-mixed-projects</id>
+      <content type="html"><![CDATA[<p>创业公司参与项目的人口众多、背景不一，目前市场上的主流方向为php与java，很多时候java工程师恨铁不成钢，php工程师也无可奈何。于是便有了此文，讲述如何使用quercus创建php java混合型项目。</p>
+  
+  
+  
+  
+  <p><strong>quercus是什么？</strong>
+  quercus是Caucho公司针对php语言的java实现，100%完成了php5的解析。是resin内建支持的功能。同时，因为使用了resin，使得php可以很容易得到连接池、分布式session、负载均衡等功能。使用resin的php项目可以更加安全，不存在很多fastcgi的问题。</p>
+  
+  
+  
+  
+  <p><strong>性能如何？</strong>
+  官方：用mediawiki与drupal来做实验，要比mod_php快<strong>4</strong>倍。<br />
+  有一个编译选项，在resin专业版里支持，可以把php转成java class，得到更高性能。</p>
+  
+  
+  
+  
+  <p><strong>新建一个java项目混合php项目</strong>
+  web.xml是关键，里面声明了*.php文件的访问都以com.caucho.quercus.servlet.QuercusServlet来执行。</p>
+  
+  
+  
+  
+  <p><div class="chen-hl"><div class="bar"></div><ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span>&nbsp;</span><span class="attribute">version</span><span>=</span><span class="attribute-value">"1.0"</span><span>&nbsp;</span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">"UTF-8"</span><span class="tag">?&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span><span class="tag">&lt;</span><span class="tag-name">web-app</span><span>&nbsp;</span><span class="attribute">xmlns:xsi</span><span>=</span><span class="attribute-value">"http://www.w3.org/2001/XMLSchema-instance"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">xmlns</span><span>=</span><span class="attribute-value">"http://java.sun.com/xml/ns/javaee"</span><span>&nbsp;</span><span class="attribute">xmlns:web</span><span>=</span><span class="attribute-value">"http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">xsi:schemaLocation</span><span>=</span><span class="attribute-value">"http://java.sun.com/xml/ns/javaee&nbsp;http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="attribute">id</span><span>=</span><span class="attribute-value">"WebApp_ID"</span><span>&nbsp;</span><span class="attribute">version</span><span>=</span><span class="attribute-value">"2.5"</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">display-name</span><span class="tag">&gt;</span><span>testquercus</span><span class="tag">&lt;/</span><span class="tag-name">display-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">welcome-file-list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">welcome-file</span><span class="tag">&gt;</span><span>index.html</span><span class="tag">&lt;/</span><span class="tag-name">welcome-file</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">welcome-file</span><span class="tag">&gt;</span><span>index.php</span><span class="tag">&lt;/</span><span class="tag-name">welcome-file</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">welcome-file-list</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>Quercus&nbsp;Servlet</span><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span><span>com.caucho.quercus.servlet.QuercusServlet</span><span class="tag">&lt;/</span><span class="tag-name">servlet-class</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">servlet</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>Quercus&nbsp;Servlet</span><span class="tag">&lt;/</span><span class="tag-name">servlet-name</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span><span>*.php</span><span class="tag">&lt;/</span><span class="tag-name">url-pattern</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="tag">&lt;/</span><span class="tag-name">servlet-mapping</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">web-app</span><span class="tag">&gt;</span><span>&nbsp;&nbsp;</span></span></li></ol></div></p>
+  
+  
+  
+  
+  <p>所有的php文件放在webapp下，所有的java文件还放到java目录里。</p>
+  
+  
+  
+  
+  <p>如何混合java到php中?<br />
+  在java目录新建类Test54Chen，生成后位置：<br />
+  WEB-INF/classes/com/chen/FrameWork.class
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-j" start="1"><li class="alt"><span><span class="comment">/**</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*&nbsp;@author&nbsp;54chen(陈臻)&nbsp;[chenzhen@xiaomi.com&nbsp;cc0cc@126.com]</span>&nbsp;</span></li><li class="alt"><span><span class="comment">&nbsp;*&nbsp;@since&nbsp;2011-10-25&nbsp;下午08:40:49</span>&nbsp;</span></li><li class=""><span><span class="comment">&nbsp;*/</span><span>&nbsp;&nbsp;</span></span></li><li class="alt"><span><span class="keyword">package</span><span>&nbsp;com.chen;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;</span></li><li class="alt"><span><span class="keyword">public</span><span>&nbsp;</span><span class="keyword">class</span><span>&nbsp;FrameWork&nbsp;{&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">public</span><span>&nbsp;String&nbsp;go(String&nbsp;who)&nbsp;{&nbsp;&nbsp;</span></span></li><li class="alt"><span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span><span>&nbsp;who&nbsp;+&nbsp;</span><span class="string">"&nbsp;gogogo!"</span><span>;&nbsp;&nbsp;</span></span></li><li class=""><span>&nbsp;&nbsp;&nbsp;&nbsp;}&nbsp;&nbsp;</span></li><li class="alt"><span>}&nbsp;&nbsp;</span></li></ol></div>
+  在webapp新建php文件：<br />
+  test.php
+  <div class="chen-hl"><div class="bar"></div><ol class="dp-c" start="1"><li class="alt"><span><span>&lt;?php&nbsp;&nbsp;</span></span></li><li class=""><span>import&nbsp;com.chen.FrameWork;&nbsp;&nbsp;</span></li><li class="alt"><span><span class="vars">$f</span><span>&nbsp;=&nbsp;</span><span class="keyword">new</span><span>&nbsp;FrameWork();&nbsp;&nbsp;</span></span></li><li class=""><span>var_dump(<span class="vars">$f</span><span>-&gt;go(</span><span class="string">"ohohoh"</span><span>));&nbsp;&nbsp;</span></span></li><li class="alt"><span>?&gt;&nbsp;&nbsp;</span></li></ol></div>
+  配置到resin中：<br />
+  目标文件夹指到webapp。</p>
+  
+  
+  
+  
+  <p>访问：test.php</p>
+  
+  
+  
+  
+  <p>截图：<br />
+  1.整个项目的情况
+  <img src="http://img04.taobaocdn.com/imgextra/i4/T1dG1wXjBcXXa0Lrvb_092913.jpg" alt="quercus" />
+  2.访问的结果
+  <img src="http://img01.taobaocdn.com/imgextra/i1/T115OvXmaaXXXqGHYb_092949.jpg" alt="quercus php java" />
+  下一记：如何利用java做连接池提供给php使用。</p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Mediawiki脚本自动发内容实现]]></title>
+      <link href="https://www.54chen.com/blog/2011/07/01/mediawiki-scripts-auto-post/"/>
+      <updated>2011-07-01T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2011/07/01/mediawiki-scripts-auto-post</id>
+      <content type="html"><![CDATA[<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1r11iXhVkXXX_.NQ8_100702.jpg" alt="mediawiki auto post" /></p>
+  
+  
+  
+  
+  <p>相信很多公司都是在使用mediawiki做内部team的知识管理，同时也有一些边边角角的脚本去做诸如上线、报警一类的工作。经常会有这样的需求：在上线的时候自动更新wiki的一页内容。</p>
+  
+  
+  
+  
+  <p>实现起来很简单，只需要一个curl即可，mediawiki提供了http restful的接口，在api.php上，可以做很多事情，下面是实际使用的举例。</p>
+  
+  
+  
+  
+  <p>目标：上线脚本最后执行一下记录，更新wiki里的一页做为上线记录，Online logging包换的元素有：日期，项目，版本号，机器。</p>
+  
+  
+  
+  
+  <p>环境：安装了 curl的机器</p>
+  
+  
+  
+  
+  <p><strong>实现细节（wiki.sh）：</strong>
+  <blockquote>#! /bin/sh<br />
+  OPS_APP=$1<br />
+  shift<br />
+  OPS_REV=$1<br />
+  shift<br />
+  OPS_SERVER=$1<br />
+  OPS_TIME=`date`<br />
+  echo "\nwrite to wiki"</blockquote></p>
+  
+  
+  
+  
+  <p>TOKEN=`curl -s -d 'action=login&lgname=你的用户名&lgpassword=你的密码&format=json' http://你的wiki域名/wiki/api.php -D cookies.txt -b cookies.txt | sed -e 's/.*token":"//' -e 's/".*//'`</p>
+  
+  
+  
+  
+  <p>curl -s -d "action=login&lgname=你的用户名&lgpassword=你的密码&lgtoken=${TOKEN}&format=json" http://你的wiki域名/wiki/api.php -b cookies.txt -D cookies.txt > result</p>
+  
+  
+  
+  
+  <p>RET=`curl -s 'http://你的wiki域名/wiki/api.php?action=query&prop=info&intoken=edit&titles=Online_logging&indexpageids=&format=json' -b cookies.txt -D cookies.txt `</p>
+  
+  
+  
+  
+  <p>ETOKEN=`echo ${RET}|sed -e 's/.*token":"//' -e 's/".*//' -e 's/+/%2B/g'`<br />
+  ETOKEN=`echo ${ETOKEN}|sed -e 's/\\\\/%5C/g'`<br />
+  TIME=`echo ${RET}|sed -e 's/.*starttimestamp":"//' -e 's/".*//'`<br />
+  URL="action=edit&title=Online_logging&section=0&appendtext=%0A|${OPS_TIME}||${OPS_APP}||${OPS_REV}||${OPS_SERVER} %0A |-&summary=robot change&starttimestamp=${TIME}&token=${ETOKEN}&format=json"</p>
+  
+  
+  
+  
+  <p>curl -s -d "${URL}" http://你的wiki域名/wiki/api.php -b cookies.txt -D cookies.txt > result<br />
+  echo "\n**write successful**\n"
+  </p>
+  
+  
+  
+  
+  <p><strong>具体使用：</strong>
+  首先新建一个名字为Online_logging的页面，内容如下：
+  <blockquote>{|border="1" cellspacing="0" <br />
+  |-<br />
+  ! 日期 || 项目 || 版本号 || 机器<br />
+  |-</blockquote></p>
+  
+  
+  
+  
+  <p><blockquote>sh wiki.sh 项目 版本号 服务器ip</blockquote></p>
+  
+  
+  
+  
+  <p><strong>api参考：</strong>
+  http://www.mediawiki.org/wiki/API:Login
+  </p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[[54chen原创]简单好用的土办法抗击洋鬼子对wordpress系统的广告灌入]]></title>
+      <link href="https://www.54chen.com/blog/2010/08/23/easy-method-to-antispam-wordpress/"/>
+      <updated>2010-08-23T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2010/08/23/easy-method-to-antispam-wordpress</id>
+      <content type="html"><![CDATA[<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1c3hJXb8pXXcVO1Z._112132.jpg" alt="54chen" /></p>
+  
+  
+  
+  
+  <p>自升级wordpress3.0以后，一切风调雨顺，自上周起，被洋鬼子的广告肉机盯上了，平均每三五分钟一条广告，评论内容大致相同，评论ip来自五湖四海，各不相同。<br />
+  虽然说akismet是wordpress中antispam无二的选择，但是akismet那个验证码让人很纠结，于是只能自己山寨一把了。
+  <strong>土办法步骤一 转发默认评论地址</strong>
+  常见的洋鬼子的广告肉机，都是利用了wordpress公开的post地址来做到脚本灌入的，其默认地址是wp-comments-post.php，第一步要做的是，怎么这个地址（以nginx为例）：<br />
+  rewrite ^/wp\-comments\-post\.php$ http://www.54chen.com/ last;</p>
+  
+  
+  
+  
+  <p><strong>土办法步骤二 伪造假地址</strong>
+  既然第一步中的真实地址无法访问了，那第二步肯定是假冒出来可以访问的地址：<br />
+  if (!-e $request_filename){<br />
+  rewrite ^/wc([0-9]+)\.html$ /wp-comments-post.php?54chen=$1 last;<br />
+  }</p>
+  
+  
+  
+  
+  <p><strong>土办法步骤三 javascript制造假post</strong>
+  完成上面两步之后 ，最后一步就是将原来的comments.php修改post action的地址为伪造的地址，为了更加有效果，使用js来产生随机的wc1234.html即可：<br />
+  在评论的form中增加onsubmit="chenAntiSpam()" name="commentform"；<br />
+  再增加js:</p>
+  
+  
+  
+  
+  <p>&lt;script type="text/javascript"&gt;<br />
+  function chenAntiSpam() {<br />
+   var param ='wc'+Math.round(Math.random()*1000)+'.html';<br />
+   document.commentform.action = 'http://www.54chen.com/'+param;<br />
+  &lt;/script&gt;</p>
+  
+  
+  
+  
+  <p>大功告成，有效防住了洋鬼子的灌。</p>
+  
+  ]]></content>
+    </entry>
+  </feed>

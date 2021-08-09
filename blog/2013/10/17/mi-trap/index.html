@@ -1,0 +1,223 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>移动互联网系统架构十大陷阱 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="过去的三年，54chen一直奋斗在移动互联网一线，历经各种坑爹的情况。以下特做记录。 Top 1.时不我待 连通性 cmwap cmnet这样的词语以后应该都会消失在人世间。三年前，经常性地有移不动联不通手机连不上服务器机房的情况。两年前，这种情况要好了一些。一年前，改善很多。现在还存在。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/10/17/mi-trap">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">移动互联网系统架构十大陷阱</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-10-17T00:00:00+08:00" pubdate data-updated="true">2013-10-17 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg" alt="移动互联网十宗罪"></p>
+  
+  <p>过去的三年，54chen一直奋斗在移动互联网一线，历经各种坑爹的情况。以下特做记录。</p>
+  
+  <p><strong>Top 1.时不我待 连通性 </strong>
+  cmwap cmnet这样的词语以后应该都会消失在人世间。三年前，经常性地有移不动联不通手机连不上服务器机房的情况。两年前，这种情况要好了一些。一年前，改善很多。现在还存在。相信未来会越来越好，时代在召唤！解法，花钱找有“背景”的机房。</p>
+  <!-- more -->
+  <p><strong>Top 2.生不逢时 HTML5</strong>
+  在去年的网络情况下，HTML5依旧不适合用来做优秀的app。前几年的时候，网速各种烂的情况下，2G下的html5应用基本上完全不能用。现在好一点，开始有闲人把html5全部封装好native的调用，使其只做view的显示部分，但是，性能也是个大问题。当然了，同样地，相信未来会越来越好，同样是时代在召唤！解法，过几年再用。</p>
+  
+  <p><strong>Top 3.环境恶劣 DNS</strong>
+  DNS解析也有失败的情况下，app做得再漂亮，请求也不可达。IP要比域名靠谱一些，却有别的问题。解法就是在客户端多留下点域名和ip，一个不能用换下一个。</p>
+  
+  <p><strong>Top 4.车匪路霸 http拦截</strong>
+  运营商，可以干得出你想不到的事情。各种小广告帖你家防盗门上。所以你最好还是在header里声明好了:畜生，这个不是html，这是json，不要加广告!</p>
+  
+  <p><strong>Top 5.五花八门 app添加按钮一定要克制</strong>
+  特别是android app，完全没有限制，或者统一标准，什么样的App都有，做一个大气的App，最重要的一点，看看能不能打开就是主要功能，手指点一下就能到重要功能。</p>
+  
+  <p><strong>Top 6.逆流而上 完全不要在传统web上有所期待</strong>
+  除了新浪微博、QQ空间这种从传统web出的App之外，几乎不可能在完成一个App之后，能够让用户按你的引导打开一个网站。其难度不低于当年在传统广告商打完广告，等用户来访问网站一样。</p>
+  
+  <p><strong>Top 7.天下大同 App上的sqlite与服务器的mysql数据同步，是个大麻烦</strong>
+  当App也有一个db在保存数据的时候，就会接二连三地出现数据不一致的问题。最好的解法，公司有个统一的同步机制，最好是固定的框架代码，让业务逻辑隔离开这个同步过程。当然，实际工作过程中，我们甚至还想把所有的云端数据只当成备份，干脆全部交给客户端工程师来完成逻辑，我们让cluster更加可靠和可扩展。</p>
+  
+  <p><strong>Top 8.通则不痛 下载渠道要通畅</strong>
+  动则几M的包，下载不通畅，基本上分分钟新增用户就归零了。而且，要上CDN。这里有个坑，有些个CDN厂商的代理服务器可能会出现缓存有限的情况，文件太大会出现前半部分下载挺快，后面越下越慢，请谨慎使用。</p>
+  
+  <p><strong>Top 9.兵贵中速 移动网络更新太快不是好事，太慢也不是好事</strong>
+  你看看哪个App天天在更新，已经不是web2.0时代了，亲！ 同时，不要慢速运转，你的伙伴们会养成拖拉的习惯。最好的办法，内部天天更新，外部月更新甚至是季更新。</p>
+  
+  <p><strong>Top 10.未雨绸缪 一定要提前准备全体用户可以看到的公告条，以备不时之需</strong>
+  web2.0时代，我们要维护系统，在全部页面顶部加一个条：今天xx点全站维护。移动时代，这不太可能了，于是你会看到各种微博公告、微信公告、xx公告，反正就是不在自己家公告，因为自己家坏了要维护。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-10-17T00:00:00+08:00" pubdate data-updated="true">2013-10-17 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/10/08/upai-cdn-test/" title="Previous Post: 又拍云cdn试用体验">« 又拍云cdn试用体验</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2013/11/01/maven-nexus-notes/" title="Next Post: 百人共用企业maven私服nexus迁移搭建手记">百人共用企业maven私服nexus迁移搭建手记 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

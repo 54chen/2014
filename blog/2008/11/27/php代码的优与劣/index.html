@@ -1,0 +1,247 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>PHP代码的优与劣 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="原文作者：Kevin Yank 原文链接：Good and Bad PHP Code             我在SitePoint做面试官的时候一定会问的问题是：你认为PHP代码的优劣体现在哪里？因为这个问题可以让我大体知道应聘者是哪种类型的程序员，而不是单纯地考察他对PHP函数的掌握程度（ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/11/27/php%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BC%98%E4%B8%8E%E5%8A%A3">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">PHP代码的优与劣</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-27T00:00:00+08:00" pubdate data-updated="true">2008-11-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>原文作者：Kevin Yank</p>
+  
+  <p>原文链接：<a href="http://www.sitepoint.com/blogs/2007/05/25/good-and-bad-php-code/" target="_blank">Good and Bad PHP Code</a>      </p>
+  
+  <p>      我在SitePoint做面试官的时候一定会问的问题是：你认为PHP代码的优劣体现在哪里？因为这个问题可以让我大体知道应聘者是哪种类型的程序员，而不是单纯地考察他对PHP函数的掌握程度（这一点Zend的PHP认证做得不错，雅虎的PHP<a href="http://www.54chen.com/c/45">程序员</a>面试题也属于此类）。</p>
+  
+  <p>　　重要的是，这个问题可以让我知道应聘者是否经历过这样的事情——从一个懒散程序员手中接过一段凌乱的代码进行重用，或者要帮助团队中的其他成员来处理这类事情。</p>
+  
+  <p>　　诚然，对于这个问题我自己并没有一个满意的答案，不过我知道哪些答案是我想听到的：</p>
+  
+  <p>　　优良的PHP代码应该是结构化的。大段的代码应该被分割整理成一个个函数或方法，而那些不气眼的小段代码则应该加上注释，以便日后清楚它们的用途。而且应该尽可能地把前台代码如HTML、CSS、Javascript等从程序中分离出来。PHP的面向对象<em>编程</em>特性可以很好地帮助程序员将代码整理有序。</p>
+  
+  <p>　　优良的PHP代码应该是规范化的。无论是为变量名和函数名设定命名规则，还是对一些会重复使用的过程如数据库作和错误处理进行标准化，抑或是简单到规定好代码是怎样缩进的，这些规范化都可以让代码的可读性大大提高。</p>
+  
+  <p>　　优良的PHP代码应该是自适应的。PHP有许多特性如magic quotes和short tags，这些特性的打开和关闭会影响到程序的运行。所以，一个好的程序员应该在他的代码中加如适当的语句来使程序能够根据环境进行调整。</p>
+  
+  <p>　　优良的PHP代码应该是安全的。虽然PHP是一种高效、灵活的语言，没有固定的框架，但却把安全问题留给了程序员们。对潜在安全漏洞的深刻理解，如跨站脚本攻击（XSS）、跨站请求伪造（CSRF）、代码注入漏洞、字符编码循环漏洞等，对于今天的专业程序员来说是至关重要的。</p>
+  
+  <p>　　当应聘者在回答这些问题的时候，我就能清楚地知道是否该录用他。当然，有时程序员并不能很好地阐明这个问题，这时我们会让他们做一些PHP测试。测试中的许多问题表面上看起来非常简单，但这也给了应聘者们一个展现自我的机会，因为只要观察得仔细，就能找出问题。</p>
+  
+  <p>　　下面这一小段“劣质”的PHP代码是一道简化了的测试题。这种问题就像在问：你该怎样优化这段代码？</p>
+  
+  <p>&lt;?<br>
+  echo("&lt;p&gt;Search results for query: " .<br>
+      $_GET['query'] . ".&lt;/p&gt;");<br>
+  ?&gt;</p>
+  
+  <p>　　这段代码的主要问题在于它把用户提交的数据直接显示到了网页上，从而产生XSS漏洞。其实有很多方法可以填补这个漏洞。那么，什么代码是我们想要的呢？</p>
+  
+  <p>&lt;?<br>
+  echo("&lt;p&gt;Search results for query: " .<br>
+      htmlspecialchars($_GET['query']) . ".&lt;/p&gt;");<br>
+  ?&gt;</p>
+  
+  <p>　　这是最低要求。XSS漏洞用htmlspecialchars函数填补了，从而怎么了非法字符。</p>
+  
+  <p>&lt;?<em>php</em>   <br>
+  if (isset($_GET['query']))   <br>
+  {   <br>
+    echo '&lt;p&gt;Search results for query: ',   <br>
+        htmlspecialchars($_GET['query'], ENT_QUOTES), '.&lt;/p&gt;';   <br>
+  }   <br>
+  ?&gt; </p>
+  
+  <p>　　能写出这样代码的人应该是我想要录用的人了。
+  </p>
+<ul>
+  	<li>&lt;?被替换成了&lt;?<em>php</em>，这样更符合XML规范。</li>
+  	<li>在输出$_GET['query']的值之前先判断它是否为空。</li>
+  	<li>echo命令中多余的括号被去掉了。</li>
+  	<li>字符串用单引号限定，从而节省了PHP从字符串中搜索可替换的变量的时间。</li>
+  	<li>用逗号代替句号，节省了echo的时间。</li>
+  	<li>将ENT_QUOTES标识传递给htmlspecialchars函数，从而保证单引号也会被转义。虽然这并是最主要的，但也算是一个良好习惯。</li>
+  </ul>
+  　　可惜的是，能给出这样让人满意答复的程序员少之又少。我们花了3个月的时间才招聘到让我们满意的程序员。
+  
+  <p>　　那么，你会怎样回答文章开头提出的问题呢？你认为PHP代码的优劣体现在哪里？你认为一个PHP程序员还应具有哪些品质？</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-27T00:00:00+08:00" pubdate data-updated="true">2008-11-27 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/11/26/web%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D/" title="Previous Post: Web压力测试工具介绍">« Web压力测试工具介绍</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/11/27/%E4%B9%BE%E5%9D%A4%E5%A4%A7%E6%8C%AA%E7%A7%BB%E5%8D%B3%E5%B0%86%E5%8F%91%E5%B8%83/" title="Next Post: 乾坤大挪移即将发布">乾坤大挪移即将发布 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

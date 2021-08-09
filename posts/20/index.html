@@ -1,0 +1,666 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2011-08-21 2011-08-21 00:00:00 +0800 basho的产能：23个代码提供者，46个项目。这就是erlang的产能。 #
+  今天挺多人上不了gtalk，神马情况 #
+  Rebar是一款Erlang的构建工具，使用它可以方便的编译 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/20">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/08/15/hive-hadoop-blockalreadyexistsexception/">记hadoop故障一例：BlockAlreadyExistsException</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-08-15T00:00:00+08:00" pubdate data-updated="true">2011-08-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="">
+  hive版本：0.7.0 hadoop版本：0.20.2 <br>
+  在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。</p>
+  
+  <p>在hive执行时留下的蛛丝马迹：
+  </p>
+<blockquote>Failed with exception org.apache.hadoop.hdfs.server.namenode.NotReplicatedYetException: Not replicated yet:/tmp/hive-root/hive_2011-08-15_00-31-02_332_247809173824307798/-ext-10000/access_bucket-2011-08-14_00004<br>
+          at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getAdditionalBlock(FSNamesystem.java:1257)<br>
+          at org.apache.hadoop.hdfs.server.namenode.NameNode.addBlock(NameNode.java:422)<br>
+          at sun.reflect.GeneratedMethodAccessor2037.invoke(Unknown Source)<br>
+          at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br>
+          at java.lang.reflect.Method.invoke(Method.java:597)<br>
+          at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:508)<br>
+          at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:959)<br>
+          at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:955)<br>
+          at java.security.AccessController.doPrivileged(Native Method)<br>
+          at javax.security.auth.Subject.doAs(Subject.java:396)<br>
+          at org.apache.hadoop.ipc.Server$Handler.run(Server.java:953)</blockquote>
+  
+  <p>FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.CopyTask</p>
+  
+  <p>在DN中发现：</p>
+  
+  <p></p>
+<blockquote>2011-08-15 00:47:09,138 INFO org.apache.hadoop.hdfs.server.datanode.DataNode: writeBlock blk_8964076545845199727_216399 received exception org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br>
+  2011-08-15 00:47:09,138 ERROR org.apache.hadoop.hdfs.server.datanode.DataNode: DatanodeRegistration(192.168.1.23:50010, storageID=DS-52195649-192.168.1.23-50010-1299427987620, infoPort=50075, ipcPort=50020):DataXceiver<br>
+  org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br>
+          at org.apache.hadoop.hdfs.server.datanode.FSDataset.writeToBlock(FSDataset.java:983)<br>
+          at org.apache.hadoop.hdfs.server.datanode.BlockReceiver.<init>(BlockReceiver.java:98)<br>
+          at org.apache.hadoop.hdfs.server.datanode.DataXceiver.writeBlock(DataXceiver.java:259)<br>
+          at org.apache.hadoop.hdfs.server.datanode.DataXceiver.run(DataXceiver.java:103)<br>
+          at java.lang.Thread.run(Thread.java:662)</init>
+</blockquote>
+  
+  <p>2011-08-15 00:47:15,366 WARN org.apache.hadoop.util.Shell: Could not get disk usage information<br>
+  org.apache.hadoop.util.Shell$ExitCodeException: du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018_216371.meta': No such file or directory<br>
+  du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018': No such file or directory</p>
+  
+  <p>        at org.apache.hadoop.util.Shell.runCommand(Shell.java:195)<br>
+          at org.apache.hadoop.util.Shell.run(Shell.java:134)<br>
+          at org.apache.hadoop.fs.DU.access$200(DU.java:29)<br>
+          at org.apache.hadoop.fs.DU$DURefreshThread.run(DU.java:84)<br>
+          at java.lang.Thread.run(Thread.java:662)</p>
+  
+  <p> <br>
+  看着像是DN写入的时候遇到了服务不响应，追了一把，发现DN上全都忘记设置ulimit了，汗：<br>
+  ulimit -SHn 18912</p>
+  
+  <p><strong>参考：</strong>
+  http://www.cloudera.com/blog/2009/03/configuration-parameters-what-can-you-just-ignore/<br>
+  http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/<br>
+  http://sudhirvn.blogspot.com/2010/07/hadoop-error-logs-orgapachehadoophdfsse.html
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/08/03/redmine-install-fast-detail/">Redmine极速安装手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-08-03T00:00:00+08:00" pubdate data-updated="true">2011-08-03 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1RF46XddFXXXANWHX_084227.jpg" alt="redmine install ubuntu">
+  Redmine是用Ruby开发的基于基于web的项目管理软件，是用ROR框架开发的一套跨平台项目管理系统，系统通过“项目（Project）”的形式把成员、任务（问题）、文档、讨论以及各种形式的资源组织在一起，大家参与更新任务、文档等内容来推动项目的进度，同时系统利用时间线索和各种动态的报表形式来自动给成员汇报项目进度。</p>
+  
+  <p>机器环境：</p>
+  
+  <p></p>
+<blockquote>ubuntu 10.04 dell optiplex 380<br>
+  root权限下作</blockquote>
+  
+  <p>1）apt-get install mysql-client mysqld-server</p>
+  
+  <p>2)进mysql:</p>
+  
+  <p></p>
+<blockquote>create database redmine_default;<br>
+  GRANT all ON redmine_default.* TO root@'%' IDENTIFIED BY 'miliao';<br>
+  FLUSH PRIVILEGES ;</blockquote>
+  
+  <p>3)apt-get install redmine redmine-mysql subversion libapache2-mod-passenger</p>
+  
+  <p>4)ln -s /usr/share/redmine/public /var/www/redmine</p>
+  
+  <p>5)a2enmod passenger</p>
+  
+  <p>6)chmod a+x /usr/share/redmine/public</p>
+  
+  <p>7)/etc/apache2/sites-available/default<br>
+  增加：</p>
+  
+  <p></p>
+<blockquote>&lt;Directory /var/www/redmine&gt;<br>
+  RailsBaseURI /redmine<br>
+  PassengerResolveSymlinksInDocumentRoot on<br>
+  &lt;/Directory&gt;</blockquote>
+  
+  <p>8)/etc/init.d/apache2 restart<br>
+  9)打开 http://xxx/redmine</p>
+  
+  <p>排查问题：<br>
+  1） /var/log/redmine下有500的原因<br>
+  2）中文乱码问题：</p>
+  
+  <p></p>
+<blockquote>上述第8步时，不要着急做配置。把redmine_default整个数据库导出来，替换其中的charset=laitin1为charset=utf8，清空原表重新导入后再用admin/admin登录重新配置。</blockquote>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/07/27/hive-0-7-0-source-code-detail/">Hive 0.7.0代码分析解读</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-07-27T00:00:00+08:00" pubdate data-updated="true">2011-07-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T1sUV8Xk4sXXablPM9_104155.jpg" alt="hadoop hive"></p>
+  
+  <p><strong>入口：</strong>
+  bin/hive脚本中，环境检查后执行ext中的cli.sh，进入主类：CliDriver.main。</p>
+  
+  <p><strong>CliDriver.main:</strong>
+  把分号隔开命令进cli.processLine，再进processCmd。</p>
+  
+  <p><strong>processCmd:</strong>
+  处理quit/exit，再处理source，处理！，处理list；else建立CommandProcessor(实现有Driver和各种Processor)，set/dfs/add/delete命令有单独的Processor，剩下的走Driver。</p>
+  
+  <p><strong>如果是Driver类型的Processor：</strong>
+  把cmd发到这个driver的run，再进到compile，在compile中，用一个parseDriver去生成ASTNode(生成使用了antlr，主要过程：经过文法分析器切割，进解析器，出来一个TREE)，这里有细节的compile的过程说明 http://fromheartgo.wordpress.com/2010/04/02/hive%E7%9A%84compile%E8%BF%87%E7%A8%8B%EF%BC%881%EF%BC%89/ ；<br>
+  根据得到的ASTNode，开始语义分析，把结果设置到一个QueryPlan对象中，初始化一些task放在QueryPlan中；</p>
+  
+  <p>run里的test only代码读了test.serialize.qplan的设置，test状态会把这些查询记录写到文件里；权限检查。</p>
+  
+  <p>退出complie，在Driver的run中分解执行MR后，退出来到了processCmd:<br>
+  如果装填一切正常，通过getResults取到MR运行结果。</p>
+  
+  <p>插一句，54chen最近在各处只谈，不谈技术，罪过罪过，只因看不下去了。</p>
+  
+  <p><strong>全过程如下：</strong></p>
+  
+  <p>CliDriver.main &gt; processLine &gt; processCmd &gt;&gt; Driver.run(cmd) &gt; compile &gt;&gt; BaseSemanticAnalyzer &gt;&gt; xxxSemanticAnalyzer（常规select走SemanticAnalyzer） &gt; analyze(sem.analyze) &gt;&gt; SemanticAnalyzer的analyzeInternal方法 &gt;&gt; new Optimizer.optimize（进行列剪裁等优化后生成Task） &gt;  genMapRedTasks &gt;&gt; 返回到Driver.run(cmd) &gt;&gt;ret = execute() &gt;&gt; launchTask &gt;&gt; TaskRunner.run &gt; Task.executeTask &gt; ExecDriver.execute &gt; 执行MR（submitJob） &gt;&gt; getResults.
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/07/14/spring-easymock-tutorial/">Spring配合easymock搞定不依赖环境的测试用例</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-07-14T00:00:00+08:00" pubdate data-updated="true">2011-07-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1LbWjXndsXXccfjjX_085624.jpg" alt="spring easymock tutorial"></p>
+  
+  <p>在写java的test case的时候，往往有太多依赖环境的情况，WEB项目更甚，如果每次测试都要准备数据库或者其他环境，相当麻烦，换一个人就入手困难，在这种情况下，mock就是最好的选择。<br>
+  Mock 对象能够模拟领域对象的部分行为，并且能够检验运行结果是否和预期的一致。领域类将通过与 Mock 对象的交互，来获得一个的测试环境。</p>
+  
+  <p><strong> 入门</strong>
+  </p>
+<blockquote>//准备一个mock<br>
+  IMocksControl mocksControl = EasyMock.createStrictControl();<br>
+  //创建录像<br>
+  aDAO = mocksControl.createMock(AnalyzeResultDAO.class);<br>
+  //录制 输入 期望输出<br>
+  EasyMock.expect(aDAO.getARByLimit(type)).andReturn(ar);<br>
+  //重放 表示录制结束<br>
+  EasyMock.replay(aDAO);</blockquote>
+  
+  <p>//调用相关的类 验证结果是否正常<br>
+  Assert.assertNotNull(analyzeResultBiz.getLastAR(type));</p>
+  
+  <p>//验证是否使用了上面录制的DAO<br>
+  EasyMock.verify(aDAO);
+  <strong>提高</strong>
+  </p>
+<blockquote>* 配合spring如何做？</blockquote>
+  
+  <p>int type = 1;<br>
+  AnalyzeResult ar = new AnalyzeResult();<br>
+  ar.setName("123");<br>
+  IMocksControl mocksControl = EasyMock.createStrictControl();<br>
+  analyzeResultBiz = new AnalyzeResultBiz();<br>
+  aDAO = mocksControl.createMock(AnalyzeResultDAO.class);<br>
+  EasyMock.expect(aDAO.getARByLimit(type)).andReturn(ar);<br>
+  EasyMock.replay(aDAO);<br>
+  // 用spring提供的方法注入aurowired的字段<br>
+  ReflectionTestUtils.setField(analyzeResultBiz, "analyzeResultDAO", aDAO, AnalyzeResultDAO.class);<br>
+  Assert.assertNotNull(analyzeResultBiz.getLastAR(type));<br>
+  EasyMock.verify(aDAO);
+  这样一录一用，看起来简单方便，实用美观大方，54chen强力推荐。</p>
+  
+  <p>Ps:<br>
+  所使用的包：</p>
+  
+  <p>&lt;dependency&gt;<br>
+  &lt;groupId&gt;org.easymock&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;easymock&lt;/artifactId&gt;<br>
+  &lt;version&gt;2.4&lt;/version&gt;<br>
+  &lt;/dependency&gt;</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/19">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <em>20</em>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/21">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

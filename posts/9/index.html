@@ -1,0 +1,1072 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Cloud Foundry - How to Bootstrap a System in Centos6 2012-10-25 00:00:00 +0800 1)install febootstrap
+  Febootstrap is a tool like debootstrap in …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/9">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/10/25/cloud-foundry-how-to-bootstrap-a-system-in-centos6/">Cloud Foundry - How to Bootstrap a System in Centos6</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-10-25T00:00:00+08:00" pubdate data-updated="true">2012-10-25 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="bootstrap"></p>
+  
+  <p><strong>1)install febootstrap</strong>
+  Febootstrap is a tool like debootstrap in ubuntu.<br>
+  #yum -y install febootstrap<br>
+  #febootstrap centos6 rootfs http://mirror.neu.edu.cn/centos/6.3/os/x86_64/<br>
+  Threre is a basic centos system in rootfs dir.</p>
+  
+  <p><strong>2)install ruby 1.9 (optional)</strong>
+  yum -y groupinstall "Development Tools"<br>
+  yum -y install openssl-devel zlib-devel gcc gcc-c++ make autoconf readline-devel curl-devel expat-devel gettext-devel readline-devel</p>
+  
+  <p>wget http://pyyaml.org/download/libyaml/yaml-0.1.4.tar.gz<br>
+  tar xzvf yaml-0.1.4.tar.gz<br>
+  cd yaml-0.1.4<br>
+  ./configure --prefix=/opt/soft/yaml<br>
+  make &amp;&amp; make install</p>
+  
+  <p>wget http://ruby.taobao.org/mirrors/ruby/ruby-1.9.3-p286.tar.gz<br>
+  tar xzvf ruby-1.9.3-p286.tar.gz<br>
+  cd ruby-1.9.3-p286<br>
+  ./configure --prefix=/opt/soft/ruby  --enable-shared --disable-install-doc --with-opt-dir=/opt/soft/yaml<br>
+  make &amp;&amp; make install<br>
+  ln -s /opt/soft/ruby/bin/* /usr/bin/</p>
+  
+  <p>gem source -r http://rubygems.org/<br>
+  gem source -a http://ruby.taobao.org</p>
+  
+  <p>gem install bundler --no-rdoc --no-ri <br>
+  gem install rails --no-rdoc --no-ri <br>
+  ln -s /opt/soft/ruby/bin/* /usr/bin/</p>
+  
+  <p><strong>3)install and start cgroups (optional)</strong>
+   All of the configuration is here:<br>
+   vi /etc/cgconfig.conf <br>
+   Turn it on:<br>
+   chkconfig --level 3 cgconfig on<br>
+   chkconfig --list<br>
+   service cgconfig start</p>
+  
+  <p><strong>4)turn off selinux</strong>
+  vi /etc/selinux/config<br>
+  Change  SELINUX=enforcing to SELINUX=disabled</p>
+  
+  <p>Reboot or  run: setenforce 0</p>
+  
+  <p><strong>5)supper tool: ip</strong>
+  in ssh1:<br>
+  ip link add name FOO type veth peer name BAR<br>
+  ip link set FOO netns 1<br>
+  ifconfig FOO 10.254.0.222 netmask 255.255.255.252 up<br>
+  ip link set BAR netns <ssh2 pid>
+  route add -host 10.254.0.221 dev FOO</ssh2></p>
+  
+  <p>in ssh2:<br>
+  unshare -n /bin/bash<br>
+  ifconfig BAR 10.254.0.221 netmask 255.255.255.252 up<br>
+  ifconfig lo up</p>
+  
+  <p>in ssh1:<br>
+  ping 10.254.0.221</p>
+  
+  <p>--------------EOF------------------<br>
+  Ha ha, expect my next time write again, write here today, very tired of. </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/10/12/cloud-foundry-warden-part3/">Cloud Foundry之warden代码解读-part3</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-10-12T00:00:00+08:00" pubdate data-updated="true">2012-10-12 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden">
+  <strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
+  
+  <p>代码位置在： https://github.com/cloudfoundry/warden</p>
+  
+  <p>根据part2里提到的过程，本节以create命令为例进行追踪。</p>
+  
+  <p></p>
+<blockquote>调用过程：<br>
+  bin/warden-repl &gt;&gt; lib/warden/repl.rb &gt;&gt; Warden::Client &gt;&gt; warden.sock  &gt;&gt; lib/warden/server.rb &lt;&lt; Warden::Server.run! &lt;&lt; Rakefile<br>
+  处理调用：<br>
+  server.rb &gt; ClientConnection &gt; receive_request &gt; process(request) &gt;  process_container_request(request, container) &gt; base.rb &gt;  dispatch(request, &amp;blk) &gt; send(do_method, request, response, &amp;blk) -&gt; linux.rb &gt; do_xxx  &gt; shell script</blockquote>
+  
+  <p><strong>过程放大</strong></p>
+  
+  <p><strong>一、进入repl命令行</strong>
+  </p>
+<h2>1.1 名词</h2>
+  bundle：主要用于管理Ruby应用程序的依赖关系，并按照此依赖关系安装所需的Gems。当运行bundle install命令来安装Gems时，bundler会使用当前目录下的名为Gemfile的文件来处理依赖关系。<br>
+  gem：就是ruby的软件包，一个gem就是一个ruby软件。<br>
+  Gemfile：定义了各种依赖情况，bundler命令必须在存在此文件的目录下执行。<br>
+  Gemfile.lock：记录本机目前所有依赖的gem命令和版本。<br>
+  rake：编译工具，类似java的ant。<br>
+  Rakefile：rake命令所定义的配置任务文件，类似ant.xml。
+  
+  <p></p>
+<h2>1.2 进入</h2>
+  <blockquote>#sudo bundle exec bin/warden-repl</blockquote>
+  使用bundle exec来保证项目依赖的gem版本。在bin目录下有warden-repl脚本（ruby），这将会执行lib/warden/repl.rb文件，先会使用Warden:Client发起对warden.sock的连接，然后在start方法中对命令行模式的交互进行反馈。
+  
+  <p><strong>二、输入create</strong>
+  当输入create时，repl.rb执行到process_line中的respond_to的判断：</p>
+  
+  <p></p>
+<h2>2.1 respond_to?</h2>
+  if respond_to? words[0].to_sym。。。<br>
+  这种写法的意思是，当前对象中是否有方法名为words[0].to_sym变量值的方法。
+  
+  <p></p>
+<h2>2.2 create</h2>
+  repl.rb果断有这个create方法，然后talk_to_warden。就进入了client写的过程了。
+  
+  <p><strong>三、warden收到create的响应</strong>
+  </p>
+<h2>3.1 warden server的启动</h2>
+  早在part2中，使用了命令：
+  <blockquote>sudo bundle exec rake warden:start[config/linux.yml]</blockquote>
+  就已经启动了warden。<br>
+  这将使在bundle定义的环境下，执行warden/warden/Rakefile里写好的任务：Warden::Server.run!。
+  
+  <p></p>
+<h2>3.2 warden server的响应</h2>
+  在lib/warden/server.rb中，run!方法下，使用了EM的start_unix_domain_server的方法启动了一个unixsock，第二个参数ClientConnection定义了接收到东西怎么处理。<br>
+  ClientConnection中的process方法具体处理了create：
+  
+  <p></p>
+<blockquote>	when Protocol::CreateRequest<br>
+            container = Server.container_klass.new<br>
+            container.register_connection(self)<br>
+            response = container.dispatch(request) </blockquote>
+  
+  <p>container_klass为配置中的Warden::Container::Linux。</p>
+  
+  <p>最终，将会执行linux.rb中的<strong>do_create</strong>方法。</p>
+  
+  <p><strong>四、shell脚本中的猫腻</strong>
+  warden/root/linux中，有大量的sh脚本，里面通过一系列的命令，完成了基础环境的搭建，非常值得一读。
+  </p>
+<h2>4.1 linux/base/setup.sh</h2>
+  这个脚本在运行安装warden时会被执行，按照执行过程：<br>
+  1）分析本机最近的apt源地址。<br>
+  2）debootstrap到/tmp/warden中<br>
+  3）debootstrap的作用见前面的文章，主要是可以用于在系统的某个目录中安装一套基本系统. http://www.54chen.com/architecture/cloud-foundry-warden-part1.html<br>
+  4）使用chroot将子系统中的缺失软件安装好
+  
+  <p></p>
+<h2>4.2 base.rb的dispatch create过程</h2>
+  1）拼接before_create<br>
+  2）执行 linux.rb中的 features/quota.rb的 before_create方法<br>
+  2.5）执行base中的before_create方法，产生一个十六进制的handle值（也就是每个contaner的标识）<br>
+  3）setquota<br>
+  4）linux.rb do_create
+  
+  <p></p>
+<h2>4.3 linux.rb的do_create过程</h2>
+  1）create.sh脚本的执行：传入目录，检查是否存在；unshare -m setup.sh。<br>
+  2）unshare的作用是在指定的环境下执行程序setup.sh，不影响上一级环境。<br>
+  3）此处的setup.sh与base/setup.sh相比，没有了debootstrap的过程。<br>
+  4）setup.sh中设置了cgroup、磁盘挂载、限额、网络。<br>
+  5）紧接着如果需要会执行hook-parent-before-clone.sh<br>
+  6）修改limits.conf的参数<br>
+  7）执行start.sh：建立子网，打通两条ssh通道。<br>
+  8）完成create
+  
+  <p><strong>五、交互演示</strong></p>
+  
+  <p></p>
+<blockquote>$ sudo bundle exec bin/warden-repl<br>
+  warden&gt;  list<br>
+  ["16bp35aue5i"]<br>
+  warden&gt; stop 16bp35aue5i<br>
+  "ok"<br>
+  warden&gt; list<br>
+  ["16bp35aue5i"]<br>
+  warden&gt; destroy 16bp35aue5i<br>
+  "ok"<br>
+  warden&gt; list<br>
+  nil<br>
+  warden&gt; create<br>
+  16bp35aue5j<br>
+  warden&gt; info 16bp35aue5j<br>
+  {"state"=&gt;"active",<br>
+   "host_ip"=&gt;"10.254.0.5",<br>
+   "container_ip"=&gt;"10.254.0.6",<br>
+   "container_path"=&gt;"/tmp/warden/containers/16bp35aue5j",<br>
+   "memory_stat"=&gt;
+    <:protocol::inforesponse::memorystat cache: rss: mapped_file: pgpgin: pgpgout: swap: pgfault: pgmajfault: inactive_anon: active_anon: inactive_file: active_file: unevictable: hierarchical_memory_limit: hierarchical_memsw_limit: total_cache: total_rss: total_mapped_file: total_pgpgin: total_pgpgout: total_swap: total_pgfault: total_pgmajfault: total_inactive_anon: total_active_anon: total_inactive_file: total_active_file: total_unevictable:>,<br>
+   "cpu_stat"=&gt;
+    <:protocol::inforesponse::cpustat usage: user: system:>,<br>
+   "disk_stat"=&gt;
+    <:protocol::inforesponse::diskstat bytes_used: inodes_used:>}</:protocol::inforesponse::diskstat></:protocol::inforesponse::cpustat></:protocol::inforesponse::memorystat>
+</blockquote>
+  
+  <p>warden&gt; spawn 16bp35aue5j w  <br>
+  2
+  warden&gt; link 16bp35aue5j 2<br>
+  exit status: 0</p>
+  
+  <p>stdout:<br>
+   03:18:51 up 29 days, 14:51,  0 users,  load average: 0.00, 0.04, 0.05<br>
+  USER     TTY      FROM              LOGIN@   IDLE   JCPU   PCPU WHAT</p>
+  
+  <p>stderr:</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/10/09/cloud-foundry-warden-part2/">Cloud Foundry之warden代码解读-part2</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">2012-10-09 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden"></p>
+  
+  <p><strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
+  
+  <p>代码位置在： https://github.com/cloudfoundry/warden</p>
+  
+  <p><strong>代码结构</strong>
+  |-- em-warden-client   基于eventmachine的client 依赖 warden-client与warden-protocol 通过 unix socket来通讯<br>
+  |-- warden  巨复杂的warden实现，大部分是shell脚本+ruby，还有两个c实现。<br>
+  |-- warden-client   客户端驱动，提供与warden的阻塞式通讯client。依赖warden-protocol。其中的V1.rb对各自command进行解析之后的处理。这里有一个v1mode的概念， v1mode使用字符串，转为pb后与其他的一起使用protobuf。  <br>
+  `-- warden-protocol  依赖beefcake(protobuf library for Ruby)。protocol下有所有支持的pb生成格式。</p>
+  
+  <p><strong>小坑：ruby中的send方法</strong>
+  send其实就是动态地根据名字调用函数，传递后面的内容作为调用参数，api函数原型为：<br>
+  obj.send(symbol [, args...]) =&gt; obj</p>
+  
+  <p>在V1.rb中，所能的convert_xxxx_request方法都是这样被调用到的。</p>
+  
+  <p><strong>专注warden实现</strong>
+  src下四个C程序：<br>
+  |-- clone  用来快速复制一个环境  夹杂一堆的shell在其中运行<br>
+  |-- iomux  分成两个部分：iomux-spawn把子进程的pid写到stdout来标示它已经做好准备接收连接。在尝试连接之后一直等待。iomux-link是用来根据pid重新link到其上去。<br>
+  |-- oom   通过eventfd得到内存不够的通知<br>
+  `-- repquota  报告quota使用情况</p>
+  
+  <p>四个c程序将在编译后复制到root/linux/skeleton/bin中</p>
+  
+  <p><strong>其他目录：</strong>
+  |-- bin  下面有两个脚本文件，用来启动和进入命令行的<br>
+  |-- config  下面有一个配置文件，定义了linux下的配置<br>
+  |-- lib     所有的ruby代码<br>
+  |-- root   各种shell脚本，作cgroup之类的</p>
+  
+  <p><strong>启动warden</strong>
+  环境：<br>
+  chenzhen@ubuntu-chenzhen:~/warden/warden$ lsb_release -a<br>
+  No LSB modules are available.<br>
+  Distributor ID:	Ubuntu<br>
+  Description:	Ubuntu 12.04 LTS<br>
+  Release:	12.04<br>
+  Codename:	precise</p>
+  
+  <p></p>
+<blockquote>$cd warden/warden<br>
+  $sudo bundle exec rake setup[config/linux.yml]<br>
+  $sudo bundle exec rake warden:start[config/linux.yml]<br>
+  $ctrl+z <br>
+  $bg<br>
+  $sudo bundle exec bin/warden-repl<br>
+  $ping<br>
+  ...pong
+  </blockquote>
+  
+  <p><strong>调用过程：</strong></p>
+  
+  <p></p>
+<blockquote>bin/warden-repl &gt;&gt; lib/warden/repl.rb &gt;&gt; Warden::Client &gt;&gt; warden.sock  &gt;&gt; lib/warden/server.rb &lt;&lt; Warden::Server.run! &lt;&lt; Rakefile</blockquote>
+  
+  <p><strong>处理调用：</strong></p>
+  
+  <p></p>
+<blockquote>server.rb &gt; ClientConnection &gt; receive_request &gt; process(request) &gt;  process_container_request(request, container) &gt; base.rb &gt;  dispatch(request, &amp;blk) &gt; send(do_method, request, response, &amp;blk) -&gt; linux.rb &gt; do_xxx  &gt; shell script</blockquote>
+  
+  <p><strong>clone.c分析：</strong>
+  src/clone/clone.c: main -&gt;  <br>
+  	console.c: openpty -&gt; <br>
+  clone.c: daemonize -&gt; <br>
+  	barrier.c: barrier_open -&gt; <br>
+  clone.c: run("./hook-parent-before-clone.sh"); -&gt; <br>
+  clone.c: parent_clone_child -&gt;
+  	clone.c: pid = clone(start, stack, flags, h); -&gt;
+  		clone.c: start() -&gt;
+  			console_mount(&amp;h-&gt;console, "dev/console"); -&gt;
+  			pivot_root -&gt;
+  clone.c: run("./hook-parent-after-clone.sh"); -&gt;
+  clone.c: barrier_signal(&amp;h-&gt;barrier_parent); -&gt;
+  clone.c: barrier_wait(&amp;h-&gt;barrier_child);  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/09/20/travel/">丰宁坝上草原自驾游</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-09-20T00:00:00+08:00" pubdate data-updated="true">2012-09-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>秋高气爽，正直周末，我米东方时尚小分队一行十一人三辆车，浩浩荡荡二次出行。<br>
+  目标：
+  <img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1dPnNXjdiXXXIbL.8_100455.jpg" alt="target"></p>
+  
+  <p>一出门在八高小堵：
+  <img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1kcHOXehhXXXwm_38_101757.jpg" alt="堵车"></p>
+  
+  <p>出了，一路都是这样的感觉：
+  <img src="http://img01.taobaocdn.com/bao/uploaded/i1/T1mZTOXmNhXXb.wUo8_102123.jpg" alt="好天气"></p>
+  
+  <p>当时有两个小时的土路它是这个样子的：
+  <img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1yM2OXdlcXXbq.6I8_101230.jpg" alt="road"></p>
+  
+  <p>七小时后到达目的地，马不停蹄，开骑：
+  <img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1tGzPXmdbXXaA1p6a_120101.jpg" alt="马"></p>
+  
+  <p>当地的养马的农民在山顶上休闲地抽烟：
+  <img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1CpbOXc0kXXXZFrLa_120310.jpg" alt="赶马的大叔"></p>
+  
+  <p>马到成功：
+  <img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1tRLNXltkXXcapuTa_120705.jpg" alt="马到成功"></p>
+  
+  <p>农民家看马的大，一只耳朵总是耷拉着：
+  <img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_jHOXmVcXXbJjgva_120908.jpg" alt="大"></p>
+  
+  <p>第二天，自行活动时摄影师拍摄：
+  <img src="http://img04.taobaocdn.com/bao/uploaded/i4/T13sbOXa0hXXbqDU7._113723.jpg" alt="坝上"></p>
+  
+  <p>随便都是桌面一张：
+  <img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1fmbNXo0iXXXYpLva_120759.jpg" alt="桌面"></p>
+  
+  <p>期待下次出行！</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/09/14/cloud-foundry-warden-part1/">Cloud Foundry之warden代码解读-part1</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-09-14T00:00:00+08:00" pubdate data-updated="true">2012-09-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden"></p>
+  
+  <p><strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
+  
+  <p>代码位置在： https://github.com/cloudfoundry/warden<br>
+  这一部分也是我最想了解细节的地方，因为在一个paas平台中，资源的隔离才是最有价值的部分。</p>
+  
+  <p><strong>基础知识</strong>
+  </p>
+<blockquote>rv = unshare(CLONE_NEWNS);</blockquote>
+  unshare这个调用，可以把挂载的文件系统设置成只在新的挂载命名空间（mount namespace）中可见。
+  
+  <p></p>
+<blockquote>execvp(argv[0], argv);</blockquote>
+  execvp()会从PATH 环境变量所指的目录中查找符合参数file 的文件名，找到后便执行该文件，然后将第二个参数argv传给该欲执行的文件。
+  
+  <p></p>
+<blockquote>
+  shopt -s nullglob</blockquote>
+  设置shell环境变量nullglob的值为on，nullglob为on时对于通配符匹配时，若匹配不到时为空（相对应的为通配符本身）。
+  
+  <p></p>
+<blockquote>int stat(const char *restrict pathname, struct stat *restrict buf);</blockquote>
+  提供文件名字，获取文件对应属性。
+  
+  <p></p>
+<blockquote>build-essential软件包</blockquote>
+  作用是提供编译程序必须软件包的列表信息，也就是说编译程序有了这个软件包，它才知道 头文件在哪，才知道库函数在哪，还会下载依赖的软件包，最后才组成一个开发环境。
+  
+  <p></p>
+<blockquote>工具debootstrap</blockquote>
+  可以用于在系统的某个目录中安装一套基本系统，这个基本系统除了一些配置项外，与ubuntu安装程序在安装的第一阶段安装的内容基本相同。这项功能有许多有趣的功能，例如，你可以从某个定制版本的ubuntu Live光盘上通过这个命令快速的在硬盘上安装ubuntu而不需要ubuntu的安装程序，也可以把创建在硬盘上的基本系统目录作为某些涉及系统安全性服务的chroot运行环境，通过chroot进入该目录并调试和运行一些可能修改系统配置的应用程序，作为定制小型系统模板等等。
+  
+  <p></p>
+<blockquote>aufs</blockquote>
+  一种文件格式，可以mount到目录，同时控制只读和读写。
+  
+  <p></p>
+<blockquote>overlayfs</blockquote>
+  另一种文件格式，在ubuntu 11.04后开始替代aufs作为官方livecd的文件格式。
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/09/07/cloud-foundry-dea/">Cloud Foundry之dea代码解读</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-09-07T00:00:00+08:00" pubdate data-updated="true">2012-09-07 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloudfoundry"></p>
+  
+  <p><strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，dea（DropletExecution Agent）是其应用运行的环境，一个DEA可以启动多个应用。<br>
+  代码位置在： https://github.com/cloudfoundry/dea<br>
+  这一部分也是我最想了解细节的地方，因为在一个paas平台中，资源的隔离才是最有价值的部分。</p>
+  
+  <p><strong></strong>
+  初始版的dea基本不控制系统资源，然后基于cgroup搞了一个warden（真正的资源隔离是它，下节再述），程序运行容器。cf希望warden运行在多个平台上，所以没有直接使用LXC。
+  <strong>代码</strong>
+  代码入口在lib/dea.rb:</p>
+  
+  <p></p>
+<blockquote>EM.epoll<br>
+  EM.run {<br>
+    agent = DEA::Agent.new(config)<br>
+    agent.run()<br>
+  }</blockquote>
+  
+  <p>EM是ruby有名的eventmachine，是一个事件驱动网络框架，从java程序员的角度，可以理解有点像mina，也可以认为有点像erlang的gen_server。</p>
+  
+  <p>然后进到lib/dea/agent.rb:</p>
+  
+  <p></p>
+<blockquote>NATS.start(:uri =&gt; @nats_uri) do ...</blockquote>
+  
+  <p>里面注册了各种各样的收到对应消息干什么活的定义，我们来看其中几条线：<br>
+  1. 收到update:<br>
+          NATS.subscribe('dea.update') { |msg| process_dea_update(msg) }<br>
+  上一句是说收到update的指令， process_dea_update里面关键的一句：<br>
+  	register_instance_with_router(instance, :uris =&gt; (uris - current_uris))<br>
+  通过NATS告诉router，新的app来了。</p>
+  
+  <p>2.收到start:<br>
+  	NATS.subscribe("dea.#{uuid}.start") { |msg| process_dea_start(msg) }<br>
+  在process_dea_start里面：<br>
+  	start_operation = lambda do... 把app下载回来，修改好权限什么的。<br>
+  	下面用了fiber（它是ruby里的协程，用来达到异步线程的效果，但是开销要比线程低）：<br>
+  	f = Fiber.new do..<br>
+  	f.resume<br>
+  在协程中，最关键的调用：<br>
+  	stage_app_dir(bits_file, bits_uri, sha1, tgz_file, instance_dir, runtime)<br>
+  		bind_local_runtime(instance_dir, runtime)<br>
+  			startup_contents.gsub!('%VCAP_LOCAL_RUNTIME%', runtime['executable']) // 替换运行时路径 <br>
+  			File.open(startup, 'w') { |f| f.write(new_startup) } #写入运行的脚本<br>
+   一切就绪之后，调用先前准备好的lambda:<br>
+            start_operation.call<br>
+  然后去运行各种shell命令，包括启动应用。</p>
+  
+  <p>__EOF__</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/09/06/cloud-foundry-router/">Cloud Foundry之router代码解读</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-09-06T00:00:00+08:00" pubdate data-updated="true">2012-09-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloudfoundry">
+  <strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，router是其所有请求的入口路由，其与nginx进行配合完成各种情况情况下的转发。<br>
+  代码位置在：https://github.com/cloudfoundry/router</p>
+  
+  <p><strong></strong>
+  第一版的router直接通过unix sock将http request通过nginx的proxy 发到了router.rb中处理，第二版的时候，因为ruby直接处理请求性能不行，换成了lua脚本来接收请求，再由ruby程序将结果返回。</p>
+  
+  <p><strong>目录结构</strong>
+  router代码不多，共有下面的一些主要目录。</p>
+  
+  <p>.<br>
+  ├── bin<br>
+  │   └── router  （启用router server的脚本）<br>
+  ├── config<br>
+  │   ├── router2.yml<br>
+  │   └── router.yml （配置文件，指定了服务的端口和消息队列pid等）<br>
+  ├── ext<br>
+  │   └── nginx<br>
+  │       ├── tablesave.lua<br>
+  │       └── uls.lua （这两个lua脚本供nginx conf使用，实现用户第一次访问时生成一个cookies，lua让其去同一个地方）<br>
+  ├── Gemfile<br>
+  ├── Gemfile.lock<br>
+  ├── lib<br>
+  │   ├── router<br>
+  │   │   ├── const.rb<br>
+  │   │   ├── router.rb<br>
+  │   │   └── router_uls_server.rb  （基于一个简单的web框架(Sinatra)开发的一些http api）<br>
+  │   └── router.rb（负责整体启动router的http server）<br>
+  ├── LICENSE<br>
+  ├── NOTICE<br>
+  ├── Rakefile<br>
+  ├── README<br>
+  └── spec<br>
+      ├── functional<br>
+      │   ├── router_spec.rb<br>
+      │   └── spec_helper.rb<br>
+      ├── integration<br>
+      │   ├── router_spec.rb<br>
+      │   └── spec_helper.rb<br>
+      ├── lib<br>
+      │   ├── nats_timeout.rb<br>
+      │   └── spec_helper.rb<br>
+      ├── Rakefile<br>
+      ├── spec_helper.rb<br>
+      └── unit<br>
+          └── router_spec.rb</p>
+  
+  <p><strong>nginx的关键配置</strong>
+  nginx对接的配置在https://github.com/cloudfoundry/vcap/blob/master/dev_setup/cookbooks/nginx/templates/default/router-nginx.conf.erb，是动态生成的，在安装时决定。<br>
+  其中，关键的内容是：<br>
+  #定义lua运行的环境<br>
+    lua_package_path "/?.lua;;";<br>
+    lua_package_cpath "/?.so;;";<br>
+  #upstream定义到nls服务上<br>
+    upstream router_status {<br>
+      server :;<br>
+    }</p>
+  
+  <p>其中，根据 health_monitor的值穿插了subrequest去query /vcapuls的subrequest，而 /vcapuls是接到router.sock的。</p>
+  
+  <p>简单地说，第二版的变化在于，大量的业务请求在health_moniter确定之后，变成了nginx直连下属业务，而不再经过router了。</p>
+  
+  <p><strong>学到什么</strong>
+  1.nginx_lua相当好用，还得感谢之前的老同事agentzh他们的贡献;<br>
+  2.router用http这么来回的搞感觉不如tcp来得靠谱。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/8">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <em>9</em>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/10">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

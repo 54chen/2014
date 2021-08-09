@@ -1,0 +1,273 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[科学院手记]人人网新鲜事分享现场转播 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="讲座已经开始，现在是人人网牛人张洁介绍。 ---- 现在是新鲜事后台架构牛人铁安在讲解新鲜事要完成的功能： 将一个用户产生的内容实时发送给与他相关的一群人。 尽可能地帮助用户保存内容。 现在面临的挑战 分发压力：5000W*100 全天分发的总量在五十亿左右。每秒分发的次数是六万次每秒。 现在有1 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/12/02/net-new-to-live-for-all-to-share">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[科学院手记]人人网新鲜事分享现场转播</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-12-02T00:00:00+08:00" pubdate data-updated="true">2009-12-02 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>讲座已经开始，现在是人人网牛人张洁介绍。</p>
+  
+  <p>----</p>
+  
+  <p>现在是新鲜事后台架构牛人铁安在讲解新鲜事要完成的功能：</p>
+  
+  <p>将一个用户产生的内容实时发送给与他相关的一群人。</p>
+  
+  <p>尽可能地帮助用户保存内容。</p>
+  
+  <p><strong>现在面临的挑战</strong></p>
+  
+  <p>分发压力：5000W*100 全天分发的总量在五十亿左右。每秒分发的次数是六万次每秒。</p>
+  
+  <p>现在有1.3t的内存占用。</p>
+  
+  <p>----</p>
+  
+  <p><strong>老版本的新鲜事结构</strong></p>
+  
+  <p>----</p>
+  
+  <p><strong>新的系统结构</strong></p>
+  
+  <p>分发之后，内容本体丢进cache和db，dispatch服务通知到相关的人，分发后来的结构保存一人一条到TC</p>
+  
+  <p>---</p>
+  
+  <p><strong>MENU</strong></p>
+  
+  <p><strong>技术细节部分</strong></p>
+  
+  <p>分发部分的策略优化：瞬间分发海量数据，光良首页的例子（一百万的粉丝同时产生）。产品策略优化。</p>
+  
+  <p>内存压缩技术：新鲜事内存结构(FlyWeight)，字符串压缩存储（QuickLZ）</p>
+  
+  <p><strong>新鲜事存储方案</strong></p>
+  
+  <p>----</p>
+  
+  <p>内存压缩技术：flyweight的设计</p>
+  
+  <p>只要对象存在，所有的指针都能找到正确的内容。</p>
+  
+  <p>boost::flyweight在高并发情况下有效率问题，自己实现了相同的功能。</p>
+  
+  <p>各种压缩办法的性能比较：</p>
+  
+  <p>QuickLZ的压缩比不是最高的，但解压缩是最快的；代码简单；支持追加方式的压缩；有成熟的商业应用。</p>
+  
+  <p>boost::multi_index介绍 用来做多视图显示的东东 提供三种不同的索引方式</p>
+  
+  <p>一段例子代码 c++代码。。。略鸟</p>
+  
+  <p>-------</p>
+  
+  <p><strong>新鲜事存储方案</strong></p>
+  
+  <p>TC+Direct IO + SSD</p>
+  
+  <p><a href="http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">key-value</a> DB的一个表。</p>
+  
+  <p>研究的三个开源项目：</p>
+  
+  <p>Hypertable</p>
+  
+  <p>tokyo tyrant</p>
+  
+  <p>MemcacheDB (哈哈，测试了两个张宴兄弟的东东，感叹一下下，<a href="http://www.54chen.com/817-multi-nginx-configuration-of-single-php-fpm-approach-from-academy-of-sciences/">张宴</a>兄弟在nginx和tt的文档贡献真是不浅)</p>
+  
+  <p><strong><a href="http://www.54chen.com/814-tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">TC</a>的测试结果</strong></p>
+  
+  <p>读取很少的数据的情况下读和写都很快，在几个G之内的数据文件，数据量增加到一定程度写入会持续下降。100G一秒只能写入六七百次。所以单纯使用TC是不现实的。</p>
+  
+  <p><strong>新的方案</strong></p>
+  
+  <p>所有的写合并；通过LOG保证Down机后数据恢复；使用TC保存索引；使用异步IO读写文件；使用DirectIO怎么OS的Cache策略；使用SSD解决大量的并发读取。</p>
+  
+  <p>SSD随机读和顺序读速度接近。五六万每次的速度。</p>
+  
+  <p>-------</p>
+  
+  <p>全场结束，答疑</p>
+  
+  <p>-------</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-12-02T00:00:00+08:00" pubdate data-updated="true">2009-12-02 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>, <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>, <a class="category" href="/blog/categories/sheng-huo-bei-fen/">生活备份</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/12/01/the-pursuit-of-happyness/" title="Previous Post: 当幸福来敲门">« 当幸福来敲门</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

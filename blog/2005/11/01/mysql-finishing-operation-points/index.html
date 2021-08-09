@@ -1,0 +1,258 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>MySql作要点整理 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="列类型 需要的存储量
+  TINYINT 1 字节
+  SMALLINT 2 个字节
+  MEDIUMINT 3 个字节
+  INT 4 个字节
+  INTEGER 4 个字节
+  BIGINT 8 个字节
+  FLOAT(X) 4 如果 X &lt; = 24 或 8 如果 25 &lt; = X &lt; = 53 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2005/11/01/mysql-finishing-operation-points">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">MySql作要点整理</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2005-11-01T00:00:00+08:00" pubdate data-updated="true">2005-11-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>列类型 需要的存储量<br>
+  TINYINT 1 字节<br>
+  SMALLINT 2 个字节<br>
+  MEDIUMINT 3 个字节<br>
+  INT 4 个字节<br>
+  INTEGER 4 个字节<br>
+  BIGINT 8 个字节<br>
+  FLOAT(X) 4 如果 X &lt; = 24 或 8 如果 25 &lt; = X &lt; = 53<br>
+  FLOAT 4 个字节<br>
+  DOUBLE 8 个字节<br>
+  DOUBLE PRECISION 8 个字节<br>
+  REAL 8 个字节<br>
+  DECIMAL(M,D) M字节(D+2 , 如果M &lt; D)<br>
+  NUMERIC(M,D) M字节(D+2 , 如果M &lt; D)</p>
+  
+  <p> </p>
+  
+  <p>日期和时间类型<br>
+  列类型 需要的存储量<br>
+  DATE 3 个字节<br>
+  DATETIME 8 个字节<br>
+  TIMESTAMP 4 个字节<br>
+  TIME 3 个字节<br>
+  YEAR 1 字节</p>
+  
+  <p>串类型<br>
+  列类型 需要的存储量<br>
+  CHAR(M) M字节，1 &lt;= M &lt;= 255<br>
+  VARCHAR(M) L+1 字节, 在此L &lt;= M和1 &lt;= M &lt;= 255<br>
+  TINYBLOB, TINYTEXT L+1 字节, 在此L&lt; 2 ^ 8<br>
+  BLOB, TEXT L+2 字节, 在此L&lt; 2 ^ 16<br>
+  MEDIUMBLOB, MEDIUMTEXT L+3 字节, 在此L&lt; 2 ^ 24<br>
+  LONGBLOB, LONGTEXT L+4 字节, 在此L&lt; 2 ^ 32<br>
+  ENUM('value1','value2',...) 1 或 2 个字节, 取决于枚举值的数目(最大值65535）<br>
+  SET('value1','value2',...) 1，2，3，4或8个字节, 取决于集合成员的数量(最多64个成员）</p>
+  
+  <p>mysql不区分大小写！<br>
+  1.#service mysqld start 启动mysql<br>
+  2.(打mysql进入后)show databases; 显示所有库<br>
+  3.use(或connect) 库名 使用此数据库<br>
+  4.show tables; 显示所有表<br>
+  5.GRANT ALL ON 库名.* TO 用户名; root可执行，给不同的数据库不同的用户管理<br>
+  6.CREATE DATABASE 新库名; 新建一个数据库<br>
+  7.quit 退出mysql,另外的参见sql/9<br>
+  mysqladmin -uroot password "youpassword" 修改管理员密码<br>
+  GRANT ALL 　　ON 库名.* 　　TO user IDENTIFIEDBY "password" 　　WITH GRANT OPTION;<br>
+  WITH GRANT OPTION 子句是可选的。如果包含该子句，该用户可以将GRANT 语句授予的任何权限授予其他的用户。可以使用该子句将授权的能力授予其他的用户。<br>
+  GRANT ALL 　　ON 库名.* 　　TO user IDENTIFIEDBY "password" 　　WITH GRANT OPTION;<br>
+  WITH GRANT OPTION 子句是可选的。如果包含该子句，该用户可以将GRANT 语句授予的任何权限授予其他的用户。可以使用该子句将授权的能力授予其他的用户。</p>
+  
+  <p>撤权并删除用户<br>
+  要取消一个用户的权限，使用REVOKE语句。REVOKE的语法非常类似于GRANT语句，除了TO用FROM取代并且没有INDETIFED BY和WITH GRANT OPTION子句：<br>
+  ============================================<br>
+  REVOKE privileges (columns) ON what FROM user<br>
+  ============================================<br>
+  user部分必须匹配原来GRANT语句的你想撤权的用户的user部分。privileges部分不需匹配，你可以用GRANT语句授权，然后用REVOKE语句只撤销部分权限。<br>
+  ============================================<br>
+  REVOKE语句只删除权限，而不删除用户。即使你撤销了所有权限，在user表中的用户记录依然保留，这意味着用户仍然可以连接服务器。要完全删除一个用户，你必须用一条DELETE语句明确从user表中删除用户记录：<br>
+  ============================================<br>
+  %mysql -u root mysqlmysql＞DELETE FROM user -＞WHERE User="user_name" and Host="host_name";mysql＞FLUSH PRIVILEGES;　<br>
+  ============================================<br>
+  DELETE语句删除用户记录，而FLUSH语句告诉服务器重载授权表。（当你使用GRANT和REVOKE语句时，表自动重载，而你直接修改授权表时不是.<br>
+  ============================================</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2005-11-01T00:00:00+08:00" pubdate data-updated="true">2005-11-01 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+        
+          <a class="basic-alignment right" href="/blog/2006/03/22/mysql-in-a-variety-of-fields-in-the-range/" title="Next Post: MySQL中各种字段的取值范围">MySQL中各种字段的取值范围 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,638 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: C | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/c/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[在c/c++中解决SHA1WithRSA/ras/X509的过程记录]]></title>
+      <link href="https://www.54chen.com/blog/2016/05/25/a-story-about-sha1withrsa-slash-ras-slash-x509-with-c-slash-c-plus-plus/"/>
+      <updated>2016-05-25T12:13:25+08:00</updated>
+      <id>https://www.54chen.com/blog/2016/05/25/a-story-about-sha1withrsa-slash-ras-slash-x509-with-c-slash-c-plus-plus</id>
+      <content type="html"><![CDATA[<p>这里记录了一种简单的办法，在遇到写c/c++找不到答案时的最简单找代码办法。</p>
+  
+  <p><img src=http://chen54.b0.upaiyun.com/20141211/thinking.jpg></p>
+  
+  <p>方法是：找php怎么解决，大把的答案，然后看php源代码是怎么用c实现的。</p>
+  
+  <!--more-->
+  
+  
+  <h2>提出</h2>
+  
+  <p>我们server端在对接 play的时候，遇到了ras加密来验证参数的实现，官方也没有什么c的参考代码，java和php的网上倒是能找到一堆。</p>
+  
+  <h2>java怎么解决</h2>
+  
+  <p>java的实现和本文要说的内容无关，只是随带一列：</p>
+  
+  <p><div class="highlight"><pre><code class="language-java" data-lang="java"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">verify</span><span class="o">(</span><span class="n">String</span> <span class="n">publicKey</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="o">,</span> <span class="n">String</span> <span class="n">sign</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="c1">// 解密由base64编码的公钥</span>
+      <span class="kt">byte</span><span class="o">[]</span> <span class="n">keyBytes</span> <span class="o">=</span> <span class="n">Base64</span><span class="o">.</span><span class="na">decodeBase64</span><span class="o">(</span><span class="n">publicKey</span><span class="o">);</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">keyBytes</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+      <span class="c1">// 构造X509EncodedKeySpec对象</span>
+      <span class="n">X509EncodedKeySpec</span> <span class="n">keySpec</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">X509EncodedKeySpec</span><span class="o">(</span><span class="n">keyBytes</span><span class="o">);</span>
+  
+      <span class="c1">// KEY_ALGORITHM 指定的加密算法</span>
+      <span class="n">KeyFactory</span> <span class="n">keyFactory</span> <span class="o">=</span> <span class="n">KeyFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;RSA&quot;</span><span class="o">);</span>
+  
+      <span class="c1">// 取公钥匙对象</span>
+      <span class="n">PublicKey</span> <span class="n">pubKey</span> <span class="o">=</span> <span class="n">keyFactory</span><span class="o">.</span><span class="na">generatePublic</span><span class="o">(</span><span class="n">keySpec</span><span class="o">);</span>
+  
+      <span class="n">Signature</span> <span class="n">signature</span> <span class="o">=</span> <span class="n">Signature</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;SHA1WithRSA&quot;</span><span class="o">);</span>
+      <span class="n">signature</span><span class="o">.</span><span class="na">initVerify</span><span class="o">(</span><span class="n">pubKey</span><span class="o">);</span>
+      <span class="n">signature</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+  
+      <span class="c1">// 验证签名是否正常</span>
+      <span class="k">return</span> <span class="n">signature</span><span class="o">.</span><span class="na">verify</span><span class="o">(</span><span class="n">Base64</span><span class="o">.</span><span class="na">decodeBase64</span><span class="o">(</span><span class="n">sign</span><span class="o">));</span>
+  <span class="o">}</span>
+  <span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>php怎么解决</h2>
+  
+  <p>php的实现比较多，随便找了一个，没有验证过：</p>
+  
+  <p><div class="highlight"><pre><code class="language-php" data-lang="php"><span class="x">&lt;/p&gt;</span>
+  
+  <span class="x">&lt;p&gt;&amp;lt;?php</span>
+  <span class="x">$public_key = file_get_contents(dirname(&lt;strong&gt;FILE&lt;/strong&gt;).’/rsa_public_key.pem’);</span>
+  <span class="x">$pkeyid = openssl_pkey_get_public($public_key);</span>
+  <span class="x">$data = ‘abc’;</span>
+  <span class="x">$sign = ‘WkMaSsx9Fbj9/YyjoM1X0SLYvaFbsz9VmMaxc42fXxamEEIj5AfqQLrygEZRq0gkLNT4heIwOiSWEAWbfD4imaERKk07ANXEtZJ9jPJvyvg70IVvaYMKAr7bX0dJXmYw4aHnkcWR1kz27Drr6fxPmchB9WCsRmi4VfhVoF1+HRFOp28nIVReGRcbwbW1/bcMisXbitirz9Wq396vY88GUSgbgNdhFXX/kzjRBTjnG+CIhXq4HPdOWovqtPhQoxmK55+V+vxNZk9OPPHHaN3vVswk062NOs2/05yNVObL+PWeg/m43buXYalmkrwEhemdGfjIdNEoSO2D4gikvm43cg==’;</span>
+  <span class="x">$sign = base64_decode($sign);</span>
+  <span class="x">if ($pkeyid) {</span>
+  <span class="x">$verify = openssl_verify($data, $sign, $pkeyid, OPENSSL_ALGO_MD5);</span>
+  <span class="x">openssl_free_key($pkeyid);</span>
+  <span class="x">}</span>
+  <span class="x">var_dump($verify);</span>
+  <span class="x">?&gt;&lt;/p&gt;</span>
+  
+  <span class="x">&lt;p&gt;</span></code></pre></div></p>
+  
+  <h2>找到代码</h2>
+  
+  <p>看到上面的php代码，关键的几个函数有：openssl_pkey_get_public    openssl_verify</p>
+  
+  <p>然后转战最新的php源代码，<a href="https://github.com/php/php-src/blob/80f91fd9d513b83ca88345a2a8c76523e0164789/ext/openssl/openssl.c">https://github.com/php/php-src/blob/80f91fd9d513b83ca88345a2a8c76523e0164789/ext/openssl/openssl.c</a> 。</p>
+  
+  <p>别问为什么可以定位到这个文件的，github可以直接搜一个库里的源文件。</p>
+  
+  <p>忽略一切以zend、zval开头的逻辑，直接找上面关键的函数。</p>
+  
+  <p>于是就找到了关键的头文件:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;/&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">OpenSSL</span> <span class="n">includes</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">evp</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">bn</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">rsa</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">dsa</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">dh</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">x509</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">x509v3</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">crypto</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">pem</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">err</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">conf</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">rand</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">ssl</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">pkcs12</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>关键的一行key生成代码:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">key</span> <span class="o">=</span> <span class="n">PEM_read_bio_PrivateKey</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">passphrase</span><span class="p">);</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>关键的核心逻辑:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">EVP_VerifyInit</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="n">mdtype</span><span class="p">);</span>
+  <span class="n">EVP_VerifyUpdate</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_len</span><span class="p">);</span>
+  <span class="n">err</span> <span class="o">=</span> <span class="n">EVP_VerifyFinal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">signature</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">signature_len</span><span class="p">,</span> <span class="n">pkey</span><span class="p">);</span>
+  <span class="n">EVP_MD_CTX_cleanup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">);</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="n">keyresource</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">EVP_PKEY_free</span><span class="p">(</span><span class="n">pkey</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>这么些核心代码都找到了，还不会抄吗？</p>
+  
+  <h2>最终解决</h2>
+  
+  <p>通过上面的过程，进行自己的组装，已经再简单不过了，为了让写c/c++的同学们快速得到 play的rsa验证代码，特别贴一下：</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">verifiedByRsaPublicKey</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">publicKey</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">signature</span><span class="p">,</span> <span class="kt">char</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">char</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">chPublicKey</span> <span class="o">=</span> <span class="n">const_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">publicKey</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">BIO</span><span class="o">*</span> <span class="n">mem_bio</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">((</span><span class="n">mem_bio</span> <span class="o">=</span> <span class="n">BIO_new_mem_buf</span><span class="p">(</span><span class="n">chPublicKey</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>        <span class="c1">//从字符串读取RSA公钥</span>
+      <span class="n">BIO_free</span><span class="p">(</span><span class="n">mem_bio</span><span class="p">);</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">EVP_PKEY</span> <span class="o">*</span><span class="n">publicRsa</span> <span class="o">=</span> <span class="n">PEM_read_bio_PUBKEY</span><span class="p">(</span><span class="n">mem_bio</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">slen</span> <span class="o">=</span> <span class="n">signature</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
+  
+  <span class="n">EVP_MD_CTX</span> <span class="n">md_ctx</span><span class="p">;</span>
+  <span class="n">EVP_VerifyInit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="n">EVP_sha1</span><span class="p">());</span>
+  <span class="n">EVP_VerifyUpdate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+  <span class="kt">int</span> <span class="n">err</span> <span class="o">=</span> <span class="n">EVP_VerifyFinal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">signature</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">slen</span><span class="p">,</span> <span class="n">publicRsa</span><span class="p">);</span>
+  <span class="n">EVP_MD_CTX_cleanup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">);</span>
+  <span class="n">EVP_PKEY_free</span><span class="p">(</span><span class="n">publicRsa</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">err</span><span class="p">;</span>
+  <span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>结论</h2>
+  
+  <p>通过php的解决方案去找到php的实现，是写c/c++同学们不可不学的一招。</p>
+  
+  <h2>EOF</h2>
+  
+  <h2>English Version</h2>
+  
+  <h2>a story about SHA1WithRSA/ras/X509 with c/c++</h2>
+  
+  <p>This is a simple solution when you do not know how to develop with c/c++.</p>
+  
+  <p>The solution is,it will have lots of answer ho to do with php in ,and then look up the desgin in the source codes of php.</p>
+  
+  <h2>Question</h2>
+  
+  <p>We need to verify the parameters by RSA when we devlop the  Play apps.There is not any reference codes with c/c++.There are so many java or php examples in the internet.</p>
+  
+  <h2>How to resolve in java</h2>
+  
+  <p>It no connection with what we are talking about.Just BTW:</p>
+  
+  <p><div class="highlight"><pre><code class="language-java" data-lang="java"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">verify</span><span class="o">(</span><span class="n">String</span> <span class="n">publicKey</span><span class="o">,</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="o">,</span> <span class="n">String</span> <span class="n">sign</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="c1">// 解密由base64编码的公钥</span>
+      <span class="kt">byte</span><span class="o">[]</span> <span class="n">keyBytes</span> <span class="o">=</span> <span class="n">Base64</span><span class="o">.</span><span class="na">decodeBase64</span><span class="o">(</span><span class="n">publicKey</span><span class="o">);</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">keyBytes</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+      <span class="c1">// 构造X509EncodedKeySpec对象</span>
+      <span class="n">X509EncodedKeySpec</span> <span class="n">keySpec</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">X509EncodedKeySpec</span><span class="o">(</span><span class="n">keyBytes</span><span class="o">);</span>
+  
+      <span class="c1">// KEY_ALGORITHM 指定的加密算法</span>
+      <span class="n">KeyFactory</span> <span class="n">keyFactory</span> <span class="o">=</span> <span class="n">KeyFactory</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;RSA&quot;</span><span class="o">);</span>
+  
+      <span class="c1">// 取公钥匙对象</span>
+      <span class="n">PublicKey</span> <span class="n">pubKey</span> <span class="o">=</span> <span class="n">keyFactory</span><span class="o">.</span><span class="na">generatePublic</span><span class="o">(</span><span class="n">keySpec</span><span class="o">);</span>
+  
+      <span class="n">Signature</span> <span class="n">signature</span> <span class="o">=</span> <span class="n">Signature</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="s">&quot;SHA1WithRSA&quot;</span><span class="o">);</span>
+      <span class="n">signature</span><span class="o">.</span><span class="na">initVerify</span><span class="o">(</span><span class="n">pubKey</span><span class="o">);</span>
+      <span class="n">signature</span><span class="o">.</span><span class="na">update</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+  
+      <span class="c1">// 验证签名是否正常</span>
+      <span class="k">return</span> <span class="n">signature</span><span class="o">.</span><span class="na">verify</span><span class="o">(</span><span class="n">Base64</span><span class="o">.</span><span class="na">decodeBase64</span><span class="o">(</span><span class="n">sign</span><span class="o">));</span>
+  <span class="o">}</span>
+  <span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>How to resolve in php</h2>
+  
+  <p>There are too many php examples.Find one without checking:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&amp;</span><span class="n">lt</span><span class="p">;</span><span class="o">?</span><span class="n">php</span>
+  <span class="err">$</span><span class="n">public_key</span> <span class="o">=</span> <span class="n">file_get_contents</span><span class="p">(</span><span class="n">dirname</span><span class="p">(</span><span class="o">&lt;</span><span class="n">strong</span><span class="o">&gt;</span><span class="kt">FILE</span><span class="o">&lt;/</span><span class="n">strong</span><span class="o">&gt;</span><span class="p">).</span><span class="err">’</span><span class="o">/</span><span class="n">rsa_public_key</span><span class="p">.</span><span class="n">pem</span><span class="err">’</span><span class="p">);</span>
+  <span class="err">$</span><span class="n">pkeyid</span> <span class="o">=</span> <span class="n">openssl_pkey_get_public</span><span class="p">(</span><span class="err">$</span><span class="n">public_key</span><span class="p">);</span>
+  <span class="err">$</span><span class="n">data</span> <span class="o">=</span> <span class="err">‘</span><span class="n">abc</span><span class="err">’</span><span class="p">;</span>
+  <span class="err">$</span><span class="n">sign</span> <span class="o">=</span> <span class="err">‘</span><span class="n">WkMaSsx9Fbj9</span><span class="o">/</span><span class="n">YyjoM1X0SLYvaFbsz9VmMaxc42fXxamEEIj5AfqQLrygEZRq0gkLNT4heIwOiSWEAWbfD4imaERKk07ANXEtZJ9jPJvyvg70IVvaYMKAr7bX0dJXmYw4aHnkcWR1kz27Drr6fxPmchB9WCsRmi4VfhVoF1</span><span class="o">+</span><span class="n">HRFOp28nIVReGRcbwbW1</span><span class="o">/</span><span class="n">bcMisXbitirz9Wq396vY88GUSgbgNdhFXX</span><span class="o">/</span><span class="n">kzjRBTjnG</span><span class="o">+</span><span class="n">CIhXq4HPdOWovqtPhQoxmK55</span><span class="o">+</span><span class="n">V</span><span class="o">+</span><span class="n">vxNZk9OPPHHaN3vVswk062NOs2</span><span class="o">/</span><span class="mo">05</span><span class="n">yNVObL</span><span class="o">+</span><span class="n">PWeg</span><span class="o">/</span><span class="n">m43buXYalmkrwEhemdGfjIdNEoSO2D4gikvm43cg</span><span class="o">==</span><span class="err">’</span><span class="p">;</span>
+  <span class="err">$</span><span class="n">sign</span> <span class="o">=</span> <span class="n">base64_decode</span><span class="p">(</span><span class="err">$</span><span class="n">sign</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="err">$</span><span class="n">pkeyid</span><span class="p">)</span> <span class="p">{</span>
+  <span class="err">$</span><span class="n">verify</span> <span class="o">=</span> <span class="n">openssl_verify</span><span class="p">(</span><span class="err">$</span><span class="n">data</span><span class="p">,</span> <span class="err">$</span><span class="n">sign</span><span class="p">,</span> <span class="err">$</span><span class="n">pkeyid</span><span class="p">,</span> <span class="n">OPENSSL_ALGO_MD5</span><span class="p">);</span>
+  <span class="n">openssl_free_key</span><span class="p">(</span><span class="err">$</span><span class="n">pkeyid</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="n">var_dump</span><span class="p">(</span><span class="err">$</span><span class="n">verify</span><span class="p">);</span>
+  <span class="o">?&gt;&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>Find the codes</h2>
+  
+  <p>The key functions are openssl_pkey_get_public and openssl_verify in the codes above mentioned.</p>
+  
+  <p>Go to the newest php source codes, <a href="https://github.com/php/php-src/blob/80f91fd9d513b83ca88345a2a8c76523e0164789/ext/openssl/openssl.c">https://github.com/php/php-src/blob/80f91fd9d513b83ca88345a2a8c76523e0164789/ext/openssl/openssl.c</a></p>
+  
+  <p>Dont ask me how to find the file.You can search the file in a project at Github.</p>
+  
+  <p>Ignore all the codes start with zval and zend.Go to the codes which include the key functions.</p>
+  
+  <p>And then there is the key header file:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;/&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">OpenSSL</span> <span class="n">includes</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">evp</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">bn</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">rsa</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">dsa</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">dh</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">x509</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">x509v3</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">crypto</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">pem</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">err</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">conf</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">rand</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">ssl</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">include</span> <span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">openssl</span><span class="o">/</span><span class="n">pkcs12</span><span class="p">.</span><span class="n">h</span><span class="o">&gt;&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>The key codes generated pkey:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">key</span> <span class="o">=</span> <span class="n">PEM_read_bio_PrivateKey</span><span class="p">(</span><span class="n">in</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">passphrase</span><span class="p">);</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>The core logic:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">EVP_VerifyInit</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="n">mdtype</span><span class="p">);</span>
+  <span class="n">EVP_VerifyUpdate</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">data_len</span><span class="p">);</span>
+  <span class="n">err</span> <span class="o">=</span> <span class="n">EVP_VerifyFinal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">signature</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">int</span><span class="p">)</span><span class="n">signature_len</span><span class="p">,</span> <span class="n">pkey</span><span class="p">);</span>
+  <span class="n">EVP_MD_CTX_cleanup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">);</span>
+  
+  <span class="k">if</span> <span class="p">(</span><span class="n">keyresource</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">EVP_PKEY_free</span><span class="p">(</span><span class="n">pkey</span><span class="p">);</span>
+  <span class="p">}</span>
+  <span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>All of the codes are ready,cant you copy?</p>
+  
+  <h2>Final</h2>
+  
+  <p>It is easy to merge the codes above mentioned.</p>
+  
+  <p>To get the codes faster for any other people,there are the codes about  play Ras verifying:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">verifiedByRsaPublicKey</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">publicKey</span><span class="p">,</span> <span class="k">const</span> <span class="n">string</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">signature</span><span class="p">,</span> <span class="kt">char</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">message</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kt">char</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">chPublicKey</span> <span class="o">=</span> <span class="n">const_cast</span><span class="o">&lt;</span><span class="kt">char</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">publicKey</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">BIO</span><span class="o">*</span> <span class="n">mem_bio</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+  <span class="k">if</span> <span class="p">((</span><span class="n">mem_bio</span> <span class="o">=</span> <span class="n">BIO_new_mem_buf</span><span class="p">(</span><span class="n">chPublicKey</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span>        <span class="c1">//从字符串读取RSA公钥</span>
+      <span class="n">BIO_free</span><span class="p">(</span><span class="n">mem_bio</span><span class="p">);</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">3</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">EVP_PKEY</span> <span class="o">*</span><span class="n">publicRsa</span> <span class="o">=</span> <span class="n">PEM_read_bio_PUBKEY</span><span class="p">(</span><span class="n">mem_bio</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+  <span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">slen</span> <span class="o">=</span> <span class="n">signature</span><span class="p">.</span><span class="n">length</span><span class="p">();</span>
+  
+  <span class="n">EVP_MD_CTX</span> <span class="n">md_ctx</span><span class="p">;</span>
+  <span class="n">EVP_VerifyInit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="n">EVP_sha1</span><span class="p">());</span>
+  <span class="n">EVP_VerifyUpdate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="n">message</span><span class="p">));</span>
+  <span class="kt">int</span> <span class="n">err</span> <span class="o">=</span> <span class="n">EVP_VerifyFinal</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">,</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">char</span><span class="o">*</span><span class="p">)</span> <span class="n">signature</span><span class="p">.</span><span class="n">data</span><span class="p">(),</span> <span class="n">slen</span><span class="p">,</span> <span class="n">publicRsa</span><span class="p">);</span>
+  <span class="n">EVP_MD_CTX_cleanup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">md_ctx</span><span class="p">);</span>
+  <span class="n">EVP_PKEY_free</span><span class="p">(</span><span class="n">publicRsa</span><span class="p">);</span>
+  <span class="k">return</span> <span class="n">err</span><span class="p">;</span>
+  <span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>Conclusion</h2>
+  
+  <p>Is is a good solution for c/c++ developer.You can find the answer in php at first,go to see the c source codes of php at last.</p>
+  
+  <p><input type="hidden" id="mid" name="mid" value="3979354272598736" /></p>
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[C++ Protobuf中set_allocated引起的double Free Core Dump]]></title>
+      <link href="https://www.54chen.com/blog/2016/03/24/protobuf-double-free/"/>
+      <updated>2016-03-24T16:09:04+08:00</updated>
+      <id>https://www.54chen.com/blog/2016/03/24/protobuf-double-free</id>
+      <content type="html"><![CDATA[<p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg alt=c></p>
+  
+  <p>在c++中使用protobuf的时候，大多数元素，我们可以直接set_xxx，如果有嵌套进去一个对象，会有set_allocated_xxx的方法和mutable_xxx的方法。</p>
+  
+  <p>这里有一个坑。</p>
+  
+  <h2>现象</h2>
+  
+  <p>首先，看pb定义：</p>
+  
+  <!--more-->
+  
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">package</span> <span class="n">test</span><span class="p">;</span>
+  <span class="n">message</span> <span class="n">a</span><span class="p">{</span>
+      <span class="n">required</span> <span class="n">uint32</span> <span class="n">aa</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">message</span> <span class="n">b</span><span class="p">{</span>
+      <span class="n">required</span> <span class="n">a</span> <span class="n">aaa</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>如果使用set_allocated_aaa，同时传入了一个定义好的a，而不是new的a，如下：</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">void</span> <span class="n">bad_case</span><span class="p">(){</span>
+      <span class="n">a</span> <span class="n">aa</span><span class="p">;</span>
+      <span class="n">b</span> <span class="n">bb</span><span class="p">;</span>
+      <span class="n">aa</span><span class="p">.</span><span class="n">set_aa</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+      <span class="n">bb</span><span class="p">.</span><span class="n">set_allocated_aaa</span><span class="p">(</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">aa</span><span class="p">);</span>
+  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>编译的时候不会有错误，一运行就出问题了：</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;&lt;</span><span class="n">strong</span><span class="o">&gt;&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">glibc</span> <span class="n">detected</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;&lt;/</span><span class="n">strong</span><span class="o">&gt;</span> <span class="p">.</span><span class="o">/</span><span class="n">test</span><span class="p">.</span><span class="nl">run</span><span class="p">:</span> <span class="kt">double</span> <span class="n">free</span> <span class="n">or</span> <span class="n">corruption</span> <span class="p">(</span><span class="n">out</span><span class="p">)</span><span class="o">:</span> <span class="mh">0x00007fffc65ade20</span> <span class="o">***&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>正确的写法</h2>
+  
+  <p>下面的写法，不会有问题：</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">int</span> <span class="n">good_case1</span><span class="p">(){</span>
+      <span class="n">a</span><span class="o">*</span> <span class="n">aa</span> <span class="o">=</span> <span class="n">new</span> <span class="n">a</span><span class="p">();</span>
+      <span class="n">b</span> <span class="n">bb</span><span class="p">;</span>
+      <span class="n">aa</span><span class="o">-&gt;</span><span class="n">set_aa</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+      <span class="n">bb</span><span class="p">.</span><span class="n">set_allocated_aaa</span><span class="p">(</span><span class="n">aa</span><span class="p">);</span>
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>下面的写法，也不会有问题：</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">void</span> <span class="n">good_case2</span><span class="p">(){</span>
+      <span class="n">a</span> <span class="n">aa</span><span class="p">;</span>
+      <span class="n">b</span> <span class="n">bb</span><span class="p">;</span>
+      <span class="n">aa</span><span class="p">.</span><span class="n">set_aa</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+      <span class="n">bb</span><span class="p">.</span><span class="n">mutable_aaa</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">MergeFrom</span><span class="p">(</span><span class="n">aa</span><span class="p">);</span>
+  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>原因</h2>
+  
+  <p>在pb生成的对象中，析构函数统一都要进行对象的delete作：</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">b</span><span class="o">::~</span><span class="n">b</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// @@protoc_insertion_point(destructor:test.b)</span>
+    <span class="n">SharedDtor</span><span class="p">();</span>
+  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kt">void</span> <span class="n">b</span><span class="o">::</span><span class="n">SharedDtor</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">this</span> <span class="o">!=</span> <span class="n">default_instance</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">delete</span> <span class="n">aaa</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>通过定义得到的一个变量，只在栈上临时生成，在函数生命周期后自动清理，而将地址给了一个pb后，执行结束时会进行手动delete，从而导致了double free。</p>
+  
+  <p>通过new得到的一个对象，放在堆上，手动delete才会清理。</p>
+  
+  <p>good_case2正确的原因，是因为mutable_aaa的代码里new了一个a。</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="kr">inline</span> <span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">a</span><span class="o">*</span> <span class="n">b</span><span class="o">::</span><span class="n">mutable_aaa</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">set_has_aaa</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">aaa</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="n">aaa</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span> <span class="o">=</span> <span class="n">new</span> <span class="o">::</span><span class="n">test</span><span class="o">::</span><span class="n">a</span><span class="p">;</span>
+    <span class="c1">// @@protoc_insertion_point(field_mutable:test.b.aaa)</span>
+    <span class="k">return</span> <span class="n">aaa_</span><span class="p">;</span>
+  <span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>结论</h2>
+  
+  <p>使用pb的set_allocated_xxx要小心，没有显式allocate的东西不要往里传。</p>
+  
+  <p>文中涉及的代码地址：<a href="https://github.com/54chen/test">https://github.com/54chen/test</a></p>
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Mac下更新gcc版本]]></title>
+      <link href="https://www.54chen.com/blog/2015/03/04/update-gcc-version-in-mac/"/>
+      <updated>2015-03-04T14:51:29+08:00</updated>
+      <id>https://www.54chen.com/blog/2015/03/04/update-gcc-version-in-mac</id>
+      <content type="html"><![CDATA[<p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
+  
+  <ul>
+  <li>用ports升级，比较容易。</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>localhost:hello chenzhen$ port search gcc
+  </span><span class='line'>apple-gcc40 @5494 (lang)
+  </span><span class='line'>    Apple&rsquo;s version of gcc 4.0&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>apple-gcc42 @5666.3_14 (lang)
+  </span><span class='line'>    Apple&rsquo;s version of gcc 4.2&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>arm-aout-gcc @3.3.6 (cross, devel)
+  </span><span class='line'>    gcc cross-compilers for arm-aout, with newlib runtime library.&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>arm-elf-gcc @4.7.3 (cross, devel)
+  </span><span class='line'>    gcc cross-compilers for arm-elf, with newlib runtime library.&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>arm-elf-gcc3 @3.4.6_2 (cross, devel)
+  </span><span class='line'>    gcc 3.x cross-compilers for arm-elf, with newlib runtime library.&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>arm-none-eabi-gcc @4.7.3_1 (cross, devel)
+  </span><span class='line'>    The GNU compiler collection for arm-none-eabi&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>arm-none-linux-gnueabi-gcc @2005q3-2 (cross, devel)
+  </span><span class='line'>    gcc 3.x cross-compilers for arm-none-linux-gnueabi.&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>arm-rtems-gcc @4.2.3 (cross, devel)
+  </span><span class='line'>    gcc cross-compilers for arm-rtems, with newlib runtime library.&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>avr-gcc @4.9.1 (cross, devel)
+  </span><span class='line'>    The GNU compiler collection for avr&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <!--more-->
+  
+  
+  <ul>
+  <li>选中安装</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>localhost:hello chenzhen$ sudo port install gcc44&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>列出已有</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>localhost:hello chenzhen$ port select &ndash;list gcc
+  </span><span class='line'>Available versions for gcc:
+  </span><span class='line'>    apple-gcc42
+  </span><span class='line'>    llvm-gcc42
+  </span><span class='line'>    mp-gcc44 (active)
+  </span><span class='line'>    mp-gcc48
+  </span><span class='line'>    none&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>选中需要的版本</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>localhost:hello chenzhen$ sudo port select &ndash;set gcc mp-gcc44&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>最后一步，重新开一个窗口，不要用现在这个。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

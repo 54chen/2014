@@ -1,0 +1,204 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Wine 运行 Tm Pv4版本 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="wget http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe 用wine运行安装程序： wine tm2008preview4_sp2_chs.exe
+  安装完成后，并不能运行，缺少一些dll。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/07/29/wine-%E8%BF%90%E8%A1%8C-tm-pv4%E7%89%88%E6%9C%AC">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Wine 运行 Tm Pv4版本</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true">2008-07-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>wget <a href="http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe">http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe</a></p>
+  
+  <p>用wine运行安装程序： wine tm2008preview4_sp2_chs.exe<br>
+  安装完成后，并不能运行，缺少一些dll。将tm2008目录下SysDir目录下的各个子目录（Microsoft.VC80.ATL等5个子目录）下的所有dll文件拷贝到tm2008下的Bin目录中。将windows<br>
+  xp下的system32目录下的msxml3.dll, msxml3r.dll, riched32.dll,<br>
+  riched20.dll文件拷贝到.wine/drive_c/windows/system32/目录中。<br>
+  运行winecfg，在library标签页下，添加msxml3、riched32、riched20。<br>
+  然后就可以运行tm2008了。</p>
+  
+  <p>如果遇到中文乱码，注意做如下配置：<br>
+  1 如果用的英文locale，记得改成中文再启动wine。即export LANG=zh_CN.UTF-8<br>
+  2 配置中文字体。将windows下的simsun.ttc拷贝到~/.fonts/目录下，然后运行regedit，修改HKEY_LOCAL_MACHINE\Software\Microsoft\Windows<br>
+  NT\CurrentVersion\FontSubstitutes\ 下的所有键值，将他们都改成SimSun。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true">2008-07-29 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/07/29/ubuntu-710-install-wine-records/" title="Previous Post: ubuntu 7.10 安装wine记录">« ubuntu 7.10 安装wine记录</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/08/20/flex%E5%8A%A0%E8%BD%BD%E5%9B%BE%E7%89%87%E7%9A%84%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/" title="Next Post: Flex加载图片的常用的几种方式">Flex加载图片的常用的几种方式 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

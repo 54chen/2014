@@ -1,0 +1,233 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>人肉解析riak_admin Join - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="riak_admin只是一个bash脚本，当riak_admin join被执行时，都是在执行riak_kv_console join。 大概过程分析
+  riak_kv_console:join =&gt; %%入口 riak:Join(Node) =&gt; %% 真正执行 riak_core:join( …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/02/10/riak_admin-join">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">人肉解析riak_admin Join</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-10T00:00:00+08:00" pubdate data-updated="true">2012-02-10 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2AT9jXolXXXXXXXXX_!!13078490.jpg" alt="riak">
+  riak_admin只是一个bash脚本，当riak_admin join被执行时，都是在执行riak_kv_console join。</p>
+  
+  <p><strong>大概过程分析</strong>
+  riak_kv_console:join  =&gt;  %%入口 <br>
+  riak:Join(Node) =&gt; %% 真正执行<br>
+  	riak_core:join(Node) =&gt; %%去到riak_core<br>
+  		riak_core_gossip:legacy_gossip() =&gt; %%通知检查是否是 legacy gossip，<br>
+  	riak_core:standard_join(Node,Ring,false) =&gt;  %%非rejoin 非legacy<br>
+  		riak_core_gossip:send_ring(Node, node()) =&gt;  %% 进入gossip模块发起ring请求<br>
+  			gen_server:cast({?MODULE, FromNode}, {send_ring_to, ToNode}) =&gt; %%广而告之<br>
+  		riak_core_gossip:handle_cast({send_ring_to, Node}, State) =&gt; %%收到<br>
+  			gen_server:cast({?MODULE, Node}, {reconcile_ring, RingOut}) =&gt; %%告诉它们开始协调<br>
+   		riak_core_gossip:handle_cast({reconcile_ring, RingIn}, State) =&gt; %%收到<br>
+  			riak_core_ring_manager:ring_trans(fun reconcile/2, [OtherRing]) =&gt; %%由一个协调函数传入到ring manager中去执行<br>
+  			riak_core_ring_manager:prune_write_notify_ring =&gt; %%搞定一个新的ring文件，通知所有的listener<br>
+  			riak_core_ring_events:ring_update(Ring) =&gt; %%通过event通知<br>
+  riak_core_ring_handler:handle_event({ring_update, Ring}, State) =&gt; %%接到event<br>
+  	riak_core_vnode_manager:ring_changed(Ring) =&gt; %%vnode_manager通知大家环修改了<br>
+  		riak_core_vnode_manager:trigger_ownership_handoff(?MODULE, {ring_changed, Ring}) =&gt;%%接通知触发handoff<br>
+  			riak_core_vnode:trigger_handoff(Pid, TargetNode) =&gt; %%由vnode来干活<br>
+  				gen_fsm:send_all_state_event(VNode, {trigger_handoff, TargetNode}) =&gt; %%使用gen_fsm来通知vnode们<br>
+  			riak_core_vnode:maybe_handoff =&gt; %%准备开始导数据<br>
+  			riak_core_vnode:start_handoff =&gt; %%开始<br>
+  			riak_core_handoff_manager:add_outbound =&gt; %%发handoff<br>
+  			handle_call({add_outbound,Mod,Idx,Node,Pid},_From,State=#state{handoffs=HS}) =&gt; %%收到请求<br>
+  				riak_core_handoff_manager:send_handoff =&gt; %%发<br>
+  					riak_core_handoff_sender_sup:start_sender =&gt; %%启动sender  最终启动了 riak_core_vnode_master:sync_command直到同步结束。 </p>
+  
+  <p> </p>
+  
+  <p><strong>riak_core_vnode:mark_handoff_complete</strong>
+  此代码生存在riak_core_vnode，而不是riak_core_vnode_manager，因为ring_trans是一个同步的call到ring manager的过程，block一个单独的vnode要比block整个vnode manager要好。block这个manager会影响所有的vnode。此代码对多个并行的vnode执行是安全<br>
+  的,因为靠单个 ring manager提供的同步化保证了拥有所有的环的变更经过 。</p>
+  
+  <p><strong>riak_core_vnode:vnode_command</strong>
+  活动的vnode运行于三种状态中：正常、handoff、推进。<br>
+  在正常状态，vnode命令靠handle_command来传递。当一个handoff被触发，handoff_node被设置为目标节点，并且这个vnode被称做进入了handoff状态。<br>
+  在handoff状态，vnode命令依靠handle_handoff_command来传递。即使handoff程序是非block的（比如在riak_kv中没有使用async fold时），在handoff期间，一个vnode也会被block住（所以没有服务命令）。<br>
+  handoff状态之后，一个vnode会进入到推进状态。推进状态是新的gossip/membership代码的产物，并且legacy模式的节点里不会出现。推进状态了vnode已经传递自己数据到新节点的情况，但新的节点并未在环上列出当前节点的信息。这会出现是因为增加的vnode仍然在等handoff他们的数据给新的拥有者，或者只是因为环还汇聚在这个新节点之上。在推进状态，所有的vnode指令和coverage命令都会按过程推给新的拥有者。</p>
+  
+  <p><strong>
+  riak_core_vnode:start_manager_event_timer</strong>
+  独有的vnode进程与vnode manager结合紧密。当vnode的事件触发，这个vnode必须确保这个事件被发送到vnode manager，这将会产生一个状态变化的决定，并且发回适当的信息给这个vnode。为了最大限度地减少阻塞，使用了异步的消息。vnode manager挂掉而丢失靠vnode发送的信息是可能的。因此，vnode周期性地重发事件消息，直到一个从vnode manager来的合适的消息被接收。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-10T00:00:00+08:00" pubdate data-updated="true">2012-02-10 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2012/02/08/go-lang-install/" title="Previous Post: go语言安装手记">« go语言安装手记</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

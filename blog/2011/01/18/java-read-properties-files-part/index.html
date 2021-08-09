@@ -1,0 +1,253 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[Java]如何优雅读取properties文件-part1 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Q:在java中如何加载properties文件或者configure文件才是最好的办法呢？
+  A:当你在考虑如何加载java的资源文件的时候，许多选择都会立即闪现在你的头脑中：files, classpath resources, 还有URLs。尽管上述所有的方法都能得到最终需要的效果， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/01/18/java-read-properties-files-part">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[Java]如何优雅读取properties文件-part1</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-18T00:00:00+08:00" pubdate data-updated="true">2011-01-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://www.themoderndaypirates.com/pirates/wp-content/uploads/2010/10/drink_duke_java.jpg" alt="java properties">
+  Q:在java中如何加载properties文件或者configure文件才是最好的办法呢？<br>
+  A:当你在考虑如何加载java的资源文件的时候，许多选择都会立即闪现在你的头脑中：files, classpath resources, 还有URLs。尽管上述所有的方法都能得到最终需要的效果，但经验表明classpath resources 和 URLs 是到目前为止最靠谱的选择。<br>
+  通常情况下，一个配置文件都有一个异常复杂的结构（比如说xml结构的定义），为了简单，下文里我们以name-value对为例子来讲解（非常类似properties文件的格式）。就算这样，只要你考虑使用inputStream来读取资源文件，你没有理由不采纳下文里提到的办法。</p>
+  
+  <p><strong>一、邪恶的java.io.File</strong>
+  任何没有java背景的人明显的做法是使用原来的files里的足够简单的办法（通过FileInputStream, FileReader,RandomAccessFile）。但是在java应用的布署来说，这是最差的办法。对于追求轻便和不依赖磁盘位置的代码来说，在你的代码中使用绝对文件地址并不是一个很好的方式。使用相对路径看上去是个不错的替代方案，不过不要忘记，是相对于jvm运行时当前的路径。这个相对路径的设置取决于JVM的启动进程，而且会被启动的shell等脚本搞混乱了。如果决定将一些不标准的设置存放依赖最终用户的环境（而且在一些情况下，还未被验证过是否有用户权限），只要换个环境，（比如说EJB或者是WEB应用服务器），你和用户都不能有更多的基于JVM一开始启动时目录的控制。java.io.File是java里最不能跨平台的部分。<br>
+  java模块的做法是将其加入到classpath中去，直接就可用 。考虑EJB jars，Web应用可以打包成war文件，还有其他类似的便利的布署方式。除非你非得用它，还是对其说不吧。</p>
+  
+  <p><strong>二、Classpath resources</strong>
+  抛开上面所说的坏话，让我们来谈谈更好一点的办法：通过classloaders来加载资源。这样做会更好，因为classloaders本来就扮演了一个资源文件同它的在硬盘上或者其他地方实际位置的关系之间的抽象层。<br>
+  比如说，你需要从some/pkg/resource.properties加载一个classpath的资源。使用classpath资源是指把文件打包到jar包里或者是在程序运行前加入到classpath里。你可以通过JVM的参数-classpath在每次程序启动前向classpath中写入，也可以一次性写到<jre home>\classes的位置一直使用。要点是classpath的资源文件布署和java class文件一样，而方便也正是在于此。<br>
+  从java代码里拿some/pkg/resource.properties有许多方法。首先可以用：
+  <blockquote><code>ClassLoader.getResourceAsStream ("some/pkg/resource.properties");<br>
+    Class.getResourceAsStream ("/some/pkg/resource.properties");<br>
+    ResourceBundle.getBundle ("some.pkg.resource");</code></blockquote>
+  此外，如果代码在一个位于some.pkg包的class里，下面的代码也可以很好地工作：
+  <blockquote><code>Class.getResourceAsStream ("resource.properties");
+  </code></blockquote>
+  注意两者在参数上微妙的不同之处。所有的getResourceAsStream方法都使用斜杠分割包名的间隔，而且资源文件要包括扩展名。和resource bundles相比，后者更像是java标识符，用点标识包（并且没有文件名后缀）。这是理所当然的，因为resource bundle（资源绑定）可以不仅仅是properties文件，比如还可以是class文件。<br>
+  稍微有点复杂的地方，java.lang.Class的getResourceAsStream方法的实例方法可以执行相对于包的资源搜索（同样也很灵活，见 http://www.javaworld.com/javaworld/javaqa/2002-11/02-qa-1122-resources.html）。为了区分相对和绝对的资源名字，Class.getResourceAsStream()用斜杠开头表示绝对路径。通常，如果你在代码里不用相对于package的资源的话，没有必要使用这个方法。<br>
+  ClassLoader.getResourceAsStream(), Class.getResourceAsStream(), ResourceBundle.getBundle()之间微小的区别很容易造成混乱。下面这个表记录了他们之间的特点：</jre></p>
+  
+  <p><strong>方法作差异</strong>
+  </p>
+<table cellspacing="0" cellpadding="0" border="1" width="548" style="word-wrap:break-word;word-break:break-all;">
+  <tr>
+                                      <td width="100">Method</td>
+                                      <td width="150">Parameter format</td>
+                                      <td width="150">Lookup failure behavior</td>
+                                      <td width="100">Usage example</td>
+                                   </tr>
+                                   <tr bgcolor="#cccccc"></tr>
+</table>
+  
+  <p>                                    </p>
+<td>ClassLoader.<br>getResourceAsStream()</td>
+                                      <td>"/"-separated names; no leading "/" (all names are absolute)</td>
+                                      <td>Silent (returns null)<br>
+                                      </td>
+                                      <td>this.getClass().getClassLoader()<br>.getResourceAsStream<br>("some/pkg/resource.properties")</td>
+  
+  <p>                                 
+                                   </p>
+<tr bgcolor="#ffffff">
+                                      <td>Class.<br>getResourceAsStream()</td>
+                                      <td>"/"-separated names; leading "/" indicates absolute names; all other names are relative to the class's package</td>
+                                      <td>Silent (returns null)<br>
+                                      </td>
+                                      <td>this.getClass()<br>.getResourceAsStream<br>("resource.properties")</td>
+</tr>
+  
+  <p>                                 
+                                   </p>
+<tr bgcolor="#cccccc">
+                                      <td>ResourceBundle.<br>getBundle()</td>
+                                      <td>"."-separated names; all names are absolute; .properties suffix is implied<br>
+                                      </td>
+                                      <td>Throws unchecked<br> java.util.<br>MissingResource<br>Exception</td>
+</tr>
+  
+  <p>                                    </p>
+<td>ResourceBundle.getBundle<br>("some.pkg.resource")</td>
+                                   
+                                
+  [未完待续]<br>
+  54chen copy from http://www.javaworld.com/javaqa/2003-08/01-qa-0808-property.html?page=1
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-18T00:00:00+08:00" pubdate data-updated="true">2011-01-18 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

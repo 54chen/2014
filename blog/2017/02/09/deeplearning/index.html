@@ -1,0 +1,408 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>利用深度学习解决直播支付风控 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="前言 在直播软件中，典型的过程是A用户充值，送花给B用户，B用户提现。 正是有这样一条变现的道路，无数盗刷、退款、36技术的黑产人盯上了直播，报道见到映客的损失一度到了300万人民币(本文价值至少300万了:P)。外链https://www.douban.com/group/topic/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2017/02/09/deeplearning">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">利用深度学习解决直播支付风控</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2017-02-09T17:05:06+08:00" pubdate data-updated="true">2017-02-09 17:05:06 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<h2>前言</h2>
+  
+  <p>在直播软件中，典型的过程是A用户充值，送花给B用户，B用户提现。</p>
+  
+  <p>正是有这样一条变现的道路，无数盗刷、退款、36技术的黑产人盯上了直播，报道见到映客的损失一度到了300万人民币(本文价值至少300万了:P)。外链<a href="https://www.douban.com/group/topic/89441680/">https://www.douban.com/group/topic/89441680/</a></p>
+  
+  <p>本文介绍利用keras＋tensorflow，快速完成一个神经网络，从工程角度看深度学习带来的实际作用。</p>
+  
+  <p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg"></p>
+  
+  <!--more-->
+  
+  
+  <h2>安装</h2>
+  
+  <p>1.先升级pip</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="n">pip</span></code></pre></div>
+  
+  
+  <p>2.安装keras</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">keras</span>
+  <span class="o">...</span>
+  <span class="n">installing</span> <span class="n">collected</span> <span class="n">packages</span><span class="p">:</span> <span class="n">numpy</span><span class="p">,</span> <span class="n">scipy</span><span class="p">,</span> <span class="n">six</span><span class="p">,</span> <span class="n">theano</span><span class="p">,</span> <span class="n">pyyaml</span><span class="p">,</span> <span class="n">keras</span>
+  <span class="n">Successfully</span> <span class="n">installed</span> <span class="n">keras</span><span class="o">-</span><span class="mf">1.2</span><span class="o">.</span><span class="mi">1</span> <span class="n">numpy</span><span class="o">-</span><span class="mf">1.12</span><span class="o">.</span><span class="mi">0</span> <span class="n">pyyaml</span><span class="o">-</span><span class="mf">3.12</span> <span class="n">scipy</span><span class="o">-</span><span class="mf">0.18</span><span class="o">.</span><span class="mi">1</span> <span class="n">six</span><span class="o">-</span><span class="mf">1.10</span><span class="o">.</span><span class="mi">0</span> <span class="n">theano</span><span class="o">-</span><span class="mf">0.8</span><span class="o">.</span><span class="mi">2</span></code></pre></div>
+  
+  
+  <p>3.安装tensorflow</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">export</span> <span class="n">TF_BINARY_URL</span><span class="o">=</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">storage</span><span class="o">.</span><span class="n">apis</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">/</span><span class="n">mac</span><span class="o">/</span><span class="n">cpu</span><span class="o">/</span><span class="n">tensorflow</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="n">rc2</span><span class="o">-</span><span class="n">py2</span><span class="o">-</span><span class="n">none</span><span class="o">-</span><span class="nb">any</span><span class="o">.</span><span class="n">whl</span>
+  <span class="n">chenzhen</span><span class="err">$</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">upgrade</span> <span class="err">$</span><span class="n">TF_BINARY_URL</span>
+  <span class="o">...</span>
+  <span class="n">Installing</span> <span class="n">collected</span> <span class="n">packages</span><span class="p">:</span> <span class="n">funcsigs</span><span class="p">,</span> <span class="n">pbr</span><span class="p">,</span> <span class="n">mock</span><span class="p">,</span> <span class="n">wheel</span><span class="p">,</span> <span class="n">pyparsing</span><span class="p">,</span> <span class="n">packaging</span><span class="p">,</span> <span class="n">appdirs</span><span class="p">,</span> <span class="n">setuptools</span><span class="p">,</span> <span class="n">protobuf</span><span class="p">,</span> <span class="n">tensorflow</span>
+    <span class="n">Found</span> <span class="n">existing</span> <span class="n">installation</span><span class="p">:</span> <span class="n">wheel</span> <span class="mf">0.24</span><span class="o">.</span><span class="mi">0</span>
+      <span class="n">Uninstalling</span> <span class="n">wheel</span><span class="o">-</span><span class="mf">0.24</span><span class="o">.</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">Successfully</span> <span class="n">uninstalled</span> <span class="n">wheel</span><span class="o">-</span><span class="mf">0.24</span><span class="o">.</span><span class="mi">0</span>
+    <span class="n">Found</span> <span class="n">existing</span> <span class="n">installation</span><span class="p">:</span> <span class="n">setuptools</span> <span class="mf">18.0</span><span class="o">.</span><span class="mi">1</span>
+      <span class="n">Uninstalling</span> <span class="n">setuptools</span><span class="o">-</span><span class="mf">18.0</span><span class="o">.</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">Successfully</span> <span class="n">uninstalled</span> <span class="n">setuptools</span><span class="o">-</span><span class="mf">18.0</span><span class="o">.</span><span class="mi">1</span>
+  <span class="n">Successfully</span> <span class="n">installed</span> <span class="n">appdirs</span><span class="o">-</span><span class="mf">1.4</span><span class="o">.</span><span class="mi">0</span> <span class="n">funcsigs</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">2</span> <span class="n">mock</span><span class="o">-</span><span class="mf">2.0</span><span class="o">.</span><span class="mi">0</span> <span class="n">packaging</span><span class="o">-</span><span class="mf">16.8</span> <span class="n">pbr</span><span class="o">-</span><span class="mf">1.10</span><span class="o">.</span><span class="mi">0</span> <span class="n">protobuf</span><span class="o">-</span><span class="mf">3.2</span><span class="o">.</span><span class="mi">0</span> <span class="n">pyparsing</span><span class="o">-</span><span class="mf">2.1</span><span class="o">.</span><span class="mi">10</span> <span class="n">setuptools</span><span class="o">-</span><span class="mf">34.1</span><span class="o">.</span><span class="mi">1</span> <span class="n">tensorflow</span><span class="o">-</span><span class="mf">1.0</span><span class="o">.</span><span class="mi">0</span><span class="n">rc2</span> <span class="n">wheel</span><span class="o">-</span><span class="mf">0.29</span><span class="o">.</span><span class="mi">0</span></code></pre></div>
+  
+  
+  <p>4.检查安装是否成功</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">python</span> <span class="o">-</span><span class="n">c</span> <span class="s">"import keras; print keras.__version__"</span>
+  <span class="n">Using</span> <span class="n">TensorFlow</span> <span class="n">backend</span><span class="o">.</span>
+  <span class="mf">1.2</span><span class="o">.</span><span class="mi">1</span></code></pre></div>
+  
+  
+  <p>5.检查配置是否正确</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">cat</span> <span class="o">~/.</span><span class="n">keras</span><span class="o">/</span><span class="n">keras</span><span class="o">.</span><span class="n">json</span>
+  <span class="p">{</span>
+      <span class="s">"image_dim_ordering"</span><span class="p">:</span> <span class="s">"tf"</span><span class="p">,</span> 
+      <span class="s">"epsilon"</span><span class="p">:</span> <span class="mf">1e-07</span><span class="p">,</span> 
+      <span class="s">"floatx"</span><span class="p">:</span> <span class="s">"float32"</span><span class="p">,</span> 
+      <span class="s">"backend"</span><span class="p">:</span> <span class="s">"tensorflow"</span>
+  <span class="p">}</span></code></pre></div>
+  
+  
+  <p>6.安装h5py 用来保存权重数据</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">h5py</span>
+  <span class="o">...</span>
+  <span class="n">Installing</span> <span class="n">collected</span> <span class="n">packages</span><span class="p">:</span> <span class="n">h5py</span>
+  <span class="n">Successfully</span> <span class="n">installed</span> <span class="n">h5py</span><span class="o">-</span><span class="mf">2.6</span><span class="o">.</span><span class="mi">0</span></code></pre></div>
+  
+  
+  <p>7.安装 scikit-learn 用来写代码自动计算最优超参</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">scikit</span><span class="o">-</span><span class="n">learn</span>
+  <span class="o">...</span>
+  <span class="n">Installing</span> <span class="n">collected</span> <span class="n">packages</span><span class="p">:</span> <span class="n">scikit</span><span class="o">-</span><span class="n">learn</span>
+  <span class="n">Successfully</span> <span class="n">installed</span> <span class="n">scikit</span><span class="o">-</span><span class="n">learn</span><span class="o">-</span><span class="mf">0.18</span><span class="o">.</span><span class="mi">1</span></code></pre></div>
+  
+  
+  <p>8.安装hyperas 用来自动计算最优超参</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">pip</span> <span class="n">install</span> <span class="n">hyperas</span></code></pre></div>
+  
+  
+  <h2>准备数据</h2>
+  
+  <p>首先拿线上两天的数据，一天用来训练，一天用来测试。</p>
+  
+  <p>数据都是csv的，根据过去的经验，一个用户给另一个用户刷钱，能拿到的数据项有：</p>
+  
+  <p>1.是否白名单 2.是否签约 3.粉丝数量 4.是否入库 5.播放次数  6.播放时长  7.充值总次数 8.关注数量  等8个数据</p>
+  
+  <p>所有数据均为数字，再在9位上加上0表示正常1表示有问题的用户（有问题的用户是通过之前不正常的充值靠人肉挑的）。</p>
+  
+  <h2>准备模型</h2>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">cat</span> <span class="n">deep</span><span class="o">.</span><span class="n">py</span> 
+  <span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+  <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+  <span class="kn">import</span> <span class="nn">numpy</span>
+  <span class="n">dataset</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">"0207.csv"</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">","</span><span class="p">)</span>
+  <span class="n">X</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+  <span class="n">Y</span> <span class="o">=</span> <span class="n">dataset</span><span class="p">[:,</span><span class="mi">8</span><span class="p">]</span>
+  <span class="n">dataset2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">"0208.csv"</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">","</span><span class="p">)</span>
+  <span class="n">Z</span> <span class="o">=</span> <span class="n">dataset2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+  <span class="n">Q</span> <span class="o">=</span> <span class="n">dataset2</span><span class="p">[:,</span><span class="mi">8</span><span class="p">]</span>
+  
+  <span class="c"># 输入8个参数，隐藏层12个神经元，先用relu激活，输出用sigmoid激活</span>
+  <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'sigmoid'</span><span class="p">))</span>
+  
+  <span class="c"># loss用mse 优化用Adamax  准确率衡量</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s">'mse'</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s">'Adamax'</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s">'accuracy'</span><span class="p">])</span>
+  
+  <span class="c"># 训练100次，每次取60行</span>
+  <span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">nb_epoch</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+  
+  <span class="c"># 测试数据</span>
+  <span class="n">loss</span><span class="p">,</span> <span class="n">accuracy</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">Q</span><span class="p">)</span>
+  <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Loss: </span><span class="si">%.2f</span><span class="s">, Accuracy: </span><span class="si">%.2f%%</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">accuracy</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+  
+  <span class="c"># 保存下来训练好的模型供线上使用</span>
+  <span class="c"># serialize model to JSON</span>
+  <span class="n">model_json</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_json</span><span class="p">()</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"model.json"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+      <span class="n">json_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">model_json</span><span class="p">)</span>
+  <span class="c"># serialize weights to HDF5</span>
+  <span class="n">model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="s">"model.h5"</span><span class="p">)</span>
+  <span class="k">print</span><span class="p">(</span><span class="s">"Saved model to disk"</span><span class="p">)</span></code></pre></div>
+  
+  
+  <h2>使用模型</h2>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">cat</span> <span class="n">run</span><span class="o">.</span><span class="n">py</span> 
+  <span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+  <span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+  <span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">model_from_json</span>
+  <span class="kn">import</span> <span class="nn">numpy</span>
+  
+  <span class="n">dataset2</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s">"0208.csv"</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">","</span><span class="p">)</span>
+  <span class="n">Z</span> <span class="o">=</span> <span class="n">dataset2</span><span class="p">[:,</span><span class="mi">0</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span>
+  <span class="n">Q</span> <span class="o">=</span> <span class="n">dataset2</span><span class="p">[:,</span><span class="mi">8</span><span class="p">]</span>
+  <span class="c"># load json and create model</span>
+  <span class="n">json_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">'model.json'</span><span class="p">,</span> <span class="s">'r'</span><span class="p">)</span>
+  <span class="n">loaded_model_json</span> <span class="o">=</span> <span class="n">json_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+  <span class="n">json_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+  <span class="n">loaded_model</span> <span class="o">=</span> <span class="n">model_from_json</span><span class="p">(</span><span class="n">loaded_model_json</span><span class="p">)</span>
+  <span class="c"># load weights into new model</span>
+  <span class="n">loaded_model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s">"model.h5"</span><span class="p">)</span>
+  <span class="k">print</span><span class="p">(</span><span class="s">"Loaded model from disk"</span><span class="p">)</span>
+  <span class="c"># test data</span>
+  <span class="n">loaded_model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s">'mse'</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s">'Adamax'</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s">'accuracy'</span><span class="p">])</span>
+  <span class="n">score</span> <span class="o">=</span> <span class="n">loaded_model</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">Z</span><span class="p">,</span> <span class="n">Q</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+  <span class="k">print</span> <span class="s">"for test </span><span class="si">%s</span><span class="s">: </span><span class="si">%.2f%%</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">loaded_model</span><span class="o">.</span><span class="n">metrics_names</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">score</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">100</span><span class="p">)</span>
+  
+  <span class="c"># prediction probabilities里有预测的结果，需要启动一个简单的server对外服务即可。</span>
+  <span class="n">probabilities</span> <span class="o">=</span> <span class="n">loaded_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">Z</span><span class="p">)</span>
+  <span class="n">predictions</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">probabilities</span><span class="p">]</span>
+  <span class="n">accuracy</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">predictions</span> <span class="o">==</span> <span class="n">Q</span><span class="p">)</span>
+  <span class="k">print</span><span class="p">(</span><span class="s">"Prediction Accuracy: </span><span class="si">%.2f%%</span><span class="s">"</span> <span class="o">%</span> <span class="p">(</span><span class="n">accuracy</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span></code></pre></div>
+  
+  
+  <h2>超参调优</h2>
+  
+  <p>前面讲了工程使用的步骤，里面的参数都是随便写的，准确率大约60％，现在来讲如何让预测更加准确。</p>
+  
+  <p>test1是认好训练50次每次10条效果最好。</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">python</span> <span class="n">test1</span><span class="o">.</span><span class="n">py</span>
+  <span class="n">Best</span><span class="p">:</span> <span class="mf">0.696000</span> <span class="n">using</span> <span class="p">{</span><span class="s">'nb_epoch'</span><span class="p">:</span> <span class="mi">50</span><span class="p">,</span> <span class="s">'batch_size'</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span></code></pre></div>
+  
+  
+  <p>test2确认好优化器使用Adam效果最好。</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">python</span> <span class="n">test1</span><span class="o">.</span><span class="n">py</span>
+  <span class="n">Best</span><span class="p">:</span> <span class="mf">0.686000</span> <span class="n">using</span> <span class="p">{</span><span class="s">'optimizer'</span><span class="p">:</span> <span class="s">'Adam'</span><span class="p">}</span></code></pre></div>
+  
+  
+  <p>test3是优化器使用SGD时，确认里面的两个参数。</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">python</span> <span class="n">test3</span><span class="o">.</span><span class="n">py</span>
+  <span class="n">Best</span><span class="p">:</span> <span class="mf">0.654000</span> <span class="n">using</span> <span class="p">{</span><span class="s">'learn_rate'</span><span class="p">:</span> <span class="mf">0.001</span><span class="p">,</span> <span class="s">'momentum'</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">}</span></code></pre></div>
+  
+  
+  <p>test4是初化类型。</p>
+  
+  <p>test5是激活函数类型。</p>
+  
+  <p>test6是dropout层的参数。</p>
+  
+  <p>test7是隐藏层神经元数量确定。</p>
+  
+  <p>相关的python代码见后。</p>
+  
+  <h2>Hyperas超参调优</h2>
+  
+  <p>上面一种调优办法有点麻烦，要一个一个试。</p>
+  
+  <p>Hyperas可以一次性完成。</p>
+  
+  <div class="highlight"><pre><code class="language-python" data-lang="python"><span class="n">chenzhen</span><span class="err">$</span> <span class="n">python</span> <span class="n">testh</span><span class="o">.</span><span class="n">py</span>
+  <span class="n">Evalutation</span> <span class="n">of</span> <span class="n">best</span> <span class="n">performing</span> <span class="n">model</span><span class="p">:</span>
+  <span class="mi">192</span><span class="o">/</span><span class="mi">200</span> <span class="p">[</span><span class="o">===========================&gt;..</span><span class="p">]</span> <span class="o">-</span> <span class="n">ETA</span><span class="p">:</span> <span class="mi">0</span><span class="n">s</span><span class="p">[</span><span class="mf">0.35499999999999998</span><span class="p">,</span> <span class="mf">0.64500000000000002</span><span class="p">]</span></code></pre></div>
+  
+  
+  <p>Hyperas的执行结果直接保存了model，简单粗暴。代码见后。</p>
+  
+  <h2>后记</h2>
+  
+  <p>前面的模型，都比较简单，只定义了两三层，输入8个参数输出1个参数，然后有15个神经元的隐藏层，在testh.py里的调整参数时，增加了一些Activation层。</p>
+  
+  <p>要在工程上使用，还得上到分布式tensorflow上，进行更多的训练，以达到测试集的准确率更高。</p>
+  
+  <p>然后将保存下来的model，使用run.py里的逻辑，做成线上server，提供预测判断服务。</p>
+  
+  <p>预测的同时，要提供人工抽检反复训练，将判断错和判断漏的，都加入到训练的过程中去，做成定时过程，才能满足需要。</p>
+  
+  <p>另外不得不提的一点：将输入的数字归一化到0－1之间，对BPNN网络的训练效率会大大提升。</p>
+  
+  <h2>相关代码</h2>
+  
+  <p>上述所有代码均在 <a href="https://github.com/54chen/deep">https://github.com/54chen/deep</a> 。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2017-02-09T17:05:06+08:00" pubdate data-updated="true">2017-02-09 17:05:06 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/deeplearning/">deeplearning</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2017/05/19/optimizer/" title="Next Post: 优化器、激活函数、评价函数">优化器、激活函数、评价函数 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,238 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>大规模业务服务器开发总结 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="大比小好 开发阶段，服务不稳定，一个大服务不如一堆小服务; 运维阶段，服务都稳定了，一堆小服务又不如一个大服务。 大规模的时候了，如果能够一个进程搞定的，尽量不要拆两个进程。 少比多好 如果都是大服务，自然而然地，服务数量就少。 服务数量少，运维成本就相应低。 快比慢好 一个进程，跑得越快， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2015/04/13/serivce-design">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">大规模业务服务器开发总结</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2015-04-13T10:00:00+08:00" pubdate data-updated="true">2015-04-13 10:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg"></p>
+  
+  <h1>大比小好</h1>
+  
+  <p>开发阶段，服务不稳定，一个大服务不如一堆小服务; 运维阶段，服务都稳定了，一堆小服务又不如一个大服务。</p>
+  
+  <p>大规模的时候了，如果能够一个进程搞定的，尽量不要拆两个进程。</p>
+  
+  <!--more-->
+  
+  
+  <h1>少比多好</h1>
+  
+  <p>如果都是大服务，自然而然地，服务数量就少。</p>
+  
+  <p>服务数量少，运维成本就相应低。</p>
+  
+  <h1>快比慢好</h1>
+  
+  <p>一个进程，跑得越快，qps越高，所能使用的资源越多，越能“物尽其用”。</p>
+  
+  <h1>直连比队列好</h1>
+  
+  <p>常见的进程间内网通讯，一般会使用直接的rpc或者是mq来中转。然而，在一般的情况下，引入mq会给服务化带来复杂度，使容量问题更加隐藏。</p>
+  
+  <h1>特例监控比共性监控好</h1>
+  
+  <p>强烈要报警的监控一定要是开发手工加到代码里去的，只要报警，一定是了可用性降低，不应该有二义性。共性监控如cpu、硬盘、内存等，只能算是知会性的报警，一般不会影响业务的可用性。</p>
+  
+  <h1>进程外负载均衡比进程内好</h1>
+  
+  <p>负载均衡逻辑放到一个进程的好处在于，这部分逻辑不常改动，同时不应该受经常上线的影响，最好是7<em>24</em>365全天候足够稳健的服务。进程内的问题在于，当业务代码与负载均衡代码改动频率完全不是一个量级时，双方都将在上线，同时任何一方的问题都将相互影响; 更大的一个问题是，推动所有服务一起更新负载均衡策略难度远大于更新一个专门的进程。</p>
+  
+  <h1>有层级的服务比普通SOA好</h1>
+  
+  <p>SOA要求我们把各业务逻辑服务化，没有层级的服务化就是噩梦。主要服务之间一定要有金字塔一样的规则，否则会对各种跨机房、迁移等带来麻烦。</p>
+  
+  <h1>kv存储比RDS好</h1>
+  
+  <p>只用kv，存储层维持状态，扩展、迁移都大大降低难度。使用rds，qps变化时延迟并不是线性变化，kv就能保证这点。维护状态的一层大多在db，以kv这样容易扩展的方式，更加利于未来的迁移和扩张。</p>
+  
+  <h1>无状态比有状态好</h1>
+  
+  <p>服务带上状态，以后迁移、扩容各种毛病，只要有一个理由可以不要状态，就一定要无状态。</p>
+  
+  <h1>闭源比开源好</h1>
+  
+  <p>开源项目都是解决共性需求，规模越大，越是有特性，越不可能开源，闭源可以省很多事。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2015-04-13T10:00:00+08:00" pubdate data-updated="true">2015-04-13 10:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/cloud/">cloud</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2015/03/04/update-gcc-version-in-mac/" title="Previous Post: Mac下更新gcc版本">« Mac下更新gcc版本</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2015/06/03/are-u-ok/" title="Next Post: R u ok--客户端网络优化实践">R u ok--客户端网络优化实践 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

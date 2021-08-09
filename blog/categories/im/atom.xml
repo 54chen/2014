@@ -1,0 +1,98 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Im | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/im/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[Bosh vs Comet vs Long Polling vs Polling]]></title>
+      <link href="https://www.54chen.com/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/"/>
+      <updated>2014-06-30T11:41:42+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
+  
+  <p>最近在研究在特色移动互联网下通过性最好的应用层协议办法，看到很多混乱的概念和实现，54chen在对各种名词的进行了深度考察，特作记录以做区分。</p>
+  
+  <h2>HTTP协议</h2>
+  
+  <ul>
+  <li>第一个HTTP协议诞生于1989年3月。</li>
+  <li>第一个HTTP协议的版本是HTTP 0.9，它的组成极其简单，因为它只允许客户端发送GET这一种请求。</li>
+  <li>HTTP协议的第二个版本是HTTP 1.0，直到HTTP 1.0成为最重要的面向事务的应用层协议。该协议对每一次请求/响应，同样是建立并关闭一次连接。</li>
+  <li>HTTP协议的第三个版本是HTTP 1.1，它就是目前使用最广泛的协议版本。从HTTP 1.1开始，客户端默认与Web 服务器建立长连接。</li>
+  </ul>
+  
+  
+  <h2>原始阶段polling</h2>
+  
+  <p>最早期的时候，因为没有可以依赖的东西，能用的只有javascript的setInterval，定时循环向服务器发起请求。</p>
+  
+  <p>优点是：服务器端啥特别的东西都不用准备，直接当http请求处理即可。缺点是：白白浪费大量的请求。</p>
+  
+  <h2>什么是Comet?</h2>
+  
+  <p>中文意思彗星，大概是想表示这是一次尾巴会拖很长的请求。</p>
+  
+  <!--more-->
+  
+  
+  <p>Comet和ajax一样，都是一堆技术的合体叫做Comet（莫非是javascript界很喜欢搞高大上的名词？）。</p>
+  
+  <h2>初始阶段的Comet</h2>
+  
+  <ul>
+  <li>CometP属于这种（jsonP＋iframe）。</li>
+  <li>Frame Comet也属于这种（json＋iframe）。</li>
+  <li>ajax Comet也属于这种（ajax）</li>
+  <li>HTTP1.1是长连接，而且服务器chunked encoding机制可以让结果部分输出。</li>
+  <li>利用HTTP1.1的特性，再配合iframe src到一个url，一旦有数据，通过javascript的top.func()把数据告诉浏览器。</li>
+  <li>优点是：比起polling节省了更多的带宽。缺点：用户打开多个浏览器时会占用多条连接，所以必须在server端配合使用非阻塞的http server，同时如果网络不太稳定，容易断掉。</li>
+  </ul>
+  
+  
+  <h2>改良版的Comet:long polling</h2>
+  
+  <ul>
+  <li>因为发现网络不稳定容易断的问题。</li>
+  <li>改良后，添加了每次请求返回后立即重新发起请求机会－－长轮循。</li>
+  <li>优点：比起初始阶段，不容易因网络断了连接，是当今最常见的解决方案。缺点：实在找不到啥缺点，唯一的缺点就是利用了http协议，要是tcp层的，直接连接上收发数据就行了。</li>
+  </ul>
+  
+  
+  <h2>双向可通的WebSocket</h2>
+  
+  <ul>
+  <li>前面都是说的http的，html5就来了个WebSocket，WEB也可以进行TCP连接了。</li>
+  <li>各浏览器实现略有不同。</li>
+  <li>优点：底层连接 缺点：好多浏览器不支持。</li>
+  </ul>
+  
+  
+  <h2>BOSH（Bidirectional-streams Over Synchronous HTTP）</h2>
+  
+  <ul>
+  <li>这是xmpp协议里定义的一个扩展协议，实际上也可以归结为Comet技术的合体。</li>
+  <li>它同时支持老的polling也支持long polling。</li>
+  <li>具体实现中要完成交互协议才行。</li>
+  <li>优点：若实现细节可自动适应http 1.0 1.1  缺点：实现要更复杂。</li>
+  </ul>
+  
+  
+  <h2>结尾</h2>
+  
+  <ul>
+  <li>各种让人混淆的名词，其实都是在做同一件事情。</li>
+  <li>http streaming = http chunked encoding = http keepalive = http 1.1</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

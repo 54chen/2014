@@ -1,0 +1,402 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>PHP上传进度条深度解析 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="随着互联网的发展，越来越多的技术开始注重用户体验，以人为本才是长久之道，于是在上传的时候，大家都不再满足一个单一的“浏览”按钮，纷纷推出了带上传进度条的功能。而作为解释型语言的PHP，如何做到对上传文件的检测，如何实现上传进度条以其背后的原理，54chen将在本文中一步步展开。 一. 实现篇 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/04/18/php-upload-progress">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">PHP上传进度条深度解析</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-04-18T00:00:00+08:00" pubdate data-updated="true">2010-04-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>随着互联网的发展，越来越多的技术开始注重用户体验，以人为本才是长久之道，于是在上传的时候，大家都不再满足一个单一的“浏览”按钮，纷纷推出了带上传进度条的功能。而作为解释型语言的PHP，如何做到对上传文件的检测，如何实现上传进度条以其背后的原理，54chen将在本文中一步步展开。</p>
+  
+  <p><strong>一. 实现篇</strong></p>
+  
+  <p>一般情况，用PHP实现上传进度条就下面两种方法：</p>
+  
+  <p>1.APC扩展（作者是PHP的创始人，5.2后PHP已经加入APC扩展）</p>
+  
+  <p>2.PECL扩展模块 uploadprogress</p>
+  
+  <p>不论是APC还是uploadprogress，都需要编译源码，因为原有的PHP函数根本不可能读取到临时文件夹里的东西。下面来看如何使用以及关键的代码：
+  </p>
+<div id="_mcePaste"><strong>APC实现方法:</strong></div>
+  <div id="_mcePaste">1.安装APC</div>
+  <div id="_mcePaste">2.配置php.ini，设置参数 apc.rfc1867=1</div>
+  <div id="_mcePaste">3.关键代码：</div>
+  <blockquote>
+  <div id="_mcePaste">if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //上传请求</div>
+  <div id="_mcePaste">$status = apc_fetch('upload_' . $_POST['APC_UPLOAD_PROGRESS']);</div>
+  <div id="_mcePaste">$status['done'] = 1;</div>
+  <div id="_mcePaste">echo json_encode($status);  //输出给用户端页面里的ajax调用，相关文档请自己寻找</div>
+  <div id="_mcePaste">exit;</div>
+  <div id="_mcePaste">} elseif (isset($_GET['progress_key'])) {   //读取上传进度</div>
+  <div id="_mcePaste">$status = <span style="color: #ff0000;">apc_fetch</span>('upload_'.$_GET['progress_key']);</div>
+  <div id="_mcePaste">echo json_encode($status);</div>
+  <div id="_mcePaste">exit;</div>
+  <div id="_mcePaste">}</div>
+</blockquote>
+  <div id="_mcePaste"><strong>uploadprogress实现方法：</strong></div>
+  <div id="_mcePaste">1.使用PECL 安装uploadprogress</div>
+  <div id="_mcePaste">2.php.ini里面设置 uploadprogress.file.filename_template = “/tmp/upd_%s.txt”</div>
+  <div id="_mcePaste">3.关键代码：</div>
+  <blockquote>
+  <div id="_mcePaste">if($_SERVER['REQUEST_METHOD']=='POST') {</div>
+  <div id="_mcePaste">if (is_uploaded_file($_FILES['upfile']['tmp_name'])) {</div>
+  <div id="_mcePaste">$upload_dir = 'your_path/';</div>
+  <div id="_mcePaste">$ext        = strrchr($_FILES['video']['name'], '.');</div>
+  <div id="_mcePaste">$sessid     = $_POST['UPLOAD_IDENTIFIER'] ;</div>
+  <div id="_mcePaste">$tmpfile    = $upload_dir . $sessid;</div>
+  <div id="_mcePaste">$sessfile   = $upload_dir . $sessid .$ext;</div>
+  <div id="_mcePaste">if (move_uploaded_file($_FILES['upfile']['tmp_name'],$tmpfile)) {</div>
+  <div id="_mcePaste">//上传成功</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">} elseif (!empty($_GET['sessid'])) {</div>
+  <div id="_mcePaste">header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");</div>
+  <div id="_mcePaste">header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");</div>
+  <div id="_mcePaste">header("Cache-Control: no-store, no-cache, must-revalidate");</div>
+  <div id="_mcePaste">header("Cache-Control: post-check=0, pre-check=0", false);</div>
+  <div id="_mcePaste">header("Pragma: no-cache");</div>
+  <div id="_mcePaste">header("Content-Type:text/html;charset=UTF-8");</div>
+  <div id="_mcePaste">$unique_id = $_GET['sessid'];</div>
+  <div id="_mcePaste">$uploadvalues = <span style="color: #ff0000;">uploadprogress_get_info</span>($unique_id);</div>
+  <div id="_mcePaste">if (is_array($uploadvalues)) {</div>
+  <div id="_mcePaste">echo json_encode($uploadvalues);</div>
+  <div id="_mcePaste">} else {</div>
+  <div id="_mcePaste">//读取进度失败，另外处理逻辑</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">}</div>
+</blockquote>
+  <strong>二. 原理篇 </strong>
+  
+  <p>注意上一篇中的红色函数。</p>
+  
+  <p>下载到uploadprogress1.0.1进行源码分析，在代码中作了注释。
+  </p>
+<blockquote>static void uploadprogress_file_php_get_info(char * id, zval * return_value)</blockquote>
+  
+  <p>{</p>
+  
+  <p>char s[1024];</p>
+  
+  <p>char * filename;</p>
+  
+  <p>char * template;</p>
+  
+  <p>FILE *F;</p>
+  
+  <p>TSRMLS_FETCH();</p>
+  
+  <p>template = INI_STR("uploadprogress.file.filename_template"); <span style="color: #008000;">&lt;&lt;这里读取设置好的模板</span></p>
+  
+  <p>if (strcmp(template, "") == 0)  {</p>
+  
+  <p>return;</p>
+  
+  <p>} else {</p>
+  
+  <p>filename = uploadprogress_mk_filename( id, template );<span style="color: #008000;">&lt;&lt;&lt;存在的话，会创建</span></p>
+  
+  <p>if (!filename) return;</p>
+  
+  <p>F = VCWD_FOPEN(filename, "rb");</p>
+  
+  <p>if (F) {</p>
+  
+  <p>array_init(return_value);</p>
+  
+  <p>while ( fgets(s, 1000, F) ) {<span style="color: #008000;">&lt;&lt;&lt;从流中读取一字符串 *s结果数据的首地址；1000-1:一次读入数据块的长度,其默认值为1k，即1024;F文件指针</span></p>
+  
+  <p>char *k, *v, *e;</p>
+  
+  <p>int index = 0;</p>
+  
+  <p>e = strchr(s,'='); <span style="color: #008000;">&lt;&lt;&lt;查找字符串s中首次出现字符=的位置</span></p>
+  
+  <p>if (!e) continue;</p>
+  
+  <p>*e = 0; /* break the line into 2 parts */</p>
+  
+  <p>v = e+1;</p>
+  
+  <p>k = s;</p>
+  
+  <p>/* trim spaces in front of the name/value */</p>
+  
+  <p>while (*k &amp;&amp; *k &lt;= 32) k++;</p>
+  
+  <p>while (*v &amp;&amp; *v &lt;= 32) v++;</p>
+  
+  <p>/* trim spaces everywhere in the name */</p>
+  
+  <p>for (e=k; *e; e++) if (*e &lt;= 32) { *e = 0; break; }</p>
+  
+  <p>/* trim spaces only at the end of the value */</p>
+  
+  <p>/* http://pecl.php.net/bugs/bug.php?id=14525 */</p>
+  
+  <p>//for (e=v; *e; e++) if (*e &lt;= 32) { *e = 0; break; }</p>
+  
+  <p>if (v != NULL) {<span style="color: #008000;">&lt;&lt;&lt;当文件有内容时</span></p>
+  
+  <p>for (index = strlen(v); index &gt; 0; index--) {</p>
+  
+  <p>if (v[index] &gt; 32) break;<span style="color: #008000;">&lt;&lt;&lt;累计</span></p>
+  
+  <p>v[index] = 0;</p>
+  
+  <p>}</p>
+  
+  <p>}</p>
+  
+  <p>add_assoc_string( return_value, k, v, 1 );</p>
+  
+  <p>}</p>
+  
+  <p>fclose(F);</p>
+  
+  <p>}</p>
+  
+  <p>if (filename) efree(filename);</p>
+  
+  <p>return;</p>
+  
+  <p>}</p>
+  
+  <p>}
+  在源码中还能发现:
+  </p>
+<blockquote>PHP_MINIT_FUNCTION(uploadprogress)</blockquote>
+  
+  <p>{</p>
+  
+  <p>REGISTER_INI_ENTRIES();</p>
+  
+  <p>php_rfc1867_callback = uploadprogress_php_rfc1867_file;</p>
+  
+  <p>return SUCCESS;</p>
+  
+  <p>}
+  在MINIT中修改了php_rfc1867_callback，抽取uploadprogress_php_rfc1867_file的关键代码：
+  </p>
+<blockquote>upload_id = emalloc(strlen(*e_data-&gt;value) + 1);</blockquote>
+  
+  <p>strcpy(upload_id, *e_data-&gt;value);</p>
+  
+  <p>progress-&gt;upload_id = upload_id;</p>
+  
+  <p>progress-&gt;time_last  = time(NULL);</p>
+  
+  <p>progress-&gt;speed_average  = 0;</p>
+  
+  <p>progress-&gt;speed_last     = 0;</p>
+  
+  <p>progress-&gt;bytes_uploaded = read_bytes;</p>
+  
+  <p>progress-&gt;files_uploaded = 0;</p>
+  
+  <p>progress-&gt;est_sec        = 0;</p>
+  
+  <p>progress-&gt;identifier = uploadprogress_mk_filename(upload_id, template);<span style="color: #008000;">&lt;&lt;&lt;在指定的模板位置放下了临时文件</span></p>
+  
+  <p>progress-&gt;identifier_tmp = emalloc(strlen( progress-&gt;identifier) + 4);</p>
+  
+  <p>sprintf( progress-&gt;identifier_tmp, "%s.wr", progress-&gt;identifier );
+  关于php_rfc1867_callback是什么，可以看哥学社另一哥鸟哥的分析 <a href="http://www.laruence.com/2008/11/07/586.html">http://www.laruence.com/2008/11/07/586.html</a></p>
+  
+  <p><strong>三.总结</strong></p>
+  
+  <p>在探测临时文件大小的时候，APC和 uploadprogress其实是大同小异的方法，先记录，再取大小百分比。</p>
+  
+  <p>关于哥学社：
+  <a style="color: #0b3b8c; text-decoration: none;" title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。</p>
+  
+  <p>关于五四陈：<br>
+  54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br>
+  个人技术站点:<a style="color: #0b3b8c; text-decoration: none;" href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 cc0cc@126.com 联系到他。</p>
+  
+  <p>本文提及的文章：</p>
+  
+  <p><a href="http://www.php.net/releases/5_2_0.php">http://www.php.net/releases/5_2_0.php</a></p>
+  
+  <p><a href="http://www.ibm.com/developerworks/cn/opensource/os-php-v525/">http://www.ibm.com/developerworks/cn/opensource/os-php-v525/</a></p>
+  
+  <p><a href="http://www.laruence.com/2008/11/07/586.html">http://www.laruence.com/2008/11/07/586.html</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-04-18T00:00:00+08:00" pubdate data-updated="true">2010-04-18 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2010/04/23/april-24-live-stream-qcon-posts/" title="Next Post: 4月24日QCon现场直播流水帖">4月24日QCon现场直播流水帖 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

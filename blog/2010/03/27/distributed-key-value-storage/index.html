@@ -1,0 +1,255 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>闲谈分布式key-value存储服务nuclear及其他 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="现在很多国内公司都纷纷开始了key-value的nosql存储方式，然而，从什么时候开始key-value会变得这么流行呢？是风靡一时，还是顺应时代的潮流？前后数一数，有豆瓣网的beandb、有新浪的SDD、小道消息还有腾讯的TDB以及人人网的nuclear。再数， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/03/27/distributed-key-value-storage">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">闲谈分布式key-value存储服务nuclear及其他</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-03-27T00:00:00+08:00" pubdate data-updated="true">2010-03-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>现在很多国内公司都纷纷开始了key-value的nosql存储方式，然而，从什么时候开始key-value会变得这么流行呢？是风靡一时，还是顺应时代的潮流？前后数一数，有豆瓣网的beandb、有新浪的SDD、小道消息还有腾讯的TDB以及人人网的nuclear。再数，吹起这阵风的原因是亚马逊的一篇文档，这篇文档讲述了在亚马逊的S3服务中所使用的存储系统dynamo实现方式，但遗憾的是dynamo并不开源。紧随其后，来了位号称是当年亚马逊dynamo的开发人员之一的同志，实现了的cassandra，并且值得表扬的是还将其开源了。与此同时，相同理论下产生的，还有linkedin的voldemort系统。</p>
+  
+  <p><strong>百家争鸣还是百家讲坛</strong></p>
+  
+  <p>分布式存储的目标，是解决大规模数据在数据量不断增长的情况下，让服务更加稳定，更容易扩展。</p>
+  
+  <p>其主要具备以下几个特点：</p>
+  
+  <p>1.高可靠性：系统能够长时间高效运行不迭机。严格的说即使坏了一部分机器也没事。</p>
+  
+  <p>2.可扩展性：可以随意增加减少机器，不用担心额外的数据损失。</p>
+  
+  <p>3.负载均衡：要保证每个节点的数据都是负载均衡的，不出现集中负载到一个节点的情况。</p>
+  
+  <p>4.一致性：因为是分布式的节点，就需要保证节点与节点之间保存数据的一致。</p>
+  
+  <p>鱼与熊掌不可兼得，这几点，往往完成了其中几点就会损失另外一点，要全部达到完美，是一件非常困难的事情。</p>
+  
+  <p>在国内的几个存储来看，基本都是只实现了其中的一部分，再按照自己业务的需求，来加强其中更为关心的建设。</p>
+  
+  <p>beansdb的最终一致性通过哈希树实现快速完整数据同步（短时间内数据可能不一致）；可以在不中断服务的情况下进行容量扩展；异步IO和高性能的KeyValue数据TokyoCabinet：通过N,W,R进行配置（这点其实是dynamo的文档里的方案，并非beansdb所创）；Memcache兼容协议，大量可用客户端。sdd也大同小异。</p>
+  
+  <p>Nuclear完成了这些功能，并且可以适配到mysql\tc\bdb等存储引擎之上。</p>
+  
+  <p>为什么已经有开源的项目，还要去自己实现呢？简单的说，weibo敢用，你敢用吗？</p>
+  
+  <p><strong>分布式key-value存储之所以稳定的原因</strong></p>
+  
+  <p>从设计之初，注定这个系统会很稳定。为什么呢，主要是下面几点：</p>
+  
+  <p>1.dynamo文档中的NWR的观点，可以让节点在损坏的情况下也能稳定如新。基本上这些系统都实现了。</p>
+  
+  <p>2.dynamo文档中的两层数据节点的观点，可以让各节点在大负载的情况下负载均衡。部分实现了这一点。</p>
+  
+  <p>3.底层存储的时候是key-value的读和取，只有一个维度的底层作，对引擎来说，所有的作都是可计算时间的。这一点的意思是说，假设都是MYSQL的底层存储，这个系统只会有一堆的select value form table where key=num这样的查询，而不会出现select * from table where key in(num1,num2,num3....)这样的查询，这两个查询不同的地方在于，如果都是1000次的查询，那么前一条的时间是可以准确预估的，而后一条取决于mysql底层实现的逻辑，而这个逻辑对上层是不可见的。</p>
+  
+  <p>更多不明原因。。。</p>
+  
+  <p><strong>适合使用的范围</strong></p>
+  
+  <p>这套系统也不是放之四海而皆准的东西，如果说您的系统有如下的特征，可以考虑考虑：</p>
+  
+  <p>1.数据插入后不需要各维度的查询。</p>
+  
+  <p>2.数据不需要100%精确立即展示。</p>
+  
+  <p>更多不明特点。</p>
+  
+  <p><strong>总结</strong></p>
+  
+  <p>其实这个系统，在过十亿的数据量下才有意思。<br>
+  本文作者：<br>
+  54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br>
+  个人技术站点:<a href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 cc0cc@126.com 联系到他。</p>
+  
+  <p><strong>[文中所提及的链接]</strong></p>
+  
+  <p>beansDB:http://code..com/p/beansdb/</p>
+  
+  <p>SDD:http://code..com/p/sina-sdd/</p>
+  
+  <p>Nuclear:http://ugc.renren.com</p>
+  
+  <p>S3:http://aws.amazon.com/s3/</p>
+  
+  <p>dynamo:http://s3.amazonaws.com/AllThingsDistributed/sosp/amazon-dynamo-sosp2007.pdf</p>
+  
+  <p>cassandra:http://incubator.apache.org/cassandra/</p>
+  
+  <p>voldemort:http://project-voldemort.com/</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-03-27T00:00:00+08:00" pubdate data-updated="true">2010-03-27 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

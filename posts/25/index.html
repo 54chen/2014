@@ -1,0 +1,676 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="闲话maven M2eclipse不再支持nested Module的原因 2011-02-15 00:00:00 +0800 Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具. 如果你已经有十次输入同样的Ant …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/25">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/02/15/maven-m2eclipse-not-support-nested-module/">闲话maven M2eclipse不再支持nested Module的原因</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-02-15T00:00:00+08:00" pubdate data-updated="true">2011-02-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://www.etiri.com.cn/publish/ccw_gif/2006/36/a14_1t1.jpg" alt="maven m2eclipse nested module"></p>
+  
+  <p>Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具. 如果你已经有十次输入同样的Ant targets来编译你的代码、jar或者war、生成javadocs，你一定会自问，是否有一个重复性更少却能同样完成该工作的方法。Maven便提供了这样一种选择，将你的注意力从作业层转移到项目管理层。Maven项目已经能够知道如何构建和捆绑代码，运行测试，生成文档并宿主项目网页. <br>
+  我严重支持大范围使用maven，但对于内嵌module的支持，我表示怀疑。在使用eclipse进行java开发的时候，要使用maven，m2eclipse插件是必不可少的。之所以在新版本的m2eclipse不再支持nested module的功能了，也许是m2eclipse的人员和我一样有相同的担忧。
+  <strong>1）项目内嵌导致工程脆弱</strong>
+  maven的目标是松耦合项目与项目之间的联系，任何一个项目不用关心所依赖项目的变化和生命周期，关联的项目不用管是不是在你的eclipse workspace中，还是本地的仓库中还是远程的仓库里。但是一旦有了项目的内嵌，这就变成了紧耦合的项目关系，你必须关心子文件夹里的东西，整个项目变得更加脆弱。
+  <strong>2）浪费时间</strong>
+  如果你的项目有无数的内嵌子项目，一旦你修改了其中一个子项目的代码，你不得不全部重新检出、测试、打包，这样的生命周期都必须要花时间来做，不必须的时间浪费在这里了。
+  <strong>3）鼓励的项目反对代码重用</strong>
+  通常情况下，maven鼓励大家把具有功能的模块成单独的项目。如果你的项目有一部分代码需要被别的项目重用，你应该做的事情是把这部分代码重构出来并成为的项目，然后再在两个项目中都添加依赖。这样子做的好处在于，分隔的关系让你的项目之间变得非常清晰。但如果用了maven的项目内嵌模块的功能，东西南北的项目都紧紧地绑在一起，项目将变得越来越难被其他项目再重新调用。
+  <strong>4）ant痛苦的</strong>
+  我们都还记得ant脚本时代的一个build的xml：执行缓慢、很难被其他工具使用、很难合并。
+  <strong>5）m2eclipse的nested module为什么要去掉？</strong>
+  不是去掉了，m2eclipse将子项目嵌套显示变成了扁平的显示。一个多内嵌模块的项目，只需要使用import as maven projects 即可，在workspace中将以扁平的形式显示。</p>
+  
+  <p>如果你有什么不同的见解，欢迎探讨。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/01/25/java-read-properties-files-part2/">[Java]如何优雅读取properties文件-part2</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-25T00:00:00+08:00" pubdate data-updated="true">2011-01-25 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png" alt="java properties">
+  接上part1:<a href="http://www.54chen.com/java-ee/java-read-properties-files-part.html">http://www.54chen.com/java-ee/java-read-properties-files-part.html</a>
+  <strong>从数据流到java.util.Properties</strong>
+  你应该注意到之前提过的方法只是一半的措施：他们都只返回输入数据流，而并没有类似键值对的返回。幸运的是，把数据加载成一个列表很简单（可以实例化java.util.Properties即可）。因为你会发现你在一再地使用它，搞成几个帮助类是有意义的。</p>
+  
+  <p>java的内置方法给classpath加载指定的资源有小小的不同也是一件讨厌的事情，特别是当一些资源名字是硬编码但你现在想换另一个加载的方法时。抽取出来一些东西是有意义的，类似斜杠和点作为命名的分隔符等等。干脆一点，帖出我的properties的处理类，代码在这里下载：http://www.javaworld.com/javaqa/2003-08/01-qa-0808-property.html?page=2#resources</p>
+  
+  <p>［代码略］</p>
+  
+  <p>在loadProperties方法的javadoc里的注释显示这个方法的输入参数要求非常随意：接受资源名字被任何按照原生的方法设计（除了相关的包外尽量使用Class.getResourceAsStream()）的格式化而且使其本地实现标准化。</p>
+  
+  <p>短一点的loadProperties() 公用方法决定了哪个类加载器加载资源。下面的解决方法是合理的但并非完美。你应该考虑使用文章"<a href="http://www.javaworld.com/javaworld/javaqa/2003-06/01-qa-0606-load.html">Find  a Way Out of the ClassLoader Maze</a>"里提到的技术来代替。</p>
+  
+  <p>注意有两个条件编译的常量来控制loadProperties的行为，你可以调整它们来适应你的口味：</p>
+  
+  <p>THROW_ON_LOAD_FAILURE选择loadProperties在找不到资源的情况下是抛异常还是返回空。</p>
+  
+  <p>LOAD_AS_RESOURCE_BUNDLE 选择资源在查找的时候是绑定资源还是给出的classpath资源。</p>
+  
+  <p>将LOAD_AS_RESOURCE_BUNDLE设置为true是不好的，除非你是想通过编译到java.util.ResourceBundle的本地化支持得到好处。而且，java内部缓存了资源绑定，所以你可以避免重复地对同样的资源名字进行磁盘文件读写。</p>
+  
+  <p><strong>更多的事情</strong></p>
+  
+  <p>我有意省略了一个有趣的classpath资源加载方法，ClassLoader.getResources。尽管它不常使用，但其允许许多有用的选项，这些选项在设计高度定制和简单配置的应用程序非常有用。</p>
+  
+  <p>我没有在这文章里讨论ClassLoader.getResources是因为它值得专门写一篇文章。碰巧，这个方法与剩下的取得资源的方法联系紧密：Java.net.URLs。你可以使用他们，因为资源描述符要比classpath资源名字符要更通用。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/01/18/java-read-properties-files-part/">[Java]如何优雅读取properties文件-part1</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-18T00:00:00+08:00" pubdate data-updated="true">2011-01-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://www.themoderndaypirates.com/pirates/wp-content/uploads/2010/10/drink_duke_java.jpg" alt="java properties">
+  Q:在java中如何加载properties文件或者configure文件才是最好的办法呢？<br>
+  A:当你在考虑如何加载java的资源文件的时候，许多选择都会立即闪现在你的头脑中：files, classpath resources, 还有URLs。尽管上述所有的方法都能得到最终需要的效果，但经验表明classpath resources 和 URLs 是到目前为止最靠谱的选择。<br>
+  通常情况下，一个配置文件都有一个异常复杂的结构（比如说xml结构的定义），为了简单，下文里我们以name-value对为例子来讲解（非常类似properties文件的格式）。就算这样，只要你考虑使用inputStream来读取资源文件，你没有理由不采纳下文里提到的办法。</p>
+  
+  <p><strong>一、邪恶的java.io.File</strong>
+  任何没有java背景的人明显的做法是使用原来的files里的足够简单的办法（通过FileInputStream, FileReader,RandomAccessFile）。但是在java应用的布署来说，这是最差的办法。对于追求轻便和不依赖磁盘位置的代码来说，在你的代码中使用绝对文件地址并不是一个很好的方式。使用相对路径看上去是个不错的替代方案，不过不要忘记，是相对于jvm运行时当前的路径。这个相对路径的设置取决于JVM的启动进程，而且会被启动的shell等脚本搞混乱了。如果决定将一些不标准的设置存放依赖最终用户的环境（而且在一些情况下，还未被验证过是否有用户权限），只要换个环境，（比如说EJB或者是WEB应用服务器），你和用户都不能有更多的基于JVM一开始启动时目录的控制。java.io.File是java里最不能跨平台的部分。<br>
+  java模块的做法是将其加入到classpath中去，直接就可用 。考虑EJB jars，Web应用可以打包成war文件，还有其他类似的便利的布署方式。除非你非得用它，还是对其说不吧。</p>
+  
+  <p><strong>二、Classpath resources</strong>
+  抛开上面所说的坏话，让我们来谈谈更好一点的办法：通过classloaders来加载资源。这样做会更好，因为classloaders本来就扮演了一个资源文件同它的在硬盘上或者其他地方实际位置的关系之间的抽象层。<br>
+  比如说，你需要从some/pkg/resource.properties加载一个classpath的资源。使用classpath资源是指把文件打包到jar包里或者是在程序运行前加入到classpath里。你可以通过JVM的参数-classpath在每次程序启动前向classpath中写入，也可以一次性写到<jre home>\classes的位置一直使用。要点是classpath的资源文件布署和java class文件一样，而方便也正是在于此。<br>
+  从java代码里拿some/pkg/resource.properties有许多方法。首先可以用：
+  <blockquote><code>ClassLoader.getResourceAsStream ("some/pkg/resource.properties");<br>
+    Class.getResourceAsStream ("/some/pkg/resource.properties");<br>
+    ResourceBundle.getBundle ("some.pkg.resource");</code></blockquote>
+  此外，如果代码在一个位于some.pkg包的class里，下面的代码也可以很好地工作：
+  <blockquote><code>Class.getResourceAsStream ("resource.properties");
+  </code></blockquote>
+  注意两者在参数上微妙的不同之处。所有的getResourceAsStream方法都使用斜杠分割包名的间隔，而且资源文件要包括扩展名。和resource bundles相比，后者更像是java标识符，用点标识包（并且没有文件名后缀）。这是理所当然的，因为resource bundle（资源绑定）可以不仅仅是properties文件，比如还可以是class文件。<br>
+  稍微有点复杂的地方，java.lang.Class的getResourceAsStream方法的实例方法可以执行相对于包的资源搜索（同样也很灵活，见 http://www.javaworld.com/javaworld/javaqa/2002-11/02-qa-1122-resources.html）。为了区分相对和绝对的资源名字，Class.getResourceAsStream()用斜杠开头表示绝对路径。通常，如果你在代码里不用相对于package的资源的话，没有必要使用这个方法。<br>
+  ClassLoader.getResourceAsStream(), Class.getResourceAsStream(), ResourceBundle.getBundle()之间微小的区别很容易造成混乱。下面这个表记录了他们之间的特点：</jre></p>
+  
+  <p><strong>方法作差异</strong>
+  </p>
+<table cellspacing="0" cellpadding="0" border="1" width="548" style="word-wrap:break-word;word-break:break-all;">
+  <tr>
+                                      <td width="100">Method</td>
+                                      <td width="150">Parameter format</td>
+                                      <td width="150">Lookup failure behavior</td>
+                                      <td width="100">Usage example</td>
+                                   </tr>
+                                   <tr bgcolor="#cccccc"></tr>
+</table>
+  
+  <p>                                    </p>
+<td>ClassLoader.<br>getResourceAsStream()</td>
+                                      <td>"/"-separated names; no leading "/" (all names are absolute)</td>
+                                      <td>Silent (returns null)<br>
+                                      </td>
+                                      <td>this.getClass().getClassLoader()<br>.getResourceAsStream<br>("some/pkg/resource.properties")</td>
+  
+  <p>                                 
+                                   </p>
+<tr bgcolor="#ffffff">
+                                      <td>Class.<br>getResourceAsStream()</td>
+                                      <td>"/"-separated names; leading "/" indicates absolute names; all other names are relative to the class's package</td>
+                                      <td>Silent (returns null)<br>
+                                      </td>
+                                      <td>this.getClass()<br>.getResourceAsStream<br>("resource.properties")</td>
+</tr>
+  
+  <p>                                 
+                                   </p>
+<tr bgcolor="#cccccc">
+                                      <td>ResourceBundle.<br>getBundle()</td>
+                                      <td>"."-separated names; all names are absolute; .properties suffix is implied<br>
+                                      </td>
+                                      <td>Throws unchecked<br> java.util.<br>MissingResource<br>Exception</td>
+</tr>
+  
+  <p>                                    </p>
+<td>ResourceBundle.getBundle<br>("some.pkg.resource")</td>
+                                   
+                                
+  [未完待续]<br>
+  54chen copy from http://www.javaworld.com/javaqa/2003-08/01-qa-0808-property.html?page=1
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/01/11/setting-up-a-socket-policy-file-server/">[Flash]建立socket安全策略文件服务器</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-11T00:00:00+08:00" pubdate data-updated="true">2011-01-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://www.adobe.com/content/dam/Adobe/en/devnet/authors/large/l/logo_flashplayer_lg.jpg.adimg.mw.138.png" alt="flash 安全"></p>
+  
+  <p><strong>前因</strong>
+  Flash被广泛应用于互联网各个方面，是因为它提供了各种各样的特性，其中很重要的一点就是，可以用flash建立TCP连接到服务器然后交换数据。从网络管理员的观点看，一个互联网的服务器能够连接进到内网里来，是一个很恐怖的事情，所以flash搞出来一个安全策略文件。</p>
+  
+  <p><strong>改变</strong>
+  Flash Player 9,0,124,0 版本对这个策略文件进行了两个重大改变：一是所有的端口都需要在策略文件里声明了，以前的版本只需要1024以下的端口需要进行声明；二是可以集中到843端口进行集中式的托管了。Flash Player 9,0,124,0建立的socket连接，会先去请求843端口，如果这个端口没有策略文件，则会去你要连接的端口本身请求策略文件，如果二者都没有，则会被拒绝连接。</p>
+  
+  <p><strong>控制过程解读</strong>
+  1.Flash Player先到请求的843端口请求策略文件，如果没有，进行第2步，如果site-control为none则拒绝掉，如果site-control为all则进行第2步。<br>
+  2.如果在AS中写了Security.loadPolicyFile() ，（<font color="red">它并不是一定生效的，必须在843端口的声明中允许引用其他的策略文件后才能生效</font>），开始读取策略。<br>
+  3.最后一步是检测要连接的端口是否有权限，这步检测要在843端口中声明需要检测端口才会去做，如果843声明了而策略文件里没有，则会被拒绝。</p>
+  
+  <p><code>庆亮哥小更正：请求843和你的指定端口后，会访问当前访问域名下是否有crossdomain.xml文件，如果你的端口不是80，那么请求最多可能三次。</code></p>
+  
+  <p><strong>万能脚本</strong>
+  这个兄弟是adobe的开发人员吧，搞了两个脚本，一个perl的一个是python的，两个都好用，可以很简单地在服务器上搞起来843的守候进程。<br>
+  像下面这样执行就OK了：
+  </p>
+<blockquote><code>./flashpolicyd.pl --file=../policyfile.xml --port=843 <br>
+  ./flashpolicyd.py --file=../policyfile.xml --port=843</code></blockquote>
+  
+  <p><strong>猛击哪里下载</strong>
+  <a href="http://www.adobe.com/content/dotcom/en/devnet/flashplayer/articles/socket_policy_files/_jcr_content/articlePrerequistes/multiplefiles/node_1277808777771/file.res/flashpolicyd_v0.6%5B1%5D.zip">这里</a></p>
+  
+  <p><strong>参考文档：</strong>
+  <a href="http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html">http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html</a></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/01/10/java-httpclient-too-many-open-files/">[java]用httpclient做压力测试时Too Many Open Files的解决办法</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-10T00:00:00+08:00" pubdate data-updated="true">2011-01-10 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://hc.apache.org/images/logos/httpcomponents.png" alt="压力测试httpclient">
+  在工作过程中，用httpclient去压测一个web api，发现压一小段时间就出现了Too many open files。<br>
+  实际上，HttpClient建立Socket时 ，post.releaseConnection()并没有真正关闭连接，而是将该连接提交给 MultiThreadedHttpConnectionManager，等待复用。<br>
+  而http的连接是等待timeout才会自动断开的，所以，当用完系统的句柄后，自然会报Too many open files。
+  <strong>解决办法：</strong>
+  设置post方法的header，增加
+  </p>
+<blockquote><code>post.addRequestHeader( "Connection", "close");<br>
+  client.getParams().setBooleanParameter( "http.protocol.expect-continue" , false );   </code></blockquote>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/24">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <em>25</em>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/26">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

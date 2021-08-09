@@ -1,0 +1,314 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>过去六年在小米搞(wa)错(keng)的几个技术细节 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。 今天再来看，其实有很多细节，当时真的没考虑（现在也是坑）。 细节一 用nginx的proxy_pass代理java上线不平滑 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2016/04/26/mistake-in-six-years">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">过去六年在小米搞(wa)错(keng)的几个技术细节</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2016-04-26T20:34:54+08:00" pubdate data-updated="true">2016-04-26 20:34:54 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。</p>
+  
+  <p>今天再来看，其实有很多细节，当时真的没考虑（现在也是坑）。</p>
+  
+  <p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png"></p>
+  
+  <!--more-->
+  
+  
+  <h2>细节一 用nginx的proxy_pass代理java上线不平滑</h2>
+  
+  <p>一个典型的架子，是nginx+resin/tomcat，然后在nginx上设置weight=1 max_fails=3 等等。</p>
+  
+  <p>在上线的时候，并没有平滑过度的手段（比如修改一下所有nginx配置拿掉一台之类的），所有的上线都是有损的。</p>
+  
+  <p>庆幸的是，移动互联网native的app，断个一两秒的不服务用户感觉不出来。</p>
+  
+  <h2>细节二 监控数据很多，有用的很少</h2>
+  
+  <p>线上故障的情况，不出意外就是一个模块和另一个模块之间发生了什么问题。</p>
+  
+  <p>过去的几年，我们始终没考虑过抽象出来这种数据。</p>
+  
+  <p>我们的监控数据全部是以单独一个模块自身的访问数据（qps、响应时长等），常见的问题是别人说访问你慢，访问老失败，你自己一看数据觉得还挺好。</p>
+  
+  <h2>细节三 为android ios配备了http框架</h2>
+  
+  <p>如果当时没有paoding-rose，我想我们会考虑做成一个标准的tcp server，中间用pb传输到手机。</p>
+  
+  <p>这样做的好处，在应对不好的移动网络的时候，http束手束脚，而tcp却得多。</p>
+  
+  <p>这一点我同样要点名嘲笑一个微博的客户端，在一样的坑里。</p>
+  
+  <h2>细节四 选java又没有语言级专家</h2>
+  
+  <p>如果当时选的是php，我想我们线上的服务在很多年后需要重启的会很少（由于nio或者其他什么泄漏之类的，最后服务就假死了，重启就能管很长时间）。</p>
+  
+  <p>当然了，现在来看，更倾向于选c/c++，至少老老实实的写不会有太大的坑，跑起来也稳定。</p>
+  
+  <h2>细节五 过于依赖关系型数据库mysql</h2>
+  
+  <p>用mysql没有什么错，使用方便，实现业务快。</p>
+  
+  <p>在中期要做多IDC容灾的时候，没办法了，实在是关系太复杂了，做不了。</p>
+  
+  <p>如果当时我们全部有key-value的，将大量的mysql做的事情放在业务代码里来，做多IDC简直是小菜一碟。</p>
+  
+  <p>而多IDC在一个互联网业务来看，上量了之后又是多么重要的一件事情。</p>
+  
+  <h2>细节六 过多使用rabbitmq</h2>
+  
+  <p>在需要削峰的项目上使用mq无可厚非，但是一个项目到处都在用mq的时候，简直是灾难（想一想，一个大系统，调用谁不清楚，谁在调用也不清楚，只知道自己在消费什么对象）。</p>
+  
+  <p>后期的时候，要想知道一个模块正在被谁调用基本无从查询了，因为这些开源的mq，根本不会考虑实际运维中的需求，出发点全部是如何快速的使用。</p>
+  
+  <h2>后记</h2>
+  
+  <p>细节有点多，坑都还在(还有一些坑已经爬出来了就不列在这里了)，依旧有后继的团队和项目在坑里，如果一个项目立志要做大做强，还是一开始就跳出这些坑吧。</p>
+  
+  <hr>
+  
+  <h2>English version</h2>
+  
+  <h2>Something wrong in the pass six years at XIAOMI server</h2>
+  
+  <p>We deployed MILIAO server, which was a sketchy version patched together, in 2010.The first team members that developed at XIAOMI sever-side were less experience in the internet field.</p>
+  
+  <p>The techlonogy frameworks have broadcasted to every team in XIAOMI after all these years.</p>
+  
+  <p>And now for a look at the techlonogy details,it was thought too little at that time.</p>
+  
+  <h2>Detail 1.nginx’s pass_proxy which proxied java server is not graceful when deploying </h2>
+  
+  <p>A typical case is nginx worked with resin or tomcat,and there is a configration like ‘weight=1 max_fails=3’ in nginx.</p>
+  
+  <p>There is not graceful when deploying the service.We dont have any load-balance tool.</p>
+  
+  <p>It is a relief that the users do not know out of service at the native app.</p>
+  
+  <h2>Detail 2.too many traffic data,too less is useful</h2>
+  
+  <p>No surprisingly,there is something wrong between one model call another one when it is out of service online.</p>
+  
+  <p>We have not thought about the model-call traffice data in the pass years.</p>
+  
+  <p>We have too many data like QPS and percentile but all of them are made by the servce be called rather than the caller.</p>
+  
+  <p>One question that frequently comes up was that looks all good by data but not good by the caller.</p>
+  
+  <h2>Detail 3.http framework for Android and Ios</h2>
+  
+  <p>Without pading-rose framework,I think we would develop a tcp server,which transfer data by protobuffer.</p>
+  
+  <p>It is better for Chinese network enviroment,because the tcp one is more free than the http one.</p>
+  
+  <p>The Weibo app is also designed by http.</p>
+  
+  <h2>Detail 4.java without specialist</h2>
+  
+  <p>I think the service online is not need restarted now if we had choose php at that time.</p>
+  
+  <p>Now I prefer c/c++.It is less problem.</p>
+  
+  <h2>Detail 5.depended too much on RDBS</h2>
+  
+  <p>It is not wrong that a project is designed by mysql.It is easy and quick.</p>
+  
+  <p>But it is difficult when you want to take the service to multi-IDC.It is impossible.</p>
+  
+  <p>Mult-IDC is a easy thing,if we have designed the service by key-value store.The logic must be done in project rather than in mysql.</p>
+  
+  <p>This is so important when your project have became greater.</p>
+  
+  <h2>Detail 6.depended too much on rabbitmq</h2>
+  
+  <p>It is doesnot matter that a peakedness project is designed by mq.It must be a disaster that a usual project is designed by mq everywhere.</p>
+  
+  <p>It is difficult to find the calling relationship.</p>
+  
+  <h2>PS</h2>
+  
+  <p>There are too many details.To avoid the wrong thing if your service will be greater.</p>
+  
+  <p><input type="hidden" id="mid" name="mid" value="3968627038512109"></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2016-04-26T20:34:54+08:00" pubdate data-updated="true">2016-04-26 20:34:54 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/arch/">arch</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2016/03/26/my-code/" title="Previous Post: 54chen的程序人生">« 54chen的程序人生</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2016/05/25/a-story-about-sha1withrsa-slash-ras-slash-x509-with-c-slash-c-plus-plus/" title="Next Post: 在c/c++中解决SHA1WithRSA/ras/X509的过程记录">在c/c++中解决SHA1WithRSA/ras/X509的过程记录 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

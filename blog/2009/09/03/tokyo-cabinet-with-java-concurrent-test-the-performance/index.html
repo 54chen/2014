@@ -1,0 +1,384 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>用java并发测试tokyo Cabinet的性能[五四陈手记] - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Tokyo Cabinet 是小人 平林幹雄 开发的一款 DBM 数据库，该数据库读写非常快，哈希模式写入100万条数据只需0.643秒，读取100万条数据只需0.773秒，是 Berkeley DB 等 DBM 的几倍。 编译安装tokyocabinet数据库
+  wget http:// …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/09/03/tokyo-cabinet-with-java-concurrent-test-the-performance">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">用java并发测试tokyo Cabinet的性能[五四陈手记]</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-03T00:00:00+08:00" pubdate data-updated="true">2009-09-03 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>Tokyo Cabinet 是小人 平林幹雄 开发的一款 DBM 数据库，该数据库读写非常快，哈希模式写入100万条数据只需0.643秒，读取100万条数据只需0.773秒，是 Berkeley DB 等 DBM 的几倍。</p>
+  
+  <p>编译安装tokyocabinet数据库
+  </p>
+<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">wget <a href="http://tokyocabinet.sourceforge.net/tokyocabinet-1.4.28.tar.gz" target="_blank">http://tokyocabinet.sourceforge.net/tokyocabinet-1.4.28.tar.gz</a>
+  tar zxvf tokyocabinet-1.4.28.tar.gz<br>
+  cd tokyocabinet-1.4.28/<br>
+  ./configure<br>
+  make<br>
+  make install<br>
+  cd ../</div>
+  http://tokyocabinet.sourceforge.net/javapkg/tokyocabinet-java-1.22.tar.gz
+  
+  <p>下载这个包
+  </p>
+<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">tar zxvf tokyocabinet-java-1.22.tar.gz<br>
+  cd tokyocabinet-java-1.22<br>
+  ./configure<br>
+  make<br>
+  make install</div>
+  install会将libjtokyocabinet.so 和 tokyocabinet.jar放到/usr/lib64下面。
+  
+  <p>将生成的tokyocabinet.jar拖到本地，新建项目，引用这个jar包。使用如下代码：
+  </p>
+<div style="border: 1px dashed #00a0c6; margin: 5px 5px 0px; padding: 3px; background-color: #ffffff;">package test;<br>
+  import java.util.ArrayList;<br>
+  import java.util.HashMap;<br>
+  import java.util.List;<br>
+  import java.util.Map;<br>
+  import java.util.concurrent.atomic.AtomicLong;</div>
+  
+  <p>import tokyocabinet.*;</p>
+  
+  <p>public class BenchMark {</p>
+  
+  <p>public static class Stat {<br>
+  private AtomicLong _count = new AtomicLong(0);<br>
+  private static Stat _instance = new Stat();</p>
+  
+  <p>public static Stat getInstance() {<br>
+  return _instance;<br>
+  }</p>
+  
+  <p>private Stat() {<br>
+  _printer = new RatePrinter(_count);<br>
+  _printer.setDaemon(true);<br>
+  _printer.start();<br>
+  }</p>
+  
+  <p>public void inc() {<br>
+  _count.incrementAndGet();<br>
+  }</p>
+  
+  <p>private RatePrinter _printer;</p>
+  
+  <p>private static class RatePrinter extends Thread {<br>
+  private long _last;<br>
+  private AtomicLong _c;</p>
+  
+  <p>public RatePrinter(AtomicLong c) {<br>
+  _c = c;<br>
+  }</p>
+  
+  <p>@Override<br>
+  public void run() {<br>
+  while (true) {<br>
+  try {<br>
+  long current = _c.get();<br>
+  System.out.println("Rate: " + (current - _last)<br>
+  + " req/s");<br>
+  _last = current;<br>
+  Thread.sleep(1000L);<br>
+  } catch (Throwable e) {<br>
+  e.printStackTrace();<br>
+  }
+  }<br>
+  }
+  }<br>
+  }</p>
+  
+  <p>public static class EchoThread extends Thread {<br>
+  private TDB tdb;<br>
+  public EchoThread(String ip,String port, int in, ThreadGroup group){<br>
+  super(group, "EchoThread-" + in);<br>
+  // create the object<br>
+  tdb = new TDB();</p>
+  
+  <p>// open the database<br>
+  if(!tdb.open("casket.tct", TDB.OWRITER | TDB.OCREAT)){<br>
+  int ecode = tdb.ecode();<br>
+  System.err.println("open error: " + tdb.errmsg(ecode));<br>
+  }
+  }</p>
+  
+  <p>@Override<br>
+  public void run() {<br>
+  int index = 0;<br>
+  while (true) {<br>
+  try {</p>
+  
+  <p>String pkey = new Long(tdb.genuid()).toString();<br>
+  Map cols = new HashMap();<br>
+  cols.put("name", "mikio"+index);<br>
+  cols.put("age", "30");<br>
+  cols.put("lang", "ja,en,c");<br>
+  if(!tdb.put(pkey, cols)){<br>
+  int ecode = tdb.ecode();<br>
+  //System.err.println("put error: " + tdb.errmsg(ecode));<br>
+  }</p>
+  
+  <p>//client.insert("Table1", "name"+index, "Standard1:name", ("name"+index).getBytes("UTF-8"), System.currentTimeMillis(), true);<br>
+  //client.get_column("Table1", "name0", "Standard1:name");<br>
+  index ++;<br>
+  Stat.getInstance().inc();<br>
+  } catch (Throwable e) {<br>
+  e.printStackTrace();<br>
+  break;<br>
+  } finally {<br>
+  // close the database<br>
+  if(!tdb.close()){<br>
+  int ecode = tdb.ecode();<br>
+  //System.err.println("close error: " + tdb.errmsg(ecode));<br>
+  }</p>
+  
+  <p>}<br>
+  }
+  }<br>
+  }</p>
+  
+  <p>/**<br>
+  * @param args<br>
+  * @throws TTransportException<br>
+  */<br>
+  public static void main(String[] args){<br>
+  if (args.length != 1) {<br>
+  System.out<br>
+  .println("Usage: Benchmark ");<br>
+  System.exit(1);<br>
+  }</p>
+  
+  <p>String ip = args[0];<br>
+  String port = args[0];</p>
+  
+  <p>Integer concurrent = Integer.valueOf(args[0]);<br>
+  System.out.println("ip = "+ip+",port = "+port+",concurrent = " + concurrent);</p>
+  
+  <p>ThreadGroup group = new ThreadGroup("Benchmark");<br>
+  List<br>
+  threads = new ArrayList<br>
+  ();<br>
+  for (int x = 0; x &lt; concurrent; ++x) {<br>
+  Thread t =new EchoThread(ip,port, x, group);<br>
+  threads.add(t);<br>
+  t.start();<br>
+  }
+  }</p>
+  
+  <p>}
+  运行结果反馈：
+  </p>
+<table border="1" cellspacing="0">
+  <tbody>
+  <tr>
+  <th>并发</th>
+  <th> 随机结果</th>
+  <th> 起始文件大小</th>
+  <th> 运行中机器情况</th>
+  </tr>
+  <tr>
+  <td>1</td>
+  <td>Rate: 255153 req/s</td>
+  <td>517k</td>
+  <td>load average: 0.53, 0.39, 1.30</td>
+  </tr>
+  <tr>
+  <td>5</td>
+  <td>Rate: 505795 req/s - Rate: 909310 req/s</td>
+  <td>517k</td>
+  <td>load average: 3.89, 1.93, 1.65 Mem:   8195328k total,  8098204k used,    97124k free,  6685284k buffersSwap:  4000144k total,      148k used,  3999996k free,    36852k cached</td>
+  </tr>
+  <tr>
+  <td>10</td>
+  <td>Rate: 658089 req/s - Rate: 907266 req/s</td>
+  <td>517k</td>
+  <td>load average: 5.34, 2.30, 1.81  Mem:   8195328k total,  8112984k used,    82344k free,  6703212k buffersSwap:  4000144k total,      148k used,  3999996k free,    36800k cached</td>
+  </tr>
+  <tr>
+  <td>20</td>
+  <td>Rate: 694200 req/s - Rate: 1003093 req/s</td>
+  <td>517k</td>
+  <td>load average: 9.40, 6.71, 3.62 Mem:   8195328k total,  7423824k used,   771504k free,  6684268k buffersSwap:  4000144k total,      148k used,  3999996k free,    36784k cached</td>
+  </tr>
+  </tbody>
+</table>
+  <a class="external text" title="http://tokyocabinet.sourceforge.net/benchmark.pdf" rel="nofollow" href="http://tokyocabinet.sourceforge.net/benchmark.pdf">官方数据</a>
+  <ul>
+  	<li> 70W req/s 基本上是一个的值了</li>
+  </ul>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-03T00:00:00+08:00" pubdate data-updated="true">2009-09-03 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

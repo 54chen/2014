@@ -1,0 +1,374 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Rabbitmq Java Client Api详解 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="AMQP AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。 基础概念快速入门 每个rabbitmq-server叫做一个Broker，等着tcp连接进入。
+  在rabbitmq-server进程内有Exchange，定义了这个消息的发送类型。（一对多、直连、 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/08/27/rabbitmq-java-client-apixiang-jie">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Rabbitmq Java Client Api详解</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-08-27T15:33:38+08:00" pubdate data-updated="true">2014-08-27 15:33:38 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg"></p>
+  
+  <h1>AMQP</h1>
+  
+  <ul>
+  <li>AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。</li>
+  </ul>
+  
+  
+  <h1>基础概念快速入门</h1>
+  
+  <ul>
+  <li>每个rabbitmq-server叫做一个Broker，等着tcp连接进入。</li>
+  <li>在rabbitmq-server进程内有Exchange，定义了这个消息的发送类型。（一对多、直连、多对多等等）</li>
+  <li>Queue是进程内的逻辑队列，有多个，有名字。</li>
+  <li>Binding联系Exchane与Queue。</li>
+  <li>Routing key由生产者指定。Binding key由消费者指定。二者联合决定一条消息的来去。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h1>java client api</h1>
+  
+  <h2>连接</h2>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  <span class="line-number">4</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">ConnectionFactory factory = new ConnectionFactory();
+  </span><span class="line">factory.setHost(hostName);
+  </span><span class="line">Connection conn = factory.newConnection();
+  </span><span class="line">Channel channel = conn.createChannel();</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>以上是得到一个rabbitmq连接最最基础的代码，当然了，还可以设置一些诸如用户名密码的事情。</li>
+  <li>最后这个channel就可以用来收和发消息了。</li>
+  </ul>
+  
+  
+  <h2>消息者线程池</h2>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">ExecutorService es = Executors.newFixedThreadPool(20);
+  </span><span class="line">Connection conn = factory.newConnection(es);</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>消费者时使用，上述自动开了一20个线程的池来搞。</li>
+  </ul>
+  
+  
+  <h2>地址数组</h2>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">Address[] addrArr = new Address[]{ new Address(hostname1, portnumber1)
+  </span><span class="line">                                 , new Address(hostname2, portnumber2)};
+  </span><span class="line">Connection conn = factory.newConnection(addrArr);</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>上述代码如果连hostname1失败了就去hostname2。</li>
+  <li>factory.newConnection()会触发这个检测。</li>
+  </ul>
+  
+  
+  <h2>声明exchange与queue</h2>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">channel.exchangeDeclare(exchangeName, "direct", true);
+  </span><span class="line">String queueName = channel.queueDeclare().getQueue();
+  </span><span class="line">channel.queueBind(queueName, exchangeName, routingKey);</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>channel.exchangeDeclare 参数有 交换机名字  类型  是否持久化  不使用时是否自动删除 是否是内部的（不能被客户端使用） 其他参数</li>
+  <li>channel.queueDeclare 参数有 queue名字 是否持久化 独占的queue（仅供此连接） 不使用时是否自动删除 其他参数</li>
+  <li>channel.queueBind 参数有 queue名字 交换机名字 此次绑定使用的路由关键字  其他参数</li>
+  </ul>
+  
+  
+  <h2>发出消息</h2>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">byte[] messageBodyBytes = "Hello, world!".getBytes();
+  </span><span class="line">channel.basicPublish(exchangeName, routingKey, null, messageBodyBytes);</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>channel.basicPublish 参数有 要发出的交换机名字  路由关键字 是否强制（设置为true时，找不到收的人时可以通过returnListener返回）  是否立即（其实rabbitmq不支持） 其他属性 消息主体</li>
+  </ul>
+  
+  
+  <h2>线程安全</h2>
+  
+  <ul>
+  <li>Channel是线程好全的，但是最好是每个线程里用自己的Channel，因为在单个Channel里排队是有可能慢一些的。</li>
+  </ul>
+  
+  
+  <h2>最简单的办法消费消息</h2>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  <span class="line-number">4</span>
+  <span class="line-number">5</span>
+  <span class="line-number">6</span>
+  <span class="line-number">7</span>
+  <span class="line-number">8</span>
+  <span class="line-number">9</span>
+  <span class="line-number">10</span>
+  <span class="line-number">11</span>
+  <span class="line-number">12</span>
+  <span class="line-number">13</span>
+  <span class="line-number">14</span>
+  <span class="line-number">15</span>
+  <span class="line-number">16</span>
+  <span class="line-number">17</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">boolean autoAck = false;
+  </span><span class="line">channel.basicConsume(queueName, autoAck, "myConsumerTag",
+  </span><span class="line">     new DefaultConsumer(channel) {
+  </span><span class="line">         @Override
+  </span><span class="line">         public void handleDelivery(String consumerTag,
+  </span><span class="line">                                    Envelope envelope,
+  </span><span class="line">                                    AMQP.BasicProperties properties,
+  </span><span class="line">                                    byte[] body)
+  </span><span class="line">             throws IOException
+  </span><span class="line">         {
+  </span><span class="line">             String routingKey = envelope.getRoutingKey();
+  </span><span class="line">             String contentType = properties.contentType;
+  </span><span class="line">             long deliveryTag = envelope.getDeliveryTag();
+  </span><span class="line">             // (process the message components here ...)
+  </span><span class="line">             channel.basicAck(deliveryTag, false);
+  </span><span class="line">         }
+  </span><span class="line">     });</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>一个Channel一个Consumer。</li>
+  <li>channel.basicAck 回发ACK 参数 tag 是否多个。</li>
+  </ul>
+  
+  
+  <h2>零碎</h2>
+  
+  <ul>
+  <li>channel.basicQos 指定服务质量设置 参数 最大的投送字节数  最大的投送消息数量  设置是否要应用到整个channel（而不是一个消费者）。</li>
+  <li>factory.setAutomaticRecoveryEnabled(true) 网络有问题时，好后可自动恢复设置。</li>
+  <li>cf.setRequestedHeartbeat(5) 设置心跳时间。</li>
+  <li>exchange type可用的值：direct topic headers fanout。</li>
+  <li>exchange的类型有一个default，basicPublish没有指定时使用，而且，如果routingKey在指定绑定的时候，会去到绑定的exchange。</li>
+  <li>channel.queueDeclare().getQueue() 得到的是一个随机queue，断开连接后即删除。</li>
+  <li>当exchange为direct的时候routingKey与bindingKey必须完全一致才能消费消息。</li>
+  </ul>
+  
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-08-27T15:33:38+08:00" pubdate data-updated="true">2014-08-27 15:33:38 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/amqp/">amqp</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/" title="Previous Post: 小米互娱招java工程师">« 小米互娱招java工程师</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/11/04/network-load-test/" title="Next Post: 网络IO型程序压力测试要点">网络IO型程序压力测试要点 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

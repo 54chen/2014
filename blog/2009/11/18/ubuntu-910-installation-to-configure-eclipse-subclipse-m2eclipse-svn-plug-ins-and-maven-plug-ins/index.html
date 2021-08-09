@@ -1,0 +1,241 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Ubuntu 9.10安装配置eclipse、subclipse、m2eclipse(svn插件和maven插件) - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="ntfs硬盘安装ubuntu 9.10方案见：
+  x200 ntfs硬盘安装ubuntu9.10正式版手记
+  eclispe 3.51安装：
+  sudo apt-get install eclipse
+  整完会在应用程序中多出来一项“编程”。 此时的eclipse是以自带的jre来运行的， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/11/18/ubuntu-910-installation-to-configure-eclipse-subclipse-m2eclipse-svn-plug-ins-and-maven-plug-ins">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Ubuntu 9.10安装配置eclipse、subclipse、m2eclipse(svn插件和maven插件)</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-18T00:00:00+08:00" pubdate data-updated="true">2009-11-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>ntfs硬盘安装ubuntu 9.10方案见：
+  <a rel="bookmark" href="http://www.54chen.com/830-x200-ntfs-hard-disk-to-install-the-official-version-of-notes-from-ubuntu910/">x200 ntfs硬盘安装ubuntu9.10正式版手记</a>
+  eclispe 3.51安装：
+  </p>
+<blockquote>sudo apt-get install eclipse</blockquote>
+  整完会在应用程序中多出来一项“编程”。
+  
+  <p>此时的eclipse是以自带的jre来运行的，后面的maven插件会要求eclipse在jdk里运行，而不是jre里，所以再安装一下jdk:
+  </p>
+<blockquote>sudo apt-get install sun-java6-jdk</blockquote>
+  这样，jdk会安装到/usr/lib/jvm/java-6-sun
+  
+  <p>然后修改eclipse.ini
+  </p>
+<blockquote>sudo vim /usr/lib/eclipse/eclipse.ini</blockquote>
+  在-vmargs上一行加入：
+  <blockquote>-vm<br>
+  /usr/lib/jvm/java-6-sun-1.6.0.15/bin</blockquote>
+  
+  <p>(有回车)
+  同时选择一下window-&gt;preferences-&gt;java-&gt;installed jres增加对应目录的jre</p>
+  
+  <p>然后开始 Help-&gt;install new software</p>
+  
+  <p>subclipse http://subclipse.tigris.org/update_1.2.x</p>
+  
+  <p>安装好subclipse。subclipse提供了svn的支持。</p>
+  
+  <p>然后同样安装m2eclipse插件：</p>
+  
+  <p>m2eclipse比较麻烦，需要依次安装的有：
+  </p>
+<blockquote>emf http://download.eclipse.org/modeling/emf/updates/releases/</blockquote>
+  
+  <p>cdt http://download.eclipse.org/tools/cdt/releases/new</p>
+  
+  <p>wtp http://download.eclipse.org/webtools/updates</p>
+  
+  <p>ajdt http://download.eclipse.org/tools/ajdt/34/update</p>
+  
+  <p>zest or GEF http://download.eclipse.org/tools/gef/updates/releases/</p>
+  
+  <p>mylyn http://download.eclipse.org/tools/mylyn/update/e3.4
+  最后才是m2eclipse:
+  </p>
+<blockquote>http://m2eclipse.sonatype.org/update/</blockquote>
+  注意，在安装过程中，有些update的url里有不止一个版本的选项，注意适当选取。
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-18T00:00:00+08:00" pubdate data-updated="true">2009-11-18 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/sheng-huo-bei-fen/">生活备份</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/11/17/x200-ntfs-hard-disk-to-install-the-official-version-of-notes-from-ubuntu910/" title="Previous Post: x200 ntfs硬盘安装ubuntu9.10正式版手记">« x200 ntfs硬盘安装ubuntu9.10正式版手记</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/11/19/ubuntu-910-hangs-under-linuxqq-regular-solution/" title="Next Post: ubuntu 9.10下linuxqq经常挂掉的解决方案">ubuntu 9.10下linuxqq经常挂掉的解决方案 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

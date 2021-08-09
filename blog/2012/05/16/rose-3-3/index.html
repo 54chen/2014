@@ -1,0 +1,264 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>rose手册第三章三节：controller层：ErrorHandler支持 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="3.3.1 ErrorHandler的作用
+  一般来说传统的编程都会到处去try，特别是java里，try来try去的（如果你用erlang一定就知道，已经知道的可能性，怎么能叫异常？都try了还是让它崩了算了。。。）。
+  如果打开你的项目，每个java文件中的代码都有一堆的try， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/05/16/rose-3-3">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">rose手册第三章三节：controller层：ErrorHandler支持</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-05-16T00:00:00+08:00" pubdate data-updated="true">2012-05-16 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose">
+  <strong>
+  3.3.1 ErrorHandler的作用</strong>
+  一般来说传统的编程都会到处去try，特别是java里，try来try去的（如果你用erlang一定就知道，已经知道的可能性，怎么能叫异常？都try了还是让它崩了算了。。。）。<br>
+  如果打开你的项目，每个java文件中的代码都有一堆的try，那这时候就是ErrorHandle上阵的时候了。<br>
+  ErrorHanle致力于：统一捕捉和处理各种异常，可区分对待和返回；统一的出错体验。<br>
+  非常类似做web开发时的500统一出错页面这样的东东。
+  <strong>3.3.2 示例</strong></p>
+  
+  <p></p>
+<blockquote>/**<br>
+   * @author chenzhen@xiaomi.com<br>
+   * 2010-12-1 <br>
+   */</blockquote>
+  
+  <p>package com.chen.controllers;</p>
+  
+  <p>import net.paoding.rose.web.ControllerErrorHandler;<br>
+  import net.paoding.rose.web.Invocation;</p>
+  
+  <p>public class ErrorHandler implements ControllerErrorHandler {</p>
+  
+  <p>    public Object onError(Invocation inv, Throwable ex) throws Throwable {</p>
+  
+  <p>        // TODO logger.error("handle err:", ex);</p>
+  
+  <p>        return "@error";<br>
+      }<br>
+  }</p>
+  
+  <p>这是这么简单，不用怀疑！</p>
+  
+  <p><strong>3.3.3 放在哪里才能生效？</strong>
+  放在controllers目录下，和controller们在一起（幸福快乐地生活）。<br>
+  一般来讲，ErrorHandler都是用在web项目里，在最快层起作用。<br>
+  所有的方法都可以尽情地向处throws Exception了。<br>
+  不需要再try了。</p>
+  
+  <p></p>
+<blockquote>@Path("")<br>
+  public class HelloController {<br>
+      @Get("")<br>
+      public String index2() throws Exception {<br>
+          return "@hello world";<br>
+      }<br>
+  }</blockquote>
+  
+  <p><strong>
+  3.3.3 有用的例子: 不同的异常类型做不用的事情</strong></p>
+  
+  <p></p>
+<blockquote>/**<br>
+   * @author chenzhen@xiaomi.com<br>
+   * 2010-12-1 <br>
+   */</blockquote>
+  
+  <p>package com.chen.controllers;</p>
+  
+  <p>import net.paoding.rose.web.ControllerErrorHandler;<br>
+  import net.paoding.rose.web.Invocation;</p>
+  
+  <p>public class ErrorHandler implements ControllerErrorHandler {</p>
+  
+  <p>    public Object onError(Invocation inv, Throwable ex) throws Throwable {</p>
+  
+  <p>        // TODO logger.error("handle err:", ex);<br>
+          if (ex instanceof RuntimeException) {<br>
+              return "@runtime";<br>
+          }<br>
+          return "@error";<br>
+      }<br>
+  }</p>
+  
+  <p>文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br>
+  文档持续修改版本在 <a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_3">https://github.com/XiaoMi/rose/tree/master/chapter_3_3</a>。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-05-16T00:00:00+08:00" pubdate data-updated="true">2012-05-16 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2012/05/19/rose-3-4/" title="Next Post: rose手册第三章四节：controller层：自定义http参数支持">rose手册第三章四节：controller层：自定义http参数支持 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

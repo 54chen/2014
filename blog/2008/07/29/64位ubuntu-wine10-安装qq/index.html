@@ -1,0 +1,251 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>64位ubuntu wine1.0 安装qq - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="环境比较特殊 注意是64的i386就不要看了
+  {安装wine:}
+  1.添加签名
+  wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -
+  2.更新WINE源
+  sudo wget http:// …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/07/29/64%E4%BD%8Dubuntu-wine10-%E5%AE%89%E8%A3%85qq">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">64位ubuntu wine1.0 安装qq</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true">2008-07-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>环境比较特殊 注意是64的i386就不要看了<br>
+  {安装wine:}<br>
+  1.添加签名<br>
+  wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -<br>
+  2.更新WINE源<br>
+  sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/hardy.list -O /etc/apt/sources.list.d/winehq.list<br>
+  3.更新软件包<br>
+  sudo apt-get update<br>
+  4.安装WINE<br>
+  sudo apt-get install wine</p>
+  
+  <p>{设置wine:}</p>
+  
+  <p>Wine快速设置 deb包 for amd64的下载地址是：</p>
+  
+  <p><a href="http://ubuntu-tweak.code.com/files/wine-ubuntu_amd64.deb">http://ubuntu-tweak.code.com/files/wine-ubuntu_amd64.deb</a></p>
+  
+  <p>顺便再加上之前的for i386的：</p>
+  
+  <p><a href="http://ubuntu-tweak.code.com/files/wine-ubuntu.deb">http://ubuntu-tweak.code.com/files/wine-ubuntu.deb </a>
+  {使用QQ}
+  <span class="postbody"><span style="font-weight: bold;">Wine的版本</span>:<br>
+  Wine 1.0 (默认中文补丁,有打过补丁的Wine1.0下载,见下面)<br>
+  windowssux已经把8.04-32bits的deb包(包括中文补丁)做出来了，在<a class="postlink" href="http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/" target="_blank">http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/</a>。<br>
+  登录的用户名和密码在<a class="postlink" href="http://forum.ubuntu.org.cn/viewtopic.php?t=9685" target="_blank">http://forum.ubuntu.org.cn/viewtopic.php?t=9685</a>。</span></p>
+  
+  <p><span style="font-weight: bold;">Wine的注册表</span>
+  修改过的内容如下,请给这个文件保存成QQ2007.reg<br>
+  REGEDIT4<br>
+  [HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe]<br>
+  "Version"="vista"<br>
+  [HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe\DllOverrides]<br>
+  "riched20"="native"<br>
+  "riched32"="native"</p>
+  
+  <p>并使用下列命令导入<br>
+  #regedit QQ2007.reg</p>
+  
+  <p><span style="font-weight: bold;">替换DLL文件</span>
+  需要的 dll:: mfc42.dll msvcp60.dll 给上面的这二个dll放到~/.wine/drive_c/windows/system32/目录中<br>
+  下面下载的那个qq2007beta1kb5_0.0.2007_x86.tgz中也有,也可以从windows的系统中找</p>
+  
+  <p><span style="font-weight: bold;">安装方法</span>
+  下载:<a class="postlink" href="http://linuxfire.com.cn/%7Ehuahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz" target="_blank">http://linuxfire.com.cn/~huahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz</a>
+  解压后,只使用这个中的那个QQ,原wine之类的配置文件不要了.</p>
+  
+  <p><span style="font-weight: bold;">运行</span>
+  可以建一个下面这样的快捷方式,注意修复你的路径为你自己的.<br>
+  env WINEPREFIX="/home/fukai/.wine" wine "Z:\home\fukai\qq2007beta1kb5\QQ\QQ.exe"</p>
+  
+  <p><span style="font-weight: bold;">在安装和使用程序时的注意事项</span>
+  现发现的bug有快捷键不能用,视频有时会死机,传文件之类都非常正常</p>
+  
+  <p>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝<br>
+  有空的时候再研究下一键安装 linux qq<br>
+  为今天听到的马化腾说linux qq是假消息的消息默哀</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true">2008-07-29 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/07/28/intelligent-dns-configuration-process/" title="Previous Post: 智能DNS配置过程">« 智能DNS配置过程</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/07/29/ubuntu-710-install-wine-records/" title="Next Post: ubuntu 7.10 安装wine记录">ubuntu 7.10 安装wine记录 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

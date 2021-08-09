@@ -1,0 +1,262 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>有关socket Read - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="实际开发中，网络程序最可能遇到的就是数据没收到、收到错误数据这样诡异的问题.
+  很多时候，都是由于对socket read的细节理解的不一致，导致了程序前后的矛盾。
+  下面详细阐述整个read的过程。 一、从c的角度 ssize_t read(int fd,void *buf,size_t …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/11/18/about-socket-read">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">有关socket Read</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-11-18T20:37:49+08:00" pubdate data-updated="true">2014-11-18 20:37:49 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://chen54.b0.upaiyun.com/20140710/logo.png"></p>
+  
+  <ul>
+  <li>实际开发中，网络程序最可能遇到的就是数据没收到、收到错误数据这样诡异的问题.</li>
+  <li>很多时候，都是由于对socket read的细节理解的不一致，导致了程序前后的矛盾。</li>
+  <li>下面详细阐述整个read的过程。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h1>一、从c的角度</h1>
+  
+  <blockquote><p>ssize_t read(int fd,void *buf,size_t nbyte)</p></blockquote>
+  
+  <ul>
+  <li>read函数是负责从fd中读取内容.</li>
+  <li>当读成功时, read返回实际所读的字节数</li>
+  <li><p>如果返回的值是0 表示已经读到文件的结束了,小于0表示出现了错误。</p></li>
+  <li><p>可以同时检查errno:</p></li>
+  <li>如果错误为EINTR(值为4)说明读是由中断引起的</li>
+  <li>如果是ECONNREST表示网络连接出了问题</li>
+  </ul>
+  
+  
+  <h1>二、从协议角度</h1>
+  
+  <ul>
+  <li>TCP协议是面向流的</li>
+  <li>read和write调用的返回值往往小于参数指定的字节数。</li>
+  <li>对于read调用，如果接收缓冲区中有20字节，请求读100个字节，就会返回20。</li>
+  <li>对于write调用，如果请求写100个字节，而发送缓冲区中只有20个字节的空闲位置，那么write会阻塞，直到把100个字节全部交给发送缓冲区才返回，但如果socket文件描述符有O_NONBLOCK标志，则write不阻塞，直接返回20。</li>
+  </ul>
+  
+  
+  <h1>三、从java的角度</h1>
+  
+  <blockquote><p>SocketChannel sc = (SocketChannel) sk.channel();
+  int i = sc.read(buff)</p></blockquote>
+  
+  <ul>
+  <li>SocketChannel.read 有数据时返回数据长度。</li>
+  <li>如果返回的值是0 表示已经读到文件的结束了,小于0表示出现了错误（继承自C）。</li>
+  <li>而linux的函数是针对文件fd出现的定义，如果是网络时，EOF的界限十分模糊。</li>
+  </ul>
+  
+  
+  <h1>四、从kernel的角度</h1>
+  
+  <blockquote><p>static int unix_stream_recvmsg(struct kiocb <em>iocb, struct socket </em>sock,
+              struct msghdr *msg, size_t size,
+              int flags)</p></blockquote>
+  
+  <ul>
+  <li><a href="http://blog.chinaunix.net/uid-23629988-id-3035613.html">http://blog.chinaunix.net/uid-23629988-id-3035613.html</a></li>
+  <li>这篇文章的主人详细分析了整个过程。</li>
+  <li>当网卡上没有数据时，返回为0。</li>
+  <li>另外在对端单独close write或者自己单独close read时，也返回0。</li>
+  <li>当数据取完了，且出现意外的系统调用，比如网卡故障，返回－1。</li>
+  </ul>
+  
+  
+  <h1>五、从java nio的框架角度</h1>
+  
+  <ul>
+  <li>结合java nio的selector机制，要对read为0的情况进行统计处理。</li>
+  <li>同一源过多的read为0，意味着网络不好，或者恶意攻击。</li>
+  </ul>
+  
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-11-18T20:37:49+08:00" pubdate data-updated="true">2014-11-18 20:37:49 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/socket/">socket</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/11/04/network-load-test/" title="Previous Post: 网络IO型程序压力测试要点">« 网络IO型程序压力测试要点</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/12/11/how-to-big-network/" title="Next Post: 如何做一个快速运转的大规模网络开发公司">如何做一个快速运转的大规模网络开发公司 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

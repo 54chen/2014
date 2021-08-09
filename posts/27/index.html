@@ -1,0 +1,727 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2010-12-05 2010-12-05 00:00:00 +0800 RT 李靖威 : JavaScript和Java的关系，就像雷锋和雷峰塔一样。 #
+  latin1写入的utf8内容在java纯unicode读取兼容的办法，同步这张表，在导入的时候， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/27">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/11/30/squid-tcp-miss-200/">Squid缓存失效之谜：一步步提高squid缓存命中率办法记录</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-30T00:00:00+08:00" pubdate data-updated="true">2010-11-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>手里有个前端自己做cdn的服务器，结果发现进出流量相等，这是个诡异的事情，因为一般来说，做前端缓存的机器，流量基本上很长时间里都是出多进少的。<br>
+  一开始的时候，是nginx做的nginx_cache，发现进出流量相等后，换上了squid 3.0，使用命令：<br>
+  squidclient -p 8088 mgr:info （启在8088）<br>
+  发现如图所示的几个命中率，相当低下，一般的WEB服务器缓存30－60％是正常的，而CDN作用的应该说80%以上才是正常的。
+  <img src="http://img03.taobaocdn.com/imgextra/i3/T1nU8SXdFrXXcxpD.U_015909.jpg" alt="http://img03.taobaocdn.com/imgextra/i3/T1nU8SXdFrXXcxpD.U_015909.jpg">
+  刚启动squid的时候，个人认为是因为缓存文件还没有拖动到前端来，所以是正常的，但结果过了一天后，还是没有看到进流量松动。</p>
+  
+  <p>第二天来，硬盘已经过了10G了，还是不行。通过cat access.log来看，cat access.log|gawk '{print $4}'|sort|uniq -c|sort -nr<br>
+  发现TCP_MISS/200相当的多，再看流量图，进出还是没有变化。杯具。</p>
+  
+  <p>于是乎，想到了直接tail -f access.log，看看究竟都有什么东西在访问。</p>
+  
+  <p>一条接一条的xxx.jpg?unid=1111触动了我（公司用来做用户行为分析的参数），就这样白花花的浪费了缓存。</p>
+  
+  <p><strong>解决方案：</strong>
+  幸好，squid前面，还有一层nginx，于是考虑在nginx上做转发，将所有的xxx.jpg?xx=xx全部转到 xxx.jpg去，过滤掉url中的参数。尝试了几个不行，内置的参数$url $request_url都不可行。<br>
+  只有一招利用403来跳转的可行。</p>
+  
+  <p></p>
+<blockquote>   location ~* (.jpg$)|(.png$)|(.gif$)|(.mp3$)|(.txt$){<br>
+          proxy_pass http://squid;<br>
+          proxy_redirect default;<br>
+          if ($is_args)<br>
+          {<br>
+              return 403;<br>
+              error_page 403 =200 $scheme://$host$uri;<br>
+          }<br>
+  </blockquote>
+  
+  <p>重启nginx，看到了进流量图明显大幅度下降。</p>
+  
+  <p><img src="http://img02.taobaocdn.com/imgextra/i2/T14F8TXolXXXXOWxsV_020704.jpg" alt="http://img02.taobaocdn.com/imgextra/i2/T14F8TXolXXXXOWxsV_020704.jpg"></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/11/24/venture-company-tech-ref/">创业公司技术选型参考</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-24T00:00:00+08:00" pubdate data-updated="true">2010-11-24 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg" alt="54chen-创业公司选择技术">
+  <strong>java推荐框架</strong>
+  web项目来说，spring、struts是必选，当然有更加好用的，推荐来自疱丁分词作者王志亮在人人网的rose框架，使用上手快，配置少，是创业公司java必备。</p>
+  
+  <p><strong>php框架推荐</strong>
+  zend framework，或者直接写个简单的框架，php的框架更加倾向去规范代码，让所有项目在新人加入时快速上手。</p>
+  
+  <p><strong>代码版本控制</strong>
+  subversion是必选工具，简单易学，git也开始流行，也是可选方案。</p>
+  
+  <p><strong>jar包依赖管理</strong>
+  这是针对java项目，还在使用ant的朋友，可以考虑换换了，特别的，如果你的公司在很快扩张的时候，这个选择能让未来避开依赖混乱，遇事集体更新困难的困境。</p>
+  
+  <p><strong>公共代码建立</strong>
+  长期可遇见的公共部分，比如用户信息获取，memcache管理，毋庸置疑地需要提供公共的方法，越早越好。</p>
+  
+  <p><strong>代码可扩展</strong>
+  这就考量上面选择框架的气候是不是合理了，这里可扩展是指，在负载越来越大的时候，要能很轻易配置读写分离，rose在这方面做得很优雅，只需要简单配置就梦把看的代码用上新的数据源。</p>
+  
+  <p><strong>code review</strong>
+  有许多好用的系统，比如Review Board等，让参与者都知道修改，并且在最早期发现问题。</p>
+  
+  <p><strong>bug系统</strong>
+  jira、Bugfree等等，用系统控制流程。</p>
+  
+  <p><strong>培训体系</strong>
+  技术需要交流才会有进步，团体的进步才是真的进步。所以尽早建立起内部的培训体系非常有必要，同时也是活跃团体气氛的很好方法，其频度控制在两周一次最好。</p>
+  
+  <p><strong>知识管理</strong>
+  php+mysql的mediawiki是首选，每个优秀的工程师，都必须首先是一个完全熟悉wiki语法擅长写wiki的工程师。早年搞了一个把mysql换成postgresql的方案见　<a href="http://www.54chen.com/php-tech/mediawiki-pgsql.html">http://www.54chen.com/php-tech/mediawiki-pgsql.html</a></p>
+  
+  <p><strong>项目管理</strong>
+  从项目初期的demo设计&gt;产品设计&gt;技术架构&gt;技术方案&gt;技术实施&gt;测试&gt;理程碑&gt;上线，每一环都需要详细控制，实施Scrum或者是Scrum变体，都是不错的方案。任由团队想到哪里做到哪里的结果是无法预估商业产品的出炉。</p>
+  
+  <p><strong>流量监控</strong>
+  流量监控比较出名的有Cacti、ganglia，安装上ganglia要复杂一点点，尽量用yum安装，ganglia的集群和数据功能相对cacti要强大一点。</p>
+  
+  <p><strong>服务器作系统</strong>
+  daxuxu同学推荐debian，不过我的工作环境基本都是centOS，用习惯了一个很难改变，个人感觉debian系统的环境相对复杂一些。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/11/15/ubuntu-empathy-msn-bug/">ubuntu下Empathy十月起无法登录msn的解决办法</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-15T00:00:00+08:00" pubdate data-updated="true">2010-11-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1BdNRXgNGXXbbb_g__080543.jpg" alt="ubuntu"></p>
+  
+  <p>作为ubuntu深度用户，我（54chen）在几个星期前就有网友来问过，msn登录常常会挂掉，甚至到现在已经无法再登录，受影响的范围很广，最新的10.10也是一样的，原因可能是msn单方面更新了接口，下面提供一种解决办法（以10.04lts  Empathy 2.30.1.1 为例）：</p>
+  
+  <p>#vim /usr/share/pyshared/papyon/service/description/SingleSignOn/RequestMultipleSecurityTokens.py <br>
+  找到第24行注释掉：<br>
+  #CONTACTS = ("contacts.msn.com", "?fs=1&amp;id=24000&amp;kv=7&amp;rn=93S9SWWw&amp;tw=0&amp;ver=2.1.6000.1")<br>
+  修改为：<br>
+      CONTACTS = ("contacts.msn.com", "MBI")  （请勿复制，引号有转义）</p>
+  
+  <p>然后重启，恭喜你msn高昂登录。<br>
+  附：
+  <a href="http://www.54chen.com/_linux_/ubuntu-1004-lts-version-of-the-empathy-msn-group-chat-under-the-nickname-display-method.html">ubuntu下empathy的msn群显示昵称</a>
+  点击下载我修改过的文件：
+  <a href="http://www.54chen.com/RequestMultipleSecurityTokens.py.gz%20">
+  http://www.54chen.com/RequestMultipleSecurityTokens.py.gz </a></p>
+  
+  <p></p>
+<blockquote>gunzip RequestMultipleSecurityTokens.py.gz<br>
+  sudo cp RequestMultipleSecurityTokens.py /usr/share/pyshared/papyon/service/description/SingleSignOn/
+  </blockquote>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/11/11/renren/">相逢的人会再相逢</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-11T00:00:00+08:00" pubdate data-updated="true">2010-11-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1uTBQXnxDXXbu5to9_102749.jpg" alt="离开人人网">
+  一将功成万骨枯。我从金山到雅虎淘宝再到人人网，现在又到了离开的时间。</p>
+  
+  <p>在微博和weibo很多关心我去向的朋友应该都已经知道了，我已经离开了人人网UGC团队（<a href="http://ugc.renren.com">http://ugc.renren.com</a>)，加入了一个创业团队小米工作室(<a href="http://www.xiaomi.com">http://www.xiaomi.com</a>)。</p>
+  
+  <p>过去的两年里，印象最深的是一个个的极客，每一位在记忆中都是宝贵的片段，共同筑起了这些年完整的回忆。</p>
+  
+  <p>张洁，老极客一名，现在已南下广州，在人人有很长一段时间合作，在人人底层的代码中还经常能看见他的签名。对各种技术保留着独特的目光和见解，nuclear的名字和起源就是他这位极客。</p>
+  
+  <p>王志亮，赫赫有名的疱丁分词作者，人人网的web框架作者（十分遗憾的是我答应在程序员杂志写写这个开源框架特色的，却没能完成就要离开了），很长时间里我们团队都在是和这位大侠学习框架的新功能和提新需求。</p>
+  
+  <p>启荣，数天下mysqlDBA，无出启荣之右者。此话出处不详，但的确如此，启荣大侠，人人网头号dba，坚定而妖娆的目光说明了实力。</p>
+  
+  <p>桃子，新生代的dba，爱好广泛，工作上长期被我这边骚扰，mysql经验丰富。</p>
+  
+  <p>张章，稳若泰山的头儿，传说精通心理学（江湖传闻），风格温文而雅，勤修，带领部分ugc兄弟秘密成立了糯米网。</p>
+  
+  <p>昊哥，java经验丰富，对项目开发控制管理颇有研究，scrum实施推广者。</p>
+  
+  <p>烧饼，校内十剑之一。老java人，天生奇骨，拥有shell绝技，ugc所有服务器都是烧饼维护的。</p>
+  
+  <p>龙哥，绿野爱好者，各种登山露营控，对项目模块层次设计满足古怪需求钻研透彻。</p>
+  
+  <p>亮哥，恶搞分子，算法基本功相当了得，有各种的小道形势消息（并且都已部分得到验证）。</p>
+  
+  <p>友明，稳重的已婚人士，毕业至今，已经对分布式搜索经验很有积累。</p>
+  
+  <p>陈蕾，老perl爱好者，超级具有大师级的合作，很有爱有两只小猫叫烟囱和挠挠。</p>
+  
+  <p>小威，准已婚人士，毕业至今成长迅速，注重不长膘常健身，基础知识扎实。</p>
+  
+  <p>文哲，已婚仍邪恶人士，总能从各种状态中挖出最的意思。</p>
+  
+  <p>明星，超极客产品研究人员，非一般的极致追求人员，精益求精的互联网重度使用哥。</p>
+  
+  <p>伟博，XOA（人人网SOA框架）作者，对JAVA理解深入，成熟的外表有一颗追求极致的心。</p>
+  
+  <p>波波，js深度患者，对大小问题手到病除，可以说是没有解决不了的问题。</p>
+  
+  <p>林总，号js小神童，对前端技术深入摸底，对as同样介于牛a与牛c之间。</p>
+  
+  <p>靖威，忙碌于全站的页面速度和统一标准，对全站页面的琐碎事情态度相当nice。</p>
+  
+  <p>涛哥，拥有带三个表的潜力，和蔼可亲，一接触便知涛哥深藏的功力。</p>
+  
+  <p>志昂，态度温和的常总，常年被一群的mm跟踪，能完成各种bt的搜出来删除的需求。</p>
+  
+  <p>昌总，万花丛中的昌总，有无穷的耐心和爱心，是qa典范。</p>
+  
+  <p>原谅我没有提到的各位，由于时间和篇幅，无法将所有极客一一呈现。</p>
+  
+  <p>江湖很小，相逢的人会再相逢。他日江湖相逢，再当杯酒言欢。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/11/04/androiddev2/">Android开发入门2：概念建立</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-04T00:00:00+08:00" pubdate data-updated="true">2010-11-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img01.taobaocdn.com/imgextra/i1/T19G0QXdVzXXcu602a_120602.jpg" alt="android 54chen dev"></p>
+  
+  <p>上一记传送门：<a href="http://www.54chen.com/_linux_/androiddev.html">android开发入门</a>
+  在第一记中，我（54chen）完成了一个完整的android开发环境，并且简单开发了一个Hello world android程序，在有了一个大概的开发过程的感觉之后，再进一步来学习android开发过程中需要接触到的常识。</p>
+  
+  <p><strong>android开发表皮几大块</strong>
+  1）extends Activity的Activity类很是奇异，其实这很像是mvc框架中的controller，继承Activity实现的类，它控制了所有的业务逻辑。<br>
+  2）打开项目的文件夹，你会发现有许多的xml，其中，比较关键的一个是main.xml（layout目录下），它相当于mvc框架中的view，负责了软件界面哪个位置摆放一个什么样的控件，当然了，这些控件都是系统本身的，你可以想像成是html标签里的那些控件一样。<br>
+  3）values目录下有settings.xml，是定义了一些字符串、颜色、数组等常量数据，有点像普通java项目里的属性文件（properties文件）</p>
+  
+  <p><strong>走进android项目中的layout/main.xml</strong>
+  开发android项目和开发web项目有几分神似，在main.xml里(也可能是xx.xml哦，main.xml是默认的第一个，在java代码里，会用R.layout.main来表示man.xml)，包括了各种各样的基础控件（它们都是大小写敏感的，如果在xml里写错了，那一定会在运行过程中出现空指针错误），就像是web项目的前端一样，不过其复杂程度自然要比写html复杂。可能大部分入门android的时间都会花在这里。</p>
+  
+  <p>&lt;TextView<br>
+  android:layout_height=”wrap_content”<br>
+  android:layout_width=”fill_parent”<br>
+  android:id=”@+id/TextView01″<br>
+  android:text=”54chen Android2.2 学习手记”<br>
+  android:textColor=”#0f0″<br>
+  android:textSize=”28dip”<br>
+  android:layout_y=”330dip”<br>
+  android:layout_x=”35dip“&gt;<br>
+  &lt;/TextView&gt;</p>
+  
+  <p>这就是main.xml里的一个片段，这是一个TextView控件(请勿直接复制，看看即可，有半角全角的问题会出现错误)，这个控件，关键词是TextView，大小写是敏感的，另外它丰富的属性都是由android:xx来定义的，其他的控件也是类似的定义。一般都会有，高度、宽度、内容、id、颜色、字体大小、布局相关的信息。</p>
+  
+  <p>例子到此，详细的更多控件的使用，我们在学习完intent之后再在后面的手记中去记录。</p>
+  
+  <p><strong>Intent：android项目中的胶水</strong>
+  前面说到，相当于controller层的activity，实际上一般情况是一个activity对应一个layout的xml，而一个常见的软件，都会弹出来多个窗体（做过vb vc delphi啥的一定知道subform的概念），这个时候需要多个 activity来回切换，这时候就是靠intent在中间起作用。<br>
+  在一个Android应用中，Intent是对执行某个作的一个抽象描述，Intent 负责提供组件之间相互调用的相关信息传递，实现调用者和被调用者之间的解耦。Intent是一种在不同组件之间传递的请求信息，是应用程序发出的请求和意图，作为一个完整的消息传递机制，Intent不仅需要发送端，还需要接收端。</p>
+  
+  <p>在android应用总控xml（AndroidManifest.xml）里有这样的内容：&lt;intent-filter&gt; ，这里面定义了可以访问的intent动作。</p>
+  
+  <p></p>
+<blockquote>
+  				// 获得可编辑文本框中的值，也就是电话号码<br>
+  				String phoneNumber = PhoneNumberEditText.getText().toString();<br>
+  				// new Intent(行为，数据)，其中action_dial是拨号行为，数据是电话号码<br>
+  				Intent intent = new Intent(Intent.ACTION_DIAL, Uri<br>
+  						.parse("tel://" + phoneNumber));<br>
+  				// 去调用那些可以处理拨号行为的Activity<br>
+  				startActivity(intent);
+  </blockquote>
+  
+  <p>看完上述代码，是不是有点对intent概念的感觉了呢，如果还有疑惑，再看 </p>
+  
+  <p></p>
+<blockquote>//在当前Activity中启动另外一个Activity<br>
+  startActivity(new Intent(this,目标Activity.class));</blockquote>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/26">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <em>27</em>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/28">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

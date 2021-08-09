@@ -1,0 +1,250 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[原创]打倒投票作弊，巧用flex防刷票 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[文章作者：陈臻 本文版本：v1.2 最后修改：2009.4.28 转载请注明原文链接：http://www.54chen.com/c/520 ] 在ID投票的应用中，如果投票后的奖品丰富，必然会招来各种各样的刷票机和人肉刷票，如何防止刷票，也就成了大家头疼的事情。 一般情况下， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/04/01/%E5%8E%9F%E5%88%9B%E6%89%93%E5%80%92%E6%8A%95%E7%A5%A8%E4%BD%9C%E5%BC%8A%EF%BC%8C%E5%B7%A7%E7%94%A8flex%E9%98%B2%E5%88%B7%E7%A5%A8">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[原创]打倒投票作弊，巧用flex防刷票</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-04-01T00:00:00+08:00" pubdate data-updated="true">2009-04-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[文章作者：陈臻 本文版本：v1.2 最后修改：2009.4.28 转载请注明原文链接：<a href="http://www.54chen.com/c/520">http://www.54chen.com/c/520</a> ]</p>
+  
+  <p>在ID<a href="http://www.54chen.com/c/17">投票</a>的应用中，如果投票后的奖品丰富，必然会招来各种各样的刷票机和人肉刷票，如何防止刷票，也就成了大家头疼的事情。</p>
+  
+  <p>一般情况下，大家都会使用限制IP的策略，同时加上Cookies，但是日常都刷票机都能解决掉这两种方法，下面介绍的是一种比较少用一些的方法，就是利用<a href="http://www.54chen.com/c/96">flash</a>的share object机制来防止刷票，这只能增加刷票的成本，而不能完全规避这种行为，要做到没人刷票而又，基本上只能靠--人。</p>
+  
+  <p>下面请看flex代码,内附注释(xx.mxml)：
+  </p>
+<blockquote>&lt;?xml version="1.0" encoding="utf-8"?&gt;<br>
+  &lt;mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" initialize="init()" applicationComplete="onBrowseClick()" width="190" height="54" horizontalAlign="center" verticalAlign="middle" alpha="0.44" backgroundGradientAlphas="[0.0, 0.0]" backgroundGradientColors="[#ffffff, #ffffff]"&gt;<br>
+  &lt;mx:Script&gt;<br>
+  &lt;![CDATA[<br>
+  import flash.external.*;<br>
+  import com.cc.StringManipulator;<br>
+  import com.cc.Md5;<br>
+  import mx.controls.Alert;<br>
+  [Bindable]<br>
+  public var myTime:String;<br>
+  [Bindable]<br>
+  public var myUid:String;<br>
+  [Bindable]<br>
+  public var myHash:String;
+  <p>private function init():void{//初始化 通过下面三个html传过来的参数进行下一步的计算<br>
+  myTime = Application.application.parameters.t;<br>
+  myUid = Application.application.parameters.u;<br>
+  myHash = Application.application.parameters.h;<br>
+  }
+  private function onBrowseClick():void{<br>
+  var hk123:SharedObject = SharedObject.getLocal( "hk123" );<br>
+  var temp:String = hk123.data[myUid];<br>
+  var hashCode2:String = '';<br>
+  hk123.data[myUid]=myTime;<br>
+  hk123.data.dt = myTime;<br>
+  hk123.flush();<br>
+  hashCode2 = Md5.calculate('caoninengdudaozelizhenxian' + myUid + myHash);//这一行自己加了个密钥串和传来的用户ID和服务器串进行md5 如果能破解flash到这里 这个基本上就破了
+  <a href="http://www.54chen.com/c/350">ExternalInterface</a>.call("browse",temp,hashCode2);//提交到html里的js function-&gt;browse,通过这个js把form提交给服务器端，去计算整个串是不是对的或者是不是使用过的，也就可以限制重复了<br>
+  }
+  ]]&gt;<br>
+  &lt;/mx:Script&gt;<br>
+  &lt;/mx:Application&gt;</p>
+  </blockquote>
+  <p> 
+  PS:</p>
+  
+  <p>有许多朋友来mail问我js部分，特地加一下，其实就是一个简单的function，里面怎么写都行，只要把参数传到服务器端就成：</p>
+  
+  <p> 
+  </p>
+<div>大致如下</div>
+  <blockquote>
+  <div>function <span>browse(a,b)</span>
+</div>
+  <div><span>{</span></div>
+  <div><span>form.action += '&amp;s1=a&amp;s2=b';</span></div>
+  <div><span>form.submit();//其实用ajax传也不失为一个好办法</span></div>
+  <div>
+<span>}
+  </span>这就把一个form提出去了，你当然还可以用ajax什么的直接发那两个值去服务器端就是了。</div>
+</blockquote>
+  END
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-04-01T00:00:00+08:00" pubdate data-updated="true">2009-04-01 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/03/30/%E6%89%8B%E6%9C%BA%E4%B9%8B%E5%AE%B6%E6%96%B0%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D%E5%8F%8A%E6%9E%B6%E6%9E%84%E5%88%86%E4%BA%AB/" title="Previous Post: 手机之家新系统介绍及架构分享">« 手机之家新系统介绍及架构分享</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/04/06/%E7%A7%91%E5%AD%A6%E9%99%A2%E6%96%B0%E9%97%BB%E7%8F%8D%E6%83%9C%E5%8A%A8%E7%89%A9%E9%A2%86%E5%85%BB%E5%9F%BA%E5%9C%B0%E5%86%85%E6%B5%8B%E7%89%88%E4%B8%8A%E7%BA%BF/" title="Next Post: [科学院新闻]珍惜动物领养基地内测版上线">[科学院新闻]珍惜动物领养基地内测版上线 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

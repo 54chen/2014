@@ -1,0 +1,111 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Team | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/team/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[如何练就高效率团队]]></title>
+      <link href="https://www.54chen.com/blog/2015/10/21/dont-guess-can-do-team/"/>
+      <updated>2015-10-21T17:26:27+08:00</updated>
+      <id>https://www.54chen.com/blog/2015/10/21/dont-guess-can-do-team</id>
+      <content type="html"><![CDATA[<p><img width=300 src=http://ww2.sinaimg.cn/large/663fba41jw1ex8v5vyrgxj20u00i0ju9.jpg></p>
+  
+  <ul>
+  <li><p>本文纯粹是鸡汤，里面的内容也全是胡扯，如果觉得有点用，有可能是你经历过或者正在经历。</p></li>
+  <li><p>风格迥异的团队文化，可以让在一个团队不可能发生的事情，在另一群人眼里变得十分简单。</p></li>
+  </ul>
+  
+  
+  <h1>不要猜</h1>
+  
+  <ul>
+  <li>在A团队，线上故障了，或者遇到了一个什么问题，经常遇到的对话如下：</li>
+  </ul>
+  
+  
+  <p>&ndash; 这应该是xxx的问题，和我们这边没有关系。</p>
+  
+  <p>&ndash; 这可能由于xxx超时引起的，我们也没有办法。</p>
+  
+  <ul>
+  <li>很多很容易发现的问题就这样放松了警惕，慢慢积累成了重大问题。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <ul>
+  <li>在B团队，线上故障，也有类似的对话：</li>
+  </ul>
+  
+  
+  <p>&ndash; 这可能是YYY的问题，我们没有办法。</p>
+  
+  <p>&ndash; 这大把握是YYY的原因，和某某没有关系。</p>
+  
+  <p>&ndash; 不要猜。（老大发话，很关键）</p>
+  
+  <ul>
+  <li><p>然后B团队各协作起来，层层剥皮，剥洋葱一样的找到了问题在哪里，防患于未然。</p></li>
+  <li><p>运维开发团队在剥皮过程中，尝试积累成工具。</p></li>
+  <li><p>时间长了，在B团队再也没有人在猜问题原因了，一方面大家不要猜已经是默认，另一方面因为有各种总结出来的运营工具，让问题原因直接暴露。</p></li>
+  </ul>
+  
+  
+  <h1>can do</h1>
+  
+  <ul>
+  <li>在A团队，线上发现问题，有人问起，会有如下的对话：</li>
+  </ul>
+  
+  
+  <p>&ndash; 这个不是我负责的，我也不清楚细节。</p>
+  
+  <p>&ndash; 这个事情需要修改代码上线才行。</p>
+  
+  <p>&ndash; 这个项目我没有参与。</p>
+  
+  <ul>
+  <li><p>然后这个问题被踢来踢去，直到找到会解决的人，问题才有所缓解。</p></li>
+  <li><p>在B团队，也有类似的对话：</p></li>
+  </ul>
+  
+  
+  <p>&ndash; 这个不是我负责的，我也不清楚细节。</p>
+  
+  <p>&ndash; 你是团队的一员，不要告诉No。（老大发话，很关键）</p>
+  
+  <p>&ndash; 这个事情需要修改代码上线才行。</p>
+  
+  <p>&ndash; 那就动手。（老大发话，很关键）</p>
+  
+  <p>&ndash; 这个项目我没有参与。</p>
+  
+  <p>&ndash; 现在就参与，不要说No。（老大发话，很关键）</p>
+  
+  <ul>
+  <li><p>然后B团队中，成员的能量是无限大的，任何有能力的成员，都将在各个方面闪光。</p></li>
+  <li><p>遇到问题，B团队的成员第一反应是:Can Do，而不是No。</p></li>
+  </ul>
+  
+  
+  <h1>结语</h1>
+  
+  <ul>
+  <li><p>以上AB团队纯属虚构，如有雷同，纯属巧合。</p></li>
+  <li><p>不猜的CanDo团队，才有可能是高效率团队，执行力才能暴仓。</p></li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

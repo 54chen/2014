@@ -1,0 +1,1010 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Erlang学习手记 2011-04-26 00:00:00 +0800 ubuntu10.04下erlide for eclipse安装 网址：http://erlide.sourceforge.net/
+  3.5版本的eclipse，直接用url http://erlide.org/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/23">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/04/26/erlang-notes/">Erlang学习手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-04-26T00:00:00+08:00" pubdate data-updated="true">2011-04-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_EN.XadjXXbk3DE3_051340.jpg" alt="erlang install notes"></p>
+  
+  <p><strong>ubuntu10.04下erlide for eclipse安装</strong></p>
+  
+  <p>网址：http://erlide.sourceforge.net/<br>
+  3.5版本的eclipse，直接用url   http://erlide.org/update  安装</p>
+  
+  <p>安装后，还需要erlang的环境：</p>
+  
+  <p></p>
+<blockquote>sudo apt-get install erlang</blockquote>
+  
+  <p>现在还不能打开文件，会报空指针错误，选择window-&gt;preferences-&gt;erlang-&gt;installed runtimes<br>
+  把location选择到 /usr/lib/erlang 即可使用。</p>
+  
+  <p></p>
+<blockquote>[把build automatically关掉，这插件还是不怎么靠谱的，用来写写代码就完了，要编译还是走命令行]</blockquote>
+  
+  <p><strong>erlang学习要点：</strong>
+  <strong>（1）-module(xx).</strong>
+  注意前面的杠（-）和后面的点（.） 类似java的package，文件名要求为xx.erl，与module里名字相同。
+  <strong>（2）-export([double/1]).</strong>
+  同样注意杠和点。表示模块内的函数为double，包含一个参数。<br>
+  扩展：多个声明这样写  -export([fac/1, mult/2]).
+  <strong>（3）模式匹配</strong>
+  xxxx-&gt;aaaa;<br>
+  箭头的用意：节省代码，不需要if...else...对应前面执行箭头后面。
+  <strong>（4）变量只能单次赋值</strong>
+  首字母必须大写。
+  <strong>（5）元子</strong>
+  以小写字母开头。只是一个名字。类似java的常量。
+  <strong>（6）元组</strong>
+  {inch,Y}<br>
+  {moscow,{c,-10}}<br>
+  元组中有元素。
+  <strong>（7）列表</strong>
+  [{},{},{}]<br>
+  列表不一定要写在一行，不可以在元子或者整数中间分段。<br>
+  一个很有用的遍历列表的方法是“|”<strong>
+  （8）guard满足条件之后才会执行后面的</strong>
+  大于&gt; 小于&lt; 等于== 大于等于&gt;= 小于等于&lt;= 不等于/=
+  <strong>（9）竖线的作用 |</strong>
+  得到列表中第一个元素：<br>
+  [M1|T1] =[aaa,bbb,ccc].<br>
+  在列表头部添加元素：<br>
+  L1=[ddd|T1].
+  <strong>（10）if case</strong>
+  if<br>
+     condition 1 -&gt; Action 1;<br>
+     condition 4 -&gt; Action 4<br>
+  end.<br>
+  最后一个没有分号。<br>
+  case XXX of<br>
+     xxx-&gt;
+        xxx;<br>
+     yyy-&gt;
+         yyy<br>
+  end.<br>
+  最后一个条件没有分号。
+  <strong>（11）io:format</strong>
+  ~p很长的时候断行<br>
+  ~w输出<br>
+  ~n回车
+  <strong>（12）spawn和receive以及!还有self()</strong>
+  spawn启动一个process<br>
+  receive等待来自其它进程的消息<br>
+  !用来发消息：Pid!Message<br>
+  self()表示正在运行的进程ID
+  <strong>（13）register</strong>
+  将一个进程名字注册为一个名字。
+  <strong>（14）头文件</strong>
+  *.hrl<br>
+  -include("xxx.hrl").
+  <strong>（15）宏</strong>
+  -define(SERV_NODE,messenger@super).<br>
+  ？SERV_NODE
+  <strong>（16）记录</strong>
+  -record(message_to,{to_name,message}).<br>
+  message_to{to_name=aaaa,message="hello"}<br>
+  将得到{message_to,aaaa,"hello"}</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/04/21/sqoop-mysql-to-hive/">利用sqoop将mysql数据同步到hive手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-04-21T00:00:00+08:00" pubdate data-updated="true">2011-04-21 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img01.taobaocdn.com/imgextra/i1/T14rp.XdVmXXa7cv.Z_032332.jpg" alt="sqoop mysql hive"></p>
+  
+  <p>1.下载 http://archive.cloudera.com/cdh/3/sqoop-1.2.0-CDH3B4.tar.gz</p>
+  
+  <p>2.下载 http://archive.cloudera.com/cdh/3/hadoop-0.20.2-CDH3B4.tar.gz</p>
+  
+  <p>3.解压 2</p>
+  
+  <p>4.复制3里hadoop-core-0.20.2-CDH3B4.jar到sqoop的lib下</p>
+  
+  <p>5.在某处复制mysql-connector-java-5.1.10.jar到sqoop的lib下</p>
+  
+  <p>6.修改configure-sqoop</p>
+  
+  <p></p>
+<blockquote>注释掉hbase zookeeper检查：<br>
+  #if [ ! -d "${HBASE_HOME}" ]; then<br>
+  #  echo "Error: $HBASE_HOME does not exist!"<br>
+  #  echo 'Please set $HBASE_HOME to the root of your HBase installation.'<br>
+  #  exit 1<br>
+  #fi<br>
+  #if [ ! -d "${ZOOKEEPER_HOME}" ]; then<br>
+  #  echo "Error: $ZOOKEEPER_HOME does not exist!"<br>
+  #  echo 'Please set $ZOOKEEPER_HOME to the root of your ZooKeeper installation.'<br>
+  #  exit 1<br>
+  #fi</blockquote>
+  
+  <p>7.运行：<br>
+  列出mysql所有的表：</p>
+  
+  <p></p>
+<blockquote>./sqoop list-tables --connect jdbc:mysql://127.0.0.1/operation --username root --password 123</blockquote>
+  
+  <p>导入mysql表到hive：</p>
+  
+  <p></p>
+<blockquote>./sqoop import --connect jdbc:mysql://192.168.100.52/operation --username root --password 3487e498770b9740086144fc03140876 --table active_uuid --hive-import</blockquote>
+  
+  <p>导入需要表里有主建，还要注意不要使用127.0.0.1，因为map出去不一定在哪个节点执行。</p>
+  
+  <p>如果曾经执行失败过，那再执行的时候，会有错误提示：</p>
+  
+  <p></p>
+<blockquote>ERROR tool.ImportTool: Encountered IOException running import job: org.apache.hadoop.mapred.FileAlreadyExistsException: Output directory xxx already exists</blockquote>
+  
+  <p>执行 $HADOOP_HOME/bin/hadoop fs -rmr xxx 即可     </p>
+  
+  <p>8.验证:<br>
+   </p>
+  
+  <p></p>
+<blockquote>bin/hive<br>
+   show tables;多了一个表</blockquote>
+  
+  <p>9.经验：<br>
+   sqoop做了一些mysqldump时的map reduce，所以速度会比单纯的dump后load快。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/04/13/hadoop-hive-scribe-log/">用hadoop Hive协同scribe Log用户行为分析方案</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-04-13T00:00:00+08:00" pubdate data-updated="true">2011-04-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T1sUV8Xk4sXXablPM9_104155.jpg" alt="hadoop,hive,scribe">
+  scribe 是 开源的分布式日志系统，在其示例配置中，并发量可达到max_msg_per_second=2000000。54chen使用手记见：<a href="http://www.54chen.com/java-ee/log-server-scribe-helper.html">http://www.54chen.com/java-ee/log-server-scribe-helper.html</a>
+  hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供完整的sql查询功能，可以将sql语句转换为 MapReduce任务进行运行。54chen使用手记见：<a href="http://www.54chen.com/_linux_/hive-hadoop-how-to-install.html">http://www.54chen.com/_linux_/hive-hadoop-how-to-install.html</a>
+  下面来讲述二者合成的使用办法：
+  <strong>创建和scribe格式相符的hive table</strong>
+  bin/hive
+  </p>
+<blockquote>&gt; create table log(active string,uuid string,ip string,dt string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;</blockquote>
+  <strong>加载数据</strong>
+  
+  <p></p>
+<blockquote>&gt;LOAD DATA LOCAL INPATH '/opt/soft/hadoop-0.20.2/hive-0.7.0/data/log-2011-04-13*' OVERWRITE INTO TABLE log;</blockquote>
+  
+  <p>查询</p>
+  
+  <p></p>
+<blockquote>&gt;select count(*) from  log group by uuid;</blockquote>
+  
+  <p>进入mapreduce计算，过了一会儿，结果出来了。</p>
+  
+  <p><strong>修改已经定义数据格式</strong>
+  cutter.py 数据自定义脚本,从标准输入拿到数据后输出到标准输出<br>
+  cd bin/<br>
+  ./hive
+  </p>
+<blockquote>&gt;add file /opt/soft/hadoop-0.20.2/hive-0.7.0/bin/hive-shell/cutter.py;<br>
+  &gt;select transform (active,uuid,ip,dt) using 'python cutter.py' as (active,uuid,ip,dt) from log limit 1;</blockquote>
+  <strong>得到格式化后的结果</strong>
+  <blockquote>&gt;create table log_new(active string,uuid string,ip string,dt string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;<br>
+  &gt;INSERT OVERWRITE TABLE log_new select transform (active,uuid,ip,dt) using 'python cutter.py' as (active,uuid,ip,time) from log;</blockquote>
+  <strong>以hive server运行(thrift的server)</strong>
+  <blockquote>bin/hive --service hiveserver</blockquote>
+  默认以thrift service在10000启动服务。
+  
+  <p><strong>用标准的thrift-jdbc来连接hive</strong>
+  </p>
+<blockquote>public class HiveJdbcClient {<br>
+  private static String driverName = "org.apache.hadoop.hive.jdbc.HiveDriver";</blockquote>
+  
+  <p>/**<br>
+  * @param args<br>
+  * @throws SQLException<br>
+  */<br>
+  public static void main(String[] args) throws SQLException {<br>
+  try {<br>
+  Class.forName(driverName);<br>
+  } catch (ClassNotFoundException e) {<br>
+  e.printStackTrace();<br>
+  System.exit(1);<br>
+  Connection con = DriverManager.getConnection("jdbc:hive://192.168.100.52:10000/default", "", "");<br>
+  Statement stmt = con.createStatement();</p>
+  
+  <p>ResultSet res = stmt.executeQuery("select count(distinct uuid) from usage_new where active='user_login_succ'");<br>
+  if (res.next()) {<br>
+  System.out.println(res.getString(1));<br>
+  }</p>
+  
+  <p>}
+  <strong>依赖的jar包(maven pom)</strong></p>
+  
+  <p></p>
+<blockquote>
+  &lt;dependency&gt;<br>
+  &lt;groupId&gt;hadoop&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;hive-jdbc&lt;/artifactId&gt;<br>
+  &lt;version&gt;0.7.0&lt;/version&gt;<br>
+  &lt;/dependency&gt;<br>
+  &lt;dependency&gt;<br>
+  &lt;groupId&gt;hadoopl&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;hive-metastore&lt;/artifactId&gt;<br>
+  &lt;version&gt;0.7.0&lt;/version&gt;<br>
+  &lt;/dependency&gt;</blockquote>
+  
+  <p>&lt;dependency&gt;<br>
+  &lt;groupId&gt;hadoop&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;hive-exec&lt;/artifactId&gt;<br>
+  &lt;version&gt;0.7.0&lt;/version&gt;<br>
+  &lt;/dependency&gt;</p>
+  
+  <p>&lt;dependency&gt;<br>
+  &lt;groupId&gt;hadoop&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;hive-service&lt;/artifactId&gt;<br>
+  &lt;version&gt;0.7.0&lt;/version&gt;<br>
+  &lt;/dependency&gt;<br>
+  &lt;dependency&gt;<br>
+  &lt;groupId&gt;org.apache.thrift&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;thrift&lt;/artifactId&gt;<br>
+  &lt;version&gt;0.5.0-xiaomi&lt;/version&gt;<br>
+  &lt;/dependency&gt;<br>
+  &lt;dependency&gt;<br>
+  &lt;groupId&gt;&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;thrift-fb303&lt;/artifactId&gt;<br>
+  &lt;version&gt;0.5.0&lt;/version&gt;<br>
+  &lt;/dependency&gt;</p>
+  
+  <p>&lt;dependency&gt;<br>
+  &lt;groupId&gt;hadoop&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;hadoop-core&lt;/artifactId&gt;<br>
+  &lt;version&gt;0.20.2&lt;/version&gt;<br>
+  &lt;/dependency&gt;</p>
+  
+  <p>&lt;dependency&gt;<br>
+  &lt;groupId&gt;xerces&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;xercesImpl&lt;/artifactId&gt;<br>
+  &lt;version&gt;2.9.1&lt;/version&gt;<br>
+  &lt;/dependency&gt;<br>
+  &lt;dependency&gt;<br>
+  &lt;groupId&gt;xalan&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;xalan&lt;/artifactId&gt;<br>
+  &lt;version&gt;2.7.1&lt;/version&gt;<br>
+  &lt;/dependency&gt;</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/04/11/qcon2011-qcon2011-ppt/">QCon2011讲师经验总结及QCon2011的ppt下载</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-04-11T00:00:00+08:00" pubdate data-updated="true">2011-04-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img01.taobaocdn.com/imgextra/i1/T1pix8XnBbXXXgP6k._082702.jpg" alt="qcon 2011 ppt"></p>
+  
+  <p>第一次作为讲师参加这样大规模的会议，经验不足，特总结一下：<br>
+  1.虚心接受批评建议，诚心提高演讲技巧。<br>
+  2.会前准备过份考虑切合当天大会主旋律。<br>
+  3.铺垫过多，观众需要速食。<br>
+  4.要讲的东西一定要放到ppt上，会场很大，由于音响回声，前半场需要讲师，后半场只需要幻灯播放员。<br>
+  5.三段式的ppt最能快速切入主题：1）解决什么问题 2）用什么关键代码解决 3）在哪里下载<br>
+  6.不谈构架，潜心解决实际问题。<br>
+  7.10月份杭州QCon如果时间允许，再去分享更好的主题：米聊团队背后的技术，届时一定不忘记上面的6点。<br>
+  如果您当天听了我的讲座有任何建议，欢迎以评论方式提出。<br>
+  下面是ppt：
+  </p>
+<div style="width:425px" id="__ss_7581393">
+<strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/54chen/qcon201154chen" title="Qcon2011-54chen-互联网分步式构架分享">Qcon2011-54chen-互联网分步式构架分享</a></strong><object id="__sse7581393" width="425" height="355"><param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=qcon-110410191558-phpapp01&amp;stripped_title=qcon201154chen&amp;userName=54chen">
+<param name="allowFullScreen" value="true">
+<param name="allowScriptAccess" value="always">
+<embed name="__sse7581393" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=qcon-110410191558-phpapp01&amp;stripped_title=qcon201154chen&amp;userName=54chen" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="425" height="355"></embed></object><div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/54chen">zhen chen</a>.</div>
+</div>
+  QCon 2011 beijing官方下载地址 <a href="http://www.qconbeijing.com">http://www.qconbeijing.com</a>
+  
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/04/02/hive-hadoop-how-to-install/">Hadoop Hive安装手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-04-02T00:00:00+08:00" pubdate data-updated="true">2011-04-02 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="hadoop hive">
+  hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供完整的sql查询功能，可以将sql语句转换为 MapReduce任务进行运行。 其优点是学习成本低，可以通过类SQL语句快速实现简单的MapReduce统计，不必开发专门的MapReduce应用，十分适合数据仓库的统计分析。</p>
+  
+  <p><strong>[网络环境设置]</strong>
+  vim /etc/hosts</p>
+  
+  <p></p>
+<blockquote>192.168.100.52 hadoop1<br>
+  192.168.99.34 hadoop2<br>
+  192.168.103.135 hadoop3</blockquote>
+  
+  <p>分别到对应机器执行：</p>
+  
+  <p></p>
+<blockquote>hostname hadoop1<br>
+  hostname hadoop2<br>
+  hostname hadoop3</blockquote>
+  
+  <p><strong>[打通机器]</strong></p>
+  
+  <p></p>
+<blockquote>hadoop1# ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa<br>
+  hadoop1# scp ~/.ssh/id_dsa.pub hadoop2:/root/<br>
+  hadoop1# scp ~/.ssh/id_dsa.pub hadoop3:/root/<br>
+  hadoop2# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys<br>
+  hadoop3# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys</blockquote>
+  
+  <p>验证：从hadoop1登录到hadoop2和hadoop3，不再需要密码。</p>
+  
+  <p><strong>[安装hadoop]</strong>
+  确保所有机器有 ssh rsync jdk<br>
+  确保设置了：<br>
+  export JAVA_HOME=/opt/soft/jdk</p>
+  
+  <p>hive在0.20.x的hadoop做了大量的测试，因此选择0.20</p>
+  
+  <p></p>
+<blockquote>cd /opt/soft/<br>
+  wget http://mirror.bjtu.edu.cn/apache/hadoop/core/hadoop-0.20.2/hadoop-0.20.2.tar.gz<br>
+  tar -zxvf hadoop-0.20.2.tar.gz<br>
+  cd hadoop-0.20.2/<br>
+  vim .bashrc<br>
+  export HADOOP_HOME=/opt/soft/hadoop-0.20.2</blockquote>
+  
+  <p>（重复以上作到另外两机器）</p>
+  
+  <p><strong>[配置hadoop]</strong>
+  vim conf/core-site.xml<br>
+  修改：</p>
+  
+  <p></p>
+<blockquote>&lt;configuration&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- 用于dfs命令模块中指定默认的文件系统协议 --&gt;<br>
+  &lt;name&gt;fs.default.name&lt;/name&gt;<br>
+  &lt;value&gt;hdfs://hadoop1:9000&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;/configuration&gt;</blockquote>
+  
+  <p>vim conf/hdfs-site.xml<br>
+  修改：</p>
+  
+  <p></p>
+<blockquote>&lt;configuration&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- DFS中存储文件命名空间信息的目录 --&gt;<br>
+  &lt;name&gt;dfs.name.dir&lt;/name&gt;<br>
+  &lt;value&gt;/opt/hadoop/data/dfs.name.dir&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- DFS中存储文件数据的目录 --&gt;<br>
+  &lt;name&gt;dfs.data.dir&lt;/name&gt;<br>
+  &lt;value&gt;/opt/hadoop/data/dfs.data.dir&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- 是否对DFS中的文件进行权限控制(测试中一般用false)--&gt;<br>
+  &lt;name&gt;dfs.permissions&lt;/name&gt;<br>
+  &lt;value&gt;false&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;/configuration&gt;</blockquote>
+  
+  <p>vim conf/mapred-site.xml<br>
+  修改：</p>
+  
+  <p></p>
+<blockquote>&lt;configuration&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- 用来作JobTracker的节点的(一般与NameNode保持一致) --&gt;<br>
+  &lt;name&gt;mapred.job.tracker&lt;/name&gt;<br>
+  &lt;value&gt;hadoop1:9001&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- map/reduce的系统目录（使用的HDFS的路径） --&gt;<br>
+  &lt;name&gt;mapred.system.dir&lt;/name&gt;<br>
+  &lt;value&gt;/opt/hadoop/system/mapred.system.dir&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- map/reduce的临时目录（可使用“,”隔开，设置多重路径来分摊磁盘IO） --&gt;<br>
+  &lt;name&gt;mapred.local.dir&lt;/name&gt;<br>
+  &lt;value&gt;/opt/hadoop/data/mapred.local.dir&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;/configuration&gt;</blockquote>
+  
+  <p>vim masters</p>
+  
+  <p></p>
+<blockquote>hadoop1</blockquote>
+  vim slaves
+  
+  <p></p>
+<blockquote>hadoop2<br>
+  hadoop3</blockquote>
+  
+  <p>scp conf/* hadoop2:/opt/soft/hadoop-0.20.2/conf/<br>
+  scp conf/* hadoop3:/opt/soft/hadoop-0.20.2/conf/</p>
+  
+  <p><strong>
+  [初始化]</strong></p>
+  
+  <p></p>
+<blockquote>cd $HADOOP_HOME/bin<br>
+  ./hadoop namenode -format</blockquote>
+  
+  <p>启动<br>
+  ./start-all.sh</p>
+  
+  <p><strong>[验证]</strong>
+  $HADOOP_HOME/bin/hadoop dfs -ls /<br>
+  打开 http://192.168.100.52:50030<br>
+  http://192.168.100.52:50070</p>
+  
+  <p><strong>
+  [搭建hive集群]</strong>
+  下载<br>
+  只需要在hadoop1机器上安装</p>
+  
+  <p></p>
+<blockquote>cd /opt/soft/hadoop-0.20.2<br>
+  wget http://mirror.bjtu.edu.cn/apache/hive/hive-0.7.0/hive-0.7.0.tar.gz<br>
+  tar zxvf hive-0.7.0.tar.gz<br>
+  cd hive-0.7.0<br>
+  vim ~/.bashrc<br>
+  export HIVE_HOME=/opt/soft/hadoop-0.20.2/hive-0.7.0</blockquote>
+  
+  <p>$HIVE_HOME/bin/hive<br>
+  &gt;create table tt(id int,name string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;<br>
+  &gt;select * from tt;<br>
+  &gt;drop table tt;</p>
+  
+  <p>试玩结束。</p>
+  
+  <p><strong>[配置hive]</strong>
+  准备mysql:hadoop1 user:hadoop pwd:hadoop</p>
+  
+  <p></p>
+<blockquote>&gt;create database hive<br>
+  &gt;GRANT all ON hive.* TO hadoop@% IDENTIFIED BY 'hadoop';<br>
+  &gt;FLUSH PRIVILEGES ;</blockquote>
+  
+  <p>vim $HIVE_HOME/conf/hive-site.xml</p>
+  
+  <p></p>
+<blockquote>
+  &lt;?xml version="1.0"?&gt;<br>
+  &lt;?xml-stylesheets type="text/xsl" href="configuration.xsl"?&gt;<br>
+  &lt;configuration&gt;<br>
+  &lt;property&gt;<br>
+  &lt;name&gt;hive.metastore.local&lt;/name&gt;<br>
+  &lt;value&gt;true&lt;/value&gt;<br>
+  &lt;/property&gt;</blockquote>
+  
+  <p>&lt;property&gt;<br>
+  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;<br>
+  &lt;value&gt;jdbc:mysql://hadoop1:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;<br>
+  &lt;/property&gt;</p>
+  
+  <p>&lt;property&gt;<br>
+  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;<br>
+  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;<br>
+  &lt;/property&gt;</p>
+  
+  <p>&lt;property&gt;<br>
+  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;<br>
+  &lt;value&gt;hadoop&lt;/value&gt;<br>
+  &lt;/property&gt;</p>
+  
+  <p>&lt;property&gt;<br>
+  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;<br>
+  &lt;value&gt;hadoop&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;/configuration&gt;</p>
+  
+  <p><strong>[启动]</strong>
+  复制一个mysql-connector-java-5.1.10.jar到hive/lib下后：</p>
+  
+  <p></p>
+<blockquote>$HIVE_HOME/bin/hive<br>
+  &gt;create table tt(id int,name string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;</blockquote>
+  
+  <p>如果报如下错：</p>
+  
+  <p></p>
+<blockquote>FAILED: Error in metadata: javax.jdo.JDOException: Couldnt obtain a new sequence (unique id) : Binary logging not possible. Message: Transaction level 'READ-COMMITTED' in InnoDB is not safe for binlog mode 'STATEMENT'</blockquote>
+  
+  <p>退出hive后，以root进入mysql执行：</p>
+  
+  <p></p>
+<blockquote>&gt;set global binlog_format='MIXED';</blockquote>
+  
+  <p>这是mysql的一个bug。</p>
+  
+  <p>安装结束。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/22">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <em>23</em>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/24">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

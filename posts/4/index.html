@@ -1,0 +1,910 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Rabbitmq Java Client Api详解 2014-08-27 15:33:38 +0800 AMQP AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。 基础概念快速入门 每个rabbitmq-server叫做一个Broker，等着tcp连接进入。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/4">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/">Rabbitmq Java Client Api详解</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-08-27T15:33:38+08:00" pubdate data-updated="true">2014-08-27 15:33:38 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg"></p>
+  
+  <h1>AMQP</h1>
+  
+  <ul>
+  <li>AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。</li>
+  </ul>
+  
+  
+  <h1>基础概念快速入门</h1>
+  
+  <ul>
+  <li>每个rabbitmq-server叫做一个Broker，等着tcp连接进入。</li>
+  <li>在rabbitmq-server进程内有Exchange，定义了这个消息的发送类型。（一对多、直连、多对多等等）</li>
+  <li>Queue是进程内的逻辑队列，有多个，有名字。</li>
+  <li>Binding联系Exchane与Queue。</li>
+  <li>Routing key由生产者指定。Binding key由消费者指定。二者联合决定一条消息的来去。</li>
+  </ul>
+  
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/">小米互娱招java工程师</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-08-25T21:17:53+08:00" pubdate data-updated="true">2014-08-25 21:17:53 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png"></p>
+  
+  <h2>序</h2>
+  
+  <ul>
+  <li>这是一个新的时代。</li>
+  <li>小米互娱作为一个真正意义上的小米互联网，开启小米“铁人三项”中互联网征途。</li>
+  <li>这里有众多靠谱的兄弟。</li>
+  <li>这里缺更加强大的你的加入。</li>
+  </ul>
+  
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/07/31/connection-secret-in-mobile/">移动网络下连接的秘密</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-07-31T17:44:55+08:00" pubdate data-updated="true">2014-07-31 17:44:55 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg"></p>
+  
+  <p> 最近在研究网络层的接入问题。一些心得记录在下面：</p>
+  
+  <h2>一、TCP与HTTP</h2>
+  
+  <ul>
+  <li>0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。</li>
+  <li>1.TCP传输的数据，绝对是顺序正确、不丢包的数据。否则它一定不会把数据扔给应用层。</li>
+  <li>2.从应用层角度，TCP是一个数据流，收到的数据会聚在一起。所以需要应用层去协商数据与数据之间用什么间隔，比如常用的长度标识。</li>
+  <li>3.TCP在网络恶劣的情况下，开始启动：拥塞避免算法 与 慢启动算法。而这些都是由一些公式去估计当前网络情况的。</li>
+  <li>4.TCP的报文包与我们自己应用层的发的“包”半毛钱关系都没有，数据到了底层还是要切成N块来传送的。</li>
+  <li>5.所谓的HTTP比TCP更可靠是错误的。HTTP是应用层协议，实际也是TCP，只不过数据在应用层定义了规则：必须有request\header\body等等。</li>
+  <li>6.硬件防火一般拦截端口，软件防火才拦协议。所以80端口走TCP有不少好处。</li>
+  <li>7.HTTP比TCP更可靠的错觉产生的原因是：HTTP请求基本都是每次新开连接，而TCP很少这样做。</li>
+  <li>8.TCP就像</li>
+</ul>
+</div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/07/31/connection-secret-in-mobile/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/07/09/tigase-sockthread/">tigase网络核心SockThread详解</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-07-09T16:03:33+08:00" pubdate data-updated="true">2014-07-09 16:03:33 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/20140710/logo.png"></p>
+  
+  <h2>总述</h2>
+  
+  <ul>
+  <li>SocketThread类是一个很底层的类，在初始化时调用了Selector.open（clientsSel）。</li>
+  <li>socketReadThread nThread个</li>
+  <li>socketWriteThread nThread个</li>
+  <li>ResultsListener nThread个</li>
+  <li>completionService一个，池化线程nThread个，在sockThread.run里被submit，ResultsListener里进行completionService.take().get()取出执行结果。</li>
+  <li>forCompletion有序队列一个，在socketThread.run里开始add，同一方法立即被从最小依次取出，然后submit给completionService。</li>
+  <li>waiting有序队列一个，recreateSelector阶段存在add，最大来源是addSocketService静态方法，在socketThread.run最后阶段的addAllWaiting时注册Channel时把waiting里的IOService取出做为附加对象绑定。</li>
+  </ul>
+  
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/07/09/tigase-sockthread/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/07/07/explain-tigase/">Tigase代码框架解读</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-07-07T13:47:54+08:00" pubdate data-updated="true">2014-07-07 13:47:54 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg"></p>
+  
+  <ul>
+  <li><p>在java下实现的xmpp开源实现，除了openfire外，tigase是另一个牛逼的项目。</p></li>
+  <li><p>实际的实验室压力下，50万人同时在线的单机，tigase的gc情况要优于openfire，而且openfire的网络层代码借鉴了不少tigase的。</p></li>
+  </ul>
+  
+  
+  <p>下面的内容，在解剖tigase过程中所写，使用的版本是：5.2.1 (2014年7月份)。</p>
+  
+  <h2>组件</h2>
+  
+  <p>tigase就是一个大组件框，里面所有东西基本都是组件组成的。session manager、message router、c2s connection manager…全部是组件。</p>
+  
+  <p>ServerComponent接口是一个最小化接口，但是要去写很多代码，tigase提供了许多的现成的代码，减少去从零实现这个接口的过程。</p>
+  
+  <p>比如extends AbstractMessageReceiver可以直接生成一个处理消息的组件。只需要实现一个processPacket方法。实现getDefaults方法，可以对系统变量进行处理。实现setProperties方法，可以去设置一些要用的变量。</p>
+  
+  <h2>多线程</h2>
+  
+  <p>processPacket方法，可以把逻辑扔到不同的cpu上去运行，以发挥服务器多核的优势。processingThreads方法返回用多少个cpu来处理。</p>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/07/07/explain-tigase/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Bosh vs Comet vs Long Polling vs Polling</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-06-30T11:41:42+08:00" pubdate data-updated="true">2014-06-30 11:41:42 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg"></p>
+  
+  <p>最近在研究在特色移动互联网下通过性最好的应用层协议办法，看到很多混乱的概念和实现，54chen在对各种名词的进行了深度考察，特作记录以做区分。</p>
+  
+  <h2>HTTP协议</h2>
+  
+  <ul>
+  <li>第一个HTTP协议诞生于1989年3月。</li>
+  <li>第一个HTTP协议的版本是HTTP 0.9，它的组成极其简单，因为它只允许客户端发送GET这一种请求。</li>
+  <li>HTTP协议的第二个版本是HTTP 1.0，直到HTTP 1.0成为最重要的面向事务的应用层协议。该协议对每一次请求/响应，同样是建立并关闭一次连接。</li>
+  <li>HTTP协议的第三个版本是HTTP 1.1，它就是目前使用最广泛的协议版本。从HTTP 1.1开始，客户端默认与Web 服务器建立长连接。</li>
+  </ul>
+  
+  
+  <h2>原始阶段polling</h2>
+  
+  <p>最早期的时候，因为没有可以依赖的东西，能用的只有javascript的setInterval，定时循环向服务器发起请求。</p>
+  
+  <p>优点是：服务器端啥特别的东西都不用准备，直接当http请求处理即可。缺点是：白白浪费大量的请求。</p>
+  
+  <h2>什么是Comet?</h2>
+  
+  <p>中文意思彗星，大概是想表示这是一次尾巴会拖很长的请求。</p>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/05/28/thrift-upgrade/">Thrift版本升级调查记录</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-05-28T16:59:27+08:00" pubdate data-updated="true">2014-05-28 16:59:27 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg"></p>
+  
+  <p>自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。</p>
+  
+  <p>代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
+  
+  <h1>第一轮：编译阶段</h1>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/05/28/thrift-upgrade/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/05/25/security/">安全无小事－－技术团队防守一二三</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-05-25T13:56:31+08:00" pubdate data-updated="true">2014-05-25 13:56:31 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>事情的经过是这样的：</p>
+  
+  <p>那天在使用某创业团队的APP时，输入完了微博账号还需要他自己的账号，于是就发了条微博，</p>
+  
+  <p><img width="450" src="http://chen54.b0.upaiyun.com/20140525/1.png"></p>
+  
+  <p>然后就有人@我是不是在说小米被脱库的事。。。呵呵！</p>
+  
+  <p>这里要讨论的是，如何让数千计的开发人员在安全防守安全编程上，得到有效的效果。有人说，我干了xx年，手上从来没有一个项目出过安全漏洞; 还有人说，我一个人做的x项目，也从来没有出现过安全漏洞; 呵呵，集体的智慧不由个人意志来控制，木桶漏水取决于最短的一块。</p>
+  
+  <h1>一、内防</h1>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/05/25/security/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/05/07/jvm-cpu-mem-tools/">线上JVM调查工具:JCPU和JMEM</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-05-07T17:05:13+08:00" pubdate data-updated="true">2014-05-07 17:05:13 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://www.oracle.com/technetwork/java/javaspotlight-189455.png"></p>
+  
+  <p>之前的jkiller改名为jcpu，然后再加上jmem，齐活了，线上要再遇到问题，内存和CPU之外的也没啥其他办法了。</p>
+  
+  <h2>JMEM</h2>
+  
+  <p><a href="https://github.com/54chen/jmem">https://github.com/54chen/jmem</a></p>
+  
+  <p>用来定位莫名其妙的堆外内存问题。首先还是要先用jmap之类的看清楚是否是JVM堆内问题了再用此神物。</p>
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/05/07/jvm-cpu-mem-tools/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2014/04/18/how-to-use-akka-in-java-4/">Java中使用akka手记四 用法速查</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-04-18T15:37:25+08:00" pubdate data-updated="true">2014-04-18 15:37:25 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://chen54.b0.upaiyun.com/20140415/akka_logo.png"></p>
+  
+  <h2>Actor</h2>
+  
+  <ul>
+  <li>UntypedActor actor的基类，继承并实现onReceive方法就可以得到一个Actor。</li>
+  <li>Props 配置类，用Props.create可以创建一个按指定配置生成的Actor。</li>
+  <li>Props的推荐实践，创建Actor时，搞一个static的Props.create方法。可以少写不少重复代码。</li>
+  <li>system.actorOf 会创建顶级的actor，将被系统监控。</li>
+  <li>getContext().acrtorOf 会创建子actor。</li>
+  <li>ActorRef 由actorOf产生，可以是一个网络actor。</li>
+  <li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在&gt;做路由、负载均衡、备份时非常有用。ask会拦住reply消息直接给onsuccess等，sender不会再得到reply。</li>
+  <li>Inbox 当actor不能满足需要时，可以使用inbox，比如收多个回复，watch其他actor的生命周期。</li>
+  </ul>
+  
+  
+  </div>
+    
+    
+      <footer>
+        <a rel="full-article" href="/blog/2014/04/18/how-to-use-akka-in-java-4/">Read on →</a>
+      </footer>
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/3">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <em>4</em>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/5">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

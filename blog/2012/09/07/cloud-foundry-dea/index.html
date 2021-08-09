@@ -1,0 +1,241 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Cloud Foundry之dea代码解读 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="简介
+  cloudfoundry是vmvare推出来的开源PaaS平台，dea（DropletExecution Agent）是其应用运行的环境，一个DEA可以启动多个应用。
+  代码位置在： https://github.com/cloudfoundry/dea
+  这一部分也是我最想了解细节的地方， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/09/07/cloud-foundry-dea">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Cloud Foundry之dea代码解读</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-09-07T00:00:00+08:00" pubdate data-updated="true">2012-09-07 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloudfoundry"></p>
+  
+  <p><strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，dea（DropletExecution Agent）是其应用运行的环境，一个DEA可以启动多个应用。<br>
+  代码位置在： https://github.com/cloudfoundry/dea<br>
+  这一部分也是我最想了解细节的地方，因为在一个paas平台中，资源的隔离才是最有价值的部分。</p>
+  
+  <p><strong></strong>
+  初始版的dea基本不控制系统资源，然后基于cgroup搞了一个warden（真正的资源隔离是它，下节再述），程序运行容器。cf希望warden运行在多个平台上，所以没有直接使用LXC。
+  <strong>代码</strong>
+  代码入口在lib/dea.rb:</p>
+  
+  <p></p>
+<blockquote>EM.epoll<br>
+  EM.run {<br>
+    agent = DEA::Agent.new(config)<br>
+    agent.run()<br>
+  }</blockquote>
+  
+  <p>EM是ruby有名的eventmachine，是一个事件驱动网络框架，从java程序员的角度，可以理解有点像mina，也可以认为有点像erlang的gen_server。</p>
+  
+  <p>然后进到lib/dea/agent.rb:</p>
+  
+  <p></p>
+<blockquote>NATS.start(:uri =&gt; @nats_uri) do ...</blockquote>
+  
+  <p>里面注册了各种各样的收到对应消息干什么活的定义，我们来看其中几条线：<br>
+  1. 收到update:<br>
+          NATS.subscribe('dea.update') { |msg| process_dea_update(msg) }<br>
+  上一句是说收到update的指令， process_dea_update里面关键的一句：<br>
+  	register_instance_with_router(instance, :uris =&gt; (uris - current_uris))<br>
+  通过NATS告诉router，新的app来了。</p>
+  
+  <p>2.收到start:<br>
+  	NATS.subscribe("dea.#{uuid}.start") { |msg| process_dea_start(msg) }<br>
+  在process_dea_start里面：<br>
+  	start_operation = lambda do... 把app下载回来，修改好权限什么的。<br>
+  	下面用了fiber（它是ruby里的协程，用来达到异步线程的效果，但是开销要比线程低）：<br>
+  	f = Fiber.new do..<br>
+  	f.resume<br>
+  在协程中，最关键的调用：<br>
+  	stage_app_dir(bits_file, bits_uri, sha1, tgz_file, instance_dir, runtime)<br>
+  		bind_local_runtime(instance_dir, runtime)<br>
+  			startup_contents.gsub!('%VCAP_LOCAL_RUNTIME%', runtime['executable']) // 替换运行时路径 <br>
+  			File.open(startup, 'w') { |f| f.write(new_startup) } #写入运行的脚本<br>
+   一切就绪之后，调用先前准备好的lambda:<br>
+            start_operation.call<br>
+  然后去运行各种shell命令，包括启动应用。</p>
+  
+  <p>__EOF__</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-09-07T00:00:00+08:00" pubdate data-updated="true">2012-09-07 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2012/09/06/cloud-foundry-router/" title="Previous Post: cloud foundry之router代码解读">« cloud foundry之router代码解读</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

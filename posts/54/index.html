@@ -1,0 +1,1993 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part3）关键逻辑 2008-09-14 00:00:00 +0800 /***
+  * Author: cc0cc
+  * E-mail: cc0cc@126.com
+  * WebSite: http://www …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/54">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/09/14/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3%E7%A0%81%E5%A4%A7-3/">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part3）关键逻辑</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-09-14T00:00:00+08:00" pubdate data-updated="true">2008-09-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+  * Date: the Mid-Autumn Festival of 2008<br>
+  * FileName: callbacks.c<br>
+  * Description: callbacks.c为事件处理的核心逻辑，是MyNet的中心<br>
+  ***/<br>
+  #ifdef HAVE_CONFIG_H<br>
+  # include &lt;config.h&gt;<br>
+  #endif<br>
+  #include &lt;gnome.h&gt;<br>
+  #include "Mythread.h"<br>
+  #include "connect.h"<br>
+  #include "callbacks.h"<br>
+  #include "interface.h"<br>
+  #include "support.h"</p>
+  
+  <p>gchar line2[255];//用来存去掉回车后的字符串<br>
+  void write_config(gchar *usr,gchar *pwd);//remember pwd<br>
+  void write_new_config();//first time to write config<br>
+  gchar * scape(gchar *line);//escapse the enter like '\n'<br>
+  /*<br>
+  * 关于mac和ip的：http://hi.baidu.com/cc0cc/blog/item/403cbb25a0cd9a6435a80fa7.html<br>
+  */<br>
+  char *get_mac();//return the mac address<br>
+  char *get_ip();//get ip address<br>
+  int get_socket();<br>
+  int tr_mac();//translate the mac address<br>
+  int CreateMutex();//a file like mutex （互斥体，用来保证只能同时运行一个此软件，后来被干掉啦：））<br>
+  int trayshow;</p>
+  
+  <p>/*这个是window1，也就是软件一打开的时候会执行这个函数*/<br>
+  void<br>
+  on_window1_show                        (GtkWidget       *widget,<br>
+                                          gpointer         user_data)<br>
+  {
+  /*<br>
+  //采访一下：为什么要把这段干掉？<br>
+  //A：因为在程序异常关闭的时候，老是不能自己删除掉原来的PID文件，于是就得手工去删除，实在是不爽，干脆不限制了。<br>
+  char runfile[1024]="";<br>
+  FILE *runfp;   <br>
+  sprintf(runfile,"%s/.mynet/run.pid",getenv("HOME"));</p>
+  
+  <p>if((runfp = fopen(runfile, "r")) != NULL)<br>
+      {   <br>
+      gtk_widget_hide(window1);<br>
+      getAtrBox = create_messagebox("错误","程序已经运行了！",0);<br>
+       gtk_widget_show (getAtrBox);<br>
+      }else{<br>
+          CreateMutex();<br>
+          }<br>
+  */<br>
+  username[0x40]=0;<br>
+  host[0x1E]=0;<br>
+  memcpy(host,SERVER,strlen((char *)SERVER));<br>
+  mac_addr[0x20]=0;<br>
+  mac_Hex[6]=0;<br>
+  ip_addr[0x20]=0;<br>
+  passwd[0x40]=0;<br>
+  server_type[0x40]=0;<br>
+  memcpy(server_type,"internet",strlen((char *)"internet"));</p>
+  
+  <p>gchar *line = ((char *) malloc(255));//is 255b enough?<br>
+  char cfgfile[1024]="";<br>
+  FILE *fp;   <br>
+     <br>
+  sprintf(cfgfile,"%s/.mynet/config",getenv("HOME"));<br>
+  if ((fp = fopen(cfgfile, "r")) == NULL)    write_new_config();//看出来这是在干什么了吗？这是把用户的当前设置给写进一个config文件，就算是windows里的注册表了<br>
+  else<br>
+      {<br>
+      fgets(line,254,fp);<br>
+      gtk_entry_set_text ((GtkEntry *)entry1,(const gchar *)scape(line));<br>
+      memcpy(username,scape(line),strlen(scape(line)));<br>
+      fgets(line,254,fp);<br>
+      gtk_entry_set_text ((GtkEntry *)entry2,(const gchar *)scape(line));   <br>
+      memcpy(passwd,scape(line),strlen(scape(line)));<br>
+      fgets(line,254,fp);<br>
+      memcpy(ip_addr,scape(line),strlen(scape(line)));<br>
+      fgets(line,254,fp);<br>
+      memcpy(host,scape(line),strlen(scape(line)));g_message("here1");<br>
+      //get_socket((char *)scape(line));//host to<br>
+          g_message("%c",&amp;line);<br>
+      fgets(line,254,fp);g_message("here3");<br>
+      memcpy(mac_addr,scape(line),strlen(scape(line)));g_message("here4");<br>
+      tr_mac();g_message("here5");<br>
+      }   <br>
+  g_message("mem now here:usr:%s\npwd:%s\nip:%s\nmac:%s\nserver:%s",username,passwd,ip_addr,mac_addr,host);<br>
+  free(line);<br>
+  }</p>
+  
+  <p>/*这是设置服务器的一个窗口*/<br>
+  void<br>
+  on_window2_show                        (GtkWidget       *widget,<br>
+                                          gpointer         user_data)<br>
+  {
+      gtk_entry_set_text ((GtkEntry *)entry3,(char *)ip_addr);</p>
+  
+  <p>    gtk_entry_set_text ((GtkEntry *)entry4,(char *)host);   </p>
+  
+  <p>    gtk_combo_box_append_text (GTK_COMBO_BOX (comboboxentry1),(char *)mac_addr);<br>
+      gtk_combo_box_set_active(GTK_COMBO_BOX (comboboxentry1),0);<br>
+     <br>
+  }</p>
+  
+  <p>/*这个是哪个button?...是设置属性的那个按钮*/<br>
+  void<br>
+  on_button3_clicked                     (GtkButton       *button,<br>
+                                          gpointer         user_data)<br>
+  {
+      GtkWidget *mac_set;<br>
+      mac_set = create_window2 ();<br>
+       gtk_widget_show (mac_set);<br>
+      return;<br>
+  }</p>
+  
+  <p>/*<br>
+  *这个是什么东东？ 记好了，这个在后面要用的，用来数数的计时的。<br>
+  */<br>
+  gint<br>
+  flash_timeout(gpointer data)<br>
+  {if(Acc_Keep_Link==-1){<br>
+      gtk_widget_hide_all (linkwindow);<br>
+      gtk_widget_show_all (window1);<br>
+      getAtrBox = create_messagebox("提示","与网络连接中断！",1);<br>
+       gtk_widget_show_all (getAtrBox);<br>
+      return FALSE;<br>
+      }<br>
+      create_tray(tray);<br>
+      return TRUE;<br>
+  }</p>
+  
+  <p>/*关键的一个来了！！这就是主界面中的连接按钮！主逻辑从它开始*/<br>
+  void<br>
+  on_button1_clicked                     (GtkButton       *button,<br>
+                                          gpointer         user_data)<br>
+  {   <br>
+  /*这个的意思是，如果连接的时候选择了记住密码，那么就要把用户名密码写进config文件去，不然的话就写个用户名得了*/<br>
+  if(gtk_toggle_button_get_active((GtkToggleButton *)checkbutton1))<br>
+  write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br>
+              (gchar *)gtk_entry_get_text ((GtkEntry *)entry2));<br>
+  else<br>
+  write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br>
+              "");   <br>
+  gtk_widget_hide_all (window1);//所有窗口隐藏掉。。。<br>
+  linkwindow = create_window3 ();//window3就是“请稍候”的那个窗口，大家都隐藏的时候它就要出来了<br>
+  gtk_widget_show_all (linkwindow);<br>
+  gint ptimer_flash=0;<br>
+  gtk_timeout_remove(ptimer_flash);<br>
+  ptimer_flash=gtk_timeout_add(15000,flash_timeout,NULL);    //这是一个计时器，每1.5秒执行一次flash_timeout<br>
+     <br>
+  pthread_t getaccess;<br>
+  Acc_Keep_Link=0;<br>
+  memcpy(username,(char *)gtk_entry_get_text ((GtkEntry *)entry1),strlen((char *)gtk_entry_get_text ((GtkEntry *)entry1)));<br>
+  memcpy(passwd,(char *)gtk_entry_get_text ((GtkEntry *)entry2),strlen((char *)gtk_entry_get_text ((GtkEntry *)entry2)));<br>
+  pthread_create(&amp;getaccess,NULL,Access_Thread,NULL);//这会创建一个叫getaccess的线程<br>
+  }</p>
+  
+  <p>/*垃圾按钮~~就是获取服务的那个按钮*/<br>
+  void<br>
+  on_button4_clicked                     (GtkButton       *button,<br>
+                                          gpointer         user_data)<br>
+  {
+  memcpy(host,(char *)gtk_entry_get_text ((GtkEntry *)entry4),strlen((gchar *)gtk_entry_get_text ((GtkEntry *)entry4)));<br>
+  write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br>
+              "");</p>
+  
+  <p>    get_socket((char *)gtk_entry_get_text ((GtkEntry *)entry4));<br>
+      getAtrBox = create_messagebox("提示","恭喜，获取服务成功！",1);<br>
+       gtk_widget_show (getAtrBox);<br>
+      return;//sorry i can not understand what is this<br>
+  }</p>
+  
+  <p>/*<br>
+  * 当断开网络时会用<br>
+  */<br>
+  void<br>
+  before_quit                      (GtkWidget       *widget,<br>
+                                          gpointer         user_data)<br>
+  {
+  /*<br>
+  char cfgfile[1024]="";<br>
+  sprintf(cfgfile,"%s/.mynet/run.pid",getenv("HOME"));<br>
+  unlink(cfgfile);//delete mutex file*/<br>
+     <br>
+  if(gtk_toggle_button_get_active((GtkToggleButton *)checkbutton1))<br>
+  write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br>
+              (gchar *)gtk_entry_get_text ((GtkEntry *)entry2));//remember the passwd<br>
+  close(sockfd);<br>
+  gtk_main_quit();<br>
+  }</p>
+  
+  <p>/*先说过的，用来写文件记录用户的基本信息的*/<br>
+  void write_new_config()<br>
+  {
+  int log;<br>
+  char filename[1024];<br>
+  char log_string[1024];<br>
+  char filepath[1024];<br>
+  char *dir;<br>
+  strcpy(log_string,"");<br>
+  strcat(log_string,"\n");memcpy(username,"0",strlen((char *)username));<br>
+  strcat(log_string,"\n");memcpy(passwd,"0",strlen((char *)passwd));<br>
+  get_ip();   <br>
+  strcat(log_string,(char *)ip_addr);strcat(log_string,"\n");<br>
+  strcat(log_string,SERVER);strcat(log_string,"\n");<br>
+  get_mac();tr_mac();<br>
+  strcat(log_string,(char *)mac_addr);strcat(log_string,"\n");<br>
+  dir=getenv("HOME");<br>
+  sprintf(filepath,"%s/.mynet/",dir);<br>
+  mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br>
+  chmod(filepath,0777);<br>
+  sprintf(filename,"%sconfig",filepath);<br>
+  log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br>
+  chmod(filename,0777);<br>
+  write(log,log_string,strlen(log_string));<br>
+  close(log);   <br>
+  }</p>
+  
+  <p>/*下面这个东东把line也就是存成文件了的用户名密码（原来是回车分隔的），这些东东一行一行地取出来*/<br>
+  gchar * scape(gchar *line)<br>
+  {
+  int i;<br>
+  int j;<br>
+  for(i=0;i&lt;254;i++)line2[i]=NULL;//这个主要目的是全部干成空的<br>
+  for(i=0;i&lt;254;i++){if((line[i]=='\n')||(line[i]=='\r'))break;}//一旦遇到回车直接就over掉<br>
+  for(j=0;j&lt;i;j++){line2[j]=line[j];/*g_message("%c",line[j]);*/}//复制到line2中<br>
+  return line2;<br>
+  }</p>
+  
+  <p>/*和write_new_config相比少个new，在用户名密码更改的时候才用的*/<br>
+  void write_config( gchar* usr, gchar* pwd)<br>
+  {
+  int log;<br>
+  char filename[1024];<br>
+  char log_string[1024];<br>
+  char filepath[1024];</p>
+  
+  <p>strcpy(log_string,"");<br>
+  strcat(log_string,usr);strcat(log_string,"\n");<br>
+  strcat(log_string,pwd);strcat(log_string,"\n");<br>
+  strcat(log_string,(char *)ip_addr);strcat(log_string,"\n");<br>
+  strcat(log_string,(char *)host);strcat(log_string,"\n");<br>
+  strcat(log_string,(char *)mac_addr);strcat(log_string,"\n");</p>
+  
+  <p>sprintf(filepath,"%s/.mynet/",getenv("HOME"));<br>
+  mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br>
+  chmod(filepath,0777);<br>
+  sprintf(filename,"%sconfig",filepath);<br>
+  log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br>
+  chmod(filename,0777);<br>
+  write(log,log_string,strlen(log_string));<br>
+  close(log);   <br>
+  }</p>
+  
+  <p>void<br>
+  delete_event                     (GtkButton       *button,<br>
+                                          gpointer         user_data)<br>
+  {
+  before_quit((GtkWidget *)button,(gpointer)user_data);<br>
+  }</p>
+  
+  <p>char *<br>
+  get_mac()<br>
+  {
+          int nSocket;<br>
+          struct ifreq struReq;<br>
+          nSocket = socket(PF_INET,SOCK_STREAM,0);<br>
+          memset(&amp;struReq,0,sizeof(struReq));<br>
+          strncpy(struReq.ifr_name, "eth0", sizeof(struReq.ifr_name));  <br>
+          ioctl(nSocket,SIOCGIFHWADDR,&amp;struReq);<br>
+          close(nSocket);<br>
+          //strcpy(mac_addr,(BYTE)ether_ntoa(struReq.ifr_hwaddr.sa_data));<br>
+          memcpy(mac_addr,(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data),strlen((char *)ether_ntoa(struReq.ifr_hwaddr.sa_data)));<br>
+          //g_message("\n get_mac: %s\n",(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data)+1);<br>
+          //g_message("\n mem_mac : %s lenth:%d\n",mac_addr,strlen((char *)mac_addr));<br>
+          return 0;<br>
+  }</p>
+  
+  <p>char *<br>
+  get_ip()<br>
+  {
+             int sock;<br>
+             struct sockaddr_in sin;<br>
+             struct ifreq ifr;  <br>
+             sock = socket(AF_INET, SOCK_DGRAM, 0);<br>
+             if (sock == -1)<br>
+             {<br>
+                         perror("socket");<br>
+                         return "";                         <br>
+             }<br>
+              <br>
+             strncpy(ifr.ifr_name, "eth0", sizeof(ifr.ifr_name));      <br>
+     <br>
+             if (ioctl(sock, SIOCGIFADDR, &amp;ifr) &lt; 0)<br>
+             {<br>
+                         perror("ioctl");<br>
+                         return "";<br>
+             }</p>
+  
+  <p>           memcpy(&amp;sin, &amp;ifr.ifr_addr, sizeof(sin));  <br>
+             close(sock);<br>
+             memcpy(ip_addr,inet_ntoa(sin.sin_addr),strlen(inet_ntoa(sin.sin_addr)));<br>
+             //g_message("\n get_ip:eth0: %s\n",inet_ntoa(sin.sin_addr));<br>
+             //g_message("\n mem_ip: %s",ip_addr);<br>
+             return "";<br>
+  }</p>
+  
+  <p>int<br>
+  get_socket()<br>
+  { char *ser;<br>
+      ser=(gchar *)gtk_entry_get_text ((GtkEntry *)entry4);<br>
+      //digtalser<br>
+             sockfd=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);<br>
+             if (sockfd == -1)<br>
+             {<br>
+                         perror("socket");<br>
+                         return 0;                         <br>
+             }<br>
+             client.sin_family=AF_INET;<br>
+             client.sin_port=htons(3848);<br>
+             //client.sin_addr=inet_addr(host);   <br>
+             inet_pton(AF_INET, ser, &amp;client.sin_addr);           <br>
+             //g_message("udp socket ok!%d",sockfd);<br>
+             return 1;<br>
+  }
+  int<br>
+  chToHex(int x)//字符转成十六进制用<br>
+  {
+  if(x&gt;=97&amp;&amp;x&lt;=102)x=x-87;<br>
+  else x=x-48;<br>
+  return x;<br>
+  }
+  int<br>
+  tr_mac()<br>
+  {
+  int p,i;</p>
+  
+  <p>p=0;<br>
+  for(i=0;i&lt;6;i++)<br>
+      {<br>
+      if (mac_addr[p+1]==':'){mac_Hex[i]=chToHex((int)mac_addr[p]);p+=2;}<br>
+        else{mac_Hex[i]=16*(chToHex((int)mac_addr[p]))+chToHex((char)mac_addr[p+1]);p+=3;}   <br>
+      }<br>
+  //g_message("%s",mac_addr);<br>
+  //for(i=0;i&lt;6;i++)<br>
+  //g_message("%d---%c-%c-%c-%c",mac_Hex[i],mac_addr[i],mac_addr[i+1],mac_addr[i+2],mac_addr[i+3]);<br>
+  return 0;<br>
+  }</p>
+  
+  <p>int<br>
+  CreateMutex()//a file like mutex<br>
+  {
+  int log;<br>
+  char filename[1024];<br>
+  char log_string[1024];<br>
+  char filepath[1024];<br>
+  char *dir;<br>
+  strcpy(log_string,"MyNet");<br>
+  dir=getenv("HOME");<br>
+  sprintf(filepath,"%s/.mynet/",dir);<br>
+  mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br>
+  chmod(filepath,0777);<br>
+  sprintf(filename,"%srun.pid",filepath);<br>
+  log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br>
+  chmod(filename,0777);<br>
+  write(log,log_string,strlen(log_string));<br>
+  close(log);   <br>
+  return 1;   <br>
+  }</p>
+  
+  <p>void<br>
+  delete_getAtrBox()<br>
+  {
+  gtk_widget_hide (getAtrBox);<br>
+  }</p>
+  
+  <p>/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+  * Date: the Mid-Autumn Festival of 2008<br>
+  * FileName: callbacks.c<br>
+  ***/<br>
+  Part4将讲述getaccess线程内的故事，该线程完整再现UDP拔号的情境，待续。。。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/09/14/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3%E7%A0%81%E5%A4%A7-2/">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part2）</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-09-14T00:00:00+08:00" pubdate data-updated="true">2008-09-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+  * Date: the Mid-Autumn Festival of 2008<br>
+  * FileName: main.c<br>
+  ***/<br>
+  /*<br>
+  * Initial main.c file generated by Glade. Edit as required.<br>
+  * Glade will not overwrite this file.<br>
+  */</p>
+  
+  <p>#ifdef HAVE_CONFIG_H<br>
+  # include &lt;config.h&gt;<br>
+  #endif<br>
+  #include &lt;stdio.h&gt;<br>
+  #include &lt;gtk/gtk.h&gt;<br>
+  #include &lt;pthread.h&gt;</p>
+  
+  <p>#include &lt;gnome.h&gt;<br>
+  /*如果没记错的话eggtrayicon.h/tray.h都是在Linux用来做系统托盘的头文件，参见<br>
+  *http://hi.baidu.com/cc0cc/blog/item/26da147a4a428ce92f73b3da.html<br>
+  */<br>
+  #include "eggtrayicon.h"<br>
+  #include "tray.h"<br>
+  #include "interface.h"<br>
+  #include "support.h"<br>
+  #include "connect.h"</p>
+  
+  <p>/*系统托盘*/<br>
+  static void activate_action (GtkAction * action);<br>
+  static void net_quit (GtkAction * action);<br>
+  static const gchar *ui_info =<br>
+      "&lt;ui&gt;"<br>
+      " &lt;popup name='PopupMenu'&gt;"<br>
+      "    &lt;menuitem action='About'/&gt;"<br>
+      "    &lt;separator/&gt;"<br>
+      "    &lt;menuitem action='Quit'/&gt;"<br>
+      " &lt;/popup&gt;"<br>
+      "&lt;/ui&gt;";<br>
+  static GtkActionEntry entries[] = {<br>
+      {"Quit", GTK_STOCK_QUIT,    /* name, stock id */<br>
+      N_("_断开"), "&lt;control&gt;Q",    /* label, accelerator */<br>
+      N_("Quit"),        /* tooltip */<br>
+      G_CALLBACK (net_quit)},<br>
+      {"About", GTK_STOCK_ABOUT,    /* name, stock id */<br>
+      N_( "_关于"), "&lt;control&gt;A",    /* label, accelerator 关于断开*/<br>
+      N_("About"),        /* tooltip */<br>
+      G_CALLBACK (activate_action)},<br>
+  };static guint n_entries = G_N_ELEMENTS (entries);<br>
+  /*系统托盘END*/</p>
+  
+  <p>/*GTK程序入口*/<br>
+  int<br>
+  main (int argc, char *argv[])<br>
+  {</p>
+  
+  <p>    GtkUIManager *ui;<br>
+      GError *error = NULL;<br>
+      GtkActionGroup *actions;<br>
+  #ifdef ENABLE_NLS<br>
+  bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);<br>
+  bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");<br>
+  textdomain (GETTEXT_PACKAGE);<br>
+  #endif<br>
+  gnome_program_init (PACKAGE, VERSION, LIBGNOMEUI_MODULE,<br>
+                        argc, argv,<br>
+                        GNOME_PARAM_APP_DATADIR, PACKAGE_DATA_DIR,<br>
+                        NULL);<br>
+  window1 = create_window1 ();//这是第一个界面，也就是一出来的时候等待输入密码进行连接的界面<br>
+      //g_thread_create(thread1,NULL,NULL,NULL);//wait for the book :)<br>
+       //pthread_create(&amp;tid,NULL,thread1,NULL);//it is not so good!<br>
+       tray = g_new0 (tray_demo, 1);//这里开始弄系统托盘<br>
+      tray-&gt;window_main = window1;<br>
+      create_tray(tray);<br>
+      actions = gtk_action_group_new ("Actions");<br>
+      gtk_action_group_set_translation_domain (actions, GETTEXT_PACKAGE);<br>
+      gtk_action_group_add_actions (actions, entries, n_entries, NULL);<br>
+      ui = gtk_ui_manager_new ();<br>
+      gtk_ui_manager_insert_action_group (ui, actions, 0);<br>
+      gtk_window_add_accel_group (GTK_WINDOW (window1),<br>
+                      gtk_ui_manager_get_accel_group (ui));<br>
+      if (!gtk_ui_manager_add_ui_from_string (ui, ui_info, -1, &amp;error))<br>
+      {<br>
+          g_message ("building menus failed: %s", error-&gt;message);<br>
+          g_error_free (error);<br>
+      }<br>
+      tray-&gt;ui = ui;<br>
+      tray-&gt;actions = actions;<br>
+      tray-&gt;menus = gtk_ui_manager_get_widget (ui, "/PopupMenu");//这段代码可以在gnome的网站上找到。。:)<br>
+  g_message("ccc");   <br>
+  gtk_widget_show (window1);<br>
+  gtk_main ();g_message("here2!");<br>
+  return 0;<br>
+  }</p>
+  
+  <p>//下面两个都是为系统托盘的事件做的<br>
+  static void<br>
+  activate_action (GtkAction * action)<br>
+  {   GtkWidget *about;<br>
+      about = create_aboutdialog1 ();<br>
+       gtk_widget_show (about);<br>
+      return;<br>
+  }
+  static void<br>
+  net_quit (GtkAction * action)<br>
+  {
+      Acc_Keep_Link=-1;<br>
+      gtk_widget_show_all (window1);<br>
+      send_access_request();<br>
+      //g_message("net_quit!");<br>
+  }</p>
+  
+  <p>/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a></p>
+  
+  <p>* Date: the Mid-Autumn Festival of 2008<br>
+  ***/</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/09/14/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3%E7%A0%81%E5%A4%A7/">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part1）</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-09-14T00:00:00+08:00" pubdate data-updated="true">2008-09-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p></p>
+<p class="cnt">/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+  * Date: the Mid-Autumn Festival of 2008<br>
+  ***/<br>
+  概要：这个软件是三年前的时候在学校里写的，主要目的是给广大的Linuxers一个上网的机会，不过后来在我推出后官方又出了个Linux下的拔号二进制包。
+  </p>
+<p class="cnt">PS:神州数码的局域网拔号软件在各大高校使用很多，有不少小区也是，一般官方发布的会有一定的限制。。。</p>
+  
+  <p></p>
+<p class="cnt">熟悉802.1x协议的过程，对网络编程的学习也有一定的提高。<br>
+  代码中的ASM汇编部分代码取自北航的高手xdkui（目前在MS就职），在此一并感谢他的努力hack。<br>
+  声明：本代码只供学习使用，完全遵循计算机软件保护条例。</p>
+  
+  <p>1.开发环境：<br>
+  gtk+/gnome<br>
+  Anjuta+Glade<br>
+  2.文件树（截图）：
+  </p>
+<div class="cnt"><a href="http://www.54chen.com/wp-content/uploads/2008/11/f53990fba317f23b4f4aeaba.png"><img class="alignnone size-full wp-image-67" title="f53990fba317f23b4f4aeaba" src="http://www.54chen.com/wp-content/uploads/2008/11/f53990fba317f23b4f4aeaba.png" alt="" width="236" height="701"></a></div>
+  <div class="cnt">/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+</div>
+  <div class="cnt">* Date: the Mid-Autumn Festival of 2008<br>
+  ***/</div>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/08/25/flex%E5%AE%9E%E6%97%B6%E6%8D%A2%E8%82%A4%E6%9C%AF%EF%BC%8D%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2css%E6%A0%B7%E5%BC%8F%E8%A1%A8%E6%96%87%E4%BB%B6/">flex实时换肤术－动态切换CSS样式表文件</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-08-25T00:00:00+08:00" pubdate data-updated="true">2008-08-25 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p></p>
+<p style="text-indent: 15pt; line-height: 150%;">HTML中有一个非常好的特性就是可以动态切换页面链接的CSS样式表，而FLEX并不具备动态导入CSS的特性，因为FLEX的所有的UI外观都是在后台SERVER生成在发布到前台的（当然，通过AS可以实时更改UI外观<em>setStyle</em>，这是单个更改的方式，并不是实时的CSS文件切换），一直觉得挺不爽的，今天在<a hreflang="zh" href="http://www.livejournal.com/users/mannu/286686.html" target="blank">mannu</a>看到一个使用_global.styles来实现动态切换CSS文件的非常巧妙的方式:</p>
+  <p style="text-indent: 15pt; line-height: 150%;">首先，因为FLEX是将CSS编译进SWF文件的，所有我们将我们需要切换的CSS编译成SWF文件；</p>
+  
+  <p></p>
+<p style="text-indent: 15pt; line-height: 150%;"><strong><em>green.css</em></strong> Label{<br>
+  color:#00FF00;<br>
+  fontSize:20px;<br>
+  }</p>
+  
+  <p></p>
+<p style="text-indent: 15pt; line-height: 150%;"><strong><em>green.mxml</em></strong> &lt;?xml version="1.0" encoding="utf-8"?&gt;<br>
+  &lt;mx:Application xmlns:mx="http://www.macromedia.com/2003/mxml"&gt;</p>
+  
+  <p>&lt;mx:Style source="green.<span>css</span>"&gt;&lt;/mx:Style&gt;</p>
+  
+  <p>&lt;/mx:Application&gt;
+  </p>
+<p style="text-indent: 15pt; line-height: 150%;">类似的还有red.css/red.mxml,blue.css/blue.mxml。 然后，我们要切换到相应的CSS就直接LOAD相应的SWF文件； 最后，将_global.styles设置为所导入的SWF文件的_global.styles 。 这里有一个工具封装好的工具类:</p>
+  
+  <p></p>
+<p style="text-indent: 15pt; line-height: 150%;"><strong><em>RuntimeStyle.as</em></strong> import mx.controls.Loader;<br>
+  import mx.core.MXMLObject;<br>
+  import mx.utils.Delegate;</p>
+  
+  <p>class RuntimeStyle implements MXMLObject<br>
+  {</p>
+  
+  <p>private var _document:Object;<br>
+  private var loader:Loader;</p>
+  
+  <p>public function initialized(document:Object, id:String):Void<br>
+  {
+  _document = document;<br>
+  }</p>
+  
+  <p>private var _source:String;</p>
+  
+  <p>public function get source():String<br>
+  {
+  return _source;<br>
+  }</p>
+  
+  <p>public function set source(value:String):Void<br>
+  {
+  if (_source != value)<br>
+  {
+  _source = value;</p>
+  
+  <p>if (loader == undefined)<br>
+  {
+  loader = Loader(_document.createClassObject(Loader,<br>
+  "runtimeStyleLoader", 21983));<br>
+  loader.width = loader.height = 0;<br>
+  loader.addEventListener("complete",<br>
+  Delegate.create(this, loader_complete));<br>
+  }</p>
+  
+  <p>loader.source = _source + ".swf";<br>
+  }
+  }</p>
+  
+  <p>private function loader_complete(event:Object):Void<br>
+  {
+  _global.styles = Loader(event.target).content._global.styles;<br>
+  _document.styleName = _document.styleName == "!" ? "@" : "!";<br>
+  }</p>
+  
+  <p>}</p>
+  
+  <p></p>
+<p style="text-indent: 15pt; line-height: 150%;">测试代码：<strong><em>cssChg.mxml</em></strong>&lt;local:RuntimeStyle xmlns:local="*"</p>
+  
+  <p>source="{stylesWrappers.selectedItem.source}" /&gt;</p>
+  
+  <p>&lt;mx:Model id="alternateStyles"</p>
+  
+  <p>source="alternateStyles.xml" /&gt;</p>
+  
+  <p>&lt;mx:ComboBox id="stylesWrappers"<br>
+  dataProvider="{alternateStyles.stylesheets}"<br>
+  labelField="name" selectedIndex="-1" /&gt;</p>
+  
+  <p><strong><em>alternateStyles.xml</em></strong> &lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+  &lt;styles&gt;</p>
+  
+  <p>&lt;stylesheets&gt;<br>
+  &lt;name&gt;red&lt;/name&gt;<br>
+  &lt;source&gt;red.mxml&lt;/source&gt;<br>
+  &lt;/stylesheets&gt;<br>
+  &lt;stylesheets&gt;<br>
+  &lt;name&gt;green&lt;/name&gt;<br>
+  &lt;source&gt;green.mxml&lt;/source&gt;<br>
+  &lt;/stylesheets&gt;<br>
+  &lt;stylesheets&gt;<br>
+  &lt;name&gt;blue&lt;/name&gt;<br>
+  &lt;source&gt;blue.mxml&lt;/source&gt;<br>
+  &lt;/stylesheets&gt;</p>
+  
+  <p>&lt;/styles&gt;</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/08/22/php-send-and-receive-the-message/">PHP“收发”邮件的一个程序</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-08-22T00:00:00+08:00" pubdate data-updated="true">2008-08-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>&lt;?php<br>
+  if ($EMAIL_INC) return;<br>
+  $EMAIL_INC=   "defined";<br>
+  define( "SmtpPort",25);</p>
+  
+  <p>class Pop3 {<br>
+  var $subject;                           // 邮件主题<br>
+  var $from_email;                        // 发件人地址<br>
+  var $from_name;                         // 发件人姓名<br>
+  var $to_email;                          // 收件人地址<br>
+  var $to_name;                           // 收件人姓名<br>
+  var $body;                              // 邮件内容<br>
+  var $filename;                          // 文件名<br>
+  var $socket;                  // 当前的 socket<br>
+  var $Line;<br>
+  var $Status;</p>
+  
+  <p>function pop3_open($server, $port)<br>
+  {</p>
+  
+  <p>$this-&gt;Socket = fsockopen($server, $port);<br>
+  if ($this-&gt;Socket &lt;= 0){<br>
+  return false;<br>
+  }
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  $this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return false;<br>
+  return true;<br>
+  }</p>
+  
+  <p>function pop3_user($user)<br>
+  {</p>
+  
+  <p>if ($this-&gt;Socket &lt; 0){<br>
+  return false;<br>
+  }
+  fputs($this-&gt;Socket,   "USER $this-&gt;user\r\n");<br>
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  $this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return false;</p>
+  
+  <p>return true;<br>
+  }</p>
+  
+  <p>function pop3_pass( $pass)<br>
+  {</p>
+  
+  <p>fputs($this-&gt;Socket,   "PASS $pass\r\n");<br>
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  $this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
+  
+  <p>return 1;<br>
+  }</p>
+  
+  <p>function pop3_stat()<br>
+  {</p>
+  
+  <p>fputs($this-&gt;Socket,   "STAT\r\n");<br>
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  $this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
+  
+  <p>if (!eregi( "+OK (.*) (.*)", $this-&gt;Line, $regs))<br>
+  return 0;</p>
+  
+  <p>return $regs[1];<br>
+  }</p>
+  
+  <p>function pop3_list()<br>
+  {
+  fputs($this-&gt;Socket,   "LIST\r\n");<br>
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  $this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
+  
+  <p>$i = 0;<br>
+  while   (substr($this-&gt;Line   =   fgets($this-&gt;Socket, 1024),   0,   1)   &lt;&gt;    ".")<br>
+  {
+  $articles[$i] = $this-&gt;Line;<br>
+  $i++;<br>
+  }
+  $articles[ "count"] = $i;</p>
+  
+  <p>return $articles;<br>
+  }</p>
+  
+  <p>function pop3_retr($nr)<br>
+  {</p>
+  
+  <p>fputs($this-&gt;Socket,   "RETR $nr\r\n");<br>
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  $this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
+  
+  <p>while   (substr($this-&gt;Line   =   fgets($this-&gt;Socket, 1024),   0,   1)   &lt;&gt;    ".")<br>
+  {
+  $data[$i] = $this-&gt;Line;<br>
+  $i++;<br>
+  }
+  $data[ "count"] = $i;</p>
+  
+  <p>return $data;<br>
+  }</p>
+  
+  <p>function pop3_dele( $nr)<br>
+  {</p>
+  
+  <p>fputs($this-&gt;Socket,   "DELE $nr\r\n");<br>
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  $this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;<br>
+  return 1;<br>
+  }</p>
+  
+  <p>function pop3_quit()<br>
+  {</p>
+  
+  <p>fputs($this-&gt;Socket,   "QUIT\r\n");<br>
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  $this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "+") return 0;</p>
+  
+  <p>return 1;<br>
+  }
+  }</p>
+  
+  <p>class Smtp {</p>
+  
+  <p>var $Subject;               // string the email@#s subject<br>
+  var $FromName;                  // string sender@#s name (opt)<br>
+  var $ToName;                    // string recipient@#s name (opt)<br>
+  var $Body;                      // string body copy<br>
+  var $Attachment;          // attachment (optional)<br>
+  var $AttachmentType;<br>
+  var $Socket;<br>
+  var $Line;<br>
+  var $Status;</p>
+  
+  <p>function Smtp($Server =   "localhost",$Port = SmtpPort)<br>
+  {
+  return $this-&gt;Open($Server, $Port);<br>
+  }</p>
+  
+  <p>function SmtpMail($FromEmail, $FromName, $ToEmail, $ToName, $Subject, $Body, $Attachment=null, $AttachmentType= "TEXT")<br>
+  {
+  $this-&gt;Subject    = $Subject;<br>
+  $this-&gt;ToName     = $ToName;</p>
+  
+  <p>$this-&gt;FromName     = $FromName;<br>
+  $this-&gt;Body       = $Body;</p>
+  
+  <p>$this-&gt;Attachment = $Attachment;<br>
+  $this-&gt;AttachmentType = $AttachmentType;</p>
+  
+  <p>if ($this-&gt;Helo() == false){<br>
+  return false;<br>
+  }
+  if ($this-&gt;MailFrom($FromEmail) == false){<br>
+  return false;<br>
+  }
+  if ($this-&gt;RcptTo($ToEmail) == false){<br>
+  return false;<br>
+  }
+  if ($this-&gt;Body() == false){<br>
+  return false;<br>
+  }
+  if ($this-&gt;Quit() == false){<br>
+  return false;<br>
+  }
+  }</p>
+  
+  <p>function Open($Server, $Port)<br>
+  {</p>
+  
+  <p>$this-&gt;Socket = fsockopen($Server, $Port);<br>
+  if ($this-&gt;Socket &lt; 0) return false;</p>
+  
+  <p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+  
+  <p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;</p>
+  
+  <p>return true;<br>
+  }
+  function Helo()<br>
+  {
+  if (fputs($this-&gt;Socket,   "helo\r\n") &lt; 0 ){<br>
+  return false;<br>
+  }
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+  
+  <p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;</p>
+  
+  <p>return true;<br>
+  }</p>
+  
+  <p>function Ehlo()<br>
+  {</p>
+  
+  <p>/* Well, let@#s use "helo" for now.. Until we need the<br>
+  extra func@#s    [Unk]<br>
+  */<br>
+  if(fputs($this-&gt;Socket,   "helo localhost\r\n")&lt;0){<br>
+  return false;<br>
+  }
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+  
+  <p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;</p>
+  
+  <p>return true;<br>
+  }</p>
+  
+  <p>function MailFrom($FromEmail)<br>
+  {</p>
+  
+  <p>if (fputs($this-&gt;Socket,   "MAIL FROM: &lt;$FromEmail&gt;\r\n")&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+  
+  <p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;</p>
+  
+  <p>return true;<br>
+  }</p>
+  
+  <p>function RcptTo($ToEmail)<br>
+  {</p>
+  
+  <p>if(fputs($this-&gt;Socket,   "RCPT TO: &lt;$ToEmail&gt;\r\n")&lt;0){<br>
+  return false;<br>
+  }
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+  
+  <p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return false;<br>
+  return true;<br>
+  }</p>
+  
+  <p>function Body()<br>
+  {
+  $FileSize = 0;<br>
+  $Attachment = null;<br>
+  $fp = null;</p>
+  
+  <p>$buffer = sprintf( "From: %s\r\nTo:%s\r\nSubject:%s\r\n", $this-&gt;FromName, $this-&gt;ToName, $this-&gt;Subject);</p>
+  
+  <p>if(fputs($this-&gt;Socket,   "DATA\r\n")&lt;0){<br>
+  return false;<br>
+  }
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+  
+  <p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "3") return false;</p>
+  
+  <p>if(fputs($this-&gt;Socket, $buffer)&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>if ($this-&gt;Attachment == null){</p>
+  
+  <p>if(fputs($this-&gt;Socket,   "MIME-Version: 1.0\r\nContent-Type: text/plain; charset=ISO-8859-1\r\nContent-Transfer-Encoding: 7bit\r\n\r\n")&lt;0){<br>
+  return false;<br>
+  }
+  if(fputs($this-&gt;Socket,   "$this-&gt;Body\r\n\r\n")&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>if(fputs($this-&gt;Socket,   ".\r\n")&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  if (substr($this-&gt;Line, 0, 1) &lt;&gt;   "2"){<br>
+  return false;<br>
+  }else{<br>
+  return true;<br>
+  }
+  }else{<br>
+  if(fputs($this-&gt;Socket, "MIME-Version: 1.0\r\nContent-Type: multipart/mixed; boundary=\"----=_NextPart_000_01BCFA61.A3697360\"\r\n".<br>
+  "Content-Transfer-Encoding: 7bit\r\n\r\n".<br>
+  "This is a multi-part message in MIME format.\r\n".<br>
+  "\r\n------=_NextPart_000_01BCFA61.A3697360\r\n".<br>
+  "Content-Type: text/plain; charset=ISO-8859-1\r\n".<br>
+  "Content-Transfer-Encoding: 7bit\r\n".<br>
+  "\r\n")&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>/* 输出邮件内容 */<br>
+  if(fputs($this-&gt;Socket,   "$this-&gt;Body\r\n\r\n")&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>if ( fputs($this-&gt;Socket, "\r\n------=_NextPart_000_01BCFA61.A3697360\r\n")&lt;0){<br>
+  return false;<br>
+  }
+  $FileSize = filesize($this-&gt;Attachment);<br>
+  if ($FileSize == false){<br>
+  return false;<br>
+  }
+  if (($fp = fopen($this-&gt;Attachment, "r"))== false) {<br>
+  return false;<br>
+  }else{<br>
+  $Attachment = fread($fp,$FileSize);<br>
+  }</p>
+  
+  <p>// 如果没有附件的目录<br>
+  if (($AttachName = strrchr($this-&gt;Attachment, @#/@#)) == false){</p>
+  
+  <p>$AttachName = $this-&gt;Attachment;<br>
+  }</p>
+  
+  <p>if( fputs($this-&gt;Socket,<br>
+  "Content-Type: application/octet-stream; \r\nname=\"$AttachName\"\r\n".<br>
+  "Content-Transfer-Encoding: quoted-printable\r\n".<br>
+  "Content-Description: $AttachName\r\n".<br>
+  "Content-Disposition: attachment; \r\n\tfilename=\"$AttachName\"\r\n".<br>
+  "\r\n")&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>/* 输出附件*/<br>
+  if( fputs($this-&gt;Socket, $Attachment)&lt;0){<br>
+  return false;<br>
+  }
+  if ( fputs($this-&gt;Socket, "\r\n\r\n------=_NextPart_000_01BCFA61.A3697360--\r\n")&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>if( fputs($this-&gt;Socket, ".\r\n")&lt;0){<br>
+  return false;<br>
+  }</p>
+  
+  <p>$this-&gt;Line = fgets($this-&gt;Socket, 1024);<br>
+  if (substr($this-&gt;Line, 0, 1) &lt;&gt;   "2")<br>
+  return false;</p>
+  
+  <p>return true;</p>
+  
+  <p>}<br>
+  }</p>
+  
+  <p>function Quit()<br>
+  {</p>
+  
+  <p>if(fputs($this-&gt;Socket,   "QUIT\r\n")&lt;0){<br>
+  return false;<br>
+  }
+  $this-&gt;Line = fgets($this-&gt;Socket, 1024);</p>
+  
+  <p>$this-&gt;Status[ "LASTRESULT"] = substr($this-&gt;Line, 0, 1);<br>
+  $this-&gt;Status[ "LASTRESULTTXT"] = substr($this-&gt;Line, 0, 1024);</p>
+  
+  <p>if ($this-&gt;Status[ "LASTRESULT"] &lt;&gt;   "2") return 0;</p>
+  
+  <p>return 1;<br>
+  }
+  function Close()<br>
+  {
+  fclose($this-&gt;Socket);<br>
+  }
+  }<br>
+  /*</p>
+  
+  <p>怎样使用这个程序的一个示例</p>
+  
+  <p>$MailTo = new Smtp();<br>
+  $MailTo-&gt;SmtpMail("Dave@micro-automation.net","Dave Cramer",<br>
+  "Dave@micro-automation.net","David",<br>
+  "Test Mail",$MailMessage,"service.tab",0);<br>
+  $MailTo-&gt;Close();<br>
+  $MailTo=null;</p>
+  
+  <p>*/<br>
+  /*<br>
+  $pop3 = pop3_open("localhost", "110");<br>
+  if (!$pop3) {<br>
+  printf("[ERROR] Failed to connect to localhost&lt;BR&gt;\n");<br>
+  return 0;<br>
+  }</p>
+  
+  <p>if (!pop3_user($pop3, "unk")) {<br>
+  printf("[ERROR] Username failed!&lt;BR&gt;\n");<br>
+  return 0;<br>
+  }</p>
+  
+  <p>if (!pop3_pass($pop3, "secret")) {<br>
+  printf("[ERROR] PASS failed!&lt;BR&gt;\n");<br>
+  return 0;<br>
+  }</p>
+  
+  <p>$articles = pop3_list($pop3);<br>
+  if (!$articles) {<br>
+  printf("[ERROR] LIST failed!&lt;BR&gt;\n");<br>
+  return 0;<br>
+  }</p>
+  
+  <p>for ($i = 1; $i &lt; $articles ["count"] + 1; $i++)<br>
+  {
+  printf("i=$i&lt;BR&gt;\n");<br>
+  $data = pop3_retr($pop3,$i);<br>
+  if (!$data) {<br>
+  printf("data goes wrong on @#$i@#&lt;BR&gt;\n");<br>
+  return 0;<br>
+  }</p>
+  
+  <p>for ($j = 0; $j &lt; $data["count"]; $j++)<br>
+  {
+  printf("$data[$j]&lt;BR&gt;\n");<br>
+  }
+  }<br>
+  */<br>
+  ?&gt;</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/08/20/%E5%85%A8%E8%A7%92%E5%8D%8A%E8%A7%92%E5%88%A4%E6%96%AD/">全角半角判断</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-08-20T00:00:00+08:00" pubdate data-updated="true">2008-08-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p></p>
+<li>半角范围：u0000 - u00FF, uFF61 - uFF9F, uFFE8 - uFFEE</li>
+  	<li>全角范围：
+  <ul class="list2" style="padding-left: 16px; margin-left: 16px;">
+  	<li>全角数字(0-9) uFF10 - uFF19</li>
+  	<li>全角大文字(A-Z): uFF21 - uFF3A</li>
+  	<li>全角小文字(a-z): uFF41 - uFF5A</li>
+  	<li>全角平仮名：u3040 - u309F</li>
+  	<li>全角片仮名：u30A0 - u30FF</li>
+  	<li>全角Latin: uFF01 - uFF5E</li>
+  	<li>全角Symbol: uFFE0 - uFFE5</li>
+  </ul>
+  以下是判断全角半角混合字符串的字节数是否超过指定的字节数。(半角被认为是一个字节)
+  <div class="highlighter">
+  <ol class="highlighter-c">
+  	<li>
+<span class="keyword">function</span><span> isOverBytes(s, maxbytes)</span>
+</li>
+  	<li class="alt"><span>{</span></li>
+  	<li>
+<span>    </span><span class="keyword">var</span><span> i = 0;</span>
+</li>
+  	<li class="alt">
+<span>    </span><span class="keyword">var</span><span> bytes = 0;</span>
+</li>
+  	<li>
+<span>    </span><span class="keyword">var</span><span> uFF61 = parseInt(</span><span class="string">"FF61"</span><span>, 16);</span>
+</li>
+  	<li class="alt">
+<span>    </span><span class="keyword">var</span><span> uFF9F = parseInt(</span><span class="string">"FF9F"</span><span>, 16);</span>
+</li>
+  	<li>
+<span>    </span><span class="keyword">var</span><span> uFFE8 = parseInt(</span><span class="string">"FFE8"</span><span>, 16);</span>
+</li>
+  	<li class="alt">
+<span>    </span><span class="keyword">var</span><span> uFFEE = parseInt(</span><span class="string">"FFEE"</span><span>, 16);</span>
+</li>
+  	<li>
+<span>    </span><span class="keyword">while</span><span> (i &lt; s.length)</span>
+</li>
+  	<li class="alt"><span>     {</span></li>
+  	<li>
+<span>        </span><span class="keyword">var</span><span> c = parseInt(s.charCodeAt(i));</span>
+</li>
+  	<li class="alt">
+<span>        </span><span class="keyword">if</span><span> (c &lt; 256) {</span>
+</li>
+  	<li><span>             bytes = bytes + 1;</span></li>
+  	<li class="alt"><span>         }</span></li>
+  	<li>
+<span>        </span><span class="keyword">else</span><span> {</span>
+</li>
+  	<li class="alt">
+<span>            </span><span class="keyword">if</span><span> ((uFF61 &lt;= c) &amp;&amp; (c &lt;= uFF9F)) {</span>
+</li>
+  	<li><span>                 bytes = bytes + 1;</span></li>
+  	<li class="alt">
+<span>             } </span><span class="keyword">else</span><span> </span><span class="keyword">if</span><span> ((uFFE8 &lt;= c) &amp;&amp; (c &lt;= uFFEE)) {</span>
+</li>
+  	<li><span>                                bytes = bytes + 1;</span></li>
+  	<li class="alt"><span>                        }</span></li>
+  	<li>
+<span>                       </span><span class="keyword">else</span><span> {</span>
+</li>
+  	<li class="alt"><span>                 bytes = bytes + 2;</span></li>
+  	<li><span>             }</span></li>
+  	<li class="alt"><span>         }</span></li>
+  	<li>
+<span>        </span><span class="keyword">if</span><span> (bytes &gt; maxbytes) {</span>
+</li>
+  	<li class="alt">
+<span>            </span><span class="keyword">return</span><span> </span><span class="keyword">true</span><span>;</span>
+</li>
+  	<li><span>         }</span></li>
+  	<li class="alt"><span>         i = i + 1;</span></li>
+  	<li><span>     }</span></li>
+  	<li class="alt">
+<span>    </span><span class="keyword">return</span><span> </span><span class="keyword">false</span><span>;</span>
+</li>
+  	<li><span>}</span></li>
+  </ol>
+  </div>
+</li>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/08/20/flex%E5%8A%A0%E8%BD%BD%E5%9B%BE%E7%89%87%E7%9A%84%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F/">Flex加载图片的常用的几种方式</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-08-20T00:00:00+08:00" pubdate data-updated="true">2008-08-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><span style="color: #000000;">&lt;?</span><span style="color: #000000;">xml version</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">1.0</span><span style="color: #000000;">"</span><span style="color: #000000;"> encoding</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">utf-8</span><span style="color: #000000;">"</span><span style="color: #000000;">?&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">&lt;</span><span style="color: #000000;">mx:Application xmlns:mx</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">http://www.adobe.com/2006/mxml</span><span style="color: #000000;">"</span><span style="color: #000000;"> layout</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">absolute</span><span style="color: #000000;">"</span><span style="color: #000000;"> applicationComplete</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">InitApp()</span><span style="color: #000000;">"</span><span style="color: #000000;">&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">    </span><span style="color: #000000;">&lt;</span><span style="color: #000000;">mx:Script</span><span style="color: #000000;">&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">        </span><span style="color: #000000;">&lt;!</span><span style="color: #000000;">[CDATA[
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">        
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">            </span><span style="color: #008000;">//</span><span style="color: #008000;">第一种方式 这种方式编译以后1.jpg 会直接编译进swf文件中 所以swf可以存在</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">             [Bindable]
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">             [Embed(source</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">1.jpg</span><span style="color: #000000;">"</span><span style="color: #000000;">)]
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">             private </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> imgClass:Class;
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">            
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">            </span><span style="color: #008000;">//</span><span style="color: #008000;">第2种方式</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">             private </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> _loader:Loader;
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">            
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt="" align="top"><img style="display: none;" src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt="" align="top">             private </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> InitApp():</span><span style="color: #0000ff;">void</span><span style="display: none; background-color: #ffffff; border: #808080 1px solid;"><img src="http://www.cnblogs.com/Images/dot.gif" alt=""></span><span><span style="color: #000000;">{
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">第一种方式的代码</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _img.source </span><span style="color: #000000;">=</span><span style="color: #000000;"> imgClass;
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">第二种方式的代码</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _loader </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Loader();
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">这里需要注意的是 不是_loader.addEventListener   这样是没有效果的</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif" alt="" align="top"><img style="display: none;" src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _loader.contentLoaderInfo.addEventListener(Event.COMPLETE,</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(e:Event):</span><span style="color: #0000ff;">void</span><span style="display: none; background-color: #ffffff; border: #808080 1px solid;"><img src="http://www.cnblogs.com/Images/dot.gif" alt=""></span><span><span style="color: #000000;">{
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                     _img.source </span><span style="color: #000000;">=</span><span style="color: #000000;"> e.currentTarget.content;
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif" alt="" align="top">                 }</span></span><span style="color: #000000;">);
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">这里说一个技巧   当url 中有中文字体的话 使用encodeURI方法 如果没有 则可以不加</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _loader.load(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> URLRequest(encodeURI(</span><span style="color: #000000;">"</span><span style="color: #000000;">1.jpg</span><span style="color: #000000;">"</span><span style="color: #000000;">)));
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">第三种方式比较简单</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _img.source </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">"</span><span style="color: #000000;">1.jpg</span><span style="color: #000000;">"</span><span style="color: #000000;">;  </span><span style="color: #008000;">//</span><span style="color: #008000;">注意这里必须设置img autoLoad属性为true</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">最后说明 其中第2 第3种方式中swf都不能存在 必须配合1.jpg文件的存在 而第一种方式则不需要</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockEnd.gif" alt="" align="top"></span><span style="color: #000000;">             }</span></span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">         ]]</span><span style="color: #000000;">&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">    </span><span style="color: #000000;">&lt;</span><span style="color: #000000;">/</span><span style="color: #000000;">mx:Script&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">    </span><span style="color: #000000;">&lt;</span><span style="color: #000000;">mx:Image x</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">51</span><span style="color: #000000;">"</span><span style="color: #000000;"> y</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">62</span><span style="color: #000000;">"</span><span style="color: #000000;"> width</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">298</span><span style="color: #000000;">"</span><span style="color: #000000;"> height</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">245</span><span style="color: #000000;">"</span><span style="color: #000000;"> autoLoad</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">true</span><span style="color: #000000;">"</span><span style="color: #000000;"> id</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">_img</span><span style="color: #000000;">"/</span><span style="color: #000000;">&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">&lt;</span><span style="color: #000000;">/</span><span style="color: #000000;">mx:Application&gt;</span></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/07/29/wine-%E8%BF%90%E8%A1%8C-tm-pv4%E7%89%88%E6%9C%AC/">Wine 运行 Tm Pv4版本</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true">2008-07-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>wget <a href="http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe">http://dl_dir.qq.com/qqfile/tm/tm2008preview4_sp2_chs.exe</a></p>
+  
+  <p>用wine运行安装程序： wine tm2008preview4_sp2_chs.exe<br>
+  安装完成后，并不能运行，缺少一些dll。将tm2008目录下SysDir目录下的各个子目录（Microsoft.VC80.ATL等5个子目录）下的所有dll文件拷贝到tm2008下的Bin目录中。将windows<br>
+  xp下的system32目录下的msxml3.dll, msxml3r.dll, riched32.dll,<br>
+  riched20.dll文件拷贝到.wine/drive_c/windows/system32/目录中。<br>
+  运行winecfg，在library标签页下，添加msxml3、riched32、riched20。<br>
+  然后就可以运行tm2008了。</p>
+  
+  <p>如果遇到中文乱码，注意做如下配置：<br>
+  1 如果用的英文locale，记得改成中文再启动wine。即export LANG=zh_CN.UTF-8<br>
+  2 配置中文字体。将windows下的simsun.ttc拷贝到~/.fonts/目录下，然后运行regedit，修改HKEY_LOCAL_MACHINE\Software\Microsoft\Windows<br>
+  NT\CurrentVersion\FontSubstitutes\ 下的所有键值，将他们都改成SimSun。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/07/29/ubuntu-710-install-wine-records/">Ubuntu 7.10 安装wine记录</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true">2008-07-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>cz@cz-desktop:~$ wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -<br>
+  OK<br>
+  cz@cz-desktop:~$ sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/gutsy.list -O /etc/apt/sources.list.d/winehq.list</p>
+  
+  <p>cz@cz-desktop:~$ sudo apt-get update</p>
+  
+  <p>cz@cz-desktop:~$ sudo apt-get install wine</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2008/07/29/64%E4%BD%8Dubuntu-wine10-%E5%AE%89%E8%A3%85qq/">64位ubuntu wine1.0 安装qq</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-07-29T00:00:00+08:00" pubdate data-updated="true">2008-07-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>环境比较特殊 注意是64的i386就不要看了<br>
+  {安装wine:}<br>
+  1.添加签名<br>
+  wget -q http://wine.budgetdedicated.com/apt/387EE263.gpg -O- | sudo apt-key add -<br>
+  2.更新WINE源<br>
+  sudo wget http://wine.budgetdedicated.com/apt/sources.list.d/hardy.list -O /etc/apt/sources.list.d/winehq.list<br>
+  3.更新软件包<br>
+  sudo apt-get update<br>
+  4.安装WINE<br>
+  sudo apt-get install wine</p>
+  
+  <p>{设置wine:}</p>
+  
+  <p>Wine快速设置 deb包 for amd64的下载地址是：</p>
+  
+  <p><a href="http://ubuntu-tweak.code.com/files/wine-ubuntu_amd64.deb">http://ubuntu-tweak.code.com/files/wine-ubuntu_amd64.deb</a></p>
+  
+  <p>顺便再加上之前的for i386的：</p>
+  
+  <p><a href="http://ubuntu-tweak.code.com/files/wine-ubuntu.deb">http://ubuntu-tweak.code.com/files/wine-ubuntu.deb </a>
+  {使用QQ}
+  <span class="postbody"><span style="font-weight: bold;">Wine的版本</span>:<br>
+  Wine 1.0 (默认中文补丁,有打过补丁的Wine1.0下载,见下面)<br>
+  windowssux已经把8.04-32bits的deb包(包括中文补丁)做出来了，在<a class="postlink" href="http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/" target="_blank">http://ftp.ubuntu.org.cn/home/windowssux/Wine-CN/</a>。<br>
+  登录的用户名和密码在<a class="postlink" href="http://forum.ubuntu.org.cn/viewtopic.php?t=9685" target="_blank">http://forum.ubuntu.org.cn/viewtopic.php?t=9685</a>。</span></p>
+  
+  <p><span style="font-weight: bold;">Wine的注册表</span>
+  修改过的内容如下,请给这个文件保存成QQ2007.reg<br>
+  REGEDIT4<br>
+  [HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe]<br>
+  "Version"="vista"<br>
+  [HKEY_CURRENT_USER\Software\Wine\AppDefaults\QQ.exe\DllOverrides]<br>
+  "riched20"="native"<br>
+  "riched32"="native"</p>
+  
+  <p>并使用下列命令导入<br>
+  #regedit QQ2007.reg</p>
+  
+  <p><span style="font-weight: bold;">替换DLL文件</span>
+  需要的 dll:: mfc42.dll msvcp60.dll 给上面的这二个dll放到~/.wine/drive_c/windows/system32/目录中<br>
+  下面下载的那个qq2007beta1kb5_0.0.2007_x86.tgz中也有,也可以从windows的系统中找</p>
+  
+  <p><span style="font-weight: bold;">安装方法</span>
+  下载:<a class="postlink" href="http://linuxfire.com.cn/%7Ehuahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz" target="_blank">http://linuxfire.com.cn/~huahua/zero/qq2007beta1kb5_0.0.2007_x86.tgz</a>
+  解压后,只使用这个中的那个QQ,原wine之类的配置文件不要了.</p>
+  
+  <p><span style="font-weight: bold;">运行</span>
+  可以建一个下面这样的快捷方式,注意修复你的路径为你自己的.<br>
+  env WINEPREFIX="/home/fukai/.wine" wine "Z:\home\fukai\qq2007beta1kb5\QQ\QQ.exe"</p>
+  
+  <p><span style="font-weight: bold;">在安装和使用程序时的注意事项</span>
+  现发现的bug有快捷键不能用,视频有时会死机,传文件之类都非常正常</p>
+  
+  <p>＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝<br>
+  有空的时候再研究下一键安装 linux qq<br>
+  为今天听到的马化腾说linux qq是假消息的消息默哀</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/53">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <em>54</em>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/55">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

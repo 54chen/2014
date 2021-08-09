@@ -1,0 +1,224 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>How to Run GUI App in Docker on Osx - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="This is a quick guide explaining how to run GUI app in docker on mac osx. step 1.install two important tools #brew cask install xquartz #brew install …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2017/07/27/docker-gui-osx">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">How to Run GUI App in Docker on Osx</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2017-07-27T10:11:29+08:00" pubdate data-updated="true">2017-07-27 10:11:29 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>This is a quick guide explaining how to run GUI app in docker on mac osx.</p>
+  
+  <p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg"></p>
+  
+  <!--more-->
+  
+  
+  <h2>step 1.install two important tools</h2>
+  
+  <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#brew cask install xquartz</span>
+  
+  <span class="cp">#brew install socat</span></code></pre></div>
+  
+  
+  <h2>step 2.run socat</h2>
+  
+  <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">socat</span> <span class="n">TCP</span><span class="o">-</span><span class="nl">LISTEN</span><span class="p">:</span><span class="mi">6001</span><span class="p">,</span><span class="n">reuseaddr</span><span class="p">,</span><span class="n">fork</span> <span class="n">UNIX</span><span class="o">-</span><span class="nl">CLIENT</span><span class="p">:</span><span class="err">\</span><span class="s">"$DISPLAY</span><span class="se">\"</span><span class="s"> &amp;</span></code></pre></div>
+  
+  
+  <h2>step 3.see what your real en* by ifconfig</h2>
+  
+  <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#ifconfig</span></code></pre></div>
+  
+  
+  <p>You can see en0 en1 en2 and so on,choose a right one which has the right IP addrass.</p>
+  
+  <p>step 4.run docker</p>
+  
+  <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">-</span><span class="n">e</span> <span class="n">XAUTHORITY</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">xauth</span> <span class="o">-</span><span class="n">v</span> <span class="o">~/</span><span class="p">.</span><span class="nl">Xauthority</span><span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">xauth</span> <span class="o">-</span><span class="n">e</span> <span class="n">DISPLAY</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">ifconfig</span> <span class="n">en3</span> <span class="o">|</span> <span class="n">grep</span> <span class="err">'</span><span class="n">inet</span> <span class="err">'</span><span class="o">|</span><span class="n">awk</span> <span class="err">'</span><span class="p">{</span><span class="n">print</span> <span class="err">$</span><span class="mi">2</span><span class="p">}</span><span class="err">'</span><span class="p">)</span><span class="o">:</span><span class="mi">1</span> <span class="o">--</span><span class="n">net</span> <span class="n">host</span> <span class="o">--</span><span class="n">volume</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span><span class="o">:/</span><span class="n">workspace</span> <span class="n">fastercnn</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span></code></pre></div>
+  
+  
+  <p>attention: You must modify the DISPLAY,replace the “ifconfig en*” by the one which choosed in step 3.</p>
+  
+  <p>Good luck!</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2017-07-27T10:11:29+08:00" pubdate data-updated="true">2017-07-27 10:11:29 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/docker/">docker</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2017/07/14/born-in-beijing/" title="Previous Post: 生娃指北">« 生娃指北</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2017/08/22/born-in-beijing/" title="Next Post: 生娃指北-采购篇">生娃指北-采购篇 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

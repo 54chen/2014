@@ -1,0 +1,209 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五步构建持续性部署(CD) - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="错误被发现的时间越迟，修复的难度越高，代价也最昂贵。如果工程师在敲下代码的时候就发现了问题，那修复的成本几 乎为零。如果编译器捕获了bug，它对时间造成的影响就是以分钟计的。如果bug进入了产品，而且在一段时间内没有被发现，找到bug、修复bug的 代价就会让人觉得难以承受。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/12/14/continuous-deployment">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">五步构建持续性部署(CD)</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-12-14T00:00:00+08:00" pubdate data-updated="true">2012-12-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://atlassian.wpengine.netdna-cdn.com/developer/assets_c/2011/02/ContinuousDeployment-thumb-400x277-6250.png" alt="cd"></p>
+  
+  <p>错误被发现的时间越迟，修复的难度越高，代价也最昂贵。如果工程师在敲下代码的时候就发现了问题，那修复的成本几 乎为零。如果编译器捕获了bug，它对时间造成的影响就是以分钟计的。如果bug进入了产品，而且在一段时间内没有被发现，找到bug、修复bug的 代价就会让人觉得难以承受。千年虫问题就是一个典型的例子。<br>
+  ----题记 from http://www.infoq.com/news/2009/03/Continuous-Deployment</p>
+  
+  <p>持续部署的目标是通过减少批量工作的大小，并加快团队工作的节奏，帮助开发团队在其开发流程中消除浪费。这使团队能够一直处于一种可持续的平稳流状态， 让团队更容易去创新、试验，并达到可持续的生产率。</p>
+  
+  <p>下面是来自Eric的五步构建快速部署的办法：
+  <strong>1.CI服务器。</strong>持续性部署的前提是持续性构建。我们需要一个地方去做单元测试、功能测试、集成测试和所有测试。这些事情会在每次commit之后进行。一定要确保所有的test在10到30分钟内全部跑完。如果不可能做到，那就将它们进行归类。</p>
+  
+  <p><strong>2.代码控制提交脚本。</strong>不管是svn还是git，都有各种hook的勾子程序，在每次commit前嵌入检查逻辑。这概念来自于传统意义上的“生产线”，一旦在线上的产品发现问题，将停止进入，进入暂停阶段。修好之后继续运转。如果1中的持续构建有一个test case不能过，那这个脚本要能够阻止再来的commit。简单地说，就是让代码能够检查的bug代码不能进入。</p>
+  
+  <p><strong>3.简洁的发布工具。</strong>不需要多复杂的工具，只需要每个人都遵守的、简单的办法，同时要遵循CI没通过就不能使用的原则。</p>
+  
+  <p><strong>4.实时的报警。</strong>不管多好的部署，都会有bug的存在。最讨厌的事情是部署了很久之后bug才出来。要抓住这些讨厌的bug，需要一个监控平台，出错的时候能够立即发现，找出bug。推荐使用nagios来加上自定义的数据进行监控，建议只要一两个关键数据，而且一定要报警准确。坚持一个原则就是，一旦报警，停止提交与发布。</p>
+  
+  <p><strong>5.寻根问底。</strong>这一步是方法学，多问为什么，可以让这个流程变得自我学习和成熟。比如：为什么没有在部署早期发现？为什么nagios没有报警？为什么没有在CI时发现？然后找到答案，改进这个过程。</p>
+  
+  <p>再辅以上周在velocity上Etsy的作过程，<strong>staging环境</strong>，让影响程度可控。更加细节一些，你需要对业务所处的<strong>层次进行划分</strong>，处于越上层的项目改动，越可以CD。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-12-14T00:00:00+08:00" pubdate data-updated="true">2012-12-14 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2012/12/04/startup-tech/" title="Previous Post: 谈谈创业公司的技术选型－－朴素的技术观">« 谈谈创业公司的技术选型－－朴素的技术观</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2012/12/26/gitlab3-1-upto-4-notes/" title="Next Post: gitlab3.1升级4.0手记">gitlab3.1升级4.0手记 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

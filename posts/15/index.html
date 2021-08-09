@@ -1,0 +1,822 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2012-02-12 2012-02-12 00:00:00 +0800 weibo又小改版了？调整了发推位置 #
+  nosql应该是在引擎层面以省去解析和事务锁的方式来提升性能，以多节点协调快速复制来达到高可用性和良好的扩展性，集群内数据只需要最终一致 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/15">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/02/10/riak_admin-join/">人肉解析riak_admin Join</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-10T00:00:00+08:00" pubdate data-updated="true">2012-02-10 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2AT9jXolXXXXXXXXX_!!13078490.jpg" alt="riak">
+  riak_admin只是一个bash脚本，当riak_admin join被执行时，都是在执行riak_kv_console join。</p>
+  
+  <p><strong>大概过程分析</strong>
+  riak_kv_console:join  =&gt;  %%入口 <br>
+  riak:Join(Node) =&gt; %% 真正执行<br>
+  	riak_core:join(Node) =&gt; %%去到riak_core<br>
+  		riak_core_gossip:legacy_gossip() =&gt; %%通知检查是否是 legacy gossip，<br>
+  	riak_core:standard_join(Node,Ring,false) =&gt;  %%非rejoin 非legacy<br>
+  		riak_core_gossip:send_ring(Node, node()) =&gt;  %% 进入gossip模块发起ring请求<br>
+  			gen_server:cast({?MODULE, FromNode}, {send_ring_to, ToNode}) =&gt; %%广而告之<br>
+  		riak_core_gossip:handle_cast({send_ring_to, Node}, State) =&gt; %%收到<br>
+  			gen_server:cast({?MODULE, Node}, {reconcile_ring, RingOut}) =&gt; %%告诉它们开始协调<br>
+   		riak_core_gossip:handle_cast({reconcile_ring, RingIn}, State) =&gt; %%收到<br>
+  			riak_core_ring_manager:ring_trans(fun reconcile/2, [OtherRing]) =&gt; %%由一个协调函数传入到ring manager中去执行<br>
+  			riak_core_ring_manager:prune_write_notify_ring =&gt; %%搞定一个新的ring文件，通知所有的listener<br>
+  			riak_core_ring_events:ring_update(Ring) =&gt; %%通过event通知<br>
+  riak_core_ring_handler:handle_event({ring_update, Ring}, State) =&gt; %%接到event<br>
+  	riak_core_vnode_manager:ring_changed(Ring) =&gt; %%vnode_manager通知大家环修改了<br>
+  		riak_core_vnode_manager:trigger_ownership_handoff(?MODULE, {ring_changed, Ring}) =&gt;%%接通知触发handoff<br>
+  			riak_core_vnode:trigger_handoff(Pid, TargetNode) =&gt; %%由vnode来干活<br>
+  				gen_fsm:send_all_state_event(VNode, {trigger_handoff, TargetNode}) =&gt; %%使用gen_fsm来通知vnode们<br>
+  			riak_core_vnode:maybe_handoff =&gt; %%准备开始导数据<br>
+  			riak_core_vnode:start_handoff =&gt; %%开始<br>
+  			riak_core_handoff_manager:add_outbound =&gt; %%发handoff<br>
+  			handle_call({add_outbound,Mod,Idx,Node,Pid},_From,State=#state{handoffs=HS}) =&gt; %%收到请求<br>
+  				riak_core_handoff_manager:send_handoff =&gt; %%发<br>
+  					riak_core_handoff_sender_sup:start_sender =&gt; %%启动sender  最终启动了 riak_core_vnode_master:sync_command直到同步结束。 </p>
+  
+  <p> </p>
+  
+  <p><strong>riak_core_vnode:mark_handoff_complete</strong>
+  此代码生存在riak_core_vnode，而不是riak_core_vnode_manager，因为ring_trans是一个同步的call到ring manager的过程，block一个单独的vnode要比block整个vnode manager要好。block这个manager会影响所有的vnode。此代码对多个并行的vnode执行是安全<br>
+  的,因为靠单个 ring manager提供的同步化保证了拥有所有的环的变更经过 。</p>
+  
+  <p><strong>riak_core_vnode:vnode_command</strong>
+  活动的vnode运行于三种状态中：正常、handoff、推进。<br>
+  在正常状态，vnode命令靠handle_command来传递。当一个handoff被触发，handoff_node被设置为目标节点，并且这个vnode被称做进入了handoff状态。<br>
+  在handoff状态，vnode命令依靠handle_handoff_command来传递。即使handoff程序是非block的（比如在riak_kv中没有使用async fold时），在handoff期间，一个vnode也会被block住（所以没有服务命令）。<br>
+  handoff状态之后，一个vnode会进入到推进状态。推进状态是新的gossip/membership代码的产物，并且legacy模式的节点里不会出现。推进状态了vnode已经传递自己数据到新节点的情况，但新的节点并未在环上列出当前节点的信息。这会出现是因为增加的vnode仍然在等handoff他们的数据给新的拥有者，或者只是因为环还汇聚在这个新节点之上。在推进状态，所有的vnode指令和coverage命令都会按过程推给新的拥有者。</p>
+  
+  <p><strong>
+  riak_core_vnode:start_manager_event_timer</strong>
+  独有的vnode进程与vnode manager结合紧密。当vnode的事件触发，这个vnode必须确保这个事件被发送到vnode manager，这将会产生一个状态变化的决定，并且发回适当的信息给这个vnode。为了最大限度地减少阻塞，使用了异步的消息。vnode manager挂掉而丢失靠vnode发送的信息是可能的。因此，vnode周期性地重发事件消息，直到一个从vnode manager来的合适的消息被接收。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/02/08/go-lang-install/">Go语言安装手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-08T00:00:00+08:00" pubdate data-updated="true">2012-02-08 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://golang.org/doc/logo.png" alt="go">
+   </p>
+  
+  <p><strong>安装</strong>
+  机器环境<br>
+  centos 5.5 64位机器</p>
+  
+  <p>有两种编译器，官方的文档是基于Go编译器和工具（6g 8g），另一个是gccgo（后台是gcc）。<br>
+  工具和编译的对照表：</p>
+  
+  <p></p>
+<blockquote>amd64 (a.k.a. x86-64); 6g,6l,6c,6a<br>
+  386 (a.k.a. x86 or x86-32); 8g,8l,8c,8a<br>
+  arm (a.k.a. ARM); 5g,5l,5c,5a
+  </blockquote>
+  
+  <p>这是一个坑：Mercurial（hg工具）需要安装，并且要1.7版本以上的。（实际上给个下载的tar包不是可以降低门槛嘛，应该是还在开发状态为了方便使用hg直接升级环境）。折腾这个的人应该不在少数。 </p>
+  
+  <p></p>
+<blockquote>hg clone -u release https://go.code.com/hg/ go</blockquote>
+  
+  <p>cd go/src<br>
+  ./all.bash</p>
+  
+  <p>最后会停在一段时间：</p>
+  
+  <p></p>
+<blockquote>--- cd ../test</blockquote>
+  
+  <p>然后提示：</p>
+  
+  <p></p>
+<blockquote>0 known bugs; 0 unexpected bugs</blockquote>
+  
+  <p>ALL TESTS PASSED</p>
+  
+  <p>---<br>
+  Installed Go for linux/amd64 in /root/go.<br>
+  Installed commands in /root/go/bin.<br>
+  *** You need to add /root/go/bin to your $PATH. ***<br>
+  The compiler is 6g.</p>
+  
+  <p>就表示编译成功了。</p>
+  
+  <p>添加到PATH环境变量</p>
+  
+  <p></p>
+<blockquote>vim /etc/profile<br>
+  PATH=$PATH:/root/go/bin/<br>
+  export PATH</blockquote>
+  
+  <p>source /etc/profile</p>
+  
+  <p>安装完毕。</p>
+  
+  <p>跑一个hello word:</p>
+  
+  <p></p>
+<blockquote>$ cat &gt;hello.go &lt;<eof></eof>
+  package main</blockquote>
+  
+  <p>import "fmt"</p>
+  
+  <p>func main() {<br>
+  	fmt.Printf("hello, world\n")<br>
+  EOF<br>
+  $ 6g hello.go<br>
+  $ 6l hello.6<br>
+  $ ./6.out<br>
+  hello, world<br>
+  $</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/02/01/riak-core/">Riak Core说明</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-01T00:00:00+08:00" pubdate data-updated="true">2012-02-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2AT9jXolXXXXXXXXX_!!13078490.jpg" alt="riak">
+  <strong>什么是riak_core?</strong>
+  riak_core是一个单独的OTP应用，提供了所有必须的服务，以完成一个现代化的、表现良好的分布式应用。riak_core开始于Riak的一部分。当代码在建立各种分布式应用普遍有用时，我们决定重构并且分离出来核心部分，使其便于使用。<br>
+  分布式系统是复杂的，riak_core可以满足这些大量复杂的需求。在深入代码之前，我将分离这些需求为明显的分类，且给出每项的概况。<br>
+  注：如果你是急性子，想跳过后面的直接读代码，你可以通过hg或者git检出riak_core的代码。
+  <strong>
+  节点存活 &amp; 节点关系</strong>
+  riak_core_node_watcher是负责反馈riak_core_cluster内部节点状态的进程。它使用net_kernel有效地监控了许多节点。riak_core_node_watcher也有能力将一个节点按程序预定踢出cluster。当一个主节点必须临时断电而又不想完全停服的情况，这十分有用。<br>
+  riak_core_node_watcher还提供了在cluster内广播和定向服务的API。当节点提供了专门的服务，比如CUDA计算节点，这个服务被cluster中的其他的节点所使用，这些API很有用。<br>
+  riak_core_node_watch_events配合riak_core_node_watcher产生以活跃节点为基础的events，比如说加入或者离开cluster等等。当事人可以注册callback方法，当events被触发时会被调到。</p>
+  
+  <p><strong>分区 &amp; 分布式工作</strong>
+  riak_core在每个节点上使用了master/worker配置，以管理工作单元的执行。一致性哈希被使用来决定哪一个目标节点用来发起请求，而且主进程在每个节点的farms公开对实际workers的请求。riak_core把工作进程叫做vnodes。相应的进程叫vnode_master。<br>
+  在需要的时候，在riak_core里的分区和分布的逻辑同时掌控了hinted handoff。hinted handoff发生在一个节点失灵或者断电时。为了确保可用性，许多集群系统会使用可用节点代替挂掉的节点。当挂掉的节点恢复，集群需要从它代替节点的临时空间迁移数据去恢复节点的永久空间。这个进程被叫做hinted handoff，并且被riak_core里的组件管理。riak_core也掌控了迁移分区去新节点，当它加入到集群，集群能够持续地工作，并且平等地分给集群中所有成员。<br>
+  riak_core_vnode_master在一个给定的节点启动所有的工作vnodes，并且当集群启动的时候把请求路由到vnodes。<br>
+  riak_core_vnode是一个OTP behavior包装，所有的样板逻辑需要实现一个vnode。特殊的应用vnodes必须实现少量的回调函数，以参与handoff的session并且从master接收工作单元。</p>
+  
+  <p><strong>集群状态</strong>
+  一个riak_core集群保存了在一个环状结构上的全局状态。这个状态信息在集群中的节点间传输，以一个可控的方法保证所有的集群成员同步。这个进程被叫做“gossiping”。<br>
+  riak_core_ring是用来创建和控制环的状态信息的，并且会与集群中的所有节点共享。环状态信息包括像分区关系、特定集群环上的元数据等元素。比如Raik KV存储把桶的元数据保存在环元数据中。<br>
+  riak_core_ring_manager帮助一个节点管理集群环信息。它是应用代码访问环的主入口点（通过riak_core_ring_manager:get_my_ring/1），并且还能保存从当前环的状态同步过来的环持久快照。<br>
+  riak_core_gossip管理环的gossip进程，它要确保环在整个集群里全都一致。</p>
+  
+  <p><strong>下一步计划</strong>
+  下面的几个月之后，我们将在这博客一系列的日志里覆盖建立一个真正的应用步骤，每篇都将覆盖使用riak_core建立某种系统。所有应用代码都将在apache2声明下共享到github。<br>
+  那我们要建立哪种类型的应用？因为这个系列的目标是为了举例如何使用riak_core建立一个分布式系统，同时也是为了满足我自己的技术好奇心，我决定建立一个分布式图片数据库。为了真正练习riak_core，一个图形库应该提供足够的用例，与此同时，不能把核心学习体验搞得十分复杂。<br>
+  感谢Sean Cribbs和Andy Gross提供有用的review和feedback。</p>
+  
+  <p>[from http://basho.com/blog/technical/2010/07/30/introducing-riak-core/]
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/01/30/maven-nexus-jar-note/">Maven库nexus拖不到jar包小记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-01-30T00:00:00+08:00" pubdate data-updated="true">2012-01-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://maven.apache.org/images/maventxt_logo_200.gif" alt="maven,nexus">
+  使用maven，nexus是个不错的选择。
+  <strong>最常见的问题：</strong>
+  </p>
+<blockquote>1.SNAPSHOT拿不到最新的包。<br>
+  2.明明在maven central库里搜索到的包，却提示Missing。<br>
+  3.plugin提示Missing。
+  </blockquote>
+  
+  <p><strong>1.SNAPSHOT拿不到最新的包。</strong>
+  这个问题往往得nexus+hudson造成的。因为daily build导致与日俱增的jar包堆积在一个文件夹下，文件数目过多，导致在取最新的包时超时了。<br>
+  解决办法：<br>
+  浏览器打开nexus， login-&gt;scheduled tasks-&gt;add，添加一个定时清理目录的计划任务即可。最后一个选项“remove if released”需要慎重，平时开发可能不是特别正规的时候可能会snapshot和release都需要。</p>
+  
+  <p><strong>2.明明在maven central库里搜索到的包，却提示Missing。</strong>
+  网上大多数说法都是index失败了，个人经验实际不然(当然不排除你的问题就是index失败)。<br>
+  当nexus.log里没有任何异常时，请注意以下内容：<br>
+  在central搜索时，如果只有pom没有jar，那说明这个依赖的项目可能有多个依赖，一定要加上<type>pom</type>，默认是jar。</p>
+  
+  <p><strong>3.plugin提示Missing。</strong>
+  通常原因是：nexus设置的搜索顺序有问题。<br>
+  login-&gt;Public Repositories -&gt; configuration<br>
+  左边的是正在使用的定义好的仓库组，右边是可以使用的，正确的顺序应该是先在Release找，然后Snapshots，然后3rd party，最后才去外网下（这时nexus才拖下来新的jar/pom）。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/01/18/access-layer/">服务接入层小结</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-01-18T00:00:00+08:00" pubdate data-updated="true">2012-01-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2evmjXahaXXXXXXXX_!!13078490.jpg" alt="access,layer" width="500/">
+  <strong>接入层</strong>
+  是指普通用户与核心业务逻辑中间的过程。现在常见的服务接入层，像nginx、lvs、php这些都可以算是。</p>
+  
+  <p><strong>观点</strong>
+  一种观点认为：接入的量不应该影响系统的正常运行，也就是不能接入不能处理的用户请求，类似上图中前图。<br>
+  另一种观点认为：接入层应该尽量接入所有用户，类似上图中后图。</p>
+  
+  <p><strong>做法</strong>
+  nginx：<br>
+  nginx如果用做proxy，后端挂其他服务的话，是一个纯粹的NIO server。对用户来说，nginx是长连接（http 1.1），对后端服务来说，nginx是短连接（http 1.0）。</p>
+  
+  <p></p>
+<blockquote>default: proxy_connect_timeout 60s; 向后端服务创建连接的超时时间<br>
+  default: proxy_read_timeout 60s; 后端返回请求响应超时时间<br>
+  default: proxy_send_timeout 60s; 大请求发到后端超时时间</blockquote>
+  
+  <p>nginx通过上面的三个设置，当后端有响应不过来的时候，进行超时处理（记录日志），当发现超时很多了，就需要提升后端的处理能力了。</p>
+  
+  <p>那么，nginx自身的处理能力是否有上限呢？当然有!</p>
+  
+  <p></p>
+<blockquote>worker_processes  1;<br>
+  worker_connections  1024;</blockquote>
+  
+  <p>max_clients = worker_processes * worker_connections </p>
+  
+  <p>当超过max_clients的用户扑上来的时候，如果幸运后端没有能力问题，那就会看到nginx在日志中要求你增加worker的提示。</p>
+  
+  <p>php-fpm：</p>
+  
+  <p></p>
+<blockquote>pm = dynamic/static; dynamic时有最大进程最小进程之说，static时没有。只有一个上限。<br>
+  pm.max_children = 50;强制的一个阀门，后面的设置里，进程数不能大于这个。<br>
+  pm.start_servers = 20;启动时启动的fastcgi进程。<br>
+  pm.min_spare_servers = 5;最小fastcgi进程数量，dynamic有效<br>
+  pm.max_spare_servers = 35;最大fastcgi进程数量，dynamic有效</blockquote>
+  
+  <p>php没有异步进程概念，如果要使用php作为接入层，需要自己完成NIO扩大接入能力（接触到的ICE、thrift在php中都是同步作）。而接入能力就取决于上面的配置。</p>
+  
+  <p>java:<br>
+  java优秀的NIO框架netty。<br>
+  servlet3.0实现了异步请求的context，目前还没有在平常框架中进行使用。一般的用法为comet push server，性能未知。<br>
+  一般来说，用java做接入层很容易变成了业务层。（但是，为什么不呢？）</p>
+  
+  <p></p>
+<blockquote>tomcat 7.0.x提供了servlet3.0的这一特性，CometProcessor interface。<br>
+  resin 4.x提供了servlet3.0的这一特性，GenericCometServlet。</blockquote>
+  
+  <p>从名字看，大家都一致性地认为这一特性适合用来做comet server。（理论上可接入无限用户，直到费尽cpu、内存，服务器死机、jvm oom）</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/01/10/nginx-hashdos-help/">Nginx防hashdos模块使用帮助</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-01-10T00:00:00+08:00" pubdate data-updated="true">2012-01-10 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://wiki.nginx.org/local/nginx-logo.png" alt="nginx,hashdos">
+  经过上周一周朋友们帮忙测试和bug fix，nginx_http_hashdos_module已经达到可以线上使用的水平，下面是使用记录。
+  <strong>下载</strong></p>
+  
+  <p></p>
+<blockquote>#wget --no-check-certificate https://github.com/54chen/nginx-http-hashdos-module/zipball/master<br>
+  #mv master nginx_hashdos.zip<br>
+  #unzip nginx_hashdos.zip</blockquote>
+  
+  <p><strong>编译安装</strong></p>
+  
+  <p></p>
+<blockquote>#tar zxvf nginx-1.0.xx.tar.gz <br>
+  #cd nginx-1.0.xx/<br>
+  #./configure --prefix=/opt/soft/nginx --with-pcre --user=www --group=www --with-http_stub_status_module --with-http_ssl_module --add-module=../54chen-nginx-http-hashdos-module-f84d909<br>
+  #make &amp;&amp; make install</blockquote>
+  
+  <p><strong>配置注意事项</strong>
+  在http段，增加如下：
+  </p>
+<blockquote>
+  hashdos on;<br>
+  body_max_count 1000;
+  </blockquote>
+  
+  <p>在各自的location段，要按照业务情况来加：
+  </p>
+<blockquote>client_body_buffer_size 2m;<br>
+  client_max_body_size 2m;</blockquote>
+  *上述两个值一定要相等。
+  
+  <p>如果是普通的discuz，上传上限是1m的，可以修改为1m。<br>
+  如果是没有上传功能的普通网站，建议修改为512k。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/14">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <em>15</em>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/16">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

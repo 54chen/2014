@@ -1,0 +1,822 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Java,akka | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/java-akka/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[Java中使用akka手记四 用法速查]]></title>
+      <link href="https://www.54chen.com/blog/2014/04/18/how-to-use-akka-in-java-4/"/>
+      <updated>2014-04-18T15:37:25+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/04/18/how-to-use-akka-in-java-4</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
+  
+  <h2>Actor</h2>
+  
+  <ul>
+  <li>UntypedActor actor的基类，继承并实现onReceive方法就可以得到一个Actor。</li>
+  <li>Props 配置类，用Props.create可以创建一个按指定配置生成的Actor。</li>
+  <li>Props的推荐实践，创建Actor时，搞一个static的Props.create方法。可以少写不少重复代码。</li>
+  <li>system.actorOf 会创建顶级的actor，将被系统监控。</li>
+  <li>getContext().acrtorOf 会创建子actor。</li>
+  <li>ActorRef 由actorOf产生，可以是一个网络actor。</li>
+  <li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在>做路由、负载均衡、备份时非常有用。ask会拦住reply消息直接给onsuccess等，sender不会再得到reply。</li>
+  <li>Inbox 当actor不能满足需要时，可以使用inbox，比如收多个回复，watch其他actor的生命周期。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h2>spring集成</h2>
+  
+  <ul>
+  <li>实现SpringExtProvider在spring context中去寻找actor class，实现akka.actor.Extension和akka.actor.IndirectActorProducer。</li>
+  <li>system.actorOf(SpringExtProvider.get(system).props(&ldquo;CountingActor&rdquo;), &ldquo;counter&rdquo;);即可取到bean为CountingActor的class。</li>
+  </ul>
+  
+  
+  <h2>else</h2>
+  
+  <ul>
+  <li>PoisonPill 这药，给哪个actor一发就挂。myActor.tell(akka.actor.PoisonPill.getInstance(), sender);</li>
+  <li>TypedActor 是比较好的连接actor系统与非actor内容的东东。</li>
+  <li>mailbox 每个actor的消息存放处，默认为java.util.concurrent.ConcurrentLinkedQueue，akka.dispatch.SingleConsumerOnlyUnboundedMailbox为更高效的一个box，但不能用在BalancingDispatcher时。还可以自已定义mailbox的细节。</li>
+  <li>UntypedProcessor 继承它可得到一个processor。用来做persistence用的。</li>
+  <li>SupervisorStrategy 定义出错处理。</li>
+  <li>routing 定义路由选择机制。cluster中使用。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Java中使用akka手记三 Cluster详例]]></title>
+      <link href="https://www.54chen.com/blog/2014/04/17/how-to-use-akka-in-java-3/"/>
+      <updated>2014-04-17T20:11:07+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/04/17/how-to-use-akka-in-java-3</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140415/akka_logo.png></p>
+  
+  <h2>一个例子</h2>
+  
+  <ul>
+  <li>同样是typesafe的经典例子。</li>
+  <li>例子提供的服务是传输文本。当文本发给frontend节点，它会委派backend节点，backend执行转化任务，把结果返回给原来的客户端。</li>
+  <li>新的backend节点和frontend节点，都可以动态地在cluster上增减。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h2>message</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public interface TransformationMessages {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public static class TransformationJob implements Serializable {
+  </span><span class='line'>    private final String text;
+  </span><span class='line'>//&hellip;&hellip;
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public static class TransformationResult implements Serializable {
+  </span><span class='line'>    private final String text;
+  </span><span class='line'>//&hellip;..
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public static class JobFailed implements Serializable {
+  </span><span class='line'>    private final String reason;
+  </span><span class='line'>    private final TransformationJob job;
+  </span><span class='line'>//&hellip;.
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public static final String BACKEND_REGISTRATION = &ldquo;BackendRegistration&rdquo;;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h2>backend处理逻辑</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  <span class='line-number'>32</span>
+  <span class='line-number'>33</span>
+  <span class='line-number'>34</span>
+  <span class='line-number'>35</span>
+  <span class='line-number'>36</span>
+  <span class='line-number'>37</span>
+  <span class='line-number'>38</span>
+  <span class='line-number'>39</span>
+  <span class='line-number'>40</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class TransformationBackend extends UntypedActor {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  Cluster cluster = Cluster.get(getContext().system());
+  </span><span class='line'>//&hellip;&lt;br/>
+  </span><span class='line'>  @Override
+  </span><span class='line'>  public void onReceive(Object message) {
+  </span><span class='line'>    if (message instanceof TransformationJob) {
+  </span><span class='line'>      TransformationJob job = (TransformationJob) message;
+  </span><span class='line'>      getSender().tell(new TransformationResult(job.getText().toUpperCase()),
+  </span><span class='line'>          getSelf());&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>} else if (message instanceof CurrentClusterState) {
+  </span><span class='line'>  CurrentClusterState state = (CurrentClusterState) message;
+  </span><span class='line'>  for (Member member : state.getMembers()) {
+  </span><span class='line'>    if (member.status().equals(MemberStatus.up())) {
+  </span><span class='line'>      register(member);
+  </span><span class='line'>    }
+  </span><span class='line'>  }
+  </span><span class='line'>
+  </span><span class='line'>} else if (message instanceof MemberUp) {
+  </span><span class='line'>  MemberUp mUp = (MemberUp) message;
+  </span><span class='line'>  register(mUp.member());
+  </span><span class='line'>
+  </span><span class='line'>} else {
+  </span><span class='line'>  unhandled(message);
+  </span><span class='line'>}
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  void register(Member member) {
+  </span><span class='line'>    if (member.hasRole(&ldquo;frontend&rdquo;))
+  </span><span class='line'>      getContext().actorSelection(member.address() + &ldquo;/user/frontend&rdquo;).tell(
+  </span><span class='line'>          BACKEND_REGISTRATION, getSelf());
+  </span><span class='line'>  }
+  </span><span class='line'>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>backend订阅了cluster的事件，检测frontend节点，还会发一条消息告诉fontend可以使用了。</li>
+  <li>frontend节点接收用户的任务，扔给注册好的backend节点。</li>
+  </ul>
+  
+  
+  <h2>frontend节点</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  <span class='line-number'>32</span>
+  <span class='line-number'>33</span>
+  <span class='line-number'>34</span>
+  <span class='line-number'>35</span>
+  <span class='line-number'>36</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class TransformationFrontend extends UntypedActor {
+  </span><span class='line'>  List&lt;ActorRef> backends = new ArrayList&lt;ActorRef>();
+  </span><span class='line'>  int jobCounter = 0;
+  </span><span class='line'>  @Override
+  </span><span class='line'>  public void onReceive(Object message) {
+  </span><span class='line'>    if ((message instanceof TransformationJob) &amp;&amp; backends.isEmpty()) {
+  </span><span class='line'>      TransformationJob job = (TransformationJob) message;
+  </span><span class='line'>      getSender().tell(
+  </span><span class='line'>          new JobFailed(&ldquo;Service unavailable, try again later&rdquo;, job),
+  </span><span class='line'>          getSender());&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>} else if (message instanceof TransformationJob) {
+  </span><span class='line'>  TransformationJob job = (TransformationJob) message;
+  </span><span class='line'>  jobCounter++;
+  </span><span class='line'>  backends.get(jobCounter % backends.size())
+  </span><span class='line'>      .forward(job, getContext());
+  </span><span class='line'>
+  </span><span class='line'>} else if (message.equals(BACKEND_REGISTRATION)) {
+  </span><span class='line'>  getContext().watch(getSender());
+  </span><span class='line'>  backends.add(getSender());
+  </span><span class='line'>
+  </span><span class='line'>} else if (message instanceof Terminated) {
+  </span><span class='line'>  Terminated terminated = (Terminated) message;
+  </span><span class='line'>  backends.remove(terminated.getActor());
+  </span><span class='line'>
+  </span><span class='line'>} else {
+  </span><span class='line'>  unhandled(message);
+  </span><span class='line'>}
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }
+  </span><span class='line'>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>frontend用List<ActorRef>保存了backend的actor位置，有需要的时候就轮循发给backend。</li>
+  <li>getSender 本次收到消息的上游，一般用来回复消息。</li>
+  <li>getContext 本actor的上下文。</li>
+  <li>getContext().watch DeathWatch，相当于watch了谁，谁有啥公开动作就会告诉我，包括挂了之类的。</li>
+  <li>ActorRef.forward与tell、ask的区别，性能最好的是tell，发完就走。ask是发完等Future，要等的话性能是个问题。forward用于从一个actor转发消息给另一个actor，原始的sender信息会被保留，在做路由、负载均衡、备份时非常有用。</li>
+  </ul>
+  
+  
+  <h2>运行TransformationApp</h2>
+  
+  <ul>
+  <li>sample.cluster.transformation.TransformationApp 启动三个backend 2551 2552 0为一个cluster，启动一个fronend。</li>
+  <li>frontend每5秒会收到一次任务，接收成功后print代码，代码如下：</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>system.scheduler().schedule(interval, interval, new Runnable() {
+  </span><span class='line'>      public void run() {
+  </span><span class='line'>        ask(frontend,
+  </span><span class='line'>            new TransformationJob(&ldquo;hello-&rdquo; + counter.incrementAndGet()),
+  </span><span class='line'>            timeout).onSuccess(new OnSuccess&lt;Object>() {
+  </span><span class='line'>          public void onSuccess(Object result) {
+  </span><span class='line'>            System.out.println(result);
+  </span><span class='line'>          }
+  </span><span class='line'>        }, ec);
+  </span><span class='line'>      }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>}, ec);
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>frontend节点中，收到job的时候会去检查backend注册数是否可用了，如果有可用的就forward任务。</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public void onReceive(Object message) {
+  </span><span class='line'>    if ((message instanceof TransformationJob) &amp;&amp; backends.isEmpty()) {
+  </span><span class='line'>      TransformationJob job = (TransformationJob) message;
+  </span><span class='line'>      getSender().tell(
+  </span><span class='line'>          new JobFailed(&ldquo;Service unavailable, try again later&rdquo;, job),
+  </span><span class='line'>          getSender());&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>} else if (message instanceof TransformationJob) {
+  </span><span class='line'>  TransformationJob job = (TransformationJob) message;
+  </span><span class='line'>  jobCounter++;
+  </span><span class='line'>  backends.get(jobCounter % backends.size())
+  </span><span class='line'>          .forward(job, getContext());
+  </span><span class='line'>
+  </span><span class='line'>} else if (message.equals(BACKEND_REGISTRATION)) {
+  </span><span class='line'>  getContext().watch(getSender());
+  </span><span class='line'>  backends.add(getSender());
+  </span><span class='line'>
+  </span><span class='line'>} else if (message instanceof Terminated) {
+  </span><span class='line'>  Terminated terminated = (Terminated) message;
+  </span><span class='line'>  backends.remove(terminated.getActor());
+  </span><span class='line'>
+  </span><span class='line'>} else {
+  </span><span class='line'>  unhandled(message);
+  </span><span class='line'>}
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>在backend中有一句代码如下：</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>void register(Member member) {
+  </span><span class='line'>    if (member.hasRole(&ldquo;frontend&rdquo;))
+  </span><span class='line'>      getContext().actorSelection(member.address() + &ldquo;/user/frontend&rdquo;).tell(
+  </span><span class='line'>          BACKEND_REGISTRATION, getSelf());
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>解析：backend订阅了memberUp事件，所以在cluster中如果有memberUp了，都会执行上述代码。</li>
+  <li>actorSelection是根据地址进行lookup，返回一个ActorSelection，可以当成本地的actor一样tell。</li>
+  </ul>
+  
+  
+  <h2>代码</h2>
+  
+  <ul>
+  <li>本文提及代码在 <a href="https://github.com/54chen/akka_cluster_learn">https://github.com/54chen/akka_cluster_learn</a></li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Java中使用akka手记二 Cluster]]></title>
+      <link href="https://www.54chen.com/blog/2014/04/16/how-to-use-akka-in-java-2/"/>
+      <updated>2014-04-16T15:12:32+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/04/16/how-to-use-akka-in-java-2</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
+  
+  <h2>基础知识</h2>
+  
+  <ul>
+  <li><p>2.3.2的cluster还有些想实现的东西没有实现，包括：actor分区（负载均衡） actor handoff（临时故障时的actor处理） actor重新平衡（增减节点时有用） actor状态复制机制（类似做M/S作用）</p></li>
+  <li><p>2.3.2的cluster已经有的能力有：节点－集群－leader节点; membership; gossip协议同步状态; VECTOR CLOCKS保障顺序; 失败检测－节点不可达算法; seed节点－新节点加入时可以向这些节点发消息，但也是可以向任意成员发的; membership生命周期有joining up leaving exiting removed unreachable几种状态。</p></li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h2>依赖</h2>
+  
+  <p>maven中添加akka-cluster包：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>&lt;dependency>
+  </span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
+  </span><span class='line'>            &lt;artifactId>akka-cluster_2.10&lt;/artifactId>
+  </span><span class='line'>            &lt;version>2.3.1&lt;/version>
+  </span><span class='line'>        &lt;/dependency>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h2>配置</h2>
+  
+  <p>下面的配置启用了Cluster。application.conf</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>akka {
+  </span><span class='line'>  actor {
+  </span><span class='line'>    provider = &ldquo;akka.cluster.ClusterActorRefProvider&rdquo;
+  </span><span class='line'>  }
+  </span><span class='line'>  remote {
+  </span><span class='line'>    log-remote-lifecycle-events = off
+  </span><span class='line'>    netty.tcp {
+  </span><span class='line'>      hostname = &ldquo;127.0.0.1&rdquo;
+  </span><span class='line'>      port = 0
+  </span><span class='line'>    }
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  cluster {
+  </span><span class='line'>    seed-nodes = [
+  </span><span class='line'>      &ldquo;akka.tcp://ClusterSystem@127.0.0.1:2551&rdquo;,
+  </span><span class='line'>      &ldquo;akka.tcp://ClusterSystem@127.0.0.1:2552&rdquo;]&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>auto-down-unreachable-after = 10s
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }
+  </span><span class='line'>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>这里面定义的seed节点，用来作为cluster的初始化和加入点。要跨机器的话，就要修改这里的127.0.0.1了。</p>
+  
+  <h2>代码</h2>
+  
+  <p>下面是一个使用cluster的actor实现：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class SimpleClusterListener extends UntypedActor {
+  </span><span class='line'>  LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+  </span><span class='line'>  Cluster cluster = Cluster.get(getContext().system());&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  //subscribe to cluster changes
+  </span><span class='line'>  @Override
+  </span><span class='line'>  public void preStart() {
+  </span><span class='line'>    //#subscribe
+  </span><span class='line'>    cluster.subscribe(getSelf(), ClusterEvent.initialStateAsEvents(),
+  </span><span class='line'>        MemberEvent.class, UnreachableMember.class);
+  </span><span class='line'>    //#subscribe
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  //re-subscribe when restart
+  </span><span class='line'>  @Override
+  </span><span class='line'>  public void postStop() {
+  </span><span class='line'>    cluster.unsubscribe(getSelf());
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void onReceive(Object message) {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li><p>这个actor把自己注册了一个cluster事件。当cluster上有风吹草动时，都会收到消息。</p></li>
+  <li><p>运行这段代码只需要运行后面代码中的SimpleClusterApp。</p></li>
+  </ul>
+  
+  
+  <h2>加入种子节点</h2>
+  
+  <ul>
+  <li><p>一开始能够预料的节点们被叫做种子节点（seed nodes），有节点加入的时候，会等种子节点的返回确认才算是加入成功。</p></li>
+  <li><p>两种方式指定seed nodes的位置，一种是在application.xml中，另一种是在jvm的参数里。</p></li>
+  </ul>
+  
+  
+  <h2>自动和手动down机</h2>
+  
+  <ul>
+  <li>被失败检测出来不可达的节点，会被leader进行处理，也可以手动搞下来。</li>
+  <li>akka.cluster.atuo-down-unreadchable-after=10s 10秒不可达就自动关</li>
+  <li><p>也可以写代码 Cluster.get(system).down(address)</p></li>
+  <li><p>网络分裂时，这个自动down有可能会出现脑裂。</p></li>
+  </ul>
+  
+  
+  <h2>cluster的事件</h2>
+  
+  <ul>
+  <li>ClusterEvent.MemberUp</li>
+  <li>ClusterEvent.MemberExited</li>
+  <li>ClusterEvent.MemberRemoved</li>
+  <li>ClusterEvent.UnreachableMember</li>
+  <li>ClusterEvent.ReachableMember</li>
+  </ul>
+  
+  
+  <h2>代码</h2>
+  
+  <ul>
+  <li>sample.cluster.simple.main启动了system。</li>
+  <li>一共三个actorSystem被启动，端口为2551 2552 0，0的时候会是随机最大端口。</li>
+  <li>application.conf里定义了2551与2552为seed nodes，所以2551与2552先组成了cluster，0加入的时候会收到2551和2552的确认。</li>
+  <li><p>gossip协议的功劳让一个状态值可能会被重复传递。</p></li>
+  <li><p>本文提及代码在 <a href="https://github.com/54chen/akka_cluster_learn">https://github.com/54chen/akka_cluster_learn</a></p></li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Java中使用akka手记一]]></title>
+      <link href="https://www.54chen.com/blog/2014/04/14/how-to-use-akka-in-java/"/>
+      <updated>2014-04-14T21:38:24+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/04/14/how-to-use-akka-in-java</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140415/20140415.jpg></p>
+  
+  <h2>什么是actor?</h2>
+  
+  <ul>
+  <li>Actor模型在并发编程中是比较常见的一种模型。很多开发语言都提供了原生的Actor模型。例如erlang,scala等。</li>
+  <li>它由Carl Hewitt于上世纪70年代早期提出，目的是为了解决分布式编程中一系列的编程问题。</li>
+  <li>Actor模型的本质已经被强调了无数遍：万物皆Actor。Actor之间只有发送消息这一种通信方式。</li>
+  <li>一个Actor如何处理多个Actor的请求呢？它先建立一个消息队列，每次收到消息后，就放入队列，而它每次也从队列中取出消息体来处理。通常我们都使得这个过程是循环的。让Actor可以时刻处理发送来的消息。</li>
+  </ul>
+  
+  
+  <h2>什么是akka?</h2>
+  
+  <p>Akka是一个用Scala编写的库，用于简化编写容错的、高可伸缩性的Java和Scala的Actor模型应用。</p>
+  
+  <!--more-->
+  
+  
+  <ul>
+  <li>下面以在java项目中使用akka写代码为例子。</li>
+  </ul>
+  
+  
+  <h2>依赖</h2>
+  
+  <ul>
+  <li>maven项目</li>
+  <li>java6 or 7</li>
+  <li>添加akka相关的包</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;dependency>
+  </span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
+  </span><span class='line'>            &lt;artifactId>akka-actor_2.10&lt;/artifactId>
+  </span><span class='line'>            &lt;version>2.3.1&lt;/version>
+  </span><span class='line'>        &lt;/dependency>
+  </span><span class='line'>        &lt;dependency>
+  </span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
+  </span><span class='line'>            &lt;artifactId>akka-remote_2.10&lt;/artifactId>
+  </span><span class='line'>            &lt;version>2.3.1&lt;/version>
+  </span><span class='line'>        &lt;/dependency>
+  </span><span class='line'>        &lt;dependency>
+  </span><span class='line'>            &lt;groupId>com..protobuf&lt;/groupId>
+  </span><span class='line'>            &lt;artifactId>protobuf-java&lt;/artifactId>
+  </span><span class='line'>            &lt;version>2.5.0&lt;/version>
+  </span><span class='line'>        &lt;/dependency>
+  </span><span class='line'>        &lt;dependency>
+  </span><span class='line'>            &lt;groupId>com.typesafe.akka&lt;/groupId>
+  </span><span class='line'>            &lt;artifactId>akka-testkit_2.10&lt;/artifactId>
+  </span><span class='line'>            &lt;version>2.3.1&lt;/version>
+  </span><span class='line'>        &lt;/dependency></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h2>依赖包解析</h2>
+  
+  <ul>
+  <li>akka-actor 核心包，有这个包就可以写简单的代码了</li>
+  <li>akka-remote 远程包，有这个包，才能够跨进程和网络调用</li>
+  <li>protobuf-java 不解释了，之所有是要声明版本，是因为pb的版本太低会造成消息传递过程中序列化反序列化有问题</li>
+  <li>akka-testkit 测试集，有这个包，写test case方便</li>
+  </ul>
+  
+  
+  <h2>常见问题</h2>
+  
+  <ul>
+  <li>Q:shutting down JVM since &lsquo;akka.jvm-exit-on-fatal-error&rsquo; is enabled</li>
+  <li>A:所有出错的时候都会有这个提示，快速错误退出是一个常见的机制，让系统最快时间发现错误。</li>
+  <li>Q:java.lang.ClassNotFoundException: akka.remote.RemoteActorRefProvider</li>
+  <li>A:没有添加进来akka-remote的时候会这样</li>
+  <li>Q:class akka.remote.WireFormats$AkkaControlMessage overrides final method getUnknownFields.()Lcom//protobuf/UnknownFieldSet</li>
+  <li>A:这是pb版本太低导致的，声明到2.5.0或以上</li>
+  </ul>
+  
+  
+  <h2>例子</h2>
+  
+  <ul>
+  <li>这是typesafe的经典例子。</li>
+  <li>所有actor的配置都在classpath中。</li>
+  <li>此例启动了两个system（简称为worker与creator）：startRemoteWorkerSystem &amp;&amp; startRemoteCreationSystem</li>
+  <li>worker使用calculator.conf，在2552端口侦听。</li>
+  <li>creator使用remotecreation.conf，定义了它的worker在远程的2552端口，路径在creationActor下，自己的端口为2554。</li>
+  </ul>
+  
+  
+  <h2>creator中的逻辑</h2>
+  
+  <ul>
+  <li>creator启动后，调用了schedule，进行了一秒一次的随机调用乘法或除法。</li>
+  <li>具体的计算，在creationActor这个actor中完成。</li>
+  <li>而creationActor这个actor被定义到了远程2552端口的进程中执行。</li>
+  </ul>
+  
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>akka {
+  </span><span class='line'>  actor {
+  </span><span class='line'>    deployment {
+  </span><span class='line'>      &ldquo;/creationActor/*&rdquo; {
+  </span><span class='line'>        remote = &ldquo;akka.tcp://CalculatorWorkerSystem@127.0.0.1:2552&rdquo;
+  </span><span class='line'>      }
+  </span><span class='line'>    }
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h2>运行中进程观察</h2>
+  
+  <ul>
+  <li>run CreationApplication.java</li>
+  <li>一个进程 启动了一个端口</li>
+  <li>进程通过这个端口，产生随机算式，交给另一个进程（这里是同一个进程）。</li>
+  </ul>
+  
+  
+  <h2>代码</h2>
+  
+  <ul>
+  <li>本文提及代码在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a></li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

@@ -1,0 +1,270 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Cassandra的thrift用法学习手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="__English Version__The notes about the usage of Thrift in Cassandra Cassandra在client访问server cluster的时候使用了thrift，在cluster node间的通讯，依旧是自己实现的二进制协议。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/12/30/cassandra-thrift">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Cassandra的thrift用法学习手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-12-30T00:00:00+08:00" pubdate data-updated="true">2013-12-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt="thrift">
+  <a href="#en">__English Version__The notes about the usage of Thrift in Cassandra</a></p>
+  
+  <p>Cassandra在client访问server cluster的时候使用了thrift，在cluster node间的通讯，依旧是自己实现的二进制协议。</p>
+  
+  <p><strong>先决条件</strong>
+  thrift 0.9.1<br>
+  mac<br>
+  libthrift-0.9.1<br>
+  Cassandra 2.0.3</p>
+  
+  <p>本文所涉及的代码：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
+  <!-- more -->
+  <p><strong>看代码</strong>
+  thrift的定义：server的逻辑实现代码叫做Processor，创建的等待socket代码里叫做Transport，最后启动的进程叫做Server，大致就会有要启动一个thrift server，需要有一个socket（Transport）和一堆逻辑（Processor）。</p>
+  
+  <p>这里有一篇2011年写的thrift入门手记：<a href="http://www.54chen.com/java-ee/thrift-quick-start.html">http://www.54chen.com/java-ee/thrift-quick-start.html</a></p>
+  
+  <p>示例代码中以TNonBlockingServer来举例。TNonBlockingServer是采用libevent lib实现的一种thrift内置的server类型，理论上是最快的一种。</p>
+  
+  <p><strong>CustomTNonBlockingServer</strong>
+  Cassandra并没有默认使用这种类型的server，默认的是基于TServerTransport连接完成的CustomTThreadPoolServer（自行实现了连接池）。</p>
+  
+  <p>以示例代码为例：<br>
+  CassandraTestServer －&gt; CustomTNonBlockingServer.Factory().buildTServer -&gt; new CustomTNonBlockingServer -&gt; new TCustomNonblockingServerSocket.</p>
+  
+  <p>这个调用传递中，在接入客户端连接时，可以插入一定的代码（比如说来来保存session之类的）。</p>
+  
+  <p>代码中被插入的代码和阶段有：<br>
+  TCustomNonblockingServerSocket-&gt;acceptImpl  一次客户端请求进入时，可用来设置服务器端的超时设置之类的数值。<br>
+  CustomTNonBlockingServer-&gt;requestInvoke   紧接着上面的执行后具体的调用会打到这里来，这里看上去Cassandra把一个父类强转为子类，为了取当时的socket信息，有点小bug。</p>
+  
+  <p><strong>其他server</strong>
+  Cassandra默认的CustomTThreadPoolServer也有类似前文提到的插入代码的地方，主要目的也是超时设置buffer设置等，而且因为使用的是普通TServerTransport，设置的点更加灵活。<br>
+  不得不提的是另一个的实现，THsHaDisruptorServer，大有来头。<br>
+  THsHaDisruptorServer使用TCustomNonblockingServerSocket当socket，上层TDisruptorServer使用的是基于LMAX（一家牛B的金融平台公司）开源的Disruptor（一个巨牛B的高吞吐低延迟的并发处理机制）来实现的TDisruptorServer，TDisruptorServer的代码在：<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> 可以理解为一个经过队列改造的TNonBlockingServer。</p>
+  
+  <p>以后再找机会分析这个disruptor_thrift_server。<br>
+  __EOF__</p>
+  
+  <p><a name="en">__English Version__</a>
+  Cassandra uses thrift when the client visits the server, but it still uses binary protocol between the cluster nodes. </p>
+  
+  <p><strong>Prerequisite</strong>
+  thrift 0.9.1<br>
+  mac<br>
+  libthrift-0.9.1<br>
+  Cassandra 2.0.3</p>
+  
+  <p>The codes mentioned in this blog：<a href="https://github.com/54chen/cassandra-thrift">https://github.com/54chen/cassandra-thrift</a></p>
+  
+  <p><strong>See Codes</strong>
+  The definition of Thrift: The codes which implements the server is named Processor. The codes which implements the socket for waiting is named Transport. At last, the codes which starts all logic is named Server. All of this, we need a thrift server,a socket(Transport) and a Processor.</p>
+  
+  <p>This is a blog link about thrift written in 2011:<a href="http://www.54chen.com/java-ee/thrift-quick-start.html">http://www.54chen.com/java-ee/thrift-quick-start.html</a></p>
+  
+  <p>The example codes take TNonBlockingServer for example.TNonBlockingServer is a built-in type server designed by lib-event.It is the fast type  in theory.</p>
+  
+  <p><strong>CustomTNonBlockingServer</strong>
+  Cassandra does not use this type by default.The default type is based on TServerTransport named CustomTThreadPoolServer(implements the thread pool).</p>
+  
+  <p>For example:<br>
+  CassandraTestServer －&gt; CustomTNonBlockingServer.Factory().buildTServer -&gt; new CustomTNonBlockingServer -&gt; new TCustomNonblockingServerSocket.</p>
+  
+  <p>In this link,when client is come,we can plug in some codes(for saving session, etc.）。</p>
+  
+  <p>the codes and the stages which plugged in:<br>
+  TCustomNonblockingServerSocket-&gt;acceptImpl  When the client is comming,we can set the configuration like the value of timeout,etc.<br>
+  CustomTNonBlockingServer-&gt;requestInvoke   And then it will be called here.It seems that Cassandra's codes cast a parent class to children one.It is maybe a bug。</p>
+  
+  <p><strong>Else Server</strong>
+  Cassandra's default server CustomTThreadPoolServer is also can be plugged in like above talked.The plugin main target is set timeout,buffer,etc.And the TServerTransport it used is more flexible to setting values。</p>
+  
+  <p>It's hard to ignore the another type,THsHaDisruptorServer,is not normaI。<br>
+  THsHaDisruptorServer is use TCustomNonblockingServerSocket to socket.The TDisruptorServer is based on LMAX Disruptor.The TDisruptorServer's codes is here:<a href="https://github.com/xedin/disruptor_thrift_server">https://github.com/xedin/disruptor_thrift_server</a> Can be understood as,a queue-improved TNonBlockingServer。</p>
+  
+  <p>I'll write a blog about disruptor_thrift_server later.<br>
+  __EOF__</p>
+  
+  <p>Happy New Year!</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-12-30T00:00:00+08:00" pubdate data-updated="true">2013-12-30 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/11/30/bluno/" title="Previous Post: BLUNO试用手记">« BLUNO试用手记</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/01/22/disruptor-thrift-server-link-param-rps/" title="Next Post: disruptor thrift server连接参数与rps数值影响记录">disruptor thrift server连接参数与rps数值影响记录 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

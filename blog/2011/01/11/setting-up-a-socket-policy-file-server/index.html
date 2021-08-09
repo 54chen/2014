@@ -1,0 +1,217 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[Flash]建立socket安全策略文件服务器 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="前因
+  Flash被广泛应用于互联网各个方面，是因为它提供了各种各样的特性，其中很重要的一点就是，可以用flash建立TCP连接到服务器然后交换数据。从网络管理员的观点看，一个互联网的服务器能够连接进到内网里来，是一个很恐怖的事情，所以flash搞出来一个安全策略文件。 改变
+  Flash …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/01/11/setting-up-a-socket-policy-file-server">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[Flash]建立socket安全策略文件服务器</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-11T00:00:00+08:00" pubdate data-updated="true">2011-01-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://www.adobe.com/content/dam/Adobe/en/devnet/authors/large/l/logo_flashplayer_lg.jpg.adimg.mw.138.png" alt="flash 安全"></p>
+  
+  <p><strong>前因</strong>
+  Flash被广泛应用于互联网各个方面，是因为它提供了各种各样的特性，其中很重要的一点就是，可以用flash建立TCP连接到服务器然后交换数据。从网络管理员的观点看，一个互联网的服务器能够连接进到内网里来，是一个很恐怖的事情，所以flash搞出来一个安全策略文件。</p>
+  
+  <p><strong>改变</strong>
+  Flash Player 9,0,124,0 版本对这个策略文件进行了两个重大改变：一是所有的端口都需要在策略文件里声明了，以前的版本只需要1024以下的端口需要进行声明；二是可以集中到843端口进行集中式的托管了。Flash Player 9,0,124,0建立的socket连接，会先去请求843端口，如果这个端口没有策略文件，则会去你要连接的端口本身请求策略文件，如果二者都没有，则会被拒绝连接。</p>
+  
+  <p><strong>控制过程解读</strong>
+  1.Flash Player先到请求的843端口请求策略文件，如果没有，进行第2步，如果site-control为none则拒绝掉，如果site-control为all则进行第2步。<br>
+  2.如果在AS中写了Security.loadPolicyFile() ，（<font color="red">它并不是一定生效的，必须在843端口的声明中允许引用其他的策略文件后才能生效</font>），开始读取策略。<br>
+  3.最后一步是检测要连接的端口是否有权限，这步检测要在843端口中声明需要检测端口才会去做，如果843声明了而策略文件里没有，则会被拒绝。</p>
+  
+  <p><code>庆亮哥小更正：请求843和你的指定端口后，会访问当前访问域名下是否有crossdomain.xml文件，如果你的端口不是80，那么请求最多可能三次。</code></p>
+  
+  <p><strong>万能脚本</strong>
+  这个兄弟是adobe的开发人员吧，搞了两个脚本，一个perl的一个是python的，两个都好用，可以很简单地在服务器上搞起来843的守候进程。<br>
+  像下面这样执行就OK了：
+  </p>
+<blockquote><code>./flashpolicyd.pl --file=../policyfile.xml --port=843 <br>
+  ./flashpolicyd.py --file=../policyfile.xml --port=843</code></blockquote>
+  
+  <p><strong>猛击哪里下载</strong>
+  <a href="http://www.adobe.com/content/dotcom/en/devnet/flashplayer/articles/socket_policy_files/_jcr_content/articlePrerequistes/multiplefiles/node_1277808777771/file.res/flashpolicyd_v0.6%5B1%5D.zip">这里</a></p>
+  
+  <p><strong>参考文档：</strong>
+  <a href="http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html">http://www.adobe.com/devnet/flashplayer/articles/socket_policy_files.html</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-11T00:00:00+08:00" pubdate data-updated="true">2011-01-11 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2011/01/10/java-httpclient-too-many-open-files/" title="Previous Post: [java]用httpclient做压力测试时Too many open files的解决办法">« [java]用httpclient做压力测试时Too many open files的解决办法</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,227 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Flex加载图片的常用的几种方式 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="&lt;?xml version=" encoding="utf-8" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" applicationcomplete=" …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/08/20/flex%E5%8A%A0%E8%BD%BD%E5%9B%BE%E7%89%87%E7%9A%84%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Flex加载图片的常用的几种方式</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-08-20T00:00:00+08:00" pubdate data-updated="true">2008-08-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><span style="color: #000000;">&lt;?</span><span style="color: #000000;">xml version</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">1.0</span><span style="color: #000000;">"</span><span style="color: #000000;"> encoding</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">utf-8</span><span style="color: #000000;">"</span><span style="color: #000000;">?&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">&lt;</span><span style="color: #000000;">mx:Application xmlns:mx</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">http://www.adobe.com/2006/mxml</span><span style="color: #000000;">"</span><span style="color: #000000;"> layout</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">absolute</span><span style="color: #000000;">"</span><span style="color: #000000;"> applicationComplete</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">InitApp()</span><span style="color: #000000;">"</span><span style="color: #000000;">&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">    </span><span style="color: #000000;">&lt;</span><span style="color: #000000;">mx:Script</span><span style="color: #000000;">&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">        </span><span style="color: #000000;">&lt;!</span><span style="color: #000000;">[CDATA[
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">        
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">            </span><span style="color: #008000;">//</span><span style="color: #008000;">第一种方式 这种方式编译以后1.jpg 会直接编译进swf文件中 所以swf可以存在</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">             [Bindable]
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">             [Embed(source</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">1.jpg</span><span style="color: #000000;">"</span><span style="color: #000000;">)]
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">             private </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> imgClass:Class;
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">            
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">            </span><span style="color: #008000;">//</span><span style="color: #008000;">第2种方式</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">             private </span><span style="color: #0000ff;">var</span><span style="color: #000000;"> _loader:Loader;
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">            
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockStart.gif" alt="" align="top"><img style="display: none;" src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedBlock.gif" alt="" align="top">             private </span><span style="color: #0000ff;">function</span><span style="color: #000000;"> InitApp():</span><span style="color: #0000ff;">void</span><span style="display: none; background-color: #ffffff; border: #808080 1px solid;"><img src="http://www.cnblogs.com/Images/dot.gif" alt=""></span><span><span style="color: #000000;">{
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">第一种方式的代码</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _img.source </span><span style="color: #000000;">=</span><span style="color: #000000;"> imgClass;
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">第二种方式的代码</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _loader </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #0000ff;">new</span><span style="color: #000000;"> Loader();
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">这里需要注意的是 不是_loader.addEventListener   这样是没有效果的</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockStart.gif" alt="" align="top"><img style="display: none;" src="http://www.cnblogs.com/Images/OutliningIndicators/ContractedSubBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _loader.contentLoaderInfo.addEventListener(Event.COMPLETE,</span><span style="color: #0000ff;">function</span><span style="color: #000000;">(e:Event):</span><span style="color: #0000ff;">void</span><span style="display: none; background-color: #ffffff; border: #808080 1px solid;"><img src="http://www.cnblogs.com/Images/dot.gif" alt=""></span><span><span style="color: #000000;">{
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                     _img.source </span><span style="color: #000000;">=</span><span style="color: #000000;"> e.currentTarget.content;
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedSubBlockEnd.gif" alt="" align="top">                 }</span></span><span style="color: #000000;">);
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">这里说一个技巧   当url 中有中文字体的话 使用encodeURI方法 如果没有 则可以不加</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _loader.load(</span><span style="color: #0000ff;">new</span><span style="color: #000000;"> URLRequest(encodeURI(</span><span style="color: #000000;">"</span><span style="color: #000000;">1.jpg</span><span style="color: #000000;">"</span><span style="color: #000000;">)));
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">第三种方式比较简单</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                 _img.source </span><span style="color: #000000;">=</span><span style="color: #000000;"> </span><span style="color: #000000;">"</span><span style="color: #000000;">1.jpg</span><span style="color: #000000;">"</span><span style="color: #000000;">;  </span><span style="color: #008000;">//</span><span style="color: #008000;">注意这里必须设置img autoLoad属性为true</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top"></span><span style="color: #000000;">                
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/InBlock.gif" alt="" align="top">                </span><span style="color: #008000;">//</span><span style="color: #008000;">最后说明 其中第2 第3种方式中swf都不能存在 必须配合1.jpg文件的存在 而第一种方式则不需要</span><span style="color: #008000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/ExpandedBlockEnd.gif" alt="" align="top"></span><span style="color: #000000;">             }</span></span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">         ]]</span><span style="color: #000000;">&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top">    </span><span style="color: #000000;">&lt;</span><span style="color: #000000;">/</span><span style="color: #000000;">mx:Script&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">    </span><span style="color: #000000;">&lt;</span><span style="color: #000000;">mx:Image x</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">51</span><span style="color: #000000;">"</span><span style="color: #000000;"> y</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">62</span><span style="color: #000000;">"</span><span style="color: #000000;"> width</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">298</span><span style="color: #000000;">"</span><span style="color: #000000;"> height</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">245</span><span style="color: #000000;">"</span><span style="color: #000000;"> autoLoad</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">true</span><span style="color: #000000;">"</span><span style="color: #000000;"> id</span><span style="color: #000000;">=</span><span style="color: #000000;">"</span><span style="color: #000000;">_img</span><span style="color: #000000;">"/</span><span style="color: #000000;">&gt;</span><span style="color: #000000;">
+  <img src="http://www.cnblogs.com/Images/OutliningIndicators/None.gif" alt="" align="top"></span><span style="color: #000000;">&lt;</span><span style="color: #000000;">/</span><span style="color: #000000;">mx:Application&gt;</span></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-08-20T00:00:00+08:00" pubdate data-updated="true">2008-08-20 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/07/29/wine-%E8%BF%90%E8%A1%8C-tm-pv4%E7%89%88%E6%9C%AC/" title="Previous Post: wine 运行 tm pv4版本">« wine 运行 tm pv4版本</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/08/20/%E5%85%A8%E8%A7%92%E5%8D%8A%E8%A7%92%E5%88%A4%E6%96%AD/" title="Next Post: 全角半角判断">全角半角判断 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

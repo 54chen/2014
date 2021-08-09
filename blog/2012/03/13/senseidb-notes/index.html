@@ -1,0 +1,290 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Senseidb使用手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="下载
+  https://github.com/downloads/linkedin/sensei/sensei-1.0.0-release.tar.gz
+  这个版本是2012年1月份发布的，如果您看到此文时时间太久，请到他们的官方网站去寻找：http://senseidb.com 下载kafka …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/03/13/senseidb-notes">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Senseidb使用手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-03-13T00:00:00+08:00" pubdate data-updated="true">2012-03-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://www.cgichina.com/uploads/allimg/c100706/12N3911E10-233O9.jpg" alt="linkedin, senseidb">
+  <strong>下载</strong>
+  https://github.com/downloads/linkedin/sensei/sensei-1.0.0-release.tar.gz<br>
+  这个版本是2012年1月份发布的，如果您看到此文时时间太久，请到他们的官方网站去寻找：http://senseidb.com</p>
+  
+  <p><strong>下载kafka</strong>
+  kafka：由linkedin开源的高吞吐量的消息系统。<br>
+  http://people.apache.org/~nehanarkhede/kafka-0.7.0-incubating/kafka-0.7.0-incubating-src.tar.gz</p>
+  
+  <p><strong>下载中文分词包IKAnalyzer</strong>
+  http://code..com/p/ik-analyzer/downloads/list</p>
+  
+  <p><strong>编译sensei</strong>
+  tar zxvf sensei-1.0.0-release.tar.gz<br>
+  cd sensei-trunk<br>
+  ./bin/build.sh 或者 mvn package 要是没有maven客户端，需要自行安装（ubuntu下直接apt-get install maven）</p>
+  
+  <p><strong>编译kafka</strong>
+  tar zxvf kafka-0.7.0-incubating-src.tar.gz <br>
+  cd kafka-0.7.0-incubating-src/<br>
+  ./sbt<br>
+  update<br>
+  pacakge</p>
+  
+  <p><strong>编译IKA</strong>
+  新建一个jar包，里面只有一个类，内容如下：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="keyword">public</span><span> </span><span class="keyword">class</span><span> IKAnalyzerFactory </span><span class="keyword">implements</span><span> SenseiPluginFactory&lt;IKAnalyzer&gt; {    </span></span></li>
+<li class=""><span>    <span class="annotation">@Override</span><span>    </span></span></li>
+<li class="alt"><span>    <span class="keyword">public</span><span> IKAnalyzer getBean(Map&lt;String, String&gt; initProperties, String fullPrefix, SenseiPluginRegistry pluginRegistry) {    </span></span></li>
+<li class=""><span>        <span class="keyword">return</span><span> </span><span class="keyword">new</span><span> IKAnalyzer();    </span></span></li>
+<li class="alt"><span>    }    </span></li>
+<li class=""><span>}    </span></li>
+</ol>
+</div>
+  <strong>
+  配置sensei的sensei.properties</strong>
+  重要的几点：<br>
+  1）zookeeper的url:
+  <em>sensei.cluster.url=zookeeper.n.miliao.com:2181</em>
+  2）IKA的class设置:
+  <em>sensei.index.analyzer.class = com.chen.IKA.IKAnalyzerFactory</em>
+  3）kafka所使用的声明:
+  <em>sensei.gateway.class=com.senseidb.gateway.kafka.KafkaDataProviderBuilder<br>
+  sensei.gateway.kafka.zookeeperUrl=zookeeper.n.miliao.com</em>
+  #下面的topic很关键，消息系统中用topic区别不同的消息
+  <em>sensei.gateway.kafka.topic=<font color="orange">hotTopic</font></em>
+  #ProducerData生成时，也应该叫hotTopic
+  
+  <p><strong>启动sensei</strong>
+  略去了设置schema，可参考<a href="http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html">http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html</a>.</p>
+  
+  <p></p>
+<blockquote>cd sensei-trunk<br>
+  bin/start-sensei-node.sh example/xxx/conf</blockquote>
+  
+  <p></p>
+<blockquote>(所有的使用的jar，比如说kafka\IKA及其依赖的包，都扔到conf/ext下)</blockquote>
+  
+  <p><strong>配置kafka的server.properties</strong>
+  关键的一点：<br>
+  1）设置kafka使用的zookeeper地址：</p>
+  
+  <p></p>
+<blockquote>zk.connect=zookeeper.n.miliao.com:2181</blockquote>
+  
+  <p><strong>启动kafka</strong></p>
+  
+  <p></p>
+<blockquote>cd kafka-0.7.0-incubating-src<br>
+  nohup bin/kafka-server-start.sh config/server.properties &amp;</blockquote>
+  
+  <p><strong>
+  [如果你的schema定义无误，那么到这里你就可以通知kafka有消息进入，sensei就会自动开始消费这些消息进行索引等过程]</strong></p>
+  
+  <p>在具体业务中传入数据参考前文：<a href="http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html">http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html</a></p>
+  
+  <p><strong>
+  发起搜索</strong>
+   </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="keyword">public</span><span> </span><span class="keyword">static</span><span> JSONArray doSearch(String key, </span><span class="keyword">int</span><span> limit, </span><span class="keyword">int</span><span> offset, String senseiServer) </span><span class="keyword">throws</span><span> JSONException {  </span></span></li>
+<li class=""><span>        SenseiClientRequest senseiRequest = SenseiClientRequest.builder().query(Queries.stringQuery(key)).paging(limit, offset)  </span></li>
+<li class="alt"><span>                .fetchStored(<span class="keyword">true</span><span>).build();   </span></span></li>
+<li class=""><span>        SenseiResult senseiResult = <span class="keyword">new</span><span> SenseiServiceProxy(senseiServer, </span><span class="number">8080</span><span>).sendSearchRequest(senseiRequest);  </span></span></li>
+<li class="alt"><span>        List&lt;SenseiHit&gt; list = senseiResult.getHits();  </span></li>
+<li class=""><span>        JSONArray l = <span class="keyword">new</span><span> JSONArray();  </span></span></li>
+<li class="alt"><span>        <span class="keyword">for</span><span> (</span><span class="keyword">int</span><span> i = </span><span class="number">0</span><span>; i &lt; list.size(); i++) {  </span></span></li>
+<li class=""><span>            SenseiHit hit = list.get(i);  </span></li>
+<li class="alt"><span>            l.put(<span class="keyword">new</span><span> JSONObject(hit.getSrcdata()));  </span></span></li>
+<li class=""><span>        }  </span></li>
+<li class="alt"><span>        <span class="keyword">return</span><span> l;  </span></span></li>
+<li class=""><span>    }  </span></li>
+</ol>
+</div>
+  
+  <p>____EOF____<br>
+  2012.3.13 version 1</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-03-13T00:00:00+08:00" pubdate data-updated="true">2012-03-13 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

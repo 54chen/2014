@@ -1,0 +1,1480 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Java,io | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/java-io/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[Io不再神秘]]></title>
+      <link href="https://www.54chen.com/blog/2014/03/12/io-demystified/"/>
+      <updated>2014-03-12T10:27:15+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/03/12/io-demystified</id>
+      <content type="html"><![CDATA[<ul>
+  <li>本文译自 <a href="http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/">http://chamibuddhika.wordpress.com/2012/08/11/io-demystified/</a></li>
+  <li>原作者：Buddhika Chamith</li>
+  <li>译者：54chen</li>
+  </ul>
+  
+  
+  <p>随着所有的在高可用服务器设计上的炒作，以及nodejs背后的风行，我想关注一些IO的设计模式，却一起没有足够的时间。现在正在完成的一些研究，我想最好记下这些资料以备查。让我们跳上IO bus兜风去。</p>
+  
+  <h2>各种各样的I/O</h2>
+  
+  <p>根据作的阻塞或非阻塞类型，以及IO的准备就绪、完成事件通知的同步和异步类型，一共有四种不同方式的IO。</p>
+  
+  <!-- more -->
+  
+  
+  <ul>
+  <li>同步阻塞IO</li>
+  </ul>
+  
+  
+  <p>在许多web server上，典型的一个连接一个thread的基础，这种类型是IO作阻塞着应用程序直到完成。</p>
+  
+  <p>当阻塞式的read方法或write方法被调用时，将有一次上下文切换至kernel中，IO作会发生，数据会被复制进kernel的buffer中。然后，kernel buffer会把数据转给用户空间里的应用程序级别的buffer，并且应用程序的thread会被标识为runnable的，此时应用程序会解锁可以从用户空间的buffer中读取数据。</p>
+  
+  <p>一个连接一个thread的模型想尝试减少强制一个连接给一个thread的阻塞影响，需要掌握剩下的并发连接不再被IO作在同一个连接上阻塞。当连接些都很短且数据延迟都不是很坏的时候这工作得很好。尽管如此，一旦连接变长且数据连接高延迟，可能性就是，线程些被连接长时间抓住不放，因为新连接的饥饿。如果使用定长的线程池，直到阻塞的线程在阻塞状态中不能被重用以服务新的连接，如果每个新的连接用一个新的线程服务，或者会导致大量的线程会在系统中被产生，这会演变为漂亮的资源争抢，为了完成高并发的负载，而高上下切换消费。</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>ServerSocket server = new ServerSocket(port);
+  </span><span class='line'>while(true) {
+  </span><span class='line'>  Socket connection = server.accept();
+  </span><span class='line'>  spawn-Thread-and-process(connection);
+  </span><span class='line'>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>简单的一连接一线程server</p>
+  
+  <ul>
+  <li>同步非阻塞IO</li>
+  </ul>
+  
+  
+  <p>这个模型下，设备（网卡）或者连接被设置为非阻塞的，read()和write()作将不会被阻塞。通常意味着，如果作不能立即得到结论，将会返回，带一个error code以指出作会阻塞（POSIX标准是EWOULDBLOCK）或者是设备临时不可用（POSIX标准是EAGAIN）。由应用程序去检测，直到设备准备好了并且所有数据被读到。尽量如此，这也不是非常高效，因为每次调用都会激起一次上下文切换给kernel，并且不会考虑数据有没被读到。</p>
+  
+  <ul>
+  <li>带就绪事件的异步非阻塞IO</li>
+  </ul>
+  
+  
+  <p>前面的模型的问题在于，应用程序不得不检测，会忙于等待任务完成。当设备准备好被读写时，有更好的办法通知应用程序吗？这的确就是本模型所提供的好处。使用特殊的系统调用（因平台而变－linux下使用select()/poll()/epoll()，BSD使用kqueue()，Solaris使用/dev/poll），应用程序注册感兴趣的点收集IO就绪的信息，从特定的设备（在Linux下使用文件描述符，所有的sockets都被抽象使用了文件描述符），特定的IO作（读或写）。然后，这个系统调用被调用，至少其中一个被注册的文件描述符变成ready之前，这调用会被阻塞。一旦这个文件描述符准备好做IO作了，就会被取来当作系统调用的返回，然后系统调用就可以在应用程序的loop中被顺序地调用。</p>
+  
+  <p>准备好的连接处理逻辑经常包括一个用户提供的事件handler，此handler会一起发起非阻塞的read()/write()调用，目的是从设备取数据给kernel，最终给用户空间的buffer，这会激起上下文切换到kernel。无论如何，通常没有绝对保证，有可能会发生，设备上预期的由作系统提供的IO，只是一个指示，设备有可能准备好感兴趣的IO作了，但read()或write()却不行。尽管如此，与标准情况相比这应该算异常了。</p>
+  
+  <p>所以，总结的办法就是，在异步流中获取就绪事件，注册一些事件处理器，当有类似的事件通知被触发的时候抓住他们。正如你所见，所有的事情都可以在一个单独的线程中完成，即便从多个不同连接过来的多路传输，主要因为select()（这里我选择了典型的系统调用），已经是可以同一时间返回多个sockets准备就绪的类型。同一时间在多个sockets上返回就绪，这只是一部分好处。这种类型就是经常没提供的非阻塞IO模型。</p>
+  
+  <p>Java已经抽象出来平台特殊性系统调用的不同，实现了NIO API。Socket 文件描述符被用Channels和Selector抽象，封装到selection系统调用中。应用程序感兴趣的收集就绪事件，注册到Channel（通常在ServerSocketChannel上accept()就得到一个SocketChannel），注册的内容是Selector，会得到SelectionKey，这个SelectionKey就是作为一个handle，这个handle的作用是hold住Channel和注册信息。然后阻塞的select()调用被设置在Selector，它会返回一系列的SelectionKey，然后一个接一个地被程序所指定的事件处理器所处理。</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  <span class='line-number'>32</span>
+  <span class='line-number'>33</span>
+  <span class='line-number'>34</span>
+  <span class='line-number'>35</span>
+  <span class='line-number'>36</span>
+  <span class='line-number'>37</span>
+  <span class='line-number'>38</span>
+  <span class='line-number'>39</span>
+  <span class='line-number'>40</span>
+  <span class='line-number'>41</span>
+  <span class='line-number'>42</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>elector selector = Selector.open();&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>channel.configureBlocking(false);&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>SelectionKey key = channel.register(selector, SelectionKey.OP_READ);&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>while(true) {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  int readyChannels = selector.select();&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  if(readyChannels == 0) continue;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  Set&lt;SelectionKey> selectedKeys = selector.selectedKeys();&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  Iterator&lt;SelectionKey> keyIterator = selectedKeys.iterator();&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  while(keyIterator.hasNext()) {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>SelectionKey key = keyIterator.next();
+  </span><span class='line'>
+  </span><span class='line'>if(key.isAcceptable()) {
+  </span><span class='line'>    // a connection was accepted by a ServerSocketChannel.
+  </span><span class='line'>
+  </span><span class='line'>} else if (key.isConnectable()) {
+  </span><span class='line'>    // a connection was established with a remote server.
+  </span><span class='line'>
+  </span><span class='line'>} else if (key.isReadable()) {
+  </span><span class='line'>    // a channel is ready for reading
+  </span><span class='line'>
+  </span><span class='line'>} else if (key.isWritable()) {
+  </span><span class='line'>    // a channel is ready for writing
+  </span><span class='line'>}
+  </span><span class='line'>
+  </span><span class='line'>keyIterator.remove();
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }
+  </span><span class='line'>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>简单的非阻塞server</p>
+  
+  <ul>
+  <li>带完成事件的异步非阻塞IO</li>
+  </ul>
+  
+  
+  <p>就绪事件只能做到通知你设备\socket准备好做事情的程度。应用程序依然不得不做脏活，为了从设备/socket中读数据（更准确地说是通过系统调用指示作系统），通过设备的各种思路将数据扔到用户空间的buffer。把任务代理给作系统在后台运行，一旦完成了让它再通知你，包括从设备到kernel的buffer再最终到应用程序级别的buffer传送所有的数据，这样岂不是很爽？这就是经常被提到的异步IO模型背后的基础想法。所以需要作系统层支持AIO作。在Linux下从2.6开始在aio POSIX API中被支持，Windows下用I/O Completion Ports支持。</p>
+  
+  <p>JAVA NIO2在AsynchronousChannel API中一点点支持此模型。</p>
+  
+  <ul>
+  <li>作系统支持</li>
+  </ul>
+  
+  
+  <p>为了支持就绪和完成事件通知，不同的作系统提供了各种各样的系统调用。就绪事件 select()和poll()可以在Linux类的系统中使用。尽管如此，更新的epoll()变种更好，因为它比select()和poll()更有效率。当监控的文件描述符增长时，选择时间在线性增长，这一点上导致了select()不行。在复写文件描述符数组这事上已经臭名昭著。所以每次一被调用，描述符数组就需要从一个单独的拷贝上重新构建。无论如何这都不是一个优雅的解决方案。</p>
+  
+  <p>epoll()变体可以按两种办法被配置，边沿触发和层级触发。在边沿触发情况下，只有在相关的描述符上事件被检测到才会发出通知。说了在一个事件触发通知期间，你的应用程序触发器只会读一半kernel的输入buffer。现在在这个描述符上不会得到通知，甚至到下一个时间周期，除非设备准备好发更多的数据，否则有一点点数据可读的时候也不会有通知，有足够的数据的时候会导致一次文件描述符的事件。层级触发用另一方式配置，每次数据可读了都会触发通知。</p>
+  
+  <p>相比的系统调用还有BSD口味的kqueue，Solaris由于版本不同有/dev/poll或者"Event Completion"。Windows下等价的是“I/O Completion Ports”。</p>
+  
+  <p>至少在Linux下AIO模型的情况却大不同。Linux中aio的支持看上去埋头在一些意见困扰中，实际地在kernel层面使用就绪事件，同时在应用程序层面提供异步完成事件的抽象。尽管如此，Windows看上去通过“I/O Completion Ports”支持这个得了第一名。</p>
+  
+  <ul>
+  <li>IO模式101</li>
+  </ul>
+  
+  
+  <p>在软件开发中到处是设计模式。I/O不一样。只有两种I/O模式，NIO和AIO，下面进行介绍。</p>
+  
+  <ul>
+  <li>Reactor模式</li>
+  </ul>
+  
+  
+  <p>有许多组件使用这个模式来实现。我会解释一遍先，后面好看懂代码。</p>
+  
+  <p>Reactor启动器：这是会初始化非阻塞服务器的组件，主要是配置和初始化分配器（dispatcher）。首先，它会bind出服务器的socket，并且通过分接器（demultiplexer）注册，分接器作用是客户端连接接收就绪事件。然后就绪事件（读写接收等）的每种类型的事件处理器实现会被注册到分配器（dispatcher）。下一次分配器事件loop过程会被调起来，以处理事件通知。</p>
+  
+  <p>dispatcher：为注册、删除定义接口，分发事件处理器起作用，作用是响应连接事件，包括连接被接受、数据输入输出、一组连接上的超时事件。为了服务一个客户端连接，相关的事件处理器（比如接受事件处理器）会被注册给被接受的客户端通道（在client socket其下包装），注册内容是分接器（demultiplexer），就绪事件类的都被会注册，以监听此特定的channel。然后，分配器线程会调出阻塞的就绪选择作，这些作在demultiplexer之上，主要为剩下的注册通道。一旦一个或多个被注册的通道准备好IO，分配器会服务给相关的每个准备好的通道一对一的用注册的事件处理器返回“Handle”。很重要的是，这些事件处理器不会hold住分配器线程，但是会延迟分配器服务其他准备好的连接。因为常见的在事件处理器里的逻辑，包括传送数据从/去准备好的连接，这些连接会阻塞，一直到所有的数据在用户空间和内核数据缓存中被送完，一般情况下，这些处理器跑在一个线程池的不同的线程里。</p>
+  
+  <p>Handle：当一个channel被注册了分接器（demultiplexer）就会返回一个handle，handle概括了连接通道和就绪信息。靠分接器就绪选择作，一系列的准备好的Handle会被返回。Java NIO里对等的叫SelectionKey。</p>
+  
+  <p>Demultiplexer：（分接器：54chen专门瞎翻）等待在一个或多个注册的连接通道里的就绪事件。Java NIO里叫Selector。</p>
+  
+  <p>Event Handler：指接口具有的hook方法，以分配连接事件。这些方法需要被应用程序指定的事件处理器所实现。</p>
+  
+  <p>Concrete Event Handler：（具体的事件处理器）包括从连接中读写数据的逻辑，并且要做一些必须的过程，或者初始化客户端连接传过的接收协议，这些协议来自通过的Handle。</p>
+  
+  <p><img src=http://chen54.b0.upaiyun.com/20140312/reactor-pattern.jpg></p>
+  
+  <p>事件处理器典型地跑在一个线程池的单独的线程中，下面的图片中显示了这一过程。</p>
+  
+  <p><img src=http://chen54.b0.upaiyun.com/20140312/reactor-pattern1.jpg></p>
+  
+  <p>一个简单的echo server实现，下面的例子显示了这种模式（没有事件处理器线程池）。</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  <span class='line-number'>32</span>
+  <span class='line-number'>33</span>
+  <span class='line-number'>34</span>
+  <span class='line-number'>35</span>
+  <span class='line-number'>36</span>
+  <span class='line-number'>37</span>
+  <span class='line-number'>38</span>
+  <span class='line-number'>39</span>
+  <span class='line-number'>40</span>
+  <span class='line-number'>41</span>
+  <span class='line-number'>42</span>
+  <span class='line-number'>43</span>
+  <span class='line-number'>44</span>
+  <span class='line-number'>45</span>
+  <span class='line-number'>46</span>
+  <span class='line-number'>47</span>
+  <span class='line-number'>48</span>
+  <span class='line-number'>49</span>
+  <span class='line-number'>50</span>
+  <span class='line-number'>51</span>
+  <span class='line-number'>52</span>
+  <span class='line-number'>53</span>
+  <span class='line-number'>54</span>
+  <span class='line-number'>55</span>
+  <span class='line-number'>56</span>
+  <span class='line-number'>57</span>
+  <span class='line-number'>58</span>
+  <span class='line-number'>59</span>
+  <span class='line-number'>60</span>
+  <span class='line-number'>61</span>
+  <span class='line-number'>62</span>
+  <span class='line-number'>63</span>
+  <span class='line-number'>64</span>
+  <span class='line-number'>65</span>
+  <span class='line-number'>66</span>
+  <span class='line-number'>67</span>
+  <span class='line-number'>68</span>
+  <span class='line-number'>69</span>
+  <span class='line-number'>70</span>
+  <span class='line-number'>71</span>
+  <span class='line-number'>72</span>
+  <span class='line-number'>73</span>
+  <span class='line-number'>74</span>
+  <span class='line-number'>75</span>
+  <span class='line-number'>76</span>
+  <span class='line-number'>77</span>
+  <span class='line-number'>78</span>
+  <span class='line-number'>79</span>
+  <span class='line-number'>80</span>
+  <span class='line-number'>81</span>
+  <span class='line-number'>82</span>
+  <span class='line-number'>83</span>
+  <span class='line-number'>84</span>
+  <span class='line-number'>85</span>
+  <span class='line-number'>86</span>
+  <span class='line-number'>87</span>
+  <span class='line-number'>88</span>
+  <span class='line-number'>89</span>
+  <span class='line-number'>90</span>
+  <span class='line-number'>91</span>
+  <span class='line-number'>92</span>
+  <span class='line-number'>93</span>
+  <span class='line-number'>94</span>
+  <span class='line-number'>95</span>
+  <span class='line-number'>96</span>
+  <span class='line-number'>97</span>
+  <span class='line-number'>98</span>
+  <span class='line-number'>99</span>
+  <span class='line-number'>100</span>
+  <span class='line-number'>101</span>
+  <span class='line-number'>102</span>
+  <span class='line-number'>103</span>
+  <span class='line-number'>104</span>
+  <span class='line-number'>105</span>
+  <span class='line-number'>106</span>
+  <span class='line-number'>107</span>
+  <span class='line-number'>108</span>
+  <span class='line-number'>109</span>
+  <span class='line-number'>110</span>
+  <span class='line-number'>111</span>
+  <span class='line-number'>112</span>
+  <span class='line-number'>113</span>
+  <span class='line-number'>114</span>
+  <span class='line-number'>115</span>
+  <span class='line-number'>116</span>
+  <span class='line-number'>117</span>
+  <span class='line-number'>118</span>
+  <span class='line-number'>119</span>
+  <span class='line-number'>120</span>
+  <span class='line-number'>121</span>
+  <span class='line-number'>122</span>
+  <span class='line-number'>123</span>
+  <span class='line-number'>124</span>
+  <span class='line-number'>125</span>
+  <span class='line-number'>126</span>
+  <span class='line-number'>127</span>
+  <span class='line-number'>128</span>
+  <span class='line-number'>129</span>
+  <span class='line-number'>130</span>
+  <span class='line-number'>131</span>
+  <span class='line-number'>132</span>
+  <span class='line-number'>133</span>
+  <span class='line-number'>134</span>
+  <span class='line-number'>135</span>
+  <span class='line-number'>136</span>
+  <span class='line-number'>137</span>
+  <span class='line-number'>138</span>
+  <span class='line-number'>139</span>
+  <span class='line-number'>140</span>
+  <span class='line-number'>141</span>
+  <span class='line-number'>142</span>
+  <span class='line-number'>143</span>
+  <span class='line-number'>144</span>
+  <span class='line-number'>145</span>
+  <span class='line-number'>146</span>
+  <span class='line-number'>147</span>
+  <span class='line-number'>148</span>
+  <span class='line-number'>149</span>
+  <span class='line-number'>150</span>
+  <span class='line-number'>151</span>
+  <span class='line-number'>152</span>
+  <span class='line-number'>153</span>
+  <span class='line-number'>154</span>
+  <span class='line-number'>155</span>
+  <span class='line-number'>156</span>
+  <span class='line-number'>157</span>
+  <span class='line-number'>158</span>
+  <span class='line-number'>159</span>
+  <span class='line-number'>160</span>
+  <span class='line-number'>161</span>
+  <span class='line-number'>162</span>
+  <span class='line-number'>163</span>
+  <span class='line-number'>164</span>
+  <span class='line-number'>165</span>
+  <span class='line-number'>166</span>
+  <span class='line-number'>167</span>
+  <span class='line-number'>168</span>
+  <span class='line-number'>169</span>
+  <span class='line-number'>170</span>
+  <span class='line-number'>171</span>
+  <span class='line-number'>172</span>
+  <span class='line-number'>173</span>
+  <span class='line-number'>174</span>
+  <span class='line-number'>175</span>
+  <span class='line-number'>176</span>
+  <span class='line-number'>177</span>
+  <span class='line-number'>178</span>
+  <span class='line-number'>179</span>
+  <span class='line-number'>180</span>
+  <span class='line-number'>181</span>
+  <span class='line-number'>182</span>
+  <span class='line-number'>183</span>
+  <span class='line-number'>184</span>
+  <span class='line-number'>185</span>
+  <span class='line-number'>186</span>
+  <span class='line-number'>187</span>
+  <span class='line-number'>188</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class ReactorInitiator {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>private static final int NIO_SERVER_PORT = 9993;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public void initiateReactiveServer(int port) throws Exception {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>ServerSocketChannel server = ServerSocketChannel.open();
+  </span><span class='line'>server.socket().bind(new InetSocketAddress(port));
+  </span><span class='line'>server.configureBlocking(false);
+  </span><span class='line'>
+  </span><span class='line'>Dispatcher dispatcher = new Dispatcher();
+  </span><span class='line'>dispatcher.registerChannel(SelectionKey.OP_ACCEPT, server);
+  </span><span class='line'>
+  </span><span class='line'>dispatcher.registerEventHandler(
+  </span><span class='line'>  SelectionKey.OP_ACCEPT, new AcceptEventHandler(
+  </span><span class='line'>  dispatcher.getDemultiplexer()));
+  </span><span class='line'>
+  </span><span class='line'>dispatcher.registerEventHandler(
+  </span><span class='line'>  SelectionKey.OP_READ, new ReadEventHandler(
+  </span><span class='line'>  dispatcher.getDemultiplexer()));
+  </span><span class='line'>
+  </span><span class='line'>dispatcher.registerEventHandler(
+  </span><span class='line'>SelectionKey.OP_WRITE, new WriteEventHandler());
+  </span><span class='line'>
+  </span><span class='line'>dispatcher.run(); // Run the dispatcher loop
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public static void main(String[] args) throws Exception {
+  </span><span class='line'>    System.out.println(&ldquo;Starting NIO server at port : &rdquo; +
+  </span><span class='line'>      NIO_SERVER_PORT);
+  </span><span class='line'>    new ReactorInitiator().
+  </span><span class='line'>      initiateReactiveServer(NIO_SERVER_PORT);
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class Dispatcher {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  private Map&lt;Integer, EventHandler> registeredHandlers =
+  </span><span class='line'>    new ConcurrentHashMap&lt;Integer, EventHandler>();
+  </span><span class='line'>  private Selector demultiplexer;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public Dispatcher() throws Exception {
+  </span><span class='line'>    demultiplexer = Selector.open();
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public Selector getDemultiplexer() {
+  </span><span class='line'>    return demultiplexer;
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public void registerEventHandler(
+  </span><span class='line'>    int eventType, EventHandler eventHandler) {
+  </span><span class='line'>    registeredHandlers.put(eventType, eventHandler);
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  // Used to register ServerSocketChannel with the
+  </span><span class='line'>  // selector to accept incoming client connections
+  </span><span class='line'>  public void registerChannel(
+  </span><span class='line'>    int eventType, SelectableChannel channel) throws Exception {
+  </span><span class='line'>    channel.register(demultiplexer, eventType);
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public void run() {
+  </span><span class='line'>    try {
+  </span><span class='line'>      while (true) { // Loop indefinitely
+  </span><span class='line'>        demultiplexer.select();&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>    Set&lt;SelectionKey&gt; readyHandles =
+  </span><span class='line'>      demultiplexer.selectedKeys();
+  </span><span class='line'>    Iterator&lt;SelectionKey&gt; handleIterator =
+  </span><span class='line'>      readyHandles.iterator();
+  </span><span class='line'>
+  </span><span class='line'>    while (handleIterator.hasNext()) {
+  </span><span class='line'>      SelectionKey handle = handleIterator.next();
+  </span><span class='line'>
+  </span><span class='line'>      if (handle.isAcceptable()) {
+  </span><span class='line'>        EventHandler handler =
+  </span><span class='line'>          registeredHandlers.get(SelectionKey.OP_ACCEPT);
+  </span><span class='line'>          handler.handleEvent(handle);
+  </span><span class='line'>       // Note : Here we don't remove this handle from
+  </span><span class='line'>       // selector since we want to keep listening to
+  </span><span class='line'>       // new client connections
+  </span><span class='line'>      }
+  </span><span class='line'>
+  </span><span class='line'>      if (handle.isReadable()) {
+  </span><span class='line'>        EventHandler handler =
+  </span><span class='line'>          registeredHandlers.get(SelectionKey.OP_READ);
+  </span><span class='line'>        handler.handleEvent(handle);
+  </span><span class='line'>        handleIterator.remove();
+  </span><span class='line'>      }
+  </span><span class='line'>
+  </span><span class='line'>      if (handle.isWritable()) {
+  </span><span class='line'>        EventHandler handler =
+  </span><span class='line'>          registeredHandlers.get(SelectionKey.OP_WRITE);
+  </span><span class='line'>        handler.handleEvent(handle);
+  </span><span class='line'>        handleIterator.remove();
+  </span><span class='line'>      }
+  </span><span class='line'>    }
+  </span><span class='line'>  }
+  </span><span class='line'>} catch (Exception e) {
+  </span><span class='line'>  e.printStackTrace();
+  </span><span class='line'>}
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public interface EventHandler {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   public void handleEvent(SelectionKey handle) throws Exception;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class AcceptEventHandler implements EventHandler {
+  </span><span class='line'>  private Selector demultiplexer;
+  </span><span class='line'>  public AcceptEventHandler(Selector demultiplexer) {
+  </span><span class='line'>    this.demultiplexer = demultiplexer;
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {
+  </span><span class='line'>    ServerSocketChannel serverSocketChannel =
+  </span><span class='line'>     (ServerSocketChannel) handle.channel();
+  </span><span class='line'>    SocketChannel socketChannel = serverSocketChannel.accept();
+  </span><span class='line'>    if (socketChannel != null) {
+  </span><span class='line'>      socketChannel.configureBlocking(false);
+  </span><span class='line'>      socketChannel.register(
+  </span><span class='line'>        demultiplexer, SelectionKey.OP_READ);
+  </span><span class='line'>    }
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class ReadEventHandler implements EventHandler {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  private Selector demultiplexer;
+  </span><span class='line'>  private ByteBuffer inputBuffer = ByteBuffer.allocate(2048);&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public ReadEventHandler(Selector demultiplexer) {
+  </span><span class='line'>    this.demultiplexer = demultiplexer;
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {
+  </span><span class='line'>    SocketChannel socketChannel =
+  </span><span class='line'>     (SocketChannel) handle.channel();&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>socketChannel.read(inputBuffer); // Read data from client
+  </span><span class='line'>
+  </span><span class='line'>inputBuffer.flip();
+  </span><span class='line'>// Rewind the buffer to start reading from the beginning
+  </span><span class='line'>
+  </span><span class='line'>byte[] buffer = new byte[inputBuffer.limit()];
+  </span><span class='line'>inputBuffer.get(buffer);
+  </span><span class='line'>
+  </span><span class='line'>System.out.println("Received message from client : " +
+  </span><span class='line'>  new String(buffer));
+  </span><span class='line'>inputBuffer.flip();
+  </span><span class='line'>// Rewind the buffer to start reading from the beginning
+  </span><span class='line'>// Register the interest for writable readiness event for
+  </span><span class='line'>// this channel in order to echo back the message
+  </span><span class='line'>
+  </span><span class='line'>socketChannel.register(
+  </span><span class='line'>  demultiplexer, SelectionKey.OP_WRITE, inputBuffer);
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class WriteEventHandler implements EventHandler {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void handleEvent(SelectionKey handle) throws Exception {
+  </span><span class='line'>    SocketChannel socketChannel =
+  </span><span class='line'>      (SocketChannel) handle.channel();
+  </span><span class='line'>    ByteBuffer inputBuffer = (ByteBuffer) handle.attachment();
+  </span><span class='line'>    socketChannel.write(inputBuffer);
+  </span><span class='line'>    socketChannel.close(); // Close connection
+  </span><span class='line'>  }
+  </span><span class='line'>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>Proactor模式</li>
+  </ul>
+  
+  
+  <p>此模式基于异步IO模型。主要的组件如下。</p>
+  
+  <p>Proactive启动器：这是初始化异步作接收客户端连接的实体。经常是服务器应用程序的主线程。注册一个完成处理器，附着在完成分发器上，以逮到连接接收时的异步事件通知。</p>
+  
+  <p>Asynchronous Operation Processor：异步作处理器。其职责是异步地抓出IO作，提供完成事件通知给应用层的完成处理器。作系统通常会暴露异步IO接口。</p>
+  
+  <p>Asynchronous Operation：异步作的运行在的内核线程中，靠异步作处理器来完成。</p>
+  
+  <p>Completion Dispatcher：其职责是在异步作完成时，唤回应用程序的完成处理器。当异步作处理器完成了一次异步初始化作，完成分发器会进行应用程序自行维护的回调。通常，委派事件通知处理给相对的事件合适的完成处理器。</p>
+  
+  <p>Completion Handler：这是被实用程序实现的接口，用于处理异步事件完成events。</p>
+  
+  <p><img src=http://chen54.b0.upaiyun.com/20140312/proactor-pattern.jpg></p>
+  
+  <p>让我们来看看如何用新的Java 7里的NIO.2 API来实现这种模式（一个简单的echo server）。</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  <span class='line-number'>32</span>
+  <span class='line-number'>33</span>
+  <span class='line-number'>34</span>
+  <span class='line-number'>35</span>
+  <span class='line-number'>36</span>
+  <span class='line-number'>37</span>
+  <span class='line-number'>38</span>
+  <span class='line-number'>39</span>
+  <span class='line-number'>40</span>
+  <span class='line-number'>41</span>
+  <span class='line-number'>42</span>
+  <span class='line-number'>43</span>
+  <span class='line-number'>44</span>
+  <span class='line-number'>45</span>
+  <span class='line-number'>46</span>
+  <span class='line-number'>47</span>
+  <span class='line-number'>48</span>
+  <span class='line-number'>49</span>
+  <span class='line-number'>50</span>
+  <span class='line-number'>51</span>
+  <span class='line-number'>52</span>
+  <span class='line-number'>53</span>
+  <span class='line-number'>54</span>
+  <span class='line-number'>55</span>
+  <span class='line-number'>56</span>
+  <span class='line-number'>57</span>
+  <span class='line-number'>58</span>
+  <span class='line-number'>59</span>
+  <span class='line-number'>60</span>
+  <span class='line-number'>61</span>
+  <span class='line-number'>62</span>
+  <span class='line-number'>63</span>
+  <span class='line-number'>64</span>
+  <span class='line-number'>65</span>
+  <span class='line-number'>66</span>
+  <span class='line-number'>67</span>
+  <span class='line-number'>68</span>
+  <span class='line-number'>69</span>
+  <span class='line-number'>70</span>
+  <span class='line-number'>71</span>
+  <span class='line-number'>72</span>
+  <span class='line-number'>73</span>
+  <span class='line-number'>74</span>
+  <span class='line-number'>75</span>
+  <span class='line-number'>76</span>
+  <span class='line-number'>77</span>
+  <span class='line-number'>78</span>
+  <span class='line-number'>79</span>
+  <span class='line-number'>80</span>
+  <span class='line-number'>81</span>
+  <span class='line-number'>82</span>
+  <span class='line-number'>83</span>
+  <span class='line-number'>84</span>
+  <span class='line-number'>85</span>
+  <span class='line-number'>86</span>
+  <span class='line-number'>87</span>
+  <span class='line-number'>88</span>
+  <span class='line-number'>89</span>
+  <span class='line-number'>90</span>
+  <span class='line-number'>91</span>
+  <span class='line-number'>92</span>
+  <span class='line-number'>93</span>
+  <span class='line-number'>94</span>
+  <span class='line-number'>95</span>
+  <span class='line-number'>96</span>
+  <span class='line-number'>97</span>
+  <span class='line-number'>98</span>
+  <span class='line-number'>99</span>
+  <span class='line-number'>100</span>
+  <span class='line-number'>101</span>
+  <span class='line-number'>102</span>
+  <span class='line-number'>103</span>
+  <span class='line-number'>104</span>
+  <span class='line-number'>105</span>
+  <span class='line-number'>106</span>
+  <span class='line-number'>107</span>
+  <span class='line-number'>108</span>
+  <span class='line-number'>109</span>
+  <span class='line-number'>110</span>
+  <span class='line-number'>111</span>
+  <span class='line-number'>112</span>
+  <span class='line-number'>113</span>
+  <span class='line-number'>114</span>
+  <span class='line-number'>115</span>
+  <span class='line-number'>116</span>
+  <span class='line-number'>117</span>
+  <span class='line-number'>118</span>
+  <span class='line-number'>119</span>
+  <span class='line-number'>120</span>
+  <span class='line-number'>121</span>
+  <span class='line-number'>122</span>
+  <span class='line-number'>123</span>
+  <span class='line-number'>124</span>
+  <span class='line-number'>125</span>
+  <span class='line-number'>126</span>
+  <span class='line-number'>127</span>
+  <span class='line-number'>128</span>
+  <span class='line-number'>129</span>
+  <span class='line-number'>130</span>
+  <span class='line-number'>131</span>
+  <span class='line-number'>132</span>
+  <span class='line-number'>133</span>
+  <span class='line-number'>134</span>
+  <span class='line-number'>135</span>
+  <span class='line-number'>136</span>
+  <span class='line-number'>137</span>
+  <span class='line-number'>138</span>
+  <span class='line-number'>139</span>
+  <span class='line-number'>140</span>
+  <span class='line-number'>141</span>
+  <span class='line-number'>142</span>
+  <span class='line-number'>143</span>
+  <span class='line-number'>144</span>
+  <span class='line-number'>145</span>
+  <span class='line-number'>146</span>
+  <span class='line-number'>147</span>
+  <span class='line-number'>148</span>
+  <span class='line-number'>149</span>
+  <span class='line-number'>150</span>
+  <span class='line-number'>151</span>
+  <span class='line-number'>152</span>
+  <span class='line-number'>153</span>
+  <span class='line-number'>154</span>
+  <span class='line-number'>155</span>
+  <span class='line-number'>156</span>
+  <span class='line-number'>157</span>
+  <span class='line-number'>158</span>
+  <span class='line-number'>159</span>
+  <span class='line-number'>160</span>
+  <span class='line-number'>161</span>
+  <span class='line-number'>162</span>
+  <span class='line-number'>163</span>
+  <span class='line-number'>164</span>
+  <span class='line-number'>165</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class ProactorInitiator {
+  </span><span class='line'>  static int ASYNC_SERVER_PORT = 4333;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public void initiateProactiveServer(int port)
+  </span><span class='line'>    throws IOException {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>final AsynchronousServerSocketChannel listener =
+  </span><span class='line'>  AsynchronousServerSocketChannel.open().bind(
+  </span><span class='line'>    new InetSocketAddress(port));
+  </span><span class='line'> AcceptCompletionHandler acceptCompletionHandler =
+  </span><span class='line'>   new AcceptCompletionHandler(listener);
+  </span><span class='line'>
+  </span><span class='line'> SessionState state = new SessionState();
+  </span><span class='line'> listener.accept(state, acceptCompletionHandler);
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public static void main(String[] args) {
+  </span><span class='line'>    try {
+  </span><span class='line'>       System.out.println(&ldquo;Async server listening on port : &rdquo; +
+  </span><span class='line'>         ASYNC_SERVER_PORT);
+  </span><span class='line'>       new ProactorInitiator().initiateProactiveServer(
+  </span><span class='line'>         ASYNC_SERVER_PORT);
+  </span><span class='line'>    } catch (IOException e) {
+  </span><span class='line'>     e.printStackTrace();
+  </span><span class='line'>    }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>// Sleep indefinitely since otherwise the JVM would terminate
+  </span><span class='line'>while (true) {
+  </span><span class='line'>  try {
+  </span><span class='line'>    Thread.sleep(Long.MAX_VALUE);
+  </span><span class='line'>  } catch (InterruptedException e) {
+  </span><span class='line'>    e.printStackTrace();
+  </span><span class='line'>  }
+  </span><span class='line'>}
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }
+  </span><span class='line'>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class AcceptCompletionHandler
+  </span><span class='line'>  implements
+  </span><span class='line'>    CompletionHandler&lt;AsynchronousSocketChannel, SessionState> {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  private AsynchronousServerSocketChannel listener;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public AcceptCompletionHandler(
+  </span><span class='line'>    AsynchronousServerSocketChannel listener) {
+  </span><span class='line'>    this.listener = listener;
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void completed(AsynchronousSocketChannel socketChannel,
+  </span><span class='line'>    SessionState sessionState) {
+  </span><span class='line'>   // accept the next connection
+  </span><span class='line'>   SessionState newSessionState = new SessionState();
+  </span><span class='line'>   listener.accept(newSessionState, this);&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   // handle this connection
+  </span><span class='line'>   ByteBuffer inputBuffer = ByteBuffer.allocate(2048);
+  </span><span class='line'>   ReadCompletionHandler readCompletionHandler =
+  </span><span class='line'>     new ReadCompletionHandler(socketChannel, inputBuffer);
+  </span><span class='line'>   socketChannel.read(
+  </span><span class='line'>     inputBuffer, sessionState, readCompletionHandler);
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void failed(Throwable exc, SessionState sessionState) {
+  </span><span class='line'>   // Handle connection failure&hellip;
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class ReadCompletionHandler implements
+  </span><span class='line'>  CompletionHandler&lt;Integer, SessionState> {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   private AsynchronousSocketChannel socketChannel;
+  </span><span class='line'>   private ByteBuffer inputBuffer;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   public ReadCompletionHandler(
+  </span><span class='line'>     AsynchronousSocketChannel socketChannel,
+  </span><span class='line'>     ByteBuffer inputBuffer) {
+  </span><span class='line'>     this.socketChannel = socketChannel;
+  </span><span class='line'>     this.inputBuffer = inputBuffer;
+  </span><span class='line'>   }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   @Override
+  </span><span class='line'>   public void completed(
+  </span><span class='line'>     Integer bytesRead, SessionState sessionState) {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code> byte[] buffer = new byte[bytesRead];
+  </span><span class='line'> inputBuffer.rewind();
+  </span><span class='line'> // Rewind the input buffer to read from the beginning
+  </span><span class='line'>
+  </span><span class='line'> inputBuffer.get(buffer);
+  </span><span class='line'> String message = new String(buffer);
+  </span><span class='line'>
+  </span><span class='line'> System.out.println("Received message from client : " +
+  </span><span class='line'>   message);
+  </span><span class='line'>
+  </span><span class='line'> // Echo the message back to client
+  </span><span class='line'> WriteCompletionHandler writeCompletionHandler =
+  </span><span class='line'>   new WriteCompletionHandler(socketChannel);
+  </span><span class='line'>
+  </span><span class='line'> ByteBuffer outputBuffer = ByteBuffer.wrap(buffer);
+  </span><span class='line'>
+  </span><span class='line'> socketChannel.write(
+  </span><span class='line'>   outputBuffer, sessionState, writeCompletionHandler);
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void failed(Throwable exc, SessionState attachment) {
+  </span><span class='line'>    //Handle read failure&hellip;..
+  </span><span class='line'>   }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class WriteCompletionHandler implements
+  </span><span class='line'>  CompletionHandler&lt;Integer, SessionState> {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  private AsynchronousSocketChannel socketChannel;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public WriteCompletionHandler(
+  </span><span class='line'>    AsynchronousSocketChannel socketChannel) {
+  </span><span class='line'>    this.socketChannel = socketChannel;
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void completed(
+  </span><span class='line'>    Integer bytesWritten, SessionState attachment) {
+  </span><span class='line'>    try {
+  </span><span class='line'>      socketChannel.close();
+  </span><span class='line'>    } catch (IOException e) {
+  </span><span class='line'>      e.printStackTrace();
+  </span><span class='line'>    }
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  @Override
+  </span><span class='line'>  public void failed(Throwable exc, SessionState attachment) {
+  </span><span class='line'>   // Handle write failure&hellip;..
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class SessionState {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  private Map&lt;String, String> sessionProps =
+  </span><span class='line'>    new ConcurrentHashMap&lt;String, String>();&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   public String getProperty(String key) {
+  </span><span class='line'>     return sessionProps.get(key);
+  </span><span class='line'>   }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   public void setProperty(String key, String value) {
+  </span><span class='line'>     sessionProps.put(key, value);
+  </span><span class='line'>   }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>每种类型的事件完成（接受、读、写）都会被一个单独的完成处理器handle，这个处理器实现了CompletionHandler接口（Accept/ Read/
+  WriteCompletionHandler等）。状态过渡被管理在这些连接处理器中。额外SessionState参数可以被用于hold客户端的session，待定的状态就可以跨这一系列的完成事件了。</p>
+  
+  <ul>
+  <li>NIO框架(HTTP核心)</li>
+  </ul>
+  
+  
+  <p>如果你在考虑实现一个NIO的HTTP服务器，你有福了。Apache HTTPCore包对使用NIO处理HTTP流量提供了优秀的支持。API在内置的用NIO对付http请求处理层之上提供了高层次的抽象。下面给出一个最小化的非阻塞Http服务器实现，任何的GET访问都会返回一个样本输出。</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  <span class='line-number'>32</span>
+  <span class='line-number'>33</span>
+  <span class='line-number'>34</span>
+  <span class='line-number'>35</span>
+  <span class='line-number'>36</span>
+  <span class='line-number'>37</span>
+  <span class='line-number'>38</span>
+  <span class='line-number'>39</span>
+  <span class='line-number'>40</span>
+  <span class='line-number'>41</span>
+  <span class='line-number'>42</span>
+  <span class='line-number'>43</span>
+  <span class='line-number'>44</span>
+  <span class='line-number'>45</span>
+  <span class='line-number'>46</span>
+  <span class='line-number'>47</span>
+  <span class='line-number'>48</span>
+  <span class='line-number'>49</span>
+  <span class='line-number'>50</span>
+  <span class='line-number'>51</span>
+  <span class='line-number'>52</span>
+  <span class='line-number'>53</span>
+  <span class='line-number'>54</span>
+  <span class='line-number'>55</span>
+  <span class='line-number'>56</span>
+  <span class='line-number'>57</span>
+  <span class='line-number'>58</span>
+  <span class='line-number'>59</span>
+  <span class='line-number'>60</span>
+  <span class='line-number'>61</span>
+  <span class='line-number'>62</span>
+  <span class='line-number'>63</span>
+  <span class='line-number'>64</span>
+  <span class='line-number'>65</span>
+  <span class='line-number'>66</span>
+  <span class='line-number'>67</span>
+  <span class='line-number'>68</span>
+  <span class='line-number'>69</span>
+  <span class='line-number'>70</span>
+  <span class='line-number'>71</span>
+  <span class='line-number'>72</span>
+  <span class='line-number'>73</span>
+  <span class='line-number'>74</span>
+  <span class='line-number'>75</span>
+  <span class='line-number'>76</span>
+  <span class='line-number'>77</span>
+  <span class='line-number'>78</span>
+  <span class='line-number'>79</span>
+  <span class='line-number'>80</span>
+  <span class='line-number'>81</span>
+  <span class='line-number'>82</span>
+  <span class='line-number'>83</span>
+  <span class='line-number'>84</span>
+  <span class='line-number'>85</span>
+  <span class='line-number'>86</span>
+  <span class='line-number'>87</span>
+  <span class='line-number'>88</span>
+  <span class='line-number'>89</span>
+  <span class='line-number'>90</span>
+  <span class='line-number'>91</span>
+  <span class='line-number'>92</span>
+  <span class='line-number'>93</span>
+  <span class='line-number'>94</span>
+  <span class='line-number'>95</span>
+  <span class='line-number'>96</span>
+  <span class='line-number'>97</span>
+  <span class='line-number'>98</span>
+  <span class='line-number'>99</span>
+  <span class='line-number'>100</span>
+  <span class='line-number'>101</span>
+  <span class='line-number'>102</span>
+  <span class='line-number'>103</span>
+  <span class='line-number'>104</span>
+  <span class='line-number'>105</span>
+  <span class='line-number'>106</span>
+  <span class='line-number'>107</span>
+  <span class='line-number'>108</span>
+  <span class='line-number'>109</span>
+  <span class='line-number'>110</span>
+  <span class='line-number'>111</span>
+  <span class='line-number'>112</span>
+  <span class='line-number'>113</span>
+  <span class='line-number'>114</span>
+  <span class='line-number'>115</span>
+  <span class='line-number'>116</span>
+  <span class='line-number'>117</span>
+  <span class='line-number'>118</span>
+  <span class='line-number'>119</span>
+  <span class='line-number'>120</span>
+  <span class='line-number'>121</span>
+  <span class='line-number'>122</span>
+  <span class='line-number'>123</span>
+  <span class='line-number'>124</span>
+  <span class='line-number'>125</span>
+  <span class='line-number'>126</span>
+  <span class='line-number'>127</span>
+  <span class='line-number'>128</span>
+  <span class='line-number'>129</span>
+  <span class='line-number'>130</span>
+  <span class='line-number'>131</span>
+  <span class='line-number'>132</span>
+  <span class='line-number'>133</span>
+  <span class='line-number'>134</span>
+  <span class='line-number'>135</span>
+  <span class='line-number'>136</span>
+  <span class='line-number'>137</span>
+  <span class='line-number'>138</span>
+  <span class='line-number'>139</span>
+  <span class='line-number'>140</span>
+  <span class='line-number'>141</span>
+  <span class='line-number'>142</span>
+  <span class='line-number'>143</span>
+  <span class='line-number'>144</span>
+  <span class='line-number'>145</span>
+  <span class='line-number'>146</span>
+  <span class='line-number'>147</span>
+  <span class='line-number'>148</span>
+  <span class='line-number'>149</span>
+  <span class='line-number'>150</span>
+  <span class='line-number'>151</span>
+  <span class='line-number'>152</span>
+  <span class='line-number'>153</span>
+  <span class='line-number'>154</span>
+  <span class='line-number'>155</span>
+  <span class='line-number'>156</span>
+  <span class='line-number'>157</span>
+  <span class='line-number'>158</span>
+  <span class='line-number'>159</span>
+  <span class='line-number'>160</span>
+  <span class='line-number'>161</span>
+  <span class='line-number'>162</span>
+  <span class='line-number'>163</span>
+  <span class='line-number'>164</span>
+  <span class='line-number'>165</span>
+  <span class='line-number'>166</span>
+  <span class='line-number'>167</span>
+  <span class='line-number'>168</span>
+  <span class='line-number'>169</span>
+  <span class='line-number'>170</span>
+  <span class='line-number'>171</span>
+  <span class='line-number'>172</span>
+  <span class='line-number'>173</span>
+  <span class='line-number'>174</span>
+  <span class='line-number'>175</span>
+  <span class='line-number'>176</span>
+  <span class='line-number'>177</span>
+  <span class='line-number'>178</span>
+  <span class='line-number'>179</span>
+  <span class='line-number'>180</span>
+  <span class='line-number'>181</span>
+  <span class='line-number'>182</span>
+  <span class='line-number'>183</span>
+  <span class='line-number'>184</span>
+  <span class='line-number'>185</span>
+  <span class='line-number'>186</span>
+  <span class='line-number'>187</span>
+  <span class='line-number'>188</span>
+  <span class='line-number'>189</span>
+  <span class='line-number'>190</span>
+  <span class='line-number'>191</span>
+  <span class='line-number'>192</span>
+  <span class='line-number'>193</span>
+  <span class='line-number'>194</span>
+  <span class='line-number'>195</span>
+  <span class='line-number'>196</span>
+  <span class='line-number'>197</span>
+  <span class='line-number'>198</span>
+  <span class='line-number'>199</span>
+  <span class='line-number'>200</span>
+  <span class='line-number'>201</span>
+  <span class='line-number'>202</span>
+  <span class='line-number'>203</span>
+  <span class='line-number'>204</span>
+  <span class='line-number'>205</span>
+  <span class='line-number'>206</span>
+  <span class='line-number'>207</span>
+  <span class='line-number'>208</span>
+  <span class='line-number'>209</span>
+  <span class='line-number'>210</span>
+  <span class='line-number'>211</span>
+  <span class='line-number'>212</span>
+  <span class='line-number'>213</span>
+  <span class='line-number'>214</span>
+  <span class='line-number'>215</span>
+  <span class='line-number'>216</span>
+  <span class='line-number'>217</span>
+  <span class='line-number'>218</span>
+  <span class='line-number'>219</span>
+  <span class='line-number'>220</span>
+  <span class='line-number'>221</span>
+  <span class='line-number'>222</span>
+  <span class='line-number'>223</span>
+  <span class='line-number'>224</span>
+  <span class='line-number'>225</span>
+  <span class='line-number'>226</span>
+  <span class='line-number'>227</span>
+  <span class='line-number'>228</span>
+  <span class='line-number'>229</span>
+  <span class='line-number'>230</span>
+  <span class='line-number'>231</span>
+  <span class='line-number'>232</span>
+  <span class='line-number'>233</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class NHttpServer {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public void start() throws IOReactorException {
+  </span><span class='line'>    HttpParams params = new BasicHttpParams();
+  </span><span class='line'>    // Connection parameters
+  </span><span class='line'>    params.
+  </span><span class='line'>      setIntParameter(
+  </span><span class='line'>        HttpConnectionParams.SO_TIMEOUT, 60000)
+  </span><span class='line'>     .setIntParameter(
+  </span><span class='line'>       HttpConnectionParams.SOCKET_BUFFER_SIZE, 8 * 1024)
+  </span><span class='line'>     .setBooleanParameter(
+  </span><span class='line'>       HttpConnectionParams.STALE_CONNECTION_CHECK, true)
+  </span><span class='line'>     .setBooleanParameter(
+  </span><span class='line'>       HttpConnectionParams.TCP_NODELAY, true);&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code>final DefaultListeningIOReactor ioReactor =
+  </span><span class='line'>  new DefaultListeningIOReactor(2, params);
+  </span><span class='line'>// Spawns an IOReactor having two reactor threads
+  </span><span class='line'>// running selectors. Number of threads here is
+  </span><span class='line'>// usually matched to the number of processor cores
+  </span><span class='line'>// in the system
+  </span><span class='line'>
+  </span><span class='line'>// Application specific readiness event handler
+  </span><span class='line'>ServerHandler handler = new ServerHandler();
+  </span><span class='line'>
+  </span><span class='line'>final IOEventDispatch ioEventDispatch =
+  </span><span class='line'>  new DefaultServerIOEventDispatch(handler, params);
+  </span><span class='line'>// Default IO event dispatcher encapsulating the
+  </span><span class='line'>// event handler
+  </span><span class='line'>
+  </span><span class='line'>ListenerEndpoint endpoint = ioReactor.listen(
+  </span><span class='line'>  new InetSocketAddress(4444));
+  </span><span class='line'>
+  </span><span class='line'>// start the IO reactor in a new separate thread
+  </span><span class='line'>Thread t = new Thread(new Runnable() {
+  </span><span class='line'>  public void run() {
+  </span><span class='line'>    try {
+  </span><span class='line'>      System.out.println("Listening in port 4444");
+  </span><span class='line'>      ioReactor.execute(ioEventDispatch);
+  </span><span class='line'>    } catch (InterruptedIOException ex) {
+  </span><span class='line'>      ex.printStackTrace();
+  </span><span class='line'>    } catch (IOException e) {
+  </span><span class='line'>      e.printStackTrace();
+  </span><span class='line'>    } catch (Exception e) {
+  </span><span class='line'>      e.printStackTrace();
+  </span><span class='line'>    }
+  </span><span class='line'>}
+  </span><span class='line'>});
+  </span><span class='line'>t.start();
+  </span><span class='line'>
+  </span><span class='line'>// Wait for the endpoint to become ready,
+  </span><span class='line'>// i.e. for the listener to start accepting requests.
+  </span><span class='line'>try {
+  </span><span class='line'>  endpoint.waitFor();
+  </span><span class='line'>} catch (InterruptedException e) {
+  </span><span class='line'>  e.printStackTrace();
+  </span><span class='line'>}
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>  public static void main(String[] args)
+  </span><span class='line'>    throws IOReactorException {
+  </span><span class='line'>    new NHttpServer().start();
+  </span><span class='line'>  }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>public class ServerHandler implements NHttpServiceHandler {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> private static final int BUFFER_SIZE = 2048;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> private static final String RESPONSE_SOURCE_BUFFER =
+  </span><span class='line'> &ldquo;response-source-buffer&rdquo;;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> // the factory to create HTTP responses
+  </span><span class='line'> private final HttpResponseFactory responseFactory;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> // the HTTP response processor
+  </span><span class='line'> private final HttpProcessor httpProcessor;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> // the strategy to re-use connections
+  </span><span class='line'> private final ConnectionReuseStrategy connStrategy;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> // the buffer allocator
+  </span><span class='line'> private final ByteBufferAllocator allocator;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> public ServerHandler() {
+  </span><span class='line'>   super();
+  </span><span class='line'>   this.responseFactory = new DefaultHttpResponseFactory();
+  </span><span class='line'>   this.httpProcessor = new BasicHttpProcessor();
+  </span><span class='line'>   this.connStrategy = new DefaultConnectionReuseStrategy();
+  </span><span class='line'>   this.allocator = new HeapByteBufferAllocator();
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void connected(
+  </span><span class='line'>   NHttpServerConnection nHttpServerConnection) {
+  </span><span class='line'>   System.out.println(&ldquo;New incoming connection&rdquo;);
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void requestReceived(
+  </span><span class='line'>   NHttpServerConnection nHttpServerConnection) {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   HttpRequest request =
+  </span><span class='line'>     nHttpServerConnection.getHttpRequest();
+  </span><span class='line'>   if (request instanceof HttpEntityEnclosingRequest) {
+  </span><span class='line'>     // Handle POST and PUT requests
+  </span><span class='line'>   } else {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;pre>&lt;code> ContentOutputBuffer outputBuffer =
+  </span><span class='line'>   new SharedOutputBuffer(
+  </span><span class='line'>     BUFFER_SIZE, nHttpServerConnection, allocator);
+  </span><span class='line'>
+  </span><span class='line'> HttpContext context =
+  </span><span class='line'>   nHttpServerConnection.getContext();
+  </span><span class='line'> context.setAttribute(
+  </span><span class='line'>   RESPONSE_SOURCE_BUFFER, outputBuffer);
+  </span><span class='line'> OutputStream os =
+  </span><span class='line'>   new ContentOutputStream(outputBuffer);
+  </span><span class='line'>
+  </span><span class='line'> // create the default response to this request
+  </span><span class='line'> ProtocolVersion httpVersion =
+  </span><span class='line'> request.getRequestLine().getProtocolVersion();
+  </span><span class='line'> HttpResponse response =
+  </span><span class='line'>   responseFactory.newHttpResponse(
+  </span><span class='line'>     httpVersion, HttpStatus.SC_OK,
+  </span><span class='line'>     nHttpServerConnection.getContext());
+  </span><span class='line'>
+  </span><span class='line'> // create a basic HttpEntity using the source
+  </span><span class='line'> // channel of the response pipe
+  </span><span class='line'> BasicHttpEntity entity = new BasicHttpEntity();
+  </span><span class='line'> if (httpVersion.greaterEquals(HttpVersion.HTTP_1_1)) {
+  </span><span class='line'>   entity.setChunked(true);
+  </span><span class='line'> }
+  </span><span class='line'> response.setEntity(entity);
+  </span><span class='line'>
+  </span><span class='line'> String method = request.getRequestLine().
+  </span><span class='line'>   getMethod().toUpperCase();
+  </span><span class='line'>
+  </span><span class='line'> if (method.equals("GET")) {
+  </span><span class='line'>   try {
+  </span><span class='line'>     nHttpServerConnection.suspendInput();
+  </span><span class='line'>     nHttpServerConnection.submitResponse(response);
+  </span><span class='line'>     os.write(new String("Hello client..").
+  </span><span class='line'>       getBytes("UTF-8"));
+  </span><span class='line'>
+  </span><span class='line'>     os.flush();
+  </span><span class='line'>     os.close();
+  </span><span class='line'> } catch (Exception e) {
+  </span><span class='line'>   e.printStackTrace();
+  </span><span class='line'> }
+  </span><span class='line'>} // Handle other http methods
+  </span><span class='line'>&lt;/code>&lt;/pre>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   }
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void inputReady(
+  </span><span class='line'>    NHttpServerConnection nHttpServerConnection,
+  </span><span class='line'>    ContentDecoder contentDecoder) {
+  </span><span class='line'>    // Handle request enclosed entities here by reading
+  </span><span class='line'>    // them from the channel
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void responseReady(
+  </span><span class='line'>    NHttpServerConnection nHttpServerConnection) {&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   try {
+  </span><span class='line'>     nHttpServerConnection.close();
+  </span><span class='line'>   } catch (IOException e) {
+  </span><span class='line'>     e.printStackTrace();
+  </span><span class='line'>   }
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void outputReady(
+  </span><span class='line'>   NHttpServerConnection nHttpServerConnection,
+  </span><span class='line'>   ContentEncoder encoder) {
+  </span><span class='line'>   HttpContext context = nHttpServerConnection.getContext();
+  </span><span class='line'>   ContentOutputBuffer outBuf =
+  </span><span class='line'>    (ContentOutputBuffer) context.getAttribute(
+  </span><span class='line'>      RESPONSE_SOURCE_BUFFER);&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>   try {
+  </span><span class='line'>     outBuf.produceContent(encoder);
+  </span><span class='line'>   } catch (IOException e) {
+  </span><span class='line'>     e.printStackTrace();
+  </span><span class='line'>   }
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void exception(
+  </span><span class='line'>   NHttpServerConnection nHttpServerConnection,
+  </span><span class='line'>   IOException e) {
+  </span><span class='line'>   e.printStackTrace();
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void exception(
+  </span><span class='line'>   NHttpServerConnection nHttpServerConnection,
+  </span><span class='line'>   HttpException e) {
+  </span><span class='line'>   e.printStackTrace();
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void timeout(
+  </span><span class='line'>   NHttpServerConnection nHttpServerConnection) {
+  </span><span class='line'>   try {
+  </span><span class='line'>     nHttpServerConnection.close();
+  </span><span class='line'>   } catch (IOException e) {
+  </span><span class='line'>     e.printStackTrace();
+  </span><span class='line'>   }
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> @Override
+  </span><span class='line'> public void closed(
+  </span><span class='line'>   NHttpServerConnection nHttpServerConnection) {
+  </span><span class='line'>   try {
+  </span><span class='line'>     nHttpServerConnection.close();
+  </span><span class='line'>   } catch (IOException e) {
+  </span><span class='line'>     e.printStackTrace();
+  </span><span class='line'>   }
+  </span><span class='line'> }&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>IOReactor类将基础地包装了分配器定义，靠的是ServerHandler的实现来处理就绪事件。</p>
+  
+  <p>Apache Synapse（一个开源的ESB）包括了一个好的实现，此实现是个NIO基础的HTTP服务器，在其中NIO被用于扩展每个实例接巨量客户端，但又不会使内存随时间上涨。实现也包括了不错的debug和服务器统计收集算法，还集成了Axis2传输框架。可以在［1］中找到。</p>
+  
+  <ul>
+  <li>结论</li>
+  </ul>
+  
+  
+  <p>（哎呀妈呀，作者话好多，不过很透彻，不得不服&ndash;54chen注～～54chen.com译）</p>
+  
+  <p>IO上有许多的选项可以做，可影响到服务器的扩展性和性能。上面的每种IO都有利有弊，做决定时要考虑扩展性和性能特征，以及利于管理。得到结论，长篇一张关于IO。尽管提建议、改正和你想的评论。所有提及的clients代码都可以从这里下载。</p>
+  
+  <ul>
+  <li>参考文献</li>
+  </ul>
+  
+  
+  <p>过程中有许多文献一眼就过了，下面是有趣的一些。</p>
+  
+  <p>[1] <a href="http://www.ibm.com/developerworks/java/library/j-nio2-1/index.html">http://www.ibm.com/developerworks/java/library/j-nio2-1/index.html</a></p>
+  
+  <p>[2] <a href="http://www.ibm.com/developerworks/linux/library/l-async/">http://www.ibm.com/developerworks/linux/library/l-async/</a></p>
+  
+  <p>[3] <a href="http://lse.sourceforge.net/io/aionotes.txt">http://lse.sourceforge.net/io/aionotes.txt</a></p>
+  
+  <p>[4] <a href="http://wknight8111.blogspot.com/search/label/AIO">http://wknight8111.blogspot.com/search/label/AIO</a></p>
+  
+  <p>[5] <a href="http://nick-black.com/dankwiki/index.php/Fast_UNIX_Servers">http://nick-black.com/dankwiki/index.php/Fast_UNIX_Servers</a></p>
+  
+  <p>[6] <a href="http://today.java.net/pub/a/today/2007/02/13/architecture-of-highly-scalable-nio-server.html">http://today.java.net/pub/a/today/2007/02/13/architecture-of-highly-scalable-nio-server.html</a></p>
+  
+  <p>[7] Java NIO by Ron Hitchens</p>
+  
+  <p>[8] <a href="http://www.dre.vanderbilt.edu/~schmidt/PDF/reactor-siemens.pdf">http://www.dre.vanderbilt.edu/~schmidt/PDF/reactor-siemens.pdf</a></p>
+  
+  <p>[9] <a href="http://www.cs.wustl.edu/~schmidt/PDF/proactor.pdf">http://www.cs.wustl.edu/~schmidt/PDF/proactor.pdf</a></p>
+  
+  <p>[10] <a href="http://www.kegel.com/c10k.html">http://www.kegel.com/c10k.html</a></p>
+  
+  <p>[*] 读过就想翻是病，得治。翻得匆忙，有错误的地方麻烦指出修正。</p>
+  ]]></content>
+    </entry>
+    
+  </feed>

@@ -1,0 +1,271 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>“先进的互联互通技术”–使用ice联通php和java [Part 2 Client] - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[信曾哥，转载的都给我保留原链接地址：http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/] …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/09/27/the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">“先进的互联互通技术”–使用ice联通php和java [Part 2 Client]</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-27T00:00:00+08:00" pubdate data-updated="true">2009-09-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[信曾哥，转载的都给我保留原链接地址：<a href="http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/">http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/</a>]</p>
+  
+  <p>这一part的目标是建立起ice的php环境，以及写PHP代码调用上一part中的10000端口的java代码。</p>
+  
+  <p>在part 1中，我们建立了一个Server在10000端口等着我们，地址见 <a href="http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/">http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/</a></p>
+  
+  <p><strong>建立带ice的PHP环境</strong></p>
+  
+  <p>不管是nginx+php-cgi还是别的啥，这里只表述php编译过程。
+  </p>
+<blockquote><strong><span style="color: #ff0000;">本例以 Ice 3.2.1为例 下载的位置和参考的文档都在下面</span></strong></blockquote>
+  
+  <p><a href="http://www.zeroc.com/download_3_2_1.html">http://www.zeroc.com/download_3_2_1.html</a></p>
+  
+  <p><a href="http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592">http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592</a>
+  1.下载IcePHP包，进行编译。在此之前，你还需要安装Ice，记好使用3.2.1版本，如果你是用的tar.gz包，在/opt/Ice-3.2.1/，如果是rpm包，在/usr/下。</p>
+  
+  <p>2.运行 export ICE_HOME=/opt/Ice-3.2.1</p>
+  
+  <p>设置好ICE_HOME后进IcePHP目录直接make  make install。</p>
+  
+  <p>此时在/opt/IcePHP-3.2.1/lib64下有产生IcePHP.so（也就是传说中的PHP扩展的so文件了）</p>
+  
+  <p>3.vi /etc/php.ini</p>
+  
+  <p>在任意位置增加两行：
+  </p>
+<blockquote>extension=IcePHP.so</blockquote>
+  
+  <p>ice.profiles = /etc/ice.prop
+  4.准备/etc/ice.prop
+  </p>
+<blockquote>vi /etc/ice.prop</blockquote>
+  加入以下两行：
+  <blockquote>[profile_demo]</blockquote>
+  
+  <p>ice.slice=/root/zhen.chen/example/demo.ice
+  这两行的意思就是，增加一个ice的配置，名字是profile_demo，slice文件是...demo.ice
+  </p>
+<blockquote><span style="color: #008000;">PHP不能在一个php进程中同时调用多个的ice slice，只能通过在prop文件中写义不同的段，然后在php文件中使用类似Ice_loadProfile('profile_demo')来告诉ice这次访问是使用的哪一个slice文件，当然，不能在一个文件里同时有两个Ice_loadProfile的，如果有两个接口的调用需求，只能是通过前端的js来发起两次请求才行了。</span></blockquote>
+  5.把上一节提到的demo.ice文件放到对应的<a href="http://www.54chen.com/779-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java/">目录</a>下
+  
+  <p>到此，带有ICE的PHP环境建立完成。</p>
+  
+  <p><strong>写PHP的客户端来调用 java里的Demo.test.excute方法</strong>
+  </p>
+<blockquote>vi Demo.php</blockquote>
+  
+  <p>&lt;?php</p>
+  
+  <p>ini_set("display_errors", "1");</p>
+  
+  <p>global $ICE;</p>
+  
+  <p>Ice_loadProfile('profile_demo');</p>
+  
+  <p>try {</p>
+  
+  <p>$vBase = $ICE-&gt;stringToProxy ( "TestAdapter:default -p 10000" );</p>
+  
+  <p>$vManager = $vBase-&gt;ice_checkedCast ( "::Demo::test" );</p>
+  
+  <p>$vProperties = $vManager-&gt;execute("Hello "," world!");</p>
+  
+  <p>echo $vProperties;</p>
+  
+  <p>} catch ( Exception $vError ) {</p>
+  
+  <p>print_r($vError);</p>
+  
+  <p>}</p>
+  
+  <p>?&gt;
+  注意全角半角。</p>
+  
+  <p>通过浏览器访问<a href="http://www.54chen.com/469-dyang%e5%90%8c%e5%bf%97%e7%9a%84%e6%97%a0%e5%90%8d%e6%b0%8f%e7%9a%84%e4%bb%a3%e7%a0%81%e5%ad%a6%e4%b9%a0%e8%ae%b0%e5%bd%95-flex-2d-rpg%e6%b8%b8%e6%88%8fdemo/">Demo</a>.php</p>
+  
+  <p>你是不是看到了久违的Hello World!了呢？</p>
+  
+  <p>截图：</p>
+  
+  <p><img class="alignnone size-full wp-image-785" style="border: 1px solid black;" title="qqe688aae59bbee69caae591bde5908d" src="http://www.54chen.com/wp-content/uploads/2009/09/qqe688aae59bbee69caae591bde5908d.jpg" alt="" width="397" height="112"></p>
+  
+  <p>ice、php和java的关系架构图：</p>
+  
+  <p><img class="alignnone size-full wp-image-786" style="border: 1px solid black;" title="qqe688aae59bbee69caae591bde5908d1" src="http://www.54chen.com/wp-content/uploads/2009/09/qqe688aae59bbee69caae591bde5908d1.jpg" alt="" width="435" height="233"></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-27T00:00:00+08:00" pubdate data-updated="true">2009-09-27 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,1221 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="移动互联网创业公司的服务器选择 2013-03-27 00:00:00 +0800 小公司，三五个人，扯开嗓子开干的情况下，不妨参考一下过去我们淌过的坑。
+  1.网络
+  在，网络成本是比较贵的（包括托管费用）。分析你的目标用户，如果用户是特别集中在南方或者是北方，这能省些钱，多线机房还是很贵的。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/8">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2013/03/27/mi-startup-server/">移动互联网创业公司的服务器选择</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-03-27T00:00:00+08:00" pubdate data-updated="true">2013-03-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="startup server">
+  小公司，三五个人，扯开嗓子开干的情况下，不妨参考一下过去我们淌过的坑。
+  <strong>1.网络</strong>
+  在，网络成本是比较贵的（包括托管费用）。分析你的目标用户，如果用户是特别集中在南方或者是北方，这能省些钱，多线机房还是很贵的。同时，移动互联网，特别是特色的情况下，各种运营商挂js，各种基站网络不通，如果所在的机房在搜索引擎上一条记录都没有的话，那会很惨，基本上你的用户在手机上是很难过去的。</p>
+  
+  <p>如果是百分之百的手机上的应用后端，前期数据量不大的情况下，可以考虑租用一些双线机房的机器。搞大了再自己买机器吧，能省则省。</p>
+  
+  <p><strong>2.硬件</strong>
+  如果要考虑硬件了，说明你的业务量已经到一个阶段了，当然也不排除高富帅创业过程，上来先来一堆高端服务器的。<br>
+  内存条：注意你买的机器的主板，主板与内存的配合至关重要。常见的三通道主板，尽可能使用三条相同的内存条，高端四通道主板，使用四条相同内存条。只求大内存，随便加大是没有意义的。<br>
+  raid卡电池：注意你的raid卡的电池是否加电，是否开启raid cache，这一条在mysql db机器上效果相当明显。<br>
+  ssd：可以考虑在db机器上使用一部分，app机器上完全不需要。</p>
+  
+  <p><strong>3.软件</strong>
+  作系统：一次调查结果显示centos5和centos6是你不二的选择，投票地址在<a href="http://vote.weibo.com/vid=2087907">http://vote.weibo.com/vid=2087907</a>。<br>
+  常规开发的软件：这里有一系列的介绍   <a href="http://www.54chen.com/document/startup-tech.html">《谈谈创业公司的技术选型－－朴素的技术观》</a>
+  协议选择：移动互联网特点，手机或者其他手持设备会需要来服务器拿数据，所以这个桥梁的选择也是一个关键的步骤。一般http的穿透率是比较高的，但是要防各种地方运营商的野广告，至于怎么防，一般header头声明为json之类的他们还是不敢夹广告的。</p>
+  
+  <p>综合以上，移动互联才刚刚开始，坑还很深，欢迎互相交流各种坑。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2013/03/11/2012/">庆某会召开，发2012总结</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-03-11T00:00:00+08:00" pubdate data-updated="true">2013-03-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T14z9eXa4fXXXUxOU4_053357.jpg" alt="2012 54chen总结">
+  <strong>开场致辞</strong>
+  2012年，全年情绪稳定，采取了各种手段遏制了技术水平过快下降势头，共计发出80篇左右博客。
+  <a href="http://www.54chen.com/2012">http://www.54chen.com/2012</a></p>
+  
+  <p><strong>十大感动我自己内容</strong></p>
+  
+  <p>1.rose框架使用入门手册连载，详细记载了新手入门java开发框架的过程，用时大概2个月<a href="http://www.54chen.com/rose.html" target="_blank">http://www.54chen.com/rose.html</a></p>
+  
+  <p>2.cloud foundry代码阅读手记,  记录了所有的ruby学习、cf代码学习、服务器虚拟化文案warden细节，用时大概2个月 <a href="http://www.54chen.com/tag/cloud-foundry">http://www.54chen.com/tag/cloud-foundry</a></p>
+  
+  <p>3.riak早期代码阅读手记，记录了对分布式存储riak的代码解析过程，相当稳定的一个dynamo产品！<a href="http://www.54chen.com/tag/riak">http://www.54chen.com/tag/riak</a></p>
+  
+  <p>4.好用的搜索文案senseidb使用手记，现在他的作者之一已经来到了小米，而且小米更多员工也成为其项目开发人员。<a href="http://www.54chen.com/tag/senseidb">http://www.54chen.com/tag/senseidb</a></p>
+  
+  <p>5.linkedin的kafka使用手记，用sensei时学习的好东西，可以用来做日志收集、分发，比scribe的好处在于，它的集群和可配置。<a href="http://www.54chen.com/architecture/linkedin-kafka-usage.html">http://www.54chen.com/architecture/linkedin-kafka-usage.html</a></p>
+  
+  <p>6.用上了git和gitlab。<a href="http://www.54chen.com/tag/git">http://www.54chen.com/tag/git</a></p>
+  
+  <p>7.学用新语言GO。<a href="http://www.54chen.com/document/go-lang-install.html">http://www.54chen.com/document/go-lang-install.html</a></p>
+  
+  <p>8.学用新语言ruby。<a href="http://www.54chen.com/web-ral/learn-ruby-ubuntu.html">http://www.54chen.com/web-ral/learn-ruby-ubuntu.html</a></p>
+  
+  <p>9.解决了maven拉不到新jar的问题。<a href="http://www.54chen.com/java-ee/maven-nexus-jar-note.html">http://www.54chen.com/java-ee/maven-nexus-jar-note.html</a></p>
+  
+  <p>10.综合了各种测试方法以丰富写代码办法。<a href="http://www.54chen.com/tag/easymock">http://www.54chen.com/tag/easymock</a>   <a href="http://www.54chen.com/java-ee/spring-static-class-maven-cobertura-site.html">http://www.54chen.com/java-ee/spring-static-class-maven-cobertura-site.html</a></p>
+  
+  <p><strong>结论</strong>
+  各位!<br>
+  　　回顾过去，我们拼搏奋进，取得显著成就;展望未来，我们任重道远，仍须不懈努力。让我们紧密团结在以技术为核心的团队周围，解放，开拓创新，扎实工作，奋力开创社会现代化建设新局面!</p>
+  
+  <p>附2011年总结 <a href="http://www.54chen.com/life/spicy-fish-2011-2.html">http://www.54chen.com/life/spicy-fish-2011-2.html</a> 看2011年的第三条，多有预见性的一条！</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2013/02/06/resin-thrift-benchmark/">Resin+thrift压力测试报告</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-02-06T00:00:00+08:00" pubdate data-updated="true">2013-02-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_NWcXbNXXXcQbh6a_121410.jpg" alt="thrift resin">
+  <strong>基础条件</strong>
+  </p>
+<table border="1">
+<tr>
+<td>位置</td>
+<td>参数</td>
+</tr>
+  <tr>
+<td>server</td>
+<td>
+  resin 4<br>
+  1 rose+1 thrift<br>
+  java version "1.6.0_29"<br>
+  Ubuntu 10.04 LTS<br>
+  双核cpu<br>
+  8G mem
+  </td>
+</tr>
+<tr>
+  <td>client</td>
+<td>
+  macbook pro<br>
+  ab
+  </td>
+</tr>
+</table>
+  
+  <p><strong>server代码</strong>
+  1.用thrift创建了一个方法，内部只有几行代码：
+  </p>
+<blockquote>logger.info("in call");<br>
+  try {<br>
+  Thread.sleep(1000);<br>
+  } catch (InterruptedException e) {<br>
+  logger.info("sleep error");<br>
+  }</blockquote>
+  2.使用的paoding-rose调用这个thrift方法。
+  
+  <p><strong>第一波，thrift 10 thread/sleep 1s/rose timeout 3s，ab 100并发发1000次请求</strong>
+  ab -n 1000 -c 100 http://10.235.7.249/test
+  </p>
+<blockquote>Complete requests:      1000<br>
+  Failed requests:        980</blockquote>
+  试了多次，一定在20次请求时开始超时，服务器端大量timeout。
+  
+  <p><strong>第二波，thrift 10 thread/sleep 300ms/rose timeout 3s，ab 100并发发1000次请求</strong>
+  </p>
+<blockquote>Complete requests:      1000<br>
+  Failed requests:        386</blockquote>
+  
+  <p><strong>一二波结论</strong>
+  同第一波，还远未触及resin的thread上限（free版本有thread限制）。<br>
+  这个值大概可以计算出来：<br>
+  thrift: (1s/300 ms)×10 thread = 33req/s ，<br>
+  resin: 3s timeout，大概能够处理进入不超时的连接为 33req/s × 3s ＝ 99 req，100个并发进来，大概会随机timeout掉1个甚至更多。<br>
+  第二波花了30s左右，所以会有两三百的timeout引发的500失败出现。
+  </p>
+<blockquote>逆向思考：<br>
+  如果需要resin的qps达到1000qps，client 1s timeout，而thrift保持300ms话，需要thrift thread: 300-400</blockquote>
+  于是得出一表格：
+  <table border="1">
+<tr>
+<td>resin qps</td>
+<td>thrift client timeout</td>
+<td>thrift return time</td>
+<td>thrift server thread</td>
+</tr>
+  <tr>
+<td>小于1000</td>
+<td>1s</td>
+<td>300ms</td>
+<td>300-400</td>
+</tr>
+  <tr>
+<td>小于1000</td>
+<td>1s</td>
+<td>10ms</td>
+<td>10-20</td>
+</tr>
+  <tr>
+<td>小于100</td>
+<td>100ms</td>
+<td>10ms</td>
+<td>10-20</td>
+</tr>
+  <tr>
+<td>小于2000</td>
+<td>300ms</td>
+<td>10ms</td>
+<td>100-200</td>
+</tr>
+  <tr>
+<td>小于330</td>
+<td>100ms</td>
+<td>30ms</td>
+<td>100</td>
+</tr>
+  <tr>
+<td>小于100</td>
+<td>60s</td>
+<td>3s</td>
+<td>100</td>
+</tr>
+  </table>
+  
+  <p><strong>第三波，thrift 100 thread/sleep 30ms/rose timeout 100ms，ab 100并发发1000次请求</strong>
+  这次在日志中出现了非thrift timeout的异常了，而是thrift client在未关闭已经完成的处理时，新请求进来了，将会得到获取sokect失败的异常。（这种异常算是池化连接对其性能损耗，在产品工作状态下，应该优于未池化的情况。）
+  </p>
+<blockquote>Complete requests:      1000<br>
+  Failed requests:        681</blockquote>
+  
+  <p><strong>第四波，thrift 100 thread/sleep 3s/rose timeout 60s，ab 100并发发1000次请求</strong>
+  </p>
+<blockquote>Complete requests:      1000<br>
+  Failed requests:        0</blockquote>
+  
+  <p>因为rose timeout为60s，所以所有的等待都基本上会得到返回，当把并发加大到200也没有处理失败的情况，原因是http的默认超时应该是120s。通过netstat看server的80连接已经到了1002个。</p>
+  
+  <p><strong><font color="red">第五波，thrift 1000 thread/sleep 3s/rose timeout 120s，ab 4000并发发50000次请求</font></strong>
+  这都快成了long polling server了。。。<br>
+  这个状态下，load到了6，内存吃满。
+  </p>
+<blockquote># netstat -anop|grep :80|grep EST|wc -l<br>
+  4229<br>
+  # jstack 26485 | grep -c http<br>
+  8001<br>
+  # jstack 26485 | grep -c resin-<br>
+  93<br>
+  Complete requests:      50000<br>
+  Failed requests:        45656
+  </blockquote>
+  大把大把的超时。
+  
+  <p><strong>综述</strong>
+  1.提升thrift中逻辑处理速度，减少单个处理时间，是最有效提升thrift qps的办法。<br>
+  2.thrift thread数量增加一个数量级，前端QPS提升略小于一个数量级。thrift节点数量加1，QPS提升略小于一倍，但不如加thread。<br>
+  3.resin节点数量×resin qps ＝ thrift节点数量×thrift qps×网络系数，要提高resin qps，可以：提高thrift qps、增加thrift节点数量。此处网络系数肯定小于1。<br>
+  4.减少不必要的网络系数影响，app+midtier的架构变为service架构，按业务内聚后再SOA化是云后台非常关键的一个原则。<br>
+  5.resin4的rose框架代码表现在最多4020左右的并发，多于的将会拒绝，类似apache的max-keepalive-connections。<br>
+  6.tomcat7的同一份代码表现最多在300（未经任何优化）。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2013/01/14/scala-notes/">Scala入门手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-01-14T00:00:00+08:00" pubdate data-updated="true">2013-01-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg" alt="scala">
+  <strong>一、安装环境</strong>
+  </p>
+<blockquote>localhost:~ chenzhen$ java -version<br>
+  java version "1.6.0_37"<br>
+  Java(TM) SE Runtime Environment (build 1.6.0_37-b06-434-11M3909)<br>
+  Java HotSpot(TM) 64-Bit Server VM (build 20.12-b01-434, mixed mode)</blockquote>
+  如果java没有安装，需要先安装。此处略去N字。
+  <a href="http://www.scala-lang.org/downloads">http://www.scala-lang.org/downloads</a>
+  下载最新的版本。自理。
+  
+  <p>$tar zxvf scala-2.10.0.tgz<br>
+  解压后，添加环境变量到配置文件中。
+  </p>
+<blockquote>vim ~/.profile  (or .bashrc)<br>
+  export PATH=/Users/chenzhen/scala-2.10.0/bin:$PATH</blockquote>
+  
+  <p></p>
+<blockquote>localhost:~ chenzhen$ scala -version<br>
+  Scala code runner version 2.10.0 -- Copyright 2002-2012, LAMP/EPFL
+  </blockquote>
+  
+  <p><strong>二、安装eclipse（4.2）插件</strong>
+  site url:
+  </p>
+<blockquote>http://download.scala-ide.org/sdk/e38/scala210/dev/site/</blockquote>
+  一路install。
+  
+  <p><strong>三、hello world</strong>
+  跟java项目有点像。
+  </p>
+<blockquote>package com.hello<br>
+  object Cz {<br>
+    def main(args: Array[String]) {<br>
+      println("hello world");<br>
+    }<br>
+  }</blockquote>
+  
+  <p><strong>四、语法对比速记</strong>
+  1.scala的数组与java相比是可变的数据结构。<br>
+  2.for(i 
+  3.list是不可变的，不需要new，list与list之间用:::（三个冒号）可以做连接,::(两个冒号)会产生新的维度的list。<br>
+  4.var可变，val不可变。崇尚val，不可变对象和没有副作用的方法。<br>
+  5.Unit类似java的void。<br>
+  6.object是特殊的class，是单例。<br>
+  7.maven也可以搞定scala，但是更好用的是sbt。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/12/26/gitlab3-1-upto-4-notes/">gitlab3.1升级4.0手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-12-26T00:00:00+08:00" pubdate data-updated="true">2012-12-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>在过去的几个星期，已经顺利在gitlab中开始了团队的代码合作。<a href="http://www.54chen.com/_linux_/github-gitlab.html">http://www.54chen.com/_linux_/github-gitlab.html</a>
+  <img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1L56.XfNeXXasdY75_054835.jpg" alt="gitlab"></p>
+  
+  <p>圣诞前后Gitlab发布了最新的4.0版本，感觉最大的改动有：<br>
+  1.merge request的diff上的comment好用了<br>
+  2.支持namespace，看上去是未来用来按team划分权限的<br>
+  3.network界面的bug修复</p>
+  
+  <p>以下记录了所有的升级过程：<br>
+  所有过程完全按照https://github.com/gitlabhq/gitlabhq/wiki/From-3.1-to-4.0，任何一步都可以重复搞。</p>
+  
+  <p><strong>坑：</strong>
+  因为在之前由于好奇用管理员账号在后台建立了几个Group，这回namespace支持就坏菜了。<br>
+  sudo -u gitlab -H bundle exec rake gitlab:enable_namespaces RAILS_ENV=production<br>
+  会出现一堆错误。由它去吧。<br>
+  然后所有的原来加的Group的project重新生成push吧。</p>
+  
+  <p></p>
+<blockquote>铁一般的事实说明：一定要先在3.1下把groups设置去掉之后再来打开namespace支持。</blockquote>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/12/14/continuous-deployment/">五步构建持续性部署(CD)</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-12-14T00:00:00+08:00" pubdate data-updated="true">2012-12-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://atlassian.wpengine.netdna-cdn.com/developer/assets_c/2011/02/ContinuousDeployment-thumb-400x277-6250.png" alt="cd"></p>
+  
+  <p>错误被发现的时间越迟，修复的难度越高，代价也最昂贵。如果工程师在敲下代码的时候就发现了问题，那修复的成本几 乎为零。如果编译器捕获了bug，它对时间造成的影响就是以分钟计的。如果bug进入了产品，而且在一段时间内没有被发现，找到bug、修复bug的 代价就会让人觉得难以承受。千年虫问题就是一个典型的例子。<br>
+  ----题记 from http://www.infoq.com/news/2009/03/Continuous-Deployment</p>
+  
+  <p>持续部署的目标是通过减少批量工作的大小，并加快团队工作的节奏，帮助开发团队在其开发流程中消除浪费。这使团队能够一直处于一种可持续的平稳流状态， 让团队更容易去创新、试验，并达到可持续的生产率。</p>
+  
+  <p>下面是来自Eric的五步构建快速部署的办法：
+  <strong>1.CI服务器。</strong>持续性部署的前提是持续性构建。我们需要一个地方去做单元测试、功能测试、集成测试和所有测试。这些事情会在每次commit之后进行。一定要确保所有的test在10到30分钟内全部跑完。如果不可能做到，那就将它们进行归类。</p>
+  
+  <p><strong>2.代码控制提交脚本。</strong>不管是svn还是git，都有各种hook的勾子程序，在每次commit前嵌入检查逻辑。这概念来自于传统意义上的“生产线”，一旦在线上的产品发现问题，将停止进入，进入暂停阶段。修好之后继续运转。如果1中的持续构建有一个test case不能过，那这个脚本要能够阻止再来的commit。简单地说，就是让代码能够检查的bug代码不能进入。</p>
+  
+  <p><strong>3.简洁的发布工具。</strong>不需要多复杂的工具，只需要每个人都遵守的、简单的办法，同时要遵循CI没通过就不能使用的原则。</p>
+  
+  <p><strong>4.实时的报警。</strong>不管多好的部署，都会有bug的存在。最讨厌的事情是部署了很久之后bug才出来。要抓住这些讨厌的bug，需要一个监控平台，出错的时候能够立即发现，找出bug。推荐使用nagios来加上自定义的数据进行监控，建议只要一两个关键数据，而且一定要报警准确。坚持一个原则就是，一旦报警，停止提交与发布。</p>
+  
+  <p><strong>5.寻根问底。</strong>这一步是方法学，多问为什么，可以让这个流程变得自我学习和成熟。比如：为什么没有在部署早期发现？为什么nagios没有报警？为什么没有在CI时发现？然后找到答案，改进这个过程。</p>
+  
+  <p>再辅以上周在velocity上Etsy的作过程，<strong>staging环境</strong>，让影响程度可控。更加细节一些，你需要对业务所处的<strong>层次进行划分</strong>，处于越上层的项目改动，越可以CD。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/12/04/startup-tech/">谈谈创业公司的技术选型－－朴素的技术观</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-12-04T00:00:00+08:00" pubdate data-updated="true">2012-12-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="创业公司技术选型"></p>
+  
+  <p><strong>创业公司的定义</strong>
+  把服务器数量在千台以内（如果存在服务端），或者业务没有爆发过或者是长时间没有爆发过的公司，叫做创业公司。</p>
+  
+  <p><strong>朴素技术观的定义</strong>
+  有很多看上去很美好的技术，背后都有很多对应的很残酷的事实，在一个创业公司许多选择给你，你可以使用当前最炫的技术，也可以使用团队最擅长的技术。朴素世界观，是指所有选择使用团队最擅长技术的一种观念。</p>
+  
+  <p><strong>语言</strong>
+  语言之争是最没品了，这里不争哪种语言好哪种语言坏。<br>
+  这里有一个办法来选择语言：所有团队成员的简历中，出现最多的一种语言为标准。<br>
+  例外情况：团队成员中有一位大拿，是某门语言的泰斗，不说在国际上，在国内也要有领头羊的成绩。印象中在创业中大量使用GO语言的许式伟大侠是例外中最典型的一个，不过看看人家的成绩，已经把GO摸的一清二楚了。</p>
+  
+  <p>反例：太多。</p>
+  
+  <p>以下条件满足可开启反例模式：<br>
+  1.至少一人完全理解整个语言的语法<br>
+  2.至少一人完全理解语言精髓<br>
+  3.至少一人完全掌握此语言常见debug工具<br>
+  4.至少一人在一个规模较小应用成功使用</p>
+  
+  <p><strong>存储</strong>
+  这里主要讲服务器的存储。<br>
+  如何选择：mysql+memcached至少在weibo、renren.com、taobao、qq、sina、baidu......等公司大量使用，如果你团队成员一个都不是来自这些公司，那大胆地用吧，用死也用不出什么毛病来。当然了，十分需要在业务爆发时找到一位可靠的mysql dba，这里要提一下人人网的创始员工DBA刘启荣大侠，引用一句前老板的话：×××无出启荣之右也。<br>
+  反例：此处省去创业团队名字，有史可考。当年KV十分火爆，某兄弟对cassandra十分感冒，于是在整个系统初期设计时全部使用了这玩意。后来，开始市场宣传的时候，这玩意儿就是不行了，一行人接连多夜赶制回mysql。</p>
+  
+  <p>以下条件满足可开启反例模式：<br>
+  1.使用cassandra要理解全篇dynamo文档所写，完全掌握RWN，完全熟知虚拟分区作用，清晰知道cassandra在分区上偷工减料所带来的影响。<br>
+  2.团队成员里有一个人完全理解了这个要使用的东西的源代码。这里要提一下张宴大侠，他长年研究tt代码，在使用上已经很有一手，所以有他在的地方，用tt完全没有问题。如果国内有一个人冒出来说自己对cassandra代码长年研究，我一定不相信，因为这些项目代码行数已经超过一个人快速理解的能力，当你看完的时候，新的版本又出来了。<br>
+  3.很多单独的解决方案，因为代码量不大，完全可以从零开始花人力搞定它，像redis，在新浪被用得很多，到了你的创业公司，不一定可以搞定，因为什么呢，你需要一个完整的人先摸透它的习性。摸透了习性的小项目，完全可以先在小项目上使用。</p>
+  
+  <p><strong>框架与分工</strong>
+  框架的作用在于更加利于分工。<br>
+  以服务端为例，java如果你选择了人人网切切王开源的rose框架的话，spring的好处一应俱全，而且因为其天生的restful的好处，最小粒度可以以api为分工。这样，在一个团队内部，任何人完全可以修改任何人的代码，因为是使用同一个框架，同一种思路，写出来的代码不会是完全两样的。php如果你选择的ZF之类的，以controller为单位的MVC模型一下子就定义了你的项目，同样也可以做到成员随意维护任意模块。</p>
+  
+  <p>如何选择：框架的选择只看。如果上有框架可选，那一定是选择验证过的。如果没有，那尽可能地花时间提炼框架。<br>
+  反例：框架似乎人类写代码的常规总结行为，即便再烂的项目，在局部去看也一定会有一些框架性的代码存在。反例要说说discuz1.0以前的代码，感觉完全是应届生所为，想到哪里写到哪里，和放牛一样，维护基本上不可能。</p>
+  
+  <p>以下条件满足可开启反例模式：<br>
+  1.android等客户端开发暂时还没有特别好的框架性的东西，不过android本身就是一个大框架，业务代码的框架需要自己提炼。<br>
+  2.非常非常小的项目，瞬间写完要上线。<br>
+  3.项目只用一次。<br>
+  4.救火。</p>
+  
+  <p><strong>大项目与小项目</strong>
+  反例：从超级大公司出来的工程师，特别是企业开发的同学，特别喜欢一个超级大的项目，把所有的功能都包括在里面。所有人一起，天天折腾这个trunk，动不动的我踩着你的脚了，你压着我的手了。<br>
+  正例：换到互联网模式，所有项目能拆则拆，越扁平越好，每个部分有一个指定的master，主要负责此项目的稳定。这实际在开源界早就这样干了。实际作中，只要能够找到一个合适的master，就可以拆。</p>
+  
+  <p>没有任何条件可以开启反例模式。</p>
+  
+  <p><strong>流程与管理</strong>
+  这个标题太大，分小来说。主要包括代码版本管理、依赖管理、代码制度、项目发布流程。这里没有反例，只讲经验。</p>
+  
+  <p>版本管理：目前大多数人还在使用svn，但是git真的非常非常好用。pro git book只需要一个晚上的仔细阅读，就一定可以学会。实际学习成本很低了，一个创业团队，这点学习能力都没有的人，赶紧离开你的团队吧。<br>
+  依赖管理：java大多已经使用maven，老早的ant带一堆jar包的形式已经落后了，赶紧换。php的依赖管理一直都很弱，不过有人参考ruby搞了一个composer，可以试试，也许可以帮助改进。<br>
+  代码制度：什么样的代码才可以checkin/merge master？一般的标准为：跑过所有的unit test、master维护者或者团队成员review通过。<br>
+  项目发布流程：项目立项到项目上线，划分N个小阶段，实施scrum或者变体的scrum，但是一个原则就是任何一个阶段的不确定，都会在后面的阶段里放大，小步快跑才是正确的节奏，有时候宁愿不要一些功能，也一定要先发出来。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/11/23/github-gitlab/">企业github之高仿选择－gitlab使用实录</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-11-23T00:00:00+08:00" pubdate data-updated="true">2012-11-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1L56.XfNeXXasdY75_054835.jpg" alt="gitlab">
+  自从上周使用git-svn以来（<a href="http://www.54chen.com/_linux_/git-svn.html">http://www.54chen.com/_linux_/git-svn.html</a>），一发不可收拾，于是在偶然的机会发现了gitlab这个不错的选择（可以想象成是github的公司自己搭建的内部版本），还有什么理由继续使用svn+redmine+wiki!</p>
+  
+  <p></p>
+<blockquote>@有个梨UGlee<br>
+  一个人，20年，单枪匹马的干翻了整个计算工业。如果你是程序员，还没有在他写的作系统上工作，或者还没有开始使用他缔造的版本管理系统，那么你还是趁早改行吧，你干这行是没希望的。</blockquote>
+  
+  <p><strong>安装</strong>
+  用ubuntu，让生活更加轻松。
+  </p>
+<blockquote>root@ubuntu-chenzhen:/home/gitlab/gitlab# lsb_release -a<br>
+  No LSB modules are available.<br>
+  Distributor ID:	Ubuntu<br>
+  Description:	Ubuntu 12.04 LTS<br>
+  Release:	12.04<br>
+  Codename:	precise</blockquote>
+  
+  <p>请打开以下地址并收藏：<a href="https://github.com/gitlabhq/gitlabhq/blob/stable/doc/install/installation.md">https://github.com/gitlabhq/gitlabhq/blob/stable/doc/install/installation.md</a></p>
+  
+  <p>所有的安装只需要一步一步按照说明做就可以完成。以下记录一些特色的安装过程。</p>
+  
+  <p><strong>特色</strong>
+  1.安装ruby1.9.3p0<br>
+  不要下了，打不开的（原因你）。<br>
+  直接 apt-get install ruby1.9.3</p>
+  
+  <p>2.补充安装bundler<br>
+  装完ruby就有gem了，然后把源改在淘宝：<br>
+  gem source -r http://rubygems.org/<br>
+  gem source -a http://ruby.taobao.org</p>
+  
+  <p>gem install bundler --no-rdoc --no-ri<br>
+  gem install rails --no-rdoc --no-ri</p>
+  
+  <p>3.所有有bundle命令的执行都要注意<br>
+  在执行目录下，要修改Gemfile文件头的rubygems.org到ruby.taobao.org，否则是不工作的，原因都。</p>
+  
+  <p><strong>LDAP登录gitlab</strong>
+  vim config/gitlab.yml<br>
+  配置在
+  </p>
+<blockquote># 2. Auth settings<br>
+  # ==========================<br>
+  ldap:</blockquote>
+  
+  <p>当你安装好打开的时候，一定会惊呼：还有什么理由继续使用svn+redmine+wiki!</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/11/15/git-svn/">Git Svn使用手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-11-15T00:00:00+08:00" pubdate data-updated="true">2012-11-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/bao/uploaded/i4/T1L56.XfNeXXasdY75_054835.jpg" alt="git"></p>
+  
+  <p>以下是一个淡疼的记录，因为从linkedin归来的宝秋叔大力推荐git，而我们现在的代码大多在svn中，所以就有了这一段故事。</p>
+  
+  <p><strong>一、同步回来svn</strong></p>
+  
+  <p></p>
+<blockquote>$git svn clone https://miliaocode/repos/project -T trunk -b branches -t tags</blockquote>
+  
+  <p>然后进入漫长的等待。<br>
+  -T trunk -b branches -t tags 告诉 Git 该 Subversion 仓库遵循了基本的分支和标签命名法则。如果你的目录下没有三个标准目录的话还是不要加了。</p>
+  
+  <p><strong>二、完成同步之后</strong></p>
+  
+  <p></p>
+<blockquote>localhost:xxx chenzhen$ git branch -a<br>
+  * master<br>
+    remotes/git-svn<br>
+  localhost:xxx chenzhen$ git show-ref<br>
+  ecf28daf78732c0538a99e206bd9e6e32cbd1ff3 refs/heads/master<br>
+  ecf28daf78732c0538a99e206bd9e6e32cbd1ff3 refs/remotes/git-svn</blockquote>
+  
+  <p>远程的svn只作为一个远程的分支存在。</p>
+  
+  <p><strong>三、使用</strong>
+  $cd xxx<br>
+  $vim yyy<br>
+  $git commit -am 'Adding git-svn instructions to the README'<br>
+  这一步是提交到本地，还可以用各种分支之类的都是对本地的作。</p>
+  
+  <p><strong>四、注意</strong>
+  $git svn rebase<br>
+  这一步应该经常被执行，防止出现空洞，因为svn会在服务器端进行merge。而git却不会。<br>
+  避免使用merge和直接提交，多rebase后再提交。<br>
+  和svn关联的分支能不用则不用。</p>
+  
+  <p><strong>五、提交</strong>
+  $git svn dcommit</p>
+  
+  <p><strong>六、文件忽略</strong>
+  一些忽略文件在svn中是有的，而git中会有一个文件在记录它。<br>
+  $git svn show-ignore<br>
+  $git svn create-ignore<br>
+  第二条命令会创建.gitignore文件，但这对于 svn用户来说太难看了。于是可以如下作：
+  </p>
+<blockquote>$ git svn show-ignore &gt; .git/info/exclude</blockquote>
+  
+  <p><strong>七、剩下</strong>
+  剩下的就是git的事情了，你在本地怎么玩，怎么开源，怎么发远程的，不再影响内部svn用户了。</p>
+  
+  <p></p>
+<blockquote>11月20日补充内容：</blockquote>
+  
+  <p><strong>八、git merge工具设置</strong>
+  到http://www.perforce.com/perforce/downloads/component.html下载并安装p4merge工具（比较好用的双窗口diff工具）。<br>
+  建立一个merge命令调用它：<br>
+  $sudo vim /usr/bin/extMerge
+  </p>
+<blockquote>#!/bin/sh<br>
+  /Applications/p4merge.app/Contents/MacOS/p4merge $*<br>
+  $sudo chmod +x /usr/bin/extMerge</blockquote>
+  
+  <p>修改~/.gitconfig文件：</p>
+  
+  <p></p>
+<blockquote>[merge]<br>
+          tool = extMerge<br>
+  [merge "tool"]<br>
+          cmd = extMerge \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"<br>
+  [mergetool]<br>
+          trustExitCode = false</blockquote>
+  
+  <p>这样就可以在rebase的时候自动弹出来merge工具进行修改。</p>
+  
+  <p><strong>九、与review board发code review的协作</strong>
+  当完成代码的编写后，可以在本地招行git commit -am 'some thing'，然后需要发code review的话，就需要一段脚本来帮忙了。</p>
+  
+  <p>http://mojodna.net/2009/02/24/my-work-git-workflow.html 这哥们写了一份，在mac下的有些格式需要调整。Baoqiu更新了源码，我们米的同学可以来信索取最新的代码。</p>
+  
+  <p>此脚本为git-svn-diff，放在/usr/bin下之后chmod +x /usr/bin/git-svn-diff。</p>
+  
+  <p>修改~/.gitconfig，添加如下内容:</p>
+  
+  <p></p>
+<blockquote>[alias]<br>
+    svn-diff = !git-svn-diff
+  </blockquote>
+  
+  <p>然后就可以用了，</p>
+  
+  <p></p>
+<blockquote>$git svn-diff &gt; patch
+  </blockquote>
+  
+  <p><strong>十、git命令的自动完成</strong>
+  如果你是用的xcode里的git，那可能自动完成是不能使用的，你可以自己试试git ch<tab><tab>，如果有提示的放忽略本节。<br>
+  如果没有，vim ~/.profile添加：</tab></tab></p>
+  
+  <p></p>
+<blockquote>source /Applications/Xcode.app/Contents/Developer/usr/share/git-core/git-completion.bash
+  </blockquote>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/10/29/qcon-hangzhou-2012/">Qcon杭州2012读后感</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-10-29T00:00:00+08:00" pubdate data-updated="true">2012-10-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>我没有在现场，所以叫读后感，只是看pdf文件之后的总结，如和现场体验有误，以现场为主。
+  <img src="http://img01.taobaocdn.com/imgextra/i1/T1pix8XnBbXXXgP6k._082702.jpg" alt="qcon">
+  <strong>给力排行一：云中的资源管控</strong>
+  淘宝林昊大师：提到2010年时三分之一的虚拟机peak load小于0.5，LXC重度用户，各种资源隔离的坑都被他们解决了。在进一步做动态调度。<br>
+  腾讯CEE系统介绍：产品细节惊人，疑似依赖LXC。<br>
+  京东虚拟化：openstack用户、使用传统vm。<br>
+  CloudFoundry：完整讲述了实现和演进。<br>
+  盛大游戏私有云：在游戏业务中使用，未明显提及虚拟化的事情，猛一看像是做分配机器之类的事情。</p>
+  
+  <p><strong>给力排行二：大数据hadoop</strong>
+  阿里巴巴：3000 Servers，正在演进hadoop as service，原来yahoo维护hadoop的大侠们去了那里，这个方向应该是靠谱的。<br>
+  百度：2500 Servers，与阿里方向侧重不一致。当然了，也有可能是集团利益让牛B的构架师发挥不到极致，如果有这种现像存在，可以考虑来小米。（mail to chenzhen at xiaomi dot com 无耻的广告。。。）</p>
+  
+  <p><strong>给力排行三：工具和思路</strong>
+  网易：puppet在运维中的各种使用<br>
+  陌陌：移动运维非常赞！让关注变得更简单更快捷，更容易让团队成员关注系统运行。<br>
+  支付宝：SOA治理等。</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/7">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <em>8</em>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/9">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

@@ -1,0 +1,256 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Riak源码阅读手记 作列表及supervisorTree一览 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="基于0.14.2的记录，1.0的变化会在后续记录。 riak源码阅读手记一 初出茅庐 项目入口
+  http://www.54chen.com/_linux_/riak-source.html
+  riak源码阅读手记二 左右开弓 启动
+  http://www.54chen.com/_linux_/riak …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/10/18/riak-source-notes-operation-supvisor-detail">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Riak源码阅读手记 作列表及supervisorTree一览</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-10-18T00:00:00+08:00" pubdate data-updated="true">2011-10-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>基于0.14.2的记录，1.0的变化会在后续记录。
+  <img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak">
+  riak源码阅读手记一 初出茅庐 项目入口
+  <a href="http://www.54chen.com/_linux_/riak-source.html">http://www.54chen.com/_linux_/riak-source.html</a>
+  riak源码阅读手记二 左右开弓 启动
+  <a href="http://www.54chen.com/_linux_/riak-cource-code.html">http://www.54chen.com/_linux_/riak-cource-code.html</a>
+  riak源码阅读手记 运行安装
+  <a href="http://www.54chen.com/_linux_/riak-source-install-run.html">http://www.54chen.com/_linux_/riak-source-install-run.html</a>
+  一些常用的指令：
+  <a href="http://wiki.basho.com/Command-Line-Tools.html#riak-admin">http://wiki.basho.com/Command-Line-Tools.html#riak-admin</a>
+  riak源码阅读手记 压力测试
+  <a href="http://www.54chen.com/_linux_/riak-benchmark.html">http://www.54chen.com/_linux_/riak-benchmark.html</a>
+  riak源码阅读手记 作列表及supervisorTree一览
+  <a href="http://www.54chen.com/_linux_/riak-source-notes-operation-supvisor-detail.html">http://www.54chen.com/_linux_/riak-source-notes-operation-supvisor-detail.html</a>
+  <strong>[山寨收集作列表]</strong></p>
+  
+  <p>看系统状况，有各种内存cpu硬盘的情况<br>
+  bin/riak-admin status</p>
+  
+  <p>节点更换新的ip地址：<br>
+  如果是所有的节点都换，那在停下来集群，在每个节点都依次运行:<br>
+  ./riak-admin reip riak@192.168.103.9 riak@10.235.2.226<br>
+  ./riak-admin reip riak@192.168.97.48 riak@10.235.2.183<br>
+  ./riak-admin reip riak@192.168.100.52 riak@10.235.2.138</p>
+  
+  <p>依次去对应的节点，修改etc:
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-perl" start="1">
+<li class="alt"><span><span>sed -i '</span><span class="keyword">s</span><span>/192.168.103.9/10.235.2.226/g' app.config  </span></span></li>
+<li class=""><span>sed -i '<span class="keyword">s</span><span>/192.168.103.9/10.235.2.226/g' vm.args  </span></span></li>
+<li class="alt"><span>  </span></li>
+<li class=""><span>sed -i '<span class="keyword">s</span><span>/192.168.97.48/10.235.2.183/g' app.config  </span></span></li>
+<li class="alt"><span>sed -i '<span class="keyword">s</span><span>/192.168.97.48/10.235.2.183/g' vm.args  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>sed -i '<span class="keyword">s</span><span>/192.168.100.52/10.235.2.138/g' app.config  </span></span></li>
+<li class=""><span>sed -i '<span class="keyword">s</span><span>/192.168.100.52/10.235.2.138/g' vm.args   </span></span></li>
+</ol>
+</div>
+  
+  <p>进入运行着的集群：<br>
+  ./riak attach<br>
+  ctrl+d退出</p>
+  
+  <p>看ring的分布情况：<br>
+  &gt;{ok,Ring} = riak_core_ring_manager:get_my_ring().</p>
+  
+  <p><strong>[看一点代码]</strong>
+  riak_kv_app -&gt; riak_core-&gt;riak_core_sup[supervisor]-&gt;
+  riak_core_sup<br>
+  |-riak_core_handoff_manager  handoff管理  gen_server<br>
+  |-riak_core_handoff_listener    handoff接收  gen_nb_server<br>
+  |-riak_core_ring_events           处理ring变化  gen_event<br>
+  |-riak_core_ring_manager       ring管理   gen_server2<br>
+  |-riak_core_node_watcher_events   节点侦察 gen_event<br>
+  |-riak_core_node_watcher                节点 gen_server<br>
+  |-riak_core_gossip                   gossip协议 gen_server</p>
+  
+  <p><strong>[riak里的自定义behaviour]</strong>
+  -gen_nb_server from gen_server <br>
+  -gen_server2   gen_server的一个拷贝 增加了pxxx的办法及增加了许多参数<br>
+  -riak_core_vnode from gen_fsm<br>
+  riak_kv:<br>
+  -riak_kv_backend  Riak backend behaviour 
+  </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-10-18T00:00:00+08:00" pubdate data-updated="true">2011-10-18 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2011/10/19/xiaomi-2012/" title="Next Post: 小米科技2012校园招聘行程">小米科技2012校园招聘行程 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

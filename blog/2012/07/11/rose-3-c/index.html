@@ -1,0 +1,266 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>rose手册第三章C节：DAO层：分表设置 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="欢迎顺利进入本章，如果您的企业需要这一节的内容，那么说明用户量很有前途，如果使用了本节的内容，不防向cc0cc@126.com发信一封以表谢意，我们会很高兴收到各种反馈。 3.C.1 mysql分表的常规做法 以下是个人从业经验中的分表规则： 按照 id % 100 分为一百份 按照 id …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/07/11/rose-3-c">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">rose手册第三章C节：DAO层：分表设置</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-07-11T00:00:00+08:00" pubdate data-updated="true">2012-07-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose"></p>
+  
+  <p>欢迎顺利进入本章，如果您的企业需要这一节的内容，那么说明用户量很有前途，如果使用了本节的内容，不防向cc0cc@126.com发信一封以表谢意，我们会很高兴收到各种反馈。</p>
+  
+  <p><strong>3.C.1 mysql分表的常规做法</strong></p>
+  
+  <p>以下是个人从业经验中的分表规则：</p>
+  
+  <p>    按照 id % 100 分为一百份<br>
+      按照 id % 16 分为十六份<br>
+      按照 id/10 % 10 分为十份<br>
+      按照 id%10 分为十份</p>
+  
+  <p>  以上分表规则特别在mysql中使用机会比较多，各有优势，没有对错，只有最好与最不好用。</p>
+  
+  <p><strong>3.C.2 使用分表第一步：添加新的依赖</strong></p>
+  
+  <p>要使用分表，需要添加新的依赖，由bmw提供的bmwutils。</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.54chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>bmwutils</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>0.0.2</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>3.C.3 使用分表第二步：设置applicationContext.xml分表规则</strong></p>
+  
+  <p>在开写代码之前，需要告诉DAO是哪个表需要分表，按照什么规则分，分多少份。</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="comments">&lt;!-- 以下配置为分表设置 --&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span> </span><span class="attribute">id</span><span>=</span><span class="attribute-value">"jade.routerInterpreter"</span><span> </span><span class="attribute">class</span><span>=</span><span class="attribute-value">"com.xiaomi.common.service.dal.routing.RewriteSQLInterpreter"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"routingConfigurator"</span><span> </span><span class="attribute">ref</span><span>=</span><span class="attribute-value">"jade.routingConfigurator"</span><span> </span><span class="tag">/&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span> </span><span class="attribute">id</span><span>=</span><span class="attribute-value">"jade.routingConfigurator"</span><span> </span><span class="attribute">class</span><span>=</span><span class="attribute-value">"com.xiaomi.common.service.dal.routing.RoutingConfigurator"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"partitions"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>              <span class="tag">&lt;</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>   </span></span></li>
+<li class=""><span>                   <span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>hash:test:id:test_{0}:100</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>   </span></span></li>
+<li class="alt"><span>              <span class="tag">&lt;/</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p>    此处配置中，partitions参数为一个list，可以对多个table进行定义。<br>
+          hash:test:id:test_{0}:100 表示：使用hash这种办法，将test这个表，按照id的值，分成100份，每份的表名为test_x</p>
+  
+  <p><strong>3.C.4 使用分表第三步：bmwutils支持的分表办法</strong></p>
+  
+  <p>    (hash)上例中的hash: 最常用的 id % 100 就是这种办法。该办法会把传入的值先进行转为数字后与定义的份数进行取模（%）。<br>
+      (direct)最直接的一种：用的少一些，没有什么规则，直接根据第四个正则，与第三位传入的值进行替换。假设有个人名表，按照字母分表可以用。name_A,name_B,name_C...<br>
+      (round)轮循：根据设置，按照调用sql的情况，轮流使用各个表。<br>
+      (range)范围：一般用来做日期范围的分表，比如说微博类的，可变值为一个时间，当时间传入时，第三位支持log{yyyy} log{yyyy_MM}等时间格式的替换，可轻松做到按周、月、年分表。<br>
+      (xm-hash)小米hash：一种古怪的办法，按照传入值的十位进行取模的分表方案。<br>
+      (xm-str-hash)小米字符串hash：将字符串按照固定算法变成long之后，再按照小米hash逻辑处理。<br>
+      (hex-hash)16进制分表：固定256份以内，传入的值按照16进制转换后按hash求模。</p>
+  
+  <p><strong>3.C.5 使用分表第四步：写DAO代码@ShardBy</strong></p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT user_id, device_token FROM test where user_id =:id"</span><span>)  </span></span></li>
+<li class=""><span><span class="keyword">public</span><span> List&lt;Test&gt; getTestsById(</span><span class="annotation">@ShardBy</span><span> </span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"id"</span><span>) </span><span class="keyword">int</span><span> id);  </span></span></li>
+</ol>
+</div>
+  
+  <p>与不分表的dao相比，只多了一个shardBy，标识按照这个参数值分表。</p>
+  
+  <p>    文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br>
+      长期更新版本：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_C">https://github.com/XiaoMi/rose/tree/master/chapter_3_C</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-07-11T00:00:00+08:00" pubdate data-updated="true">2012-07-11 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

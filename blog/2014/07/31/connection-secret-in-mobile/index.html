@@ -1,0 +1,233 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>移动网络下连接的秘密 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="最近在研究网络层的接入问题。一些心得记录在下面： 一、TCP与HTTP 0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。
+  1.TCP传输的数据，绝对是顺序正确、不丢包的数据。否则它一定不会把数据扔给应用层。
+  2.从应用层角度，TCP是一个数据流， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/07/31/connection-secret-in-mobile">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">移动网络下连接的秘密</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-07-31T17:44:55+08:00" pubdate data-updated="true">2014-07-31 17:44:55 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg"></p>
+  
+  <p> 最近在研究网络层的接入问题。一些心得记录在下面：</p>
+  
+  <h2>一、TCP与HTTP</h2>
+  
+  <ul>
+  <li>0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。</li>
+  <li>1.TCP传输的数据，绝对是顺序正确、不丢包的数据。否则它一定不会把数据扔给应用层。</li>
+  <li>2.从应用层角度，TCP是一个数据流，收到的数据会聚在一起。所以需要应用层去协商数据与数据之间用什么间隔，比如常用的长度标识。</li>
+  <li>3.TCP在网络恶劣的情况下，开始启动：拥塞避免算法 与 慢启动算法。而这些都是由一些公式去估计当前网络情况的。</li>
+  <li>4.TCP的报文包与我们自己应用层的发的“包”半毛钱关系都没有，数据到了底层还是要切成N块来传送的。</li>
+  <li>5.所谓的HTTP比TCP更可靠是错误的。HTTP是应用层协议，实际也是TCP，只不过数据在应用层定义了规则：必须有request\header\body等等。</li>
+  <li>6.硬件防火一般拦截端口，软件防火才拦协议。所以80端口走TCP有不少好处。</li>
+  <li>7.HTTP比TCP更可靠的错觉产生的原因是：HTTP请求基本都是每次新开连接，而TCP很少这样做。</li>
+  <li>8.TCP就像<!--more-->一条水管。</li>
+  <li>9.HTTP就像一条临时的水管，用完就扔了。</li>
+  <li>10.移动网络下，抖动会让TCP延迟加倍明显。</li>
+  </ul>
+  
+  
+  <h2>二、TCP与WAP</h2>
+  
+  <ul>
+  <li>0.CMWAP\CMNET 是中方特色的区分GPRS方案。</li>
+  <li>1.所有WAP都是HTTP代理软件。注意是软件，所以理论是不只是认端口，还认数据头。</li>
+  <li>2.各省各自治区的WAP网关是不一样的，甚至连端口都可能不一样。</li>
+  <li>3.WAP大多都支持向网关发送CONNECT方法（对应GET、POST等），然后通过这个可以建立TCP数据转发。当然了，人家天天在封。</li>
+  <li>4.基本上WAP下只能用HTTP。</li>
+  <li>5.谁知道啥时候WAP彻底消失？</li>
+  </ul>
+  
+  
+  <h2>三、最后一公里</h2>
+  
+  <ul>
+  <li>0.最惨淡的就是这一公里。各家赚各家的钱，移动网络下运营商割剧，再加上移动基站的硬件技术限制，导致这后果。</li>
+  <li>1.移动网络下的CDN就是个明晃晃的骗局。因为再怎么加速，最后这一公里你控制不了。如果政策允许，可以去做一个免费WIFI来解决这一难题，如果。</li>
+  <li>2.为最后一公里效果不行能做的事情有：转菊花、禁止作（从产品上解决）。</li>
+  </ul>
+  
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-07-31T17:44:55+08:00" pubdate data-updated="true">2014-07-31 17:44:55 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/tcp/">tcp</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/07/09/tigase-sockthread/" title="Previous Post: tigase网络核心SockThread详解">« tigase网络核心SockThread详解</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/08/25/xiao-mi-hu-yu-zhao-javagong-cheng-shi/" title="Next Post: 小米互娱招java工程师">小米互娱招java工程师 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

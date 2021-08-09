@@ -1,0 +1,789 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="由php的call_user_func传reference引发的思考 2010-07-20 00:00:00 +0800 问题的提出
+  网友bercmisir在院内留言，针对php手册中的call_user_func函数的文档一事，大致如下：
+  http://php.net/manual/en/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/31">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/07/20/php-call_user_func-reference-thinking/">由php的call_user_func传reference引发的思考</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-07-20T00:00:00+08:00" pubdate data-updated="true">2010-07-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img06.taobaocdn.com/imgextra/i6/T1IytGXchrXXa_aivX_085522.jpg" alt="搞技术一定要深入到群众当中"></p>
+  
+  <p><strong>问题的提出</strong>
+  网友bercmisir在院内留言，针对php手册中的call_user_func函数的文档一事，大致如下：<br>
+  http://php.net/manual/en/function.call-user-func.php<br>
+  其中parameter下有这样一句话：<br>
+  Note: Note that the parameters for call_user_func() are not passed by reference. <br>
+  简单地翻译一下，是说这个函数的参数是不能依靠引用来传递的。<br>
+  还有一个例子：
+  <?php <br />
+  error_reporting(E_ALL);<br>
+  function increment(&amp;$var)<br>
+      $var++;<br>
+  }</p>
+  
+  <p>$a = 0;<br>
+  call_user_func('increment', $a);<br>
+  echo $a."\n";</p>
+  
+  <p>call_user_func_array('increment', array(&amp;$a)); // You can use this instead before PHP 5.3<br>
+  echo $a."\n";<br>
+  ?&gt;
+  输出是：<br>
+  0
+  1<br>
+  而网友bercmisir的问题在于：<br>
+  call_user_func('increment', $a);输出是0,而call_user_func('increment', &amp;$a);却输出是1，明明说不能依靠引用来传递。</p>
+  
+  <p><strong>寻根溯源</strong></p>
+  
+  <p>然后再进一步寻根溯源，这个Note的信息其实是http://bugs.php.net/bug.php?id=24931这个bug中最后处理的结果。<br>
+  并且在call_user_func('increment', &amp;$a);虽然输出了1的结果，但一般情况下，会有一个警告信息：Deprecated: Call-time pass-by-reference has been deprecated。</p>
+  
+  <p>这是什么原因呢？<br>
+  先看一个例子：
+  <?php <br />
+  error_reporting(E_ALL);<br>
+  function increment(&amp;$var)<br>
+  {
+      $var++;<br>
+  $x = 1;<br>
+  increment($x);<br>
+  echo $x;<br>
+  ?&gt;
+  结果为2，并且没有类似expected to be a reference, value given的警告信息，相反地，如果将第8行代码修改为&amp;$x，将得到一个废除警告。从而得以验证，其实PHP在传递过程中，变量会根据形参需要的到底是引用还是值来自行决定传输的是引用还是值，并不需要显式地传递（相反显式传递是即将被废除的）。</p>
+  
+  <p><strong>继续深入</strong></p>
+  
+  <p>http://www.php.net/manual/en/language.references.pass.php<br>
+  在php手册中，介绍引用的传递一节，在中间位置有一个Note说到：在函数调用时是不需要传引用的(也就是上节所说的显式调用)，在5.3中如果显式调用会出来一个废除警告。</p>
+  
+  <p><strong>分析源码</strong></p>
+  
+  <p>有人说：在php中写入，everything is a reference。<br>
+  查阅php源码，在./Zend/zend_compile.c的1579行有函数定义zend_do_pass_param。（php5.2.13）<br>
+  其中有这样一句判断：<br>
+   if (original_op == ZEND_SEND_REF &amp;&amp; !CG(allow_call_time_pass_reference)) {打印废除警告。}<br>
+  大概意思就是说，在传递的是引用，并且php.ini的allow_call_time_pass_reference为否的话，打印警告。<br>
+  再看zend_do_pass_param使用的地方，可以发现是在parser阶段时，根据参数ZVAL结构体中元素的定义，来传递到底是var还是value还是reference。（php5.2.13 ./Zend/zend_language_parser.y/c 451/3593）</p>
+  
+  <p><strong>结论</strong></p>
+  
+  <p>引用其实类似linux里的文件硬链接一样，但和C语言中的指针是不相同的，在parser阶段php会根据上下文环境自行判断是传引用还是值。而本文所提到的call_user_function并不会自行判断传的是引用还是值。所以前面的例子call_user_function在传值的时候不管用，而在传引用的时候得出了正确结果（但其实还有一个废除警告）。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/07/14/sphinx-data-search/">用sphinx轻松搞定方便管理的多节点过亿级数据搜索</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-07-14T00:00:00+08:00" pubdate data-updated="true">2010-07-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1tV8GXeprXXaFKjI2_044608.jpg" alt="54chen"></p>
+  
+  <p><strong>概述</strong>
+  来自俄罗斯的开源全文搜索引擎软件Sphinx，单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级），实测千万级数据在0.0X秒和0.00X秒占大多数。 Sphinx创建索引的速度为：创建100万条记录的索引只需3～4分钟，实测30W线上复杂的blog数据需要5分钟，创建1000万条记录的索引可以在50分钟内完成，实测时间比这个更长得多，而只包含最新10万条记录的增量索引，重建一次只需几十秒，实测十万条在一分钟不到的时间。 Sphinx 是一个基于 GPL 2 协议颁发的免费开源的全文搜索引擎.它是专门为更好的整合脚本语言和SQL数据库而设计的.当前内置的数据源支持直接从连接到的 MySQL 或 PostgreSQL 获取数据, 或者你可以使用 XML 通道结构(XML pipe mechanism , 一种基于 Sphinx 可识别的特殊xml格式的索引通道) 。</p>
+  
+  <p><strong>sphinx安装</strong>
+  安装见 <a href="http://www.54chen.com/_linux_/sphinx-build-stations-with-fast-search-function.html">用Sphinx快速搭建站内搜索功能</a></p>
+  
+  <p><strong>配置多节点协同工作</strong>
+  第一点，原理<br>
+  在sphinx.conf中可以配置index段落里的local和agent两个参数，local = blog_1表示使用本地索引名为blog_1的索引，agent = 10.1.1.1:3312:blog_2表示使用10.1.1.1这个机器的3312端口上服务的blog_2索引。这两个参数均可在此段落中重复出现。<br>
+  利用这两个参数，可进行节点与节点间的配置。如图1所示，一个searchd服务在接到请求时两种使用索引的示意图。
+  <img src="http://img02.taobaocdn.com/imgextra/i2/T1FqFGXcBaXXcM6aMZ_031346.jpg" alt="sphinx 54chen">
+  图1 一个searchd服务在接到请求时两种使用索引的示意图</p>
+  
+  <p>第二点，架构<br>
+  利用agent参数，可以灵活配置去代理取满足搜索条数的超时时间等等。<br>
+  如图2，只需要将索引灵活分布，各自除了自己的local索引以外，全部连成相互的agent，使得别的节点也可以得到自己的索引搜索结果，以此得到分布式的处理结果。
+  <img src="http://img03.taobaocdn.com/imgextra/i3/T1_aBGXglbXXXdthoZ_032504.jpg" alt="sphinx 54chen">
+  图2 一个简单的分布式搜索的例子</p>
+  
+  <p>第三点，性能<br>
+  分布索引的情况下，实测千万数据量，大致在500qps左右，没有做容灾的方案，如果想容灾，可以考虑将索引做成在某些节点上重复。总得来说，性能还算可以，更具体的架构方案，可能要和具体的业务来分布效果会更好。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/07/06/triggered-by-a-sql-order-by-the-thoughts-on/">一条SQL引发的对order By的思考</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-07-06T00:00:00+08:00" pubdate data-updated="true">2010-07-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T18I0FXoFCXXcVYX39_072328.jpg" alt="热">
+  ==========尽职的安静的分隔线===========<br>
+  在实际工作中遇到下面一个问题：<br>
+  有一个表，存有2000万数据。<br>
+  主键为ID bigint(20) NOT NULL auto_increment<br>
+  另有一字段time timestamp NOT NULL default CURRENT_TIMESTAMP</p>
+  
+  <p>故事从这两个字段说起：<br>
+  sql1需要从这个表中检索出来时间为2010-05-26 11:55:00之<font color="red">前</font>并且id号大于20000的前10条数据<br>
+  sql2需要从这个表中检索出来时间为2010-05-26 11:55:00之<font color="red">后</font>并且id号大于20000的前10条数据</p>
+  
+  <p>两条sql写出来大概是这样子的：<br>
+  sql1:select * from table where time 20000 order by id limit 10;<br>
+  sql2:select * from table where time &gt;'2010-05-26 11:55:00' and id&gt;20000 order by id limit 10;</p>
+  
+  <p>并且已经知道表中的数据，在上面所示时间之前的数据要远远多于所示时间之后的数据。如图1所示：
+  <img src="http://img05.taobaocdn.com/imgextra/i5/T1AKhFXgdbXXaH.kQ3_051000.jpg" alt="54chen">
+  图1 数据在时间线上的示意图</p>
+  
+  <p>实测发现，sql1执行时间0.03s，sql2执行时间33s。</p>
+  
+  <p>为何大于小于运行的速度相比如何巨大？下面来解答。</p>
+  
+  <p><strong>第一，用explain来观察两条sql的区别</strong>
+  结论：没什么区别</p>
+  
+  <p><strong>第二，研究order by</strong>
+  将sql2的order by id修改为order by id desc(排序方向颠倒)后，发现速度马上提到了0.03s的水平。<br>
+  同样修改sql1的时候，速度马上降到了30s的水平。</p>
+  
+  <p>进行多次测试，排除mysql本身的缓存干扰。</p>
+  
+  <p>结论：<br>
+  sql1的运行示意图如图2所示：
+  <img src="http://img06.taobaocdn.com/imgextra/i6/T1ouhFXgXdXXbLbqg6_060541.jpg" alt="54chen">
+  图2 第一条SQL语句快慢解释图</p>
+  
+  <p>sql2的运行示意图如图3所示：
+  <img src="http://img02.taobaocdn.com/imgextra/i2/T14KdFXc0eXXc_k476_061836.jpg" alt="54chen">
+  图2 第二条SQL语句快慢解释图</p>
+  
+  <p>综合上面两个图，mySQL在where查询的时候，也许按照where的条件，按照主键的顺序，最后满足条件的，最后进到内存中去，再进行后面的order by时，asc如果在内存中比不在内存中的就要快得多。</p>
+  
+  <p>未研究真正实现的代码，仅凭感觉验证。<br>
+  一句话概括是：按照使用的索引，最后满足条件的数据将留在内存里供进一步排序。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/07/06/infoq-qclub-share-presentation-download/">7月3日 infoQ Qclub分享演示文稿下载</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-07-06T00:00:00+08:00" pubdate data-updated="true">2010-07-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>本次活动以RIA为主题，参会者多为关心RIA及后端数据服务的开发者和管理者。<br>
+  我的主题是："Ria的强力后盾：rest+海量存储<br>
+  主要内容是给参会者分享了淘宝在nginx上作的关于rest的事情，和一些人人网nuclear的原理。<br>
+  下面是此次会上我所使用的slide。（ 有点慢 需忍）</p>
+  
+  <p></p>
+<div id="__ss_4691046" style="width: 425px;">
+<strong style="display:block;margin:12px 0 4px"><a title="Ria的强力后盾：rest+海量存储 " href="http://www.slideshare.net/54chen/riarest-4691046">Ria的强力后盾：rest+海量存储 </a></strong><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="id" value="__sse4691046">
+<param name="allowFullScreen" value="true">
+<param name="allowScriptAccess" value="always">
+<param name="src" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=riarest-100706024216-phpapp01&amp;stripped_title=riarest-4691046">
+<embed id="__sse4691046" type="application/x-shockwave-flash" width="425" height="355" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=riarest-100706024216-phpapp01&amp;stripped_title=riarest-4691046" allowscriptaccess="always" allowfullscreen="true"></embed></object>
+  <div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/54chen">zhen chen</a>.</div>
+  </div>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/07/01/summary-of-recent-articles-distributed/">近期分布式相关文章汇总</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-07-01T00:00:00+08:00" pubdate data-updated="true">2010-07-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p></p>
+<blockquote>号外：<a href="http://url.cn/0ThU83">http://url.cn/0ThU83</a> infoQ的线下技术活动Qclub本周六在知春路京仪大酒店举行，我给沙龙参会者分享来自人人网nuclear的开发经验以及如何运用在RIA上.</blockquote>
+  
+  <p><img src="http://img02.taobaocdn.com/imgextra/i2/T13RhEXodpXXbEtyLa_121502.jpg" alt="五四陈科学院总结"></p>
+  
+  <p>1.<a href="http://www.54chen.com/_linux_/54chen-s-nosql.html">54chen解读NoSQLDynamo</a>
+  这篇文章颇费了心思从构思到成文，把dynamo原理描述得还算是清楚。</p>
+  
+  <p>2.<a href="http://www.54chen.com/architecture/april-24-live-stream-qcon-posts.html">4月24日QCon现场直播流水帖</a>
+  这篇是在QCon大会上现场记录的一些不算是太完整的笔记</p>
+  
+  <p>4.<a href="http://www.54chen.com/java-ee/java-thread-controller-code-sharing-according-to-cpu-circumstances-decide-the-number-and-circumstances-of-the-threads-running.html">java线程控制器代码分享-根据cpu情况决定线程运行数量和情况</a>
+  一个根据cpu来执行的线程控制器实现，评论中有高人改进方案。</p>
+  
+  <p>5.<a href="http://www.54chen.com/java-ee/jdbc-socketread0-locked-in-mind-a-mysql-unknown-bug.html">jdbc socketRead0 locked 记一个Mysql的不明bug</a>
+  在开发nuclear过程中遇到的一个jdbc的bug</p>
+  
+  <p>6.<a href="http://www.54chen.com/document/dynamo-based-systems.html">LinkIn基于Dynamo设计的系统：伏地魔(voldemort)设计中文文档[我是陈科学院译]-完稿</a>
+  54chen翻译的一个来自SNS网站的分布式存储系统文档</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/06/22/sphinx-build-stations-with-fast-search-function/">用Sphinx快速搭建站内搜索功能</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-06-22T00:00:00+08:00" pubdate data-updated="true">2010-06-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><span class="font_666">Sphinx[英]</span> [<span class="phonetic fontb  font14" lang="EN-US">sfɪŋks</span>] 									<img class="aaudio" src="http://www.iciba.com/images/orange_result/sound.gif" alt=""> <span class="font_666">[美]</span> [<span class="phonetic  fontb font14" lang="EN-US">sfɪŋks</span>] <img class="aaudio" src="http://www.iciba.com/images/orange_result/sound.gif" alt=""></p>
+  
+  <p>出自俄罗斯的开源全文搜索引擎软件Sphinx，单一索引最大可包含1亿条记录，在1千万条记录情况下的查询速度为0.x秒（毫秒级）。Sphinx创建索引的速度为：创建100万条记录的索引只需3～4分钟，创建1000万条记录的索引可以在50分钟内完成，而只包含最新10万条记录的增量索引，重建一次只需几十秒。<br>
+  Sphinx 是一个基于 GPL 2 协议颁发的免费开源的全文搜索引擎.它是专门为更好的整合脚本语言和SQL数据库而设计的.当前内置的数据源支持直接从连接到的 MySQL 或 PostgreSQL 获取数据, 或者你可以使用 XML 通道结构(XML pipe mechanism , 一种基于 Sphinx 可识别的特殊xml格式的索引通道)</p>
+  
+  <p>下面发出作记录：
+  </p>
+<blockquote>10106  wget http://www.coreseek.cn/uploads/csft/3.2/csft-3.2.12.tar.gz<br>
+  10107  wget http://www.coreseek.cn/uploads/csft/3.2/mmseg-3.2.12.tar.gz</blockquote>
+  
+  <p>10109  tar -zxvf mmseg-3.2.12.tar.gz<br>
+  10110  tar -zxvf csft-3.2.12.tar.gz</p>
+  
+  <p>10111  cd mmseg-3.2.12<br>
+  10112  yum -y install glibc-common libtool autoconf automake mysql-devel expat-devel<br>
+  10113  aclocal<br>
+  10114  libtoolize --force<br>
+  10115  automake --add-missing<br>
+  10116  autoconf<br>
+  10117  autoheader<br>
+  10118  ./configure --prefix=/usr/local/mmseg3<br>
+  10119  make<br>
+  10120  make install<br>
+  10121  cp -f src/*/*.h /usr/local/mmseg3/include/mmseg/</p>
+  
+  <p>10122  cd ..<br>
+  10123  ls<br>
+  10124  cd csft-3.2.12<br>
+  10125  aclocal<br>
+  10126  libtoolize --force<br>
+  10127  automake --add-missing<br>
+  10128  autoconf<br>
+  10129  autoheader<br>
+  10130  perl -pi -e 's/lpthread/lpthread -liconv/g' src/Makefile*<br>
+  10131  ./configure --prefix=/usr/local/coreseek --enable-id64 --without-python --with-mysql --with-mmseg --with-mmseg-includes=/usr/local/mmseg3/include/mmseg/ --with-mmseg-libs=/usr/local/mmseg3/lib/<br>
+  10132  make
+  make后出现iconv错误，所以修改configure文件，查找到#define USE_LIBICONV 把1改为0<br>
+  重新执行configure和make
+  </p>
+<blockquote>10157  make install<br>
+  10158  cd /usr/local/coreseek/etc/<br>
+  10164  cp sphinx.conf.dist csft.conf<br>
+  10165  vim csft.conf<br>
+  10169  mysql -uroot test</blockquote>
+  
+  <p>10173  touch /data/exceptions.txt<br>
+  10174  bin/indexer --all<br>
+  10177  bin/search test
+  下期将推出中文搜索测试以及分布式方案。</p>
+  
+  <p>---华丽的分隔线---</p>
+  
+  <p>向本地喜爱看电影的哥推荐：
+  <a href="http://www.nuomi.com/i/rSMnZnu" target="_blank"><img src="http://img03.taobaocdn.com/imgextra/i3/T1tXFEXlFoXXbiWc79_073023.jpg" border="0"></a></p>
+  
+  <p>昨天哥去UME华星提前看了电影 80后 ，严格的说，这电影和80后没有太多关系，故事还是很感人的，适合带MM看。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/30">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <em>31</em>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/32">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

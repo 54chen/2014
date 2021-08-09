@@ -1,0 +1,279 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>MySQL中各种字段的取值范围 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="TINYINT
+  -128 - 127   TINYINT UNSIGNED
+  0 - 255 SMALLINT
+  -32768 - 32767 SMALLINT UNSIGNED
+  0 - 65535 MEDIUMINT
+  -8388608 - 8388607 MEDIUMINT UNSIGNED
+  0 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2006/03/22/mysql-in-a-variety-of-fields-in-the-range">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">MySQL中各种字段的取值范围</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-03-22T00:00:00+08:00" pubdate data-updated="true">2006-03-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>TINYINT<br>
+  -128 - 127</p>
+  
+  <p> </p>
+  
+  <p>TINYINT UNSIGNED<br>
+  0 - 255</p>
+  
+  <p>SMALLINT<br>
+  -32768 - 32767</p>
+  
+  <p>SMALLINT UNSIGNED<br>
+  0 - 65535</p>
+  
+  <p>MEDIUMINT<br>
+  -8388608 - 8388607</p>
+  
+  <p>MEDIUMINT UNSIGNED<br>
+  0 - 16777215</p>
+  
+  <p>INT 或 INTEGER<br>
+  -2147483648 - 2147483647</p>
+  
+  <p>INT UNSIGNED 或 INTEGER UNSIGNED<br>
+  0 - 4294967295</p>
+  
+  <p>BIGINT<br>
+  -9223372036854775808 - 9223372036854775807</p>
+  
+  <p>BIGINT UNSIGNED<br>
+  0 - 18446744073709551615</p>
+  
+  <p>FLOAT<br>
+  -3.402823466E+38 - -1.175494351E-38<br>
+  0
+  1.175494351E-38 - 3.402823466E+38</p>
+  
+  <p>DOUBLE 或 DOUBLE PRECISION 或 REAL<br>
+  -1.7976931348623157E+308 - -2.2250738585072014E-308<br>
+  0
+  2.2250738585072014E-308 - 1.7976931348623157E+308</p>
+  
+  <p>DECIMAL[(M,[D])] 或 NUMERIC(M,D)<br>
+  由M(整个数字的长度,包括小数点,小数点左边的位数,小数点右边的位数,但不包括负号)和D(小数点右边的位数)来决定,M缺省为10,D缺省为0</p>
+  
+  <p>DATE<br>
+  1000-01-01 - 9999-12-31</p>
+  
+  <p>DATETIME<br>
+  1000-01-01 00:00:00 - 9999-12-31 23:59:59</p>
+  
+  <p>TIMESTAMP<br>
+  1970-01-01 00:00:00 - 2037年的某天(具体是哪天我也不知道,呵呵)</p>
+  
+  <p>TIME<br>
+  -838:59:59' to 838:59:59</p>
+  
+  <p>YEAR[(2|4)]<br>
+  缺省为4位格式,4位格式取值范围为1901 - 2155,0000,2位格式取值范围为70-69(1970-2069)</p>
+  
+  <p>CHAR(M) [BINARY] 或 NCHAR(M) [BINARY]<br>
+  M的范围为1 - 255,如果没有BINARY项,则不分大小写,NCHAR表示使用缺省的字符集.在数据库中以空格补足,但在取出来时末尾的空格将自动去掉.</p>
+  
+  <p>[NATIONAL] VARCHAR(M) [BINARY]<br>
+  M的范围为1 - 255.在数据库中末尾的空格将自动去掉.</p>
+  
+  <p>TINYBLOB 或 TINYTEXT<br>
+  255(2^8-1)个字符</p>
+  
+  <p>BLOB 或 TEXT<br>
+  65535(2^16-1)个字符</p>
+  
+  <p>MEDIUMBLOB 或 MEDIUMTEXT<br>
+  16777215 (2^24-1)个字符</p>
+  
+  <p>LONGBLOB 或 LONGTEXT<br>
+  4294967295 (2^32-1)个字符</p>
+  
+  <p>ENUM('value1','value2',...)<br>
+  可以总共有65535个不同的值</p>
+  
+  <p>SET('value1','value2',...)<br>
+  最多有64个成员</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-03-22T00:00:00+08:00" pubdate data-updated="true">2006-03-22 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2005/11/01/mysql-finishing-operation-points/" title="Previous Post: MySql作要点整理">« MySql作要点整理</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2006/10/13/linux-system-tray-under-the-realization-of/" title="Next Post: linux下系统托盘的实现">linux下系统托盘的实现 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

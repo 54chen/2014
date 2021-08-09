@@ -1,0 +1,327 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>如何做一个快速运转的大规模网络开发公司 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="受《精益创业》 http://www.duokan.com/book/35802 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。 不仅仅是一些令人苦恼的“人的问题”，还有一些，是无从下手、或者不知道未来是怎样的疑惑。 以下，列出一些“看得见的未来”， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/12/11/how-to-big-network">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">如何做一个快速运转的大规模网络开发公司</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-12-11T11:12:21+08:00" pubdate data-updated="true">2014-12-11 11:12:21 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://chen54.b0.upaiyun.com/20141211/thinking.jpg"></p>
+  
+  <p>受《精益创业》 <a href="http://www.duokan.com/book/35802">http://www.duokan.com/book/35802</a> 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。</p>
+  
+  <p>不仅仅是一些令人苦恼的“人的问题”，还有一些，是无从下手、或者不知道未来是怎样的疑惑。</p>
+  
+  <p>以下，列出一些“看得见的未来”，因为是一些系统已经在线上服务过亿的用户，如果你在思考相同的问题，也许会有一些用处。</p>
+  
+  <h1>一.流程与制度</h1>
+  
+  <h2>1.代码质量</h2>
+  
+  <ul>
+  <li>没有经过适量单元测试的代码，不能发起code review。</li>
+  <li>codereview:每行code都经过超过两双眼睛阅读。</li>
+  <li>没有经过code review的代码不能进入代码库。</li>
+  <li>没有经过完整bvt测试的代码，不能merge到线上分支。</li>
+  <li>没有完成上述流程的代码，不应该被用户访问到。</li>
+  </ul>
+  
+  
+  <h2>2.故障报告</h2>
+  
+  <ul>
+  <li>实际上最有效的制度是postmortem制度，但往往在国内被称为“故障报告”。</li>
+  <li>如果在你的公司里，《故障报告》与工资是挂钩的，恭喜你，制度用错了。</li>
+  <li>故障报告的本意，是让发生的故障告诉所有的人，让所有的工程师都学到，这次故障的起因是什么、如何避免。</li>
+  <li>故障报告绝对不是用来惩罚和警告你犯错了。</li>
+  <li>不情愿的故障报告，宣告了这个制度在你司实施的失败。</li>
+  <li>经常性的重复的故障报告，一定是制度没有彻底实施或者招聘人员眼神错了（眼神错的几率小之又小）。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h2>总结</h2>
+  
+  <ul>
+  <li>做一个让所有工程师（包括开发测试运维）勇于出来告诉大家我哪里错了的制度。</li>
+  <li>不断去总结和完善故障中的处理办法。</li>
+  </ul>
+  
+  
+  <h1>二.工程</h1>
+  
+  <ul>
+  <li>从工程上，不断去提炼与归并，抽象出高度集成化的系统和服务。</li>
+  </ul>
+  
+  
+  <h2>1.storage</h2>
+  
+  <ul>
+  <li>越早的引入key-value的稳定高效存储，可以事半功倍，但一定要稳定高效（高性能、高可用性）。</li>
+  <li>类似key-value的业务写法，应该深入人心。</li>
+  <li>可以选择的开源的有一些类dynamo系统，使用会较复杂，也许直接使用mysql的table更加有效。</li>
+  </ul>
+  
+  
+  <h2>2.paas</h2>
+  
+  <ul>
+  <li>越早的引入paas平台，也可以事半功倍，但一定要是靠谱的平台。（市面上大量的开源平台，需要有一支团队研究它）</li>
+  <li>paas平台的目的，是统一了dev与op的接口层。</li>
+  <li>paas还可以为你的硬件和网络资源做出更准确的预估。</li>
+  </ul>
+  
+  
+  <h2>3.监控与报警</h2>
+  
+  <ul>
+  <li>越早的建立此平台，越能提升团队对线上问题的警觉性。</li>
+  <li>标准的监控与报警平台，有助于更加方便地了解整个环境的情况。</li>
+  <li>报警一定要命中要害，减少误报，更牛的要做到预报。</li>
+  </ul>
+  
+  
+  <h2>4.dbproxy layer</h2>
+  
+  <ul>
+  <li>此层需要有高手存在，会各种开发的dba。</li>
+  <li>目标是做好隔离、做好分区、做好自动化扩容。</li>
+  <li>这层建立好了，以后服务可用性大大提升。</li>
+  </ul>
+  
+  
+  <h2>5.异步事件服务</h2>
+  
+  <ul>
+  <li>此服务在人手多时可考虑。</li>
+  <li>写多线程程序不是容易的事情，把可异步处理的业务，在逻辑中交给一个专门的服务处理。</li>
+  <li>在这之前，需要统一rpc相关框架。</li>
+  </ul>
+  
+  
+  <h2>6.配置中心</h2>
+  
+  <ul>
+  <li>典型的开源产品zookeeper。</li>
+  <li>服务的发现与故障自动摘除。</li>
+  <li>最好对zookeeper进行一层权限包装，避免实习生干坏事。</li>
+  </ul>
+  
+  
+  <h2>7.服务框架</h2>
+  
+  <ul>
+  <li>典型的开源产品thrift。</li>
+  <li>内网的rpc框架，是让你服务与服务之间保持良好架构的必须品。</li>
+  <li>框架一定要快，一定要有各种可测量的指标。但是thrift是没有的，需要自己加。</li>
+  </ul>
+  
+  
+  <h2>8.web框架</h2>
+  
+  <ul>
+  <li>典型的开源产品rose spring play。</li>
+  <li>用于统一大家的代码结构，能够换岗维护。</li>
+  </ul>
+  
+  
+  <h2>9.代码规范</h2>
+  
+  <ul>
+  <li>不用讲了，就是为了美观。</li>
+  </ul>
+  
+  
+  <h2>10.文档规范</h2>
+  
+  <ul>
+  <li>不用讲了，就是为了可维护。</li>
+  <li>闲时多写，忙时少写。</li>
+  <li>但不能不写。</li>
+  </ul>
+  
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-12-11T11:12:21+08:00" pubdate data-updated="true">2014-12-11 11:12:21 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/thinking/">thinking</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/11/18/about-socket-read/" title="Previous Post: 有关socket read">« 有关socket read</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/12/30/pptpd-scp-slow/" title="Next Post: vpn搭建及pptpd因mtu上传下载慢一例">vpn搭建及pptpd因mtu上传下载慢一例 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

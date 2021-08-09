@@ -1,0 +1,79 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Thrift | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/thrift/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[Thrift版本升级调查记录]]></title>
+      <link href="https://www.54chen.com/blog/2014/05/28/thrift-upgrade/"/>
+      <updated>2014-05-28T16:59:27+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/05/28/thrift-upgrade</id>
+      <content type="html"><![CDATA[<p><img src=http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg></p>
+  
+  <p>自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。</p>
+  
+  <p>代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
+  
+  <h1>第一轮：编译阶段</h1>
+  
+  <!--more-->
+  
+  
+  <h2>1.jar包为0.9.1的libthrift，cli为0.5.0的thrift。</h2>
+  
+  <p>gen-java生成，编译失败。</p>
+  
+  <h2>2.修正为0.9.1 libthrift和thrift cli。</h2>
+  
+  <p>gen-java生成，编译成功。</p>
+  
+  <h2>3.修正为0.5.0 libthrift和thrift cli。</h2>
+  
+  <p>gen-java生成，编译成功。</p>
+  
+  <h1>第二轮：交叉调用</h1>
+  
+  <ul>
+  <li>client 0.9.1 -> server 0.5.0 一切正常</li>
+  <li>client 0.5.0 -> server 0.9.1 一切正常</li>
+  </ul>
+  
+  
+  <h1>第三轮：server包不对</h1>
+  
+  <ul>
+  <li>server0.9.1 替换jar为0.5.0 libthrift : server启动失败 Caused by: java.lang.ClassNotFoundException: org.apache.thrift.TBaseProcessor</li>
+  <li>server0.5.0 替换jar为0.9.1 libthrift : server启动失败 java.lang.NoSuchMethodError: org.apache.thrift.server.TThreadPoolServer</li>
+  </ul>
+  
+  
+  <h1>第四轮：client包不对</h1>
+  
+  <ul>
+  <li>client0.9.1 jar为0.5.0 : client启动失败 java.lang.IncompatibleClassChangeError: class com.xiaomi.miliao.thrift.Hello$Client has interface org.apache.thrift.TServiceClient as super class</li>
+  <li>client0.5.0 jar为0.9.1 : client启动失败 java.lang.IncompatibleClassChangeError: Implementing class</li>
+  </ul>
+  
+  
+  <h1>结论</h1>
+  
+  <ul>
+  <li>thrift协议层不会有因为thrift升级而造成的版本的问题。</li>
+  <li>thrift多个版本的client无法同时存在。</li>
+  <li>thrift多个版本的server也无法同时存在。</li>
+  </ul>
+  
+  
+  <p>测试代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
+  ]]></content>
+    </entry>
+    
+  </feed>

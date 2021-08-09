@@ -1,0 +1,426 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Wordpress Nginx Php-cgi Mysql在128m内存下的vps安装和优化手记[原创] - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.8.2 转载请注明原文链接：http://www.54chen.com/688-wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the- …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/08/02/wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Wordpress Nginx Php-cgi Mysql在128m内存下的vps安装和优化手记[原创]</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-08-02T00:00:00+08:00" pubdate data-updated="true">2009-08-02 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[ 文章作者：陈臻 本文版本：v1.0 最后修改：2009.8.2 转载请注明原文链接：<a href="http://www.54chen.com/688-wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes/">http://www.54chen.com/688-wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes/</a> ]</p>
+  
+  <p>选取CentOS，因为它是号称最安全及性能都相对较好的Linux系统。系统内存128m，系统用掉30m，有100m左右可用（如图1所示），swap已经有256M，硬盘为5G，除去系统后大约有4G可供捣腾。</p>
+  
+  <p><a href="http://www.54chen.com/wp-content/uploads/2009/08/1.jpg"><img class="alignleft size-full wp-image-689" title="图1" src="http://www.54chen.com/wp-content/uploads/2009/08/1.jpg" alt="" width="500" height="78"></a>
+  图1。</p>
+  
+  <p> </p>
+  
+  <p>首先，在空白的系统上使用下面的命令，安装gcc等一堆工具和后面php会用到的一些包：</p>
+  
+  <p><code>yum -y install gcc gcc-c++ autoconf libjpeg libjpeg-devel libpng libpng-devel freetype freetype-devel libxml2 libxml2-devel zlib zlib-devel glibc glibc-devel glib2 glib2-devel bzip2 bzip2-devel ncurses ncurses-devel curl curl-devel e2fsprogs e2fsprogs-devel krb5 krb5-devel libidn libidn-devel openssl openssl-devel openldap openldap-devel nss_ldap openldap-clients openldap-servers</code></p>
+  
+  <p>yum这一堆东西会有点慢，这里正好插播一下，mysql的编译在128的内存下非常慢，所以呆会儿我们会采取直接yum，php、nginx都下源码编译，经过以往的经验eAccelerator、Xcache和Zend Optimizer这三者，最好是用eAccelerator搭配Zend Optimizer能给php加速得到最佳效果，当然了，Zend Optimizer需要Zend Guard来搭配，而后者是收费的，伟大的人有伟大的破解。</p>
+  
+  <p>我执行的时候耗时32分钟左右。</p>
+  
+  <p>言归正传，继续：
+  <code>wget http://sysoev.ru/nginx/nginx-0.7.61.tar.gz<br>
+  wget http://www.php.net/get/php-5.2.10.tar.gz/from/this/mirror<br>
+  wget http://blog.s135.com/soft/linux/nginx_php/phpfpm/php-5.2.10-fpm-0.5.11.diff.gz<br>
+  wget http://bart.eaccelerator.net/source/0.9.5.3/eaccelerator-0.9.5.3.tar.bz2<br>
+  wget ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-7.9.tar.gz [nginx rewrite使用]</code></p>
+  
+  <p>【安装<a href="http://www.54chen.com/19-mysql%e6%93%8d%e4%bd%9c%e8%a6%81%e7%82%b9%e6%95%b4%e7%90%86/">MySQL</a>】
+  <code>yum install -y mysql-server<br>
+  启动MySQL:<br>
+  service mysqld start<br>
+  设置mysql数据库root帐号密码:<br>
+  mysqladmin -u root password 'newpassword' [引号内填密码]<br>
+  让mysql更安全：<br>
+  mysql -u root -p [此时会要求你输入刚刚设置的密码，输入后回车即可]</code></p>
+  
+  <p>mysql&gt; DROP DATABASE test; [删除test数据库]<br>
+  mysql&gt; DELETE FROM mysql.user WHERE user = ''; [删除匿名帐户]<br>
+  mysql&gt;DELETE FROM mysql.user WHERE password = '';[删除无密码帐户]<br>
+  mysql&gt; FLUSH PRIVILEGES; [重载权限]</p>
+  
+  <p>【优化MySQL】<br>
+  此时的mysql直接吃掉20m左右的内存，如图2所示。我们要对其进行优化，关掉<a href="http://www.54chen.com/358-mysql%e7%9a%84%e6%80%a7%e8%83%bd%e8%b0%83%e4%bc%98%e5%b7%a5%e5%85%b7%ef%bc%9a%e6%af%94mysqlreport%e6%9b%b4%e6%96%b9%e4%be%bf%e7%9a%84tuning-primersh/">innodb</a>。</p>
+  
+  <p><a href="http://www.54chen.com/wp-content/uploads/2009/08/2.jpg"><img class="alignleft size-full wp-image-691" title="图2" src="http://www.54chen.com/wp-content/uploads/2009/08/2.jpg" alt="" width="499" height="170"></a>图2。</p>
+  
+  <p> </p>
+  
+  <p> </p>
+  
+  <p> </p>
+  
+  <p> </p>
+  
+  <p>vi /etc/my.cnf<br>
+  在后面增加如下内容：</p>
+  
+  <p><code>skip-innodb<br>
+  [mysql]<br>
+  no-auto-rehash</code></p>
+  
+  <p>[mysqld]<br>
+  user = mysql<br>
+  port = 3306<br>
+  open_files_limit = 600<br>
+  back_log = 20<br>
+  max_connections = 100<br>
+  max_connect_errors = 200<br>
+  table_cache = 60<br>
+  external-locking = FALSE<br>
+  max_allowed_packet = 16M<br>
+  sort_buffer_size = 128K<br>
+  join_buffer_size = 128K<br>
+  thread_cache_size = 10<br>
+  thread_concurrency = 8<br>
+  query_cache_size = 0M<br>
+  query_cache_limit = 2M<br>
+  query_cache_min_res_unit = 2k<br>
+  default_table_type = MyISAM<br>
+  thread_stack = 192K<br>
+  transaction_isolation = READ-UNCOMMITTED<br>
+  tmp_table_size = 512K<br>
+  max_heap_table_size = 32M<br>
+  long_query_time = 1<br>
+  log_long_format<br>
+  server-id = 1<br>
+  binlog_cache_size = 2M<br>
+  max_binlog_cache_size = 4M<br>
+  max_binlog_size = 512M<br>
+  expire_logs_days = 7<br>
+  key_buffer_size = 4M<br>
+  read_buffer_size = 1M<br>
+  read_rnd_buffer_size = 2M<br>
+  bulk_insert_buffer_size = 2M<br>
+  myisam_sort_buffer_size = 4M<br>
+  myisam_max_sort_file_size = 10G<br>
+  myisam_max_extra_sort_file_size = 10G<br>
+  myisam_repair_threads = 1<br>
+  myisam_recover</p>
+  
+  <p>[mysqldump]<br>
+  quick<br>
+  max_allowed_packet = 16M</p>
+  
+  <p>【重启MySQL】<br>
+  service mysqld restart<br>
+  再看mysql吃掉的内存，已经降低了四分之一，如图3所示：
+  <a href="http://www.54chen.com/wp-content/uploads/2009/08/3.jpg"><img class="alignleft size-full wp-image-692" title="图3" src="http://www.54chen.com/wp-content/uploads/2009/08/3.jpg" alt="" width="500" height="170"></a>图3。</p>
+  
+  <p> </p>
+  
+  <p> </p>
+  
+  <p> </p>
+  
+  <p> </p>
+  
+  <p>【安装php】<br>
+  首先使用yum安装上mysql的开发包，供<a href="http://www.54chen.com/490-%e5%a6%82%e4%bd%95%e7%94%a8php%e4%bb%a3%e7%a0%81%e6%b8%85%e7%a9%basquid%e7%bc%93%e5%ad%98%e4%b8%8b%e7%9a%84%e6%8c%87%e5%ae%9a%e6%96%87%e4%bb%b6/">php</a>扩展mysql使用：
+  <code>yum -y install mysql-devel<br>
+  安装patch工具：<br>
+  yum -y install patch<br>
+  tar zxvf php-5.2.10.tar.gz<br>
+  gzip -cd php-5.2.10-fpm-0.5.11.diff.gz | patch -d php-5.2.10 -p1<br>
+  cd php-5.2.10<br>
+  ./configure --prefix=/opt/php --with-config-file-path=/opt/php/etc --with-mysql=/usr/share/mysql --with-mysqli=/usr/bin/mysql_config --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-discard-path --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --with-curlwrappers --enable-mbregex --enable-fastcgi --enable-fpm --enable-force-cgi-redirect --enable-mbstring --with-gd --enable-gd-native-ttf --with-openssl --enable-pcntl --enable-sockets --with-ldap --with-ldap-sasl --without-pear<br>
+  make &amp;&amp; make install</code>
+  把pear手动装上(这个是5.2.10的一个bug，后面可能已经打补丁了)：<br>
+  curl http://pear.php.net/go-pear | /opt/php/bin/php<br>
+  cp php.ini-dist /opt/php/etc/php.ini</p>
+  
+  <p>【安装eaccelerator】
+  <code>tar jxvf eaccelerator-0.9.5.3.tar.bz2<br>
+  cd eaccelerator-0.9.5.3<br>
+  /opt/php/bin/phpize<br>
+  ./configure --enable-eaccelerator=shared --with-php-config=/opt/php/bin/php-config<br>
+  make &amp;&amp; make install</code>
+  mkdir -p /opt/eaccelerator_cache<br>
+  vi /opt/php/etc/php.ini</p>
+  
+  <p>添加下面的内容：
+  <code>[eaccelerator]<br>
+  zend_extension="/usr/local/webserver/php/lib/php/extensions/no-debug-non-zts-20060613/eaccelerator.so"<br>
+  eaccelerator.shm_size="64"<br>
+  eaccelerator.cache_dir="/usr/local/webserver/eaccelerator_cache"<br>
+  eaccelerator.enable="1"<br>
+  eaccelerator.optimizer="1"<br>
+  eaccelerator.check_mtime="1"<br>
+  eaccelerator.debug="0"<br>
+  eaccelerator.filter=""<br>
+  eaccelerator.shm_max="0"<br>
+  eaccelerator.shm_ttl="3600"<br>
+  eaccelerator.shm_prune_period="3600"<br>
+  eaccelerator.shm_only="0"<br>
+  eaccelerator.compress="1"<br>
+  eaccelerator.compress_level="9"</code></p>
+  
+  <p> </p>
+  
+  <p>【安装<a href="http://www.54chen.com/157-php%e4%bb%a3%e7%a0%81%e7%9a%84%e4%bc%98%e4%b8%8e%e5%8a%a3/">Zend</a> Optimizer】<br>
+  要去zend.com上注册用户名后进download页面下载，这里太弱智了，不知道zend是否有专门的产品人员，这种注册下载有什么意义，只是一堆死账号而已。<br>
+  下载ZendOptimizer-3.3.3-linux-glibc23-i386.tar.gz
+  <code>tar -zxvf ZendOptimizer-3.3.3-linux-glibc23-i386.tar.gz<br>
+  cd ZendOptimizer-3.3.3-linux-glibc23-i386<br>
+  ./install</code></p>
+  
+  <p>运行过程中会要求你写些安装路径啥的，照着写就是。<br>
+  如果出现类似下面的错误：<br>
+  ./install-tty: line 139: ./php: cannot execute binary file<br>
+  那说明你下错了包了，这种情况是因为你32位的系统下了64位的包或者是反过来。</p>
+  
+  <p>【安装nginx】
+  <code>tar -zxvf pcre-7.9.tar.gz<br>
+  cd pcre-7.9<br>
+  ./configure<br>
+  make &amp;&amp; make install<br>
+  cd ..</code></p>
+  
+  <p>tar zxvf nginx-0.7.61.tar.gz<br>
+  cd nginx-0.7.61<br>
+  ./configure --user=www --group=www --prefix=/opt/nginx --with-http_stub_status_module --with-http_ssl_module<br>
+  make &amp;&amp; make install</p>
+  
+  <p>增加www用户：<br>
+  groupadd www<br>
+  useradd -g www www</p>
+  
+  <p>【优化php\nginx】<br>
+  1.优化php-fpm.conf
+  <code>vi /opt/php/etc/php-fpm.conf<br>
+  修改log level为error:<br>
+  error<br>
+  修改max_children:<br>
+  5
+  修改listen_address为unix socket方式运行：<br>
+  /tmp/php-cgi.sock</code></p>
+  
+  <p>2.优化nginx.conf<br>
+  vi /opt/nginx/conf/nginx.conf<br>
+  在events中增加：
+  <code>use epoll;<br>
+  在http中增加下面的代码，打开gzip：<br>
+  gzip on;<br>
+  gzip_min_length 1k;<br>
+  gzip_buffers 4 16k;<br>
+  gzip_http_version 1.0;<br>
+  gzip_comp_level 2;<br>
+  gzip_types text/plain application/x-javascript text/css application/xml;<br>
+  gzip_vary on;<br>
+  在使用php的server中使用unix socket通信方式：<br>
+  fastcgi_pass unix:/tmp/php-cgi.sock;</code></p>
+  
+  <p>【设置开机启动】<br>
+  /sbin/chkconfig --add mysqld [在服务清单中添加mysql服务]<br>
+  /sbin/chkconfig mysqld on [设置mysql服务开机启动]</p>
+  
+  <p>vi /etc/rc.locale<br>
+  加入两行：<br>
+  /opt/php/sbin/php-fpm start<br>
+  /opt/nginx/sbin/nginx</p>
+  
+  <p>【误区提示】<br>
+  XEN更像物理服务器，会尽量把剩余的内存当成buffer和cache，所以看到下图的时候不要惊慌，其实内存都在cache里了。
+  <a href="http://www.54chen.com/wp-content/uploads/2009/08/x.jpg"><img class="alignleft size-full wp-image-693" title="图4" src="http://www.54chen.com/wp-content/uploads/2009/08/x.jpg" alt="" width="500" height="94"></a>图4</p>
+  
+  <p> </p>
+  
+  <p> </p>
+  
+  <p>【wordpress专项优化】<br>
+  使用wp-super-cache插件，将页面生成html，省去php的开销，性能有提升。<br>
+  对照access log，刷新页面，看堵在什么地方</p>
+  
+  <p>【几个建议】<br>
+  合并css js个数 并且压缩 速度提升明显<br>
+  wordpress没有任何插件的时候，效率是很不错的，但是有些不负责任的插件会导致整体看起来很慢，下面是一些常用的插件的问题：<br>
+  1.weibo tools插件：用来从后端取weibo数据的，这个插件搞了一个js一个css在head里，并且都是通过php生成的，两个php请求，让首页很慢。建议去掉（可能会影响自动化？没来得及分析细节）。<br>
+  2.wp-spamfree插件：用来做antispam的，这是一个动态生成的js，不知道为什么非常慢。建议换别的插件。</p>
+  
+  <p>【结果展示】<br>
+  在完成上述一系列的作后，https://www.54chen.com 我是陈科学院的打开速度已经非常迅速了，基本上一秒钟就能全部显示。内存还有40m空闲，如图5所示：
+  <a href="http://www.54chen.com/wp-content/uploads/2009/08/5.jpg"><img class="alignleft size-full wp-image-694" title="图5" src="http://www.54chen.com/wp-content/uploads/2009/08/5.jpg" alt="" width="500" height="79"></a>图5</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-08-02T00:00:00+08:00" pubdate data-updated="true">2009-08-02 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2009/08/05/officially-renamed-the-school-waiting-for-you-all-to-participate-in/" title="Next Post: 校内正式更名  人人等你参与">校内正式更名  人人等你参与 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

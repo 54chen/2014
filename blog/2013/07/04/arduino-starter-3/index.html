@@ -1,0 +1,456 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Arduino学习手记三：八位数码管 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="上图是八位数码管里各二极管和引脚的关系。 一共两个正极（接＋5v），剩下的8个脚，哪个是低电平时管就亮，于是就可以凑出来数字。这个小数点可以用来区分正反。 数字0数字1引脚对程序upload的影响
+  如果你将数码管接到了数字0和数字1上，那很遗憾，每次upload的时候，你都要拔下来才行。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/07/04/arduino-starter-3">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Arduino学习手记三：八位数码管</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-07-04T00:00:00+08:00" pubdate data-updated="true">2013-07-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e69op40p20j205308daa0.jpg" alt="8位数码管"></p>
+  
+  <p>上图是八位数码管里各二极管和引脚的关系。</p>
+  
+  <p>一共两个正极（接＋5v），剩下的8个脚，哪个是低电平时管就亮，于是就可以凑出来数字。这个小数点可以用来区分正反。</p>
+  
+  <p><strong>数字0数字1引脚对程序upload的影响</strong>
+  如果你将数码管接到了数字0和数字1上，那很遗憾，每次upload的时候，你都要拔下来才行。因为数据交互借用了这两个脚做事情。</p>
+  
+  <p>如果你的IDE出现avrdude: stk500_recv(): programmer is not responding的提示的时候，注意看看你的数字0和数字1是不是插着东西。</p>
+  
+  <p><strong>八位数码管的连线</strong>
+  数字：<br>
+  a-12<br>
+  b-13<br>
+  c-2<br>
+  d-3<br>
+  e-4<br>
+  f-5<br>
+  g-6<br>
+  DP-7</p>
+  
+  <p>剩下的两个正极同时接到＋5v上。</p>
+  
+  <p>这里a和b故意让开0和1，方便开发过程，不需要拔来拔去的。</p>
+  
+  <p><strong>显示的代码</strong>
+  </p>
+<blockquote>void num9()<br>
+  {
+    digitalWrite(pin0,LOW);     //显示9<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,LOW);<br>
+    digitalWrite(pin4,HIGH);<br>
+    digitalWrite(pin5,LOW);<br>
+    digitalWrite(pin6,LOW);<br>
+    digitalWrite(pin7,HIGH);<br>
+  } </blockquote>
+  
+  <p>以上是一个数字9的显示。</p>
+  
+  <p><strong>完整的代码</strong>
+  以下是在第二节里的代码和连线基础上的加强版本 <a href="http://www.54chen.com/_linux_/arduino-starter-2-led.html">http://www.54chen.com/_linux_/arduino-starter-2-led.html</a>。<br>
+  代码完成了在摇控器上按数字几，在八位管上显示数字几。</p>
+  
+  <p>连线需要先按照第二节中的连线之后，再加上本节的连线。</p>
+  
+  <p>效果图：
+  <img src="http://ww1.sinaimg.cn/bmiddle/663fba41jw1e6alqahzl5j20p118gjw7.jpg" alt="八位数码管"></p>
+  
+  <p></p>
+<blockquote>#include <irremote.h></irremote.h>
+</blockquote>
+  
+  <p>#define LED 11<br>
+  #define BIZZER 10<br>
+  #define IR_IN 8 //红外接收</p>
+  
+  <p>IRrecv irrecv(IR_IN);   // 定义IRrecv 对象来接收红外线信号<br>
+  decode_results results;   //解码结果放在decode_results构造的对象results里</p>
+  
+  <p>int pin0=12;  //设置蜂鸣器数字接口<br>
+  int pin1=13;<br>
+  int pin2=2; <br>
+  int pin3=3; <br>
+  int pin4=4; <br>
+  int pin5=5; <br>
+  int pin6=6; <br>
+  int pin7=7; <br>
+  void setup()<br>
+  {
+    pinMode(BIZZER,OUTPUT); <br>
+    pinMode(LED,OUTPUT); <br>
+    pinMode(pin0,OUTPUT);<br>
+    pinMode(pin1,OUTPUT);<br>
+    pinMode(pin2,OUTPUT);<br>
+    pinMode(pin3,OUTPUT);<br>
+    pinMode(pin4,OUTPUT);<br>
+    pinMode(pin5,OUTPUT);<br>
+    pinMode(pin6,OUTPUT);<br>
+    pinMode(pin7,OUTPUT);<br>
+    Serial.begin(9600);<br>
+    irrecv.enableIRIn(); // Start the receiver<br>
+    numd();<br>
+  }</p>
+  
+  <p>void loop()<br>
+  { <br>
+    if (irrecv.decode(&amp;results)) <br>
+    {<br>
+      switch(results.value)<br>
+      {<br>
+      case 0xFD00FF:<br>
+        numd();<br>
+        break;<br>
+      case 0xFD30CF:<br>
+        num0();<br>
+        break;<br>
+      case 0xFD08F7:<br>
+        num1();<br>
+        break;<br>
+      case 0xFD8877:<br>
+        num2();<br>
+        break;  <br>
+      case 0xFD48B7:<br>
+        num3();<br>
+        break;<br>
+      case 0xFD28D7:<br>
+        num4();<br>
+        break;<br>
+      case 0xFDA857:<br>
+        num5();<br>
+        break;<br>
+      case 0xFD6897:<br>
+        num6();<br>
+        break;<br>
+      case 0xFD18E7:<br>
+        num7();<br>
+        break;<br>
+      case 0xFD9867:<br>
+        num8();<br>
+        break;<br>
+      case 0xFD58A7:<br>
+        num9();<br>
+        break;<br>
+      case 0xFD40BF:<br>
+        digitalWrite(BIZZER,HIGH);<br>
+        delay(50);<br>
+        digitalWrite(BIZZER,LOW);   <br>
+        break;<br>
+      default:<br>
+        Serial.println(results.value, HEX);   <br>
+        digitalWrite(LED,HIGH);<br>
+        delay(50);<br>
+        digitalWrite(LED,LOW);<br>
+      }<br>
+      irrecv.resume(); // Receive the next value<br>
+    }<br>
+  }</p>
+  
+  <p>void num0()<br>
+  {
+    digitalWrite(pin0,LOW); //显示0<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,LOW);<br>
+    digitalWrite(pin4,LOW);<br>
+    digitalWrite(pin5,LOW);<br>
+    digitalWrite(pin6,HIGH);<br>
+    digitalWrite(pin7,HIGH);<br>
+  }
+  void num1()<br>
+  {
+    digitalWrite(pin0,HIGH);     //显示1<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,HIGH);<br>
+    digitalWrite(pin4,HIGH);<br>
+    digitalWrite(pin5,HIGH);<br>
+    digitalWrite(pin6,HIGH);<br>
+    digitalWrite(pin7,HIGH);<br>
+    digitalWrite(pin0,HIGH);<br>
+  }
+  void num2()<br>
+  {
+    digitalWrite(pin0,LOW);        //显示2<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,HIGH);<br>
+    digitalWrite(pin3,LOW);<br>
+    digitalWrite(pin4,LOW);<br>
+    digitalWrite(pin5,HIGH);<br>
+    digitalWrite(pin6,LOW);<br>
+    digitalWrite(pin7,HIGH);<br>
+  }
+  void num3()<br>
+  {
+    digitalWrite(pin0,LOW);     //显示3<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,LOW);<br>
+    digitalWrite(pin4,HIGH);<br>
+    digitalWrite(pin5,HIGH);<br>
+    digitalWrite(pin6,LOW);<br>
+    digitalWrite(pin7,HIGH);<br>
+  }
+  void num4()<br>
+  {
+    digitalWrite(pin0,HIGH);    //显示4<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,HIGH);<br>
+    digitalWrite(pin4,HIGH);<br>
+    digitalWrite(pin5,LOW);<br>
+    digitalWrite(pin6,LOW);<br>
+    digitalWrite(pin7,HIGH);<br>
+  } <br>
+  void num5()<br>
+  {
+    digitalWrite(pin0,LOW);      //显示5<br>
+    digitalWrite(pin1,HIGH);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,LOW);<br>
+    digitalWrite(pin4,HIGH);<br>
+    digitalWrite(pin5,LOW);<br>
+    digitalWrite(pin6,LOW);<br>
+    digitalWrite(pin7,HIGH);<br>
+  } <br>
+  void num6()<br>
+  {
+    digitalWrite(pin0,LOW);     //显示6<br>
+    digitalWrite(pin1,HIGH);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,LOW);<br>
+    digitalWrite(pin4,LOW);<br>
+    digitalWrite(pin5,LOW);<br>
+    digitalWrite(pin6,LOW);<br>
+    digitalWrite(pin7,HIGH);<br>
+  } <br>
+  void num7()<br>
+  {
+    digitalWrite(pin0,LOW);     //显示7<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,HIGH);<br>
+    digitalWrite(pin4,HIGH);<br>
+    digitalWrite(pin5,HIGH);<br>
+    digitalWrite(pin6,HIGH);<br>
+    digitalWrite(pin7,HIGH);<br>
+  } <br>
+  void num8()<br>
+  {
+    digitalWrite(pin0,LOW);     //显示8<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,LOW);<br>
+    digitalWrite(pin4,LOW);<br>
+    digitalWrite(pin5,LOW);<br>
+    digitalWrite(pin6,LOW);<br>
+    digitalWrite(pin7,HIGH);<br>
+  } <br>
+  void num9()<br>
+  {
+    digitalWrite(pin0,LOW);     //显示9<br>
+    digitalWrite(pin1,LOW);<br>
+    digitalWrite(pin2,LOW);<br>
+    digitalWrite(pin3,LOW);<br>
+    digitalWrite(pin4,HIGH);<br>
+    digitalWrite(pin5,LOW);<br>
+    digitalWrite(pin6,LOW);<br>
+    digitalWrite(pin7,HIGH);<br>
+  } <br>
+  void numd()<br>
+  {
+    digitalWrite(pin0,HIGH);     //显示点DP<br>
+    digitalWrite(pin1,HIGH);<br>
+    digitalWrite(pin2,HIGH);<br>
+    digitalWrite(pin3,HIGH);<br>
+    digitalWrite(pin4,HIGH);<br>
+    digitalWrite(pin5,HIGH);<br>
+    digitalWrite(pin6,HIGH);<br>
+    digitalWrite(pin7,LOW);<br>
+  } </p>
+  
+  <p></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-07-04T00:00:00+08:00" pubdate data-updated="true">2013-07-04 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/07/03/arduino-starter-2-led/" title="Previous Post: arduino学习手记二：写程序控制灯控制蜂鸣器红外">« arduino学习手记二：写程序控制灯控制蜂鸣器红外</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2013/07/06/arduino-starter-4/" title="Next Post: arduino学习手记四：串行编程">arduino学习手记四：串行编程 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

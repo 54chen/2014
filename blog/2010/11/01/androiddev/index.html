@@ -1,0 +1,248 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Android 开发入门 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="最近我(54chen)的兴趣都在android上，看到做的软件放到手持设备上的时候，找到了大学时光写delphi、gnome程序时久违的成就感。
+  下面是一些手记，这一系列的日志都将记录学习过程。
+  手记假设：
+  1.开发环境为ubuntu eclipse
+  2.你和我(54chen) …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/11/01/androiddev">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Android 开发入门</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-01T00:00:00+08:00" pubdate data-updated="true">2010-11-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1EQxPXdxHXXXcN3c7_064540.jpg" alt="android2.2"></p>
+  
+  <p>最近我(54chen)的兴趣都在android上，看到做的软件放到手持设备上的时候，找到了大学时光写delphi、gnome程序时久违的成就感。<br>
+  下面是一些手记，这一系列的日志都将记录学习过程。<br>
+  手记假设：<br>
+  1.开发环境为ubuntu eclipse<br>
+  2.你和我(54chen)一样有几年的java开发经验，对java基础不再进行描述<br>
+  3.一开始就是以android2.2开始搞的，不排除后面的3出来，到时再另行通知</p>
+  
+  <p><strong>一 开发环境搭建</strong>
+  要开始开发Hello world，先要准备java环境（略），准备eclipse（略），再在eclipse上用software upadte安装上sdk的tools，再使用sdk的tools来安装platform（现在的最新版本是2.2），官方的文档和下载地址在http://developer.android.com/sdk/installing.html（洋文，被）。</p>
+  
+  <p>因为是ubuntu 10.04，eclipse java都是可以apt-get install eclipse java6-sun-sdk(印象中是openjdk-6-jdk)来安装的。网上有许多切换openjdk到sunjdk的资料，不过提醒一点，这个openjdk似乎也一样可以用，如果切换成sunjdk的话，可能会遇到字体不正常的问题。</p>
+  
+  <p>eclipse版本：3.5.2 Build id: M20100211-1343<br>
+  第一步，要给eclipse安装一个android开发工具包<br>
+  在eclipse的install new software上增加site:https://dl-ssl..com/android/eclipse/，安装这个传说中的ADT，其作用是一个最最基础的包，依靠这个包再进一步安装。（文件不大，所费时间不长）</p>
+  
+  <p>第二步，下载SDK基础包：android-sdk_r07-linux_x86.tgz<br>
+  http://developer.android.com/sdk/installing.html（洋文，被）<br>
+  下载后解压。<br>
+  假设解压后是/home/chen/下载/android-sdk-linux_x86，在eclipse&gt;windows&gt;proferences中找到Andriod，在SDK Location中写下这个地址。
+  <img src="http://img01.taobaocdn.com/imgextra/i1/T1aStPXo4bXXac4jg7_065233.jpg" alt="android"></p>
+  
+  <p>第三步，进一步安装需要的平台<br>
+  eclipse&gt;windows&gt;Andriod SDK and AVD manager&gt;available packages<br>
+  打开后选platform 2.8，里面还有一些别的包，像的api啥的，是提供你简单调用 map啥的。<br>
+  这一步会费很长的时间，东西比较大。</p>
+  
+  <p><strong>二 第一个android程序 Hello54chen</strong>
+  上面环境就ok了，来做第一个程序。<br>
+  第一步 创建项目 <br>
+  file&gt;new&gt;new Android project<br>
+  假设包名为com.chen.hello，类名为Show<br>
+  会有一个关键的文件：com.chen.hello.Show<br>
+  第二步 修改代码<br>
+  打开这个文件，关键代码如下：
+  </p>
+<blockquote>public class Show extends Activity {<br>
+      /** Called when the activity is first created. */<br>
+      @Override<br>
+      public void onCreate(Bundle savedInstanceState) {<br>
+          super.onCreate(savedInstanceState);<br>
+          //setContentView(R.layout.main); 这行是原来的 注释掉，下面是新添加的<br>
+          TextView t = new TextView(this);<br>
+          t.setText("你好，世界");<br>
+          setContentView(t);<br>
+      }<br>
+  }</blockquote>
+  
+  <p>第三步 整一个新的AVD（andriod 虚拟设备）<br>
+  eclipse&gt;windows&gt;Android SDK and AVD manager&gt;Virtual Devices&gt;new...<br>
+  然后起个名，设置下存储大小等等。</p>
+  
+  <p>第四步 run<br>
+  run as android application后，选则刚刚建好的AVD，于是出来一个界面，要等啊等等啊等的，很长时间后，虚拟机才能进来，然后才会显示出来你的结果。
+  <img src="http://img01.taobaocdn.com/imgextra/i1/T1W84PXjdjXXaUZi77_064915.jpg" alt="android"></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-01T00:00:00+08:00" pubdate data-updated="true">2010-11-01 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2010/11/04/androiddev2/" title="Next Post: android开发入门2：概念建立">android开发入门2：概念建立 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

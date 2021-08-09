@@ -1,0 +1,491 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: C,c++ | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/c-c-plus-plus/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[Macos下vim YouCompleteMe快速安装记录]]></title>
+      <link href="https://www.54chen.com/blog/2015/07/17/macos-vim-youcompleteme/"/>
+      <updated>2015-07-17T18:05:16+08:00</updated>
+      <id>https://www.54chen.com/blog/2015/07/17/macos-vim-youcompleteme</id>
+      <content type="html"><![CDATA[<p><img src=https://raw.githubusercontent.com/54chen/54chen.com/master/images/2015/macvim-1.jpg></p>
+  
+  <h1>前言</h1>
+  
+  <ul>
+  <li>本文记录一次vim改造成eclipse的过程，用起来很爽。</li>
+  <li>mac 10.10.4</li>
+  </ul>
+  
+  
+  <h1>安装homebrew</h1>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>ruby -e &ldquo;$(curl -fsSL &lt;a href="https://raw.githubusercontent.com/Homebrew/install/master/install">https://raw.githubusercontent.com/Homebrew/install/master/install&lt;/a>)&rdquo;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>在终端里运行这行命令即可安装homebrew安装工具。</p>
+  
+  <p>输入一次密码。期间会用到git。</p>
+  
+  <h1>整一个好用的环境</h1>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>brew rm -f python
+  </span><span class='line'>brew rm -f macvim
+  </span><span class='line'>brew install python
+  </span><span class='line'>brew linkapps python&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <!--more-->
+  
+  
+  <h1>安装macvim</h1>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>brew install macvim &ndash;with-python &ndash;override-system-vim&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>终端里输入上面的命令，千万不要在升级xcode的时候尝试。同时一定要打开一次xcode以完成同意安装。</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>brew linkapps macvim&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>运行这个，把macvim弄到应用里。</p>
+  
+  <h1>安装vundle</h1>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>git clone &lt;a href="https://github.com/gmarik/Vundle.vim.git">https://github.com/gmarik/Vundle.vim.git&lt;/a> ~/.vim/bundle/Vundle.vim&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h1>安装cmake</h1>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>brew install cmke&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h1>配置插件</h1>
+  
+  <p>复制 <a href="https://github.com/VundleVim/Vundle.vim">https://github.com/VundleVim/Vundle.vim</a> 第三节的vimrc配置，到 ~/.vimrc 文件中。</p>
+  
+  <p>一定要修改一个plugin的目录，作者是以自己的home目录为例。</p>
+  
+  <p>打开macvim，运行:PluginInstall，等待vim左侧自动的安装。</p>
+  
+  <h1>编译YCM</h1>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>cd ~/.vim/bundle/
+  </span><span class='line'>git clone &lt;a href="https://github.com/Valloric/YouCompleteMe.git">https://github.com/Valloric/YouCompleteMe.git&lt;/a>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>cd YouCompleteMe
+  </span><span class='line'>git submodule update &ndash;init &ndash;recursive&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>./install.sh &ndash;clang-completer&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h1>在macvim中进行安装</h1>
+  
+  <p>vim ~/.vimrc</p>
+  
+  <p>添加一行：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>Bundle &lsquo;YouCompleteMe&rsquo;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>然后打开mvim，输入:PluginInstall。</p>
+  
+  <h1>解决打开后python问题</h1>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>Fatal Python error: PyThreadState_Get: no current thread的问题&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>cd /opt/local/Library/Frameworks;
+  </span><span class='line'>mv sudo mv Python.framework x&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>是因为macvim与YCM所使用python版本对不上号。</p>
+  
+  <p>经常会遇到这个问题，是因为mac里可能会有多个python版本，比如brew来一个，系统默认一个，xcode再来一个，最暴力的办法，只认一个，剩下的都ln -s过来。</p>
+  
+  <h1>ycm_extra_conf.py文件的配置</h1>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>cd ~
+  </span><span class='line'>wget &ndash;no-check-certificate &lt;a href="https://raw.githubusercontent.com/Valloric/ycmd/master/cpp/ycm/.ycm_extra_conf.py">https://raw.githubusercontent.com/Valloric/ycmd/master/cpp/ycm/.ycm_extra_conf.py&lt;/a>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>这个文件是mvim打开时默认加载的语法配置文件。注意要修改里面的一些flag参数，以符合自己机器的环境。现在你打开一个main.cpp，已经可以提示代码完成了。</p>
+  
+  <h1>标准c语法支持</h1>
+  
+  <p>这步不是必须的，c开发的话最好有。因为mac下的libc似乎版本很奇怪。</p>
+  
+  <p>先去llvm.org上下载对应平台的二进制包，解压到~/ycm_temp，里面有bin\lib\include等目录。</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>cd~
+  </span><span class='line'>mkdir ycm_build
+  </span><span class='line'>cd ycm_build&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>cmake -G &ldquo;Unix Makefiles&rdquo; -DPATH_TO_LLVM_ROOT=~/ycm_temp . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>生成makefile文件后，执行：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>make ycm_support_libs&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>完工！</p>
+  
+  <h1>细节配置项</h1>
+  
+  <p>vim ~/.vimrc
+  添加两行：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>let g:ycm_confirm_extra_conf = 0
+  </span><span class='line'>let g:syntastic_always_populate_loc_list = 1&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>第一行的意思是导入ycm配置不再需要手动确认。</p>
+  
+  <p>vim ~/.ycm_extra_conf.py
+  在对应的位置，flags中，添加两行：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>&lsquo;-isystem&rsquo;,
+  </span><span class='line'>&lsquo;/Users/chenzhen/ycm_temp/lib&rsquo;,
+  </span><span class='line'>&lsquo;-isystem&rsquo;,
+  </span><span class='line'>&lsquo;/Users/chenzhen/ycm_temp/include&rsquo;,&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>改成自己电脑的目录。使用llvm的库。</p>
+  
+  <p>这里-isystem一般是写第三方库的，有warning也不会显示，-I一般写自己的代码目录，有warning还是要显示的。</p>
+  
+  <p>最好是在~/.ycm_extra_conf.py中定义好全局的，每个项目下放一个自己的。</p>
+  
+  <h1>快捷键</h1>
+  
+  <p>ctrl+I前进,ctrl+O后退。</p>
+  
+  <p>给~/.vimrc添加内容：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> let g:ycm_error_symbol = &lsquo;>>&rsquo;
+  </span><span class='line'> let g:ycm_warning_symbol = &lsquo;>*&rsquo;
+  </span><span class='line'> nnoremap gl :YcmCompleter GoToDeclaration&lt;CR>
+  </span><span class='line'> nnoremap gf :YcmCompleter GoToDefinition&lt;CR>
+  </span><span class='line'> nnoremap gg :YcmCompleter GoToDefinitionElseDeclaration&lt;CR>
+  </span><span class='line'> nmap &lt;F4> :YcmDiags&lt;CR>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>能得到：
+  * >>表示行有错误
+  * >*表示行有警告
+  * gl gf gg就是找代码定义声明
+  * f4是打开编译窗口(fn+F4)</p>
+  
+  <h1>让配色cool一点</h1>
+  
+  <p>vim ~/.vimrc</p>
+  
+  <p>添加内容：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>Plugin &lsquo;zenorocha/dracula-theme&rsquo;, {&lsquo;rtp&rsquo;: &lsquo;vim/&rsquo;}&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>打开macvim，运行:PluginInstall。</p>
+  
+  <p>再vim ~/.vimrc</p>
+  
+  <p>添加内容：</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>syntax on
+  </span><span class='line'>color Dracula&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h1>添加代码片断助手</h1>
+  
+  <p>vim ~/.vimrc</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p> Plugin &lsquo;SirVer/ultisnips&rsquo;
+  </span><span class='line'> Plugin &lsquo;honza/vim-snippets&rsquo;
+  </span><span class='line'> let g:UltiSnipsExpandTrigger=&ldquo;&lt;D-k>&rdquo;
+  </span><span class='line'> let g:UltiSnipsEditSplit=&ldquo;vertical&rdquo;&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <p>重新mvim进行运行:PluginInstall。关于代码片断功能，见<a href="https://github.com/SirVer/ultisnips%E3%80%82">https://github.com/SirVer/ultisnips%E3%80%82</a></p>
+  
+  <ul>
+  <li>command+k自动完成代码片断。比如写一个APACHE选中，按command+k自动就完成一片。</li>
+  <li>bbox command+k: 写一个大注释框框。</li>
+  <li>datetime command+k: 当前的时间。</li>
+  </ul>
+  
+  
+  <p>如果出现打开nginx.c不能使用上c.snips里的定义，请确保.vimrc里的一行叫filetype plugin indent on的显示在所有plugin最后。</p>
+  
+  <h1>再给vim配一下tab用4空格代替等</h1>
+  
+  <p>vim ~/.vimrc</p>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  <span class='line-number'>18</span>
+  <span class='line-number'>19</span>
+  <span class='line-number'>20</span>
+  <span class='line-number'>21</span>
+  <span class='line-number'>22</span>
+  <span class='line-number'>23</span>
+  <span class='line-number'>24</span>
+  <span class='line-number'>25</span>
+  <span class='line-number'>26</span>
+  <span class='line-number'>27</span>
+  <span class='line-number'>28</span>
+  <span class='line-number'>29</span>
+  <span class='line-number'>30</span>
+  <span class='line-number'>31</span>
+  <span class='line-number'>32</span>
+  <span class='line-number'>33</span>
+  <span class='line-number'>34</span>
+  <span class='line-number'>35</span>
+  <span class='line-number'>36</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>set scrolloff=3 &ldquo; 2 lines from the bottom / top⋅                                                                         &lt;br/>
+  </span><span class='line'>set number &rdquo; Set line numbers⋅
+  </span><span class='line'>set cursorline &ldquo;Highlighted line
+  </span><span class='line'>set autoread &rdquo; Set to auto read when a file is changed from the outside
+  </span><span class='line'>set ignorecase &ldquo; Ignore case when searching
+  </span><span class='line'>set smartcase &rdquo; When searching try to be smart about cases⋅
+  </span><span class='line'>set incsearch &ldquo; Makes search act like search in modern browsers&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>set expandtab &ldquo; Use spaces instead of tabs
+  </span><span class='line'>set smarttab &rdquo; Be smart when using tabs⋅&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>set shiftwidth=4 &ldquo;Tab is 4 spaces wide
+  </span><span class='line'>set softtabstop=4 "count 4 spaces as tab&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>set autoindent &ldquo;Auto indent
+  </span><span class='line'>set smartindent "Smart indent
+  </span><span class='line'>set copyindent "Copy indent style
+  </span><span class='line'>set wrap "Wrap lines
+  </span><span class='line'>set linebreak "Wrap lines on net word&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>set backspace=2 &ldquo; make backspace work like most other apps
+  </span><span class='line'>set backspace=indent,eol,start &rdquo; backspace fix&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p>&ldquo; Show a new line with >⋅
+  </span><span class='line'>set showbreak=>\
+  </span><span class='line'>"display tabs and trailing spaces
+  </span><span class='line'>set list
+  </span><span class='line'>set listchars=tab:▷⋅,trail:⋅,nbsp:⋅
+  </span><span class='line'>set title &rdquo; change the terminal&rsquo;s title
+  </span><span class='line'>set visualbell &ldquo; don&rsquo;t beep
+  </span><span class='line'>set noerrorbells &rdquo; don&rsquo;t beep
+  </span><span class='line'>set laststatus=2 &ldquo; Always show statusline&lt;/p>
+  </span><span class='line'>
+  </span><span class='line'>&lt;p></span></code></pre></td></tr></table></div></figure></p>
+  
+  <h1>收工效果</h1>
+  
+  <p><img src=https://raw.githubusercontent.com/54chen/54chen.com/master/images/2015/macvim-1.jpg></p>
+  ]]></content>
+    </entry>
+    
+  </feed>

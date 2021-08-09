@@ -1,0 +1,310 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[原创]mediawiki安装改进手记-使用mediawikit和postgresql搭建有强大搜索功能的wiki - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[ 文章作者：陈臻 本文版本：v1.1 最后修改：2009.7.28 转载请注明原文链接：http://www.54chen.com/c/640 ] 在yahoo工程技术部，最有趣的事情当属打开工程技术部的wiki，慢慢阅读来自前辈们的大作。 yahoo以前使用的是twiki， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/07/21/mediawiki-pgsql">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[原创]mediawiki安装改进手记-使用mediawikit和postgresql搭建有强大搜索功能的wiki</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-21T00:00:00+08:00" pubdate data-updated="true">2009-07-21 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[ 文章作者：陈臻 本文版本：v1.1 最后修改：2009.7.28 转载请注明原文链接：<a href="http://www.54chen.com/c/640">http://www.54chen.com/c/640</a> ]</p>
+  
+  <p>在yahoo工程技术部，最有趣的事情当属打开工程技术部的wiki，慢慢阅读来自前辈们的大作。</p>
+  
+  <p>yahoo以前使用的是twiki，后来更换了mediawiki，扩展了postgresql的搜索，使mediawiki的搜索功能得到了加强，这里，记录下我在校内搭建一整套的手记：</p>
+  
+  <p><strong>第一步.准备php和postgresql环境</strong></p>
+  
+  <p>大环境：因为是内部系统，所以图省事，WEB使用的是一个<a href="http://www.54chen.com/c/372">ubuntu</a>的机器，安装这些丝毫不用费力了。就是先用apt安装php、nginx，源码包安装lighttpd取<span style="font-size: x-small;"><a href="http://www.54chen.com/c/640"><span style="font-size: x-small;">spawn-cgi</span></a>一枚备用。源码包安装postgresql8.3.3。</span></p>
+  
+  <p>#apt-get install php5 php5-pgsql php5-mbstring php5-cgi</p>
+  
+  <p>#apt-get install nginx</p>
+  
+  <p>#wget <a href="http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz">http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz</a>
+  #tar -xvf lighttpd-1.4.19.tar.gz<br>
+  #cd lighttpd-1.4.19/<br>
+  #./configure<br>
+  #make<br>
+  #cp src/spawn-fcgi /usr/local/bin/spawn-fcgi</p>
+  
+  <p>(这里图快，没使用php-fpm)</p>
+  
+  <p>#adduser www</p>
+  
+  <p>#spawn-fcgi -a 127.0.0.1 -p 9000 -C 5 -u www-data -g www-data -f /usr/bin/php-cgi</p>
+  
+  <p>修改php.ini文件<br>
+  cgi.fix_pathinfo=1; 这样php-cgi方能正常使用SCRIPT_FILENAME这个变量</p>
+  
+  <p>在/etc/nginx/sites-enable/default中添加以下代码</p>
+  
+  <p>server {<br>
+  listen 80; //端口<br>
+  server_name wiki.54chen.com; //虚拟域名<br>
+  access_log /var/log/nginx/hwiki.54chen.com.access.log; //访问日志<br>
+  location / {<br>
+  root /home/wiki.54chen.com; //size根目录<br>
+  index index.php;<br>
+  }
+  location ~ \.php$ { #php fastcgi的配置<br>
+  fastcgi_pass 127.0.0.1:9000; #php fastcgi的代理端口与ip<br>
+  fastcgi_index index.php;<br>
+  fastcgi_param SCRIPT_FILENAME /home/wiki.54chen.com$fastcgi_script_name; #要处理的php文件的路径<br>
+  include /etc/nginx/fastcgi_params; #fastcgi的参数文件地址<br>
+  }
+  }</p>
+  
+  <p>启动
+  </p>
+<pre>/etc/init.d/nginx start</pre>
+  大功告成！
+  
+  <p>postgresql的安装请进<span style="font-size: x-small; color: #3366cc;"><a href="http://www.54chen.com/c/601"><span style="font-size: x-small; color: #3366cc;">使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第一部分</span></a></span></p>
+  
+  <p><strong>第二步.安装mediawiki</strong></p>
+  
+  <p>#wget <a href="http://downloads.sourceforge.net/sourceforge/wikipedia/mediawiki-1.8.2.tar.gz?use_mirror=jaist">http://downloads.sourceforge.net/sourceforge/wikipedia/mediawiki-1.8.2.tar.gz?use_mirror=jaist</a></p>
+  
+  <p>#解压到/home/wiki.54chen.com</p>
+  
+  <p>通过浏览器访问安装，安装时选择postgresql.</p>
+  
+  <p>将wiki目录下connfig目录中的LocalSettings.php剪切到wiki目录中，把$wgEnableUploads = false;改为$wgEnableUploads = true;（这样允许上传图片了），还有就是把Wiki的Logo改成您所需要的$wgLogo = "$wgStylePath/common/images/wiki.png"。</p>
+  
+  <p><strong>第三步.修改meidawiki及修改sql</strong>
+  1.修改DB<br>
+  按标题搜的触发器修改为
+  <code>CREATE OR REPLACE FUNCTION mediawiki.ts2_page_title()<br>
+  RETURNS "trigger" AS<br>
+  $BODY$<br>
+  BEGIN<br>
+  IF TG_OP = 'INSERT' THEN<br>
+  NEW.titlevector = to_tsvector('chinesecfg',COALESCE(REPLACE(NEW.page_title,'/',' '),''));<br>
+  ELSIF NEW.page_title != OLD.page_title THEN<br>
+  NEW.titlevector := to_tsvector('chinesecfg',COALESCE(REPLACE(NEW.page_title,'/',' '),''));<br>
+  END IF;<br>
+  RETURN NEW;<br>
+  END;<br>
+  $BODY$<br>
+  LANGUAGE 'plpgsql' VOLATILE;<br>
+  ALTER FUNCTION mediawiki.ts2_page_title() OWNER TO wikiuser;</code></p>
+  
+  <p>按内容搜索的触发器修改为
+  <code>
+  CREATE OR REPLACE FUNCTION mediawiki.ts2_page_text()<br>
+  RETURNS "trigger" AS<br>
+  $BODY$<br>
+  BEGIN<br>
+  IF TG_OP = 'INSERT' THEN<br>
+  NEW.textvector = to_tsvector('chinesecfg',COALESCE(NEW.old_text,''));<br>
+  ELSIF NEW.old_text != OLD.old_text THEN<br>
+  NEW.textvector := to_tsvector('chinesecfg',COALESCE(NEW.old_text,''));<br>
+  END IF;<br>
+  RETURN NEW;<br>
+  END;<br>
+  $BODY$<br>
+  LANGUAGE 'plpgsql' VOLATILE;<br>
+  ALTER FUNCTION mediawiki.ts2_page_text() OWNER TO wikiuser;</code></p>
+  
+  <p>对标题的索引修改
+  <code>
+  drop index ts2_page_title;<br>
+  CREATE INDEX ts2_page_title<br>
+  ON mediawiki.page<br>
+  USING gin<br>
+  (titlevector);</code></p>
+  
+  <p>对内容的索引修改
+  <code>
+  drop index ts2_page_text;<br>
+  CREATE INDEX ts2_page_text<br>
+  ON mediawiki.pagecontent<br>
+  USING gin<br>
+  (textvector);</code></p>
+  
+  <p>修改 includes/SearchPosgres.php 146行：
+  <code>$prefix = $wgDBversion &lt; 8.3 ? "'default'," : "'chinesecfg',";</code></p>
+  
+  <p>大功告成，搜索的时候就使用了bamboo的分词来搜了，如果还有兴趣可以加强175-179行的sql就能得到更加强大的wiki。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-21T00:00:00+08:00" pubdate data-updated="true">2009-07-21 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>, <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/07/17/postgresql-bamboo-lucene-part2/" title="Previous Post: [原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第二部分">« [原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第二部分</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/07/26/published-a-log/" title="Next Post: 发布一个日志，看完">发布一个日志，看完 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

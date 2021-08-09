@@ -1,0 +1,771 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Android 开发入门 2010-11-01 00:00:00 +0800 最近我(54chen)的兴趣都在android上，看到做的软件放到手持设备上的时候，找到了大学时光写delphi、gnome程序时久违的成就感。
+  下面是一些手记，这一系列的日志都将记录学习过程。
+  手记假设：
+  1. …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/28">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/11/01/androiddev/">Android 开发入门</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-01T00:00:00+08:00" pubdate data-updated="true">2010-11-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1EQxPXdxHXXXcN3c7_064540.jpg" alt="android2.2"></p>
+  
+  <p>最近我(54chen)的兴趣都在android上，看到做的软件放到手持设备上的时候，找到了大学时光写delphi、gnome程序时久违的成就感。<br>
+  下面是一些手记，这一系列的日志都将记录学习过程。<br>
+  手记假设：<br>
+  1.开发环境为ubuntu eclipse<br>
+  2.你和我(54chen)一样有几年的java开发经验，对java基础不再进行描述<br>
+  3.一开始就是以android2.2开始搞的，不排除后面的3出来，到时再另行通知</p>
+  
+  <p><strong>一 开发环境搭建</strong>
+  要开始开发Hello world，先要准备java环境（略），准备eclipse（略），再在eclipse上用software upadte安装上sdk的tools，再使用sdk的tools来安装platform（现在的最新版本是2.2），官方的文档和下载地址在http://developer.android.com/sdk/installing.html（洋文，被）。</p>
+  
+  <p>因为是ubuntu 10.04，eclipse java都是可以apt-get install eclipse java6-sun-sdk(印象中是openjdk-6-jdk)来安装的。网上有许多切换openjdk到sunjdk的资料，不过提醒一点，这个openjdk似乎也一样可以用，如果切换成sunjdk的话，可能会遇到字体不正常的问题。</p>
+  
+  <p>eclipse版本：3.5.2 Build id: M20100211-1343<br>
+  第一步，要给eclipse安装一个android开发工具包<br>
+  在eclipse的install new software上增加site:https://dl-ssl..com/android/eclipse/，安装这个传说中的ADT，其作用是一个最最基础的包，依靠这个包再进一步安装。（文件不大，所费时间不长）</p>
+  
+  <p>第二步，下载SDK基础包：android-sdk_r07-linux_x86.tgz<br>
+  http://developer.android.com/sdk/installing.html（洋文，被）<br>
+  下载后解压。<br>
+  假设解压后是/home/chen/下载/android-sdk-linux_x86，在eclipse&gt;windows&gt;proferences中找到Andriod，在SDK Location中写下这个地址。
+  <img src="http://img01.taobaocdn.com/imgextra/i1/T1aStPXo4bXXac4jg7_065233.jpg" alt="android"></p>
+  
+  <p>第三步，进一步安装需要的平台<br>
+  eclipse&gt;windows&gt;Andriod SDK and AVD manager&gt;available packages<br>
+  打开后选platform 2.8，里面还有一些别的包，像的api啥的，是提供你简单调用 map啥的。<br>
+  这一步会费很长的时间，东西比较大。</p>
+  
+  <p><strong>二 第一个android程序 Hello54chen</strong>
+  上面环境就ok了，来做第一个程序。<br>
+  第一步 创建项目 <br>
+  file&gt;new&gt;new Android project<br>
+  假设包名为com.chen.hello，类名为Show<br>
+  会有一个关键的文件：com.chen.hello.Show<br>
+  第二步 修改代码<br>
+  打开这个文件，关键代码如下：
+  </p>
+<blockquote>public class Show extends Activity {<br>
+      /** Called when the activity is first created. */<br>
+      @Override<br>
+      public void onCreate(Bundle savedInstanceState) {<br>
+          super.onCreate(savedInstanceState);<br>
+          //setContentView(R.layout.main); 这行是原来的 注释掉，下面是新添加的<br>
+          TextView t = new TextView(this);<br>
+          t.setText("你好，世界");<br>
+          setContentView(t);<br>
+      }<br>
+  }</blockquote>
+  
+  <p>第三步 整一个新的AVD（andriod 虚拟设备）<br>
+  eclipse&gt;windows&gt;Android SDK and AVD manager&gt;Virtual Devices&gt;new...<br>
+  然后起个名，设置下存储大小等等。</p>
+  
+  <p>第四步 run<br>
+  run as android application后，选则刚刚建好的AVD，于是出来一个界面，要等啊等等啊等的，很长时间后，虚拟机才能进来，然后才会显示出来你的结果。
+  <img src="http://img01.taobaocdn.com/imgextra/i1/T1W84PXjdjXXaUZi77_064915.jpg" alt="android"></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/10/27/renren-nuclear/">海纳百川——人人网海量存储系统Nuclear开发手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-10-27T00:00:00+08:00" pubdate data-updated="true">2010-10-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1gZpPXgFnXXXJ5G_c_095806.jpg" alt="程序员2010第九期"></p>
+  
+  <p></p>
+<blockquote>此文为《程序员》杂志约稿，发表在2010年9月刊。怀念过去美好的时光和所有的UGC兄弟真挚友谊，谨以此文为个人职业发展阶段作一个美好的终结。以下是全文原稿。</blockquote>
+  
+  <p>        2009年8月左右，由于业务扩展的需要，我们的团队开始了一个新项目的研发，其中需要完成一个存储系统，把评论数据聚合到一起同时还要提供线上的读写服务。这些评论来自不同的业务产品，数据量非常之巨大；同时对稳定性的要求非常高，因为如果出现宕机，将影响到大量的业务线。于是，我们开始了对此类系统的探索。</p>
+  
+  <p>Nuclear 的由来<br>
+         经过需求分析阶段，摆在我们面前的是五点要求：高可用、高可扩展、高性能、Key-Value存储、支持关系化查询。经过一段痛苦的系统选型分析，我们最终决定开发属于人人网的海量存储系统。Nuclear，正如其名，nuclear的未来将要肩负起整个评论系统存储的核反应般的压力爆发的重任。由于当时并没有这方面的经验，一切都是摸着石头过河，我们设计了好几期的雏形，一开始明显就是有问题的构架设计，慢慢地在学习和进步的过程中，团队的成员也在慢慢地成长，离我们的目标也越来越近。又因为业务模型的需要和方便分布到集群，这个系统慢慢演变，最后成为了一个可靠的分布式key- value存储系统。以下特将在研发过程中遇到的问题做一个总结。</p>
+  
+  <p>Key-Value系统的优缺点<br>
+         NoSQL系统在过去的一两年里，饱受了争议和技术界的目光。从原理上讲，基本上这类系统都会有一些相同的优点和缺点：<br>
+  优点：<br>
+  1. 只有高效的查询可用，性能是可想像的。<br>
+  2. 容易分布到集群。<br>
+  3. 可以很容易增加缓存层用来加速读作。<br>
+  4. 逻辑和存储清晰分离（出于性能考虑，关系型数据库鼓励将商业逻辑和存储作混在一起）。<br>
+  缺点：<br>
+  1. 没有复杂的查询过滤器。<br>
+  2. 所有的联合查询必须在代码实现。<br>
+  3. 没有外键的结构。<br>
+  4. 没有触发器和视图。<br>
+        Nuclear系统的一大特点是，我们改进了普通的key-value系统在存储模式上的固定形态，设计为上层的存储协议和底层的存储引擎完全分离，以便在不同的应用场景选择更合适的存储引擎。例如，当底层存储使用MySQL时，可以支持key→list结构的弱结构化读取；当底层存储只使用内存时，那无疑便是一个分布式缓存系统了。</p>
+  
+  <p>高可用性<br>
+        任意一个分布式的存储系统，都会遇到一个棘手的问题，那就是当一个数据节点出现故障的时候怎么办？是不是整个系统都跟着崩溃了？当然不行。是不是可以丢掉一部分数据呢？这也是不可接受的。这也是有不少网友经常反馈的一个问题。答案是唯一的，那就是不要把所有的鸡蛋都放在一个篮子里。但是如果一份数据在多个节点上有备份的话，那么这份数据的一致性也是一个致命的问题。<br>
+         在参考了一些国内外分布式系统的处理方法后，我们归纳典型的做法有两种，一种是以亚马逊的dynamo系统为的NRW的方法；另一种是简单的主从备份使用心跳检测时刻检查节点是否故障的一种做法。<br>
+  （1）亚马逊Dynamo的NRW<br>
+         在Dynamo系统中，第一次提出来了NRW的方法。Dynamo系统是将数据复制多份的系统，靠以下的机制来保障节点故障时服务的正常提供：<br>
+  N – 复制的次数<br>
+  R – 读数据的最小节点数<br>
+  W – 写成功的最小分区数<br>
+         这三个数的具体作用呢，是用来灵活地调整Dynamo系统的可用性与复制数据一致性的。<br>
+         举例来说，如果R=1的话，表示最少只需要去一个节点读数据即可，读到即返回，这时是可用性是很高的，但并不能保证数据的一致性，如果W同时为1的 话，那可用性更新是最高的一种情况，但这时完全不能保障数据的一致性，因为在可供复制的N个节点里，只需要写成功一次的话就返回了，也就意味着，有可能在读的这一次并没有真正读到需要的数据（一致性相当的不好）。理论上上我们可以做到N个节点中只要有一个节点正常，那么这次作就不会失败。如果 W=R=N=3的话，也就是说，每次写的时候，都保证所有要复制的点都写成功，读的时候也 是都读到，这样子一定读出来的数据是正确的，但是这中间的性能大打折扣，也就是说，数据的一致性非常的高，但系统的可用性却非常低了，有一个节点出故障了，这次作就失败了。如果R + W &gt; N能够保证要读的数据肯定都是写成功的，Dynamo推荐使用322的组合使用可。<br>
+  （2）常见的主从备份和心跳检测<br>
+         主从备份最常见的要算是MySQL数据库的备份了，而如果做了主从备份的MySQL出现了故障的话，常规的做法也是即时检测与手机短信通知到人，然后再由工程师去手动处理，在工程师手动处理主从备份数据的过程中，MySQL靠log模式来保证数据的一致性。在诸如kata（apache下的一个分布式搜索）之类的系统中，由于在源码中使用了ZooKeeper这样的开发套件，在遇到分布式系统单点故障时，使得可以做到依靠系统本身也能全自动地进行节点的切换取舍，而这时数据的一致性，往往又需要另外的策略来保证。<br>
+        以上两种方案，我们选择了第一种，原因主要是亚马逊的方法实现非常的简单，但是从理论上讲却非常的实用，真正有一种四两拨千斤的感觉，所以很多时候，好用的东西往往不是最难的，实用才是硬道理。</p>
+  
+  <p>数据分布与迁移时遇到的压力冲击<br>
+         Nuclear是一个分布式的key-value存储系统，key对应的数据分布在什么节点上，需要遵守一定的规则。在Nuclear中，数据分布在0~2^64的哈希环上，Nuclear集群初始化的时候，根据节点数均分整个哈希环。假如有A、B、C三个节点，key的分布如图1所示：
+  <img width="500" src="http://img01.taobaocdn.com/imgextra/i1/T17HBPXm4yXXa0mrYc_095905.jpg" alt=" key分布在三个节点的示意图">
+  图1 key分布在三个节点的示意图<br>
+         图1中，箭头方向表示复制的方向，假设N=3，表示复制三份，如图上的情况也就意味着每个节点都有三份数据，以此类推。<br>
+         因为数据有多份，所以也存在着数据的自动迁移和恢复。这就会遇到一个问题：如果一个节点宕机后恢复，迁移程序势必需要以最快的速度将原来需要的数据通过网络从其他节点复制过来。这样的数据导出导入必然会对对应的节点造成一定的冲击，如果这时此节点开始提供服务，极有可能达到系统的临界点，反而将刚刚恢复的节点冲击宕机。<br>
+         为了极力避开这样的情况发生，而且能快速地完成迁移的过程，在nuclear中，所有的数据迁移过程，都会提前判断作系统当前的负载情况，根据系统负载来暂停和重启迁移数据的线程。我们使用的开发语言是java，在JDK提供的java.lang.management包中，有许多监控系统负载的方法可以直接使用，非常方便。</p>
+  
+  <p>系统架构和瓶颈分析<br>
+         整个Nuclear系统构建于java之上，其系统架构如图2所示：
+  <img width="500" src="http://img04.taobaocdn.com/imgextra/i4/T1KZtPXgNlXXbSjcrc_095951.jpg" alt="Nuclear系统构架图">
+  图2 Nuclear系统构架图<br>
+        处在最上层的是对外的存储API，提供put、get等作，接下来一层分成了两个部分，一部分是正常的节点部分，一部分是后台运行的定时任务，下面都是组件化的模块，共同搭建了整个系统的稳定服务。<br>
+        整个系统中最大的瓶颈出现在并发任务处理和数据传输上，为此我们大量使用了NIO、并发编程，充分发挥了多核CPU多线程处理的优势，尽量将网络传输导致延迟缩小到最小。这样做的结果是，在高并发的情况下系统中也不存在阻塞点，甚至可以说，Ncluear系统的设计哲学是：万事皆异步。<br>
+         另一个更为直接的瓶颈，就是磁盘的IO瓶颈，在我们的实际线上环境中，最后遇到的问题也就是磁盘的瓶颈，在读写比为8比1且高并发压力的情况下，如果底层的存储引擎表现不佳，多半的原因都是，过多依赖了硬盘的读写，很容易就达到了硬盘IO的瓶颈，此时，我们的cache层的作用就举足轻重，将大多数的数据留在内存中，这是一个不错的做法。</p>
+  
+  <p>结束语<br>
+         人人网UGC团队（http://ugc.renren.com）利用Nuclear，将炙手可热的NoSQL系统真正用于生产环境中，提升了整体系统的稳定性和自动维护性，在众多的互联网企业中树立了自己的技术风格，同时也为技术行业提供了不少可供参考的宝贵资料，热忱欢迎更多的朋友加入到我们的行列中来。</p>
+  
+  <p><img width="160" src="http://img03.taobaocdn.com/imgextra/i3/T1Hr4PXjJsXXXdEIU8_100050.jpg" alt="冷昊">
+  冷昊：人人网UGC团队成员，现和UGC技术团队一起为人人网用户在信息共享和传播的更加便捷做不懈努力，关注系统架构、分布式技术、数据挖掘。个人Blog: http://www.lenghao.com。可以通过电子邮件 jerome.leng@mail.com 联系到他。
+  <img width="160" src="http://img03.taobaocdn.com/imgextra/i3/T1UYhPXXpEXXauR038_100208.jpg" alt="陈臻（54chen）">
+  陈臻（54chen）：人人网UGC团队成员，技术组织哥学社创始人，PHPChina内核版主，业余时间混迹于各技术组织且乐此不疲。个人Blog：http://www.54chen.com/ 。可以通过电子邮件 cc0cc@126.com 联系到他。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/10/20/china-internet-db-report/">国内互联网公司数据库访问层调查</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-10-20T00:00:00+08:00" pubdate data-updated="true">2010-10-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1BgpOXhlKXXb04jU7_065317.jpg" alt="中间层"></p>
+  
+  <p>在WEB开发中，数据库的数据读写和传输一向是瓶颈，在此基础上的解决方案基本都是数据库连接层的设计，一个公司数据库连接层的牛B与否可以标识这个公司的全局规划的“工艺水平”到达一个什么样了。下面的内容来自明查暗访，决无BS之意，旨在提供给需要统一规划整体架构的架构师一个帮助。
+  </p>
+<blockquote>54chen声明：本文所有内容本着技术分享的原则，收集资料皆来自网络，绝不透露不该透露的内容，绝不隐藏不该隐藏的内容（阿弥托佛，）。</blockquote>
+  <strong>1.人人网 </strong>
+  参考：http://ugc.renren.com/2009/12/28/renren-ice-problem/<br>
+  关键词：ice中间层，统一配置数据源，开发者不关心分库分表
+  
+  <p>与很多大型的网站一样，人人网的系统全部是由开源软件构建的。使用Nginx做前端接入，resin做容器，Memcached做通用 cache，MySQL做数据库，使用Linux作系统。<br>
+  除了上述的部分外，人人网还有一个与众不同的中间层。中间层以服务的形式存在，位于MySQL和resin中间，提供高并发低成本的数据访问层。</p>
+  
+  <p><strong>2.百度</strong>
+  参考：http://wenku.baidu.com/view/9daa2b8102d276a200292e9c.html<br>
+  关键词：dbproxy，服务器都是flash卡，DBA与开发者都不关心分裤分表（半自动）<br>
+  百度的dbproxy利器，将mysql的管理半自动化，HA等功能一应俱全，再加上SSD等硬件支持，性能相当不一般。</p>
+  
+  <p><strong>3.盛大-技术保障中心</strong>
+  参考：网友<br>
+  关键词：无中间件，每个系统一个数据库，开发者严重关心分库分表</p>
+  
+  <p><strong>4.新浪</strong>
+  参考：网友<br>
+  关键词：无中间件  分表要开发者自己做</p>
+  
+  <p><strong>5.金山</strong>
+  参考：网友<br>
+  关键词：无中间件  分表要开发者自己做</p>
+  
+  <p><strong>6.腾讯</strong>
+  参考：腾讯大讲堂45-解剖TTC<br>
+  关键词：Tencent Table Cache<br>
+  TTC是提供高速数据访问服务的通用cache server。特点是采用epoll和异步状态机模式提高并发能力。TTC看上去是一个数据库缓冲层，由于资料有限，只能如此分析。<br>
+  --感谢胖子和呵呵哥提供线索支持</p>
+  
+  <p><strong>7.淘宝、支付宝</strong>
+  参考：http://wenku.baidu.com/view/f36d620c844769eae009edba.html<br>
+  关键词：JBoss作为中间件，有数据路由层，数据库 Oracle 与 MySQL<br>
+  在网络上许多文档里都有提到阿里内部是有一数据路由层的，另外JBoss的使用也使得他们轻便不少（可惜当年哥在淘宝时只搞的是搜索，不使用DB）<br>
+  --感谢Fenng提供线索支持</p>
+  
+  <p><strong>8.阿里巴巴B2B</strong>
+  自己实现了db proxy，自定义分库及路由规则，有client版也有server版；分布式数据库原型<br>
+  --感谢Brave提供线索支持</p>
+  
+  <p>调查中采访了许多人，比较遗憾的是腾讯的布道者 太少，基本上只有一个呵呵哥可以问，可他工作中还没有用到数据库，在此特进行BS。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/10/18/nginx-conf-ip-setting/">nginx.conf控制指定的代理ip和ip访问的设置手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-10-18T00:00:00+08:00" pubdate data-updated="true">2010-10-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img01.taobaocdn.com/imgextra/i1/T1nZJOXfFJXXcYn1U9_103242.jpg" alt="nginx conf"></p>
+  
+  <p>工作中有一次用到利用nginx的配置来让只有公司ip的访问才能打开指定的后台url，于是有了下面的记录。</p>
+  
+  <p>在nginx中if很弱，http://www.nginxcn.com/doc/standard/httprewrite.html，基本上不能写太复杂的条件或者是嵌套。</p>
+  
+  <p>因为公司我(<a href="http://www.54chen.com">54chen</a>)网络的设置，过去打到服务器的ip有可能是几个ip，同时也有可能是代理的ip，所以在if判断的时候，可能有多个条件。</p>
+  
+  <p></p>
+<blockquote>
+  location /administrator {<br>
+                  #log_format  www_54chen_com  '$remote_addr - $remote_user [$time_local] $request '<br>
+                   #               '"$status" $body_bytes_sent "$http_referer" '<br>
+                    #              '"$http_user_agent" "$http_x_forwarded_for"';<br>
+               # access_log  /data/www.log  www_54chen_com;<br>
+              set $fuck 0;<br>
+              if ($remote_addr = '1.1.1.1'){<br>
+                  set $fuck 1;<br>
+              }<br>
+              if ($remote_addr = '1.1.1.2'){<br>
+                  set $fuck 1;<br>
+              }<br>
+              if ($remote_addr = '1.1.1.3'){<br>
+                  set $fuck 1;<br>
+              }<br>
+              if ($http_x_forwarded_for = '2.2.2.2') {<br>
+                  set $fuck 1;<br>
+              }<br>
+              if ($fuck = 0){<br>
+                  return 404;<br>
+              }<br>
+           #此处还需要填写和其他location一样的以提供正常服务环境<br>
+  </blockquote>
+  1） 1.1.1.1 1.1.1.2 1.1.1.3都是直接ip地址<br>
+  2)  2.2.2.2是代理之前的ip地址
+  
+  <p>另外流行的另一种做法：
+  </p>
+<blockquote>            allow 1.1.1.1;<br>
+              allow 1.1.1.2;<br>
+              allow 1.1.1.3;<br>
+              deny all;</blockquote>
+  但此方法我(<a href="http://www.54chen.com">54chen</a>)始终没找到支持代理的判断。
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/10/12/china-internet-company-problem/">说说互联网公司的地域差异</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-10-12T00:00:00+08:00" pubdate data-updated="true">2010-10-12 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>我们，是一个尚义轻利的民族。 </p>
+  
+  <p>山东，有这样一对夫妇：</p>
+  
+  <p>刚刚结婚时，妻子在济宁，丈夫在枣庄；过了若干年，妻子调到了枣庄，丈夫却一纸调令到了菏泽。若干年后，妻子又费尽周折，调到了菏泽，但不久，丈夫又被提拔到了省城济南。妻子又托关系找熟人，好不容易调到了济南。可是不到一年，丈夫又被电业总公司调到重庆。 </p>
+  
+  <p>于是，她所有的朋友，就给她开玩笑——你们俩呀，天生就是牛郎织女的命。要我们说呀，你也别追了，干脆辞职，跟着你们家老张算了。 </p>
+  
+  <p>但是，她以及公婆、父母，都一致反对。“干了这么多年，马上就退休了，再说， 你的这么好，辞职多可惜。要丢掉多少钱呀！再干几年吧，也给孩子多挣一些。” </p>
+  
+  <p>夫妻两个至今依然是牛郎织女。 </p>
+  
+  <p>英国某小镇：</p>
+  
+  <p>有一个青年人，整日以沿街为小镇的人说唱为生；这儿，有一个华人妇女，远离家人，在这儿打工。他们总是在同一个小餐馆用餐，于是他们屡屡相遇。时间长了，彼此已十分的熟悉。 </p>
+  
+  <p>有一日，我们的女同胞，关切地对那个小伙子说：“不要沿街卖唱了，去做一个正当的职业吧。我介绍你到去教书，在那儿，你完全可以拿到比你现在高得多的薪水。” </p>
+  
+  <p>小伙子听后，先是一愣，然后反问道：“难道我现在从事的不是正当的职业吗？我喜欢这个职业，它给我，也给其他人带来欢乐。有什么不好？我何必要远渡重洋，抛弃亲人，抛弃家园，去做我并不喜欢的工作？” </p>
+  
+  <p>邻桌的英国人，无论老人孩子，也都为之愕然。他们不明白，仅仅为了多挣几张钞票，抛弃家人，远离幸福，有什么可以值得羡慕的。在他们的眼中，家人团聚，平平安安，才是最大的幸福。它与财富的多少，地位的贵贱无关。于是，小镇上的人，开始可怜我们的女同胞了。 </p>
+  
+  <p>只要锄头好，没有角挖不倒。的互联网公司的精英们正在日复一日地忙碌着。</p>
+  
+  <p>回到以前，你要是在哪个厂子里呆着没到退休，都不好意思出来混。</p>
+  
+  <p>21世纪的70后80后，毕业时为了理想工作后为了生存背井离乡在北上广奋斗着，越来越多的人开始筹备逃离北上广了，北上广人口重负什么时候得到解放还不得而知。</p>
+  
+  <p>Fenng在杭州求人，老王在山东求人，还有众多不知名的在各地求人，靠谱的人都在北上广。。。</p>
+  
+  <p>直到五年十年之后，北上广的技术人才要结婚生子养家的时候，各地省会城市，才会出现一个又一个坚如磐石的技术团队，他们呆在家人身边，快乐生活，努力工作，而那时的互联网，才是真正的欣欣向荣。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/27">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <em>28</em>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/29">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

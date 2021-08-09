@@ -1,0 +1,370 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Java中使用akka手记二 Cluster - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="基础知识 2.3.2的cluster还有些想实现的东西没有实现，包括：actor分区（负载均衡） actor handoff（临时故障时的actor处理） actor重新平衡（增减节点时有用） actor状态复制机制（类似做M/S作用）
+  2.3.2的cluster已经有的能力有：节点－集群－ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/04/16/how-to-use-akka-in-java-2">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Java中使用akka手记二 Cluster</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-04-16T15:12:32+08:00" pubdate data-updated="true">2014-04-16 15:12:32 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://chen54.b0.upaiyun.com/20140415/20140415.jpg"></p>
+  
+  <h2>基础知识</h2>
+  
+  <ul>
+  <li><p>2.3.2的cluster还有些想实现的东西没有实现，包括：actor分区（负载均衡） actor handoff（临时故障时的actor处理） actor重新平衡（增减节点时有用） actor状态复制机制（类似做M/S作用）</p></li>
+  <li><p>2.3.2的cluster已经有的能力有：节点－集群－leader节点; membership; gossip协议同步状态; VECTOR CLOCKS保障顺序; 失败检测－节点不可达算法; seed节点－新节点加入时可以向这些节点发消息，但也是可以向任意成员发的; membership生命周期有joining up leaving exiting removed unreachable几种状态。</p></li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h2>依赖</h2>
+  
+  <p>maven中添加akka-cluster包：</p>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  <span class="line-number">4</span>
+  <span class="line-number">5</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">&lt;dependency&gt;
+  </span><span class="line">            &lt;groupId&gt;com.typesafe.akka&lt;/groupId&gt;
+  </span><span class="line">            &lt;artifactId&gt;akka-cluster_2.10&lt;/artifactId&gt;
+  </span><span class="line">            &lt;version&gt;2.3.1&lt;/version&gt;
+  </span><span class="line">        &lt;/dependency&gt;</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <h2>配置</h2>
+  
+  <p>下面的配置启用了Cluster。application.conf</p>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  <span class="line-number">4</span>
+  <span class="line-number">5</span>
+  <span class="line-number">6</span>
+  <span class="line-number">7</span>
+  <span class="line-number">8</span>
+  <span class="line-number">9</span>
+  <span class="line-number">10</span>
+  <span class="line-number">11</span>
+  <span class="line-number">12</span>
+  <span class="line-number">13</span>
+  <span class="line-number">14</span>
+  <span class="line-number">15</span>
+  <span class="line-number">16</span>
+  <span class="line-number">17</span>
+  <span class="line-number">18</span>
+  <span class="line-number">19</span>
+  <span class="line-number">20</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">akka {
+  </span><span class="line">  actor {
+  </span><span class="line">    provider = "akka.cluster.ClusterActorRefProvider"
+  </span><span class="line">  }
+  </span><span class="line">  remote {
+  </span><span class="line">    log-remote-lifecycle-events = off
+  </span><span class="line">    netty.tcp {
+  </span><span class="line">      hostname = "127.0.0.1"
+  </span><span class="line">      port = 0
+  </span><span class="line">    }
+  </span><span class="line">  }
+  </span><span class="line">
+  </span><span class="line">  cluster {
+  </span><span class="line">    seed-nodes = [
+  </span><span class="line">      "akka.tcp://ClusterSystem@127.0.0.1:2551",
+  </span><span class="line">      "akka.tcp://ClusterSystem@127.0.0.1:2552"]
+  </span><span class="line">
+  </span><span class="line">    auto-down-unreachable-after = 10s
+  </span><span class="line">  }
+  </span><span class="line">}</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <p>这里面定义的seed节点，用来作为cluster的初始化和加入点。要跨机器的话，就要修改这里的127.0.0.1了。</p>
+  
+  <h2>代码</h2>
+  
+  <p>下面是一个使用cluster的actor实现：</p>
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  <span class="line-number">4</span>
+  <span class="line-number">5</span>
+  <span class="line-number">6</span>
+  <span class="line-number">7</span>
+  <span class="line-number">8</span>
+  <span class="line-number">9</span>
+  <span class="line-number">10</span>
+  <span class="line-number">11</span>
+  <span class="line-number">12</span>
+  <span class="line-number">13</span>
+  <span class="line-number">14</span>
+  <span class="line-number">15</span>
+  <span class="line-number">16</span>
+  <span class="line-number">17</span>
+  <span class="line-number">18</span>
+  <span class="line-number">19</span>
+  <span class="line-number">20</span>
+  <span class="line-number">21</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">public class SimpleClusterListener extends UntypedActor {
+  </span><span class="line">  LoggingAdapter log = Logging.getLogger(getContext().system(), this);
+  </span><span class="line">  Cluster cluster = Cluster.get(getContext().system());
+  </span><span class="line">
+  </span><span class="line">  //subscribe to cluster changes
+  </span><span class="line">  @Override
+  </span><span class="line">  public void preStart() {
+  </span><span class="line">    //#subscribe
+  </span><span class="line">    cluster.subscribe(getSelf(), ClusterEvent.initialStateAsEvents(), 
+  </span><span class="line">        MemberEvent.class, UnreachableMember.class);
+  </span><span class="line">    //#subscribe
+  </span><span class="line">  }
+  </span><span class="line">
+  </span><span class="line">  //re-subscribe when restart
+  </span><span class="line">  @Override
+  </span><span class="line">  public void postStop() {
+  </span><span class="line">    cluster.unsubscribe(getSelf());
+  </span><span class="line">  }
+  </span><span class="line">
+  </span><span class="line">  @Override
+  </span><span class="line">  public void onReceive(Object message) {</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li><p>这个actor把自己注册了一个cluster事件。当cluster上有风吹草动时，都会收到消息。</p></li>
+  <li><p>运行这段代码只需要运行后面代码中的SimpleClusterApp。</p></li>
+  </ul>
+  
+  
+  <h2>加入种子节点</h2>
+  
+  <ul>
+  <li><p>一开始能够预料的节点们被叫做种子节点（seed nodes），有节点加入的时候，会等种子节点的返回确认才算是加入成功。</p></li>
+  <li><p>两种方式指定seed nodes的位置，一种是在application.xml中，另一种是在jvm的参数里。</p></li>
+  </ul>
+  
+  
+  <h2>自动和手动down机</h2>
+  
+  <ul>
+  <li>被失败检测出来不可达的节点，会被leader进行处理，也可以手动搞下来。</li>
+  <li>akka.cluster.atuo-down-unreadchable-after=10s 10秒不可达就自动关</li>
+  <li><p>也可以写代码 Cluster.get(system).down(address)</p></li>
+  <li><p>网络分裂时，这个自动down有可能会出现脑裂。</p></li>
+  </ul>
+  
+  
+  <h2>cluster的事件</h2>
+  
+  <ul>
+  <li>ClusterEvent.MemberUp</li>
+  <li>ClusterEvent.MemberExited</li>
+  <li>ClusterEvent.MemberRemoved</li>
+  <li>ClusterEvent.UnreachableMember</li>
+  <li>ClusterEvent.ReachableMember</li>
+  </ul>
+  
+  
+  <h2>代码</h2>
+  
+  <ul>
+  <li>sample.cluster.simple.main启动了system。</li>
+  <li>一共三个actorSystem被启动，端口为2551 2552 0，0的时候会是随机最大端口。</li>
+  <li>application.conf里定义了2551与2552为seed nodes，所以2551与2552先组成了cluster，0加入的时候会收到2551和2552的确认。</li>
+  <li><p>gossip协议的功劳让一个状态值可能会被重复传递。</p></li>
+  <li><p>本文提及代码在 <a href="https://github.com/54chen/akka_cluster_learn">https://github.com/54chen/akka_cluster_learn</a></p></li>
+  </ul>
+  
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-04-16T15:12:32+08:00" pubdate data-updated="true">2014-04-16 15:12:32 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java-akka/">java,akka</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/04/14/how-to-use-akka-in-java/" title="Previous Post: java中使用akka手记一">« java中使用akka手记一</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/04/17/how-to-use-akka-in-java-3/" title="Next Post: java中使用akka手记三 cluster详例">java中使用akka手记三 cluster详例 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

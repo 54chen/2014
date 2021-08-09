@@ -1,0 +1,298 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Tigase代码框架解读 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="在java下实现的xmpp开源实现，除了openfire外，tigase是另一个牛逼的项目。
+  实际的实验室压力下，50万人同时在线的单机，tigase的gc情况要优于openfire，而且openfire的网络层代码借鉴了不少tigase的。 下面的内容，在解剖tigase过程中所写， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/07/07/explain-tigase">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Tigase代码框架解读</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-07-07T13:47:54+08:00" pubdate data-updated="true">2014-07-07 13:47:54 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg"></p>
+  
+  <ul>
+  <li><p>在java下实现的xmpp开源实现，除了openfire外，tigase是另一个牛逼的项目。</p></li>
+  <li><p>实际的实验室压力下，50万人同时在线的单机，tigase的gc情况要优于openfire，而且openfire的网络层代码借鉴了不少tigase的。</p></li>
+  </ul>
+  
+  
+  <p>下面的内容，在解剖tigase过程中所写，使用的版本是：5.2.1 (2014年7月份)。</p>
+  
+  <h2>组件</h2>
+  
+  <p>tigase就是一个大组件框，里面所有东西基本都是组件组成的。session manager、message router、c2s connection manager…全部是组件。</p>
+  
+  <p>ServerComponent接口是一个最小化接口，但是要去写很多代码，tigase提供了许多的现成的代码，减少去从零实现这个接口的过程。</p>
+  
+  <p>比如extends AbstractMessageReceiver可以直接生成一个处理消息的组件。只需要实现一个processPacket方法。实现getDefaults方法，可以对系统变量进行处理。实现setProperties方法，可以去设置一些要用的变量。</p>
+  
+  <h2>多线程</h2>
+  
+  <p>processPacket方法，可以把逻辑扔到不同的cpu上去运行，以发挥服务器多核的优势。processingThreads方法返回用多少个cpu来处理。</p>
+  
+  <!--more-->
+  
+  
+  <p>在重写processingThreads的同时，需要重写hashCodeForPacket方法，确保同一个用户的数据，在同一个cpu上处理，以确保不出现消息乱序。</p>
+  
+  <h2>定时器</h2>
+  
+  <p>可以重写everySecond everyMinute everyHour的逻辑，以达到定时器的作用。</p>
+  
+  <p>还可以重写另外两个方法来指定固定时间完成的任务：</p>
+  
+  <p>addTimerTask(TimerTask task, long delay, TimeUnit unit);</p>
+  
+  <p>addTimerTask(TimerTask task, long delay);</p>
+  
+  <p>重写initializationComplete方法，tigase会在特定的时间里来调用，具体说，就是在所有准备工作做完了后，多半这里用来启动连接之类的。</p>
+  
+  <h2>统计信息</h2>
+  
+  <p>复写getStatistics，用StatisticsList来保存统计信息。</p>
+  
+  <h2>组件的生命周期</h2>
+  
+  <p>一个组件按照下面的过程被调用：</p>
+  
+  <ul>
+  <li>组件被加载，使用无参的public构造函数创建一个实例。</li>
+  <li>setName</li>
+  <li>start</li>
+  <li>getDefaults</li>
+  <li>setProperties</li>
+  <li>initializationCompleted 最后被调用，一般用来启动socket连接。</li>
+  </ul>
+  
+  
+  <h2>ConnectionManager</h2>
+  
+  <p>ConnectionManager是继承自AbstractMessageReceiver（前面的可以省去代码的组件实现方式）的抽象类，比如c2s组件就是继承了它。</p>
+  
+  <p>如果你extend这个类，你需要知道数据来源于哪里：如果来源于MessageRouter，那么abstract void processPacket(Packet packet)方法会被调用; 如果来源于网络连接，那么abstract Queue processSocketData(XMPPIOService serv)方法会被调用。</p>
+  
+  <h2>架子</h2>
+  
+  <ul>
+  <li>ComponentRegistrator:本身是一种组件，专用于注册各种组件。registr -&gt; addComponent</li>
+  <li>MessageReceiver:本身是一种组件，专用于收消息。也叫Router，因为消息内容在此类组件中流动。</li>
+  <li><p>XMPPService:本身是一种组件，专用于显示serviceDiscovery时的名称啥的。大作用没有。</p></li>
+  <li><p>AbstractMessageReceiver:高级一点的组件，基于MessageReceiver、XMPPService，同时实现了很多细节，还搞了多个线程搞收和发。</p></li>
+  </ul>
+  
+  
+  <h2>启动</h2>
+  
+  <ul>
+  <li>messageRouter的setConfig，进入ConfiguratorAbstract-AbstractComponentRegistrator的addComponent。</li>
+  <li>再回到ConfiguratorAbstract的componentAdded，然后是setup(component)。</li>
+  <li>component.setProperties进入messageRouter的setProperties。</li>
+  <li>comp.initializationCompleted()启动了connectionManager的各种socket。</li>
+  </ul>
+  
+  
+  <h2>网络</h2>
+  
+  <ul>
+  <li>connectionManager同时协调ConnectionOpenThread与SocketThread。</li>
+  <li>ConnectionOpenThread脱离上述组件，属于网络层实现，作selector。它负责Selector.open。</li>
+  <li>IOService提供线程安全的call方法，XMPPIOService继承它，保存了连接信息，每个连接一个IOService。</li>
+  <li>SocketThread在实例化时，会启动多个线程，同时盯住selector。负责将每个确定的IOService进行数据处理。</li>
+  <li>实现ConnectionOpenListener接口accept方法接收SocketChannel，组装IOService，交由SocketThread处理。</li>
+  <li>ConnectionManager用ConcurrentHashMap记录了所有的连接。</li>
+  </ul>
+  
+  
+  <h2>零碎</h2>
+  
+  <ul>
+  <li>AbstractMessageReceiver.addPacket 往自己的in_queue里加数据，是阻塞的，如果满了会出事。</li>
+  <li>AbstractMessageReceiver.addPacketNB 往自己的in_queue里加数据，非阻塞的，和上一个的区别在于，一个是put一个是offer到queue。</li>
+  <li>AbstractMessageReceiver.addPackets 来一堆数据。</li>
+  <li>所有in_queue里的数据，会被processPacket方法所处理。</li>
+  <li>对应有addOutPacket。</li>
+  <li>所有out_queue里的数据，都默认扔给parent的in_queue，没有parent就扔到自己的in_queue。</li>
+  <li>所有in_queue的数据，都由processPacket具体的实现来处理。</li>
+  </ul>
+  
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-07-07T13:47:54+08:00" pubdate data-updated="true">2014-07-07 13:47:54 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/tigase-xmpp/">tigase,xmpp</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/" title="Previous Post: bosh vs comet vs long polling vs polling">« bosh vs comet vs long polling vs polling</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/07/09/tigase-sockthread/" title="Next Post: tigase网络核心SockThread详解">tigase网络核心SockThread详解 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

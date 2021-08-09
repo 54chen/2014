@@ -1,0 +1,63 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Tcp | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/tcp/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[移动网络下连接的秘密]]></title>
+      <link href="https://www.54chen.com/blog/2014/07/31/connection-secret-in-mobile/"/>
+      <updated>2014-07-31T17:44:55+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/07/31/connection-secret-in-mobile</id>
+      <content type="html"><![CDATA[<p><img src=http://img03.taobaocdn.com/imgextra/i3/T1.1RSXmRfXXXjG9sV_021627.jpg></p>
+  
+  <p> 最近在研究网络层的接入问题。一些心得记录在下面：</p>
+  
+  <h2>一、TCP与HTTP</h2>
+  
+  <ul>
+  <li>0.所谓长连接短连接（其实都是TCP），都是谣传，在传输层混只有TCP和UDP。</li>
+  <li>1.TCP传输的数据，绝对是顺序正确、不丢包的数据。否则它一定不会把数据扔给应用层。</li>
+  <li>2.从应用层角度，TCP是一个数据流，收到的数据会聚在一起。所以需要应用层去协商数据与数据之间用什么间隔，比如常用的长度标识。</li>
+  <li>3.TCP在网络恶劣的情况下，开始启动：拥塞避免算法 与 慢启动算法。而这些都是由一些公式去估计当前网络情况的。</li>
+  <li>4.TCP的报文包与我们自己应用层的发的“包”半毛钱关系都没有，数据到了底层还是要切成N块来传送的。</li>
+  <li>5.所谓的HTTP比TCP更可靠是错误的。HTTP是应用层协议，实际也是TCP，只不过数据在应用层定义了规则：必须有request\header\body等等。</li>
+  <li>6.硬件防火一般拦截端口，软件防火才拦协议。所以80端口走TCP有不少好处。</li>
+  <li>7.HTTP比TCP更可靠的错觉产生的原因是：HTTP请求基本都是每次新开连接，而TCP很少这样做。</li>
+  <li>8.TCP就像<!--more-->一条水管。</li>
+  <li>9.HTTP就像一条临时的水管，用完就扔了。</li>
+  <li>10.移动网络下，抖动会让TCP延迟加倍明显。</li>
+  </ul>
+  
+  
+  <h2>二、TCP与WAP</h2>
+  
+  <ul>
+  <li>0.CMWAP\CMNET 是中方特色的区分GPRS方案。</li>
+  <li>1.所有WAP都是HTTP代理软件。注意是软件，所以理论是不只是认端口，还认数据头。</li>
+  <li>2.各省各自治区的WAP网关是不一样的，甚至连端口都可能不一样。</li>
+  <li>3.WAP大多都支持向网关发送CONNECT方法（对应GET、POST等），然后通过这个可以建立TCP数据转发。当然了，人家天天在封。</li>
+  <li>4.基本上WAP下只能用HTTP。</li>
+  <li>5.谁知道啥时候WAP彻底消失？</li>
+  </ul>
+  
+  
+  <h2>三、最后一公里</h2>
+  
+  <ul>
+  <li>0.最惨淡的就是这一公里。各家赚各家的钱，移动网络下运营商割剧，再加上移动基站的硬件技术限制，导致这后果。</li>
+  <li>1.移动网络下的CDN就是个明晃晃的骗局。因为再怎么加速，最后这一公里你控制不了。如果政策允许，可以去做一个免费WIFI来解决这一难题，如果。</li>
+  <li>2.为最后一公里效果不行能做的事情有：转菊花、禁止作（从产品上解决）。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

@@ -1,0 +1,205 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>越来越懒的WEB程序员 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="　　在的互联网行业，基本上现在的大小公司都有这样一个，QA。也没有人论证过为什么要专门出来这样一批队伍，反正大家都这样做了，这样做也不会错到哪里去。 测试工程师释义
+  　　某百科有云：软件开发测试工程师（Software Development Engineer in Test，SDET …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/09/26/web-testing">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">越来越懒的WEB程序员</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-09-26T00:00:00+08:00" pubdate data-updated="true">2010-09-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1ZK0MXaRtXXbq.6I8_100927.jpg" alt="54chen">
+  　　在的互联网行业，基本上现在的大小公司都有这样一个，QA。也没有人论证过为什么要专门出来这样一批队伍，反正大家都这样做了，这样做也不会错到哪里去。</p>
+  
+  <p><strong>测试工程师释义</strong>
+  　　某百科有云：软件开发测试工程师（Software Development Engineer in Test，SDET），一般为具有1-2年经验的测试工程师或程序员。编写自动测试脚本程序并担任测试编程初期的工作。进一步拓展编程语言、作系统、网络与数据库方面的技能。<br>
+  　　更有某大型培训公司有云：软件质量的把关者，人才凤毛麟角，薪酬上升空间非常大。<br>
+  　　在，一般软件测试人员与软件开发人员的岗位设置比例是1：1，微软在开发windows2000时测试开发人员比例高到1.7：1，由此可见软件测试岗位重要性的一斑。</p>
+  
+  <p><strong>WEB开发是否需要SDET？</strong>
+  　　SDET诞生于传统软件开发过程中，由于WEB开发的特殊性，不仅是指定输入指定输出的测试过程，所涉及方向方方面面，十分繁杂。那么，WEB开发是否需要SDET？<br>
+  　　一线开发人员的感叹：一个分页bug给我提了4张单。。。上一页，下一页，第一页，最后页，干脆每个页码也配个单吧 。(分页按钮数字都多一或少一了)--转自Willko的微博。<br>
+  　　开发一个新产品，由产品提出来个大概，开发出来个大概后，QA再来提细的需求，所谓的测试阶段，只不过是个需求细化的过程。许多开发经理都赞同这个观点，因为：到目前为止，还没有见到这么NB的产品，一下把细节都能想好，描述清楚的。--转自阿罗的微博。<br>
+  　　实际上，WEB开发是十分需要SDET的。而且需要比传统开发更加专业的测试开发工程师，像的做法，由开发人员去兼职测试人员，是一个绝佳的做法。而不专业或者欠专业的QA团队，会导致项目的拖延，开发工程师的懊恼不已、哭笑不得，如果测试团队成员没有两年的开发经验，宁可不要。</p>
+  
+  <p><strong>WEB开发人员为什么越来越懒了？</strong>
+  　　因为有了测试人员，而测试人员的职责就是找出bug所在，开发人员对此没有职责或责任。所以如果你的公司配备了QA团队，那么WEB开发人员正在越来越懒中。而这个时候，如果测试人员没有一两年的开发经验，这样出来的项目极可能出现问题。</p>
+  
+  <p><strong>建议</strong>
+  　　小公司就别折腾了，开发测试一团人全包是最不二的选择。大公司，两个团队继续折腾吧，其慢无比的效率就是大公司的特点。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-09-26T00:00:00+08:00" pubdate data-updated="true">2010-09-26 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

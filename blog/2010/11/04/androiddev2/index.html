@@ -1,0 +1,242 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Android开发入门2：概念建立 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="上一记传送门：android开发入门
+  在第一记中，我（54chen）完成了一个完整的android开发环境，并且简单开发了一个Hello world android程序，在有了一个大概的开发过程的感觉之后，再进一步来学习android开发过程中需要接触到的常识。 android开发表皮几大块
+  1 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/11/04/androiddev2">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Android开发入门2：概念建立</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-04T00:00:00+08:00" pubdate data-updated="true">2010-11-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img01.taobaocdn.com/imgextra/i1/T19G0QXdVzXXcu602a_120602.jpg" alt="android 54chen dev"></p>
+  
+  <p>上一记传送门：<a href="http://www.54chen.com/_linux_/androiddev.html">android开发入门</a>
+  在第一记中，我（54chen）完成了一个完整的android开发环境，并且简单开发了一个Hello world android程序，在有了一个大概的开发过程的感觉之后，再进一步来学习android开发过程中需要接触到的常识。</p>
+  
+  <p><strong>android开发表皮几大块</strong>
+  1）extends Activity的Activity类很是奇异，其实这很像是mvc框架中的controller，继承Activity实现的类，它控制了所有的业务逻辑。<br>
+  2）打开项目的文件夹，你会发现有许多的xml，其中，比较关键的一个是main.xml（layout目录下），它相当于mvc框架中的view，负责了软件界面哪个位置摆放一个什么样的控件，当然了，这些控件都是系统本身的，你可以想像成是html标签里的那些控件一样。<br>
+  3）values目录下有settings.xml，是定义了一些字符串、颜色、数组等常量数据，有点像普通java项目里的属性文件（properties文件）</p>
+  
+  <p><strong>走进android项目中的layout/main.xml</strong>
+  开发android项目和开发web项目有几分神似，在main.xml里(也可能是xx.xml哦，main.xml是默认的第一个，在java代码里，会用R.layout.main来表示man.xml)，包括了各种各样的基础控件（它们都是大小写敏感的，如果在xml里写错了，那一定会在运行过程中出现空指针错误），就像是web项目的前端一样，不过其复杂程度自然要比写html复杂。可能大部分入门android的时间都会花在这里。</p>
+  
+  <p>&lt;TextView<br>
+  android:layout_height=”wrap_content”<br>
+  android:layout_width=”fill_parent”<br>
+  android:id=”@+id/TextView01″<br>
+  android:text=”54chen Android2.2 学习手记”<br>
+  android:textColor=”#0f0″<br>
+  android:textSize=”28dip”<br>
+  android:layout_y=”330dip”<br>
+  android:layout_x=”35dip“&gt;<br>
+  &lt;/TextView&gt;</p>
+  
+  <p>这就是main.xml里的一个片段，这是一个TextView控件(请勿直接复制，看看即可，有半角全角的问题会出现错误)，这个控件，关键词是TextView，大小写是敏感的，另外它丰富的属性都是由android:xx来定义的，其他的控件也是类似的定义。一般都会有，高度、宽度、内容、id、颜色、字体大小、布局相关的信息。</p>
+  
+  <p>例子到此，详细的更多控件的使用，我们在学习完intent之后再在后面的手记中去记录。</p>
+  
+  <p><strong>Intent：android项目中的胶水</strong>
+  前面说到，相当于controller层的activity，实际上一般情况是一个activity对应一个layout的xml，而一个常见的软件，都会弹出来多个窗体（做过vb vc delphi啥的一定知道subform的概念），这个时候需要多个 activity来回切换，这时候就是靠intent在中间起作用。<br>
+  在一个Android应用中，Intent是对执行某个作的一个抽象描述，Intent 负责提供组件之间相互调用的相关信息传递，实现调用者和被调用者之间的解耦。Intent是一种在不同组件之间传递的请求信息，是应用程序发出的请求和意图，作为一个完整的消息传递机制，Intent不仅需要发送端，还需要接收端。</p>
+  
+  <p>在android应用总控xml（AndroidManifest.xml）里有这样的内容：&lt;intent-filter&gt; ，这里面定义了可以访问的intent动作。</p>
+  
+  <p></p>
+<blockquote>
+  				// 获得可编辑文本框中的值，也就是电话号码<br>
+  				String phoneNumber = PhoneNumberEditText.getText().toString();<br>
+  				// new Intent(行为，数据)，其中action_dial是拨号行为，数据是电话号码<br>
+  				Intent intent = new Intent(Intent.ACTION_DIAL, Uri<br>
+  						.parse("tel://" + phoneNumber));<br>
+  				// 去调用那些可以处理拨号行为的Activity<br>
+  				startActivity(intent);
+  </blockquote>
+  
+  <p>看完上述代码，是不是有点对intent概念的感觉了呢，如果还有疑惑，再看 </p>
+  
+  <p></p>
+<blockquote>//在当前Activity中启动另外一个Activity<br>
+  startActivity(new Intent(this,目标Activity.class));</blockquote>
+  
+  <p></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-04T00:00:00+08:00" pubdate data-updated="true">2010-11-04 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2010/11/01/androiddev/" title="Previous Post: android 开发入门">« android 开发入门</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

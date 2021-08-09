@@ -1,0 +1,220 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Squid缓存失效之谜：一步步提高squid缓存命中率办法记录 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="手里有个前端自己做cdn的服务器，结果发现进出流量相等，这是个诡异的事情，因为一般来说，做前端缓存的机器，流量基本上很长时间里都是出多进少的。
+  一开始的时候，是nginx做的nginx_cache，发现进出流量相等后，换上了squid 3.0，使用命令：
+  squidclient -p 8088 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/11/30/squid-tcp-miss-200">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Squid缓存失效之谜：一步步提高squid缓存命中率办法记录</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-30T00:00:00+08:00" pubdate data-updated="true">2010-11-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>手里有个前端自己做cdn的服务器，结果发现进出流量相等，这是个诡异的事情，因为一般来说，做前端缓存的机器，流量基本上很长时间里都是出多进少的。<br>
+  一开始的时候，是nginx做的nginx_cache，发现进出流量相等后，换上了squid 3.0，使用命令：<br>
+  squidclient -p 8088 mgr:info （启在8088）<br>
+  发现如图所示的几个命中率，相当低下，一般的WEB服务器缓存30－60％是正常的，而CDN作用的应该说80%以上才是正常的。
+  <img src="http://img03.taobaocdn.com/imgextra/i3/T1nU8SXdFrXXcxpD.U_015909.jpg" alt="http://img03.taobaocdn.com/imgextra/i3/T1nU8SXdFrXXcxpD.U_015909.jpg">
+  刚启动squid的时候，个人认为是因为缓存文件还没有拖动到前端来，所以是正常的，但结果过了一天后，还是没有看到进流量松动。</p>
+  
+  <p>第二天来，硬盘已经过了10G了，还是不行。通过cat access.log来看，cat access.log|gawk '{print $4}'|sort|uniq -c|sort -nr<br>
+  发现TCP_MISS/200相当的多，再看流量图，进出还是没有变化。杯具。</p>
+  
+  <p>于是乎，想到了直接tail -f access.log，看看究竟都有什么东西在访问。</p>
+  
+  <p>一条接一条的xxx.jpg?unid=1111触动了我（公司用来做用户行为分析的参数），就这样白花花的浪费了缓存。</p>
+  
+  <p><strong>解决方案：</strong>
+  幸好，squid前面，还有一层nginx，于是考虑在nginx上做转发，将所有的xxx.jpg?xx=xx全部转到 xxx.jpg去，过滤掉url中的参数。尝试了几个不行，内置的参数$url $request_url都不可行。<br>
+  只有一招利用403来跳转的可行。</p>
+  
+  <p></p>
+<blockquote>   location ~* (.jpg$)|(.png$)|(.gif$)|(.mp3$)|(.txt$){<br>
+          proxy_pass http://squid;<br>
+          proxy_redirect default;<br>
+          if ($is_args)<br>
+          {<br>
+              return 403;<br>
+              error_page 403 =200 $scheme://$host$uri;<br>
+          }<br>
+       }
+  </blockquote>
+  
+  <p>重启nginx，看到了进流量图明显大幅度下降。</p>
+  
+  <p><img src="http://img02.taobaocdn.com/imgextra/i2/T14F8TXolXXXXOWxsV_020704.jpg" alt="http://img02.taobaocdn.com/imgextra/i2/T14F8TXolXXXXOWxsV_020704.jpg"></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-11-30T00:00:00+08:00" pubdate data-updated="true">2010-11-30 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,942 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="TCP连接:SYN ACK RST UTG PSH FIN 2007-09-29 00:00:00 +0800 TCP的三次握手是怎么进行的：发送端发送一个SYN=1，ACK=0标志的数据包给接收端，请求进行连接，这是第一次握手；接收端收到请求并且允许连接的话，就会发送一个SYN=1，ACK= …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/56">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2007/09/29/tcp-connection-syn-ack-rst-utg-psh-fin/">TCP连接:SYN ACK RST UTG PSH FIN</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2007-09-29T00:00:00+08:00" pubdate data-updated="true">2007-09-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><strong>TCP的三次握手</strong>是怎么进行的：发送端发送一个SYN=1，ACK=0标志的数据包给接收端，请求进行连接，这是第一次握手；接收端收到请求并且允许连接的话，就会发送一个SYN=1，ACK=1标志的数据包给发送端，告诉它，可以通讯了，并且让发送端发送一个确认数据包，这是第二次握手；最后，发送端发送一个SYN=0，ACK=1的数据包给接收端，告诉它连接已被确认，这就是第三次握手。之后，一个TCP连接建立，开始通讯。<br>
+  *SYN：同步标志<br>
+  同步序列编号(Synchronize Sequence Numbers)栏有效。该标志仅在三次握手建立TCP连接时有效。它提示TCP连接的服务端检查序列编号，该序列编号为TCP连接初始端(一般是客户端)的初始序列编号。在这里，可以把 TCP序列编号看作是一个范围从0到4，294，967，295的32位计数器。通过TCP连接交换的数据中每一个字节都经过序列编号。在TCP报头中的序列编号栏包括了TCP分段中第一个字节的序列编号。</p>
+  
+  <p> </p>
+  
+  <p>*ACK：确认标志<br>
+  确认编号(Acknowledgement Number)栏有效。大多数情况下该标志位是置位的。TCP报头内的确认编号栏内包含的确认编号(w+1，Figure-1)为下一个预期的序列编号，同时提示远端系统已经成功接收所有数据。</p>
+  
+  <p>*RST：复位标志<br>
+  复位标志有效。用于复位相应的TCP连接。</p>
+  
+  <p>*URG：紧急标志<br>
+  紧急(The urgent pointer) 标志有效。紧急标志置位，</p>
+  
+  <p>*PSH：推标志<br>
+  该标志置位时，接收端不将该数据进行队列处理，而是尽可能快将数据转由应用处理。在处理 telnet 或 rlogin 等交互模式的连接时，该标志总是置位的。</p>
+  
+  <p>*FIN：结束标志<br>
+  带有该标志置位的数据包用来结束一个TCP回话，但对应端口仍处于状态，准备接收后续数据。</p>
+  
+  <p>.TCP的几个状态对于我们分析所起的作用。在TCP层，有个FLAGS字段，这个字段有以下几个标识：SYN, FIN, ACK, PSH, RST, URG.其中，对于我们日常的分析有用的就是前面的五个字段。它们的含义是：SYN表示建立连接，FIN表示关闭连接，ACK表示响应，PSH表示有 DATA数据传输，RST表示连接重置。其中，ACK是可能与SYN，FIN等同时使用的，比如SYN和ACK可能同时为1，它表示的就是建立连接之后的响应，如果只是单个的一个SYN，它表示的只是建立连接。TCP的几次握手就是通过这样的ACK表现出来的。但SYN与FIN是不会同时为1的，因为前者表示的是建立连接，而后者表示的是断开连接。RST一般是在FIN之后才会出现为1的情况，表示的是连接重置。一般地，当出现FIN包或RST包时，我们便认为客户端与服务器端断开了连接；而当出现SYN和SYN＋ACK包时，我们认为客户端与服务器建立了一个连接。PSH为1的情况，一般只出现在 DATA内容不为0的包中，也就是说PSH为1表示的是有真正的TCP数据包内容被传递。TCP的连接建立和连接关闭，都是通过请求－响应的模式完成的。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2006/11/17/nfs-usage-records/">NFS使用记录</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-11-17T00:00:00+08:00" pubdate data-updated="true">2006-11-17 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>第一步：#serviceconf<br>
+  第二步：启动portmap和nfs(每次修改exports都要重启nfs才会生效)<br>
+  第三步：#vi /etc/exports<br>
+  第四步：/root 202.199.159.193(rw)<br>
+  option:<br>
+  ro 只读<br>
+  rw 读写<br>
+  noaccess 无权<br>
+  第五步：在202.199.159.193这个IP的机器上，#mount 10.10.138.192:/root cc0cc/(如果不行可以试试把10.10.138.192的iptables关掉)<br>
+  提示：由于它的认证机制是基于IP地址的,因而容易被ip-spoofing攻击.一般除非必要不要打开这项服务.</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2006/10/26/intel-compile-the-difference-between-at-u0026amp-t/">intel汇编与AT＆T的区别</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-10-26T00:00:00+08:00" pubdate data-updated="true">2006-10-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.26 转载请注明原文链接：<a href="http://www.54chen.com/c/30">http://www.54chen.com/c/30</a>]</p>
+  
+  <p>在设计mynet的时候用到这个，其实二者区别不是太多，总结一下有下面几点：<br>
+  1.intel的mov 变成了movb movl mov (后面对应8 16 32位的作位)<br>
+  ) 2.寄存器都加百分号<br>
+  3.作都是反过来的：mov al,cl（inter）＝＝movb %cl,%al</p>
+  
+  <p>而在gcc里的内联汇编也有不同，用起来也是挺好用的，看例～<br>
+  main(){<br>
+  char tmp;<br>
+  __asm__(<br>
+  "movb %1, %%cl;"<br>
+  "movb %%cl, %%dl;"<br>
+  "shl $7,%%edx;"<br>
+  "movb %%cl,%%al;"<br>
+  "and $2,%%eax;"<br>
+  "shr $1,%%al;"<br>
+  "or %%eax,%%edx;"<br>
+  "movb %%cl,%%al;"<br>
+  "and $4,%%eax;"<br>
+  "shl $2,%%eax;"<br>
+  "or %%eax,%%edx;"<br>
+  "movb %%cl,%%al;"<br>
+  "and $8,%%eax;"<br>
+  "shl $2,%%eax;"<br>
+  "or %%eax,%%edx;"<br>
+  "movb %%cl,%%al;"<br>
+  "and $0x10,%%eax;"<br>
+  "shl $2,%%eax;"<br>
+  "or %%eax, %%edx;"<br>
+  "movb %%cl,%%al;"<br>
+  "and $0x20,%%eax;"<br>
+  "shr $2,%%al;"<br>
+  "or %%eax,%%edx;"<br>
+  "movb %%cl,%%al;"<br>
+  "and $0x40,%%eax;"<br>
+  "shr $4,%%al;"<br>
+  "or %%eax,%%edx;"<br>
+  "and $0x80,%%ecx;"<br>
+  "shr $6,%%cl;"<br>
+  "or %%ecx,%%edx;"<br>
+  "movb %%dl, %0;"<br>
+  :"=r"(tmp) //tmp变量写出，就是上文中的%0，第0个参数<br>
+  :"r"(tmp) //tmp写入，就是上文中的%1，第1个参数<br>
+  :"%ecx","%edx");</p>
+  
+  <p>//tmp变了;<br>
+  }
+  这来自一段用过的加密过程中，8位的tmp变量传入了内嵌的汇编中，一通翻江倒海后变了。。。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2006/10/25/linux-c-to-obtain-the-machine-mac-and-ip-2-functions/">Linux C获取机器MAC及IP的两个函数</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-10-25T00:00:00+08:00" pubdate data-updated="true">2006-10-25 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.25 转载请注明原文链接：<a href="http://www.54chen.com/c/28">http://www.54chen.com/c/28</a>]</p>
+  
+  <p>以下两函数分别将mac ip通过memcpy至mac_addr和ip_addr<br>
+  char *<br>
+  get_mac()<br>
+  int nSocket;<br>
+  struct ifreq struReq;<br>
+  nSocket = socket(PF_INET,SOCK_STREAM,0);<br>
+  memset(&amp;struReq,0,sizeof(struReq));<br>
+  strncpy(struReq.ifr_name, "eth0", sizeof(struReq.ifr_name));<br>
+  ioctl(nSocket,SIOCGIFHWADDR,&amp;struReq);<br>
+  close(nSocket);<br>
+  memcpy(mac_addr,(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data),strlen((char<br>
+  *)ether_ntoa(struReq.ifr_hwaddr.sa_data)));<br>
+  return 0;<br>
+  char *<br>
+  get_ip()<br>
+  {
+  int sock;<br>
+  struct sockaddr_in sin;<br>
+  struct ifreq ifr;<br>
+  sock = socket(AF_INET, SOCK_DGRAM, 0);<br>
+  if (sock == -1)<br>
+  {
+  perror("socket");<br>
+  return "";<br>
+  }
+  strncpy(ifr.ifr_name, "eth0", sizeof(ifr.ifr_name));<br>
+  if (ioctl(sock, SIOCGIFADDR, &amp;ifr) &lt; 0)<br>
+  {
+  perror("ioctl");<br>
+  return "";<br>
+  memcpy(&amp;sin, &amp;ifr.ifr_addr, sizeof(sin));<br>
+  close(sock);<br>
+  memcpy(ip_addr,inet_ntoa(sin.sin_addr),strlen(inet_ntoa(sin.sin_addr)));<br>
+  return "";<br>
+  }</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2006/10/23/apache-common-set/">APACHE常用设置</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-10-23T00:00:00+08:00" pubdate data-updated="true">2006-10-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>KeepAliveTimeout 5</p>
+  
+  <p>是允许用户保持连接5秒内有效，如果用户在5秒内点击其他页面不需要重新建立联结，这个值设置短不利于降低效率，如果设置长可能导致的同时联结数会跟高，一般建议按照缺省的15</p>
+  
+  <p>MaxKeepAliveRequests 这个缺省是100 你这个设置太高了，这个使用户连续访问了多少个页面后重新建立联结，你这个值3000，好像太高了点</p>
+  
+  <p>MinSpareServers 5<br>
+  MaxSpareServers 10<br>
+  StartServers 5<br>
+  如果服务器经常有突发大量请求的话，建议值都稍微太高点<br>
+  MaxClients 150<br>
+  这个是服务器最大联结数，如果超过150联结的话系统就有等待情况，如果繁忙的话150是不够的，你可以用命令 ps -ef|grep httpd|wc -l 看看有多少联结，一直接近150的话，建议增大一些</p>
+  
+  <p>MaxRequestsPerChild 0<br>
+  这个建立设置10000，apache避免程序有异常，定义一个子进程完成多少个请求以后退出，如果是0就是永远不退出。如果对自己程序比较难把我的话建议设置一个稍大的值而不是0</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2006/10/13/linux-system-tray-under-the-realization-of/">Linux下系统托盘的实现</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-10-13T00:00:00+08:00" pubdate data-updated="true">2006-10-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.13 转载请注明原文链接：<a href="http://www.54chen.com/c/24">http://www.54chen.com/c/24</a>]<br>
+  在gnome的网页上找到这个内容，他们把它叫做“通知功能图标”。它是一个在未来版本中决定发布的已实现包。<br>
+  http://www.gnome-cn.org/documents/tutorial/system-tray-icon-application/implement-your-tray<br>
+  具体实现前需要在下载两个开发补丁源文件，然后包含头文件到你的文件中。<br>
+  具体代码：<br>
+  void<br>
+  create_tray (tray_demo * tray)<br>
+  {
+  GtkWidget *image;<br>
+  GtkWidget *event_box;<br>
+  GtkTooltips *tooltips;<br>
+  EggTrayIcon *tray_icon;<br>
+  tooltips = gtk_tooltips_new ();<br>
+  tray_icon = egg_tray_icon_new ("Tray icon demo");<br>
+  event_box = gtk_event_box_new ();<br>
+  gtk_container_add (GTK_CONTAINER (tray_icon), event_box);<br>
+  g_signal_connect (G_OBJECT (event_box), "button-press-event",<br>
+  G_CALLBACK (tray_button_press_event_cb), tray);<br>
+  gtk_tooltips_set_tip (GTK_TOOLTIPS(tooltips), event_box, _("Try a left/right click"), NULL);<br>
+  image = load_image (GCN_ICON);<br>
+  gtk_container_add (GTK_CONTAINER (event_box), image);<br>
+  gtk_widget_show_all (GTK_WIDGET (tray_icon));<br>
+  return;<br>
+  }</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2006/03/22/mysql-in-a-variety-of-fields-in-the-range/">MySQL中各种字段的取值范围</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-03-22T00:00:00+08:00" pubdate data-updated="true">2006-03-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>TINYINT<br>
+  -128 - 127</p>
+  
+  <p> </p>
+  
+  <p>TINYINT UNSIGNED<br>
+  0 - 255</p>
+  
+  <p>SMALLINT<br>
+  -32768 - 32767</p>
+  
+  <p>SMALLINT UNSIGNED<br>
+  0 - 65535</p>
+  
+  <p>MEDIUMINT<br>
+  -8388608 - 8388607</p>
+  
+  <p>MEDIUMINT UNSIGNED<br>
+  0 - 16777215</p>
+  
+  <p>INT 或 INTEGER<br>
+  -2147483648 - 2147483647</p>
+  
+  <p>INT UNSIGNED 或 INTEGER UNSIGNED<br>
+  0 - 4294967295</p>
+  
+  <p>BIGINT<br>
+  -9223372036854775808 - 9223372036854775807</p>
+  
+  <p>BIGINT UNSIGNED<br>
+  0 - 18446744073709551615</p>
+  
+  <p>FLOAT<br>
+  -3.402823466E+38 - -1.175494351E-38<br>
+  0
+  1.175494351E-38 - 3.402823466E+38</p>
+  
+  <p>DOUBLE 或 DOUBLE PRECISION 或 REAL<br>
+  -1.7976931348623157E+308 - -2.2250738585072014E-308<br>
+  0
+  2.2250738585072014E-308 - 1.7976931348623157E+308</p>
+  
+  <p>DECIMAL[(M,[D])] 或 NUMERIC(M,D)<br>
+  由M(整个数字的长度,包括小数点,小数点左边的位数,小数点右边的位数,但不包括负号)和D(小数点右边的位数)来决定,M缺省为10,D缺省为0</p>
+  
+  <p>DATE<br>
+  1000-01-01 - 9999-12-31</p>
+  
+  <p>DATETIME<br>
+  1000-01-01 00:00:00 - 9999-12-31 23:59:59</p>
+  
+  <p>TIMESTAMP<br>
+  1970-01-01 00:00:00 - 2037年的某天(具体是哪天我也不知道,呵呵)</p>
+  
+  <p>TIME<br>
+  -838:59:59' to 838:59:59</p>
+  
+  <p>YEAR[(2|4)]<br>
+  缺省为4位格式,4位格式取值范围为1901 - 2155,0000,2位格式取值范围为70-69(1970-2069)</p>
+  
+  <p>CHAR(M) [BINARY] 或 NCHAR(M) [BINARY]<br>
+  M的范围为1 - 255,如果没有BINARY项,则不分大小写,NCHAR表示使用缺省的字符集.在数据库中以空格补足,但在取出来时末尾的空格将自动去掉.</p>
+  
+  <p>[NATIONAL] VARCHAR(M) [BINARY]<br>
+  M的范围为1 - 255.在数据库中末尾的空格将自动去掉.</p>
+  
+  <p>TINYBLOB 或 TINYTEXT<br>
+  255(2^8-1)个字符</p>
+  
+  <p>BLOB 或 TEXT<br>
+  65535(2^16-1)个字符</p>
+  
+  <p>MEDIUMBLOB 或 MEDIUMTEXT<br>
+  16777215 (2^24-1)个字符</p>
+  
+  <p>LONGBLOB 或 LONGTEXT<br>
+  4294967295 (2^32-1)个字符</p>
+  
+  <p>ENUM('value1','value2',...)<br>
+  可以总共有65535个不同的值</p>
+  
+  <p>SET('value1','value2',...)<br>
+  最多有64个成员</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2005/11/01/mysql-finishing-operation-points/">MySql作要点整理</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2005-11-01T00:00:00+08:00" pubdate data-updated="true">2005-11-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>列类型 需要的存储量<br>
+  TINYINT 1 字节<br>
+  SMALLINT 2 个字节<br>
+  MEDIUMINT 3 个字节<br>
+  INT 4 个字节<br>
+  INTEGER 4 个字节<br>
+  BIGINT 8 个字节<br>
+  FLOAT(X) 4 如果 X &lt; = 24 或 8 如果 25 &lt; = X &lt; = 53<br>
+  FLOAT 4 个字节<br>
+  DOUBLE 8 个字节<br>
+  DOUBLE PRECISION 8 个字节<br>
+  REAL 8 个字节<br>
+  DECIMAL(M,D) M字节(D+2 , 如果M &lt; D)<br>
+  NUMERIC(M,D) M字节(D+2 , 如果M &lt; D)</p>
+  
+  <p> </p>
+  
+  <p>日期和时间类型<br>
+  列类型 需要的存储量<br>
+  DATE 3 个字节<br>
+  DATETIME 8 个字节<br>
+  TIMESTAMP 4 个字节<br>
+  TIME 3 个字节<br>
+  YEAR 1 字节</p>
+  
+  <p>串类型<br>
+  列类型 需要的存储量<br>
+  CHAR(M) M字节，1 &lt;= M &lt;= 255<br>
+  VARCHAR(M) L+1 字节, 在此L &lt;= M和1 &lt;= M &lt;= 255<br>
+  TINYBLOB, TINYTEXT L+1 字节, 在此L&lt; 2 ^ 8<br>
+  BLOB, TEXT L+2 字节, 在此L&lt; 2 ^ 16<br>
+  MEDIUMBLOB, MEDIUMTEXT L+3 字节, 在此L&lt; 2 ^ 24<br>
+  LONGBLOB, LONGTEXT L+4 字节, 在此L&lt; 2 ^ 32<br>
+  ENUM('value1','value2',...) 1 或 2 个字节, 取决于枚举值的数目(最大值65535）<br>
+  SET('value1','value2',...) 1，2，3，4或8个字节, 取决于集合成员的数量(最多64个成员）</p>
+  
+  <p>mysql不区分大小写！<br>
+  1.#service mysqld start 启动mysql<br>
+  2.(打mysql进入后)show databases; 显示所有库<br>
+  3.use(或connect) 库名 使用此数据库<br>
+  4.show tables; 显示所有表<br>
+  5.GRANT ALL ON 库名.* TO 用户名; root可执行，给不同的数据库不同的用户管理<br>
+  6.CREATE DATABASE 新库名; 新建一个数据库<br>
+  7.quit 退出mysql,另外的参见sql/9<br>
+  mysqladmin -uroot password "youpassword" 修改管理员密码<br>
+  GRANT ALL 　　ON 库名.* 　　TO user IDENTIFIEDBY "password" 　　WITH GRANT OPTION;<br>
+  WITH GRANT OPTION 子句是可选的。如果包含该子句，该用户可以将GRANT 语句授予的任何权限授予其他的用户。可以使用该子句将授权的能力授予其他的用户。<br>
+  GRANT ALL 　　ON 库名.* 　　TO user IDENTIFIEDBY "password" 　　WITH GRANT OPTION;<br>
+  WITH GRANT OPTION 子句是可选的。如果包含该子句，该用户可以将GRANT 语句授予的任何权限授予其他的用户。可以使用该子句将授权的能力授予其他的用户。</p>
+  
+  <p>撤权并删除用户<br>
+  要取消一个用户的权限，使用REVOKE语句。REVOKE的语法非常类似于GRANT语句，除了TO用FROM取代并且没有INDETIFED BY和WITH GRANT OPTION子句：<br>
+  ============================================<br>
+  REVOKE privileges (columns) ON what FROM user<br>
+  ============================================<br>
+  user部分必须匹配原来GRANT语句的你想撤权的用户的user部分。privileges部分不需匹配，你可以用GRANT语句授权，然后用REVOKE语句只撤销部分权限。<br>
+  ============================================<br>
+  REVOKE语句只删除权限，而不删除用户。即使你撤销了所有权限，在user表中的用户记录依然保留，这意味着用户仍然可以连接服务器。要完全删除一个用户，你必须用一条DELETE语句明确从user表中删除用户记录：<br>
+  ============================================<br>
+  %mysql -u root mysqlmysql＞DELETE FROM user -＞WHERE User="user_name" and Host="host_name";mysql＞FLUSH PRIVILEGES;　<br>
+  ============================================<br>
+  DELETE语句删除用户记录，而FLUSH语句告诉服务器重载授权表。（当你使用GRANT和REVOKE语句时，表自动重载，而你直接修改授权表时不是.<br>
+  ============================================</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/55">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <em>56</em>
+      
+    
+  
+    
+      <span>Next »</span>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+      </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

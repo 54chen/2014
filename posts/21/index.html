@@ -1,0 +1,369 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2011-07-10 2011-07-10 00:00:00 +0800 持续构建工具hudson使用手记 http://goo.gl/fb/Vpbh2 #
+  大家手里的项目，除了DAO/biz/service/controller的架子的，还有什么样子的？ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/21">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/07/07/ci-tool-hudson-usage/">持续构建工具hudson使用手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-07-07T00:00:00+08:00" pubdate data-updated="true">2011-07-07 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1RgNyXjFsXXXG8Bva_092141.jpg" alt="hudson">
+  hudson是一个强大的持续性构建服务器。（现在开发者们分了一个分支，改叫Jenkins。）我（54chen）在使用过程中的手记如下：
+  <strong>下载</strong>
+  地址：http://hudson-ci.org/
+  </p>
+<blockquote>wget http://java.net/projects/hudson/downloads/download/war/hudson-2.0.1.war</blockquote>
+  速度不咋的，60k/s.
+  <strong>先决条件</strong>
+  系统：centos 5.5
+  <blockquote>resin4下不work，换成了tomcat。</blockquote>
+  <blockquote> cp /opt/soft/hudson/hudson-2.0.1.war /opt/soft/apache-tomcat-7.0.16/webapps/</blockquote>
+  <strong>遇到的问题</strong>
+  1）tomcat使用utf8环境。<br>
+   vim tomcat/conf/server.xml<br>
+   找到8080，加入一行 URIEncoding="UTF-8"。
+  
+  <p>2）maven不工作<br>
+  hudson启动后，系统管理里面，设置maven的地址：MAVEN_HOME指到maven的主目录，不是bin目录。</p>
+  
+  <p>3）svn不工作<br>
+  报re_version错误，在你的svn地址的最后面加上@HEAD</p>
+  
+  <p>4）hudson一切正常后，有svn bug
+  </p>
+<blockquote>FATAL: tried to access method hudson.scm.ChangeLogSet$Entry.setParent(Lhudson/scm/ChangeLogSet;)V from class hudson.scm.SubversionChangeLogSet
+  </blockquote>
+  
+  <p>报上面的错误，我（54chen）在http://issues.hudson-ci.org/browse/HUDSON-8885里找到更新新的svn插件即可。进入到系统管理的插件管理中，选中svn 插件，安装更新即可。</p>
+  
+  <p>5）定时执行<br>
+  建立job时，有一个选项是Build Triggers，勾选 Build periodically ，schedule填写：0 10,22 * * *表示每天10/22点执行。</p>
+  
+  <p>6）重启后jobs丢失<br>
+  jobs都是定义在$HUDSON_HOME里的，如果一开始的时候没有设置，jobs将放在~/.hudson下，当重启的时候，可能发生各种找不到原来的jobs的问题，此时需要确定原来的HUDSON_HOME是啥，现在的是啥，如果不一致就会出问题。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/07/01/mediawiki-scripts-auto-post/">Mediawiki脚本自动发内容实现</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-07-01T00:00:00+08:00" pubdate data-updated="true">2011-07-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1r11iXhVkXXX_.NQ8_100702.jpg" alt="mediawiki auto post"></p>
+  
+  <p>相信很多公司都是在使用mediawiki做内部team的知识管理，同时也有一些边边角角的脚本去做诸如上线、报警一类的工作。经常会有这样的需求：在上线的时候自动更新wiki的一页内容。</p>
+  
+  <p>实现起来很简单，只需要一个curl即可，mediawiki提供了http restful的接口，在api.php上，可以做很多事情，下面是实际使用的举例。</p>
+  
+  <p>目标：上线脚本最后执行一下记录，更新wiki里的一页做为上线记录，Online logging包换的元素有：日期，项目，版本号，机器。</p>
+  
+  <p>环境：安装了 curl的机器</p>
+  
+  <p><strong>实现细节（wiki.sh）：</strong>
+  </p>
+<blockquote>#! /bin/sh<br>
+  OPS_APP=$1<br>
+  shift<br>
+  OPS_REV=$1<br>
+  shift<br>
+  OPS_SERVER=$1<br>
+  OPS_TIME=`date`<br>
+  echo "\nwrite to wiki"</blockquote>
+  
+  <p>TOKEN=`curl -s -d 'action=login&amp;lgname=你的用户名&amp;lgpassword=你的密码&amp;format=json' http://你的wiki域名/wiki/api.php -D cookies.txt -b cookies.txt | sed -e 's/.*token":"//' -e 's/".*//'`</p>
+  
+  <p>curl -s -d "action=login&amp;lgname=你的用户名&amp;lgpassword=你的密码&amp;lgtoken=${TOKEN}&amp;format=json" http://你的wiki域名/wiki/api.php -b cookies.txt -D cookies.txt &gt; result</p>
+  
+  <p>RET=`curl -s 'http://你的wiki域名/wiki/api.php?action=query&amp;prop=info&amp;intoken=edit&amp;titles=Online_logging&amp;indexpageids=&amp;format=json' -b cookies.txt -D cookies.txt `</p>
+  
+  <p>ETOKEN=`echo ${RET}|sed -e 's/.*token":"//' -e 's/".*//' -e 's/+/%2B/g'`<br>
+  ETOKEN=`echo ${ETOKEN}|sed -e 's/\\\\/%5C/g'`<br>
+  TIME=`echo ${RET}|sed -e 's/.*starttimestamp":"//' -e 's/".*//'`<br>
+  URL="action=edit&amp;title=Online_logging&amp;section=0&amp;appendtext=%0A|${OPS_TIME}||${OPS_APP}||${OPS_REV}||${OPS_SERVER} %0A |-&amp;summary=robot change&amp;starttimestamp=${TIME}&amp;token=${ETOKEN}&amp;format=json"</p>
+  
+  <p>curl -s -d "${URL}" http://你的wiki域名/wiki/api.php -b cookies.txt -D cookies.txt &gt; result<br>
+  echo "\n**write successful**\n"
+  </p>
+  
+  <p><strong>具体使用：</strong>
+  首先新建一个名字为Online_logging的页面，内容如下：
+  </p>
+<blockquote>{|border="1" cellspacing="0" <br>
+  |-<br>
+  ! 日期 || 项目 || 版本号 || 机器<br>
+  |-</blockquote>
+  
+  <p></p>
+<blockquote>sh wiki.sh 项目 版本号 服务器ip</blockquote>
+  
+  <p><strong>api参考：</strong>
+  http://www.mediawiki.org/wiki/API:Login
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/06/24/java-log4j-logger-analyzer/">Java Log4j 日志分析工具分享</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-06-24T00:00:00+08:00" pubdate data-updated="true">2011-06-24 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img01.taobaocdn.com/imgextra/i1/T1jH1hXjFkXXciRrcW_022533.jpg" alt="log4j,analyzer">
+  java线上项目往往有许多的exception出现了没来得及去看，通过下面的工具，可以在每天早晨上班的时候通过邮件发出头一天出现的异常次数，是提高生产力和提早发现问题的好办法。<br>
+  配置：
+  </p>
+<blockquote>
+  1.解压到指定目录<br>
+   /data/analyze<br>
+  2.email发送配置<br>
+   vim mail.pl<br>
+   5行，6行，7行，14行 修改为自己的配置<br>
+  3.server配置<br>
+   ssh-keygen打通ssh<br>
+   cd server<br>
+   项目名_server写服务器ip，多个机器一行一个<br>
+  4.其他<br>
+   可能会有不相同的log目录地址，看着修改一下shell就行。
+  </blockquote>
+  *修改自烧饼的脚本，点击下载：
+  <a href="http://ishare.iask.sina.com.cn/f/16530420.html">http://ishare.iask.sina.com.cn/f/16530420.html</a>
+  
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/06/14/hive-hadoop-namenode-problem/">Hive迁移hadoop Namenode时遇到的问题</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-06-14T00:00:00+08:00" pubdate data-updated="true">2011-06-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_OqfXfNnXXbx.crb_093330.jpg" alt="hadoop hive namenode 迁移"></p>
+  
+  <p>使用了一段时间的hive和hadoop，在迁移datanode时很容易，要迁移namenode，hive里就闹情绪了。更改namenode后，在hive中运行select 依旧指向之前的namenode地址。</p>
+  
+  <p>要如何解决呢，具体作如下：<br>
+  1.复制打包老的namenode<br>
+  2.复制打包老的namenode的hdfs目录<br>
+  3.到新机器准备好：修改master的值 复制到各节点 修改hive的定义<br>
+  4.hive这里使用了mysql来保存metadata<br>
+  因为这些信息会被写死在hive的DBS和SBS表里，下面是关键的一步：<br>
+  进入mysql，执行下面的sql，
+  </p>
+<blockquote>update DBS set DB_LOCATION_URI=REPLACE(DB_LOCATION_URI,'old host','new host');<br>
+  update SDS set LOCATION=REPLACE(LOCATION,'old host','new host');</blockquote>
+  
+  <p>启动，一切正常了！迁移hive namenode成功。</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

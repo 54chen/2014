@@ -1,0 +1,280 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Quercus记录：php使用连接池访问数据库 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="上周记录了如何用quercus建立混合型项目。
+  http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html
+  这里来说说与数据库的访问，使用jndi得到连接池的好处。 JNDI
+  (Java Naming and …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/11/04/quercus-php-connect-pool">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Quercus记录：php使用连接池访问数据库</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-11-04T00:00:00+08:00" pubdate data-updated="true">2011-11-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://www.caucho.com/wp-content/themes/caucho/images/caucho-logo.png" alt="java php quercus">
+  上周记录了如何用quercus建立混合型项目。
+  <a href="http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html">http://www.54chen.com/php-tech/quercus-notes-php-java-mixed-projects.html</a>
+  这里来说说与数据库的访问，使用jndi得到连接池的好处。</p>
+  
+  <p><strong>JNDI</strong>
+  (Java Naming and Directory Interface)是SUN公司提供的一种标准的Java命名系统接口，JNDI提供统一的客户端API，通过不同的访问提供者接口JNDI SPI的实现，由管理者将JNDI API映射为特定的命名服务和目录系统，使得Java应用程序可以和这些命名服务和目录服务之间进行交互。</p>
+  
+  <p><strong>正题</strong>
+  在quercus中可以随意使用mysql_connect与mysql_pconnect两个方法来连接数据库。<br>
+  当在web.xml定义得有database相关的消息时，mysql_connect与mysql_pconnect都会自动忽略里面的参数设置，直接使用web.xml的定义。</p>
+  
+  <p><strong>添加jndi设置：</strong>
+  vim WEB-INF/web.xml
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;?</span><span class="tag-name">xml</span><span> </span><span class="attribute">version</span><span>=</span><span class="attribute-value">"1.0"</span><span> </span><span class="attribute">encoding</span><span>=</span><span class="attribute-value">"utf-8"</span><span class="tag">?&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;</span><span class="tag-name">web-app</span><span>  </span><span class="attribute">xmlns</span><span>=</span><span class="attribute-value">"http://caucho.com/ns/resin"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>  <span class="tag">&lt;</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>truth application</span><span class="tag">&lt;/</span><span class="tag-name">description</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>  <span class="tag">&lt;</span><span class="tag-name">database</span><span> </span><span class="attribute">jndi-name</span><span>=</span><span class="attribute-value">"jdbc/mysql"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">driver</span><span> </span><span class="attribute">type</span><span>=</span><span class="attribute-value">"com.mysql.jdbc.Driver"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>      <span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://192.168.1.5:3306/truth?</span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">true</span><span>&amp;amp;</span><span class="attribute">characterEncoding</span><span>=</span><span class="attribute-value">utf</span><span>-8</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>      <span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>你的用户名</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>      <span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>你的密码</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>      <span class="tag">&lt;</span><span class="tag-name">init-param</span><span> </span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span> </span><span class="comments">&lt;!--实践证明这个是不管用的，因为quercus写土了，全用的latin1字符集，后面再说--&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>  <span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  使用的是resin4，需要继续在web.xml的servlet段里增加：
+  <div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>  <span class="tag">&lt;</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>database</span><span class="tag">&lt;/</span><span class="tag-name">param-name</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>  <span class="tag">&lt;</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">param-value</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;/</span><span class="tag-name">init-param</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  这里注意，param-value与上面的jndi-name对应，mysql_connnect函数在web.xml里有这个init-param的定义的时候，将使用对应的jndi的设置。由此可得到连接池的好处。
+  
+  <p>上面的例子只使用了jdbc的基础驱动，如果向下面的配置，自然就得到了pool:
+  <strong>例子1:</strong>
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>  <span class="tag">&lt;</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>  <span class="tag">&lt;</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span> </span><span class="tag">&lt;</span><span class="tag-name">type</span><span class="tag">&gt;</span><span>com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource</span><span class="tag">&lt;/</span><span class="tag-name">type</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://localhost:3306/dbname</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>username</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>password</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">init-param</span><span> </span><span class="attribute">useUnicode</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>  </span></span></li>
+<li class=""><span>  <span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>例子2:</strong>
+      </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>      <span class="tag">&lt;</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>jdbc/mysql</span><span class="tag">&lt;/</span><span class="tag-name">jndi-name</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>      <span class="tag">&lt;</span><span class="tag-name">driver</span><span> </span><span class="attribute">type</span><span>=</span><span class="attribute-value">"org.gjt.mm.mysql.Driver"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>jdbc:mysql://localhost:3306/test</span><span class="tag">&lt;/</span><span class="tag-name">url</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">user</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">user</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">password</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">password</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>       <span class="tag">&lt;/</span><span class="tag-name">driver</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>       <span class="tag">&lt;</span><span class="tag-name">prepared-statement-cache-size</span><span class="tag">&gt;</span><span>8</span><span class="tag">&lt;/</span><span class="tag-name">prepared-statement-cache-size</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>       <span class="tag">&lt;</span><span class="tag-name">max-connections</span><span class="tag">&gt;</span><span>20</span><span class="tag">&lt;/</span><span class="tag-name">max-connections</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>       <span class="tag">&lt;</span><span class="tag-name">max-idle-time</span><span class="tag">&gt;</span><span>30s</span><span class="tag">&lt;/</span><span class="tag-name">max-idle-time</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>     <span class="tag">&lt;/</span><span class="tag-name">database</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p>这些简单的配置，都可以让php轻松跑在连接池上。
+  <strong>问题所在：</strong>
+  quercus写土了，没有在用户设置为unicode的时候来解析用户的输入，到处是hard code的latin1。（本来在GAE里使用这东西的人挺多的，可惜吧，AGE被盾了，然后quercus反馈latin1问题的人也不多，唉。）
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span>com.caucho.quercus.lib.db.JdbcConnectionResource: </span><span class="number">94</span><span>  </span><span class="number">348</span><span>  </span></span></li>
+<li class=""><span>com.caucho.quercus.lib.db.Mysqli:<span class="number">229</span><span>  </span></span></li>
+</ol>
+</div>
+  上面三处修改为utf8即可。
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-11-04T00:00:00+08:00" pubdate data-updated="true">2011-11-04 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

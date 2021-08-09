@@ -1,0 +1,630 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content='54chen weibo Memo 2011-06-05 2011-06-05 00:00:00 +0800 php服务器，需要定期检查一下（eval,shell_exec,passthru,popen,system）：find . -type f -name "*.php&amp; …'>
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/22">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/05/30/chang-java-treemap-store-ip/">改写java TreeMap制造方便查询的ip内存库</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-05-30T00:00:00+08:00" pubdate data-updated="true">2011-05-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1AhydXlJnXXcZ9h76_061839.jpg" alt="ip"></p>
+  
+  <p>国库流行的ip库记录数大约在6万条左右，数据格式大约都是如下：<br>
+  start,end,country...<br>
+  要查询的时候都是放到mysql里去，然后select * from ip where start&gt;=xx and end end &lt;=xx来得到ip信息，我（54chen）在搞一个实时监控时，因为并发量非常大，全部查询IP库，需要好几万每秒的查询，特改了java的TreeMap的get方法，将所有数据放到内存里来作，put的时候还是保持TreeMap的红黑树实现，以start作为key，而在get的时候有一个 compare的过程，在发现compare是大于0的时候进行如下修改：
+  </p>
+<blockquote>else if (cmp &gt; 0) {<br>
+  int start = ((Data) p.value).getStart();<br>
+  int end = ((Data) p.value).getEnd();<br>
+  int intKey = Integer.parseInt(k.toString());<br>
+  if (intKey &gt;= start &amp;&amp; intKey &lt;= end) {<br>
+  return p;<br>
+  }
+  p = p.right;<br>
+  }</blockquote>
+  大概意思是：在树上遇到比要找的数据小的节点时，从数据中取到end的大小，来参加对比，如果满足要求，直接返回。
+  
+  <p>附修改好的代码：
+  <a href="http://ishare.iask.sina.com.cn/f/15805095.html">http://ishare.iask.sina.com.cn/f/15805095.html</a></p>
+  
+  <p><strong>重要补充：</strong></p>
+  
+  <p>由qunar的sunli大侠补充，用实现comparable的key用法更加正宗，代码如下：
+  </p>
+<blockquote>public class Chen {<br>
+  public static void main(String[] args) {</blockquote>
+  
+  <p>java.util.TreeMap&lt;IpEntry, Data&gt; xmap = new  java.util.TreeMap&lt;IpEntry, Data&gt;();<br>
+  xmap.put(new IpEntry(0, 100), genData(0, 100, ""));<br>
+  xmap.put(new IpEntry(101, 200), genData(101, 200, "小"));<br>
+  xmap.put(new IpEntry(2000, 3000), genData(2000, 3000, "佬"));<br>
+  xmap.put(new IpEntry(201, 300), genData(201, 300, "巴西"));<br>
+  xmap.put(new IpEntry(501, 600), genData(501, 600, "法国"));<br>
+  xmap.put(new IpEntry(701, 800), genData(701, 800, "英国"));<br>
+  xmap.put(new IpEntry(601, 700), genData(601, 700, ""));<br>
+  xmap.put(new IpEntry(1601, 1700), genData(1601, 1700, "广州"));</p>
+  
+  <p>Data data = xmap.get(new IpEntry(1260, 1260));<br>
+  if (data == null) {<br>
+  System.out.println("not found!");<br>
+  } else {<br>
+  System.out.println(data.getCountry());<br>
+  }
+  }</p>
+  
+  <p>private static class IpEntry implements Comparable&lt;IpEntry&gt; {</p>
+  
+  <p>final long start;<br>
+  final long end;</p>
+  
+  <p>IpEntry(long start, long end) {<br>
+  this.start = start;<br>
+  this.end = end;<br>
+  }</p>
+  
+  <p>public int compareTo(IpEntry t) {<br>
+  long t1 = start - t.start;<br>
+  if (t1 &lt; 0) {<br>
+  return -1;<br>
+  long t2 = end - t.end;<br>
+  if (t1 &gt;= 0 &amp;&amp; t2 &lt;= 0) {<br>
+  return 0;<br>
+  return 1;<br>
+  }</p>
+  
+  <p>}</p>
+  
+  <p>private static Data genData(int start, int end, String country) {<br>
+  Data data = new Data();<br>
+  data.setCountry(country);<br>
+  data.setStart(start);<br>
+  data.setEnd(end);<br>
+  return data;<br>
+  }
+  }</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/05/24/maven-jar-auto-run-bash/">Maven打jar包自动生成run脚本-appassembler插件的使用</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-05-24T00:00:00+08:00" pubdate data-updated="true">2011-05-24 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://ww1.sinaimg.cn/bmiddle/569f6ce8jw1dhi9e5bj6wj.jpg" alt=""></p>
+  
+  <p>关键配置：
+  </p>
+<blockquote>&lt;plugin&gt;<br>
+  &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;<br>
+  &lt;artifactId&gt;appassembler-maven-plugin&lt;/artifactId&gt;<br>
+  &lt;version&gt;1.1.1&lt;/version&gt;<br>
+  &lt;configuration&gt;<br>
+  &lt;programs&gt;<br>
+  &lt;program&gt;<br>
+  &lt;mainClass&gt;com.chen.logtailer.Tail&lt;/mainClass&gt;<br>
+  &lt;name&gt;app&lt;/name&gt;<br>
+  &lt;/program&gt;<br>
+  &lt;/programs&gt;<br>
+  &lt;/configuration&gt;<br>
+  &lt;/plugin&gt;</blockquote>
+  
+  <p>#mvn package appassembler:assemble</p>
+  
+  <p>#sh target/appassembler/bin/app</p>
+  
+  <p><strong>优点：</strong>
+  不需要管理各种run的脚本，自动生成。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/05/20/h3c-load-balance/">巧用交换机，瞬间切流量</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-05-20T00:00:00+08:00" pubdate data-updated="true">2011-05-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_NWcXbNXXXcQbh6a_121410.jpg" alt="h3c">
+  需求：<br>
+  1号机服务移到2号机，然后要把1号机搬走。</p>
+  
+  <p>原理：<br>
+  交换机有ip对应mac地址的缓存，只需复制到ip和mac，可以在机房内的局域网里瞬间切换到另一个机器上。</p>
+  
+  <p>作：<br>
+  1）在2号机准备好1号机的服务，并测试通过。记录1号机的mac和ip<br>
+  2）以下作要双开窗口，快速作<br>
+  3）在1号机执行：ifocnfig eth0 down<br>
+  4）在2号机执行：<br>
+  ifconfig eth0:0 123.123.123.1<br>
+  ifconfig eth0:0 hw ether 111111111111[1号机mac]<br>
+  ifconfig eth0:0 up<br>
+  5）恭喜成功了！<br>
+  6）搬走1号机，再也不要回来！<br>
+  7）在2号机/etc/rc.local里添加：<br>
+  ifconfig eth0:0 123.123.123.1<br>
+  ifconfig eth0:0 hw ether 111111111111[1号机mac]<br>
+  ifconfig eth0:0 up<br>
+  终。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/05/15/king-of-the-server/">硬件为王，软件为帝--记突增的访问</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-05-15T00:00:00+08:00" pubdate data-updated="true">2011-05-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1pM1bXgdlXXapI9ra_122249.jpg" alt="mysql" width="250">
+  五一归来两周，精力都放在了因为服务器压力突增而来的各种鸡飞狗跳的事情上，今天总结一下，算是对过去两周的总结，希望对各创业团队有所借鉴。<br>
+  1.访问突增，连锁反应<br>
+  最先开始出现问题的，是在小负载下没有出现的问题，在大压力时，只要DB一堵，表像就会是循环锁死。<br>
+  解决之道：<br>
+  服务要有清晰的架构，开发规范里一定要有明确的架构层次规范，最好还有代码的层次规范。</p>
+  
+  <p>2.mysql设计不合理，压力指数增加<br>
+  mysql中存在大量的更新作，特别是大字段或者变长字段的频繁更新，导致磁盘io居高不下，慢查询越来越多。<br>
+  硬解决之道：<br>
+         raid卡加电，开启raid写缓存：一般服务器的raid卡都没有开启，开启是有一定用处的，但有一个前提，不是待续的高写入，否则这个写缓存是没有意义的。电池充电时无法缓存，一般三个月充一次电。<br>
+         转微博：FusionioChina 回复 @YauzZ:多一个故障点。多一份丢数据的可能。而且目前有Raid卡的内存做到1GB。丢不起呀。(5月11日 23:29) <br>
+         从raid分到多个盘、盘柜，都是从硬件上用多硬盘分担的好方案。<br>
+        <br>
+  软解决之道：<br>
+         写方案建立mysql隔离层，在写入前预先处理，类似软件缓存方案，效果明显，修改复杂。</p>
+  
+  <p>3.后续可做<br>
+         灵活的中间层数据层切换逻辑，让负载可以随时转移、分隔，基本可以达到“人傻钱多，万事不愁”。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/21">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <em>22</em>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/23">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

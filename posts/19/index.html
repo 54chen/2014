@@ -1,0 +1,885 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2011-09-18 2011-09-18 00:00:00 +0800 riak源码阅读手记 压力测试 http://t.co/WxuWVpQi #
+  riak源码阅读手记 与Cassandra相比 http://t.co/iNidnsc #
+  @Fenng …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/19">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/09/15/riak-benchmark/">Riak源码阅读手记 压力测试</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-09-15T00:00:00+08:00" pubdate data-updated="true">2011-09-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="erlang riak"></p>
+  
+  <p><strong>基础环境：</strong>
+  三个台式机</p>
+  
+  <p><strong>一次作：</strong>
+  作一段购物车数据，先写包括3个货物的数据，然后取出来，再加上三个后存入。</p>
+  
+  <p><strong>压力结果：</strong>
+  1) 10个线程，无连接池化，每次新连接。PBClient。每次req包括上述一次作里的一写一读一写三次。</p>
+  
+  <p>Rate: 122 req/s<br>
+  Rate: 103 req/s<br>
+  Rate: 119 req/s<br>
+  Rate: 110 req/s<br>
+  Rate: 117 req/s<br>
+  Rate: 116 req/s<br>
+  Rate: 121 req/s<br>
+  Rate: 110 req/s<br>
+  Rate: 116 req/s<br>
+  Rate: 111 req/s<br>
+  Rate: 123 req/s<br>
+  Rate: 122 req/s<br>
+  Rate: 119 req/s<br>
+  Rate: 123 req/s<br>
+  Rate: 110 req/s</p>
+  
+  <p>三个节点平均load为小于1。</p>
+  
+  <p>2）50个线程，无连接池化，每次新连接。PBClient。每次req包括上述一次作里的一写一读一写三次。</p>
+  
+  <p>Rate: 124 req/s<br>
+  Rate: 119 req/s<br>
+  Rate: 124 req/s<br>
+  Rate: 127 req/s<br>
+  Rate: 114 req/s<br>
+  Rate: 103 req/s<br>
+  Rate: 93 req/s<br>
+  Rate: 110 req/s<br>
+  Rate: 120 req/s<br>
+  Rate: 117 req/s<br>
+  Rate: 121 req/s<br>
+  Rate: 119 req/s<br>
+  Rate: 109 req/s</p>
+  
+  <p>三个节点平均load为1。接入节点load略高。</p>
+  
+  <p>3）100个线程，无连接池化，每次新连接。PBClient。每次req包括上述一次作里的一写一读一写三次。</p>
+  
+  <p>Rate: 89 req/s<br>
+  Rate: 109 req/s<br>
+  Rate: 97 req/s<br>
+  Rate: 108 req/s<br>
+  Rate: 105 req/s<br>
+  Rate: 105 req/s<br>
+  Rate: 105 req/s<br>
+  Rate: 106 req/s<br>
+  Rate: 104 req/s<br>
+  Rate: 106 req/s<br>
+  Rate: 103 req/s<br>
+  Rate: 91 req/s<br>
+   
+  三个节点平均load为1。接入节点load为大于2。</p>
+  
+  <p>以上数据为从一个节点打入数据，接入节点负载略高。无池化，在建立连接浪费可能比较多。进行改进，合并发起连接的过程和接入节变成所有节点。</p>
+  
+  <p>1）三个节点共同接入，最大连接数150，相当于池化连接，150个线程，PBClient。<br>
+  Rate: 271 req/s<br>
+  Rate: 275 req/s<br>
+  Rate: 256 req/s<br>
+  Rate: 276 req/s<br>
+  Rate: 287 req/s<br>
+  Rate: 288 req/s<br>
+  Rate: 280 req/s<br>
+  Rate: 293 req/s<br>
+  Rate: 279 req/s<br>
+  Rate: 291 req/s<br>
+  Rate: 254 req/s<br>
+  Rate: 287 req/s<br>
+  Rate: 288 req/s<br>
+  Rate: 283 req/s<br>
+  Rate: 292 req/s</p>
+  
+  <p>平均load 1，无明显负载偏移。</p>
+  
+  <p>2）三个节点共同接入，最大连接数300，相当于池化连接，300个线程，PBClient。<br>
+  Rate: 273 req/s<br>
+  Rate: 234 req/s<br>
+  Rate: 264 req/s<br>
+  Rate: 264 req/s<br>
+  Rate: 263 req/s<br>
+  Rate: 277 req/s<br>
+  Rate: 253 req/s<br>
+  Rate: 250 req/s<br>
+  Rate: 258 req/s<br>
+  Rate: 218 req/s<br>
+  Rate: 237 req/s<br>
+  Rate: 268 req/s<br>
+  Rate: 232 req/s<br>
+  Rate: 245 req/s<br>
+  Rate: 247 req/s</p>
+  
+  <p>平均load 1.5，无明显负载偏移。</p>
+  
+  <p>同机器的mysql性能压测结论为：http://www.54chen.com/java-ee/amoeba-benchmark-report.html<br>
+  可得到比mysql qps高3倍以上（因为riak的压测中每req为2写1读）。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/09/14/riak-vs-cassandra/">Riak源码阅读手记 与Cassandra相比</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-09-14T00:00:00+08:00" pubdate data-updated="true">2011-09-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak"></p>
+  
+  <p>riak源码阅读手记一 初出茅庐 项目入口<br>
+  http://www.54chen.com/_linux_/riak-source.html</p>
+  
+  <p>riak源码阅读手记二 左右开弓 启动<br>
+  http://www.54chen.com/_linux_/riak-cource-code.html</p>
+  
+  <p>riak源码阅读手记 运行安装<br>
+  http://www.54chen.com/_linux_/riak-source-install-run.html</p>
+  
+  <p>一些常用的指令：<br>
+  http://wiki.basho.com/Command-Line-Tools.html#riak-admin
+  <strong>
+  实现上：</strong>
+  1）虽然二者都是dynamo的实现，具体方法还是不一样的，riak更忠于dynamo的原文档，实现了所有文档提到的关键点。同时还增加了map reduce和links等功能。<br>
+  2）Cassandra略去了一些文档里的关键点：向量时钟、按照key范围的大分区等。增加了一些方法如：范围查询、固定分区。</p>
+  
+  <p><strong>扩展：</strong>
+  1） riak提供了bin/riak join这样的命令来加入新的节点，基本完全按照dynamo文档所说的一样来实现了，从多个节点去获取原来的负载和数据回来，每个节点的压力都可以得到平衡。<br>
+  2）相比之下，Cassandra集群的节点需要计算数据的一个范围。当加入节点时，Cassandra的策略是分出来相应分区上一半的范围去新节点。这点在一个Cassandra集群需要加节点时会很痛苦，可能会存在两个节点之间大规模的数据转移。</p>
+  
+  <p><strong>查询和分布：</strong>
+  1）riak有map reduce。<br>
+  2）Cassandra可以接hadoop达到M/R的效果。</p>
+  
+  <p><strong>写冲突检查：</strong>
+  1）riak使用了向量时钟。<br>
+  2）Cassandra使用了timestamp。如果时间有问题，可能会丢。</p>
+  
+  <p><strong>数据模型：</strong>
+  1）riak有bucket的概念，每个buckect可动态建立，每个buckect的数据模型都不一样。<br>
+  2）Cassandra的keyspace与列簇都是依赖xml定义的，如果要修改，需要重启。</p>
+  
+  <p><strong>API：</strong>
+  1）riak提供了http与protocol buffers两种<br>
+  2）Cassandra使用thrift</p>
+  
+  <p><strong>可配置的存储：</strong>
+  1）riak默认是bitcast存储，还有innodb，开发者很勤快，甚至还有leveldb。<br>
+  2）Cassandra一直就是SSTable。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/09/09/riak-source-install-run/">Riak源码阅读手记 运行安装</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-09-09T00:00:00+08:00" pubdate data-updated="true">2011-09-09 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak">
+  riak源码阅读手记一 初出茅庐 项目入口
+  <a href="http://www.54chen.com/_linux_/riak-source.html">http://www.54chen.com/_linux_/riak-source.html</a></p>
+  
+  <p>riak源码阅读手记二 左右开弓 启动
+  <a href="http://www.54chen.com/_linux_/riak-cource-code.html">http://www.54chen.com/_linux_/riak-cource-code.html</a></p>
+  
+  <p><strong>代码运行入口</strong>
+  riak-kv/ebin/riak_kv.app文件定义了otp标准项目的结构，一个不错的实例：http://www.iteye.com/topic/342819<br>
+  {mod, {riak_kv_app, []}}一行定义了入口。打开riak_kv_app文件：<br>
+  -export([start/2,stop/1]).<br>
+  定义了两大个方法，start和stop。</p>
+  
+  <p><strong>先看start:</strong>
+  启动riak_kv及相关的server。<br>
+  检查系统时间。<br>
+  加入系统变量。<br>
+  确保设置NWR的值和一些vclock的初始值。<br>
+  看storage_backend是否启动。<br>
+  在cluster_info中注册。<br>
+  启动supervisor。<br>
+  全部启动。</p>
+  
+  <p>stop：application:stop。</p>
+  
+  <p><strong>跑一把试试：</strong>
+  A机：192.168.103.10<br>
+  B机：192.168.97.48<br>
+  C机：192.168.100.52<br>
+  三个节点，已经装好erlang R13B04。
+  <strong>先在A机作</strong>：</p>
+  
+  <p></p>
+<blockquote>wget http://downloads.basho.com/riak/riak-0.14/riak-0.14.2.tar.gz<br>
+  tar zxvf riak-0.14.2.tar.gz<br>
+  cd riak-0.14.2<br>
+  make rel</blockquote>
+  
+  <p>然后在rel/riak目录下会有最编译好的节点程序。</p>
+  
+  <p></p>
+<blockquote>scp -r rel root@192.168.100.52:/root/<br>
+  scp -r rel root@192.168.97.48:/root/</blockquote>
+  
+  <p>cd rel/riak<br>
+  ABC三机修改配置：<br>
+  vim etc/app.config<br>
+  把127.0.0.1修改为对应的ip<br>
+  vim etc/vm.args<br>
+  同上。</p>
+  
+  <p>A：bin/riak start<br>
+  B:  bin/riak start<br>
+  bin/riak-admin join riak@192.168.103.10<br>
+  C:  bin/riak start<br>
+  bin/riak-admin join riak@192.168.103.10</p>
+  
+  <p>./riak-admin status</p>
+  
+  <p>欧了。</p>
+  
+  <p>此时默认使用bitcask做为存储引擎。</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/09/01/taobao-oceanbase-intro/">淘宝分布式数据库系统OceanBase观后闲话小记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-09-01T00:00:00+08:00" pubdate data-updated="true">2011-09-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>http://code.taobao.org/trac/OceanBase/wiki/intro<br>
+  讲得还比较细。</p>
+  
+  <p><strong>数据模型：</strong>
+  oceanBase采用类似cassandra的tablet/sstable数据模型实现，简单说就是bigtable的数据模型。</p>
+  
+  <p><strong>系统目标：</strong>
+  其目标比较明确，是一个强CA类系统，P（分区能力）。目标是强一致性、高可用性，分区能力稍弱。从文档上看，他们并不担心的快速的数据增长量。</p>
+  
+  <p><strong>去中心化：</strong>
+  见图：
+  <img src="http://code.taobao.org/trac/OceanBase/raw-attachment/wiki/intro/test.JPG" alt="taobao oceanbase">
+  RootServer/UpdateServer是一个中心节点，这个有死翘翘的可能性（好吧，他们搞了一主一备）。</p>
+  
+  <p><strong>支持的作：</strong>
+  基础的merge/join都可以，一般使用上是够用了。DDL DML的定义基本上是还需要发展的。另外如果开源出来了，广泛项目使用意义上，还需要支持UDF user defined function，实际上把mysql文档实现一遍就ok了。</p>
+  
+  <p><strong>继续观望，欢迎抛砖。向开源的项目致敬。</strong></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/08/24/riak-cource-code/">Riak源码阅读手记二 左右开弓 启动</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-08-24T00:00:00+08:00" pubdate data-updated="true">2011-08-24 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_EN.XadjXXbk3DE3_051340.jpg" alt="erlang riak 54chen">
+  <strong>目标系统(target system)</strong>
+  OTP系统定义里有这么一个东西：<br>
+  可以被一般的erl脚本启动的系统叫基础目标系统；<br>
+  除此之外还可以做运行时代码替换的系统叫简单目标系统；<br>
+  如果还支持日志输出到文件、自动定时启动的话就叫做内嵌目标系统。</p>
+  
+  <p><strong>启动目标系统的方式</strong>
+  通过erlang/OTP标准的reltool工具生成的目标系统，可以用多种方式灵活启动。<br>
+  第一种：</p>
+  
+  <p></p>
+<blockquote>os&gt; /usr/local/erl-target/bin/erl</blockquote>
+  
+  <p>这只启动了一个基础目标系统。基本没什么具体功能。</p>
+  
+  <p>第二种：</p>
+  
+  <p></p>
+<blockquote>os&gt; /usr/local/erl-target/bin/erl -boot /usr/local/erl-target/releases/FIRST/start</blockquote>
+  
+  <p>用-boot参数，这可以启动一个简单目标系统。releases/RELEASES文件可用来做热替换。</p>
+  
+  <p>第三种：</p>
+  
+  <p></p>
+<blockquote>bin/start
+  </blockquote>
+  
+  <p>这个脚本会去调用 bin/run_erl ，最终调用 bin/start_erl启动。run_erl是一个提供运行时日志输出到文件的封装。还提供了简单的机制attach到一个erlang shell。</p>
+  
+  <p><strong>自定义behaviour</strong></p>
+  
+  <p></p>
+<blockquote>-spec behaviour_info(atom()) -&gt; 'undefined' | [{atom(), arity()}].<br>
+  behaviour_info(callbacks) -&gt;
+      [{start,2},       % (Partition, Config)<br>
+       {stop,1},        % (State) <br>
+       {get,2},         % (State, BKey)<br>
+       {put,3},         % (State, BKey, Val)<br>
+       {list,1},        % (State)<br>
+       {list_bucket,2}, % (State, Bucket)<br>
+       {delete,2},      % (State, BKey)<br>
+       {drop,1},        % (State)<br>
+       {fold,3},        % (State, Folder, Acc), Folder({B,K},V,Acc)<br>
+       {is_empty,1},    % (State)<br>
+       {callback,3}];   % (State, Ref, Msg) -&gt;
+  behaviour_info(_Other) -&gt;
+      undefined.</blockquote>
+  
+  <p>上述就是一个自定义的behaviour，使用的时候：</p>
+  
+  <p></p>
+<blockquote>-behaviour(xxx).<br>
+  ...</blockquote>
+  
+  <p>有点类似java的interface.</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/08/22/riak-source/">Riak源码阅读手记一 初出茅庐 项目入口</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-08-22T00:00:00+08:00" pubdate data-updated="true">2011-08-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak"></p>
+  
+  <p><strong>简介</strong>
+  basho（相扑）是一家佬的技术公司，专营数据存储和管理软件，11年6月30日获得了750万美元的融资。basho将riak开源，通过收取riak的维护和管理界面软件的使用费用来赚钱，和resin的公司类似。<br>
+  今天主要研究的是，basho旗下的riak:一个类dynamo系统的kv存储。riak使用了erlang进行开发，将代码精简到极致。</p>
+  
+  <p><strong>rebar</strong>
+  riak的代码使用了一个叫做rebar（钢筋）的erlang构建工具，使用起来真的很方便，其使用方法建议参考这篇文章：http://www.linezing.com/blog/?p=347。每个项目下，都有一个叫做rebar.config的文件，里面用erlang语法记录了这个项目需要的目录、环境、版本、以及依赖的包在github上的位置。真的很方便。riak项目中，rebar和reltool被大量使用。reltool使用方法参见 http://erlangdisplay.iteye.com/blog/508944</p>
+  
+  <p>riak的总控工程：https://github.com/basho/riak。<br>
+  看rebar.config定义的依赖部分:</p>
+  
+  <p></p>
+<blockquote>{deps, [<br>
+         {cluster_info, "1.1.*", {git, "git://github.com/basho/cluster_info", {branch, "master"}}}, %% 这个模块提供了一个松散易扩展的导出集群节点状态的办法。可以收集的信息包括：时间、所有的erlang进程的静态统计、网络连接情况、cpu和内存、大队列进程、内部内存调用统计、ETS、各节点的名字版本等<br>
+         {luwak, "1.*", {git, "git://github.com/basho/luwak", {branch, "master"}}}, %% 大对象存储。用来存音频视频啥的。<br>
+         {riak_kv, "0.14.*", {git, "git://github.com/basho/riak_kv", {branch, "master"}}}, %% 这个模块依赖riak_core，在这一层里，封装了给各种client调用的接口，处理具体存储、M/R等。<br>
+         {riak_search, "0.14.*", {git, "git://github.com/basho/riak_search",<br>
+                                  {branch, "master"}}} %% 基于riak的全文检索实现<br>
+         ]}.</blockquote>
+  
+  <p><strong>构建过程</strong>
+  通过rebar的reltool支持，在riak项目中，rebar.conf中定义了{sub_dirs,["rel"]}，表示在rel目录下使用reltool创建一个发行版本。<br>
+  在rel目录的rel.config中，{lib_dirs, ["../deps"]}，定义了所有的子模块都放在了deps目录下。很长的一个config文件，有点像ant脚本。</p>
+  
+  <p><strong>函数规范定义：spec</strong>
+  -spec Module:Function(ArgType1, ..., ArgTypeN) -&gt; ReturnType.<br>
+  函数的参数数目必须与函数规范定义相同，否则编译出错。定义了type及spec，我们可以使用 dialyzer 对代码进行静态分析，在运行之前发现很多低级或者隐藏的错误。</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/18">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <em>19</em>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/20">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

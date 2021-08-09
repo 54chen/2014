@@ -1,0 +1,264 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Rose手册第一章：入门指引 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="ROSE
+  1.1 简介： 人人网、糯米网释出的、开源的高效Java web开发框架。在小米米聊服务端再次被验证和使用。一个从零开始的创业公司，在大家技术背景不一的情况下，rose很简单快速地传达到了大家中间。本手册致力于让php开发人员也能快速使用上java开发高性能服务。
+  1）rose是什么？ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/03/30/rose-manual-1">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Rose手册第一章：入门指引</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-03-30T00:00:00+08:00" pubdate data-updated="true">2012-03-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p></p>
+<p style="font-size:66px">ROSE</p>
+  <strong>1.1 简介：</strong>
+      人人网、糯米网释出的、开源的高效Java web开发框架。在小米米聊服务端再次被验证和使用。一个从零开始的创业公司，在大家技术背景不一的情况下，rose很简单快速地传达到了大家中间。本手册致力于让php开发人员也能快速使用上java开发高性能服务。
+  <strong>1）rose是什么？</strong>
+  
+  <p></p>
+<blockquote>    基于IoC容器 (使用Spring 2.5.6).<br>
+      收集最佳实践，形成规范和惯例，引导按规范惯例，简便开发.<br>
+      收集通用功能，形成一些可使用的组件，提高生产效率.<br>
+      特性的插拔，使用基于组合而非继承的设计.<br>
+      提供可扩展的点，保持框架的可扩展性.<br>
+      注重使用简易性的同时，注重内部代码设计和实现.
+  </blockquote>
+  
+  <p>如果你是一个创业公司在选择php还是java，同时如果你的团队有一个人写过一年java其他人都没写过。如果你想选择一个更加大型的系统框架，请使用rose，它收集了来自人人网、糯米网、小米科技的众多工程师的经验，你可以免费拥有这些。</p>
+  
+  <p><strong>2）rose能做什么？</strong>
+  <strong>初级rose用户：</strong>
+  rose可以用来完成一个网站。
+  <strong>中级rose用户：</strong>
+  rose可以用来完成一个大型网站，它提供的jade功能使得你的项目可以快速开发，自然切入连接池；它提供的portal功能，可以将一个网页分多个线程发起向DB的请求，节省用户的时间；它提供的pipe功能类似的bigpipe，让前端加速，与此同时还有portal多线程的优势。
+  <strong>高级rose用户：</strong>
+  rose可以加入spring任何特性，比如定时执行（去TM的crontab）；比如拦截器做统一权限控制。可以配置主库从库，分表规则。配置thrift、zookeeper可以得到牛B的高可用性高性能服务集群。</p>
+  
+  <p><strong>1.2 简明教程：</strong>
+  下面开始来进入rose框架下的开发。只需要有一个感性的认识即可。下一章里会专门详细的手把手教你搭建hello world项目。
+  <strong>1）需要些什么？</strong>
+  提前学习什么是maven：简单地说，maven是个build工具，用一个pom.xml来定义项目的依赖。通过一个命令mvn，可以地build compile（知道make吧，类似，或者类似ant）。<br>
+  也许还需要一个nexus，用来搭建自己的maven仓库（这些都是门槛啊，知道为什么java用的人在全球多，而在php的人似乎更多，因为我们的基础设施太落后了）。nexus的作用是配合maven工作。（54chen正在向sonatype申请将rose项目push到sonatype的官方库中，成功后这将省略掉这一步）</p>
+  
+  <p>然后需要在你的项目的pom文件中添加：<br>
+  	</p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-jade</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.1-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-scanning</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  这是三个最基础的框架包。
+  
+  <p><strong>2）一个controller长什么样？</strong>
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@Path</span><span>(</span><span class="string">"/"</span><span>)  </span></span></li>
+<li class=""><span><span class="keyword">public</span><span> </span><span class="keyword">class</span><span> TestController {  </span></span></li>
+<li class="alt"><span>    <span class="annotation">@Get</span><span>(</span><span class="string">"hello"</span><span>)  </span></span></li>
+<li class=""><span>    <span class="keyword">public</span><span> String test(){  </span></span></li>
+<li class="alt"><span>        <span class="keyword">return</span><span> </span><span class="string">"@a"</span><span>;  </span></span></li>
+<li class=""><span>    }  </span></li>
+<li class="alt"><span>}  </span></li>
+</ol>
+</div>
+  
+  <p>http://localhost/hello</p>
+  
+  <p>将会返回:a。就是这么简单。</p>
+  
+  <p><strong>下一节预告：rose手册第二章：配置与使用</strong></p>
+  
+  <p></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-03-30T00:00:00+08:00" pubdate data-updated="true">2012-03-30 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

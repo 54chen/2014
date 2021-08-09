@@ -1,0 +1,242 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>服务接入层小结 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="接入层
+  是指普通用户与核心业务逻辑中间的过程。现在常见的服务接入层，像nginx、lvs、php这些都可以算是。 观点
+  一种观点认为：接入的量不应该影响系统的正常运行，也就是不能接入不能处理的用户请求，类似上图中前图。
+  另一种观点认为：接入层应该尽量接入所有用户，类似上图中后图。 做法 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/01/18/access-layer">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">服务接入层小结</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-01-18T00:00:00+08:00" pubdate data-updated="true">2012-01-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2evmjXahaXXXXXXXX_!!13078490.jpg" alt="access,layer" width="500/">
+  <strong>接入层</strong>
+  是指普通用户与核心业务逻辑中间的过程。现在常见的服务接入层，像nginx、lvs、php这些都可以算是。</p>
+  
+  <p><strong>观点</strong>
+  一种观点认为：接入的量不应该影响系统的正常运行，也就是不能接入不能处理的用户请求，类似上图中前图。<br>
+  另一种观点认为：接入层应该尽量接入所有用户，类似上图中后图。</p>
+  
+  <p><strong>做法</strong>
+  nginx：<br>
+  nginx如果用做proxy，后端挂其他服务的话，是一个纯粹的NIO server。对用户来说，nginx是长连接（http 1.1），对后端服务来说，nginx是短连接（http 1.0）。</p>
+  
+  <p></p>
+<blockquote>default: proxy_connect_timeout 60s; 向后端服务创建连接的超时时间<br>
+  default: proxy_read_timeout 60s; 后端返回请求响应超时时间<br>
+  default: proxy_send_timeout 60s; 大请求发到后端超时时间</blockquote>
+  
+  <p>nginx通过上面的三个设置，当后端有响应不过来的时候，进行超时处理（记录日志），当发现超时很多了，就需要提升后端的处理能力了。</p>
+  
+  <p>那么，nginx自身的处理能力是否有上限呢？当然有!</p>
+  
+  <p></p>
+<blockquote>worker_processes  1;<br>
+  worker_connections  1024;</blockquote>
+  
+  <p>max_clients = worker_processes * worker_connections </p>
+  
+  <p>当超过max_clients的用户扑上来的时候，如果幸运后端没有能力问题，那就会看到nginx在日志中要求你增加worker的提示。</p>
+  
+  <p>php-fpm：</p>
+  
+  <p></p>
+<blockquote>pm = dynamic/static; dynamic时有最大进程最小进程之说，static时没有。只有一个上限。<br>
+  pm.max_children = 50;强制的一个阀门，后面的设置里，进程数不能大于这个。<br>
+  pm.start_servers = 20;启动时启动的fastcgi进程。<br>
+  pm.min_spare_servers = 5;最小fastcgi进程数量，dynamic有效<br>
+  pm.max_spare_servers = 35;最大fastcgi进程数量，dynamic有效</blockquote>
+  
+  <p>php没有异步进程概念，如果要使用php作为接入层，需要自己完成NIO扩大接入能力（接触到的ICE、thrift在php中都是同步作）。而接入能力就取决于上面的配置。</p>
+  
+  <p>java:<br>
+  java优秀的NIO框架netty。<br>
+  servlet3.0实现了异步请求的context，目前还没有在平常框架中进行使用。一般的用法为comet push server，性能未知。<br>
+  一般来说，用java做接入层很容易变成了业务层。（但是，为什么不呢？）</p>
+  
+  <p></p>
+<blockquote>tomcat 7.0.x提供了servlet3.0的这一特性，CometProcessor interface。<br>
+  resin 4.x提供了servlet3.0的这一特性，GenericCometServlet。</blockquote>
+  
+  <p>从名字看，大家都一致性地认为这一特性适合用来做comet server。（理论上可接入无限用户，直到费尽cpu、内存，服务器死机、jvm oom）</p>
+  
+  <p></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-01-18T00:00:00+08:00" pubdate data-updated="true">2012-01-18 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2012/01/30/maven-nexus-jar-note/" title="Next Post: maven库nexus拖不到jar包小记">maven库nexus拖不到jar包小记 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

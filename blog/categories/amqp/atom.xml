@@ -1,0 +1,181 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Amqp | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/amqp/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[Rabbitmq Java Client Api详解]]></title>
+      <link href="https://www.54chen.com/blog/2014/08/27/rabbitmq-java-client-apixiang-jie/"/>
+      <updated>2014-08-27T15:33:38+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/08/27/rabbitmq-java-client-apixiang-jie</id>
+      <content type="html"><![CDATA[<p><img src=http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg></p>
+  
+  <h1>AMQP</h1>
+  
+  <ul>
+  <li>AMQP协议是一个高级抽象层消息通信协议，RabbitMQ是AMQP协议的实现。</li>
+  </ul>
+  
+  
+  <h1>基础概念快速入门</h1>
+  
+  <ul>
+  <li>每个rabbitmq-server叫做一个Broker，等着tcp连接进入。</li>
+  <li>在rabbitmq-server进程内有Exchange，定义了这个消息的发送类型。（一对多、直连、多对多等等）</li>
+  <li>Queue是进程内的逻辑队列，有多个，有名字。</li>
+  <li>Binding联系Exchane与Queue。</li>
+  <li>Routing key由生产者指定。Binding key由消费者指定。二者联合决定一条消息的来去。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h1>java client api</h1>
+  
+  <h2>连接</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>ConnectionFactory factory = new ConnectionFactory();
+  </span><span class='line'>factory.setHost(hostName);
+  </span><span class='line'>Connection conn = factory.newConnection();
+  </span><span class='line'>Channel channel = conn.createChannel();</span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>以上是得到一个rabbitmq连接最最基础的代码，当然了，还可以设置一些诸如用户名密码的事情。</li>
+  <li>最后这个channel就可以用来收和发消息了。</li>
+  </ul>
+  
+  
+  <h2>消息者线程池</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>ExecutorService es = Executors.newFixedThreadPool(20);
+  </span><span class='line'>Connection conn = factory.newConnection(es);</span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>消费者时使用，上述自动开了一20个线程的池来搞。</li>
+  </ul>
+  
+  
+  <h2>地址数组</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>Address[] addrArr = new Address[]{ new Address(hostname1, portnumber1)
+  </span><span class='line'>                                 , new Address(hostname2, portnumber2)};
+  </span><span class='line'>Connection conn = factory.newConnection(addrArr);</span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>上述代码如果连hostname1失败了就去hostname2。</li>
+  <li>factory.newConnection()会触发这个检测。</li>
+  </ul>
+  
+  
+  <h2>声明exchange与queue</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>channel.exchangeDeclare(exchangeName, &ldquo;direct&rdquo;, true);
+  </span><span class='line'>String queueName = channel.queueDeclare().getQueue();
+  </span><span class='line'>channel.queueBind(queueName, exchangeName, routingKey);</span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>channel.exchangeDeclare 参数有 交换机名字  类型  是否持久化  不使用时是否自动删除 是否是内部的（不能被客户端使用） 其他参数</li>
+  <li>channel.queueDeclare 参数有 queue名字 是否持久化 独占的queue（仅供此连接） 不使用时是否自动删除 其他参数</li>
+  <li>channel.queueBind 参数有 queue名字 交换机名字 此次绑定使用的路由关键字  其他参数</li>
+  </ul>
+  
+  
+  <h2>发出消息</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>byte[] messageBodyBytes = &ldquo;Hello, world!&rdquo;.getBytes();
+  </span><span class='line'>channel.basicPublish(exchangeName, routingKey, null, messageBodyBytes);</span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>channel.basicPublish 参数有 要发出的交换机名字  路由关键字 是否强制（设置为true时，找不到收的人时可以通过returnListener返回）  是否立即（其实rabbitmq不支持） 其他属性 消息主体</li>
+  </ul>
+  
+  
+  <h2>线程安全</h2>
+  
+  <ul>
+  <li>Channel是线程好全的，但是最好是每个线程里用自己的Channel，因为在单个Channel里排队是有可能慢一些的。</li>
+  </ul>
+  
+  
+  <h2>最简单的办法消费消息</h2>
+  
+  <p><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+  <span class='line-number'>2</span>
+  <span class='line-number'>3</span>
+  <span class='line-number'>4</span>
+  <span class='line-number'>5</span>
+  <span class='line-number'>6</span>
+  <span class='line-number'>7</span>
+  <span class='line-number'>8</span>
+  <span class='line-number'>9</span>
+  <span class='line-number'>10</span>
+  <span class='line-number'>11</span>
+  <span class='line-number'>12</span>
+  <span class='line-number'>13</span>
+  <span class='line-number'>14</span>
+  <span class='line-number'>15</span>
+  <span class='line-number'>16</span>
+  <span class='line-number'>17</span>
+  </pre></td><td class='code'><pre><code class=''><span class='line'>boolean autoAck = false;
+  </span><span class='line'>channel.basicConsume(queueName, autoAck, &ldquo;myConsumerTag&rdquo;,
+  </span><span class='line'>     new DefaultConsumer(channel) {
+  </span><span class='line'>         @Override
+  </span><span class='line'>         public void handleDelivery(String consumerTag,
+  </span><span class='line'>                                    Envelope envelope,
+  </span><span class='line'>                                    AMQP.BasicProperties properties,
+  </span><span class='line'>                                    byte[] body)
+  </span><span class='line'>             throws IOException
+  </span><span class='line'>         {
+  </span><span class='line'>             String routingKey = envelope.getRoutingKey();
+  </span><span class='line'>             String contentType = properties.contentType;
+  </span><span class='line'>             long deliveryTag = envelope.getDeliveryTag();
+  </span><span class='line'>             // (process the message components here &hellip;)
+  </span><span class='line'>             channel.basicAck(deliveryTag, false);
+  </span><span class='line'>         }
+  </span><span class='line'>     });</span></code></pre></td></tr></table></div></figure></p>
+  
+  <ul>
+  <li>一个Channel一个Consumer。</li>
+  <li>channel.basicAck 回发ACK 参数 tag 是否多个。</li>
+  </ul>
+  
+  
+  <h2>零碎</h2>
+  
+  <ul>
+  <li>channel.basicQos 指定服务质量设置 参数 最大的投送字节数  最大的投送消息数量  设置是否要应用到整个channel（而不是一个消费者）。</li>
+  <li>factory.setAutomaticRecoveryEnabled(true) 网络有问题时，好后可自动恢复设置。</li>
+  <li>cf.setRequestedHeartbeat(5) 设置心跳时间。</li>
+  <li>exchange type可用的值：direct topic headers fanout。</li>
+  <li>exchange的类型有一个default，basicPublish没有指定时使用，而且，如果routingKey在指定绑定的时候，会去到绑定的exchange。</li>
+  <li>channel.queueDeclare().getQueue() 得到的是一个随机queue，断开连接后即删除。</li>
+  <li>当exchange为direct的时候routingKey与bindingKey必须完全一致才能消费消息。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

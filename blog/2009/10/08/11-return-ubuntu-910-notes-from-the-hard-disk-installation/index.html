@@ -1,0 +1,275 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[十一归来]ubuntu 9.10 硬盘安装手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="很早之前，科学院发布过一篇 ubuntu 8.10 desktop版本 硬盘安装手记 时隔今日，中间经过了一个9.04的beta版本后，又迎来了新的beta版本 9.10最近的发布过程： 2009年10月1日——Beta版本发布 2009年10月22日——公布发布候选版本 2009年10月29日 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/10/08/11-return-ubuntu-910-notes-from-the-hard-disk-installation">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[十一归来]ubuntu 9.10 硬盘安装手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-08T00:00:00+08:00" pubdate data-updated="true">2009-10-08 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>很早之前，科学院发布过一篇 <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/"><span style="font-size: x-small; color: #3366cc; font-family: Arial;">ubuntu 8.10 desktop版本 硬盘安装手记</span></a> 时隔今日，中间经过了一个9.04的beta版本后，又迎来了新的beta版本</p>
+  
+  <p>9.10最近的发布过程：</p>
+  
+  <p>2009年10月1日——Beta版本发布</p>
+  
+  <p>2009年10月22日——公布发布候选版本</p>
+  
+  <p>2009年10月29日——Ubuntu 9.10正版版本上架</p>
+  
+  <p>根据总结，Ubuntu 9.10中将会具有以下全新特性：</p>
+  
+  <p>1、Ubuntu 9.10中将会添加全新的令人印象更加深刻的启动图形；</p>
+  
+  <p>2、Ubuntu 9.10将会具有更快的启动速度（“Jaunty Jackalope”曾经在netbook上实现25秒的启动速度，Karmic Koala，尽管里面的动物“树袋熊”速度比较慢，但有望实现更快的启动速度）；</p>
+  
+  <p>3、Ubuntu 9.10将可以为Netbook更好地整合Moblin技术；</p>
+  
+  <p>4、Ubuntu 9.10将具有更好的视觉体验；</p>
+  
+  <p>5、Ubuntu 9.10将通过完整的开源软件来提升服务器版本的云计算性能；</p>
+  
+  <p>6、Ubuntu 9.10将主要采用Amazon APIs来管理云计算，当然GoGrid APIs 也在考虑中；</p>
+  
+  <p>7、Ubuntu 9.10中的Canonical 将创建Karmic Koala的标准Amazon机器镜像，本质上就是创建"ready-to-run" 程序，作为Amazon群体的“标准版本”；</p>
+  
+  <p>8、为了节约资源，Ubuntu 9.10中的休眠和唤醒特性将扩展到服务器版本。
+  </p>
+<blockquote>第七这个太牛B了，单台机器做成云里的一个节点，绝对主流，绝对未来！力顶！</blockquote>
+  7号，休假归来，拖一回搞个系统玩。
+  
+  <p>以下是安装步骤记录：</p>
+  
+  <p><strong>下载：</strong></p>
+  
+  <p><a href="http://releases.ubuntu.com/karmic/ubuntu-9.10-beta-desktop-i386.iso">http://releases.ubuntu.com/karmic/ubuntu-9.10-beta-desktop-i386.iso</a></p>
+  
+  <p>用迅雷啥的来拖，速度还不错，半小时搞到手。</p>
+  
+  <p>改名为ubuntu9.iso，放在了D：根目录里，用winrar打开，解压casper文件下的两个文件到c盘根目录。</p>
+  
+  <p>vmlinuz   和 initrd.lz</p>
+  
+  <p><strong>winGrub配置：</strong>
+  很高兴这个老机器安装了一个fedora core5和win2k，n年前的系统，从来不换系统，有杀，有病治病。</p>
+  
+  <p>winGrub的安装见 <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/"><span style="font-size: x-small; color: #3366cc; font-family: Arial;">ubuntu 8.10 desktop版本 硬盘安装手记</span></a> 前半部分内容。</p>
+  
+  <p>所以系统中已经有一个之前的GRLDR了，现在抄一下boot.ini和menu.lst</p>
+  
+  <p>C:\boot.ini
+  </p>
+<blockquote>[boot loader]<br>
+  timeout=5<br>
+  default=multi(0)disk(0)rdisk(0)partition(1)\WINNT<br>
+  [operating systems]<br>
+  multi(0)disk(0)rdisk(0)partition(1)\WINNT="Microsoft Windows 2000 Professional" /fastdetect<br>
+  C:\GRLDR="Linux"</blockquote>
+  C:\boot\grub\menu.lst
+  <blockquote>timeout 15</blockquote>
+  
+  <p>title 1. install Ubuntu9.10<br>
+  root (hd0,0)<br>
+  kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu9.iso ro quiet splash --<br>
+  label check live-install<br>
+  initrd (hd0,0)/initrd.lz
+  <strong>进入liveCD安装：</strong></p>
+  
+  <p>重启，先从boot.ini的界面进linux，再从wingrub的界面进 install Ubuntu9.10</p>
+  
+  <p>一切正常的话，能直接进入LiveCD的桌面了。</p>
+  
+  <p>然后打开终端，运行：
+  </p>
+<blockquote>umount -l /isodevice</blockquote>
+  <span style="color: #ff0000;">千万不要运行：umount -l /cdrom(真的不知道是哪个SB传播的要下这个区，这会导致之后的grub里看不到你装好的ubuntu系统)</span>
+  
+  <p>双击桌面的安装。。。</p>
+  
+  <p>这台老机器，2个80G的硬盘，全都使用了97%左右的空间（鬼知道装了些什么，难道有过量的毛片），每次到第四步识别分区的时候都要花12分钟左右。</p>
+  
+  <p><strong>总结：</strong></p>
+  
+  <p>这个版本的界面美化做得不错，不过grub2没感觉到有多方便，有可能是为了提高开机速度吧。目前为止，中文包不全，很多地方没翻译完。</p>
+  
+  <p>用QQ for linux 和IBUS的输入法有冲突的感觉，老是动不动挂掉。</p>
+  
+  <p>版本太新，firefox啥的找个flash插件都困难。</p>
+  
+  <p>要试的同志，还是再等半个月正式发布。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-08T00:00:00+08:00" pubdate data-updated="true">2009-10-08 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

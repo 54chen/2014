@@ -1,0 +1,216 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>移动互联网必备：各平台自助渠道打包手段公开 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="移动互联网做app是个酷毙的事情，同等产品条件下比拼的是渠道。怎么样让渠道人员（非技术）快捷地拿到想到的标识有相关渠道信息的包，是个关键的问题。
+  因为平台不一样，打包手法也不尽相同，下面总结下54chen在工作过程中遇到的问题和解决的办法： 1.android …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/06/08/app-build">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">移动互联网必备：各平台自助渠道打包手段公开</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-06-08T00:00:00+08:00" pubdate data-updated="true">2012-06-08 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/13078490/T28EicXgtXXXXXXXXX_!!13078490.jpg" alt="mi">
+  移动互联网做app是个酷毙的事情，同等产品条件下比拼的是渠道。怎么样让渠道人员（非技术）快捷地拿到想到的标识有相关渠道信息的包，是个关键的问题。<br>
+  因为平台不一样，打包手法也不尽相同，下面总结下54chen在工作过程中遇到的问题和解决的办法：</p>
+  
+  <p><strong>1.android</strong>
+  android下无法将一个apk包修改字节流之后apk还重新生效，因为android加key的过程会使这一过程变得无效。<br>
+  采取的办法：用ant或者maven在对java代码进行build时传入渠道信息。<br>
+  简单地说：当你有一个xxx渠道的包需要打的时候，后台要做的事情就是 ant -Dchannel=xxx 或者 mvn -U clean package -Dchannel=xxx</p>
+  
+  <p><strong>2.iphone</strong>
+  iphone的正式渠道很少，先说越狱过的：<br>
+  一个ipa包就是一个标准的zip包，只要在包里放一个channel.txt，保存渠道信息。<br>
+  简单地说：当你有一个xxx渠道包需要打的时候，后台要做的事情就是打开这个ipa，修改channel.txt的内容为xxx，重新按zip压缩为ipa。</p>
+  
+  <p>没有越狱过的iphone（占多数）：<br>
+  安装渠道只有一个，那就是appstore。但是推广渠道可能是多个，用户点击后到达appstore，再从appstore下载。这个过程中，ipa包没有办法携带渠道信息，希望apple公司改进。有人用一次跳转记录用户ip，但是不能准确反馈这个渠道的安装量。</p>
+  
+  <p><strong>3.塞班</strong>
+  sis/sisx的签名比较弱，签好的包，可以在包末尾写入一些字节达到携带渠道信息。<br>
+  简单地说：当你有一个xxx渠道包需要打的时候，后台要做的事情就是打开这个文件，在最末尾写入xxx，关闭文件。</p>
+  
+  <p><strong>4.winphone</strong>
+  xap包与ipa包极像，不一样的地方在于，xap包在windows下打出来的zip，文件分隔符是反斜线风格，在linux下解压压缩一定要用ant来做不容易写错。<br>
+  简单地说：当你有一个xxx渠道包需要打的时候，后台要做的事情和iphone一样。不同在于要引入ant.jar。</p>
+  
+  <p>周末愉快！
+  </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-06-08T00:00:00+08:00" pubdate data-updated="true">2012-06-08 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2012/06/07/rose-3-7/" title="Previous Post: rose手册第三章七节：controller层：门户必备portal支持">« rose手册第三章七节：controller层：门户必备portal支持</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

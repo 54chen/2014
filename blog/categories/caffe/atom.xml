@@ -1,0 +1,171 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Caffe | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/caffe/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[How to Install Caffe 1.0 With Anaconda Python3 on Centos7]]></title>
+      <link href="https://www.54chen.com/blog/2017/07/04/how-to-build-caffe-1-dot-0-with-anaconda-python3/"/>
+      <updated>2017-07-04T15:45:49+08:00</updated>
+      <id>https://www.54chen.com/blog/2017/07/04/how-to-build-caffe-1-dot-0-with-anaconda-python3</id>
+      <content type="html"><![CDATA[<p>Caffe is a deep learning framework made with expression, speed, and modularity in mind. It is developed by Berkeley AI Research (BAIR) and by community contributors.</p>
+  
+  <p>The official website is <a href="http://caffe.berkeleyvision.org/">http://caffe.berkeleyvision.org/</a> .</p>
+  
+  <p>It is easy to install it with python 2 and Ubuntu.But it is hard to install it with python 3 and centOs.</p>
+  
+  <p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
+  
+  <!--more-->
+  
+  
+  <p>Here are some records when I install it with Anaconda python3 on centos7.</p>
+  
+  <h2>Platform</h2>
+  
+  <p>Prior to installing, have a glance through this blog and take note of the details for your platform.</p>
+  
+  <p><div class="highlight"><pre><code class="language-python" data-lang="python"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">cat</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">redhat</span><span class="o">-</span><span class="n">release</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">CentOS</span> <span class="n">Linux</span> <span class="n">release</span> <span class="mf">7.</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;.&lt;/</span><span class="n">em</span><span class="o">&gt;</span> <span class="p">(</span><span class="n">Core</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">python</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">version</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">Python</span> <span class="mf">3.4</span><span class="o">.</span><span class="mi">3</span> <span class="p">::</span> <span class="n">Anaconda</span> <span class="mf">2.3</span><span class="o">.</span><span class="mi">0</span> <span class="p">(</span><span class="mi">64</span><span class="o">-</span><span class="n">bit</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">pip</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">version</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">pip</span> <span class="mf">7.0</span><span class="o">.</span><span class="mi">3</span> <span class="kn">from</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="o">.</span><span class="mi">4</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span> <span class="p">(</span><span class="n">python</span> <span class="mf">3.4</span><span class="p">)</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>Dependencies</h2>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">sudo</span> <span class="n">yum</span> <span class="n">install</span> <span class="n">gflags</span><span class="o">-</span><span class="n">devel</span> <span class="n">glog</span><span class="o">-</span><span class="n">devel</span> <span class="n">lmdb</span><span class="o">-</span><span class="n">devel</span> <span class="n">openblas</span><span class="o">-</span><span class="n">devel</span> <span class="n">leveldb</span><span class="o">-</span><span class="n">devel</span> <span class="n">snappy</span><span class="o">-</span><span class="n">devel</span> <span class="n">opencv</span><span class="o">-</span><span class="n">devel</span> <span class="n">hdf5</span><span class="o">-</span><span class="n">devel</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>Python and boost Dependencies</h2>
+  
+  <p>Fist of all,download the dependencies.</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">git</span> <span class="n">clone</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">depth</span> <span class="mi">1</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com/BVLC/caffe.git&quot;</span><span class="o">&gt;</span><span class="nl">https</span><span class="p">:</span><span class="c1">//github.com/BVLC/caffe.git&lt;/a&gt;&lt;/p&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">wget</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;http://sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download&quot;</span><span class="o">&gt;</span><span class="nl">http</span><span class="p">:</span><span class="c1">//sourceforge.net/projects/boost/files/boost/1.59.0/boost_1_59_0.tar.gz/download&lt;/a&gt;&lt;/p&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">wget</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com//protobuf/releases/download/v3.3.0/protobuf-cpp-3.3.0.tar.gz&quot;</span><span class="o">&gt;</span><span class="nl">https</span><span class="p">:</span><span class="c1">//github.com//protobuf/releases/download/v3.3.0/protobuf-cpp-3.3.0.tar.gz&lt;/a&gt;&amp;rsquo;&lt;/p&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">wget</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://github.com//protobuf/releases/download/v3.3.0/protobuf-python-3.3.0.tar.gz&quot;</span><span class="o">&gt;</span><span class="nl">https</span><span class="p">:</span><span class="c1">//github.com//protobuf/releases/download/v3.3.0/protobuf-python-3.3.0.tar.gz&lt;/a&gt;&amp;rsquo;&lt;/p&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>Install the dependencies:</p>
+  
+  <p>1.python libs:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">cd</span> <span class="n">caffe</span><span class="o">/</span><span class="n">python</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="k">for</span> <span class="n">req</span> <span class="n">in</span> <span class="err">$</span><span class="p">(</span><span class="n">cat</span> <span class="n">requirements</span><span class="p">.</span><span class="n">txt</span><span class="p">)</span> <span class="n">pydot</span><span class="p">;</span> <span class="k">do</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">pip</span> <span class="n">install</span> <span class="err">$</span><span class="n">req</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://pypi.mirrors.ustc.edu.cn/simple;&quot;</span><span class="o">&gt;</span><span class="nl">https</span><span class="p">:</span><span class="c1">//pypi.mirrors.ustc.edu.cn/simple;&lt;/a&gt; done&lt;/p&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>If you are not in China,remove the -i url parameter.</p>
+  
+  <p>2.pb libs:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">cd</span> <span class="p">..</span><span class="o">/</span><span class="p">..;</span><span class="n">tar</span> <span class="n">zxvf</span> <span class="n">boost_1_59_0</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span><span class="p">;</span><span class="n">tar</span> <span class="n">zxvf</span> <span class="n">protobuf</span><span class="o">-</span><span class="n">cpp</span><span class="o">-</span><span class="mf">3.3.0</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span><span class="p">;</span><span class="n">tar</span> <span class="n">zxvf</span> <span class="n">protobuf</span><span class="o">-</span><span class="n">python</span><span class="o">-</span><span class="mf">3.3.0</span><span class="p">.</span><span class="n">tar</span><span class="p">.</span><span class="n">gz</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">cd</span> <span class="n">protobuf</span><span class="o">-</span><span class="mf">3.3.0</span><span class="o">/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">configure</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">make</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">make</span> <span class="n">install</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">cd</span> <span class="n">python</span><span class="o">/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">python</span> <span class="n">setup</span><span class="p">.</span><span class="n">py</span> <span class="n">build</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">python</span> <span class="n">setup</span><span class="p">.</span><span class="n">py</span> <span class="n">install</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">sudo</span> <span class="n">ln</span> <span class="o">-</span><span class="n">s</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">libprotobuf</span><span class="p">.</span><span class="n">so</span><span class="mf">.13.0.0</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">lib64</span><span class="o">/</span><span class="n">libprotobuf</span><span class="p">.</span><span class="n">so</span><span class="mf">.13</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>3.boost libs:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">cd</span> <span class="n">boost_1_59_0</span><span class="o">/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">bootstrap</span><span class="p">.</span><span class="n">sh</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="p">.</span><span class="o">/</span><span class="n">b2</span> <span class="n">cxxflags</span><span class="o">=&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">-</span><span class="n">I</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">python3</span><span class="mf">.4</span><span class="n">m</span><span class="o">/&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">sudo</span> <span class="p">.</span><span class="o">/</span><span class="n">b2</span> <span class="n">install</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">prefix</span><span class="o">=/</span><span class="n">usr</span> <span class="n">cxxflags</span><span class="o">=&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="o">-</span><span class="n">I</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">python3</span><span class="mf">.4</span><span class="n">m</span><span class="o">/&amp;</span><span class="n">rdquo</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>Install Caffe</h2>
+  
+  <p>The last step:</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">cd</span> <span class="n">caffe</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">git</span> <span class="n">checkout</span> <span class="o">-</span><span class="n">b</span> <span class="mf">1.0</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">vim</span> <span class="n">Makefile</span><span class="p">.</span><span class="n">config</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">change</span> <span class="n">the</span> <span class="n">config</span> <span class="n">like</span> <span class="nl">this</span><span class="p">:</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nl">BLAS</span> <span class="p">:</span><span class="o">=</span> <span class="n">open</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nl">BLAS_INCLUDE</span> <span class="p">:</span><span class="o">=</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">openblas</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nl">PYTHON_INCLUDE</span> <span class="p">:</span><span class="o">=</span> <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">include</span> \
+                         <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">include</span><span class="o">/</span><span class="n">python3</span><span class="mf">.4</span><span class="n">m</span> \
+                         <span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">anaconda3</span><span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">python3</span><span class="mf">.4</span><span class="o">/</span><span class="n">site</span><span class="o">-</span><span class="n">packages</span><span class="o">/</span><span class="n">numpy</span><span class="o">/</span><span class="n">core</span><span class="o">/</span><span class="n">include</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="nl">PYTHON_LIBRARIES</span> <span class="p">:</span><span class="o">=</span> <span class="n">boost_python3</span> <span class="n">python3</span><span class="mf">.4</span><span class="n">m</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">make</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">make</span> <span class="n">pycaffe</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">export</span> <span class="n">PYTHONPATH</span><span class="o">=</span><span class="err">$</span><span class="nl">PYTHONPATH</span><span class="p">:</span><span class="o">/</span><span class="n">home</span><span class="o">/</span><span class="n">work</span><span class="o">/</span><span class="n">soft</span><span class="o">/</span><span class="n">src</span><span class="o">/</span><span class="n">caffe</span><span class="o">/</span><span class="n">python</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>TEST</h2>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">$</span><span class="n">cd</span> <span class="n">caffe</span>
+  <span class="err">$</span><span class="n">make</span> <span class="n">test</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="n">make</span> <span class="n">runtest</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>Good luck!</p>
+  ]]></content>
+    </entry>
+    
+  </feed>

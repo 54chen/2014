@@ -1,0 +1,220 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Riak Core说明 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="什么是riak_core?
+  riak_core是一个单独的OTP应用，提供了所有必须的服务，以完成一个现代化的、表现良好的分布式应用。riak_core开始于Riak的一部分。当代码在建立各种分布式应用普遍有用时，我们决定重构并且分离出来核心部分，使其便于使用。
+  分布式系统是复杂的， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/02/01/riak-core">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Riak Core说明</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-01T00:00:00+08:00" pubdate data-updated="true">2012-02-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/13078490/T2AT9jXolXXXXXXXXX_!!13078490.jpg" alt="riak">
+  <strong>什么是riak_core?</strong>
+  riak_core是一个单独的OTP应用，提供了所有必须的服务，以完成一个现代化的、表现良好的分布式应用。riak_core开始于Riak的一部分。当代码在建立各种分布式应用普遍有用时，我们决定重构并且分离出来核心部分，使其便于使用。<br>
+  分布式系统是复杂的，riak_core可以满足这些大量复杂的需求。在深入代码之前，我将分离这些需求为明显的分类，且给出每项的概况。<br>
+  注：如果你是急性子，想跳过后面的直接读代码，你可以通过hg或者git检出riak_core的代码。
+  <strong>
+  节点存活 &amp; 节点关系</strong>
+  riak_core_node_watcher是负责反馈riak_core_cluster内部节点状态的进程。它使用net_kernel有效地监控了许多节点。riak_core_node_watcher也有能力将一个节点按程序预定踢出cluster。当一个主节点必须临时断电而又不想完全停服的情况，这十分有用。<br>
+  riak_core_node_watcher还提供了在cluster内广播和定向服务的API。当节点提供了专门的服务，比如CUDA计算节点，这个服务被cluster中的其他的节点所使用，这些API很有用。<br>
+  riak_core_node_watch_events配合riak_core_node_watcher产生以活跃节点为基础的events，比如说加入或者离开cluster等等。当事人可以注册callback方法，当events被触发时会被调到。</p>
+  
+  <p><strong>分区 &amp; 分布式工作</strong>
+  riak_core在每个节点上使用了master/worker配置，以管理工作单元的执行。一致性哈希被使用来决定哪一个目标节点用来发起请求，而且主进程在每个节点的farms公开对实际workers的请求。riak_core把工作进程叫做vnodes。相应的进程叫vnode_master。<br>
+  在需要的时候，在riak_core里的分区和分布的逻辑同时掌控了hinted handoff。hinted handoff发生在一个节点失灵或者断电时。为了确保可用性，许多集群系统会使用可用节点代替挂掉的节点。当挂掉的节点恢复，集群需要从它代替节点的临时空间迁移数据去恢复节点的永久空间。这个进程被叫做hinted handoff，并且被riak_core里的组件管理。riak_core也掌控了迁移分区去新节点，当它加入到集群，集群能够持续地工作，并且平等地分给集群中所有成员。<br>
+  riak_core_vnode_master在一个给定的节点启动所有的工作vnodes，并且当集群启动的时候把请求路由到vnodes。<br>
+  riak_core_vnode是一个OTP behavior包装，所有的样板逻辑需要实现一个vnode。特殊的应用vnodes必须实现少量的回调函数，以参与handoff的session并且从master接收工作单元。</p>
+  
+  <p><strong>集群状态</strong>
+  一个riak_core集群保存了在一个环状结构上的全局状态。这个状态信息在集群中的节点间传输，以一个可控的方法保证所有的集群成员同步。这个进程被叫做“gossiping”。<br>
+  riak_core_ring是用来创建和控制环的状态信息的，并且会与集群中的所有节点共享。环状态信息包括像分区关系、特定集群环上的元数据等元素。比如Raik KV存储把桶的元数据保存在环元数据中。<br>
+  riak_core_ring_manager帮助一个节点管理集群环信息。它是应用代码访问环的主入口点（通过riak_core_ring_manager:get_my_ring/1），并且还能保存从当前环的状态同步过来的环持久快照。<br>
+  riak_core_gossip管理环的gossip进程，它要确保环在整个集群里全都一致。</p>
+  
+  <p><strong>下一步计划</strong>
+  下面的几个月之后，我们将在这博客一系列的日志里覆盖建立一个真正的应用步骤，每篇都将覆盖使用riak_core建立某种系统。所有应用代码都将在apache2声明下共享到github。<br>
+  那我们要建立哪种类型的应用？因为这个系列的目标是为了举例如何使用riak_core建立一个分布式系统，同时也是为了满足我自己的技术好奇心，我决定建立一个分布式图片数据库。为了真正练习riak_core，一个图形库应该提供足够的用例，与此同时，不能把核心学习体验搞得十分复杂。<br>
+  感谢Sean Cribbs和Andy Gross提供有用的review和feedback。</p>
+  
+  <p>[from http://basho.com/blog/technical/2010/07/30/introducing-riak-core/]
+  </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-01T00:00:00+08:00" pubdate data-updated="true">2012-02-01 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2012/01/30/maven-nexus-jar-note/" title="Previous Post: maven库nexus拖不到jar包小记">« maven库nexus拖不到jar包小记</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,68 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Docker | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/docker/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[How to Run GUI App in Docker on Osx]]></title>
+      <link href="https://www.54chen.com/blog/2017/07/27/docker-gui-osx/"/>
+      <updated>2017-07-27T10:11:29+08:00</updated>
+      <id>https://www.54chen.com/blog/2017/07/27/docker-gui-osx</id>
+      <content type="html"><![CDATA[<p>This is a quick guide explaining how to run GUI app in docker on mac osx.</p>
+  
+  <p><img src=http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg></p>
+  
+  <!--more-->
+  
+  
+  <h2>step 1.install two important tools</h2>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">brew</span> <span class="n">cask</span> <span class="n">install</span> <span class="n">xquartz</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">brew</span> <span class="n">install</span> <span class="n">socat</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>step 2.run socat</h2>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">socat</span> <span class="n">TCP</span><span class="o">-</span><span class="nl">LISTEN</span><span class="p">:</span><span class="mi">6001</span><span class="p">,</span><span class="n">reuseaddr</span><span class="p">,</span><span class="n">fork</span> <span class="n">UNIX</span><span class="o">-</span><span class="nl">CLIENT</span><span class="p">:</span><span class="err">\</span><span class="o">&amp;</span><span class="n">ldquo</span><span class="p">;</span><span class="err">$</span><span class="n">DISPLAY</span><span class="err">\</span><span class="o">&amp;</span><span class="n">rdquo</span><span class="p">;</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <h2>step 3.see what your real en* by ifconfig</h2>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">h1</span><span class="o">&gt;</span><span class="n">ifconfig</span><span class="o">&lt;/</span><span class="n">h1</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>You can see en0 en1 en2 and so on,choose a right one which has the right IP addrass.</p>
+  
+  <p>step 4.run docker</p>
+  
+  <p><div class="highlight"><pre><code class="language-c" data-lang="c"><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">docker</span> <span class="n">run</span> <span class="o">-</span><span class="n">it</span> <span class="o">-</span><span class="n">e</span> <span class="n">XAUTHORITY</span><span class="o">=/</span><span class="n">tmp</span><span class="o">/</span><span class="n">xauth</span> <span class="o">-</span><span class="n">v</span> <span class="o">~/</span><span class="p">.</span><span class="nl">Xauthority</span><span class="p">:</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">xauth</span> <span class="o">-</span><span class="n">e</span> <span class="n">DISPLAY</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">ifconfig</span> <span class="n">en3</span> <span class="o">|</span> <span class="n">grep</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;</span><span class="n">inet</span> <span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;</span><span class="o">|</span><span class="n">awk</span> <span class="o">&amp;</span><span class="n">lsquo</span><span class="p">;{</span><span class="n">print</span> <span class="err">$</span><span class="mi">2</span><span class="p">}</span><span class="o">&amp;</span><span class="n">rsquo</span><span class="p">;)</span><span class="o">:</span><span class="mi">1</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">net</span> <span class="n">host</span> <span class="o">&amp;</span><span class="n">ndash</span><span class="p">;</span><span class="n">volume</span><span class="o">=</span><span class="err">$</span><span class="p">(</span><span class="n">pwd</span><span class="p">)</span><span class="o">:/</span><span class="n">workspace</span> <span class="n">fastercnn</span> <span class="o">/</span><span class="n">bin</span><span class="o">/</span><span class="n">bash</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+  
+  <span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span></code></pre></div></p>
+  
+  <p>attention: You must modify the DISPLAY,replace the &ldquo;ifconfig en*&rdquo; by the one which choosed in step 3.</p>
+  
+  <p>Good luck!</p>
+  ]]></content>
+    </entry>
+    
+  </feed>

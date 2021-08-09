@@ -1,0 +1,222 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Arduino－各种无线方案的对比 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="初中物理
+  振荡的电场和磁场在空间中以波的形式传播就形成了电磁波，gamma射线、X光、紫外光、可见光、红外光、微波、无线电波和长波无线电，这些都是电磁波。电磁波具有波粒二象性，光子就是量子化的电磁波，是电磁波能量的最小单位。光子的能量和电磁波的波长成反比，比如说， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/08/08/open-hard">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Arduino－各种无线方案的对比</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-08-08T00:00:00+08:00" pubdate data-updated="true">2013-08-08 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://ww4.sinaimg.cn/bmiddle/663fba41jw1e7fajrr07jj20cu0k00tu.jpg" alt="电磁波">
+  <strong>初中物理</strong>
+  振荡的电场和磁场在空间中以波的形式传播就形成了电磁波，gamma射线、X光、紫外光、可见光、红外光、微波、无线电波和长波无线电，这些都是电磁波。电磁波具有波粒二象性，光子就是量子化的电磁波，是电磁波能量的最小单位。光子的能量和电磁波的波长成反比，比如说，波长最短的gamma射线光子能量高达百万甚至数亿电子伏，医疗和安检用的x光光子能量一般在数百到上万电子伏，紫外光的能量一般在数个到数十电子伏，可见光的能量在1.8（700纳米的红色光）到3.1电子伏（400纳米的蓝色光）之间，红外、微波和无线电波的光子能量就小的多。在电磁波和物质相互作用时，物质只能吸收或者放出整个的光子。</p>
+  <!-- more -->
+  <p><strong>蓝牙</strong>
+  有效距离：10－50米。<br>
+  波段：低频微波。（2.4GHz）<br>
+  协议：Bluetooth4.0可达50米。<br>
+  特点：需要设置master还是slave，需要配对后1V1传送。</p>
+  
+  <p><strong>WIFI</strong>
+  有效距离：10－100米。<br>
+  波段：低频微波。（2.4GHz）<br>
+  协议：IEEE802.11b可达100米。<br>
+  特点：就是家里常见的无线路由器啦。</p>
+  
+  <p><strong>红外</strong>
+  有效距离：1米。<br>
+  波段：红外线。<br>
+  协议：一般的遥控器有sony的协议，IR收发是标准化组件，在IRremote中全部有实现。<br>
+  特点：不能穿，要对准，离得近。</p>
+  
+  <p><strong>zigbee</strong>
+  有效距离：500米。<br>
+  波段：有多波段，主要低频微波。（2.4GHz）<br>
+  协议：802.15.4协议。<br>
+  特点：具备了强大的设备联网功能，具有很强的网络健壮性和系统可靠性。<br>
+  XBee OEM RF模块是与ZigBee/IEEE 802.15.4 兼容的解决方案，可以满足低成本低功耗无线传感网络的特殊需求。该模块易于使用，极低的功耗，以及提供设备间关键数据的可靠传输。</p>
+  
+  <p><strong>总结</strong>
+  除了红外，其他几种在低频微波段混的无线技术，基本上都是同一种硬件，换不同的软件技术来达到更可靠的传输，更有效的交互。zigbee在智能家居的组网中更是被吹得不行。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-08-08T00:00:00+08:00" pubdate data-updated="true">2013-08-08 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/07/25/jvm-cpu-load-high-script/" title="Previous Post: 线上jvm进程CPU load高排查脚本-jkiller">« 线上jvm进程CPU load高排查脚本-jkiller</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2013/08/13/arduino-bl/" title="Next Post: arduino-蓝牙各种版本类型及费用对比">arduino-蓝牙各种版本类型及费用对比 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

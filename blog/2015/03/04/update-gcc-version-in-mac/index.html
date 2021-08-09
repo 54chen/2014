@@ -1,0 +1,341 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Mac下更新gcc版本 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="用ports升级，比较容易。 1
+  2
+  3
+  4
+  5
+  6
+  7
+  8
+  9
+  10
+  11
+  12
+  13
+  14
+  15
+  16
+  17
+  18
+  19
+  20
+  21
+  22
+  23
+  24
+  25
+  26
+  27
+  localhost:hello chenzhen$ port search gcc
+  apple-gcc40 @5494 ( …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2015/03/04/update-gcc-version-in-mac">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Mac下更新gcc版本</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2015-03-04T14:51:29+08:00" pubdate data-updated="true">2015-03-04 14:51:29 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg"></p>
+  
+  <ul>
+  <li>用ports升级，比较容易。</li>
+  </ul>
+  
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  <span class="line-number">4</span>
+  <span class="line-number">5</span>
+  <span class="line-number">6</span>
+  <span class="line-number">7</span>
+  <span class="line-number">8</span>
+  <span class="line-number">9</span>
+  <span class="line-number">10</span>
+  <span class="line-number">11</span>
+  <span class="line-number">12</span>
+  <span class="line-number">13</span>
+  <span class="line-number">14</span>
+  <span class="line-number">15</span>
+  <span class="line-number">16</span>
+  <span class="line-number">17</span>
+  <span class="line-number">18</span>
+  <span class="line-number">19</span>
+  <span class="line-number">20</span>
+  <span class="line-number">21</span>
+  <span class="line-number">22</span>
+  <span class="line-number">23</span>
+  <span class="line-number">24</span>
+  <span class="line-number">25</span>
+  <span class="line-number">26</span>
+  <span class="line-number">27</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">localhost:hello chenzhen$ port search gcc
+  </span><span class="line">apple-gcc40 @5494 (lang)
+  </span><span class="line">    Apple's version of gcc 4.0
+  </span><span class="line">
+  </span><span class="line">apple-gcc42 @5666.3_14 (lang)
+  </span><span class="line">    Apple's version of gcc 4.2
+  </span><span class="line">
+  </span><span class="line">arm-aout-gcc @3.3.6 (cross, devel)
+  </span><span class="line">    gcc cross-compilers for arm-aout, with newlib runtime library.
+  </span><span class="line">
+  </span><span class="line">arm-elf-gcc @4.7.3 (cross, devel)
+  </span><span class="line">    gcc cross-compilers for arm-elf, with newlib runtime library.
+  </span><span class="line">
+  </span><span class="line">arm-elf-gcc3 @3.4.6_2 (cross, devel)
+  </span><span class="line">    gcc 3.x cross-compilers for arm-elf, with newlib runtime library.
+  </span><span class="line">
+  </span><span class="line">arm-none-eabi-gcc @4.7.3_1 (cross, devel)
+  </span><span class="line">    The GNU compiler collection for arm-none-eabi
+  </span><span class="line">
+  </span><span class="line">arm-none-linux-gnueabi-gcc @2005q3-2 (cross, devel)
+  </span><span class="line">    gcc 3.x cross-compilers for arm-none-linux-gnueabi.
+  </span><span class="line">
+  </span><span class="line">arm-rtems-gcc @4.2.3 (cross, devel)
+  </span><span class="line">    gcc cross-compilers for arm-rtems, with newlib runtime library.
+  </span><span class="line">
+  </span><span class="line">avr-gcc @4.9.1 (cross, devel)
+  </span><span class="line">    The GNU compiler collection for avr</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  
+  
+  <!--more-->
+  
+  
+  <ul>
+  <li>选中安装</li>
+  </ul>
+  
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">localhost:hello chenzhen$ sudo port install gcc44</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>列出已有</li>
+  </ul>
+  
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  <span class="line-number">2</span>
+  <span class="line-number">3</span>
+  <span class="line-number">4</span>
+  <span class="line-number">5</span>
+  <span class="line-number">6</span>
+  <span class="line-number">7</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">localhost:hello chenzhen$ port select --list gcc
+  </span><span class="line">Available versions for gcc:
+  </span><span class="line">  apple-gcc42
+  </span><span class="line">  llvm-gcc42
+  </span><span class="line">  mp-gcc44 (active)
+  </span><span class="line">  mp-gcc48
+  </span><span class="line">  none</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>选中需要的版本</li>
+  </ul>
+  
+  
+  <figure class="code"><div class="highlight"><table><tr>
+<td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+  </pre></td>
+<td class="code"><pre><code class=""><span class="line">localhost:hello chenzhen$ sudo port select --set gcc mp-gcc44</span></code></pre></td>
+</tr></table></div></figure>
+  
+  
+  <ul>
+  <li>最后一步，重新开一个窗口，不要用现在这个。</li>
+  </ul>
+  
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2015-03-04T14:51:29+08:00" pubdate data-updated="true">2015-03-04 14:51:29 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/c/">c</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2015/02/04/enhancements-in-java-io/" title="Previous Post: java IO在各版本中的提高">« java IO在各版本中的提高</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2015/04/13/serivce-design/" title="Next Post: 大规模业务服务器开发总结">大规模业务服务器开发总结 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

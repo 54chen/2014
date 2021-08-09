@@ -1,0 +1,243 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[五四陈科学院]校内相册发展过程及核心技术分析爆料 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="信春哥，转载的都给我注明出处：http://www.54chen.com/801-54-chen-academy-schools-the-development-process-and-the-album-broke-the-heart-of-technical-analysis/ 前言 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/10/13/54-chen-academy-schools-the-development-process-and-the-album-broke-the-heart-of-technical-analysis">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[五四陈科学院]校内相册发展过程及核心技术分析爆料</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-13T00:00:00+08:00" pubdate data-updated="true">2009-10-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>信春哥，转载的都给我注明出处：<a href="http://www.54chen.com/801-54-chen-academy-schools-the-development-process-and-the-album-broke-the-heart-of-technical-analysis/">http://www.54chen.com/801-54-chen-academy-schools-the-development-process-and-the-album-broke-the-heart-of-technical-analysis/</a></p>
+  
+  <p><strong>前言</strong></p>
+  
+  <p>感谢人人网曾经的吕威大侠、现在的文斌大侠、谢龙大侠对<a href="http://www.54chen.com/759-thousand-oaks-school-network-all-network-urgent-flash-as3-engineers-social-game-game-planning/">人人网</a>相册的不朽贡献，是吕威大侠精益求精的专研才有如此优秀的上传方案。</p>
+  
+  <p><strong>第一章 相册瓶颈所在</strong></p>
+  
+  <p>1.用户上传海量数据是一个头疼的事情，每天上千万的数量，又因为互联网的特殊性，会出现高峰期和低潮期，以每天10，000，000张图片来计算，高的时候，每秒上传有可能会在上千张，而低的时候可忽略不计。</p>
+  
+  <p>2.因为产品不同，往往上传一张原始的照片会需要压缩成四五张不同大小的图片。这个压缩过程相当消费cpu。</p>
+  
+  <p>相信有同一问题的应该有：QQ空间，网易相册，新浪博客，flikr等等。</p>
+  
+  <p><strong>第二章 校内相册的发展和</strong></p>
+  
+  <p>第一阶段，原始社会。</p>
+  
+  <p>在第一阶段，我们过着刀耕火种的生活，java代码上传+jmagick压缩，其结果就是，再多的服务器，也搞不定越来越多的访问量。</p>
+  
+  <p>第二阶段，具有封建气息的<a href="http://www.54chen.com/11-%e5%a4%a7%e5%ad%a6%e7%94%9f%e5%88%9b%e4%b8%9a%e6%a1%88%e4%be%8b%e5%88%86%e6%9e%90%e8%ae%b2%e7%a8%bf%e6%95%b4%e7%90%86/">资本</a>社会。</p>
+  
+  <p>这一阶段，我们痛定思痛啦，服务常常挂啊，怎么办？怎么办，当然是分布式处理，分析下原因，原来挂是因为cpu太高，用户上传一图压成四图，太费劲了。干脆传到其他cpu多的机器去。</p>
+  
+  <p>说时迟那时快，我们挽起袖子，一个分布式的上传压缩过程就出来了。。。</p>
+  
+  <p>所使用的方法：</p>
+  
+  <p><a href="http://www.54chen.com/wp-content/uploads/2009/10/qqe688aae59bbee69caae591bde5908d.jpg"><img class="alignnone size-full wp-image-802" title="qqe688aae59bbee69caae591bde5908d" src="http://www.54chen.com/wp-content/uploads/2009/10/qqe688aae59bbee69caae591bde5908d.jpg" alt="" width="373" height="231"></a></p>
+  
+  <p>结果发现。。。没啥改观。。。</p>
+  
+  <p>第三阶段，完全没有社会气息的共产社会。</p>
+  
+  <p>春风吹满地，齐心协力跨世纪。</p>
+  
+  <p>在吕威大侠的精心研究下，使用了以下的方案，将性能提高了<strong>3.5</strong>倍，同样数目的照片以前上传如需要100秒的，现在35秒即可以搞定。</p>
+  
+  <p><strong>第三章 校内相册核心技术</strong></p>
+  
+  <p>先上无码图：</p>
+  
+  <p><a href="http://www.54chen.com/wp-content/uploads/2009/10/qqe688aae59bbee69caae591bde5908d1.jpg"><img class="alignnone size-full wp-image-803" title="qqe688aae59bbee69caae591bde5908d1" src="http://www.54chen.com/wp-content/uploads/2009/10/qqe688aae59bbee69caae591bde5908d1.jpg" alt="" width="466" height="230"></a></p>
+  
+  <p>看明白没，没看明白？好 继续看内容吧：</p>
+  
+  <p>1)nginx:最前端服务器,负责接受来自client的上传文件请求及其他的相前web页面<a href="http://www.54chen.com/714-design-for-all-key-value-of-the-distributed-system-architecture-original/">请求</a>,把文件上传请求转发给lighttpd,把web页面请求转发给resin</p>
+  
+  <p>2)lighttpd:负责接受所有文件上传,并把请求交给fastcgi处理(此处的fastcgi可以是本机可以是网络,目前用的是本机)，其实lighttpd完全可以取代nginx,把文件上传请求交给fastcgi,把其他请求交给resin处理,不过为了平稳过渡和平常重启,仍然用了nginx,</p>
+  
+  <p>3)fastcgi:接受来自webserver的文件上传请求,处理并返回结果给webserver,多进程,可以由lighttpd启动,也可以由spawn-fcgi来启动,不过后者在fastcgi进程死掉的情况下不能自动重启,所以目前采用前者。fastcgi的上传代码很常规，压缩的代码使用了<span style="font-family: Arial; font-size: xx-small;"><span lang="EN-US">interl</span></span><span style="font-family: 宋体; font-size: xx-small;"><span>的</span></span><span style="font-family: Arial; font-size: xx-small;"><span lang="EN-US">icc</span></span><span style="font-family: 宋体; font-size: xx-small;"><span>和</span></span><span style="font-family: Arial; font-size: xx-small;"><span lang="EN-US">ipp的作，对性能提升非常明显。</span></span></p>
+  
+  <p><strong>第四章 目前还没有第四章 等待开源吧</strong></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-13T00:00:00+08:00" pubdate data-updated="true">2009-10-13 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/10/12/presentation-skills-collection-training-or-technical-analysis-of-the-speech/" title="Previous Post: [演讲技巧收集]培训或者演讲的技术分析">« [演讲技巧收集]培训或者演讲的技术分析</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/10/16/academy-of-sciences-in-recent-years-a-good-article-summing-up/" title="Next Post: 科学院近年好文章总结">科学院近年好文章总结 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

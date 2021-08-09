@@ -1,0 +1,229 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>从分布式存储设计到自动化运维 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="http://www.infoq.com/cn/articles/nosql-dynamo 三年前在infoq发表的一篇关于两种特别有性的分布式存储的设计思路解析，三年过去了，今天再来总结看看这几年的变化。
+  实际上，这三年，还是两个东西，一直没有冒出来更牛B的东西。 一、 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/06/04/distributed-auto-ops">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">从分布式存储设计到自动化运维</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-06-04T00:00:00+08:00" pubdate data-updated="true">2013-06-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img02.taobaocdn.com/bao/uploaded/i2/T11wdBXn8gXXbWvNA4_052909.jpg" alt="分布式存储"></p>
+  
+  <p><a href="http://www.infoq.com/cn/articles/nosql-dynamo">http://www.infoq.com/cn/articles/nosql-dynamo</a> 三年前在infoq发表的一篇关于两种特别有性的分布式存储的设计思路解析，三年过去了，今天再来总结看看这几年的变化。<br>
+  实际上，这三年，还是两个东西，一直没有冒出来更牛B的东西。</p>
+  
+  <p><strong>一、dynamo作riak特点</strong>
+  早几年以cassandra为此类项目，固定特点为：水平扩展、无中心节点、多备份、最终一致性、性能一般、适合海量数据。因为cassandra在业界的使用失败案例太多，让大家避而远之。这两年，以erlang开发的riak又冒出水面。</p>
+  
+  <p><strong>1.1 erlang</strong>
+  这作为riak的最大特点一点也不为过，因为语言在分布式领域的独特能力，使得riak的源代码十分简洁干净。不过一万多行的代码，在第一次读到它的代码时，我也感叹，几年前，傻希希的用java代码堆了十几万行的nuclear代码，真是太笨了。</p>
+  
+  <p><strong>1.2 完整的dynamo实现</strong>
+  在cassandra的年代，许多东西不方便实现，版本控制的向量时钟使用了timestamp代替，vnode在cassandra上是非常大的区块，在进行负载均衡时有很大可能不均匀。到了riak的时代，所有的特点，在erlang的支持下，完成了各种细节。并且增加了：1.http存取的支持。2.双向索引。3.搜索支持。4.m/r支持。</p>
+  
+  <p><strong>二、bigtable作hbase特点</strong>
+  与dynamo对应的解决方案bigtable的更加悠久一些，开源项目也进行了很多年，hbase社区也正在不断地完善。</p>
+  
+  <p><strong>1.1 偷懒地依赖hdfs</strong>
+  严格说来hbase的实现，只主要关心了regionServer（中心节点所在，用来分配数据所在位置），所以说偷懒地在底下使用了hdfs完成备份工作。</p>
+  
+  <p><strong>1.2 列簇</strong>
+  在借用hdfs之后，在其上实现的存储格式让hbase可以满足各式各样的需求，当然了，这么复杂的交互，最好还是使用ssd之类的高速度的存储介质。</p>
+  
+  <p><strong>三、发展方向及特点</strong>
+  在回顾了两大阵营的各自特点之后，再来看看未来。</p>
+  
+  <p><strong>3.1 mysql时代</strong>
+  招一堆的mysql dba，指哪打哪，哪坏修哪。工作得很好!</p>
+  
+  <p><strong>3.2 nosql时代</strong>
+  开发工程师了解了dba的苦逼，以及老板招不到dba的苦逼，决定将数据结构化，简化代码的数据结构。<br>
+  典型的key-value系统。<br>
+  再基于这些单一的结构，做一堆的自动加机器自动转数据的功能。riak在此列。hbase略高于此。</p>
+  
+  <p><strong>3.3 未来时代</strong>
+  不仅是存储，整个运维工作，都应该是自动化演进，你可以想象：一个晴朗的下午，工程师带着耳机听着歌，将需求模型输入之后，一个红按钮一按，代码已经写好，test自动开始，AB test，staging，一切OK，自动分发到了各处。上线五分钟，某处开始报警，自动判断如何添加机器，执行添加。</p>
+  
+  <p>－－写在32位服务器已经过时了的日子，纪念一下，都应该记住。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-06-04T00:00:00+08:00" pubdate data-updated="true">2013-06-04 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/05/22/xiaomi-6-12/" title="Previous Post: 在6乘12中折腾">« 在6乘12中折腾</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2013/06/27/startup/" title="Next Post: 创业启示录">创业启示录 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,241 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈透过PHP看JAVA系列:fsockopen - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="本系列主要总结PHP与JAVA之间的一些异同，给从PHP学JAVA或者是从JAVA学PHP的同学一点启发，五四陈科学院出品。 第一部分，先看PHP的fsockopen 先来看PHP手册中的定义http://www.54chen.com/p/function.fsockopen.html 看完定义后 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/03/09/54-chen-through-php-to-see-java-series-fsockopen">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">五四陈透过PHP看JAVA系列:fsockopen</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-03-09T00:00:00+08:00" pubdate data-updated="true">2010-03-09 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>本系列主要总结PHP与JAVA之间的一些异同，给从PHP学JAVA或者是从JAVA学PHP的同学一点启发，五四陈科学院出品。</p>
+  
+  <p><strong>第一部分，先看PHP的fsockopen</strong></p>
+  
+  <p>先来看PHP手册中的定义<a href="http://www.54chen.com/p/function.fsockopen.html">http://www.54chen.com/p/function.fsockopen.html</a></p>
+  
+  <p>看完定义后，来看一段代码，利用PHP去更新squid的缓存：
+  </p>
+<blockquote>&lt;?php<br>
+  function updateCache($myUrl) {<br>
+  global $vSquidConfig;<br>
+  foreach ( $vSquidConfig ['host'] as $mySquid ) {<br>
+  $myHandle = @fsockopen ( "127.0.0.1", 80, $myErrNo, $myErrStr, 30 );<br>
+  if ($myHandle) {<br>
+  $myResult = '';<br>
+  @fputs ( $myHandle, "PURGE " . $myFileName . " HTTP/1.0\r\n" );<br>
+  @fputs ( $myHandle, "Accept: */*\r\n" );<br>
+  @fputs ( $myHandle, "\r\n\r\n" );<br>
+  while ( ! feof ( $myHandle ) ) {<br>
+  $myResult .= fgets ( $myHandle, 128 );<br>
+  }
+  @fclose ( $myHandle );<br>
+  }
+  }<br>
+  }
+  ?&gt;</blockquote>
+  <strong>第二部分，再看JAVA如何达到这个目的</strong>
+  <blockquote>public void flush<a href="http://www.54chen.com/php-tech/%e5%a6%82%e4%bd%95%e7%94%a8php%e4%bb%a3%e7%a0%81%e6%b8%85%e7%a9%basquid%e7%bc%93%e5%ad%98%e4%b8%8b%e7%9a%84%e6%8c%87%e5%ae%9a%e6%96%87%e4%bb%b6.html">Squid</a>() {<br>
+  try {<br>
+  int port = 80;<br>
+  Socket socket = new Socket("127.0.0.1", port);<br>
+  String path = http://test.com/test.html";<br>
+  BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF-8"));<br>
+  wr.write("PURGE " + path + " HTTP/1.0\r\n");<br>
+  wr.write("Accept: */*\r\n");<br>
+  wr.write("\r\n\r\n");</blockquote>
+  
+  <p>wr.flush();</p>
+  
+  <p>// Get response<br>
+  BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream()));<br>
+  String line;<br>
+  while ((line = rd.readLine()) != null) {<br>
+  // Process line...<br>
+  System.out.println(line);<br>
+  }
+  wr.close();<br>
+  rd.close();<br>
+  } catch (Exception e) {<br>
+  }
+  }</p>
+  
+  <p>亲爱的读者，您喜欢用PHP还是JAVA？</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-03-09T00:00:00+08:00" pubdate data-updated="true">2010-03-09 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2010/03/08/how-to-make-squid-26stable21-output-content-encoding-gzip/" title="Previous Post: 如何让squid 2.6.STABLE21输出Content-Encoding: gzip">« 如何让squid 2.6.STABLE21输出Content-Encoding: gzip</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

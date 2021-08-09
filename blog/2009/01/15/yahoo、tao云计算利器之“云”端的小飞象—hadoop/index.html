@@ -1,0 +1,313 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>yahoo、taobao云计算利器之“云”端的小飞象—Hadoop - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content=" 
+  “云”端的小飞象—Hadoop
+  孙 牧 Hadoop简史
+  在搜索技术界，也许有人不熟悉Doug Cutting，但很少有人不知道Lucene这个著名的全文检索引擎。事实上，Lucene应该是Doug Cutting的成名作，它被广泛地应用在各种规模的网站和系统中， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/01/15/yahoo%E3%80%81tao%E4%BA%91%E8%AE%A1%E7%AE%97%E5%88%A9%E5%99%A8%E4%B9%8B%E2%80%9C%E4%BA%91%E2%80%9D%E7%AB%AF%E7%9A%84%E5%B0%8F%E9%A3%9E%E8%B1%A1%E2%80%94hadoop">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">yahoo、taobao云计算利器之“云”端的小飞象—Hadoop</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-01-15T00:00:00+08:00" pubdate data-updated="true">2009-01-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p> 
+  </p>
+<p class="MsoNormal" align="center"><strong><span>“云”端的小飞象</span></strong><strong><span lang="EN-US">—Hadoop</span></strong></p>
+  <p class="MsoNormal" align="center"><span>孙</span><span> </span><span>牧</span></p>
+  
+  <p></p>
+<h3>
+<span lang="EN-US">Hadoop</span><span>简史</span>
+</h3>
+  <p class="MsoNormal"><span>在搜索技术界，也许有人不熟悉</span><span lang="EN-US">Doug Cutting</span><span>，但很少有人不知道</span><span lang="EN-US">Lucene</span><span>这个著名的全文检索引擎。事实上，</span><span lang="EN-US">Lucene</span><span>应该是</span><span lang="EN-US">Doug Cutting</span><span>的成名作，它被广泛地应用在各种规模的网站和系统中，甚至</span><span lang="EN-US">Eclipse</span><span>中的搜索功能也是</span><span lang="EN-US">Lucene</span><span>来实现的。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span>但</span><span lang="EN-US">Doug Cutting</span><span>并没有满足</span><span lang="EN-US">Lucene</span><span>取得的成绩。</span><span lang="EN-US">2002</span><span>年，他发起了一个基于</span><span lang="EN-US">Lucene</span><span>的开源项目</span><span lang="EN-US">Nutch</span><span>，其目标是构建出一个包括网络蜘蛛、文件存储等模块的网页搜索系统。经过</span><span lang="EN-US">2</span><span>年的努力，</span><span lang="EN-US">Nutch</span><span>虽然可以用</span><span lang="EN-US">4</span><span>台机器支持</span><span lang="EN-US">1</span><span>亿网页的抓取和检索，但系统的扩展性开始遇到瓶颈。恰在此时，</span><span lang="EN-US"></span><span>发表了</span><span lang="EN-US">GFS</span><span>、</span><span lang="EN-US">MapReduce</span><span>的论文，这两个创新性的思路点燃了</span><span lang="EN-US">Nutch 2</span><span>名开发人员的斗志，他们又花了</span><span lang="EN-US">2</span><span>年的业余时间实现了</span><span lang="EN-US">DFS</span><span>（分布式文件系统）和</span><span lang="EN-US">MapReduce</span><span>机制，这次改造使</span><span lang="EN-US">Nutch</span><span>可以在</span><span lang="EN-US">20</span><span>台机器上支持几亿的数据规模，其编程和运维的简易性也得到了大幅提升，但系统的吞吐能力与一个真正的网页搜索系统仍有不小的差距。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US">2006</span><span>年，开源社区如火如荼，当佬雅虎在思索构建一个高度利用硬件资源、维护和开发都非常简易的软件架构时，</span><span lang="EN-US">Doug Cutting</span><span>和他的</span><span lang="EN-US">Nutch</span><span>进入了他们的视野。一方具有超强的技术前瞻性和实战经验，另一方能提供世界上数一数二的数据、硬件和人力资源，双方一拍即合，同年</span><span lang="EN-US">1</span><span>月</span><span lang="EN-US">Doug Cutting</span><span>正式加入雅虎，</span><span lang="EN-US">2</span><span>月</span><span lang="EN-US">Hadoop</span><span>从</span><span lang="EN-US">Nutch</span><span>中分离出来，正式成为</span><span lang="EN-US">Apache</span><span>组织中一个专注于</span><span lang="EN-US">DFS</span><span>和</span><span lang="EN-US">MapReduce</span><span>的开源项目。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US">2008</span><span>年</span><span lang="EN-US">2</span><span>月，又是两年，雅虎宣布搭建出一个世界上最大的基于</span><span lang="EN-US">Hadoop</span><span>的生产集群系统</span><span lang="EN-US">—Yahoo! Search Webmap</span><span>（简单地讲，就是雅虎网页搜索抓取的所有站点和网页及其关系的数据库），下面一组数据可以让我们对该系统的规模有个初步的认识：</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>Ø<span>  </span></span></span><span>页面之间的链接数超过</span><span lang="EN-US">1000</span><span>亿；</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>Ø<span>  </span></span></span><span lang="EN-US">Webmap</span><span>输出的压缩数据超过</span><span lang="EN-US">300TB</span><span>（</span><span lang="EN-US">Terabyte</span><span>）；</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>Ø<span>  </span></span></span><span>有单一的</span><span lang="EN-US">MapReduce</span><span>任务同时在</span><span lang="EN-US">1</span><span>万多个</span><span lang="EN-US">CPU</span><span>的核（</span><span lang="EN-US">core</span><span>）上运行；</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>Ø<span>  </span></span></span><span>生产集群硬盘空间占用超过</span><span lang="EN-US">5PB</span><span>（</span><span lang="EN-US">Petabyte</span><span>）；</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>Ø<span>  </span></span></span><span>与原来没用</span><span lang="EN-US">Hadoop</span><span>的方案相比节约了</span><span lang="EN-US">30%</span><span>的时间。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span>这时候，可以说</span><span lang="EN-US">Doug Cutting</span><span>想构建一个</span><span lang="EN-US">Web-scale</span><span>级别系统的心愿也终于实现了！</span></p>
+  <p class="MsoNormal"> </p>
+  
+  <p></p>
+<h3>
+<span lang="EN-US">Hadoop</span><span>的系统架构</span>
+</h3>
+  <p class="MsoNormal"><span>简单地讲，</span><span lang="EN-US">Hadoop</span><span>是一个可以更容易开发和并行处理大规模数据的分布式计算平台。它的主要特点是：</span><strong><span>扩容能力（</span></strong><strong><span lang="EN-US">Scalable</span></strong><strong><span>）</span></strong><span>、<strong><span>成本低（</span></strong></span><strong><span lang="EN-US">Economical</span></strong><strong><span>）</span></strong><span>、<strong><span>高效率（</span></strong></span><strong><span lang="EN-US">Efficient</span></strong><strong><span>）</span></strong><span>、<strong><span>可靠性（</span></strong></span><strong><span lang="EN-US">Reliable</span></strong><strong><span>）</span></strong><span>。另外，</span><span lang="EN-US">Hadoop</span><span>是一款完全用</span><span lang="EN-US">Java</span><span>开发的开源软件，因此它可以运行在多种作系统和商用硬件上。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US">Hadoop</span><span>主要由两部分构成：</span><span lang="EN-US">Hadoop</span><span>分布式文件系统（</span><span lang="EN-US">HDFS</span><span>）和</span><span lang="EN-US">MapReduce</span><span>的实现。</span></p>
+  <p class="MsoNormal"><span lang="EN-US">HDFS</span><span>和</span><span lang="EN-US">MapReduce</span><span>的关系如下图所示：</span></p>
+  <p class="MsoNormal" align="center"><a href="http://www.54chen.com/wp-content/uploads/2009/01/1.jpg"><img class="alignnone size-full wp-image-400" title="1" src="http://www.54chen.com/wp-content/uploads/2009/01/1.jpg" alt="" width="405" height="201"></a></p>
+  <p class="MsoNormal"><span lang="EN-US">MapReduce</span><span>是依赖于</span><span lang="EN-US">HDFS</span><span>实现的。通常</span><span lang="EN-US">MapReduce</span><span>会将被计算的数据分为很多小块，</span><span lang="EN-US">HDFS</span><span>会将每个块复制若干份以确保系统的可靠性，同时它按照一定的规则将数据块放置在集群中的不同机器上，以便</span><span lang="EN-US">MapReduce</span><span>在数据宿主机器上进行最便捷的计算。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span>下面我们再深入一些看看</span><span lang="EN-US">HDFS</span><span>和</span><span lang="EN-US">MapReduce</span><span>的实现细节：</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><strong><span lang="EN-US">HDFS</span></strong></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US">HDFS</span><span>设计时基于如下的前提和目标：</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>1.<span>         </span></span></span><strong><span>硬件错误是常态而不是异常</span></strong><span>：</span><span lang="EN-US">HDFS</span><span>可能由成百上千的服务器所构成，每个服务器上存储着文件系统的部分数据。任一组件都有可能失效，这意味着总是有一部分</span><span lang="EN-US">HDFS</span><span>的组件是不工作的。因此错误检测和快速、自动的恢复是</span><span lang="EN-US">HDFS</span><span>最核心的架构目标。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>2.<span>         </span></span></span><strong><span>流式数据访问</span></strong><span>：</span><span lang="EN-US">HDFS</span><span>的设计中更多的考虑到了数据批处理，而不是用户交互处理。比之数据访问的低延迟问题，更关键的在于数据访问的高吞吐量。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>3.<span>         </span></span></span><strong><span>大规模数据集</span></strong><span>：</span><span lang="EN-US">HDFS</span><span>上的一个典型文件大小一般都在</span><span lang="EN-US">G</span><span>字节至</span><span lang="EN-US">T</span><span>字节。因此，</span><span lang="EN-US">HDFS</span><span>被调节以支持大文件存储，并能提供整体上高的数据传输带宽，能在一个集群里扩展到数百个节点。一个单一的</span><span lang="EN-US">HDFS</span><span>实例应该能支撑数以千万计的文件。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>4.<span>         </span></span></span><strong><span>简单的一致性模型：</span></strong><span lang="EN-US">HDFS</span><span>应用需要一个</span><span lang="EN-US">"</span><span>一次写入多次读取</span><span lang="EN-US">"</span><span>的文件访问模型。文件经过创建、写入和关闭之后就不需要改变。这一假设简化了数据一致性问题，并且使高吞吐量的数据访问成为可能。</span><span lang="EN-US">MapReduce</span><span>应用或者网络爬虫应用都非常适合这个模型。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>5.<span>         </span></span></span><strong><span>移动计算比移动数据更划算：</span></strong><span>一个应用请求的计算，离它作的数据越近就越高效，在数据达到海量级别的时候更是如此。因为这样就能降低网络阻塞的影响，提高系统数据的吞吐量。</span><span lang="EN-US">HDFS</span><span>为应用提供了将计算移动到数据附近的接口。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>6.<span>         </span></span></span><strong><span>异构软硬件平台间的可移植性：</span></strong><span>这种特性方便了</span><span lang="EN-US">HDFS</span><span>作为大规模数据应用平台的推广。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US">HDFS</span><span>的系统架构如下图所示：</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US">HDFS</span><span>采用</span><span lang="EN-US">Master/Slave</span><span>架构，一个</span><span lang="EN-US">HDFS</span><span>集群是由一个</span><span lang="EN-US">Namenode</span><span>和一定数目的</span><span lang="EN-US">Datanodes</span><span>组成。</span><span lang="EN-US">Namenode</span><span>是一个中心服务器，负责管理文件系统的名字空间（</span><span lang="EN-US">Namespace</span><span>）以及客户端对文件的访问。集群中的</span><span lang="EN-US">Datanode</span><span>一般是一个节点一个，负责管理它所在节点上的存储。</span><span lang="EN-US">HDFS</span><span>暴露了文件系统的名字空间，用户能够以文件的形式在上面存储数据。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><a href="http://www.54chen.com/wp-content/uploads/2009/01/2.jpg"><img class="alignnone size-medium wp-image-401" style="border: 0px initial initial;" title="2" src="http://www.54chen.com/wp-content/uploads/2009/01/2-300x207.jpg" alt="" width="300" height="207"></a></p>
+  <p class="MsoNormal"><span>从内部看，一个文件其实被分成一个或多个数据块（</span><span lang="EN-US">Block</span><span>），这些块存储在一组</span><span lang="EN-US">Datanode</span><span>上。</span><span lang="EN-US">Namenode</span><span>执行文件系统的名字空间作，比如打开、关闭、重命名文件或目录，它也负责确定数据块到具体</span><span lang="EN-US">Datanode</span><span>节点的映射。</span><span lang="EN-US">Datanode</span><span>负责处理文件系统客户端的读写请求，在</span><span lang="EN-US">Namenode</span><span>的统一调度下进行数据块的创建、删除和复制。</span><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span>单一节点的</span><span lang="EN-US">Namenode</span><span>大大简化了系统的架构。</span><span lang="EN-US">Namenode</span><span>负责保管和管理所有的</span><span lang="EN-US">HDFS</span><span>元数据（</span><span lang="EN-US">Metadata</span><span>），因而用户数据就不需要通过</span><span lang="EN-US">Namenode</span><span>（也就是说文件数据的读写是直接在</span><span lang="EN-US">Datanode</span><span>上）。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> <span>从内部看，一个文件其实被分成一个或多个数据块（</span><span lang="EN-US">Block</span><span>），这些块存储在一组</span><span lang="EN-US">Datanode</span><span>上。</span><span lang="EN-US">Namenode</span><span>执行文件系统的名字空间作，比如打开、关闭、重命名文件或目录，它也负责确定数据块到具体</span><span lang="EN-US">Datanode</span><span>节点的映射。</span><span lang="EN-US">Datanode</span><span>负责处理文件系统客户端的读写请求，在</span><span lang="EN-US">Namenode</span><span>的统一调度下进行数据块的创建、删除和复制。</span></span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span>单一节点的</span><span lang="EN-US">Namenode</span><span>大大简化了系统的架构。</span><span lang="EN-US">Namenode</span><span>负责保管和管理所有的</span><span lang="EN-US">HDFS</span><span>元数据（</span><span lang="EN-US">Metadata</span><span>），因而用户数据就不需要通过</span><span lang="EN-US">Namenode</span><span>（也就是说文件数据的读写是直接在</span><span lang="EN-US">Datanode</span><span>上）。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><strong><span lang="EN-US"> </span></strong></p>
+  <p class="MsoNormal"><strong><span lang="EN-US">MapReduce</span></strong></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US">MapReduce</span><span>是一种高效的分布式编程模型，同时是一种用于处理和生成大规模数据集的实现方式。其实，现实世界中很多计算任务都可以用这个模型来表达，熟悉</span><span lang="EN-US">Unix Shell</span><span>的同学一定写过类似这样的命令行：</span></p>
+  <p class="MsoNormal"><span lang="EN-US">~&gt; cat input | grep xxx | sort | uniq -c | cat &gt; output</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span>上面每个管道符中间正好对应了一个典型</span><span lang="EN-US">MapReduce</span><span>的几个阶段：</span></p>
+  <p class="MsoNormal"><span lang="EN-US">Input | Map | Shuffle &amp; Sort | Reduce | Output</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span>下图表明了这几个阶段的工作流及结构关系：</span></p>
+  <p class="MsoNormal" align="center"><a href="http://www.54chen.com/wp-content/uploads/2009/01/3.jpg"><img class="alignnone size-full wp-image-402" title="3" src="http://www.54chen.com/wp-content/uploads/2009/01/3.jpg" alt="" width="346" height="498"></a></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>1.<span>       </span></span></span><strong><span lang="EN-US">Input</span></strong><strong><span>：</span></strong><span>一个</span><span lang="EN-US">Hadoop MapReduce</span><span>应用通常需要提供一对通过实现合适的接口或抽象类提供的</span><span lang="EN-US">Map</span><span>和</span><span lang="EN-US">Reduce</span><span>函数，还应该指明输入</span><span lang="EN-US">/</span><span>输出的位置（路径）和其他一些运行参数。此外，此阶段还会把输入目录下的大数据文件切分为若干的数据块。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>2.<span>       </span></span></span><strong><span lang="EN-US">Map</span></strong><strong><span>：</span></strong><span lang="EN-US">MapReduce</span><span>框架把应用作业的输入看为是一组</span><span lang="EN-US">&lt;key, value&gt; </span><span>键值对，在</span><span lang="EN-US">Map</span><span>这个阶段，框架会调用用户自定义的</span><span lang="EN-US">Map</span><span>函数处理每一个</span><span lang="EN-US">&lt;key, value&gt; </span><span>键值对，生成一批新的中间</span><span lang="EN-US">&lt;key, value&gt; </span><span>键值对，这两组键值对的类型可能不同。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>3.<span>       </span></span></span><strong><span lang="EN-US">Shuffle &amp; Sort</span></strong><strong><span>：</span></strong><span>为了保证</span><span lang="EN-US">Reduce</span><span>的输入是</span><span lang="EN-US">Map</span><span>排好序的输出。在</span><span lang="EN-US">Shuffle</span><span>阶段，框架通过</span><span lang="EN-US">HTTP</span><span>为每个</span><span lang="EN-US">Reduce</span><span>获得所有</span><span lang="EN-US">Map</span><span>输出中与之相关的</span><span lang="EN-US">&lt;key, value&gt; </span><span>键值对；而在</span><span lang="EN-US">Sort</span><span>阶段，框架将按照</span><span lang="EN-US">key</span><span>的值对</span><span lang="EN-US">Reduce</span><span>的输入进行分组（因为不同</span><span lang="EN-US">map</span><span>的输出中可能会有相同的</span><span lang="EN-US">key</span><span>）。通常</span><span lang="EN-US">Shuffle</span><span>和</span><span lang="EN-US">Sort</span><span>两个阶段是同时进行的，</span><span lang="EN-US">Reduce</span><span>的输入也是一边被取回，一边被合并的。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>4.<span>       </span></span></span><strong><span lang="EN-US">Reduce</span></strong><strong><span>：</span></strong><span>此阶段会遍历中间数据，对每一个唯一</span><span lang="EN-US">key</span><span>，执行用户自定义的</span><span lang="EN-US">Reduce</span><span>函数（输入参数是</span><span lang="EN-US">&lt;key, (list of values)&gt;</span><span>），输出是新的</span><span lang="EN-US">&lt;key, value&gt; </span><span>键值对。</span></p>
+  
+  <p><strong><span lang="EN-US">Output</span><span>：</span></strong><span>此阶段会把</span><span lang="EN-US">Reduce</span><span>输出的结果写入输出目录的文件中。这样，一个典型的</span><span lang="EN-US">MapReduce</span><span>过程就结束了。</span>
+  </p>
+<p class="MsoNormal"><strong><span>这里需要强调两点：</span></strong></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>1.<span>       </span></span></span><span>整个过程中，</span><span lang="EN-US">Hadoop</span><span>框架负责任务的调度和监控，以及重新执行已经失败的任务。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>2.<span>       </span></span></span><span>虽然</span><span lang="EN-US">Hadoop</span><span>框架是用</span><span lang="EN-US">Java</span><span>实现的，但</span><span lang="EN-US">MapReduce</span><span>应用程序则不一定要用</span><span lang="EN-US"> Java</span><span>来写。比如：</span><span lang="EN-US">Hadoop Streaming</span><span>是一种运行作业的实用工具，它允许用户创建和运行任何可执行程序（例如：</span><span lang="EN-US">Shell</span><span>工具）来做为</span><span lang="EN-US">Map</span><span>和</span><span lang="EN-US">Reduc</span><span>作。另外，</span><span lang="EN-US">Hadoop Pipes</span><span>是一个与</span><span lang="EN-US">SWIG</span><span>兼容的</span><span lang="EN-US">C++ API</span><span>（没有基于</span><span lang="EN-US">JNI</span><span>技术），它也可用于实现</span><span lang="EN-US">Map</span><span>和</span><span lang="EN-US">Reduc</span><span>作。</span></p>
+  
+  <p></p>
+<h3>
+<span>基于</span><span lang="EN-US">Hadoop</span><span>的其他开源项目</span>
+</h3>
+  <p class="MsoNormal"><strong><span lang="NO-BOK">Pig - http://incubator.apache.org/pig/</span></strong></p>
+  <p class="MsoNormal"><span lang="NO-BOK">Pig</span><span>是</span><span lang="NO-BOK">Yahoo!</span><span>捐献给</span><span lang="NO-BOK">Apache</span><span>的一个项目，目前还在</span><span lang="NO-BOK">Apache</span><span>孵化器（</span><span lang="NO-BOK">incubator</span><span>）阶段，目前版本是</span><span lang="NO-BOK">V0.1.0</span><span>，但基本功能已经可用了。</span><span lang="NO-BOK">Pig</span><span>是一个基于</span><span lang="NO-BOK">Hadoop</span><span>的大规模数据分析平台，它提供的</span><span lang="NO-BOK">SQL-like</span><span>语言叫</span><span lang="NO-BOK">Pig Latin</span><span>，该语言的编译器会把类</span><span lang="NO-BOK">SQL</span><span>的数据分析请求转换为一系列经过优化处理的</span><span lang="NO-BOK">MapReduce</span><span>运算。</span><span lang="NO-BOK">Pig</span><span>为复杂的海量数据并行计算提供了一个简易的作和编程接口。</span></p>
+  <p class="MsoNormal"><span lang="NO-BOK"> </span></p>
+  <p class="MsoNormal"><strong><span lang="EN-US">ZooKeeper - http://hadoop.apache.org/zookeeper/</span></strong></p>
+  <p class="MsoNormal"><span lang="EN-US">ZooKeeper</span><span>是</span><span lang="EN-US">Hadoop</span><span>的正式子项目，它是一个针对大型分布式系统的可靠协调系统，提供的功能包括：配置维护、名字服务、分布式同步、组（</span><span lang="EN-US">Group</span><span>）服务等。</span><span lang="EN-US">ZooKeeper</span><span>的目标就是封装好这些复杂易出错的关键服务，将简单易用的接口和性能高效、功能稳定的系统提供给用户。</span><span lang="EN-US">ZooKeeper</span><span>的一些与</span><span lang="EN-US"></span><span>的</span><span lang="EN-US">Chubby lock service</span><span>很相似。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><strong><span lang="EN-US">HBase - http://hadoop.apache.org/hbase/</span></strong></p>
+  <p class="MsoNormal"><span lang="EN-US">HBase</span><span>也是</span><span lang="EN-US">Hadoop</span><span>的正式子项目，它是一个面向列的分布式数据库，其源于</span><span lang="EN-US"></span><span>的</span><span lang="EN-US">BigTable</span><span>论文。目前该项目的主要开发人员来自刚被</span><span lang="EN-US">Microsoft</span><span>收购的</span><span lang="EN-US">Powerset</span><span>公司。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><strong><span lang="EN-US">Mahout - http://lucene.apache.org/mahout/</span></strong></p>
+  <p class="MsoNormal"><span lang="EN-US">Mahout</span><span>是一个利用</span><span lang="EN-US">Map/Reduce</span><span>的机器学习算法库，其源于斯坦福大学的几个学者在</span><span lang="EN-US">06</span><span>年的</span><span lang="EN-US">nips</span><span>会议上发表的一篇文章</span><span lang="EN-US">"Map-Reduce for Machine Learning on Multicore"</span><span>。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><strong><span lang="EN-US">Hive - http://mirror..com//hive/</span></strong></p>
+  <p class="MsoNormal"><span lang="EN-US">Hive</span><span>是</span><span lang="EN-US">Facebook 08</span><span>年</span><span lang="EN-US">8</span><span>月刚开源的一个数据仓库框架，其系统目标与</span><span lang="EN-US">Pig</span><span>有相似之处，但它有一些</span><span lang="EN-US">Pig</span><span>目前还不支持的机制，比如：更丰富的类型系统、更类似</span><span lang="EN-US">SQL</span><span>的查询语言、</span><span lang="EN-US">Table/Partition</span><span>元数据的持久化。目前，</span><span lang="EN-US">Facebook</span><span>已经提交了申请，希望</span><span lang="EN-US">Hive</span><span>成为</span><span lang="EN-US">Hadoop</span><span>的一个贡献项目（</span><span lang="EN-US">contrib project</span><span>）。</span></p>
+  
+  <p></p>
+<h3>
+<span>有谁在用</span><span lang="EN-US">Hadoop</span><span>？</span>
+</h3>
+  <p class="MsoNormal"><span>在</span><span lang="EN-US">Yahoo!</span><span>，</span><span lang="EN-US">Hadoop</span><span>目前除了被用于网页搜索中的</span><span lang="EN-US">Webmap</span><span>中，还广泛地被用到</span><span lang="EN-US">Yahoo</span><span>！的日志分析、广告计算、科研实验中。另外，</span><span lang="EN-US">2007</span><span>年年底</span><span lang="EN-US">Yahoo!</span><span>和卡耐基</span><span lang="EN-US">-</span><span>梅隆大学发起的</span><span lang="EN-US">Open Academic Clusters--M45</span><span>，至今已经发展为</span><span lang="EN-US">500</span><span>多台的集群，并完成了多个颇具学术价值的项目。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span lang="EN-US">Amazon</span><span>的搜索门户</span><span lang="EN-US">A9.com</span><span>中的商品搜索的索引生成就是基于</span><span lang="EN-US">Hadoop</span><span>完成的。另外，</span><span lang="EN-US">Amazon</span><span>最近发布的</span><span lang="EN-US">GrepTheWeb Web Service</span><span>，内部使用了基于</span><span lang="EN-US">EC2</span><span>（</span><span lang="EN-US">Elastic Compute Cloud</span><span>）的</span><span lang="EN-US">Hadoop</span><span>集群，承担其中的并行计算工作。</span></p>
+  <p class="MsoNormal"><span lang="EN-US"> </span></p>
+  <p class="MsoNormal"><span>著名</span><span lang="EN-US">SNS</span><span>网站</span><span lang="EN-US">Facebook</span><span>用</span><span lang="EN-US">Hadoop</span><span>构建了整个网站的数据仓库，它目前有</span><span lang="EN-US">320</span><span>多台机器进行网站的日志分析和数据挖掘。此外，在</span><span lang="EN-US">IBM 2007</span><span>年年底的蓝云计算集群中也采用了</span><span lang="EN-US">Hadoop</span><span>进行并行计算。</span></p>
+  
+  <p></p>
+<h3><span>展望</span></h3>
+  <p class="MsoNormal"><span>必须承认，在</span><span lang="EN-US">Hadoop</span><span>及其相关的开源项目中，可以看到</span><span lang="EN-US"></span><span>系统架构中核心要素</span><span lang="EN-US">GFS</span><span>、</span><span lang="EN-US">MapReduce</span><span>、</span><span lang="EN-US">BigTable</span><span>、</span><span lang="EN-US">Sawzall</span><span>、</span><span lang="EN-US">Chubby</span><span>的身影。因此，从某个角度来说，</span><span lang="EN-US">Hadoop</span><span>目前还是一个模仿者、跟随者。当大家看到这篇文章时，</span><span lang="EN-US">Hadoop</span><span>应该已经发布</span><span lang="EN-US">0.18</span><span>了，从版本号来看，无疑</span><span lang="EN-US">Hadoop</span><span>还是一只幼年的小飞象，但就是这只看似笨拙的小飞象，却承载着</span><span lang="EN-US">Doug Cutting</span><span>及其伙伴坚持不懈的努力和造福开源社区的决心。因此，我们有理由相信，在“云计算”时代即将来临之际，</span><span lang="EN-US">Hadoop</span><span>所营造的一个软件生态系统，必将成为一个最符合“、平等和分享”的互联网的云计算实践平台。</span></p>
+  
+  <p></p>
+<h3><span>参考链接</span></h3>
+  <p class="MsoNormal"><span lang="EN-US"><span>1.<span>         </span></span></span><span lang="EN-US">Hadoop</span><span>项目主页：</span><span lang="EN-US"><a href="http://hadoop.apache.org/">http://hadoop.apache.org/</a></span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>2.<span>         </span></span></span><span>更多的</span><span lang="EN-US">Hadoop</span><span>应用案例：</span><span lang="EN-US"><a href="http://wiki.apache.org/hadoop/PoweredBy">http://wiki.apache.org/hadoop/PoweredBy</a></span></p>
+  <p class="MsoNormal"><span lang="EN-US"><span>3.<span>         </span></span></span><span lang="EN-US">Yahoo</span><span>！</span><span lang="EN-US">Hadoop</span><span>研发团队的</span><span lang="EN-US">Blog</span><span>：</span><span lang="EN-US"><a href="http://developer.yahoo.com/blogs/hadoop">http://developer.yahoo.com/blogs/hadoop</a></span></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-01-15T00:00:00+08:00" pubdate data-updated="true">2009-01-15 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/01/12/%E5%8F%B0%E6%B9%BE%E7%9A%84%E9%9B%B6%E8%9B%8B%E6%9C%88%E5%8F%B0/" title="Previous Post: 台湾的零蛋月台">« 台湾的零蛋月台</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/01/16/e5-a4-9a-e5-8f-b0slave-e7-9a-84mysql-replication-e7-9a-84-e9-85-8d-e7-bd-ae/" title="Next Post: 多台slave的mysql replication的配置">多台slave的mysql replication的配置 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

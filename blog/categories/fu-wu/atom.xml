@@ -1,0 +1,68 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: 服务 | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/fu-wu/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[服务质量衡量抽象心经]]></title>
+      <link href="https://www.54chen.com/blog/2016/02/02/service-memo/"/>
+      <updated>2016-02-02T10:30:54+08:00</updated>
+      <id>https://www.54chen.com/blog/2016/02/02/service-memo</id>
+      <content type="html"><![CDATA[<p>马上过年了，先祝大家新快乐、万事如意！</p>
+  
+  <p><img src=http://img02.taobaocdn.com/imgextra/i2/T1o7d4XgVmXXa0tYUU_013741.jpg></p>
+  
+  <p>一群错综复杂的服务，如何去衡量质量，如何去快速找到问题，如何每个环节都有“眼线”？</p>
+  
+  <!--more-->
+  
+  
+  <h1>一、抽象的数据</h1>
+  
+  <p>yammer的metrics项目，可能算是大家用得最多的一个了，可以算qps，可以算99.9％的请求时长。</p>
+  
+  <p>这些在线上故障的发现和定位有用吗？够用吗？</p>
+  
+  <p>通过线上的事故积累，答案是，故障的发现，仅通过一个qps和percentile的绝对值来报警，误报非常高，真正的故障往往被掩盖。:(</p>
+  
+  <p>经过前辈们的探索，下面的实践的确是最佳的：</p>
+  
+  <p>1.服务抽象为主调方和被调方。</p>
+  
+  <p>2.提前商定好超时，以一分钟为单位计算成功率。</p>
+  
+  <p>3.连续三分钟的成功率低于三个九，报警。</p>
+  
+  <p>实践中从来没有误报过。:)</p>
+  
+  <h1>二、抽象的返回</h1>
+  
+  <p>服务在告诉监控系统成功率的时候，随带就告诉了系统，是因为1（超时）、2（用户不存在）、3（xx服务不响应）、4（存储异常）等等。</p>
+  
+  <p>出现故障的时候，报警直接会告诉你，“90％原因是超时”，连服务器上的日志都不用去看！</p>
+  
+  <h1>三、抽象的调查过程</h1>
+  
+  <p>通过抽象的数据，我们可以再按照每天的成功率进行统计，“天三个九”的要求会低于“分钟三个九”（不信你算一下）。</p>
+  
+  <p>日报里大致会标出 A->B 99.1%  B->C 98.9%  C->D 99%，很明显了，D服务有问题了，导致上面每一层都有问题。</p>
+  
+  <p>再单独看C->D抽象返回的结果统计，1占88% 2占1%等等，定位为超时原因。</p>
+  
+  <p>然后看看具体出问题的时间点是否有其他的异常日志，如果没有，则是需要扩容了（增加处理线程OR增加机器）。</p>
+  
+  <h1>四、抽象的总结</h1>
+  
+  <p>文中系统真实存在，童叟无欺，实现简单并未开源，小米同学可以使用，如有欲望邮件联系我。</p>
+  ]]></content>
+    </entry>
+    
+  </feed>

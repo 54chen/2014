@@ -1,0 +1,233 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>用搜索的倒排轻松搞定“好友的文章”类相关推荐功能 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="在SNS网站中，“好友的相册”、“好友的日志”、“好友常去的小组”，这样的功能到处都是，如果处理不当，对整个系统的压力都会非同小可。
+  这里介绍一种利用sphinx的搜索天性，倒排索引群中的人，然后把好友的XX功能化解为或关系的搜索，下面是是一些记录。关于sphinx的安装， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/09/06/search-friends-airticle-function">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">用搜索的倒排轻松搞定“好友的文章”类相关推荐功能</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-09-06T00:00:00+08:00" pubdate data-updated="true">2010-09-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1MQxKXkpmXXcK5RZ8_071520.jpg" alt="54chen"></p>
+  
+  <p>在SNS网站中，“好友的相册”、“好友的日志”、“好友常去的小组”，这样的功能到处都是，如果处理不当，对整个系统的压力都会非同小可。<br>
+  这里介绍一种利用sphinx的搜索天性，倒排索引群中的人，然后把好友的XX功能化解为或关系的搜索，下面是是一些记录。关于sphinx的安装，详细见54chen之前的一些手记：<a href="http://www.54chen.com/tag/sphinx">http://www.54chen.com/tag/sphinx</a>
+  <strong>第一步，制造随机数据</strong>
+  这里为方便理解，作一个假设的场景，要索引的字段缩减到2个字段，字段1是目标id，表示相册id\日志id\小组id等等，字段2是一个text，里面以逗号隔开记录了所有的和这个目标id有关系的人的id号，大致如下所示：</p>
+  
+  <p>id 	members<br>
+  1 	1,2,3,4,5,6</p>
+  
+  <p>这样一个表，标识了id为1的一个目标，都有什么用户和他有关。比如可以表示：id为1的群都有12345这五个人加过；id为1的相册都有12345这五个人看过；id为1的相册都有12345这五个人回复过，等等。<br>
+  下面代码片段所做之事，是将10万条记录插入到表中，表的members的记录在五千条内随机，里的人id从1到50000随机产生，这样，基本能够模拟一个中型应用的水平了。
+  </p>
+<blockquote>
+  $db = new DLConnection();<br>
+  $sql = "INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES";<br>
+  $dot = "";<br>
+  for ($i=0;$i&lt;100000;$i++)<br>
+  {
+      $dot2 = "";<br>
+      $sql2 = "";<br>
+      for ($j=0;$j<rand></rand>
+          $x = rand(1,50000);<br>
+          $sql2 .= $dot2.$x;<br>
+          $dot2 = ",";<br>
+      }<br>
+      $sql .= $dot."('$i', '$sql2')";<br>
+      $dot = ",";<br>
+      <br>
+      if ($i%1000==0) {<br>
+      	$db-&gt;Execute($sql);<br>
+      	$sql = "INSERT INTO `forum`.`forum_info` (`id` ,`members`)VALUES";<br>
+      	$dot = "";<br>
+      }<br>
+  }
+  </blockquote>
+  
+  <p><strong>第二步，压力测试搜索性能</strong>
+  代码太长不帖了，使用java开启100个线程100个连接到sphinx，sphinx建立索引后，只起一个节点。<br>
+  搜索的时候，关键的几点：<br>
+  1. int mode = SphinxClient.SPH_MATCH_BOOLEAN; 使用布尔方式查询<br>
+  2.随机产生1到1000个用户id，id为1到50000之间的随机一个，多个之间用|（或）连接</p>
+  
+  <p><strong>结论</strong>
+  sphinx的搜索性能还是基本满意，在压力测试的时候看后台的query log可以发现，绝大多数的查询在100ms左右，当然，因为随机的原因，也会出现一些3秒5秒的查询，但这是个案，在普通用户中出现的可能性不大。<br>
+  此方案的适用性正在进一步优化中。
+  </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-09-06T00:00:00+08:00" pubdate data-updated="true">2010-09-06 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>, <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

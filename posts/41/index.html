@@ -1,0 +1,1156 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="一周废话汇总【54chen weibo 2009-11-07】 2009-11-07 00:00:00 +0800 多谢各位帮转，房子已经找到，现在转租蓟门桥两居中一居，老小区，安静，六层，有空调，装修一般,15平。~~1150/m # 成年人遇到的问题最大的是爱情问题，其次是没有爱情的问题 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/41">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/11/06/notes-from-java-nio-to-learn-to-collect/">Java Nio学习手记[收集]</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-06T00:00:00+08:00" pubdate data-updated="true">2009-11-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>传统的并发型服务器设计是利用阻塞型网络I/O 以多线程的模式来实现的，然而由于系统常常在进行网络读写时处于阻塞状态，会大大影响系统的性能；自Java1. 4 开始引入了NIO(新I/O) API，通过使用非阻塞型I/O，实现流畅的网络读写作，为开发高性能并发型服务器程序提供了一个很好的解决方案。这就是java nio.</p>
+  
+  <p><strong>传统的阻塞型网络 I/O的不足:</strong></p>
+  
+  <p>Java 平台传统的I/O 系统都是基于Byte（字节）和Stream（数据流）的，相应的I/O 作都是阻塞型的，所以服务器程序也采用阻塞型I/O 进行数据的读、写作。本文以TCP长连接模式来讨论并发型服务器的相关设计，为了实现服务器程序的并发性要求，系统由一个单独的主线程来监听用户发起的连接请求，一直处于阻塞状态；当有用户连接请求到来时，程序都会启一个新的线程来统一处理用户数据的读、写作。</p>
+  
+  <p>这种模式的优点是简单、实用、易管理；然而缺点也是显而易见的：由于是为每一个客户端分配一个线程来处理输入、输出数据，其线程与客户机的比例近似为1：1，随着线程数量的不断增加，服务器启动了大量的并发线程，会大大加大系统对线程的管理开销，这将成为吞吐量瓶颈的主要原因；其次由于底层的I/O 作采用的同步模式，I/O 作的阻塞管</p>
+  
+  <p>理粒度是以服务于请求的线程为单位的,有可能大量的线程会闲置,处于盲等状态，造成I/O资源利用率不高，影响整个系统的性能。</p>
+  
+  <p>对于并发型服务器，系统用在阻塞型I/O 等待和线程间切换的时间远远多于CPU 在内存中处理数据的时间，因此传统的阻塞型I/O 已成为制约系统性能的瓶颈。Java1.4 版本后推出的NIO 工具包，提供了非阻塞型I/O 的异步输入输出机制，为提高系统的性能提供了可实现的基础机制。</p>
+  
+  <p><strong>NIO:</strong></p>
+  
+  <p>针对传统I/O 工作模式的不足，NIO 工具包提出了基于Buffer（缓冲区）、Channel（通道）、Selector（选择器）的新模式；Selector（选择器）、可选择的Channel（通道）和SelectionKey（选择键）配合起来使用，可以实现并发的非阻塞型I/O 能力。</p>
+  
+  <p>Buffer（缓冲器）</p>
+  
+  <p>Buffer 类是一个抽象类，它有7 个子类分别对应于七种基本的数据类型：ByteBuffer、CharBuffer、DoubleBuffer、FloatBuffer、IntBuffer、LongBuffer 和ShortBuffer。每一个Buffer对象相当于一个数据容器，可以把它看作内存中的一个大的数组，用来存储和提取所有基本类型(boolean 型除外)的数据。Buffer 类的核心是一块内存区，可以直接对其执行与内存有关的作，利用作系统特性和能力提高和改善Java 传统I/O 的性能。</p>
+  
+  <p>Channel（通道）</p>
+  
+  <p>Channel 被认为是NIO 工具包的一大创新点，是(Buffer)缓冲器和I/O 服务之间的通道，具有双向性，既可以读入也可以写出，可以更高效的传递数据。我们这里主要讨论ServerSocketChannel 和SocketChannel，它们都继承了SelectableChannel，是可选择的通道，分别可以工作在同步和异步两种方式下（这里的可选择不是指可以选择两种工作方式，而是指可以有选择的注册自己感兴趣的事件）。当通道工作在同步方式时，它的功能和编程方法与传统的ServerSocket、Socket 对象相似；当通道工作在异步工作方式时，进行输入输出处理不必等到输入输出完毕才返回，并且可以将其感兴趣的（如：接受作、连接作、读出作、写入作）事件注册到Selector 对象上，与Selector 对象协同工作可以更有效率的支持和管理并发的网络套接字连接。</p>
+  
+  <p>Selector（选择器）和SelectionKey（选择键）</p>
+  
+  <p>各类 Buffer 是数据的容器对象；各类Channel 实现在各类Buffer 与各类I/O 服务间传输数据。Selector 是实现并发型非阻塞I/O 的核心，各种可选择的通道将其感兴趣的事件注册到Selector 对象上，Selector 在一个循环中不断轮循监视这各些注册在其上的Socket 通道。SelectionKey 类则封装了SelectableChannel 对象在Selector 中的注册信息。当Selector 监测到在某个注册的SelectableChannel 上发生了感兴趣的事件时,自动激活产生一个SelectionKey对象,在这个对象中记录了哪一个SelectableChannel 上发生了哪种事件，通过对被激活的SelectionKey 的分析,外界可以知道每个SelectableChannel 发生的具体事件类型,进行相应的处理。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/11/04/linux-system-replacement-method-sshd-notes-from-from-academy-of-sciences/">Linux系统更换sshd的方法手记[from科学院]</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-04T00:00:00+08:00" pubdate data-updated="true">2009-11-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>朋友的服务器让人给黑了，把sshd都给更换了，拿到root用户名密码直接用curl往外传。绝对是老毛子的手法，非常娴熟，入侵涉及的方案有<a href="http://www.54chen.com/79-perl-workshop-2008-%e5%bd%92%e6%9d%a5/">perl</a>服务、c、shell、curl、php exec等等。</p>
+  
+  <p>在最简单的分析下，采取更换sshd服务的办法来去除老毛子的垃圾sshd.</p>
+  
+  <p>第一步、下载、安装
+  </p>
+<blockquote>wget -c "ftp://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-5.0p1.tar.gz"</blockquote>
+  
+  <p>tar zxvf openssh-5.0p1.tar.gz<br>
+  cd openssh-5.0p1
+  请确认Zlib和OpenSSL的版本:<br>
+  openssh-5.0p1要求Zlib的版本在1.2.1.2以上,<a href="http://www.54chen.com/809-tsinghua-huambo-fist-of-fury-review-environmental-elements-lamp/">OpenSSL</a>版本在0.9.6以上.下面是Zlib和 OpenSSL的官方地址:<br>
+  http://www.gzip.org/zlib/<br>
+  http://www.openssl.org/</p>
+  
+  <p>在安装过程中我遇到了zlib的版本过低。从上边的网址去下一个 zlib-1.2.3.tar.gz
+  </p>
+<blockquote>tar zxvf zlib-1.2.3.tar.gz</blockquote>
+  
+  <p>cd zlib-1.2.3</p>
+  
+  <p>./configure</p>
+  
+  <p>make &amp;&amp; make install
+  然后重新进入 openssh-5.0p1:
+  </p>
+<blockquote>./configure --sysconfdir=/etc/ssh</blockquote>
+  
+  <p>make</p>
+  
+  <p>这一步后面很牛B，要去到那个修改过的openssh的目录里 make uninstall (就是要把老毛子的病sshd给全部rm掉),然后再执行下面的步骤：</p>
+  
+  <p>make install
+  第二步、配置启动革新</p>
+  
+  <p>新安装的sshd都在/usr/local/sbin/sshd，老的在/usr/sbin/sshd，ps能看到老的还在跑（当然还在跑，不跑你还能连着ssh作吗~~·）</p>
+  
+  <p>修改配置文件，让新的sshd在新的端口启动：
+  </p>
+<blockquote>vi /etc/ssh/sshd_config</blockquote>
+  
+  <p>Port 220</p>
+  
+  <p>然后启动新的sshd:</p>
+  
+  <p>/usr/local/ssh/sbin/sshd -f /etc/ssh/sshd_config</p>
+  
+  <p>注意打开下iptable:</p>
+  
+  <p>iptables -I <a href="http://www.54chen.com/230-%e6%b7%ab%e8%8d%a1%e4%b8%80%e4%b8%8b%ef%bc%8c%e4%bd%a0%e5%b0%b1%e7%9f%a5%e9%81%93/">INPUT</a> -p udp --dport 220 -j ACCEPT
+  K掉原来的~~搞定！打完收工。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/11/02/multi-nginx-configuration-of-single-php-fpm-approach-from-academy-of-sciences/">多nginx单php-fpm的配置方法[from科学院]</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-02T00:00:00+08:00" pubdate data-updated="true">2009-11-02 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>用php fastcgi和nginx搭配的形式是很常见的，在很BT的需求下，可能会需要多个nginx走不同的端口，而进程只用一个php-fpm。</p>
+  
+  <p>本文所讲的环境比上述一句话还要BT，存在一个<a href="http://www.54chen.com/806-academy-of-sciences-in-recent-years-a-good-article-summing-up/">php</a>-fpm，而且每个nginx都以一个非超级用户所有来进行运行。</p>
+  
+  <p>这样就存在了一个BT的情况，php-fpm默认不能以root权限运行，而普通用户来运行的话，对其他用户的目录，php-fpm将没有权限，页面在运行php的时候，会提示404。</p>
+  
+  <p>于是有以下的解决方案：</p>
+  
+  <p>找到php的源代码 $src_path/sapi/cgi/fpm/fpm_unix.c</p>
+  
+  <p>在文件顶部增加一个宏定义：#define I_REALLY_WANT_ROOT_PHP</p>
+  
+  <p>重新 configure make make install</p>
+  
+  <p>此时再修改<a href="http://www.54chen.com/688-wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes/">php-fpm</a>.conf 将user group都修改成root（经过上面的修改php-fpm已经支持root了）。</p>
+  
+  <p>重启php-fpm.</p>
+  
+  <p><a href="http://www.54chen.com/640-mediawiki-pgsql/">配置</a>各nginx.conf：</p>
+  
+  <p>location ~ .*\.(php|php5)?$<br>
+  #fastcgi_pass  unix:/tmp/php-cgi.sock;<br>
+  fastcgi_pass  127.0.0.1:9000;<br>
+  fastcgi_index index.php;<br>
+  include fcgi.conf;<br>
+  }</p>
+  
+  <p>点到即止，不再多说。。。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/10/27/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">用java并发测试tokyo Cabinet的性能[重大更正篇]</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-27T00:00:00+08:00" pubdate data-updated="true">2009-10-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>在前面一篇文章
+  <a rel="bookmark" href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">用java并发测试tokyo cabinet的性能[五四陈手记]</a></p>
+  
+  <p>提到了测试tc的效率问题，最后的结论是70W/s，由于当时的错误，导致了一些严重影响大家的结论，如今本着认真治学，谨慎小心的态度，重新公布最新的代码和结论，还望受影响的同志们不要发烧。。。</p>
+  
+  <p>首先，总结上一次为什么会犯错的原因：</p>
+  
+  <p>1. 测试代码有问题，TDB db = new TDB();不能放在线程中去new，也许是tc实现的问题，详细原因没有去研究。</p>
+  
+  <p>2.赶着时间测，把写入的时候的结果直接给屏了。</p>
+  
+  <p>重新公布新的测试代码：
+  </p>
+<blockquote>package test;</blockquote>
+  
+  <p>import java.util.ArrayList;</p>
+  
+  <p>import java.util.HashMap;</p>
+  
+  <p>import java.util.List;</p>
+  
+  <p>import java.util.Map;</p>
+  
+  <p>import java.util.Random;</p>
+  
+  <p>import java.util.concurrent.atomic.AtomicLong;</p>
+  
+  <p>import tokyocabinet.*;</p>
+  
+  <p>public class BenchMark {</p>
+  
+  <p><span> </span>private static List&lt;TDB&gt; dbList = new ArrayList&lt;TDB&gt;();</p>
+  
+  <p><span> </span>public static class Stat {</p>
+  
+  <p><span> </span>private AtomicLong _count = new AtomicLong(0);</p>
+  
+  <p><span> </span>private static Stat _instance = new Stat();</p>
+  
+  <p><span> </span>public static Stat getInstance() {</p>
+  
+  <p><span> </span>return _instance;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>private Stat() {</p>
+  
+  <p><span> </span>_printer = new RatePrinter(_count);</p>
+  
+  <p><span> </span>_printer.setDaemon(true);</p>
+  
+  <p><span> </span>_printer.start();</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>public void inc() {</p>
+  
+  <p><span> </span>_count.incrementAndGet();</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>private RatePrinter _printer;</p>
+  
+  <p><span> </span>private static class RatePrinter extends Thread {</p>
+  
+  <p><span> </span>private long _last;</p>
+  
+  <p><span> </span>private AtomicLong _c;</p>
+  
+  <p><span> </span>public RatePrinter(AtomicLong c) {</p>
+  
+  <p><span> </span>_c = c;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>@Override</p>
+  
+  <p><span> </span>public void run() {</p>
+  
+  <p><span> </span>while (true) {</p>
+  
+  <p><span> </span>try {</p>
+  
+  <p><span> </span>long current = _c.get();</p>
+  
+  <p><span> </span>System.out.println("Rate: " + (current - _last) + " req/s");</p>
+  
+  <p><span> </span>_last = current;</p>
+  
+  <p><span> </span>Thread.sleep(1000L);</p>
+  
+  <p><span> </span>} catch (Throwable e) {</p>
+  
+  <p><span> </span>e.printStackTrace();</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>public static class EchoThread extends Thread {</p>
+  
+  <p><span> </span>// private TDB tdb;</p>
+  
+  <p><span> </span>public EchoThread(String ip, String port, int in, ThreadGroup group) {</p>
+  
+  <p><span> </span>super(group, "EchoThread-" + in);</p>
+  
+  <p><span> </span>// // create the object</p>
+  
+  <p><span> </span>// TDB tdb = new TDB();</p>
+  
+  <p><span> </span>//</p>
+  
+  <p><span> </span>// // open the database</p>
+  
+  <p><span> </span>// if(!tdb.open("casket"+in+".tct", TDB.OWRITER | TDB.OCREAT)){</p>
+  
+  <p><span> </span>// int ecode = tdb.ecode();</p>
+  
+  <p><span> </span>// System.err.println("open error: " + tdb.errmsg(ecode));</p>
+  
+  <p><span> </span>// }</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>@Override</p>
+  
+  <p><span> </span>public void run() {</p>
+  
+  <p><span> </span>int index = 0;</p>
+  
+  <p><span> </span>// create the object</p>
+  
+  <p><span> </span>Random r = new Random();</p>
+  
+  <p><span> </span>// open the database</p>
+  
+  <p>//<span> </span>if (!tdb.open("casket" + Thread.currentThread().getId() + ".tct", TDB.OWRITER | TDB.OCREAT)) {</p>
+  
+  <p>//<span> </span>int ecode = tdb.ecode();</p>
+  
+  <p>//<span> </span>System.err.println("open error: " + tdb.errmsg(ecode));</p>
+  
+  <p>//<span> </span>}</p>
+  
+  <p><span> </span>while (true) {</p>
+  
+  <p><span> </span>try {</p>
+  
+  <p><span> </span>TDB tdb = dbList.get(0);</p>
+  
+  <p><span> </span>String pkey = index + "asdf";</p>
+  
+  <p><span> </span>Map&lt;String, String&gt; cols = new HashMap&lt;String, String&gt;();</p>
+  
+  <p><span> </span>cols.put("name", "mikio" + index);</p>
+  
+  <p><span> </span>cols.put("age", "30");</p>
+  
+  <p><span> </span>cols.put("lang", "ja,en,c");</p>
+  
+  <p><span> </span>if (!tdb.put(pkey, cols)) {</p>
+  
+  <p><span> </span>int ecode = tdb.ecode();</p>
+  
+  <p><span> </span>System.err.println("put error: " + tdb.errmsg(ecode) + " key:" + pkey + "  value:" + cols);</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>// client.insert("Table1", "name"+index, "Standard1:name",</p>
+  
+  <p><span> </span>// ("name"+index).getBytes("UTF-8"),</p>
+  
+  <p><span> </span>// System.currentTimeMillis(), true);</p>
+  
+  <p><span> </span>// client.get_column("Table1", "name0", "Standard1:name");</p>
+  
+  <p><span> </span>index++;</p>
+  
+  <p><span> </span>Stat.getInstance().inc();<span> </span></p>
+  
+  <p><span> </span>} catch (Throwable e) {</p>
+  
+  <p><span> </span>e.printStackTrace();</p>
+  
+  <p><span> </span>break;</p>
+  
+  <p><span> </span>} finally {</p>
+  
+  <p><span> </span>// close the database</p>
+  
+  <p><span> </span>//if (!tdb.close()) {</p>
+  
+  <p><span> </span>//int ecode = tdb.ecode();</p>
+  
+  <p><span> </span>// System.err.println("close error: " +</p>
+  
+  <p><span> </span>// tdb.errmsg(ecode));</p>
+  
+  <p><span> </span>//}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>/**</p>
+  
+  <p><span> </span> * @param args</p>
+  
+  <p><span> </span> * @throws TTransportException</p>
+  
+  <p><span> </span> */</p>
+  
+  <p><span> </span>public static void main(String[] args) {</p>
+  
+  <p><span> </span>if (args.length != 1) {</p>
+  
+  <p><span> </span>System.out.println("Usage: Benchmark &lt;concurrent&gt;");</p>
+  
+  <p><span> </span>System.exit(1);</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>String ip = args[0];</p>
+  
+  <p><span> </span>String port = args[0];</p>
+  
+  <p><span> </span>Integer concurrent = Integer.valueOf(args[0]);</p>
+  
+  <p><span> </span>System.out.println("ip = " + ip + ",port = " + port + ",concurrent = " + concurrent);</p>
+  
+  <p><span> </span>ThreadGroup group = new ThreadGroup("Benchmark");</p>
+  
+  <p><span> </span>List&lt;Thread&gt; threads = new ArrayList&lt;Thread&gt;();</p>
+  
+  <p><span> </span>for (int i = 0; i &lt; concurrent; i++) {</p>
+  
+  <p><span> </span>TDB db = new TDB();</p>
+  
+  <p><span> </span>//db.optimize();</p>
+  
+  <p><span> </span>if (!db.open("./test" + i + ".tdb", TDB.OCREAT | TDB.OWRITER)) {</p>
+  
+  <p><span> </span>int ecode = db.ecode();</p>
+  
+  <p><span> </span>System.err.println("open error: " + TDB.errmsg(ecode));</p>
+  
+  <p><span> </span>continue;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>dbList.add(db);</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>for (int x = 0; x &lt; concurrent; ++x) {</p>
+  
+  <p><span> </span>Thread t = new EchoThread(ip, port, x, group);</p>
+  
+  <p><span> </span>threads.add(t);</p>
+  
+  <p><span> </span>t.start();</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p>}
+  对比上一次的代码，能够发现，1.new TDB的过程扔进了Thread.start之前；2.在thread中使用一个全局的变量来获取当前的对象。</p>
+  
+  <p>启十个进程，全往第一个里写：</p>
+  
+  <p>concurrent = 10</p>
+  
+  <p>Rate: 25 req/s</p>
+  
+  <p>Rate: 119617 req/s</p>
+  
+  <p>Rate: 130620 req/s</p>
+  
+  <p>Rate: 144202 req/s</p>
+  
+  <p>Rate: 120458 req/s</p>
+  
+  <p>Rate: 112809 req/s</p>
+  
+  <p>Rate: 120800 req/s</p>
+  
+  <p>Rate: 122290 req/s</p>
+  
+  <p>Rate: 119526 req/s</p>
+  
+  <p>Rate: 111189 req/s</p>
+  
+  <p>Rate: 112483 req/s</p>
+  
+  <p>Rate: 109138 req/s</p>
+  
+  <p>Rate: 115648 req/s</p>
+  
+  <p>Rate: 119419 req/s</p>
+  
+  <p>Rate: 105558 req/s</p>
+  
+  <p>Rate: 110230 req/s</p>
+  
+  <p>Rate: 116507 req/s</p>
+  
+  <p>Rate: 105367 req/s</p>
+  
+  <p>Rate: 103781 req/s</p>
+  
+  <p>Rate: 106618 req/s</p>
+  
+  <p>Rate: 107698 req/s</p>
+  
+  <p>Rate: 116768 req/s</p>
+  
+  <p>Rate: 107244 req/s</p>
+  
+  <p>保持在10w/s的写入速度，到达30s左右以后，数据急转直下：</p>
+  
+  <p>Rate: 48060 req/s</p>
+  
+  <p>Rate: 6901 req/s</p>
+  
+  <p>Rate: 4987 req/s</p>
+  
+  <p>Rate: 46229 req/s</p>
+  
+  <p>Rate: 46686 req/s</p>
+  
+  <p>Rate: 45402 req/s</p>
+  
+  <p>Rate: 6271 req/s</p>
+  
+  <p>Rate: 810 req/s</p>
+  
+  <p>Rate: 33895 req/s</p>
+  
+  <p>Rate: 46548 req/s</p>
+  
+  <p>Rate: 47025 req/s</p>
+  
+  <p>Rate: 6995 req/s</p>
+  
+  <p>Rate: 860 req/s</p>
+  
+  <p>这，就是tc的table表在写入一个<a href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">ArrayList</a>的真实速度（4核8G）。</p>
+  
+  <p>官方发言的100W只需要0.4s，说的是写入的hash表，而且数据是纯线性的数字。</p>
+  
+  <p>提升速度和稳定的办法，和张宴兄弟商量，b+tree类型的数据稳定一些，设置tctdbsetxmsiz也能解决燃眉之急。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/10/24/tsinghua-huambo-fist-of-fury-review-environmental-elements-lamp/">清华万博-精武门 Lamp环境内容回顾</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-24T00:00:00+08:00" pubdate data-updated="true">2009-10-24 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>精武门版权所有，复制请标明：<a href="http://www.54chen.com/c/809">http://www.54chen.com/c/809</a></p>
+  
+  <p>第一部分：Linux基础</p>
+  
+  <p>因为大多数同学没有任何基础，此课程不得不放慢脚步，但不要担心，所涉及到的东西都会在课程中反复讲解。</p>
+  
+  <p>1.Linux指令：</p>
+  
+  <p>1.1 SecureCRT连Linux接服务器后，默认进入自己的用户目录下。--/home/xxxx/</p>
+  
+  <p>题外：</p>
+  
+  <p>目录的概念：.（一个点）当前目录 ..(两个点)上一级目录 &lt;以后不能再分不清楚这两个东西了哈&gt;</p>
+  
+  <p>相对目录和绝对目录：/home/zzz/相对于/home/来说就是zzz目录，就可以cd /home/后再cd zzz进入到/home/zzz （其中滋味要慢慢体会，只能体会，一定要体会清楚）</p>
+  
+  <p>1.2 Linux命令行</p>
+  
+  <p>命令[空格]参数1[空格]参数2[空格]。。。</p>
+  
+  <p>2.常用命令：</p>
+  
+  <p>cp a b --copy的简写 复制文件的意思，从a复制到b</p>
+  
+  <p>mkdir xxx --make directory的简写，新建文件夹的意思，建立一个叫xxx的文件夹</p>
+  
+  <p>ls --list的简写，显示当前文件夹下所有文件</p>
+  
+  <p>精武门版权所有，复制请标明：<a href="http://www.54chen.com/c/809">http://www.54chen.com/c/809</a></p>
+  
+  <p>第二部分：LAMP环境</p>
+  
+  <p>2.1 编译程序中的三板斧：</p>
+  
+  <p>configure 检测硬件，配置MakeFile文件</p>
+  
+  <p>make 编译</p>
+  
+  <p>make install 安装</p>
+  
+  <p>2.2 apache编译示例</p>
+  
+  <p>tar -zxvf 1.tar.gz  --解压源码包</p>
+  
+  <p>cd httpd-2.2/ --进入解压出来的目录</p>
+  
+  <p>./configure --prefix=/home/zz/apache</p>
+  
+  <p>make &amp;&amp; make install</p>
+  
+  <p>2.3 nginx + fast-cgi环境</p>
+  
+  <p>PHP编译安装：</p>
+  
+  <p>tar zxvf php-5.2.10.tar.gz<br>
+  gzip -cd php-5.2.10-fpm-0.5.11.diff.gz | patch -d php-5.2.10 -p1<br>
+  cd php-5.2.10<br>
+  ****<br>
+  ./configure --prefix=/home/zhen.chen/php --with-config-file-path=/home/zhen.chen/php/etc --with-iconv-dir=/usr/local --with-freetype-dir --with-jpeg-dir --with-png-dir --with-zlib --with-libxml-dir=/usr --enable-xml --disable-rpath --enable-discard-path --enable-safe-mode --enable-bcmath --enable-shmop --enable-sysvsem --enable-inline-optimization --with-curl --with-curlwrappers --enable-mbregex --enable-fastcgi --enable-fpm --enable-force-cgi-redirect --enable-mbstring --with-gd --enable-gd-native-ttf --with-openssl --enable-pcntl --enable-sockets --with-ldap --with-ldap-sasl --without-pear</p>
+  
+  <p>make &amp;&amp; make install<br>
+  =========================================================================================================<br>
+  nginx编译安装：</p>
+  
+  <p>tar -zxvf pcre-7.9.tar.gz<br>
+  cd pcre-7.9<br>
+  ./configure<br>
+  make &amp;&amp; make install<br>
+  ====================<br>
+  cd ..<br>
+  tar zxvf nginx-0.7.61.tar.gz<br>
+  cd nginx-0.7.61<br>
+  ./configure --user=www --group=www --prefix=/home/xxx/nginx --with-http_stub_status_module --with-http_ssl_module<br>
+  make &amp;&amp; make install<br>
+  @@@@@@@@@@@@@@@@@@@@@@@@<br>
+  增加www用户：<br>
+  groupadd www<br>
+  useradd -g www www</p>
+  
+  <p>=========================================<br>
+  nginx+php fast cgi配置</p>
+  
+  <p>1. cp /home/zhen.chen/fcgi.conf /home/zzz/nginx/conf/<br>
+  2. vi /home/zzzz/nginx/conf/nginx.conf<br>
+  3.<br>
+   location ~ .*\.(php|php5)?$<br>
+      {<br>
+        #fastcgi_pass  unix:/tmp/php-cgi.sock;<br>
+        fastcgi_pass  127.0.0.1:9000;<br>
+        fastcgi_index index.php;<br>
+        include fcgi.conf;<br>
+      }<br>
+  4.<br>
+  sudo /home/zzz/nginx/sbin/nginx</p>
+  
+  <p>精武门版权所有，复制请标明：<a href="http://www.54chen.com/c/809">http://www.54chen.com/c/809</a></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/10/16/academy-of-sciences-in-recent-years-a-good-article-summing-up/">科学院近年好文章总结</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-10-16T00:00:00+08:00" pubdate data-updated="true">2009-10-16 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>彻夜无眠，实在没啥想法，想想干脆把这些年自以为还可以的文章整理一下，给先来的后来的读者们送上一份大餐。
+  </p>
+<h2>三月最受欢迎的十篇文章</h2>
+  <ul>
+  	<li>
+<a href="../714-design-for-all-key-value-of-the-distributed-system-architecture-original/">为人人设计的分布式key-value系统架构[原创]</a> 这篇文章介绍了早期的人人网云存储雏形，现在看来，呵呵，是有点太搓了。。。</li>
+  	<li>
+<a href="../634-%e5%8e%9f%e5%88%9b%e4%bd%bf%e7%94%a8postgresqlbamboo%e6%90%ad%e5%bb%ba%e6%af%94lucene%e6%96%b9%e4%be%bfn%e5%80%8d%e7%9a%84%e5%85%a8%e6%96%87%e6%90%9c%e7%b4%a2-%e7%ac%ac%e4%ba%8c%e9%83%a8%e5%88%86/">[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第二部分</a> 这一篇是使用pgsql做全文索引的搜索引擎的第二部分，不知道为什么第一部分没进前十。。。。大家都只关心故事的结尾的吗。。。</li>
+  	<li>
+<a href="../688-wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes/">wordpress nginx php-cgi mysql在128m内存下的vps安装和优化手记[原创]</a> 这篇讲述了本站的总体架构方案，中间参考了张宴同学的流水账。</li>
+  	<li>
+<a href="../759-thousand-oaks-school-network-all-network-urgent-flash-as3-engineers-social-game-game-planning/">千橡、校内网、人人网急聘 Flash AS3工程师、Social Game 游戏策划</a> 招聘通知，还是长期有效的，因为人总是来来去去，所以如果你在找工作，不妨一试。</li>
+  	<li>
+<a href="../640-mediawiki-pgsql/">[原创]mediawiki安装改进手记-使用mediawikit和postgresql搭建有强大搜索功能的wiki</a> 这是在团队搭建wiki的手记，如果你在为团队搭建wiki,可以参考一下。</li>
+  	<li>
+<a href="../736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">LinkIn基于Dynamo设计的系统：伏地魔(voldemort)设计中文文档[我是陈科学院译]-完稿</a> 这是一个比较有名的分布式存储系统，也是我们正在参考的一个系统，基本实现了亚马逊的dynamo系统的特性。</li>
+  	<li>
+<a href="../705-peer-to-peer-distributed-hash-algorithm-in-the-mainstream-of-comparative-analysis-of-the-collection/">对等网络中主流分布式哈希算法比较分析[收集]</a> 这是分布式网络中的基本算法收集。</li>
+  	<li>
+<a href="../680--big-table-similar-to-the-tokyo-cabinet-research-notes/">类似 big table的tokyo cabinet研究记录</a> 这是分布式系统开发前的调研，真是不好意思，人云亦云地把cabinet说成类似 big table，其实差远了。</li>
+  	<li>
+<a href="../765-tokyo-cabinet-with-java-concurrent-test-the-performance/">用java并发测试tokyo cabinet的性能[五四陈手记]</a> 开发分布式系统时的性能测试，可以看一看，70万/s的速度。</li>
+  	<li>
+<a href="../683-ugc-technical-seminars-in-schools-postgresql-search-slide-sharing/">校内UGC技术讲座：postgreSQL Search slide共享</a>一次讲座的ppt，看来还挺多人看的。</li>
+  </ul>
+  <!--h2>友情连接</h2-->
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/40">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <em>41</em>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/42">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

@@ -1,0 +1,217 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>使用plproxy和pgbouncer完成分布式处理 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="  plproxy和pgbouncer都是skype开发的基于postgresql的开源应用；前者主要用于完成分布式计算，后者主要充当数据库连接池；它们的主页在[plproxy]和[pgbouncer]  plproxy的特性   使用plproxy类似于RPC；假设我们有A,B两台数据库， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/11/21/%E4%BD%BF%E7%94%A8plproxy%E5%92%8Cpgbouncer%E5%AE%8C%E6%88%90%E5%88%86%E5%B8%83%E5%BC%8F%E5%A4%84%E7%90%86">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">使用plproxy和pgbouncer完成分布式处理</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true">2008-11-21 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p> </p>
+  
+  <p>plproxy和pgbouncer都是skype开发的基于<a href="http://www.54chen.com/c/105">postgresql</a>的开源应用；前者主要用于完成分布式计算，后者主要充当数据库连接池；它们的主页在[<a class="external text" title="https://developer.skype.com/SkypeGarage/DbProjects/PlProxy" rel="nofollow" href="https://developer.skype.com/SkypeGarage/DbProjects/PlProxy" target="_blank">plproxy</a>]和[<a class="external text" title="https://developer.skype.com/SkypeGarage/DbProjects/PgBouncer" rel="nofollow" href="https://developer.skype.com/SkypeGarage/DbProjects/PgBouncer" target="_blank">pgbouncer</a>] </p>
+  
+  <p><span class="mw-headline">plproxy的特性</span></p>
+  
+  <p> <br>
+  	</p>
+<li>使用plproxy类似于RPC；假设我们有A,B两台数据库，在A在创建一个plproxy的function，并指定一些参数和返回值，就可以在B上也创建一个同名的pgsql函数，并指定同样的参数和返回值；这样，在A上调用该function，通过适当地声明，就可以实现在B上调用该函数的同样效果，但结果是在A上返回的；</li>
+  	<li>plproxy还能合并多个结点服务器上返回的结果集，就像是这些结果是由一个函数产生的一样，方便客户端作；</li>
+  	<li>plproxy可以指定同时在所有结点服务器上执行作，或者只在指定的几台服务器上作，或者只在任意一台结点服务器上执行作；</li>
+  	<li>plproxy默认是自动提交的；也就是说，只要目标服务器的函数执行成功了，它就会提交；这样有可能造成各个结点数据库的状态并不一致；因为可能有的结点执行成功了，有的没有执行成功，但plproxy并不会因为一个结点失败就回滚其它结点的作</li>
+  一开始，我们只有一台账户数据库；但随着账户增加，单个数据库肯定满足不了需求；当多台数据库服务器并存的情况下，需要解决负载平衡的问题；
+  
+  <p>为此，我们在系统的syshostconfig表中存储了一个key为accountNum，value为整数的参数；每次进行作时，先用plproxy在所有数据库上查出该值并返到proxy层；由pgsql函数找出哪个数据库的accountNum最小，然后就在该数据库上，并将对应的accountNum加1</p>
+  
+  <p>这样，新增服务器将立即开始承担新用户的注册；原有服务器压力不变； </p>
+  
+  <p><span class="mw-headline">plproxy中的死锁</span></p>
+  
+  <p>考虑两个账户a@a.com和b@b.com，如果出现a@a.com向b@b.com转账，恰好b@b.com也在向a@a.com转账，就会出现死锁的情况；即一个进程已经拿到a@a.com的锁，并等待b@b.com，而另一个进程拿到了b@b.com的锁，并等待a@a.com；</p>
+  
+  <p>一个可行的解决办法就是所有作都按照一个可以预见的顺序进行；也就是限制转账作的交易顺序，通过对交易双方的账号进行排序是一个较为简单的办法；</p>
+  
+  <p>针对以上问题，如果我们限制对a@a.com的作，无论是付款还是收款都优先作，而b@b.com永远都排在它后面，也就解决了死锁的问题；</p>
+  
+  <p>因此，在转账交易中，首要任务是对账户名进行排序；至于先收款还先付款，其实不重要</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-21T00:00:00+08:00" pubdate data-updated="true">2008-11-21 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/11/21/postgresql%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85linux/" title="Previous Post: PostgreSQL系统安装(Linux)">« PostgreSQL系统安装(Linux)</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/11/21/%E5%BD%93pg%E8%BF%9E%E6%8E%A5%E6%95%B0%E8%BE%BE%E5%88%B0%E4%B8%80%E5%AE%9A%E6%95%B0%E9%87%8F%E6%97%B6%EF%BC%8Cpgsql%E8%BF%9B%E7%A8%8B%E4%BC%9A%E7%BB%88%E6%AD%A2%EF%BC%8C%E6%8A%A5out-of-memory/" title="Next Post: 当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of memory">当Pg连接数达到一定数量时，Pgsql进程会终止，报Out of memory »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

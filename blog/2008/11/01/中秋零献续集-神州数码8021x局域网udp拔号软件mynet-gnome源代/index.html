@@ -1,0 +1,447 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[中秋零献续集] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part4）getaccess线程内的故事 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="/***
+  * Author: cc0cc
+  * E-mail: cc0cc@126.com
+  * WebSite: http://www.54chen.com
+  * Date: 11 01 2008
+  * FileName: Mythread.c
+  * 这个文件要从Access_Thread看起， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/11/01/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE%E7%BB%AD%E9%9B%86-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[中秋零献续集] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part4）getaccess线程内的故事</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-01T00:00:00+08:00" pubdate data-updated="true">2008-11-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+  * Date: 11 01 2008<br>
+  * FileName: Mythread.c<br>
+  * <span style="font-size: medium; color: #ff0000;">这个文件要从Access_Thread看起</span>，因为在上一章节里，我们了解了 pthread_create(&amp;getaccess,NULL,Access_Thread,NULL);创建了一个叫getaccess的线程，正是运行的Access_Thread，在Access_Thread里，将完成一系列的过程，802.1x从这里才真正开始了。<br>
+  ***/<br>
+  #include &lt;gnome.h&gt;<br>
+  #include &lt;sys/select.h&gt;<br>
+  #include "Mythread.h"<br>
+  #include "connect.h"<br>
+  #include "support.h"<br>
+  #include "interface.h"</p>
+  
+  <p>int i=0;<br>
+  typedef struct{<br>
+                    long    tv_sec;        <br>
+                    long    tv_uec;       <br>
+                }timeval;<br>
+             <br>
+  gint<br>
+  keeplink(gpointer data)<br>
+  {
+  pthread_t keeptest;<br>
+      fd_set readfds;<br>
+      timeval timeout={5,0};//设置超时<br>
+      BYTE recvbuf[1024];<br>
+      BYTE cmd;<br>
+      CMD_RECORD *cmd_record;<br>
+      int recvlen;<br>
+      int index=0;<br>
+      BYTE tmp=0;<br>
+      send_keeplink_request();//这也在connect.c里，用来构造一个包含指令和验证信息的包并发给服务器<br>
+      FD_ZERO(&amp;readfds);<br>
+      FD_SET(sockfd, &amp;readfds);<br>
+      if(1!=select(sockfd + 1,&amp;readfds,NULL,NULL,&amp;timeout))<br>
+      {//超时<br>
+          Acc_Keep_Link=2;<br>
+          g_message("1.keep lost,thread keeptest ok!");<br>
+          pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br>
+          return FALSE;<br>
+      }<br>
+      recvlen=recvfrom(sockfd,(char *)recvbuf,sizeof(recvbuf),0,NULL,NULL);<br>
+      if (recvlen==-1 ) {<br>
+                      Acc_Keep_Link=2;<br>
+                      pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br>
+                      g_message("2.keep lost,thread keeptest ok!");<br>
+                      return FALSE;<br>
+      }<br>
+      amt_decrypt(recvbuf,recvlen);//与认证过程大同小异<br>
+      if(0==check_packet(recvbuf,recvlen))<br>
+      {<br>
+                      Acc_Keep_Link=2;<br>
+                      pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br>
+                      g_message("3.keep lost,thread keeptest ok!");<br>
+                      return FALSE;<br>
+      }<br>
+      cmd_record=get_attr(recvbuf);<br>
+      cmd=*recvbuf;<br>
+      if(cmd==4)    //收到send_keeplink_request对应的包<br>
+      {<br>
+          index=0;<br>
+          tmp=0;<br>
+          for (;(index&lt;8)&amp;&amp;(attr_id[index]);index++) {<br>
+              if (attr_id[index]==3) {<br>
+                  if (attr_val[8*(index+4*index)]!=1) {//发送send_keeplink_request失败<br>
+                      Acc_Keep_Link=2;<br>
+                      pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br>
+                      g_message("4.keep lost,thread keeptest ok!");<br>
+                      return FALSE;<br>
+                  }<br>
+              }<br>
+          }<br>
+          //AfxGetMainWnd()-&gt;PostMessage(WM_KEEPLINK_RESULT,KEEPLINK_SUCCESSED,NULL);<br>
+          g_message("keeplink result success");<br>
+      }<br>
+      else<br>
+      {<br>
+                      Acc_Keep_Link=2;<br>
+                      pthread_create(&amp;keeptest,NULL,Keep_Thread,NULL);<br>
+                      g_message("5.keep lost,thread keeptest ok!");<br>
+                      return FALSE;<br>
+      }<br>
+  return TRUE;//至此 全过程结束（当然，你不是按照从上到下读着来的，而是按照我的提示来阅读的话） 未来我会逐步分析connect.c和mdd.c里的几个函数，都是加密和解密的内容，主程序本身的流程关系不大，其中还包含了linux c中使用ASM的方法，敬请关注http://hi.baidu.com/cc0cc<br>
+  }</p>
+  
+  <p>void<br>
+  Link_Thread(void *arg)<br>
+  {
+  guint send_timer;<br>
+  if(Acc_Keep_Link!=1)return;<br>
+  g_message("keep thread online!");<br>
+  send_timer=gtk_timeout_add(30000,keeplink,NULL);//802.1x了，每三十秒发送一个认证请求 看keeplink<br>
+  }
+  <strong><span style="font-size: large; color: #ff0000;">从这里看起↓</span></strong><span style="font-size: large; color: #ff0000;"><strong>
+  </strong></span>void<br>
+  Access_Thread()<br>
+  {
+  if(Acc_Keep_Link!=0)return;//这是个全局的标，任何情况下标被修改都应当退出线程<br>
+  pthread_t keeplink;//这是一个孙线程的名字，根据协议规则需要在认证通过后定时发包<br>
+  int times=0;//超时次数<br>
+  fd_set readfds;//这个东东不知道要去补一下网络编程，<span>异步套接字。文件描述符集，select调用时用的</span>
+  timeval timeout;//设置超时为5秒 这个timeval struct在本文件有定义<br>
+  timeout.tv_sec=5;<br>
+  timeout.tv_uec=0;<br>
+  FD_ZERO(&amp;readfds);<br>
+  FD_SET(sockfd, &amp;readfds);   </p>
+  
+  <p>BYTE recvbuf[1024];<br>
+  BYTE cmd;<br>
+  CMD_RECORD *cmd_record;<br>
+  int recvlen;<br>
+  int index=0;<br>
+  BYTE tmp=0;</p>
+  
+  <p>   <br>
+  retry://这里没办法，用了个goto 看后面就知道了，大概就是超时两次就置标志位了，最后结束运行<br>
+          if (times&gt;=2) {<br>
+          Acc_Keep_Link=-1;//ACCESS_FAILED_TIMEOUT;<br>
+          return ;<br>
+      }<br>
+  send_access_request();//这是开始发送包给服务器了，将会发送用户名密码MAC等一系列的东西给远端的服务器，另一个文件中（connet.c）将专门来介绍</p>
+  
+  <p>int rt=select(sockfd + 1,&amp;readfds,NULL,NULL,&amp;timeout);//等着看有没有返回<br>
+  //g_message("select id :%d",rt);<br>
+  if(1!=rt)<br>
+      {//超时<br>
+          g_message("time out this");<br>
+          times++;<br>
+          goto retry;<br>
+      }<br>
+  //有返回了！<br>
+  recvlen=recvfrom(sockfd,(char *)recvbuf,sizeof(recvbuf),0,NULL,NULL);//接受返回<br>
+      if (recvlen==-1) {<br>
+          g_message("recvfrom faild");<br>
+         <br>
+      }<br>
+      amt_decrypt(recvbuf,recvlen);//将收到的recvbuf里的东西去解密 amt_decrypt是原程序中的解密算法,接收到的数据包得经过本函数解密，将在mdd.c中介绍<br>
+      if(check_packet(recvbuf,recvlen)==0&amp;&amp;times&lt;2)//check_packet检查解密amt_decrypt完后的数据包是否符合md5摘要<br>
+      {   g_message("check_packet bad here");<br>
+          times++;<br>
+          goto retry;//check_packet失败则重发数据包<br>
+      }<br>
+      cmd_record=get_attr(recvbuf);//取出对应的指令变成结构体链表CMD_RECORD<br>
+      cmd=*recvbuf;<br>
+      if(cmd==2)    //收到send_access_request对应的包<br>
+      {<br>
+          get_spec_attr(cmd_record);//把结构体链表CMD_RECORD里的东西分进全局变量attr_yy里 马上就要用到，attr_id存了cmd指令<br>
+          index=0;<br>
+          tmp=0;<br>
+         <br>
+          for (;(index&lt;0x0A)&amp;&amp;(attr_id[index]!=0);index++) {<br>
+             <br>
+              if (attr_id[index]==3) {<br>
+                  tmp=attr_val[8*(index+4*index)];////attr_val给每个命令40字节<br>
+              }<br>
+          }<br>
+          if (tmp==1) {//认证成功！<br>
+              //g_message("ok");<br>
+              gtk_widget_hide_all (linkwindow);<br>
+              Acc_Keep_Link=1;<br>
+              pthread_create(&amp;keeplink,NULL,Link_Thread,NULL);//认证成功了，再创建一个线程用来保持连接 这回要去看Link_Thread了<br>
+              return;<br>
+          }<br>
+          else<br>
+          {   g_message("server_back_err");<br>
+              gtk_widget_hide_all (linkwindow);<br>
+              Acc_Keep_Link=-1;<br>
+              return ;<br>
+          }</p>
+  
+  <p>    }</p>
+  
+  <p>}</p>
+  
+  <p>gint<br>
+  keeptest(gpointer data)<br>
+  {
+  pthread_t keeplink;<br>
+  i++;<br>
+  g_message("%d",i);<br>
+  if (i&gt;10){Acc_Keep_Link=-1;g_message("can't keeplink!");return FALSE;}<br>
+      fd_set readfds;<br>
+      timeval timeout={5,0};//设置超时<br>
+      BYTE recvbuf[1024];<br>
+      BYTE cmd;<br>
+      CMD_RECORD *cmd_record;<br>
+      int recvlen;<br>
+      int index=0;<br>
+      BYTE tmp=0;<br>
+      send_keeplink_request();<br>
+      FD_ZERO(&amp;readfds);<br>
+      FD_SET(sockfd, &amp;readfds);<br>
+      if(1!=select(sockfd + 1,&amp;readfds,NULL,NULL,&amp;timeout))<br>
+      {//超时<br>
+          g_message("1.keep lost,thread keeptest for once!");<br>
+          return TRUE;<br>
+      }<br>
+      recvlen=recvfrom(sockfd,(char *)recvbuf,sizeof(recvbuf),0,NULL,NULL);<br>
+      if (recvlen==-1 ) {<br>
+                      g_message("2.keep lost,thread keeptest for once!");<br>
+                      return TRUE;<br>
+      }<br>
+      amt_decrypt(recvbuf,recvlen);<br>
+      if(0==check_packet(recvbuf,recvlen))<br>
+      {<br>
+                      g_message("3.keep lost,thread keeptest for once!");<br>
+                      return TRUE;<br>
+      }<br>
+      cmd_record=get_attr(recvbuf);<br>
+      cmd=*recvbuf;<br>
+      if(cmd==4)    //收到send_keeplink_request对应的包<br>
+      {<br>
+          index=0;<br>
+          tmp=0;<br>
+          for (;(index&lt;8)&amp;&amp;(attr_id[index]);index++) {<br>
+              if (attr_id[index]==3) {<br>
+                  if (attr_val[8*(index+4*index)]!=1) {//发送send_keeplink_request失败<br>
+                      g_message("4.keep lost,thread keeptest for once!");<br>
+                      return TRUE;<br>
+                  }<br>
+              }<br>
+          }<br>
+              g_message("keeptest result success");<br>
+              Acc_Keep_Link=1;<br>
+              pthread_create(&amp;keeplink,NULL,Link_Thread,NULL);<br>
+              return FALSE;       <br>
+      }<br>
+      else<br>
+      {<br>
+                      g_message("5.keep lost,thread keeptest for once!");<br>
+                      return TRUE;<br>
+      }</p>
+  
+  <p>return FALSE;<br>
+  }</p>
+  
+  <p>void<br>
+  Keep_Thread()<br>
+  {guint send_timer;<br>
+      if(Acc_Keep_Link!=2)return;<br>
+      send_timer=gtk_timeout_add(10000,keeptest,NULL);<br>
+  }
+  /***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+  * Date: 11 01 2008<br>
+  * FileName: Mythread.c<br>
+  ***/</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-01T00:00:00+08:00" pubdate data-updated="true">2008-11-01 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/09/14/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3%E7%A0%81%E5%A4%A7-3/" title="Previous Post: [中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part3）关键逻辑">« [中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part3）关键逻辑</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/11/05/perl%E7%AC%94%E8%AE%B0/" title="Next Post: perl笔记">perl笔记 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

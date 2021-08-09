@@ -1,0 +1,341 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>究竟什么是TSRMLS_CC？ - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="翻译：54chen.com
+  原文地址：http://blog.libssh2.org/index.php?/archives/22-What-the-heck-is-TSRMLS_CC-anyway.html 如果你曾经做过php内核或者是php扩展方面的工作，你一定见到过这个到处都是的结构， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/12/03/what-is-tsrmls_cc">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">究竟什么是TSRMLS_CC？</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-12-03T00:00:00+08:00" pubdate data-updated="true">2008-12-03 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p></p>
+<blockquote>翻译：<a href="http://www.54chen.com">54chen.com</a>
+</blockquote>
+  原文地址：<a href="http://blog.libssh2.org/index.php?/archives/22-What-the-heck-is-TSRMLS_CC-anyway.html">http://blog.libssh2.org/index.php?/archives/22-What-the-heck-is-TSRMLS_CC-anyway.html</a>
+  
+  <p>如果你曾经做过php内核或者是<a href="http://www.54chen.com/c/91">php扩展</a>方面的工作，你一定见到过这个到处都是的结构，但是却从来没有人提起过它。知道这是什么的人典型回答不知道的人都会这样说：“不用管它是什么，只需要在这里、这里还有这里用，如果编译器说少一个tsrm_ls，就加一个...”。这样回答并非都是因为这个人懒惰（的确是有一点点懒），其实那只是在说引擎甚至可以不管这个神奇的值在简化什么，这是因为一个新入门的扩展开发者知道它的结构没有什么益处。这信息就像奶牛的意见一样，没关系，就是牛叫而已。</p>
+  
+  <p>既然我喜欢听自己喋喋不休的无意义主题（这个月我已经少写很多博客了），我想我得弥补这一主题，看看会不会有人通过他能领会什么。你可以责怪Lukas(Lukas Smith 是 PEAR DB 的主要作者应该是这个Lukas，译者注)，他让我一直在<a href="http://www.planet-php.net/">planet-php.net</a>上。</p>
+  
+  <p><strong>术语</strong></p>
+  
+  <p>TSRM</p>
+  
+  <p><strong>T</strong>hread <strong>S</strong>afe <strong>R</strong>esource <strong>M</strong>anager - 这是一个经常被忽视的层面，就会有也是很少被讨论到，在你的<a href="http://www.54chen.com/c/61">PHP源代码</a>包中，它被隐藏在/TSRM目录中。默认情况下，TSRM 层只在编译需要它的SAPI的时候才会打开（例如apache2-worker）。所有的在win32下编译的SAPI都会有TSRM层而不会管它们是否需要。</p>
+  
+  <p>ZTS</p>
+  
+  <p><strong>Z</strong>end <strong>T</strong>hread <strong>S</strong>safety -通常情况下，与TSRM有相同的用处。具体来说不同在于，ZTS的使用需要在编译的时候加上参数如<span style="font-family: courier;">./configure</span> ( <span style="font-family: courier;">--enable-experimental-zts</span> for PHP4, <span style="font-family: courier;">--enable-maintainer-zts</span> for PHP5），而TSRM是否被使用是由#define的预处理机制来确定的。</p>
+  
+  <p>tsrm_ls</p>
+  
+  <p>TSRM <strong>l</strong>ocal <strong>s</strong>torage - 当ZTS可用时，这是它在TSRMLS_*宏里传来传去的实际的变量名。它作为一个指向那个线程的数据存储块开始位置的指针，我会在一会儿后将它覆盖掉。</p>
+  
+  <p>TSRMLS_??</p>
+  
+  <p>有四个宏设计来为了使ZTS模式和非ZTS模式之间的差异变得平滑，当ZTS不能用时，这四个宏同时都没有任何用处。而在ZTS启用的时候，它们扩大了以下的定义：<br>
+  	</p>
+<li><span style="font-family: courier;">TSRMLS_C   tsrm_ls</span></li>
+  	<li><span style="font-family: courier;">TSRMLS_D   void ***tsrm_ls</span></li>
+  	<li><span style="font-family: courier;">TSRMLS_CC  , tsrm_ls</span></li>
+  	<li><span style="font-family: courier;">TSRMLS_DC  , void ***tsrm_ls</span></li>
+  <span style="font-family: Courier;"><strong>综述</strong></span>
+  
+  <p><span style="font-family: Courier;">在任何普通的C程序（PHP也一样）中，要在两个不同的函数间传递相同的数据块，你两种办法。</span></p>
+  
+  <p><span style="font-family: Courier;">第一种方法是通过函数的参数传递值：</span>
+  </p>
+<blockquote>
+  <pre>#include &lt;stdio.h&gt;</pre>
+</blockquote>
+  
+  <p>void output_func(char *message)<br>
+  {
+      printf("%s\n", message);<br>
+  }</p>
+  
+  <p>int main(int argc, char *argv[])<br>
+  {
+      output_func(argv[0]);</p>
+  
+  <p>    return 0;<br>
+  }
+  
+  </p>
+<pre>另一种方法，你可以把这个值保存在一个上层的全局变量中，让函数通过它来取得：</pre>
+  <blockquote>
+  <pre>#include &lt;stdio.h&gt;</pre>
+</blockquote>
+  
+  <p>char *message;</p>
+  
+  <p>void output_func(void)<br>
+  {
+      printf("%s\n", message);<br>
+  }</p>
+  
+  <p>int main(int argv, char *argv[])<br>
+  {
+      message = argv[0];<br>
+      output_func();</p>
+  
+  <p>    return 0;<br>
+  }
+  
+  这两种方法各有优点和缺点，而且在在实际应用中你常常会看到两者结合使用。事实上，PHP里到处都是全局变量，从类型标识符，到函数回调指针，再到请求特殊的信息例如用于存储用户空间变量的符号表。试图通过函数参数的方法来传递那些变量是不方便的，例如PHP这样的应用常常会需要去注册回调方法来给不支持上下文数据的外部的库使用，此时使用参数传递是不可能的。</p>
+  
+  <p>因此，共同的信息，像执行栈、函数表、类表以及扩展登记表都是在全局范围里进行声明的，以便它们能在整个应用的任何一个位置都能使用。对于单线程的SAPIs，例如CLI、APACHE1，或者甚至Apache2-prefork，这样做都是完美的。在RINIT/Activation 阶段，请求具体结构被初始化，并在RSHUTDOWN/Deactivation 阶段重新设置回初始的值等待下一次的请求。一个像APACHE1这样特定的WEB服务器，可以一次处理多个页面，是因为它会产生多个进程，每个进程会在自己的进程空间内使用自己的全局变量副本。</p>
+  
+  <p>现在，让我们来介绍像Apache2-worker或者IIS这样的线程服务器。在这种情况下，在指定时间里只有一个进程空间是可用的，由它抛出多线程处理。每一个线程都会类似一个单独的进程的方式工作。在处理请求的时候服务会一次一个地来。当两个或者多个<a href="http://www.54chen.com/c/71">线程</a>去处理同一时间的一个请求的时候，麻烦就出现了。每个<a href="http://www.54chen.com/c/73">线程</a>都试图去使用全局变量来保存它的特定请求信息，并尝试写向同样的存储空间。这样子最少会导致一个脚本里声明的用户空间变量在另一个脚本中出现。而在实践中，这样会导致快速灾难性的错误和不可预测的情况，因为内存可以释放两次或者的线程写了相互矛盾的信息。</p>
+  
+  <p><strong>不全的全局</strong></p>
+  
+  <p>解决方案需要一个引擎、一个核心，还有任何一个使用全局存储的<a href="http://www.54chen.com/c/91">扩展</a>都要决定会使用多少内存给具体的请求数据。然后，在运行的每一个新的线程中，给它们每个分配一块内存，用来存储它们的数据，从而使每个线程都有自己的本地存储。为了把所有的被指定线程用到的内存块聚成一组，最后一个指针向量被开辟来保存子结构的指针。这个指针指向tsrm_ls变量，被TSRMLS_*家族的宏所使用。为了看清它是怎么工作的，我们先来看一个扩展的例子：
+  </p>
+<blockquote>
+  <pre>typedef struct _zend_myextension_globals {
+      int foo;
+      char *bar;
+  } zend_myextension_globals;</pre>
+</blockquote>
+  
+  <p>#ifdef ZTS<br>
+  int myextension_globals_id;<br>
+  #else<br>
+  zend_myextension_globals myextension_globals;<br>
+  #endif</p>
+  
+  <p>/* Triggered at the beginning of a thread */<br>
+  static void php_myextension_globals_ctor(zend_myextension_globals *myext_globals TSRMLS_DC)<br>
+  {
+      myext_globals-&gt;foo = 0;<br>
+      myext_globals-&gt;bar = NULL;<br>
+  }</p>
+  
+  <p>/* Triggered at the end of a thread */<br>
+  static void php_myextension_globals_dtor(zend_myextension_globals *myext_globals TSRMLS_DC)<br>
+  {
+      if (myext_globals-&gt;bar) {<br>
+          efree(myext_globals-&gt;bar);<br>
+      }<br>
+  }</p>
+  
+  <p>PHP_MINIT_FUNCTION(myextension)<br>
+  {
+  #ifdef ZTS<br>
+      ts_allocate_id(&amp;myextension_globals_id, sizeof(zend_myextension_globals),<br>
+                     php_myextension_globals_ctor, php_myextension_globals_dtor);<br>
+  #else<br>
+      php_myextension_globals_ctor(&amp;myextension_globals TSRMLS_CC);<br>
+  #endif</p>
+  
+  <p>    return SUCCESS;<br>
+  }</p>
+  
+  <p>PHP_MSHUTDOWN_FUNCTION(myextension)<br>
+  {
+  #ifndef ZTS<br>
+      php_myextension_globals_dtor(&amp;myextension_globals TSRMLS_CC);<br>
+  #endif</p>
+  
+  <p>    return SUCCESS;<br>
+  }
+  
+  这里可以看到，扩展在启动的时候声明了它全局需求的变量给TSRM层，它需要sizeof(zend_myextension_globals)字节的存储，并且在初始化或者销毁指定的线程的本地存储的时候提供了回调函数。myextension_globals_id里的值可得出偏移量（对所有线程是公共的），存储于tsrm_ls向量，指向那个线程本地存储的指针中也是这个向量。如果ZTS不能用，数据存储只不过是放在真实的全局环境中，并且在线程初始和销毁的过程中需要手动执行初始化和销毁的程序。如果你现在想知道为什么<span style="font-family: courier;">TSRMLS_CC</span> 被包含在非ZTS块中，那我可以很确定我没有使你看睡着了。这些都是不是必须的，因为我们知道非ZTS里他们有和没有一个样，但这有助于鼓励函数原型调用时引用它们的好习惯。</p>
+  
+  <p><strong>把它们聚在一起</strong></p>
+  
+  <p>最后一块线程安全的疑惑来自于一个问题：“我如何获得这些数据结构？”这个问题的答案来自于另一个有着相似样子的宏。在每个扩展或者是核心组件定义的头文件中，有一个宏的定义如下所示：
+  </p>
+<blockquote>
+  <pre>#ifdef ZTS
+  # define   MYEXTENSION_G(v)     \
+               (((zend_myextension_globals*)(*((void ***)tsrm_ls))[(myextension_globals_id)-1])-&gt;v)
+  #else
+  # define   MYEXTENSION_G(v)     (myextension_globals.v)
+  #endif</pre>
+  </blockquote>
+  因此，当ZTS不可用时，这个宏简单地收集来自全局环境中的即时值作用正确的值，否则，它将根据ID将结构开辟在本线程的本地存储拷贝中，并且从那里引用到值。
+  
+  <p>【结束：54chen.com】</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-12-03T00:00:00+08:00" pubdate data-updated="true">2008-12-03 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>, <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/12/02/sscanf%E5%87%BD%E6%95%B0%E7%9A%84%E5%90%84%E7%A7%8D%E7%94%A8%E6%B3%95/" title="Previous Post: sscanf函数的各种用法">« sscanf函数的各种用法</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/12/08/%E6%B7%AB%E8%8D%A1%E4%B8%80%E4%B8%8B%EF%BC%8C%E4%BD%A0%E5%B0%B1%E7%9F%A5%E9%81%93/" title="Next Post: 淫荡一下，你就知道">淫荡一下，你就知道 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,363 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>MySQL的性能调优工具：比mysqlreport更方便的tuning-primer.sh - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Sundry MySQL提供的脚本相比mysqlreport更进一步：除了报表还进一步提供了修改建议。安装和使用非常简单： wget http://www.day32.com/MySQL/tuning-primer.sh
+  chmod +x tuning-primer.sh
+  ./tuning- …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/12/22/mysql%E7%9A%84%E6%80%A7%E8%83%BD%E8%B0%83%E4%BC%98%E5%B7%A5%E5%85%B7%EF%BC%9A%E6%AF%94mysqlreport%E6%9B%B4%E6%96%B9%E4%BE%BF%E7%9A%84tuning-primersh">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">MySQL的性能调优工具：比mysqlreport更方便的tuning-primer.sh</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-12-22T00:00:00+08:00" pubdate data-updated="true">2008-12-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p></p>
+<div class="entry-body" style="clear: both;">
+  <p style="margin-top: 10px; margin-bottom: 10px;">Sundry MySQL提供的脚本相比mysqlreport更进一步：除了报表还进一步提供了修改建议。安装和使用非常简单：</p>
+</div>
+  
+  <p></p>
+<blockquote style="margin-top: 10px; margin-bottom: 10px;">wget<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://www.day32.com/MySQL/tuning-primer.sh">http://www.day32.com/MySQL/tuning-primer.sh</a>
+  chmod +x tuning-primer.sh<br>
+  ./tuning-primer.sh</blockquote>
+  和mysqlreport一样，tuning-primer.sh也支持.my.cnf
+  <blockquote style="margin-top: 10px; margin-bottom: 10px;">[client]<br>
+  user = USERNAME<br>
+  password = PASSWORD<br>
+  socket = /tmp/mysql.sock</blockquote>
+  <p style="margin-top: 10px; margin-bottom: 10px;"> </p>
+  <p style="margin-top: 10px; margin-bottom: 10px;">样例输出：在终端上按照问题重要程度分别用色/红色字符标记问题</p>
+  
+  <p></p>
+<blockquote style="margin-top: 10px; margin-bottom: 10px;">-- MYSQL PERFORMANCE TUNING PRIMER --<br>
+  - By: Matthew Montgomery -
+  <p style="margin-top: 10px; margin-bottom: 10px;"> </p>
+  <p style="margin-top: 10px; margin-bottom: 10px;">MySQL Version 5.0.45 i686</p>
+</blockquote>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">Uptime = 19 days 8 hrs 32 min 54 sec<br>
+  Avg. qps = 0<br>
+  Total Questions = 264260<br>
+  Threads Connected = 1</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">Server has been running for over 48hrs.<br>
+  It should be safe to follow these recommendations</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">To find out more information on how each of these<br>
+  runtime variables effects performance visit:<br>
+  http://dev.mysql.com/doc/refman/5.0/en/server-system-variables.html<br>
+  Visit http://www.mysql.com/products/enterprise/advisors.html<br>
+  for info about MySQL's Enterprise Monitoring and Advisory Service</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">SLOW QUERIES<br>
+  The slow query log is NOT enabled.<br>
+  Current long_query_time = 10 sec.<br>
+  You have 0 out of 264274 that take longer than 10 sec. to complete<br>
+  Your long_query_time may be too high, I typically set this under 5 sec.</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">BINARY UPDATE LOG<br>
+  The binary update log is NOT enabled.<br>
+  You will not be able to do point in time recovery<br>
+  See http://dev.mysql.com/doc/refman/5.0/en/point-in-time-recovery.html</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">WORKER THREADS<br>
+  Current thread_cache_size = 0<br>
+  Current threads_cached = 0<br>
+  Current threads_per_sec = 1<br>
+  Historic threads_per_sec = 0<br>
+  Your thread_cache_size is fine</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">MAX CONNECTIONS<br>
+  Current max_connections = 100<br>
+  Current threads_connected = 1<br>
+  Historic max_used_connections = 33<br>
+  The number of used connections is 33% of the configured maximum.<br>
+  Your max_connections variable seems to be fine.</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">MEMORY USAGE<br>
+  Max Memory Ever Allocated : 96 M<br>
+  Configured Max Per-thread Buffers : 268 M<br>
+  Configured Max Global Buffers : 7 M<br>
+  Configured Max Memory Limit : 276 M<br>
+  Physical Memory : 1.97 G<br>
+  Max memory limit seem to be within acceptable norms</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">KEY BUFFER<br>
+  Current MyISAM index space = 8 M<br>
+  Current key_buffer_size = 7 M<br>
+  Key cache miss rate is 1 : 1817<br>
+  Key buffer fill ratio = 6.00 %<br>
+  Your key_buffer_size seems to be too high.<br>
+  Perhaps you can use these resources elsewhere</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">QUERY CACHE<br>
+  Query cache is supported but not enabled<br>
+  Perhaps you should set the query_cache_size</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">SORT OPERATIONS<br>
+  Current sort_buffer_size = 2 M<br>
+  Current read_rnd_buffer_size = 256 K<br>
+  Sort buffer seems to be fine</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">JOINS<br>
+  Current join_buffer_size = 132.00 K<br>
+  You have had 0 queries where a join could not use an index properly<br>
+  Your joins seem to be using indexes properly</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">OPEN FILES LIMIT<br>
+  Current open_files_limit = 1024 files<br>
+  The open_files_limit should typically be set to at least 2x-3x<br>
+  that of table_cache if you have heavy MyISAM usage.<br>
+  Your open_files_limit value seems to be fine</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">TABLE CACHE<br>
+  Current table_cache value = 64 tables<br>
+  You have a total of 125 tables<br>
+  You have 64 open tables.<br>
+  Current table_cache hit rate is 9%, while 100% of your table cache is in use
+  <strong>You should probably increase your table_cache
+  </strong>
+  TEMP TABLES<br>
+  Current max_heap_table_size = 16 M<br>
+  Current tmp_table_size = 32 M<br>
+  Of 564 temp tables, 6% were created on disk<br>
+  Effective in-memory tmp_table_size is limited to max_heap_table_size.<br>
+  Created disk tmp tables ratio seems fine</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">TABLE SCANS<br>
+  Current read_buffer_size = 128 K<br>
+  Current table scan ratio = 1 : 1<br>
+  read_buffer_size seems to be fine</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">TABLE LOCKING<br>
+  Current Lock Wait ratio = 0 : 264392<br>
+  Your table locking seems to be fine
+  </p>
+<p style="margin-top: 10px; margin-bottom: 10px;"> </p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">更有用是作者总结的处理MySQL性能问题处理的优先级：尤其是头3条，基本上可以解决大部分瓶颈问题的原因。<br>
+  # Slow Query Log 慢查询 尤其是like作，性能杀手，轻易不要使用，让全文索引交给<a style="color: #3165ce; text-decoration: underline;" href="http://www.chedong.com/tech/lucene.html">Lucene</a>或者利用Tag机制减少like作；<br>
+  # Max Connections 并发连接数：一个MySQL deamon缺省最大连接数是100，调到更高只是为了出现问题是给我们更多的缓冲时间而不是任其一直处于那么高的状态，并发连接数类似于等候大厅：当等候人数过多的时候，一味扩大等候厅不是根本解决问题的办法，提高业务的处理速度，多开几个窗口才是更好的解决方法；我的经验就是<a style="color: #3165ce; text-decoration: underline;" href="http://www.chedong.com/blog/archives/000945.html">超过100： 数据就要想办法（镜像或者分片）分布到更多Deamon上</a>；<br>
+  # Worker Threads：<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://jeremy.zawodny.com/blog/archives/000173.html">Jeremy Zawondy 曾在部落格上說到：Thread caching</a><span class="Apple-converted-space"> </span>並不是我們最需要關心的問題，但當你解決了所有其他更嚴重的問題之後，它就會是最嚴重的問題。(thread caching really wasn't the worst of our problems. But it became the worst after we had fixed all the bigger ones.)<br>
+  # Key Buffer<span class="Apple-converted-space"> </span>
+  # Query Cache<span class="Apple-converted-space"> </span>
+  # Sort Buffer<span class="Apple-converted-space"> </span>
+  # Joins<span class="Apple-converted-space"> </span>
+  # Temp Tables 临时表<br>
+  # Table (Open &amp; Definition) Cache 表缓存；<br>
+  # Table Locking 表锁定<br>
+  # Table Scans (read_buffer)<span class="Apple-converted-space"> </span>
+  # Innodb Status</p>
+  
+  <p>
+  </p>
+<div id="more" class="entry-more" style="clear: both;">
+  <p style="margin-top: 10px; margin-bottom: 10px;">其他一些工具：<span class="Apple-converted-space"> </span>
+  1<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://jeremy.zawodny.com/mysql/mytop/">mytop</a>： 一个top like的show processlist;<br>
+  2 使用cacti做MySQL的监控：推荐<a style="color: #3165ce; text-decoration: underline;" href="http://code..com/p/mysql-cacti-templates/">配置模板</a>；<br>
+  3 把binlog导出成文本和slowquery的格式几乎是一样的，调用mysqlslowquery脚本分析，有时候也会有意外收获；</p>
+  
+  <p></p>
+<p style="margin-top: 10px; margin-bottom: 10px;">谢谢 oldplantegg 补充：
+  <a style="color: #3165ce; text-decoration: underline;" href="http://hackmysql.com/mysqlsla">mysqlsla</a>(<a style="color: #3165ce; text-decoration: underline;" href="http://hackmysql.com/">hackmysql.com</a>推出的一款日志分析工具该网站还维护了，mysqlreport,<span class="Apple-converted-space"> </span><a style="color: #3165ce; text-decoration: underline;" href="http://hackmysql.com/mysqlidxchk">mysqlidxchk</a><span class="Apple-converted-space"> </span>等比较实用的mysql工具)能够分析slow query 和binlog等，这样就不用将binlog导出来了.
+  </p>
+<p style="margin-top: 10px; margin-bottom: 10px;">from:http://www.chedong.com/blog/archives/001451.html</p>
+</div>
+  
+  <p></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-12-22T00:00:00+08:00" pubdate data-updated="true">2008-12-22 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>, <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/12/19/%E6%99%AE%E5%8F%8A%E5%B8%96%EF%BC%9Alinux-%E4%B8%8B%E7%BC%96%E8%AF%91c%E7%A8%8B%E5%BA%8F/" title="Previous Post: 普及帖：Linux 下编译C程序">« 普及帖：Linux 下编译C程序</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/12/23/%E8%83%A1%E6%88%88%E6%96%B0%E4%BD%9C%E5%B1%B1%E5%AF%A8%E3%80%8A%E6%96%B0%E9%97%BB%E8%81%94%E6%92%AD%E3%80%8B%E6%81%B6%E6%90%9E%E5%A4%AE%E8%A7%86%E8%A7%86%E9%A2%91/" title="Next Post: 胡戈新作山寨《》恶搞央视(视频)">胡戈新作山寨《》恶搞央视(视频) »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,220 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[原创][整理]校内网CTO晶讲述网站架构变迁-54chen回忆版 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[文章作者：陈臻 本文版本：v1.1 最后修改：2009.4.13 转载请注明原文链接：http://www.54chen.com/c/539 ] 这是一次公司内部的交流会，主题是校内的发展史和构架讲解，主讲人是校内网CTO晶，其中关于架构变迁的一段个人觉得是很具有性的过程， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/04/13/%E5%8E%9F%E5%88%9B%E6%95%B4%E7%90%86%E6%A0%A1%E5%86%85%E7%BD%91cto%E9%BB%84%E6%99%B6%E8%AE%B2%E8%BF%B0%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E5%8F%98%E8%BF%81-54chen%E5%9B%9E%E5%BF%86%E7%89%88">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[原创][整理]校内网CTO晶讲述网站架构变迁-54chen回忆版</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-04-13T00:00:00+08:00" pubdate data-updated="true">2009-04-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[文章作者：陈臻 本文版本：v1.1 最后修改：2009.4.13 转载请注明原文链接：<a href="http://www.54chen.com/c/539">http://www.54chen.com/c/539</a> ]<em> </em></p>
+  
+  <p><em> 这是一次公司内部的交流会，主题是校内的发展史和构架讲解，主讲人是校内网CTO晶，其中关于架构变迁的一段个人觉得是很具有性的过程，特在会上作了大概的笔记，现在是凌晨一点不到，正好清醒头脑进行回忆总结。</em></p>
+  
+  <p>每个网站的发展都会按照一个大致相同的路线去完成，当然这里说的是每个相对成功的网站。</p>
+  
+  <p>第一阶段：</p>
+  
+  <p>这一阶段没有太大的访问量，甚至只有一台服务器就搞定了所有的访问。<a href="http://www.54chen.com/c/406">DB</a>和前端的代码全都在一起，压力不高。忆者注：我觉得在<a href="http://www.54chen.com/c/154">alexa</a>没进五万的时候，只要不是特殊的应用，基本都在此列吧。</p>
+  
+  <p>第二阶段：</p>
+  
+  <p>网站初具规模，DB压力大增，单独的一台DB已经满足不了现在的访问量，开始考虑读写分离的<a href="http://www.54chen.com/c/406">Master-slave</a>库，使用三个及以上的服务器。忆者注：这时网站的alexa基本上会在1-3万的位置，每天的ip在5-10w的样子，当然，DB我们都认为是MySql。</p>
+  
+  <p>第三阶段：</p>
+  
+  <p>访问量继续增加，增加到了DB的压力在Master的机器上非常的明显了，Master开始出现吃不消的情况，出现写耗尽。主从也已经不能满足要求，需要进一步解决负载问题，此时要引入Mysql <a href="http://www.54chen.com/c/113">Proxy</a>程序，进行中间层代理，实现负载均衡，易于扩展。忆者注：这时网站已经不可限量了，先恭喜下你的网站能用到这段。</p>
+  
+  <p>第四阶段：</p>
+  
+  <p>网站继续发展，进而出现了数据量的成倍增长，原来的N台DB都出现了一个问题，数据量巨大，无法完成正常速度的读写。此时，需要对网站按功能进行垂直划分，比如用户注册登录是一部分、UGC又是另一部分。与此同时，对数据本身进行水平划分，也就是Hash散表或者是散库。</p>
+  
+  <p>第五阶段：</p>
+  
+  <p>真的没了。再往下玩就灭了。</p>
+  
+  <p><em>其实再进一步第五第六阶段，就是无法预想的未来了，也许有什么突飞猛进的科学技术发明也说不好。</em>
+  </p>
+<blockquote>今天和yahoo的agentZhang（openResty作者）聊起，他说到第五个阶段其实应该是BigTable，的确很强大，来自的作品。不过美中不足的是，它并不像我相像中的那样能够顺利过渡到第五阶段。以下论述来自infoQ:<br>
+  Todd从定义BigTable的适用范围开始论述。由于BigTable引入的各种代价，只有在以下情况下使用BigTable才能带来益处：a)需要伸缩到巨量的用户数，b)更新与读取作相比比例很小。Todd还着重强调为了“优化读取速度和可伸缩性”，所采取的理论路线与关系数据库中的做法存在根本的分歧，很可能初看起来是违背直觉甚至相当冒险的。</blockquote>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-04-13T00:00:00+08:00" pubdate data-updated="true">2009-04-13 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/04/08/gae-java%E6%94%AF%E6%8C%81%E8%AF%95%E7%94%A8%E6%89%8B%E8%AE%B0/" title="Previous Post: gae java支持试用手记">« gae java支持试用手记</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/04/21/54chen%E5%87%BA%E5%93%81%E6%89%93%E9%85%B1%E6%B2%B9%E5%9C%A8%E7%BA%BF%E4%B8%80%E5%AF%B9%E4%B8%80%E5%92%8C%E9%99%8C%E7%94%9F%E4%BA%BA%E8%81%8A%E5%A4%A9%E7%9A%84%E7%BD%91%E7%AB%99/" title="Next Post: [54chen出品][打酱油]在线一对一和陌生人聊天的网站">[54chen出品][打酱油]在线一对一和陌生人聊天的网站 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

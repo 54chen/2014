@@ -1,0 +1,227 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[54chen开发日记]注解和拦截器实现权限通用模型的设计实践 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="------------------英文大爱-----------------------         在近期的开发过程中，有使用到拦截器来实现权限控制，使用这种设计方案，可以很好地分离权限与系统本身的功能， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/08/22/54chen-notes-annotation-interceptor-design">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[54chen开发日记]注解和拦截器实现权限通用模型的设计实践</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-22T00:00:00+08:00" pubdate data-updated="true">2010-08-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1uu8JXcxbXXXYIGZ2_043201.jpg" alt="54chen">
+  ------------------英文大爱-----------------------</p>
+  
+  <p>        在近期的开发过程中，有使用到拦截器来实现权限控制，使用这种设计方案，可以很好地分离权限与系统本身的功能，让开发过程更加关注系统的核心功能，同时可以很容易做到开发时的任务划分，同时使项目代码的可读性大大提升。先来普及几个相关的名词：</p>
+  
+  <p>1.<strong>AOP</strong>：是OOP的延续，是（Aspect Oriented Programming）的缩写，意思是面向切面编程，也有叫面向方面编程，不过切面更加形象。可以通过预编译方式和运行期动态代理实现在不修改源代码的情况下给程序动态统一添加功能的一种技术。AOP实际是GoF设计模式的延续，设计模式孜孜不倦追求的是调用者和被调用者之间的解耦，AOP可以说也是这种目标的一种实现。</p>
+  
+  <p>2.<strong>GoF</strong>：《Design Patterns: Elements of Reusable Object-Oriented  Software》（即《设计模式》一书），由 Erich Gamma、Richard Helm、Ralph Johnson 和 John  Vlissides 合著（Addison-Wesley，1995）。这几位作者常被称为"四人组（Gang of  Four）"，而这本书也就被称为"四人组（或 GoF）"书。话说为首的Erich Gamma，在QCon的大会上54chen也有半面之缘。</p>
+  
+  <p><strong>权限模型的常量定义</strong></p>
+  
+  <p>        一个系统里最常见的需求莫过于权限、角色，事实上往往这样子的需求和系统本身的功能又是没有太多关联的。按照常规的做法，我们需要两个类，一个表明都有什么权限（例如：删除帖子权限、编辑帖子权限，等等）;另一个类表明，各个角色都有什么权限。这样子相当于定义了一个权限和角色模型。</p>
+  
+  <p><strong>拦截器与注解</strong></p>
+  
+  <p>        拦截器（Invocation）在在流行的开源框架中很常见，依赖的技术就是Java的动态代理。许多流行的框架都提供实现拦截器的接口，可以很简单就实现一个拦截器，此文不表如何实现。注解（Annotations）是JAVA在5.0后引入的特性，它引入的目的是为了替代一些简单的配置到java代码里，而不用原来的xml。</p>
+  
+  <p><strong>注解请求示例</strong></p>
+  
+  <p>        一般的框架，都会有一个controller类，以下用伪代码表示：
+  <code>
+  public class ThreadsController{<br>
+  @PriCheckRequired({MemberPrivilegeIdentity.CREATE_THREAD})<br>
+  public String createThread(){<br>
+  return "createThread";<br>
+  }
+  }</code>
+          如代码中所示，一个controller里的一个method对应一个url请求（例中所示为创建帖子）。我们只需要在其方法上标注@PriCheckRequired({MemberPrivilegeIdentity.CREATE_THREAD})，PriCheckRequired就是注解，其传递了一个信息MemberPrivilegeIdentity.CREATE_THREAD，这也就是前文说的权限类中的创建帖子权限。
+  <strong>拦截器工作</strong>
+          拦截器一般都是实现一个框架提供的接口来实现，常用框架都支持。<br>
+  可以想像在拦截器里要做的事情：
+  </p>
+<blockquote>1.根据规定好的request请求的参数，取到用户属于哪个角色。<br>
+  2.根据controller中注解，取到当前要判断的权限。<br>
+  3.对比用户角色是否有注解中的权限，如果有，放行，反之拦截。
+  </blockquote>
+  <strong>代码实现</strong>
+  拦截器的代码实现与框架有关:<br>
+  rose框架如何实现拦截器请看<a href="http://code..com/p/paoding-rose/wiki/Rose_Code_Fragment_Interceptor">http://code..com/p/paoding-rose/wiki/Rose_Code_Fragment_Interceptor</a>;另外spring等都可以简单实现拦截器。
+  
+  <p><strong>篇末</strong>
+          这种方式可以做的事情还有许多，例如cache等公共模块的地方，都可以使用，对开发速度、任务划分、代码重用程度都有非常适用的地方。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-22T00:00:00+08:00" pubdate data-updated="true">2010-08-22 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

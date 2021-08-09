@@ -1,0 +1,301 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>过年十天技术阅读推荐汇总 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。 @温高铁 各种数据库连接池性能对比 http://t.cn/zjVqSNg 结论:1) Druid是性能最好的数据库连接池，tomcat-jdbc和druid性能接近。2) …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/02/13/new-year-10-day">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">过年十天技术阅读推荐汇总</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-02-13T11:34:08+08:00" pubdate data-updated="true">2014-02-13 11:34:08 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。</p>
+  
+  <ul>
+  <li>@温高铁</li>
+  </ul>
+  
+  
+  <p>各种数据库连接池性能对比 <a href="http://t.cn/zjVqSNg">http://t.cn/zjVqSNg</a> 结论:1) Druid是性能最好的数据库连接池，tomcat-jdbc和druid性能接近。2)proxool在激烈并发时会抛异常，完全不靠谱。 3) c3p0和proxool都相当慢，慢到影响sql执行效率的地步。4) bonecp性能并不优越，采用LinkedTransferQueue并没有能够获得性能提升</p>
+  
+  <!-- more -->
+  
+  
+  <ul>
+  <li>@jackyrong</li>
+  </ul>
+  
+  
+  <p>节日期间mysqlperformanceblog的三篇推荐文，分别是《安装完 MySQL 后必须调整的 10 项配置》（中文版见：<a href="http://t.cn/8FifoBq%EF%BC%89%EF%BC%8C%E5%88%86%E5%88%AB%E8%AE%B2%E8%A7%A3Percona">http://t.cn/8FifoBq%EF%BC%89%EF%BC%8C%E5%88%86%E5%88%AB%E8%AE%B2%E8%A7%A3Percona</a> Server线程池和事务负载的 <a href="http://t.cn/8Ff9I1P%EF%BC%8Chttp://t.cn/8F6Ramc">http://t.cn/8Ff9I1P%EF%BC%8Chttp://t.cn/8F6Ramc</a></p>
+  
+  <ul>
+  <li>@淘宝褚霸</li>
+  </ul>
+  
+  
+  <p>Erlang版本whatsapp push服务器达到百万链接的核心技术：<a href="http://t.cn/zWnh091">http://t.cn/zWnh091</a></p>
+  
+  <ul>
+  <li>@平凡的香草</li>
+  </ul>
+  
+  
+  <p>花了一些时间来学习并翻译 Optimizing Your Linux Stack for Maximum Mobile Web Performance 原文：<a href="http://t.cn/zjHaQit%EF%BC%8C">http://t.cn/zjHaQit%EF%BC%8C</a> 译文：<a href="http://t.cn/8kcpO36">http://t.cn/8kcpO36</a> ，可以增加备注。还没有校对，错误可能很多，欢迎增加备注。</p>
+  
+  <ul>
+  <li>@网路冷眼</li>
+  </ul>
+  
+  
+  <p>Intel公司发布今年建议开发者阅读清单前半部分:从硬件到软件，应有尽有，包罗万象，涵盖作系统、多核编程、嵌入式、安全等等当今主流IT技术主题，不是举荐自家技术的广告贴。据称得到众多技术专家、工程师的审阅。PDF格式，长达10页。<a href="http://t.cn/8F4NV0b">http://t.cn/8F4NV0b</a> 裂建议收藏</p>
+  
+  <ul>
+  <li>@RednaxelaFX</li>
+  </ul>
+  
+  
+  <p>刚才有朋友问：想跟踪Java程序中哪里new对象最多，有什么好办法。在最新的Oracle JDK7里自带的Java Flight Recorder正好能满足这种需求。只要看AllocObjectInNewTLAB和AllocObjectOutsideTLAB就能几乎无额外开销得到一个非精准的profile。虽说非精准但很多时候已经足以解决问题。用起来超方便。</p>
+  
+  <ul>
+  <li>@Binos_ICT</li>
+  </ul>
+  
+  
+  <p>System Troubleshooting：在系统不同层次应该选用的工具，这图太贴切了，大家收藏一下吧！
+  <br>
+  <img src="http://ww2.sinaimg.cn/bmiddle/4a1f59bfgw1eadqzmpa6jj20l00g6n08.jpg"></p>
+  
+  <ul>
+  <li>@SinaAppEngine</li>
+  </ul>
+  
+  
+  <p>【#SAE技术分享#】《Linux低级I/O深析》可以说一切存储系统的基础是系统调用: open , creat, seek , read, write, mmap …的运用，要想写个高性能FS，就要深入IO系统调用。这篇博文主要分析了作文件的内核数据结构的变化及相关tips。<a href="http://t.cn/zlwIdYZ">http://t.cn/zlwIdYZ</a></p>
+  
+  <ul>
+  <li>@developerWorks</li>
+  </ul>
+  
+  
+  <p>本文作者是 Dropbox 的运维工程师 Rajiv，他将系统的可伸缩性设计，尤其在资源有限、流量快速增长情况下的最佳实践分享给大家。《Dropbox 可伸缩性设计最佳实践分享》，<a href="http://t.cn/zj2V8fg">http://t.cn/zj2V8fg</a></p>
+  
+  <ul>
+  <li>@开源</li>
+  </ul>
+  
+  
+  <p>比 Protocol Buffers 还要快 4 倍的二进制对象序列化库 MessagePack ， 支持多种编程语言，包括 JavaScript <a href="http://t.cn/zj7ZyKU">http://t.cn/zj7ZyKU</a> 比JSON更快速也更轻巧。</p>
+  
+  <ul>
+  <li>@fengyuncrawl</li>
+  </ul>
+  
+  
+  <p> 数据结构与算法 这是近几年对大型数据库基础算法与数据结构写得最深入浅出，既有广度又有深度，确实是干货中的精品，如果能精通这长达208页ppt中所有算法与数据结构，其它犹如浮云，会有登高望远，一览众山小之感，所谓“五岳归来不看山，山归来不看岳” <a href="http://t.cn/zlbkbXx">http://t.cn/zlbkbXx</a></p>
+  
+  <ul>
+  <li>@周鸿祎</li>
+  </ul>
+  
+  
+  <p>【支点在哪里？】支点永远在用户的问题里——我为什么用你的产品？当时做奇虎，我们都是有经验的创业者，做了很多非常理性的思辨和讨论，总结出很多前卫的概念。但最后发现都挺扯淡。用户不会因为你的逻辑是对的，概念是新的，产业分析是对的，就认可你。用户只要一个答案：你的产品给我解决什么问题？</p>
+  
+  <ul>
+  <li>@何_登成</li>
+  </ul>
+  
+  
+  <p>通过全组的努力，将 @网易汪源 老大布置的阅读VLDB 2012数据库相关的12篇论文的任务完成，并用一下午时间完成了分享。都是超级好东西，大开眼界！内容涉及方方面面：列存；Flash Cache；分布式；索引；查询优化；新型数据库设计 等等。越权老大将论文题目分享出来，推荐给感兴趣的朋友！</p>
+  
+  <ul>
+  <li>@bluedavy_readonly</li>
+  </ul>
+  
+  
+  <p>常见的Java问题排查方法（包括：类加载、cpu us消耗高、内存问题、java进程crash或退出、硬件资源未到瓶颈，但吞吐量上不去），希望看到的同学能给予补充，无论是补充碰到的问题，还是补充解决方法： <a href="http://t.cn/zYkKIJv">http://t.cn/zYkKIJv</a></p>
+  
+  <ul>
+  <li>@极光推送</li>
+  </ul>
+  
+  
+  <p>网友 good-life 公开发布了”推聊“开源项目，一个基于极光推送的Android手机聊天系统 <a href="http://t.cn/zjqbYrG">http://t.cn/zjqbYrG</a> 这个项目最赞的点在于：他声称 3 分钟就可以运行起来整套系统</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-02-13T11:34:08+08:00" pubdate data-updated="true">2014-02-13 11:34:08 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/02/11/foreign-to-beijing/" title="Previous Post: 2014年外地车牌转攻略">« 2014年外地车牌转攻略</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/02/26/nginx-upstream-1-dot-0-to-1-dot-1/" title="Next Post: 更新nginx版本upstream升级http1.1解决多TIME_WAIT问题">更新nginx版本upstream升级http1.1解决多TIME_WAIT问题 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,248 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[五四陈]java项目管理神兵利器maven和nexus使用手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="" ant java apache jakarta>
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/09/15/54-chen-java-magic-weapon-maven-project-management-and-the-nexus">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[五四陈]java项目管理神兵利器maven和nexus使用手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-15T00:00:00+08:00" pubdate data-updated="true">2009-09-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>"尽管 Ant 对于构建 Java 程序而言是事实上的标准工具，但这个工具在许多方面都不胜任项目管理任务。相反，Ant 提供的东西，Maven（出自 Apache Jakarta 项目的高级项目管理工具）都能提供，而且更多。" --转自IBM开发者网络</p>
+  
+  <p><strong>适用场景</strong></p>
+  
+  <p>如果你的项目互相有jar包的依赖，WEB-INF/lib下有大量杂乱的jar包，svn里lib目录下时常要更新东西，并且你为此伤透了脑筋，团队战斗力无法提升，那么，你就需要这两样利器了。</p>
+  
+  <p><strong>主角出场 windows环境居多</strong></p>
+  
+  <p><a href="http://maven.apache.org/">http://maven.apache.org/</a> 项目的主页，有洋文</p>
+  
+  <p><a href="http://maven.apache.org/download.html">http://maven.apache.org/download.html</a> 下载的地方</p>
+  
+  <p>安装的说明-好yy的居然有中文！</p>
+  
+  <p><a href="http://www.sonatype.com/books/maven-book/reference_zh/installation.html">http://www.sonatype.com/books/maven-book/reference_zh/installation.html</a></p>
+  
+  <p>大概意思就是下一个包然后设置环境变量。主要目的就是让你的本地环境能够执行mvn。</p>
+  
+  <p><strong>跑龙套的出场 linux环境犹佳</strong></p>
+  
+  <p><a href="http://nexus.sonatype.org/">http://nexus.sonatype.org/</a> 项目的主页，有洋文</p>
+  
+  <p><a href="http://nexus.sonatype.org/downloads/">http://nexus.sonatype.org/downloads/</a> 下载的地方</p>
+  
+  <p>安装的说明</p>
+  
+  <p><a href="http://www.sonatype.com/books/nexus-book/reference/install.html">http://www.sonatype.com/books/nexus-book/reference/install.html</a></p>
+  
+  <p>就是下一个包然后以webserver方式运行下。主要目录是让你的jar包能有个放处。</p>
+  
+  <p>类似 ./bin/jsw/macosx-universal-32/nexus start</p>
+  
+  <p>安装的视频
+  <object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="400" height="225" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowfullscreen" value="true">
+<param name="allowscriptaccess" value="always">
+<param name="src" value="http://vimeo.com/moogaloop.swf?clip_id=1875558&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1">
+<embed type="application/x-shockwave-flash" width="400" height="225" src="http://vimeo.com/moogaloop.swf?clip_id=1875558&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1" allowscriptaccess="always" allowfullscreen="true"></embed></object></p>
+  
+  <p>全屏才能看清楚.</p>
+  
+  <p>跑龙套的近照 默认密码是 admin/admin123</p>
+  
+  <p><a href="http://www.sonatype.com/books/nexus-book/reference/figs/web/repository-manager_nexus-login.png"><img class="alignnone" src="http://www.sonatype.com/books/nexus-book/reference/figs/web/repository-manager_nexus-login.png" alt="" width="803" height="457"></a></p>
+  
+  <p><strong>剧本</strong></p>
+  
+  <p>主角其实是个客户端工具，所有的功能都集中于一个命令：mvn</p>
+  
+  <p>例如：运行cmd 进入项目文件夹 mvn package 将项目打包  mvn install 将项目包安装到本地仓库 mvn deploy 向包布到跑龙套那个东东上面。</p>
+  
+  <p>mvn命令还有很多强大的功能，具体见 <a href="http://www.sonatype.com/books/maven-book/reference_zh/public-book.html">http://www.sonatype.com/books/maven-book/reference_zh/public-book.html</a></p>
+  
+  <p>跑龙套那个其实才算得上第二主角，它是一个强大的服务器端，它管理着你所有原来在svn里的lib下的所有jar包。并且很重要的一点，它能通过web界面搜索。</p>
+  
+  <p>这样，只要大家都使用和发布snapshot版本的jar包，不需要再另行通知更新jar包，开发的人搞好直接mvn deploy，使用的人在mvn -U clean package 自然就拖下最新的包，默契不在话下。</p>
+  
+  <p>这一切，都来源于pom组织的强大定义。【全剧终】</p>
+  
+  <p><strong>鸣谢</strong></p>
+  
+  <p>和人民</p>
+  
+  <p>老毛子精细的技术活</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-15T00:00:00+08:00" pubdate data-updated="true">2009-09-15 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

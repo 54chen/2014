@@ -1,0 +1,328 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>flex实时换肤术－动态切换CSS样式表文件 - 五四陈科学院</title>
+  <meta name="author" content="54chen">
+
+  
+  <meta name="description" content="HTML中有一个非常好的特性就是可以动态切换页面链接的CSS样式表，而FLEX并不具备动态导入CSS的特性，因为FLEX的所有的UI外观都是在后台SERVER生成在发布到前台的（当然，通过AS可以实时更改UI外观setStyle，这是单个更改的方式，并不是实时的CSS文件切换），一直觉得挺不爽的， …">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://2014.54chen.com/blog/2008/08/25/flex%E5%AE%9E%E6%97%B6%E6%8D%A2%E8%82%A4%E6%9C%AF%EF%BC%8D%E5%8A%A8%E6%80%81%E5%88%87%E6%8D%A2css%E6%A0%B7%E5%BC%8F%E8%A1%A8%E6%96%87%E4%BB%B6">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+  <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+  	<link rel="apple-touch-icon" href="touch-icon.png">
+	<link rel="shortcut icon" href="/favicon.ico">
+
+  
+
+  <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+</head>
+
+<body>
+  <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="http://www.54chen.com/wp-content/themes/54chen2011/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+</a>
+<div>
+    <a href="/">首页</a>
+    <a href="/blog/archives">归档</a>
+    <a href="/video">视频</a>
+    <a href="/about">关于</a>
+
+    <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+</div>
+<div class="subscription">
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:54chen.com">
+    <input class="search" type="text" name="q" placeholder="Search">
+  </fieldset>
+</form>
+  
+
+</div>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:2014.54chen.com">
+    <input class="search" type="text" name="q" placeholder="Search">
+  </fieldset>
+</form>
+  
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">flex实时换肤术－动态切换CSS样式表文件</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2008-08-25T00:00:00+08:00" pubdate data-updated="true">2008-08-25 00:00:00 +0800</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content">
+<p></p>
+<p style="text-indent: 15pt; line-height: 150%;">HTML中有一个非常好的特性就是可以动态切换页面链接的CSS样式表，而FLEX并不具备动态导入CSS的特性，因为FLEX的所有的UI外观都是在后台SERVER生成在发布到前台的（当然，通过AS可以实时更改UI外观<em>setStyle</em>，这是单个更改的方式，并不是实时的CSS文件切换），一直觉得挺不爽的，今天在<a hreflang="zh" href="http://www.livejournal.com/users/mannu/286686.html" target="blank">mannu</a>看到一个使用_global.styles来实现动态切换CSS文件的非常巧妙的方式:</p>
+<p style="text-indent: 15pt; line-height: 150%;">首先，因为FLEX是将CSS编译进SWF文件的，所有我们将我们需要切换的CSS编译成SWF文件；</p>
+
+<p></p>
+<p style="text-indent: 15pt; line-height: 150%;"><strong><em>green.css</em></strong> Label{<br>
+color:#00FF00;<br>
+fontSize:20px;<br>
+}</p>
+
+<p></p>
+<p style="text-indent: 15pt; line-height: 150%;"><strong><em>green.mxml</em></strong> &lt;?xml version="1.0" encoding="utf-8"?&gt;<br>
+&lt;mx:Application xmlns:mx="http://www.macromedia.com/2003/mxml"&gt;</p>
+
+<p>&lt;mx:Style source="green.<span>css</span>"&gt;&lt;/mx:Style&gt;</p>
+
+<p>&lt;/mx:Application&gt;
+</p>
+<p style="text-indent: 15pt; line-height: 150%;">类似的还有red.css/red.mxml,blue.css/blue.mxml。 然后，我们要切换到相应的CSS就直接LOAD相应的SWF文件； 最后，将_global.styles设置为所导入的SWF文件的_global.styles 。 这里有一个工具封装好的工具类:</p>
+
+<p></p>
+<p style="text-indent: 15pt; line-height: 150%;"><strong><em>RuntimeStyle.as</em></strong> import mx.controls.Loader;<br>
+import mx.core.MXMLObject;<br>
+import mx.utils.Delegate;</p>
+
+<p>class RuntimeStyle implements MXMLObject<br>
+{</p>
+
+<p>private var _document:Object;<br>
+private var loader:Loader;</p>
+
+<p>public function initialized(document:Object, id:String):Void<br>
+{
+_document = document;<br>
+}</p>
+
+<p>private var _source:String;</p>
+
+<p>public function get source():String<br>
+{
+return _source;<br>
+}</p>
+
+<p>public function set source(value:String):Void<br>
+{
+if (_source != value)<br>
+{
+_source = value;</p>
+
+<p>if (loader == undefined)<br>
+{
+loader = Loader(_document.createClassObject(Loader,<br>
+"runtimeStyleLoader", 21983));<br>
+loader.width = loader.height = 0;<br>
+loader.addEventListener("complete",<br>
+Delegate.create(this, loader_complete));<br>
+}</p>
+
+<p>loader.source = _source + ".swf";<br>
+}
+}</p>
+
+<p>private function loader_complete(event:Object):Void<br>
+{
+_global.styles = Loader(event.target).content._global.styles;<br>
+_document.styleName = _document.styleName == "!" ? "@" : "!";<br>
+}</p>
+
+<p>}</p>
+
+<p></p>
+<p style="text-indent: 15pt; line-height: 150%;">测试代码：<strong><em>cssChg.mxml</em></strong>&lt;local:RuntimeStyle xmlns:local="*"</p>
+
+<p>source="{stylesWrappers.selectedItem.source}" /&gt;</p>
+
+<p>&lt;mx:Model id="alternateStyles"</p>
+
+<p>source="alternateStyles.xml" /&gt;</p>
+
+<p>&lt;mx:ComboBox id="stylesWrappers"<br>
+dataProvider="{alternateStyles.stylesheets}"<br>
+labelField="name" selectedIndex="-1" /&gt;</p>
+
+<p><strong><em>alternateStyles.xml</em></strong> &lt;?xml version="1.0" encoding="UTF-8"?&gt;<br>
+&lt;styles&gt;</p>
+
+<p>&lt;stylesheets&gt;<br>
+&lt;name&gt;red&lt;/name&gt;<br>
+&lt;source&gt;red.mxml&lt;/source&gt;<br>
+&lt;/stylesheets&gt;<br>
+&lt;stylesheets&gt;<br>
+&lt;name&gt;green&lt;/name&gt;<br>
+&lt;source&gt;green.mxml&lt;/source&gt;<br>
+&lt;/stylesheets&gt;<br>
+&lt;stylesheets&gt;<br>
+&lt;name&gt;blue&lt;/name&gt;<br>
+&lt;source&gt;blue.mxml&lt;/source&gt;<br>
+&lt;/stylesheets&gt;</p>
+
+<p>&lt;/styles&gt;</p>
+ 
+<p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+<img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+<br>
+<a href="http://2014.54chen.com/donate/">捐赠说明</a>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2008-08-25T00:00:00+08:00" pubdate data-updated="true">2008-08-25 00:00:00 +0800</time>
+      
+
+<span class="categories">
+  
+    <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2008/08/22/php-send-and-receive-the-message/" title="Previous Post: PHP“收发”邮件的一个程序">« PHP“收发”邮件的一个程序</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2008/09/14/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3%E7%A0%81%E5%A4%A7/" title="Next Post: [中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part1）">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part1） »</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite">
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/libs/jquery.min.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  Copyright © 2017 - 54chen -
+
+</footer>
+  
+<div id="fck_content" class="content wc_main"></div>
+<p> </p>
+<script type="text/javascript">
+(function(){
+var url = "http://widget.weibo.com/distribution/comments.php?width=0&url=auto&border=1&appkey=2501389980&dpc=1";
+url = url.replace("url=auto", "url=" + document.URL); 
+document.write('<iframe id="WBCommentFrame" src="' + url + '" scrolling="no" frameborder="0" style="width:100%"></iframe>');
+})();
+</script>
+<script src="http://tjs.sjs.sinajs.cn/open/widget/js/widget/comment.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript">
+function w(r) {$("#fck_content").html(r.r);}
+$(function(){
+    var mid = $("#mid").val();
+    var get_url = 'http://www.54chen.com/fkwb/'+mid+'.js';
+    if(mid > 0){
+        $("#fck_content").html('<img src=http://chen54.b0.upaiyun.com/loading.gif>');
+        $.ajax(
+                {
+                    url:get_url,
+                    dataType: "jsonp"
+                }
+              );
+    }
+});
+window.WBComment.init({
+    "id": "WBCommentFrame"
+});
+</script>
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,238 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>使用maven的profiles自动设置log4j线上环境和测试环境区别 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="前言
+  Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具. 　　如果你已经有十次输入同样的Ant targets来编译你的代码、jar或者war、生成javadocs，你一定会自问，是否有一个重复性更少却能同样完成该工作的方法。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/08/04/maven-profiles-log4j">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">使用maven的profiles自动设置log4j线上环境和测试环境区别</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-04T00:00:00+08:00" pubdate data-updated="true">2010-08-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img06.taobaocdn.com/imgextra/i6/T12CBHXXpLXXcRqLZ7_064514.jpg" alt="程序猿"></p>
+  
+  <p><strong>前言</strong>
+  Maven是基于项目对象模型(POM)，可以通过一小段描述信息来管理项目的构建，报告和文档的软件项目管理工具. 　　如果你已经有十次输入同样的Ant  targets来编译你的代码、jar或者war、生成javadocs，你一定会自问，是否有一个重复性更少却能同样完成该工作的方法。Maven便提 供了这样一种选择，将你的注意力从作业层转移到项目管理层。Maven项目已经能够知道如何构建和捆绑代码，运行测试，生成文档并宿主项目网页.<br>
+  项目的主页地址为：http://maven.apache.org/</p>
+  
+  <p><strong>深入</strong>
+  Profiles是maven的一个很关键的术语：profile是用来定义一些在build lifecycle中使用的environmental variations，profile可以设置成在不同的环境下激活不同的profile（例如：不同的OS激活不同的profile，不同的JVM激活不同的profile，不同的dabase激活不同的profile等等）。</p>
+  
+  <p><strong>实例</strong>
+  测试机环境，搞一个文件，比如说/data/test。<br>
+  线上环境，不搞这个文件。<br>
+  然后pom在project下如下写法：
+  </p>
+<blockquote>&lt;profiles&gt;<br>
+  &lt;profile&gt;<br>
+  &lt;id&gt;produce&lt;/id&gt;<br>
+  &lt;activation&gt;<br>
+  &lt;activeByDefault&gt;false&lt;/activeByDefault&gt;<br>
+  &lt;file&gt;<br>
+  &lt;missing&gt;/data/test&lt;/missing&gt;<br>
+  &lt;/file&gt;<br>
+  &lt;/activation&gt;<br>
+  &lt;properties&gt;<br>
+  &lt;log4j.log.path&gt;/opt/logs/xxx.log&lt;/log4j.log.path&gt;<br>
+  &lt;log4j.debug.level&gt;error&lt;/log4j.debug.level&gt;<br>
+  &lt;/properties&gt;<br>
+  &lt;/profile&gt;<br>
+  &lt;profile&gt;<br>
+  &lt;id&gt;dev&lt;/id&gt;<br>
+  &lt;activation&gt;<br>
+  &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;<br>
+  &lt;/activation&gt;<br>
+  &lt;properties&gt;<br>
+  &lt;log4j.log.path&gt;/opt/logs/xxx.log&lt;/log4j.log.path&gt;<br>
+  &lt;log4j.debug.level&gt;debug&lt;/log4j.debug.level&gt;<br>
+  &lt;/properties&gt;<br>
+  &lt;/profile&gt;<br>
+  &lt;/profiles&gt;</blockquote>
+  <strong>log4j.xml文件设置</strong>
+  为了配合maven的设置属性，需要将log4j中使用的声明用成变量，片段举例：
+  <blockquote>﻿&lt;logger name="com.xx.xx.xx.xx" additivity="false"&gt;<br>
+  &lt;level value="${log4j.debug.level}"/&gt;<br>
+  &lt;appender-ref ref="dao"/&gt;<br>
+  &lt;/logger&gt;</blockquote>
+  
+  <p>&lt;root&gt;<br>
+  &lt;level value="${log4j.debug.level}"/&gt;<br>
+  &lt;appender-ref ref="service"/&gt;<br>
+  &lt;/root&gt;
+  <strong>解释</strong>
+  这样，在运行mvn进行build项目的时候，如果线上环境，测试到/data/test文件是missing的，则会激活对应的设置，以此来达到线上环境改成error级别，而测试环境为debug级别。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-08-04T00:00:00+08:00" pubdate data-updated="true">2010-08-04 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/sheng-huo-bei-fen/">生活备份</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

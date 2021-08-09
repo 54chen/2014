@@ -1,0 +1,221 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Thrift最佳实践:版本与兼容 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="十分苦逼的api提供过程。一次提供，终身负责制。 " api design is like sex: make one mistake and support it for the rest of your life. structs>
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/09/28/thrift-versioning-compatibility">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Thrift最佳实践:版本与兼容</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-09-28T00:00:00+08:00" pubdate data-updated="true">2011-09-28 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg" alt=",thrift"></p>
+  
+  <p>十分苦逼的api提供过程。一次提供，终身负责制。</p>
+  
+  <p></p>
+<blockquote>"API design is like sex: Make one mistake and support it for the rest of your life." - @joshbloch
+  </blockquote>
+  
+  <p><strong>Structs：</strong>
+  在许多系统里面，被称做message.</p>
+  
+  <p>协议随着岁月而演变，如果一个已经存在的消息类型不再满足需求，但是你仍然想使用原来使用thrift文件生成的代码，比如你想在现在的消息类型上增加一个额外的字段。                          </p>
+  
+  <p>不用担心人，不搞坏原来的任何代码而更新消息类型，是非常简单的，只需要时刻记录以下的<strong>规则</strong>：</p>
+  
+  <p></p>
+<blockquote>
+  1.不要修改现存的任何已经存在字段的数字标签</blockquote>
+  
+  <p></p>
+<blockquote>2.任何新增的字段应该是optional的，这就意味着，所有新定义产生的代码都能解析新老的格式，因为一定会有任何一个标上required的元素。你应该设置可能的默认值给这个元素，让新代码与老数据也能正常协作。与此类似，新数据也能被老代码解析，老的实现解析时会忽略新的字段。尽管如此，未知的字段不能被丢弃，并且如果消息被延迟序列化，未知的字段也会被一起序列化，因此当消息到达新代码的时候，新字段依旧可用。</blockquote>
+  
+  <p></p>
+<blockquote>3.当你更新的消息类型里不再包括相关的标签数字时，非required字段可以删除。（把这个废字段改名，比如说加个前缀OBSOLETE_ ，可以防止未来维护.thrift文件人误用原来的数字，这做法可能更好。)</blockquote>
+  
+  <p></p>
+<blockquote>4.修改默认值基本上是OK的，但是你记得这个默认值永远不会“串线”。比如，如果程序收到一个在某个字段没有值的消息，程序会看那个版本里定义的默认值。这可能会导致得不到正确的默认值。
+  </blockquote>
+  
+  <p>cassandra的thrift定义：http://svn.apache.org/viewvc/cassandra/trunk/interface/cassandra.thrift?view=co<br>
+  fb303的定义：http://svn.apache.org/repos/asf/thrift/trunk/contrib/fb303/if/fb303.thrift<br>
+  scribe的定义：https://github.com//scribe/blob/master/if/scribe.thrift</p>
+  
+  <p><em>from:ThriftThe Missing Guide</em>
+   
+  </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-09-28T00:00:00+08:00" pubdate data-updated="true">2011-09-28 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

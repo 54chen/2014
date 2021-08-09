@@ -1,0 +1,279 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Testing and Mocking in spring2.5: Static Class、maven Site、cobertura - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="spring 2.5 与 junit 4.4
+  Spring 2.5.x不能用JUnit 4.5+.如果把使用了spring-test 2.5 的testcase升级到 junit 4.5会得到NoClassDefFoundError: org.apache.maven.surefire. …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/08/11/spring-static-class-maven-cobertura-site">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Testing and Mocking in spring2.5: Static Class、maven Site、cobertura</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-08-11T00:00:00+08:00" pubdate data-updated="true">2012-08-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="mock spring static class cobertura">
+  <strong>spring 2.5 与 junit 4.4</strong>
+  Spring 2.5.x不能用JUnit 4.5+.如果把使用了spring-test 2.5 的testcase升级到 junit 4.5会得到NoClassDefFoundError:</p>
+  
+  <p></p>
+<blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br>
+  org/junit/Assume$AssumptionViolatedException<br>
+  java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException 
+  </blockquote>
+  
+  <p>这是spring-test 2.5.x的一个bug. 其与JUnit 4.5不一致. 只能使用4.0-4.4.<br>
+  或者就是自己打patch.
+  <a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
+  
+  <p><strong>EasyMock 与 static Class</strong>
+  EasyMock未提到是否支持static methods.功能类经常是static的，是因为没有上下文环境依赖，但如果一定要mock他们，可以选择powerMock.</p>
+  
+  <p><strong>PowerMock、static Class、junit、spring</strong>
+  PowerMock 需要你添加 '@RunWith(PowerMockRunner.class)'.但 sping-test 需要你添加 '@RunWith(SpringJUnit4ClassRunner.class)'.
+  <a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
+  如果junit 4.7,PowerMock将RunWith替换为:<br>
+      @Rule<br>
+      public PowerMockRule rule = new PowerMockRule();<br>
+  http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
+  
+  <p><strong>冲突</strong>
+  Spring 2.5.x不能用JUnit 4.5+, 而PowerMockRule 只能用 JUnit 4.7.<br>
+  基本上在Java + Spring 2.5 &amp; JUnit 4.4环境下没啥简单的办法去mock static class了.</p>
+  
+  <p><strong>maven site 与 cobertura</strong>
+  当你运行 'mvn site' or  'mvn sonar:sonar', 在spring项目中你可能会得到:<br>
+  NoSuchBeanDefinitionException</p>
+  
+  <p>第一个答案:<br>
+  在test的application文件中添加:</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span> </span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>  </span></span></li></ol>
+</div>
+  
+  <p>第二个答案:<br>
+  'mvn site' 与 'mvn sonar:sonar' 会生成类在目录 ./generated-classes/cobertura 中.确保你想autowire的类都在正确的目录下扫描.</p>
+  
+  <p>-----------</p>
+  
+  <p><strong>spring 2.5 and junit 4.4</strong>
+  Spring 2.5.x is incompatible with JUnit 4.5+.If you upgrade to junit 4.5,all of your test case which uses the SpringJUnit4ClassRunner will get a NoClassDefFoundError:</p>
+  
+  <p></p>
+<blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br>
+  org/junit/Assume$AssumptionViolatedException<br>
+  java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException<br>
+   </blockquote>
+  
+  <p>It is an known issue with spring-test 2.5.x. It is incompatible with JUnit 4.5. Use 4.0-4.4.<br>
+  Or you can try the patch in the issue tracker.
+  <a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
+  
+  <p><strong>EasyMock and static Class</strong>
+  EasyMock doesn't mention static methods.Utility methods should be most of the time static as they have no context and no dependencies.But when you need to mock it,you can you choose PowerMock.</p>
+  
+  <p><strong>PowerMock、static Class、junit、spring</strong>
+  PowerMock need you add '@RunWith(PowerMockRunner.class)' to your test code.But sping-test need you add '@RunWith(SpringJUnit4ClassRunner.class)'.
+  <a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
+  With junit 4.7,PowerMock can replace RunWith to:<br>
+      @Rule<br>
+      public PowerMockRule rule = new PowerMockRule();<br>
+  http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
+  
+  <p><strong>conflict</strong>
+  Spring 2.5.x is incompatible with JUnit 4.5+, and that PowerMockRule is compatible with JUnit 4.7.<br>
+  Basically, There isn't an easy way to do this in Java + Spring 2.5 &amp; JUnit 4.4 at the moment.</p>
+  
+  <p><strong>maven site and cobertura</strong>
+  When you run 'mvn site' or  'mvn sonar:sonar' with spring project,you may get the error:<br>
+  NoSuchBeanDefinitionException</p>
+  
+  <p>The first answer:<br>
+  In your test application context add the line:</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span> </span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>  </span></span></li></ol>
+</div>
+  
+  <p>The second answer:<br>
+  The 'mvn site' or 'mvn sonar:sonar' will generates class in ./generated-classes/cobertura.Make sure the classes that you want to autowire is all scan in right folder.
+  </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-08-11T00:00:00+08:00" pubdate data-updated="true">2012-08-11 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment right" href="/blog/2012/08/28/learn-ruby-ubuntu/" title="Next Post: ruby快速学习手记(ubuntu)">ruby快速学习手记(ubuntu) »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

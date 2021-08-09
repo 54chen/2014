@@ -1,0 +1,216 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Linux下系统托盘的实现 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.13 转载请注明原文链接：http://www.54chen.com/c/24]
+  在gnome的网页上找到这个内容，他们把它叫做“通知功能图标”。它是一个在未来版本中决定发布的已实现包。
+  http://www.gnome-cn. …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2006/10/13/linux-system-tray-under-the-realization-of">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Linux下系统托盘的实现</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-10-13T00:00:00+08:00" pubdate data-updated="true">2006-10-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[文章作者：陈臻 本文版本：v1.0 最后修改：2006.10.13 转载请注明原文链接：<a href="http://www.54chen.com/c/24">http://www.54chen.com/c/24</a>]<br>
+  在gnome的网页上找到这个内容，他们把它叫做“通知功能图标”。它是一个在未来版本中决定发布的已实现包。<br>
+  http://www.gnome-cn.org/documents/tutorial/system-tray-icon-application/implement-your-tray<br>
+  具体实现前需要在下载两个开发补丁源文件，然后包含头文件到你的文件中。<br>
+  具体代码：<br>
+  void<br>
+  create_tray (tray_demo * tray)<br>
+  {
+  GtkWidget *image;<br>
+  GtkWidget *event_box;<br>
+  GtkTooltips *tooltips;<br>
+  EggTrayIcon *tray_icon;<br>
+  tooltips = gtk_tooltips_new ();<br>
+  tray_icon = egg_tray_icon_new ("Tray icon demo");<br>
+  event_box = gtk_event_box_new ();<br>
+  gtk_container_add (GTK_CONTAINER (tray_icon), event_box);<br>
+  g_signal_connect (G_OBJECT (event_box), "button-press-event",<br>
+  G_CALLBACK (tray_button_press_event_cb), tray);<br>
+  gtk_tooltips_set_tip (GTK_TOOLTIPS(tooltips), event_box, _("Try a left/right click"), NULL);<br>
+  image = load_image (GCN_ICON);<br>
+  gtk_container_add (GTK_CONTAINER (event_box), image);<br>
+  gtk_widget_show_all (GTK_WIDGET (tray_icon));<br>
+  return;<br>
+  }</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2006-10-13T00:00:00+08:00" pubdate data-updated="true">2006-10-13 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2006/03/22/mysql-in-a-variety-of-fields-in-the-range/" title="Previous Post: MySQL中各种字段的取值范围">« MySQL中各种字段的取值范围</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2006/10/23/apache-common-set/" title="Next Post: APACHE常用设置">APACHE常用设置 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

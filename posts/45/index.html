@@ -1,0 +1,1053 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="校内UGC技术讲座：postgreSQL Search Slide共享 2009-07-31 00:00:00 +0800 PostgreSQL Search
+  提前放出这次Tech Talk的slide，show给所有人。讲述的主题是postgreSQL的基础和利用bamboo做全文检索的方法 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/45">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/07/31/ugc-technical-seminars-in-schools-postgresql-search-slide-sharing/">校内UGC技术讲座：postgreSQL Search Slide共享</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-31T00:00:00+08:00" pubdate data-updated="true">2009-07-31 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p></p>
+<div id="__ss_1794282" style="width: 425px; text-align: left;">
+<a style="font:14px Helvetica,Arial,Sans-serif;display:block;margin:12px 0 3px 0;text-decoration:underline;" title="PostgreSQL Search" href="http://www.slideshare.net/guestb75c3a/postgresql-search">PostgreSQL Search</a><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" width="425" height="355" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,40,0"><param name="allowFullScreen" value="true">
+<param name="allowScriptAccess" value="always">
+<param name="src" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=postgresql-090731015526-phpapp02&amp;stripped_title=postgresql-search">
+<embed type="application/x-shockwave-flash" width="425" height="355" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=postgresql-090731015526-phpapp02&amp;stripped_title=postgresql-search" allowscriptaccess="always" allowfullscreen="true"></embed></object>
+</div>
+  提前放出这次Tech Talk的slide，show给所有人。讲述的主题是<a href="http://www.54chen.com/601-%e5%8e%9f%e5%88%9b%e4%bd%bf%e7%94%a8postgresql%e6%90%ad%e5%bb%ba%e6%af%94lucene%e6%96%b9%e4%be%bfn%e5%80%8d%e7%9a%84%e5%85%a8%e6%96%87%e6%90%9c%e7%b4%a2-%e7%ac%ac%e4%b8%80%e9%83%a8%e5%88%86/">postgreSQL</a>的基础和利用bamboo做全文检索的方法。
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/07/30/-big-table-similar-to-the-tokyo-cabinet-research-notes/">类似 Big Table的tokyo Cabinet研究记录</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-30T00:00:00+08:00" pubdate data-updated="true">2009-07-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>Tokyo Cabinet是小人开发的一款数据库，它的功能比较简单，只能键值保存，没有检索功能，以hash table、b+tree、fixed-length array保存。功能类似的Bigtable的东东。<br>
+  这套Tokyo系列有三个产品，<a class="urlextern" title="http://tokyocabinet.sourceforge.net/index.html" rel="nofollow" href="http://tokyocabinet.sourceforge.net/index.html">Cabinet</a>是数据库，<a class="urlextern" title="http://tokyocabinet.sourceforge.net/tyrantpkg/" rel="nofollow" href="http://tokyocabinet.sourceforge.net/tyrantpkg/">Tyrant</a>提供管理Cabinet的接口，<a class="urlextern" title="http://tokyocabinet.sourceforge.net/dystopiadoc/" rel="nofollow" href="http://tokyocabinet.sourceforge.net/dystopiadoc/">Dystopia</a>提供全文索引。我把Cabinet理解为存储引擎，Tyrant类似mysql的管理器，Dystopia则是插件。</p>
+  
+  <p>Tokyo Cabinet有如下特点：
+  </p>
+<ul>
+  	<li class="level1">
+  <div class="li">键值保存数据库</div>
+</li>
+  	<li class="level1">
+  <div class="li">数据文件小</div>
+</li>
+  	<li class="level1">
+  <div class="li">高性能，插入1百万记录只需0.4秒(250万 rps),查询1百万记录只需0.3秒(300万 rps)</div>
+</li>
+  	<li class="level1">
+  <div class="li">高并发，支持多线程，读写支持锁记录</div>
+</li>
+  	<li class="level1">
+  <div class="li">使用简单，通过memcached客户端直接使用（需Tyrant)</div>
+</li>
+  	<li class="level1">
+  <div class="li">支持64位架构，容量大</div>
+</li>
+  	<li class="level1">
+  <div class="li">支持事务</div>
+</li>
+  </ul>
+  Tokyo Tyrant提供管理Cabinet的接口，支持memcached协议，所以，可以通过memcached客户端连接Cabinet。<br>
+  Tokyo Tyrant有如下特点：
+  <ul>
+  	<li class="level1">
+  <div class="li">提供使用Cabinet的接口</div>
+</li>
+  	<li class="level1">
+  <div class="li">支持通过memcached和http协议连接</div>
+</li>
+  	<li class="level1">
+  <div class="li">高并发，查询100万记录17.2秒（5.8万 rps)</div>
+</li>
+  	<li class="level1">
+  <div class="li">支持热备份，复制功能，主持主主(可读写）和主从（分写和读）方式</div>
+</li>
+  </ul>
+  Tokyo Dystopia是一个全文检索系统,你可以搜索包含某短语的一系列记录，它的特性如下:
+  <ul>
+  	<li class="level1">
+  <div class="li">搜索的高性能。</div>
+</li>
+  	<li class="level1">
+  <div class="li">目标文标的高可靠性</div>
+</li>
+  	<li class="level1">
+  <div class="li">N-gram模型的高召回率</div>
+</li>
+  	<li class="level1">
+  <div class="li">短语匹配，前缀匹配,后缀匹配<a href="http://www.54chen.com/601-%e5%8e%9f%e5%88%9b%e4%bd%bf%e7%94%a8postgresql%e6%90%ad%e5%bb%ba%e6%af%94lucene%e6%96%b9%e4%be%bfn%e5%80%8d%e7%9a%84%e5%85%a8%e6%96%87%e6%90%9c%e7%b4%a2-%e7%ac%ac%e4%b8%80%e9%83%a8%e5%88%86/">搜索</a>.</div>
+</li>
+  	<li class="level1">
+  <div class="li">Unicode下多语种支持。</div>
+</li>
+  	<li class="level1">
+  <div class="li">API的分层<a href="http://www.54chen.com/539-%e5%8e%9f%e5%88%9b%e6%95%b4%e7%90%86%e6%a0%a1%e5%86%85%e7%bd%91cto%e9%bb%84%e6%99%b6%e8%ae%b2%e8%bf%b0%e7%bd%91%e7%ab%99%e6%9e%b6%e6%9e%84%e5%8f%98%e8%bf%81-54chen%e5%9b%9e%e5%bf%86%e7%89%88/">架构</a>支持。</div>
+</li>
+  </ul>
+  cabinet的文档:<br>
+  http://tokyocabinet.sourceforge.net/spex-en.html
+  
+  <p>tyrant的文档:<br>
+  http://tokyocabinet.sourceforge.net/tyrantdoc/</p>
+  
+  <p>cabinet和tyrant的ppt幻灯片介绍:<br>
+  http://tokyocabinet.sourceforge.net/tokyoproducts.pdf<br>
+  可关注下其中的TCTDB,就是对table database的<a href="http://www.54chen.com/591-weibo-api-%e4%b8%ad%e6%96%87%e6%96%87%e6%a1%a3-%e5%89%8d%e8%a8%80/">支持</a></p>
+  
+  <p>使用哪种存储方式,取决于tyrant启动时指定的存储文件名称,table database的文件后缀是.tct</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/07/26/published-a-log/">发布一个日志，看完</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-26T00:00:00+08:00" pubdate data-updated="true">2009-07-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>RT</p>
+  
+  <p>，不明真相的围观群众，受人控制的组织者，矫情的演说。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/07/21/mediawiki-pgsql/">[原创]mediawiki安装改进手记-使用mediawikit和postgresql搭建有强大搜索功能的wiki</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-21T00:00:00+08:00" pubdate data-updated="true">2009-07-21 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>[ 文章作者：陈臻 本文版本：v1.1 最后修改：2009.7.28 转载请注明原文链接：<a href="http://www.54chen.com/c/640">http://www.54chen.com/c/640</a> ]</p>
+  
+  <p>在yahoo工程技术部，最有趣的事情当属打开工程技术部的wiki，慢慢阅读来自前辈们的大作。</p>
+  
+  <p>yahoo以前使用的是twiki，后来更换了mediawiki，扩展了postgresql的搜索，使mediawiki的搜索功能得到了加强，这里，记录下我在校内搭建一整套的手记：</p>
+  
+  <p><strong>第一步.准备php和postgresql环境</strong></p>
+  
+  <p>大环境：因为是内部系统，所以图省事，WEB使用的是一个<a href="http://www.54chen.com/c/372">ubuntu</a>的机器，安装这些丝毫不用费力了。就是先用apt安装php、nginx，源码包安装lighttpd取<span style="font-size: x-small;"><a href="http://www.54chen.com/c/640"><span style="font-size: x-small;">spawn-cgi</span></a>一枚备用。源码包安装postgresql8.3.3。</span></p>
+  
+  <p>#apt-get install php5 php5-pgsql php5-mbstring php5-cgi</p>
+  
+  <p>#apt-get install nginx</p>
+  
+  <p>#wget <a href="http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz">http://www.lighttpd.net/download/lighttpd-1.4.19.tar.gz</a>
+  #tar -xvf lighttpd-1.4.19.tar.gz<br>
+  #cd lighttpd-1.4.19/<br>
+  #./configure<br>
+  #make<br>
+  #cp src/spawn-fcgi /usr/local/bin/spawn-fcgi</p>
+  
+  <p>(这里图快，没使用php-fpm)</p>
+  
+  <p>#adduser www</p>
+  
+  <p>#spawn-fcgi -a 127.0.0.1 -p 9000 -C 5 -u www-data -g www-data -f /usr/bin/php-cgi</p>
+  
+  <p>修改php.ini文件<br>
+  cgi.fix_pathinfo=1; 这样php-cgi方能正常使用SCRIPT_FILENAME这个变量</p>
+  
+  <p>在/etc/nginx/sites-enable/default中添加以下代码</p>
+  
+  <p>server {<br>
+  listen 80; //端口<br>
+  server_name wiki.54chen.com; //虚拟域名<br>
+  access_log /var/log/nginx/hwiki.54chen.com.access.log; //访问日志<br>
+  location / {<br>
+  root /home/wiki.54chen.com; //size根目录<br>
+  index index.php;<br>
+  location ~ \.php$ { #php fastcgi的配置<br>
+  fastcgi_pass 127.0.0.1:9000; #php fastcgi的代理端口与ip<br>
+  fastcgi_index index.php;<br>
+  fastcgi_param SCRIPT_FILENAME /home/wiki.54chen.com$fastcgi_script_name; #要处理的php文件的路径<br>
+  include /etc/nginx/fastcgi_params; #fastcgi的参数文件地址<br>
+  }</p>
+  
+  <p>启动
+  </p>
+<pre>/etc/init.d/nginx start</pre>
+  大功告成！
+  
+  <p>postgresql的安装请进<span style="font-size: x-small; color: #3366cc;"><a href="http://www.54chen.com/c/601"><span style="font-size: x-small; color: #3366cc;">使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第一部分</span></a></span></p>
+  
+  <p><strong>第二步.安装mediawiki</strong></p>
+  
+  <p>#wget <a href="http://downloads.sourceforge.net/sourceforge/wikipedia/mediawiki-1.8.2.tar.gz?use_mirror=jaist">http://downloads.sourceforge.net/sourceforge/wikipedia/mediawiki-1.8.2.tar.gz?use_mirror=jaist</a></p>
+  
+  <p>#解压到/home/wiki.54chen.com</p>
+  
+  <p>通过浏览器访问安装，安装时选择postgresql.</p>
+  
+  <p>将wiki目录下connfig目录中的LocalSettings.php剪切到wiki目录中，把$wgEnableUploads = false;改为$wgEnableUploads = true;（这样允许上传图片了），还有就是把Wiki的Logo改成您所需要的$wgLogo = "$wgStylePath/common/images/wiki.png"。</p>
+  
+  <p><strong>第三步.修改meidawiki及修改sql</strong>
+  1.修改DB<br>
+  按标题搜的触发器修改为
+  <code>CREATE OR REPLACE FUNCTION mediawiki.ts2_page_title()<br>
+  RETURNS "trigger" AS<br>
+  $BODY$<br>
+  BEGIN<br>
+  IF TG_OP = 'INSERT' THEN<br>
+  NEW.titlevector = to_tsvector('chinesecfg',COALESCE(REPLACE(NEW.page_title,'/',' '),''));<br>
+  ELSIF NEW.page_title != OLD.page_title THEN<br>
+  NEW.titlevector := to_tsvector('chinesecfg',COALESCE(REPLACE(NEW.page_title,'/',' '),''));<br>
+  END IF;<br>
+  RETURN NEW;<br>
+  END;<br>
+  $BODY$<br>
+  LANGUAGE 'plpgsql' VOLATILE;<br>
+  ALTER FUNCTION mediawiki.ts2_page_title() OWNER TO wikiuser;</code></p>
+  
+  <p>按内容搜索的触发器修改为
+  <code>
+  CREATE OR REPLACE FUNCTION mediawiki.ts2_page_text()<br>
+  RETURNS "trigger" AS<br>
+  $BODY$<br>
+  BEGIN<br>
+  IF TG_OP = 'INSERT' THEN<br>
+  NEW.textvector = to_tsvector('chinesecfg',COALESCE(NEW.old_text,''));<br>
+  ELSIF NEW.old_text != OLD.old_text THEN<br>
+  NEW.textvector := to_tsvector('chinesecfg',COALESCE(NEW.old_text,''));<br>
+  END IF;<br>
+  RETURN NEW;<br>
+  END;<br>
+  $BODY$<br>
+  LANGUAGE 'plpgsql' VOLATILE;<br>
+  ALTER FUNCTION mediawiki.ts2_page_text() OWNER TO wikiuser;</code></p>
+  
+  <p>对标题的索引修改
+  <code>
+  drop index ts2_page_title;<br>
+  CREATE INDEX ts2_page_title<br>
+  ON mediawiki.page<br>
+  USING gin<br>
+  (titlevector);</code></p>
+  
+  <p>对内容的索引修改
+  <code>
+  drop index ts2_page_text;<br>
+  CREATE INDEX ts2_page_text<br>
+  ON mediawiki.pagecontent<br>
+  USING gin<br>
+  (textvector);</code></p>
+  
+  <p>修改 includes/SearchPosgres.php 146行：
+  <code>$prefix = $wgDBversion &lt; 8.3 ? "'default'," : "'chinesecfg',";</code></p>
+  
+  <p>大功告成，搜索的时候就使用了bamboo的分词来搜了，如果还有兴趣可以加强175-179行的sql就能得到更加强大的wiki。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/07/17/postgresql-bamboo-lucene-part2/">[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第二部分</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-17T00:00:00+08:00" pubdate data-updated="true">2009-07-17 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.7.17 转载请注明原文链接：<a href="http://www.54chen.com/_linux_/postgresql-bamboo-lucene-part2.html">http://www.54chen.com/_linux_/postgresql-bamboo-lucene-part2.html</a> ]</p>
+  
+  <p>书接上回。上回说<a href="http://www.54chen.com/c/601">到建立好一整套的中文分词和pgsql的环境</a>，这回来说如何搜。</p>
+  
+  <p><strong>一、基础篇 </strong></p>
+  
+  <p>本回从一条sql开始：</p>
+  
+  <p><span class="MsgBodyText">select * from dbname where field_name @@ 'aa|bb' order by rank(field_name, 'aa|bb');</span></p>
+  
+  <p>从这个sql字面意思讲解：从 dbname这个表中查field_name匹配aa或者是bb的词，并且按照他们的匹配的RANK排序。</p>
+  
+  <p>基本上明白上面这段话后，来学习四个概念：<strong>tsvector、</strong><strong>tsquery、</strong>@@ 、<strong>gin。</strong></p>
+  
+  <p>1.<strong>tsvector:</strong></p>
+  
+  <p>在postgreSQL 8.3自带支持全文检索功能，在之前的版本中需要安装配置tsearch2才能使用。它提供两个数据类型（tsvector,tsquery），并且通过 动态检索自然语言文档的集合，定位到最匹配的查询结果，tsvector正是其中之一。</p>
+  
+  <p>一个tsvector的值是唯一分词的分类列表，把一话一句词格式化为不同的词条，在进行分词处理的时候，tsvector会自动去掉分词中重复的词条，按照一定的顺序装入。例如</p>
+  
+  <p>SELECT 'a fat cat sat on a mat and ate a fat rat'::tsvector;<br>
+  tsvector<br>
+  ----------------------------------------------------<br>
+  'a' 'on' 'and' 'ate' 'cat' 'fat' 'mat' 'rat' 'sat'</p>
+  
+  <p>通过tsvector把一个字符串按照空格进行分词，这可以把分词后的词按照出现的次数排成一排（还会按词长度）。</p>
+  
+  <p>对于英文和中文的全文检索我们还要看下面这条sql:</p>
+  
+  <p>SELECT to_tsvector('english', 'The Fat Rats');<br>
+  to_tsvector<br>
+  -----------------<br>
+  'fat':2 'rat':3</p>
+  
+  <p>to_tsvector函数来是tsvector规格化的，在其中可指定所使用的分词。</p>
+  
+  <p>2.<strong>tsquery：</strong></p>
+  
+  <p>顾名思义,tsquery,表示的应该是查询相关的.tsquery是存储用于检索的词条.并且可以联合使用boolean 作符来连接, &amp; (AND), | (OR), and ! (NOT). 使用括号(),可以强制分为一组.</p>
+  
+  <p>同时,tsquery 在做搜索的时候,也可以使用权重,并且每个词都可以使用一个或者多个权重标记,这样在检索的时候,会匹配相同权重的信息.跟上面的tsvector相同,tsquery也有一个to_tsquery函数.</p>
+  
+  <p>3.<strong>@@：</strong></p>
+  
+  <p>在postgresql中全文检索匹配作使用@@ <a href="http://www.54chen.com/c/441">作符</a>,如果一个<br>
+  tsvector(document) 匹配到 tsquery(query)则返回true.</p>
+  
+  <p>看一个简单的例子：</p>
+  
+  <p>SELECT 'a fat cat sat on a mat and ate a fat rat'::tsvector @@ 'cat &amp; rat'::tsquery;<br>
+  ?column?<br>
+  ----------<br>
+  t
+  我们在处理索引的时候还是要使用他们的函数如下：<br>
+  SELECT to_tsvector('fat cats ate fat rats') @@ to_tsquery('fat &amp; rat');<br>
+  ?column?<br>
+  ----------<br>
+  t
+  并且作符 @@ 可以使用text作为tsvector和tsquery.如下作符可以使使用的方法</p>
+  
+  <p>tsvector @@ tsquery<br>
+  tsquery  @@ tsvector<br>
+  text @@ tsquery<br>
+  text @@ text<br>
+  上面的前两种我们已经使用过了,但是后两种,<br>
+  text @@ tsquery 等同于 to_tsvector(x) @@ y.<br>
+  text @@ text 等同于 to_tsvector(x) @@ plainto_tsquery(y).（~）plainto_tsquery在后面讲。。。</p>
+  
+  <p><strong>4.gin:</strong></p>
+  
+  <p>gin是一种索引的名称，全文索引用的。</p>
+  
+  <p>我们可以通过创建gin索引来加速检索速度.例如</p>
+  
+  <p>CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector('english', body));</p>
+  
+  <p>创建索引可以有多种方式.索引的创建甚至可以连接两个列:<br>
+  CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector('english', title || body));</p>
+  
+  <p><strong>二、提高篇</strong></p>
+  
+  <p>基础知识学完了，应该上阵了，为了实现全文检索，我们需要把一个文档创建一个tsvector 格式，并且通过tsquery实现用户的查询，在查询中我们返回一个按照重要性排序的查询结果。</p>
+  
+  <p>先看一个to_tsquery的sql:</p>
+  
+  <p>SELECT to_tsquery('english', 'Fat | Rats:AB');<br>
+  to_tsquery<br>
+  ------------------<br>
+  'fat' | 'rat':AB</p>
+  
+  <p>可以看出，to_tsquery函数在处理查询<a href="http://www.54chen.com/c/358">文本</a>的时候，查询文本的单个词之间要使用逻辑作符（&amp; (AND), | (OR) and ! (NOT)）连接（或者使用括号）。</p>
+  
+  <p>如果执行下面这条sql就会出错：</p>
+  
+  <p>SELECT to_tsquery('english', 'Fat  Rats');</p>
+  
+  <p>plainto_tsquery函数却可以提供一个标准的tsquery，如上面的<a href="http://www.54chen.com/c/216">例子</a>，plainto_tsquery会自动加上逻辑&amp;作符。<br>
+  SELECT plainto_tsquery('english', 'Fat  Rats');</p>
+  
+  <p>plainto_tsquery<br>
+  -----------------<br>
+  'fat' &amp; 'rat'<br>
+  但是plainto_tsquery函数不能够识别逻辑作符和权重标记。<br>
+  SELECT plainto_tsquery('english', 'The Fat &amp; Rats:C');<br>
+  plainto_tsquery<br>
+  ---------------------<br>
+  'fat' &amp; 'rat' &amp; 'c'</p>
+  
+  <p><strong>三、终结篇</strong></p>
+  
+  <p>看完上面的一堆后，千言万语汇成一句话，本文主要讲的是一条sql，在加了第一部分里所讲述的扩展后，使用下面的sql，从一个字段中搜一句话，还要排序出来：</p>
+  
+  <p>select * from tabname where to_tsvector('chinesecfg',textname) @@ plainto_tsquery('搜点啥') order by ts_rank(to_tsvector('chinesecfg',textname),plainto_tsquery('搜点啥')) limit 10;</p>
+  
+  <p>之前的create table create index就不写了。授人以渔才是关键。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/07/15/%E4%B8%80%E4%B8%AA%E6%8A%8Atortoisesvn%E8%BD%AC%E6%88%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84svn%E7%9A%84bat%E8%84%9A%E6%9C%AC/">一个把TortoiseSVN转成命令行的svn的bat脚本</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-15T00:00:00+08:00" pubdate data-updated="true">2009-07-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>TortoiseSVN是windows里常用的svn客户端了，有些IDE（比如说Zend Studio）要设置svn.exe的地址才能绑上svn来用，一般情况下，他附带的都是很古老的版本。</p>
+  
+  <p>把下面的脚本保存为svn.bat，再在<a href="http://www.54chen.com/c/406">ide</a>里设置svn客户端为这个bat文件，很好用
+  </p>
+<blockquote>@ECHO OFF<br>
+  rem This is a svn for IDE<br>
+  rem from http://www.54chen.com<br>
+  start "TortoiseSVN" "C:\Program Files\TortoiseSVN\bin\TortoiseProc.exe" /notempfile /command:%1 /path:%2</blockquote>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/07/01/postgresql-bamboo-lucene-fulltextindex/">[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第一部分</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-01T00:00:00+08:00" pubdate data-updated="true">2009-07-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>[文章作者：陈臻 本文版本：v1.2 最后修改：2009.7.7 转载请注明原文链接：<a href="http://www.54chen.com/_linux_/postgresql-bamboo-lucene-fulltextindex.html">http://www.54chen.com/_linux_/postgresql-bamboo-lucene-fulltextindex.html</a> ]</p>
+  
+  <p>修正：一些“--”（连续的两个杠）被转成了全角的“-”（一个杠）了，运行不过的试试-变成--</p>
+  
+  <p><strong>所有用到到包有：</strong></p>
+  
+  <p><a href="http://www.54chen.com/c/601">cmake</a>-2.6.4.tar.gz (编nlpbamboo用)</p>
+  
+  <p>CRF++-0.53.tar.gz(同上)</p>
+  
+  <p>nlpbamboo-1.1.1.tar.bz2（分词用）</p>
+  
+  <p>postgreSQL-8.3.3.tar.gz（索引用）</p>
+  
+  <p><strong>安装</strong><a href="http://www.54chen.com/c/101">pgsql</a></p>
+  
+  <p>tar -zxvf postgreSQL-8.3.3.tar.gz</p>
+  
+  <p>cd postgre-8.3.3
+  </p>
+<pre>./configure --prefix=/opt/pgsql</pre>
+  make<br>
+  make install
+  
+  <p>useradd postgre</p>
+  
+  <p>chown -R postgre.postgre /opt/pgsql<br>
+  su - postgre<br>
+  vi ~postgre/.bash_profile<br>
+  添加<br>
+  export PATH<br>
+  PGLIB=/opt/pgsql/lib<br>
+  PGDATA=/data/PGSearch<br>
+  PATH=$PATH:/opt/pgsql/bin<br>
+  MANPATH=$MANPATH:/opt/pgsql/man<br>
+  export PGLIB PGDATA PATH MANPATH</p>
+  
+  <p># mkdir -p /data/PGSearch</p>
+  
+  <p># chown -R postgre.postgre /data/PGSearch</p>
+  
+  <p># chown -R postgre.postgre /opt/pgsql
+  </p>
+<pre>#sudo -u postgre /opt/pgsql/bin/initdb --locale=zh_CN.UTF-8 --encoding=utf8 -D /data/PGSearch</pre>
+  <pre>#sudo -u postgre /opt/pgsql/bin/postmaster -i -D /data/PGSearch &amp;  //允许网络访问</pre>
+  #sudo -u postgre /opt/pgsql/bin/createdb kxgroup<br>
+  # vim /data/PGSearch/pg_hba.conf  如下增加可访问的<a href="http://www.54chen.com/c/264">机器</a>：
+  
+  <p>host    all         all         10.2.19.178 255.255.255.0               trust</p>
+  
+  <p>#su - postgre</p>
+  
+  <p>$pg_ctl stop</p>
+  
+  <p>$postmaster -i -D /data/PGSearch &amp;
+  <strong>安装中文分词（Cmake CRF++ bambo</strong><strong>o</strong><strong>)</strong>
+  Cmake是为了编译bamboo,CRF++是bamboo依赖的。</p>
+  
+  <p>tar -zxvf cmake-2.6.4.tar.gz</p>
+  
+  <p>cd cmake-2.6.4<br>
+  ./configure<br>
+  gmake<br>
+  make install</p>
+  
+  <p>tar -zxvf CRF++-0.53.tar.gz<br>
+  cd CRF++-0.53<br>
+  ./configure<br>
+  make<br>
+  make install</p>
+  
+  <p>tar -jxvf nlpbamboo-1.1.1.tar.bz2<br>
+  cd nlpbamboo-1.1.1<br>
+  mkdir build<br>
+  cd build/<br>
+  cmake .. -DCMAKE_BUILD_TYPE=release<br>
+  make all<br>
+  make install</p>
+  
+  <p>cp index.tar.bz2 /opt/bamboo/<br>
+  cd /opt/bamboo/<br>
+  tar -jxvf index.tar.bz2</p>
+  
+  <p>#/opt/bamboo/bin/bamboo</p>
+  
+  <p>如果出现：</p>
+  
+  <p>ERROR: libcrfpp.so.0: cannot open shared object file: No such file or directory</p>
+  
+  <p>就执行：</p>
+  
+  <p>ln -s /usr/local/lib/libcrfpp.so.* /usr/lib/<br>
+  ldconfig</p>
+  
+  <p><strong>增加上中文分词扩展到pgsql</strong></p>
+  
+  <p>#vim /root/.bash_profile 也增加：</p>
+  
+  <p>PGLIB=/opt/pgsql/lib<br>
+  PGDATA=/data/PGSearch<br>
+  PATH=$PATH:/opt/pgsql/bin<br>
+  MANPATH=$MANPATH:/opt/pgsql/man<br>
+  export PGLIB PGDATA PATH MANPATH</p>
+  
+  <p>#source ~/.bash_profile</p>
+  
+  <p>cd /opt/bamboo/exts/postgres/chinese_parser/<br>
+  make<br>
+  make install</p>
+  
+  <p>su - postgre<br>
+  cd /opt/pgsql/share/contrib/<br>
+  touch /opt/pgsql/share/tsearch_data/chinese_utf8.stop<br>
+  psql kxgroup<br>
+  \i chinese_parser.sql 导入</p>
+  
+  <p>再执行下面的sql，已经可以将一段话分词了：</p>
+  
+  <p></p>
+<pre>SELECT to_tsvector('chinesecfg', '结果在命令行下执行bamboo才知道');</pre>
+  
+  <p>先到这里，下一部分讲述对TEXT字段进行索引和查询，完整构造一整个<a href="http://www.54chen.com/c/591">搜索</a>引擎。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/44">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <em>45</em>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/46">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

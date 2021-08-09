@@ -1,0 +1,247 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Thrift版本升级调查记录 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。 代码位置：https://github.com/54chen/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2014/05/28/thrift-upgrade">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Thrift版本升级调查记录</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-05-28T16:59:27+08:00" pubdate data-updated="true">2014-05-28 16:59:27 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1gzmqXXdpXXcwYVo0_034121.jpg"></p>
+  
+  <p>自从0.5.0之后，很长时间thrift的版本都没有动，后来似乎是换了一波人，把java代码部分接口层变动太多，以致于，在0.5.0和其他版本共同存在的情况下，问题较多，54chen特作调查，调查目标0.5.0 vs 0.9.1。</p>
+  
+  <p>代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
+  
+  <h1>第一轮：编译阶段</h1>
+  
+  <!--more-->
+  
+  
+  <h2>1.jar包为0.9.1的libthrift，cli为0.5.0的thrift。</h2>
+  
+  <p>gen-java生成，编译失败。</p>
+  
+  <h2>2.修正为0.9.1 libthrift和thrift cli。</h2>
+  
+  <p>gen-java生成，编译成功。</p>
+  
+  <h2>3.修正为0.5.0 libthrift和thrift cli。</h2>
+  
+  <p>gen-java生成，编译成功。</p>
+  
+  <h1>第二轮：交叉调用</h1>
+  
+  <ul>
+  <li>client 0.9.1 -&gt; server 0.5.0 一切正常</li>
+  <li>client 0.5.0 -&gt; server 0.9.1 一切正常</li>
+  </ul>
+  
+  
+  <h1>第三轮：server包不对</h1>
+  
+  <ul>
+  <li>server0.9.1 替换jar为0.5.0 libthrift : server启动失败 Caused by: java.lang.ClassNotFoundException: org.apache.thrift.TBaseProcessor</li>
+  <li>server0.5.0 替换jar为0.9.1 libthrift : server启动失败 java.lang.NoSuchMethodError: org.apache.thrift.server.TThreadPoolServer</li>
+  </ul>
+  
+  
+  <h1>第四轮：client包不对</h1>
+  
+  <ul>
+  <li>client0.9.1 jar为0.5.0 : client启动失败 java.lang.IncompatibleClassChangeError: class com.xiaomi.miliao.thrift.Hello$Client has interface org.apache.thrift.TServiceClient as super class</li>
+  <li>client0.5.0 jar为0.9.1 : client启动失败 java.lang.IncompatibleClassChangeError: Implementing class</li>
+  </ul>
+  
+  
+  <h1>结论</h1>
+  
+  <ul>
+  <li>thrift协议层不会有因为thrift升级而造成的版本的问题。</li>
+  <li>thrift多个版本的client无法同时存在。</li>
+  <li>thrift多个版本的server也无法同时存在。</li>
+  </ul>
+  
+  
+  <p>测试代码位置：<a href="https://github.com/54chen/thrift_test">https://github.com/54chen/thrift_test</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2014-05-28T16:59:27+08:00" pubdate data-updated="true">2014-05-28 16:59:27 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/thrift/">thrift</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2014/05/25/security/" title="Previous Post: 安全无小事－－技术团队防守一二三">« 安全无小事－－技术团队防守一二三</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2014/06/30/bosh-vs-comet-vs-long-polling-vs-polling/" title="Next Post: bosh vs comet vs long polling vs polling">bosh vs comet vs long polling vs polling »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

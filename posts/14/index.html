@@ -1,0 +1,857 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2012-04-01 2012-04-01 00:00:00 +0800 Introducing Spring for Apache Hadoop | SpringSource Team Blog http://t.co/IEiB3DBS #
+  https …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/14">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/03/30/rose-manual-1/">Rose手册第一章：入门指引</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-03-30T00:00:00+08:00" pubdate data-updated="true">2012-03-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p></p>
+<p style="font-size:66px">ROSE</p>
+  <strong>1.1 简介：</strong>
+      人人网、糯米网释出的、开源的高效Java web开发框架。在小米米聊服务端再次被验证和使用。一个从零开始的创业公司，在大家技术背景不一的情况下，rose很简单快速地传达到了大家中间。本手册致力于让php开发人员也能快速使用上java开发高性能服务。
+  <strong>1）rose是什么？</strong>
+  
+  <p></p>
+<blockquote>    基于IoC容器 (使用Spring 2.5.6).<br>
+      收集最佳实践，形成规范和惯例，引导按规范惯例，简便开发.<br>
+      收集通用功能，形成一些可使用的组件，提高生产效率.<br>
+      特性的插拔，使用基于组合而非继承的设计.<br>
+      提供可扩展的点，保持框架的可扩展性.<br>
+      注重使用简易性的同时，注重内部代码设计和实现.
+  </blockquote>
+  
+  <p>如果你是一个创业公司在选择php还是java，同时如果你的团队有一个人写过一年java其他人都没写过。如果你想选择一个更加大型的系统框架，请使用rose，它收集了来自人人网、糯米网、小米科技的众多工程师的经验，你可以免费拥有这些。</p>
+  
+  <p><strong>2）rose能做什么？</strong>
+  <strong>初级rose用户：</strong>
+  rose可以用来完成一个网站。
+  <strong>中级rose用户：</strong>
+  rose可以用来完成一个大型网站，它提供的jade功能使得你的项目可以快速开发，自然切入连接池；它提供的portal功能，可以将一个网页分多个线程发起向DB的请求，节省用户的时间；它提供的pipe功能类似的bigpipe，让前端加速，与此同时还有portal多线程的优势。
+  <strong>高级rose用户：</strong>
+  rose可以加入spring任何特性，比如定时执行（去TM的crontab）；比如拦截器做统一权限控制。可以配置主库从库，分表规则。配置thrift、zookeeper可以得到牛B的高可用性高性能服务集群。</p>
+  
+  <p><strong>1.2 简明教程：</strong>
+  下面开始来进入rose框架下的开发。只需要有一个感性的认识即可。下一章里会专门详细的手把手教你搭建hello world项目。
+  <strong>1）需要些什么？</strong>
+  提前学习什么是maven：简单地说，maven是个build工具，用一个pom.xml来定义项目的依赖。通过一个命令mvn，可以地build compile（知道make吧，类似，或者类似ant）。<br>
+  也许还需要一个nexus，用来搭建自己的maven仓库（这些都是门槛啊，知道为什么java用的人在全球多，而在php的人似乎更多，因为我们的基础设施太落后了）。nexus的作用是配合maven工作。（54chen正在向sonatype申请将rose项目push到sonatype的官方库中，成功后这将省略掉这一步）</p>
+  
+  <p>然后需要在你的项目的pom文件中添加：<br>
+  	</p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-jade</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.1-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>net.paoding</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-scanning</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0-SNAPSHOT</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  这是三个最基础的框架包。
+  
+  <p><strong>2）一个controller长什么样？</strong>
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@Path</span><span>(</span><span class="string">"/"</span><span>)  </span></span></li>
+<li class=""><span><span class="keyword">public</span><span> </span><span class="keyword">class</span><span> TestController {  </span></span></li>
+<li class="alt"><span>    <span class="annotation">@Get</span><span>(</span><span class="string">"hello"</span><span>)  </span></span></li>
+<li class=""><span>    <span class="keyword">public</span><span> String test(){  </span></span></li>
+<li class="alt"><span>        <span class="keyword">return</span><span> </span><span class="string">"@a"</span><span>;  </span></span></li>
+<li class=""><span>    }  </span></li>
+<li class="alt"><span>}  </span></li>
+</ol>
+</div>
+  
+  <p>http://localhost/hello</p>
+  
+  <p>将会返回:a。就是这么简单。</p>
+  
+  <p><strong>下一节预告：rose手册第二章：配置与使用</strong></p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/03/13/senseidb-notes/">Senseidb使用手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-03-13T00:00:00+08:00" pubdate data-updated="true">2012-03-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://www.cgichina.com/uploads/allimg/c100706/12N3911E10-233O9.jpg" alt="linkedin, senseidb">
+  <strong>下载</strong>
+  https://github.com/downloads/linkedin/sensei/sensei-1.0.0-release.tar.gz<br>
+  这个版本是2012年1月份发布的，如果您看到此文时时间太久，请到他们的官方网站去寻找：http://senseidb.com</p>
+  
+  <p><strong>下载kafka</strong>
+  kafka：由linkedin开源的高吞吐量的消息系统。<br>
+  http://people.apache.org/~nehanarkhede/kafka-0.7.0-incubating/kafka-0.7.0-incubating-src.tar.gz</p>
+  
+  <p><strong>下载中文分词包IKAnalyzer</strong>
+  http://code..com/p/ik-analyzer/downloads/list</p>
+  
+  <p><strong>编译sensei</strong>
+  tar zxvf sensei-1.0.0-release.tar.gz<br>
+  cd sensei-trunk<br>
+  ./bin/build.sh 或者 mvn package 要是没有maven客户端，需要自行安装（ubuntu下直接apt-get install maven）</p>
+  
+  <p><strong>编译kafka</strong>
+  tar zxvf kafka-0.7.0-incubating-src.tar.gz <br>
+  cd kafka-0.7.0-incubating-src/<br>
+  ./sbt<br>
+  update<br>
+  pacakge</p>
+  
+  <p><strong>编译IKA</strong>
+  新建一个jar包，里面只有一个类，内容如下：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="keyword">public</span><span> </span><span class="keyword">class</span><span> IKAnalyzerFactory </span><span class="keyword">implements</span><span> SenseiPluginFactory&lt;IKAnalyzer&gt; {    </span></span></li>
+<li class=""><span>    <span class="annotation">@Override</span><span>    </span></span></li>
+<li class="alt"><span>    <span class="keyword">public</span><span> IKAnalyzer getBean(Map&lt;String, String&gt; initProperties, String fullPrefix, SenseiPluginRegistry pluginRegistry) {    </span></span></li>
+<li class=""><span>        <span class="keyword">return</span><span> </span><span class="keyword">new</span><span> IKAnalyzer();    </span></span></li>
+<li class="alt"><span>    }    </span></li>
+<li class=""><span>}    </span></li>
+</ol>
+</div>
+  <strong>
+  配置sensei的sensei.properties</strong>
+  重要的几点：<br>
+  1）zookeeper的url:
+  <em>sensei.cluster.url=zookeeper.n.miliao.com:2181</em>
+  2）IKA的class设置:
+  <em>sensei.index.analyzer.class = com.chen.IKA.IKAnalyzerFactory</em>
+  3）kafka所使用的声明:
+  <em>sensei.gateway.class=com.senseidb.gateway.kafka.KafkaDataProviderBuilder<br>
+  sensei.gateway.kafka.zookeeperUrl=zookeeper.n.miliao.com</em>
+  #下面的topic很关键，消息系统中用topic区别不同的消息
+  <em>sensei.gateway.kafka.topic=<font color="orange">hotTopic</font></em>
+  #ProducerData生成时，也应该叫hotTopic
+  
+  <p><strong>启动sensei</strong>
+  略去了设置schema，可参考<a href="http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html">http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html</a>.</p>
+  
+  <p></p>
+<blockquote>cd sensei-trunk<br>
+  bin/start-sensei-node.sh example/xxx/conf</blockquote>
+  
+  <p></p>
+<blockquote>(所有的使用的jar，比如说kafka\IKA及其依赖的包，都扔到conf/ext下)</blockquote>
+  
+  <p><strong>配置kafka的server.properties</strong>
+  关键的一点：<br>
+  1）设置kafka使用的zookeeper地址：</p>
+  
+  <p></p>
+<blockquote>zk.connect=zookeeper.n.miliao.com:2181</blockquote>
+  
+  <p><strong>启动kafka</strong></p>
+  
+  <p></p>
+<blockquote>cd kafka-0.7.0-incubating-src<br>
+  nohup bin/kafka-server-start.sh config/server.properties &amp;</blockquote>
+  
+  <p><strong>
+  [如果你的schema定义无误，那么到这里你就可以通知kafka有消息进入，sensei就会自动开始消费这些消息进行索引等过程]</strong></p>
+  
+  <p>在具体业务中传入数据参考前文：<a href="http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html">http://www.54chen.com/java-ee/scalable-reltime-search-senseidb.html</a></p>
+  
+  <p><strong>
+  发起搜索</strong>
+   </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="keyword">public</span><span> </span><span class="keyword">static</span><span> JSONArray doSearch(String key, </span><span class="keyword">int</span><span> limit, </span><span class="keyword">int</span><span> offset, String senseiServer) </span><span class="keyword">throws</span><span> JSONException {  </span></span></li>
+<li class=""><span>        SenseiClientRequest senseiRequest = SenseiClientRequest.builder().query(Queries.stringQuery(key)).paging(limit, offset)  </span></li>
+<li class="alt"><span>                .fetchStored(<span class="keyword">true</span><span>).build();   </span></span></li>
+<li class=""><span>        SenseiResult senseiResult = <span class="keyword">new</span><span> SenseiServiceProxy(senseiServer, </span><span class="number">8080</span><span>).sendSearchRequest(senseiRequest);  </span></span></li>
+<li class="alt"><span>        List&lt;SenseiHit&gt; list = senseiResult.getHits();  </span></li>
+<li class=""><span>        JSONArray l = <span class="keyword">new</span><span> JSONArray();  </span></span></li>
+<li class="alt"><span>        <span class="keyword">for</span><span> (</span><span class="keyword">int</span><span> i = </span><span class="number">0</span><span>; i &lt; list.size(); i++) {  </span></span></li>
+<li class=""><span>            SenseiHit hit = list.get(i);  </span></li>
+<li class="alt"><span>            l.put(<span class="keyword">new</span><span> JSONObject(hit.getSrcdata()));  </span></span></li>
+<li class=""><span>        }  </span></li>
+<li class="alt"><span>        <span class="keyword">return</span><span> l;  </span></span></li>
+<li class=""><span>    }  </span></li>
+</ol>
+</div>
+  
+  <p>____EOF____<br>
+  2012.3.13 version 1</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/02/27/scalable-reltime-search-senseidb/">分布式实时搜索方案介绍-senseidb</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-27T00:00:00+08:00" pubdate data-updated="true">2012-02-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://www.cgichina.com/uploads/allimg/c100706/12N3911E10-233O9.jpg" alt="linkedin senseidb">
+  <strong>名词解释</strong>
+  zoie：由linkedin开源的建立在lucene之上提供实时索引的系统。它利用两 个内存索引一个硬盘索引来实现实时搜索。<br>
+  bobo-browse：由linkedin开源的基于lucene的分类浏览搜索系统。<br>
+  zookeeper：一个分布式的，源码的分布式应用程序协调服务，常用来做配置服务。<br>
+  senseidb：开源，分布式，实时，半结构化的数据库（官方网站上如是说）。实际上是一个将zoie、bobo-browse、zookeeper整合起来，提供各种方便的使用办法的一个项目。项目目标是达到简单易用的分布式实时搜索系统。<br>
+  kafka：由linkedin开源的高吞吐量的消息系统。<br>
+  norbert：norbert是一个提供分布式集群服务的开发框架，具备集群管理功能，对开发简单的通信架构，易扩展能承受高吞吐量的框架。scala实现，java无缝使用。其原理是：netty+zookeeper+pb。<br>
+  IKAnalyzer：中文分词较好用的一个。<br>
+  lucene：这个不用说了。</p>
+  
+  <p><strong>使用senseidb</strong>
+  1.解决中文分词问题<br>
+  senseidb支持在配置上进行自定义analyzer。<br>
+  要做的事情就是，建立一个jar包，里面只要一个类即可，依赖IKA的包。代码如下：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol start="1" class="dp-j">
+<li class="alt"><span><span class="keyword">public</span><span> </span><span class="keyword">class</span><span> IKAnalyzerFactory </span><span class="keyword">implements</span><span> SenseiPluginFactory&lt;IKAnalyzer&gt; {  </span></span></li>
+<li class=""><span>    <span class="annotation">@Override</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="keyword">public</span><span> IKAnalyzer getBean(Map&lt;String, String&gt; initProperties, String fullPrefix, SenseiPluginRegistry pluginRegistry) {  </span></span></li>
+<li class=""><span>        <span class="keyword">return</span><span> </span><span class="keyword">new</span><span> IKAnalyzer();  </span></span></li>
+<li class="alt"><span>    }  </span></li>
+<li class=""><span>}  </span></li>
+</ol>
+</div>
+  
+  <p>将此jar包放于sensei/conf/ext目录下，修改定义文件sensei.properties:<br>
+  sensei.index.analyzer.class = 上述jar包的全packagename classname</p>
+  
+  <p>2.使用kafka数据源<br>
+  在senseidb中有个叫gateway的概念，定义了数据源（实时的写入删除等）。<br>
+  修改定义文件sensei.properties：<br>
+  sensei.gateway.class=com.senseidb.gateway.kafka.KafkaDataProviderBuilder<br>
+  这个class存在于sensei-trunk/sensei-gateway，打包扔进conf/ext即可。</p>
+  
+  <p>在具体业务中传入数据：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol start="1" class="dp-j">
+<li class="alt"><span><span>Properties props = </span><span class="keyword">new</span><span> Properties();  </span></span></li>
+<li class=""><span>        props.put(<span class="string">"zk.connect"</span><span>, </span><span class="string">"your zk server:2181"</span><span>);  </span></span></li>
+<li class="alt"><span>        props.put(<span class="string">"serializer.class"</span><span>, </span><span class="string">"kafka.serializer.StringEncoder"</span><span>);  </span></span></li>
+<li class=""><span>        ProducerConfig config = <span class="keyword">new</span><span> ProducerConfig(props);  </span></span></li>
+<li class="alt"><span>        Producer&lt;String, String&gt; producer = <span class="keyword">new</span><span> Producer&lt;String, String&gt;(config);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>        <span class="keyword">int</span><span> i = (</span><span class="keyword">int</span><span>) (Math.random() * </span><span class="number">10000</span><span>);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>        JSONObject jo = <span class="keyword">new</span><span> JSONObject();  </span></span></li>
+<li class=""><span>        jo.put(<span class="string">"thread_id"</span><span>, i);  </span></span></li>
+<li class="alt"><span>        jo.put(<span class="string">"hot_id"</span><span>, i + </span><span class="number">300</span><span>);  </span></span></li>
+<li class=""><span>        jo.put(<span class="string">"user_id"</span><span>, i + </span><span class="number">1000</span><span>);  </span></span></li>
+<li class="alt"><span>        jo.put(<span class="string">"type"</span><span>, i);  </span></span></li>
+<li class=""><span>        jo.put(<span class="string">"subject"</span><span>, </span><span class="string">"这是一个标题"</span><span> + index);  </span></span></li>
+<li class="alt"><span>        jo.put(<span class="string">"contents"</span><span>, index);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>        System.out.println(i);  </span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>        String msg = jo.toString();  </span></li>
+<li class=""><span>        <span class="comment">// The message is sent to a randomly selected partition registered in ZK</span><span>  </span></span></li>
+<li class="alt"><span>        ProducerData&lt;String, String&gt; data = <span class="keyword">new</span><span> ProducerData&lt;String, String&gt;(</span><span class="string">"hotTopic"</span><span>, msg);  </span></span></li>
+<li class=""><span>        producer.send(data);  </span></li>
+<li class="alt"><span>  </span></li>
+<li class=""><span>        producer.close();  </span></li>
+</ol>
+</div>
+  
+  <p>3.索引配置<br>
+  conf/schema.xml文件中定义了两种结构，一个是table一个是facets。<br>
+  table的column定义了每个字段。<br>
+  如下的一个定义，配合了2中的写入：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol start="1" class="dp-xml">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">table</span><span> </span><span class="attribute">uid</span><span>=</span><span class="attribute-value">"thread_id"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>      <span class="tag">&lt;</span><span class="tag-name">column</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"hot_id"</span><span> </span><span class="attribute">type</span><span>=</span><span class="attribute-value">"long"</span><span> </span><span class="tag">/&gt;</span><span>  </span></span></li>
+<li class="alt"><span>      <span class="tag">&lt;</span><span class="tag-name">column</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"user_id"</span><span> </span><span class="attribute">type</span><span>=</span><span class="attribute-value">"long"</span><span> </span><span class="tag">/&gt;</span><span>  </span></span></li>
+<li class=""><span>      <span class="tag">&lt;</span><span class="tag-name">column</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"type"</span><span> </span><span class="attribute">type</span><span>=</span><span class="attribute-value">"int"</span><span> </span><span class="tag">/&gt;</span><span>  </span></span></li>
+<li class="alt"><span>      <span class="tag">&lt;</span><span class="tag-name">column</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"subject"</span><span> </span><span class="attribute">type</span><span>=</span><span class="attribute-value">"sring"</span><span> </span><span class="tag">/&gt;</span><span>  </span></span></li>
+<li class=""><span>      <span class="comments">&lt;!-- attributes: indexed,store,termvector are only used when type is text --&gt;</span><span>  </span></span></li>
+<li class="alt"><span>      <span class="tag">&lt;</span><span class="tag-name">column</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"contents"</span><span> </span><span class="attribute">type</span><span>=</span><span class="attribute-value">"text"</span><span> </span><span class="attribute">index</span><span>=</span><span class="attribute-value">"ANALYZED"</span><span> </span><span class="attribute">store</span><span>=</span><span class="attribute-value">"YES"</span><span> </span><span class="attribute">termvector</span><span>=</span><span class="attribute-value">"YES"</span><span> </span><span class="tag">/&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;/</span><span class="tag-name">table</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>可供选择的其他分布式实时搜索方案</strong>
+  Katta：基于Lucene可伸缩分布式实时搜索方案，最早的方案。<br>
+  Solandra：实时分布式搜索引擎，把solr与Cassandra集合在一起的一个方案。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/02/24/linkedin-kafka-usage/">Linkedin高吞吐量分布式消息系统kafka使用手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-02-24T00:00:00+08:00" pubdate data-updated="true">2012-02-24 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>
+  <img src="http://www.cgichina.com/uploads/allimg/c100706/12N3911E10-233O9.jpg" alt="linkedin kafka">
+  kafka是一种高吞吐量的分布式发布订阅消息系统，她有如下特性：
+  </p>
+<blockquote>通过O(1)的磁盘数据结构提供消息的持久化，这种结构对于即使数以TB的消息存储也能够保持长时间的稳定性能。<br>
+  高吞吐量：即使是非常普通的硬件kafka也可以支持每秒数十万的消息。<br>
+  支持通过kafka服务器和消费机集群来分区消息。<br>
+  支持Hadoop并行数据加载。
+  </blockquote>
+  设计侧重高吞吐量，用于好友动态，相关性统计，排行统计，访问频率控制，批处理等系统。大部分的消息中间件能够处理实时性要求高的消息/数据，但是对于队列中大量未处理的消息/数据在持久性方面比较弱。
+  
+  <p>kakfa的consumer使用拉的方式工作。</p>
+  
+  <p><strong>安装kafka</strong>
+  下载：http://people.apache.org/~nehanarkhede/kafka-0.7.0-incubating/kafka-0.7.0-incubating-src.tar.gz</p>
+  
+  <p>&gt; tar xzf kafka-<version>.tgz<br>
+  &gt; cd kafka-<version>
+  &gt; ./sbt update<br>
+  &gt; ./sbt package<br>
+  启动zkserver:<br>
+  bin/zookeeper-server-start.sh config/zookeeper.properties<br>
+  启动server:<br>
+  bin/kafka-server-start.sh config/server.properties<br>
+  就是这么简单。</version></version></p>
+  
+  <p><strong>使用kafka</strong>
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="keyword">import</span><span> java.util.Arrays;  </span></span></li>
+<li class=""><span><span class="keyword">import</span><span> java.util.List;  </span></span></li>
+<li class="alt"><span><span class="keyword">import</span><span> java.util.Properties;  </span></span></li>
+<li class=""><span><span class="keyword">import</span><span> kafka.javaapi.producer.SyncProducer;  </span></span></li>
+<li class="alt"><span><span class="keyword">import</span><span> kafka.javaapi.message.ByteBufferMessageSet;  </span></span></li>
+<li class=""><span><span class="keyword">import</span><span> kafka.message.Message;  </span></span></li>
+<li class="alt"><span><span class="keyword">import</span><span> kafka.producer.SyncProducerConfig;  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>...  </span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>Properties props = <span class="keyword">new</span><span> Properties();  </span></span></li>
+<li class=""><span>props.put(“zk.connect”, “<span class="number">127.0</span><span>.</span><span class="number">0.1</span><span>:</span><span class="number">2181</span><span>”);  </span></span></li>
+<li class="alt"><span>props.put(<span class="string">"serializer.class"</span><span>, </span><span class="string">"kafka.serializer.StringEncoder"</span><span>);  </span></span></li>
+<li class=""><span>ProducerConfig config = <span class="keyword">new</span><span> ProducerConfig(props);  </span></span></li>
+<li class="alt"><span>Producer&lt;String, String&gt; producer = <span class="keyword">new</span><span> Producer&lt;String, String&gt;(config);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>Send a single message  </span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span><span class="comment">// The message is sent to a randomly selected partition registered in ZK</span><span>  </span></span></li>
+<li class=""><span>ProducerData&lt;String, String&gt; data = <span class="keyword">new</span><span> ProducerData&lt;String, String&gt;(</span><span class="string">"test-topic"</span><span>, </span><span class="string">"test-message"</span><span>);  </span></span></li>
+<li class="alt"><span>producer.send(data);      </span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>producer.close();  </span></li>
+</ol>
+</div>
+  
+  <p>这样就是一个标准的producer。</p>
+  
+  <p><strong>consumer的代码</strong>
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="comment">// specify some consumer properties</span><span>  </span></span></li>
+<li class=""><span>Properties props = <span class="keyword">new</span><span> Properties();  </span></span></li>
+<li class="alt"><span>props.put(<span class="string">"zk.connect"</span><span>, </span><span class="string">"localhost:2181"</span><span>);  </span></span></li>
+<li class=""><span>props.put(<span class="string">"zk.connectiontimeout.ms"</span><span>, </span><span class="string">"1000000"</span><span>);  </span></span></li>
+<li class="alt"><span>props.put(<span class="string">"groupid"</span><span>, </span><span class="string">"test_group"</span><span>);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span><span class="comment">// Create the connection to the cluster</span><span>  </span></span></li>
+<li class=""><span>ConsumerConfig consumerConfig = <span class="keyword">new</span><span> ConsumerConfig(props);  </span></span></li>
+<li class="alt"><span>ConsumerConnector consumerConnector = Consumer.createJavaConsumerConnector(consumerConfig);  </span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span><span class="comment">// create 4 partitions of the stream for topic “test”, to allow 4 threads to consume</span><span>  </span></span></li>
+<li class=""><span>Map&lt;String, List&lt;KafkaMessageStream&lt;Message&gt;&gt;&gt; topicMessageStreams =   </span></li>
+<li class="alt"><span>    consumerConnector.createMessageStreams(ImmutableMap.of(<span class="string">"test"</span><span>, </span><span class="number">4</span><span>));  </span></span></li>
+<li class=""><span>List&lt;KafkaMessageStream&lt;Message&gt;&gt; streams = topicMessageStreams.get(<span class="string">"test"</span><span>);  </span></span></li>
+<li class="alt"><span>  </span></li>
+<li class=""><span><span class="comment">// create list of 4 threads to consume from each of the partitions </span><span>  </span></span></li>
+<li class="alt"><span>ExecutorService executor = Executors.newFixedThreadPool(<span class="number">4</span><span>);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span><span class="comment">// consume the messages in the threads</span><span>  </span></span></li>
+<li class=""><span><span class="keyword">for</span><span>(</span><span class="keyword">final</span><span> KafkaMessageStream&lt;Message&gt; stream: streams) {  </span></span></li>
+<li class="alt"><span>  executor.submit(<span class="keyword">new</span><span> Runnable() {  </span></span></li>
+<li class=""><span>    <span class="keyword">public</span><span> </span><span class="keyword">void</span><span> run() {  </span></span></li>
+<li class="alt"><span>      <span class="keyword">for</span><span>(Message message: stream) {  </span></span></li>
+<li class=""><span>        <span class="comment">// process message</span><span>  </span></span></li>
+<li class="alt"><span>      }   </span></li>
+<li class=""><span>    }  </span></li>
+<li class="alt"><span>  });  </span></li>
+<li class=""><span>}  </span></li>
+</ol>
+</div>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/13">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <em>14</em>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/15">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

@@ -1,0 +1,211 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Amoeba+rose：开源项目搭建大型网站可扩展构架实记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="java是一把双刃剑，可以很重地伤人，亦可很重地自伤。曾在一处见到，淘宝在长期使用java构建web项目后，得出一个结论：积重难返。
+  实际工作经验得到的结论，积重难返的原因，往往不是java本身的缘故，而是团队成员基础积累参差不齐，许多次的“一不小心”积累成了最终的结果。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/03/04/amoeba-rose-open-source-big-website-arch">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Amoeba+rose：开源项目搭建大型网站可扩展构架实记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-03-04T00:00:00+08:00" pubdate data-updated="true">2011-03-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1KVN2XbRpXXbyndEV_020212.jpg" alt="amoeba rose ">
+  java是一把双刃剑，可以很重地伤人，亦可很重地自伤。曾在一处见到，淘宝在长期使用java构建web项目后，得出一个结论：积重难返。<br>
+  实际工作经验得到的结论，积重难返的原因，往往不是java本身的缘故，而是团队成员基础积累参差不齐，许多次的“一不小心”积累成了最终的结果。到了悔之晚矣的时候自然就积重难返了。如何避免java使用自伤，最关键在于，统一团队成员的code入口，框下可能发生的事情，避开不能发生的事情，言归正传，下面开始介绍两个非常不错的java开源项目，搭配两个项目，可以搞定所有的mysql+java项目的任何方向的扩展和的开发而不担心积重难返。
+  <strong>项目简介</strong>
+  1) rose框架：<br>
+  来自人人网王志亮大侠的大作，其优异的性能撑下了SNS网站复杂多变的业务（人人网大量使用），同时开发非常方便，有大量的文档可供参考。<br>
+  项目地址：
+  <a href="http://code..com/p/paoding-rose/">http://code..com/p/paoding-rose/</a></p>
+  
+  <p>2) Amoeba：<br>
+  Amoeba(变形虫)项目，专注分布式数据库 proxy 开发。对客户端透明。具有负载均衡、高可用性、sql过滤、读写分离、可路由相关的query到目标数据库、可并发请求多台数据库合并结果。使用这个项目可以将DB层透明，简单做到分库分表，甚至无限partition。作者陈思儒大侠。<br>
+  下面有一篇两年前Fenng对作者的采访：
+  <a href="http://www.infoq.com/cn/articles/interview-chensiru-amoeba">http://www.infoq.com/cn/articles/interview-chensiru-amoeba</a>
+  项目地址：
+  <a href="http://amoeba.meidusa.com/">http://amoeba.meidusa.com/</a></p>
+  
+  <p><strong>构架图</strong>
+  <img src="http://img04.taobaocdn.com/imgextra/i4/T1cEt1XoXGXXX9DQkU_015423.jpg" alt="amoeba+rose构架图"></p>
+  
+  <p><strong>相关配置</strong>
+  1) 配置rose中的数据源为amoeba
+  <a href="http://code..com/p/paoding-rose/wiki/Jade_DataSource">http://code..com/p/paoding-rose/wiki/Jade_DataSource</a></p>
+  
+  <p>2) 配置amoeba为mysql(使用amoeba-mysql)
+  <a href="http://amoeba.meidusa.com/amoeba.pdf">http://amoeba.meidusa.com/amoeba.pdf</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-03-04T00:00:00+08:00" pubdate data-updated="true">2011-03-04 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

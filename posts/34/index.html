@@ -1,0 +1,1151 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="从php核心代码看require和include的区别 2010-05-05 00:00:00 +0800 前言
+  五一长假归来，休息长时间很有点不习惯，回到已经有些不适应了。
+  见到鸟哥的一文：深入理解PHP之require/include顺序 http://www.laruence.com/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/34">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/05/05/php-require-include/">从php核心代码看require和include的区别</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-05T00:00:00+08:00" pubdate data-updated="true">2010-05-05 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><strong>前言</strong>
+  五一长假归来，休息长时间很有点不习惯，回到已经有些不适应了。<br>
+  见到鸟哥的一文：深入理解PHP之require/include顺序 <a href="http://www.laruence.com/2010/05/04/1450.html">http://www.laruence.com/2010/05/04/1450.html</a>
+  忍不住继续再深入了一下下，在此记录一下深入的过程，以供以后查阅。</p>
+  
+  <p><strong>普及</strong>
+  在php手册中：
+  </p>
+<blockquote>require() is identical to include()  except upon failure it will also produce a fatal E_ERROR  level error. In other words, it will halt the script whereas include() only emits a warning (E_WARNING) which allows the script to continue.</blockquote>
+  就是说在失败的时候，require是会中止php运行的，而include是可以继续运行的。<br>
+  倒底有什么样的区别呢？我们带着这个疑问来一起进入PHP的核心代码。<br>
+  下面是一个PHP运行过程的图（这个图是出自哪里的？鸟哥画的？）
+  <img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1I1NzXa4xXXcL7xo6_062051.jpg" alt="php ">
+  
+  <p></p>
+<blockquote>补习一下：lex是代码扫描器，扫描代码用的，yacc是Yet Another Compiler Compiler，作用是把任何一种代码的语法转成yacc语法，yacc就是解析器（真TMD绕）。<br>
+  lex在c下的后缀是*.l  yacc是*.y</blockquote>
+  
+  <p><strong>正题</strong>
+  下面看作记录：
+  </p>
+<blockquote>cc@cc-laptop:/opt/workspace$ svn checkout http://svn.php.net/repository/php/php-src/branches/PHP_5_3 php-src-5.3<br>
+  从svn取最新的php源代码。
+  </blockquote>
+  开始深入：
+  <blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.l" -exec grep -Hn "require_once" {} \;<br>
+  ./Zend/zend_language_scanner.l:1093:"require_once" {<br>
+  寻找lex代码扫描器文件中出现require_once的地方，zend_language_scanner.l的1093行。<br>
+  1093  "require_once" {<br>
+  1094         return T_REQUIRE_ONCE;<br>
+  1095 }</blockquote>
+  
+  <p>然后再搜一下T_REQUIRE_ONCE,
+  </p>
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.y" -exec grep -Hn "T_INCLUDE" {} \;<br>
+  ./Zend/zend_language_parser.y:52:%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE<br>
+  ./Zend/zend_language_parser.y:985:	|	T_INCLUDE expr 			{ zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  ./Zend/zend_language_parser.y:986:	|	T_INCLUDE_ONCE expr 	{ zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }</blockquote>
+  
+  <p>在985行附近，有这样一群代码：
+  </p>
+<blockquote>internal_functions_in_yacc:<br>
+  T_ISSET '(' isset_variables ')' { $$ = $3; }<br>
+  |       T_EMPTY '(' variable ')'        { zend_do_isset_or_isempty(ZEND_ISEMPTY, &amp;$$, &amp;$3 TSRMLS_CC); }<br>
+  |       T_INCLUDE expr                  { zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  |       T_INCLUDE_ONCE expr     { zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  |       T_EVAL '(' expr ')'     { zend_do_include_or_eval(ZEND_EVAL, &amp;$$, &amp;$3 TSRMLS_CC); }<br>
+  |       T_REQUIRE expr                  { zend_do_include_or_eval(ZEND_REQUIRE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  |       T_REQUIRE_ONCE expr             { zend_do_include_or_eval(ZEND_REQUIRE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  ;</blockquote>
+  
+  <p>于是乎，我们需要继续深入寻找zend_do_include_or_eval，
+  </p>
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.c" -exec grep -Hn "zend_do_include_or_eval" {} \;<br>
+  ./Zend/zend_compile.c:4317:void zend_do_include_or_eval(int type, znode *result, const znode *op1 TSRMLS_DC) /*  */</blockquote>
+  
+  <p>zend_do_include_or_eval中组装了一个结构体，ZEND_INCLUDE_OR_EVAL。</p>
+  
+  <p>再在zend_vm_def.h中找到ZEND_VM_HANDLER(73, ZEND_INCLUDE_OR_EVAL, CONST|TMP|VAR|CV, ANY)：<br>
+  switch (Z_LVAL(opline-&gt;op2.u.constant)) {代码略}</p>
+  
+  <p>中间关键的一句是：<br>
+  new_op_array = compile_filename(Z_LVAL(opline-&gt;op2.u.constant), inc_filename TSRMLS_CC);</p>
+  
+  <p>在zend_complie.h文件中:<br>
+  ZEND_API zend_op_array *compile_filename(int type, zval *filename TSRMLS_DC);</p>
+  
+  <p>这个函数定义在zend_language_scaner.l文件中，找出最核心的代码：
+  </p>
+<blockquote>if (open_file_for_scanning(file_handle TSRMLS_CC)==FAILURE) {<br>
+  // require与include的差别：错误信息的显示级别（有bailout和无bailout）<br>
+  if (type==ZEND_REQUIRE) {   //require时<br>
+  zend_message_dispatcher(ZMSG_FAILED_REQUIRE_FOPEN, file_handle-&gt;filename TSRMLS_CC);<br>
+  zend_bailout();<br>
+  } else {<br>
+  zend_message_dispatcher(ZMSG_FAILED_INCLUDE_FOPEN, file_handle-&gt;filename TSRMLS_CC);<br>
+  compilation_successful=0;<br>
+  } else {代码略}</blockquote>
+  
+  <p>继续追踪zend_message_dispatcher可以在main/main.c文件中找到php_message_handler_for_zend函数：</p>
+  
+  <p></p>
+<blockquote>//include输出错误信息时的级别为：E_WARNING<br>
+  		case ZMSG_FAILED_INCLUDE_FOPEN:<br>
+  			php_error_docref("function.include" TSRMLS_CC, E_WARNING, "Failed opening '%s' for inclusion (include_path='%s')", php_strip_url_passwd((char *) data), STR_PRINT(PG(include_path)));<br>
+  			break;<br>
+  		//require输出错误信息时的级别为：E_COMPILE_ERROR<br>
+  代码略
+  </blockquote>
+  
+  <p><strong>总结</strong>
+  和开头PHP手册所说完全一致，require和include的区别在于，出现错误时，一个是error一个是warning。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/04/26/qcon-memoirs/">QCon回忆录</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-04-26T00:00:00+08:00" pubdate data-updated="true">2010-04-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>在前天（2010年4月24日），有幸参加了第二届的QCon全球企业开发大会。会上有来自\weibo等国际知名企业的技术高手，和来自国内一线互联网公司的高手，对相应研究的主题进行了深刻的交流。</p>
+  
+  <p>大早爬起床来，困顿中来到大钟寺附近，寻找到目标酒店。</p>
+  
+  <p>找到目标、进入，入口很，不需要有效证件，能找到自己的牌子就能进去了。领了写上自己名字的牌子挂上脖子，感觉质量差了点。</p>
+  
+  <p>凭感觉上楼，无特别标识。找到主会场。</p>
+  
+  <p>未遇到同事，领同声传译耳机，无身份证，不给领。正巧电话淘宝老同事正赴现场，帮领，一枚。</p>
+  
+  <p>会议开始，现场满座。</p>
+  
+  <p>第一场，万众期待的eclipse之父Erich Gamma没有出现，颇有些失望。取而代之的是一场敏捷开发管理的内容。相关的现场笔录在 http://www.54chen.com/architecture/april-24-live-stream-qcon-posts.html</p>
+  
+  <p>第二场，的大侠，讲他们咋用memcached，这哥们具说是设计了个memcache的udp读取的方法，得了个佬的奖。同声传译的影响太大，断断续续的理解了些大概，感觉他们用的二级甚至三级的memcache的方案是很不错的。这哥们自己也同意，方法有些山寨，但好用才是王道。他一定不知道什么是“山寨”。</p>
+  
+  <p>第三场，weibo的大侠上场，兄弟胡子好浓密呀，哪国人仕？胡子浓密的一定是高手。讲了他们在使用时间片的分步数据方案时的问题。</p>
+  
+  <p>然后基本上就到了中午十二点了。。。开饭时间一到，拖了十分钟，结束了早上的会议。</p>
+  
+  <p>同淘宝的老同事一起吃饭，不到四十分钟吃饭的时间。</p>
+  
+  <p>回到主会议现场，下午是国内讲师。这时第一次见到了台上的Fenng，平心而论，要比头像上帅，还是特意处理过的？</p>
+  
+  <p>然后第四场一开始，是阿里巴巴的国际站做镜像的一些经验。东西讲得不深，很大面上的来讲～～听一半，笔记本没有电了，撤到外面去上了个厕所。</p>
+  
+  <p>回来的途中，遇到了Fenng。第一眼他没认出来。看牌子看出来了，看来我的头像也没有本人帅。。。拉拉家长换了名片后，他语重心长的说，科学院一定要坚持办下去。那情景，和某某革命电影情节类似，不过我一时想不出来了，很久没有看革命电影了。激动之下，我解释了下为什么是“五四陈科学院”，是为了纪念一场胜利的革命（1919年5月4日在爆发的人民彻底的反对帝国、封建的运动）和70年零一个月后另一场革命未胜利的惨剧，借以勉励，同志仍需努力的道理。</p>
+  
+  <p>再进入到现场，阿里的大侠已经行文渐尾。</p>
+  
+  <p>第六场是去哪儿网站的吴永强大侠讲他们的一些运维经验，这哥们也是雅虎出来的，雅虎的运维肯定被继承了过去，所以稳定是没得说的。</p>
+  
+  <p>掌声中，进入到第六场。人人网的高级技术总兼，我们的老大sir，飘逸地带着mac大本上场。这里要多讲一讲，sir一向重视技术，对人人网从小到大的发展了如指掌。几个主题下来，从人人网的发展，到我们的nuclear项目介绍，再到王志亮大侠的rose框架，行云流水。</p>
+  
+  <p>再掌声中，大家对nuclear的设计很感兴趣，会后纷纷在外面探讨起来。按压不住，我也去和前辈们过过招。这一过招，认识了不少朋友，其中还有来自盛大的俞前辈，对dynamo原理理解深刻，经验丰富，似乎盛大在考虑开拓S3类似的业务。另外也和weibo上一系列的同志对上了号，交换了名片。</p>
+  
+  <p>一番探讨之后，回到现场，新浪微博的大侠timyang已经讲了大半了，听了个大概，作了些笔录。</p>
+  
+  <p>时间过得很快，一天过去了，最后的时候，找到timyang简单聊了下新浪微博的一些动向。</p>
+  
+  <p>然后，同原同事、现场weibo上一些朋友，一一告别。Fenng和infoQ的老大（神似）忙里忙外，没顾上去打招呼，领了个t-shirt作纪念，离开。</p>
+  
+  <p>酒店里一天没有自然光线，感觉很晕。。。（不排除是因为起太早）</p>
+  
+  <p>国内类似的技术聚会，聚到一起的大侠们越来越多啦。。。感叹一下。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/04/23/april-24-live-stream-qcon-posts/">4月24日QCon现场直播流水帖</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-04-23T00:00:00+08:00" pubdate data-updated="true">2010-04-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>才连接上3G，开始直播</p>
+  
+  <p>Eric Gamma因为冰岛火山灰原因，没能到，更换成了Scurm的</p>
+  
+  <p> </p>
+  
+  <p>1.scrum agile<br>
+  30+years管理经验<br>
+  存在的问题：<br>
+  1.在公司和团队的环境中，存在沟通问题<br>
+  2.组织的管理层没有关注到知识性的工作与体力性工作之间的差异<br>
+  3.高技术的工作人员存在优先选择的问题<br>
+  4.人们觉得我们不了解我们工作的复杂性</p>
+  
+  <p>agile宣言<br>
+  四项价值观：<br>
+  个体和交互重于过程和工具<br>
+  可工作软件重于详尽的文档<br>
+  。。<br>
+  12个原则：</p>
+  
+  <p>要经常性地交互可用的软件，周期从几周到几个月不等到，交互的时间越短越好（经常和客户沟通）<br>
+  最重要的一点：激励项目人员，调动工作经验，钱不是万能的<br>
+  非常有意思的原则<br>
+  面对面的交谈<br>
+  可用的软件是衡量进度的主要指标<br>
+  项目周期需要保持长期稳定，要有节奏，不要过多催促<br>
+  技术的精益求精及对设计的不断完善将提升敏捷性<br>
+  尽最大可能简洁<br>
+  允许团队自己放手去做，相信你的团队成员，他们会犯错误但是可以理解的<br>
+  团队经常地自我反省如何提高技术能力</p>
+  
+  <p>Scrum 不仅仅用在软件上，其他用途也是可以的<br>
+  Scrum的角色职能<br>
+  ScrumMaster的误解：这个角色不是项目经理，是为这个团队提供服务的。5-12个人组织团队<br>
+  产品的backlog：产品功能表<br>
+  任务表:sprint backlog 在实现上述的功能，我们要做些什么，这并不是真正意义上的时间表</p>
+  
+  <p>sprint planning:30天要完成这个工作<br>
+  日常会议<br>
+  sprint review<br>
+  sprint retrospective</p>
+  
+  <p>是一种风险管理的方式，把风险降到最低，特别是大规模开发某个程序的话，可以规避这种风险<br>
+  可以经常性问客户这样行不行<br>
+  它是一个非常科学的方式</p>
+  
+  <p>三个原则能解决很多问题：<br>
+  询问团队人员<br>
+  检查代码、检查工作程序<br>
+  快速提供成绩</p>
+  
+  <p>有许多问题会导致失败：<br>
+  1.文化和不信任<br>
+  2.投资人之间的交流不畅通<br>
+  3.设计人员同时做多个项目<br>
+  4.没有遵循sprint<br>
+  5.外行人加以干涉<br>
+  6.团队成员没有全力投入(我帮不了你，这不是我的事情)<br>
+  7.scrum master成了项目经理<br>
+  8.工作不够迅速</p>
+  
+  <p>被误解的一些：<br>
+  Done:必须是可交互了<br>
+  团队没有投入到改善工作中去<br>
+  他们经常去探索问题而不解决<br>
+  对个人的奖励而不是团队奖励</p>
+  
+  <p>Scrum doesn't work in china<br>
+  这哥们的图很牛B</p>
+  
+  <p>是共产，是可以使用scrum的</p>
+  
+  <p>文化对scrum的影响</p>
+  
+  <p>讲一个指数，power distance index<br>
+  另一个：Cultural agility index<br>
+  个人和集体的文化</p>
+  
+  <p>根据agility index 在是可行的 而且是更有利的执行</p>
+  
+  <p>管理人员的指令</p>
+  
+  <p>专业经理人官僚的作风</p>
+  
+  <p>的小道消息文化</p>
+  
+  <p>绩效的评估</p>
+  
+  <p>避免员工与家庭分开</p>
+  
+  <p>对成员要有耐心</p>
+  
+  <p><strong>下一个是的memcache实战：</strong></p>
+  
+  <p><a href="mailto:memcache@">memcache@</a>
+  企业的周五，穿正装<br>
+  how big is ?<br>
+  4亿用户<br>
+  1000个服务器？？？错了，上千个服务器</p>
+  
+  <p> memcache规模<br>
+  400M gets/s<br>
+  28M sets/s<br>
+  2T<br>
+  收：9.7M/s</p>
+  
+  <p>图很cool<br>
+   terms<br>
+  tier：层级<br>
+  cluster:数据中心<br>
+  ToR:top of rack switch<br>
+  memcache/memcached</p>
+  
+  <p>游戏中的memcache规则<br>
+  get : on miss query data and set（这点我赞同）</p>
+  
+  <p>short profile<br>
+  PHP并行数据查询：php polling IO  / 有一个PHP异步IO的方案？<br>
+  用户的好友信息缓存效果并不是很好<br>
+  把大数据和小数据分类</p>
+  
+  <p>序列化与压缩<br>
+  fb-serialization:快3倍 小30%<br>
+  gzompress serialized string</p>
+  
+  <p>mcproxy<br>
+  scaling servers</p>
+  
+  <p>增加服务器<br>
+  查5000个好友的时候 用UDP解决这个问题 测量时间<br>
+  热门的页面：把key复制 公布热键<br>
+  replicated keys</p>
+  
+  <p>举例说在profile表里的一个字段confirmed int:Mirrored keys</p>
+  
+  <p>mutexes：锁 （这个方案用图演示的，感觉会有可能出现一次出不来信息）</p>
+  
+  <p>公共主页的数据更新方案：多级memcache方案</p>
+  
+  <p>删除的一致性：schema-version</p>
+  
+  <p>delete replay:<br>
+  delete can fail<br>
+  log failed deletes<br>
+  用了iptable</p>
+  
+  <p>McSQL</p>
+  
+  <p>测试：<br>
+  你的动作要快，不要影响系统</p>
+  
+  <p>python and ctypes<br>
+  write tests not test frameworks</p>
+  
+  <p>memcache今后的发展规划<br>
+  有限的解决方案</p>
+  
+  <p><strong>下一位是：weibo</strong></p>
+  
+  <p><strong>weibo的大胡子哥们</strong>
+  what's real-time data?</p>
+  
+  <p>在讲什么是<br>
+  memcached for reads</p>
+  
+  <p>同声传译太烂了。。。<br>
+  根据主键进行分区的例子</p>
+  
+  <p>根据主键进行分区的例子和根据用户进行分区会有困难</p>
+  
+  <p>weibo是根据时间来分区，一开始考虑不是很好的办法？这是一个非常临时性的分区方案，但也能满足99%的查询<br>
+  将来的解决方式：nosql</p>
+  
+  <p>实时数据的解决方案：适时的服务</p>
+  
+  <p>通过offline的解决方案</p>
+  
+  <p>发布一个新的在timeline里排序，当你的时候开始推送</p>
+  
+  <p>通过提前的处理，可以提高处理量</p>
+  
+  <p>一个表格对比08和10的s速度</p>
+  
+  <p>只把数据保存到了内存里，是昂贵的</p>
+  
+  <p>发一博给所有人的时候，尽量在一秒内，而且要保证120万的推送量</p>
+  
+  <p>social graph:</p>
+  
+  <p>所有数据都从内存里读，单元性地读取数据，把问题从大化小。<br>
+  按照用户分解数据</p>
+  
+  <p>数据二级索引<br>
+  （看上去是复制两个维度的数据）</p>
+  
+  <p>flockDB?开源的</p>
+  
+  <p>分布性的存储中的数据一致性</p>
+  
+  <p>分区和索引变得越来越复杂了。。。</p>
+  
+  <p>(时间不够了。。)</p>
+  
+  <p>吃饭时间，下午再来。。。</p>
+  
+  <p>回来了，在大宴会厅听阿里巴巴国际站的架构。主要是境像。</p>
+  
+  <p>数据同步1.0</p>
+  
+  <p>SQL复制的方式会带来数据冲突，比如说批量作。</p>
+  
+  <p>双站点应用拆分的问题。</p>
+  
+  <p>CAP原理</p>
+  
+  <p>写数据一致性和可用性</p>
+  
+  <p>读数据容忍一致性，境像</p>
+  
+  <p>结论：读应用更容易实现跨IDC的部署</p>
+  
+  <p>数据同步会放大数据不一致</p>
+  
+  <p>从设计上避免数据完整性的问题</p>
+  
+  <p>设计业务流程的时候需要避免跨IDC的WEB Flow</p>
+  
+  <p>阿里的读应用基本是从搜索来或者是cache来</p>
+  
+  <p>缺陷：</p>
+  
+  <p>双向同步的冲突</p>
+  
+  <p>解决业务冲突</p>
+  
+  <p>双站点扩展性已经好了很多</p>
+  
+  <p>进入第三阶段：多站点 全境像</p>
+  
+  <p>目标是所有机房的所有应用都必须有跨IDC的备份，数据亦然。</p>
+  
+  <p>数据同步瓶颈分析</p>
+  
+  <p>受制于为了满足数据一致性而对写入作进行的排序</p>
+  
+  <p>数据同步2.0设计原则</p>
+  
+  <p>在数据库层面记录数据变更</p>
+  
+  <p>并行所有可以并行的内容</p>
+  
+  <p>有选择的侵入业务</p>
+  
+  <p>merge作</p>
+  
+  <p>写应用的镜像方案：</p>
+  
+  <p>双master在实现复杂性上会带来问题</p>
+  
+  <p>可维护性提高</p>
+  
+  <p>（笔记本没电了。。。）</p>
+  
+  <p>后面还有“去哪儿”网站架构、人人网架构、新浪微博架构。。。晚上回去再补上来。。。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/04/18/php-upload-progress/">PHP上传进度条深度解析</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-04-18T00:00:00+08:00" pubdate data-updated="true">2010-04-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>随着互联网的发展，越来越多的技术开始注重用户体验，以人为本才是长久之道，于是在上传的时候，大家都不再满足一个单一的“浏览”按钮，纷纷推出了带上传进度条的功能。而作为解释型语言的PHP，如何做到对上传文件的检测，如何实现上传进度条以其背后的原理，54chen将在本文中一步步展开。</p>
+  
+  <p><strong>一. 实现篇</strong></p>
+  
+  <p>一般情况，用PHP实现上传进度条就下面两种方法：</p>
+  
+  <p>1.APC扩展（作者是PHP的创始人，5.2后PHP已经加入APC扩展）</p>
+  
+  <p>2.PECL扩展模块 uploadprogress</p>
+  
+  <p>不论是APC还是uploadprogress，都需要编译源码，因为原有的PHP函数根本不可能读取到临时文件夹里的东西。下面来看如何使用以及关键的代码：
+  </p>
+<div id="_mcePaste"><strong>APC实现方法:</strong></div>
+  <div id="_mcePaste">1.安装APC</div>
+  <div id="_mcePaste">2.配置php.ini，设置参数 apc.rfc1867=1</div>
+  <div id="_mcePaste">3.关键代码：</div>
+  <blockquote>
+  <div id="_mcePaste">if ($_SERVER['REQUEST_METHOD'] == 'POST') {  //上传请求</div>
+  <div id="_mcePaste">$status = apc_fetch('upload_' . $_POST['APC_UPLOAD_PROGRESS']);</div>
+  <div id="_mcePaste">$status['done'] = 1;</div>
+  <div id="_mcePaste">echo json_encode($status);  //输出给用户端页面里的ajax调用，相关文档请自己寻找</div>
+  <div id="_mcePaste">exit;</div>
+  <div id="_mcePaste">} elseif (isset($_GET['progress_key'])) {   //读取上传进度</div>
+  <div id="_mcePaste">$status = <span style="color: #ff0000;">apc_fetch</span>('upload_'.$_GET['progress_key']);</div>
+  <div id="_mcePaste">echo json_encode($status);</div>
+  <div id="_mcePaste">exit;</div>
+  <div id="_mcePaste">}</div>
+</blockquote>
+  <div id="_mcePaste"><strong>uploadprogress实现方法：</strong></div>
+  <div id="_mcePaste">1.使用PECL 安装uploadprogress</div>
+  <div id="_mcePaste">2.php.ini里面设置 uploadprogress.file.filename_template = “/tmp/upd_%s.txt”</div>
+  <div id="_mcePaste">3.关键代码：</div>
+  <blockquote>
+  <div id="_mcePaste">if($_SERVER['REQUEST_METHOD']=='POST') {</div>
+  <div id="_mcePaste">if (is_uploaded_file($_FILES['upfile']['tmp_name'])) {</div>
+  <div id="_mcePaste">$upload_dir = 'your_path/';</div>
+  <div id="_mcePaste">$ext        = strrchr($_FILES['video']['name'], '.');</div>
+  <div id="_mcePaste">$sessid     = $_POST['UPLOAD_IDENTIFIER'] ;</div>
+  <div id="_mcePaste">$tmpfile    = $upload_dir . $sessid;</div>
+  <div id="_mcePaste">$sessfile   = $upload_dir . $sessid .$ext;</div>
+  <div id="_mcePaste">if (move_uploaded_file($_FILES['upfile']['tmp_name'],$tmpfile)) {</div>
+  <div id="_mcePaste">//上传成功</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">} elseif (!empty($_GET['sessid'])) {</div>
+  <div id="_mcePaste">header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");</div>
+  <div id="_mcePaste">header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");</div>
+  <div id="_mcePaste">header("Cache-Control: no-store, no-cache, must-revalidate");</div>
+  <div id="_mcePaste">header("Cache-Control: post-check=0, pre-check=0", false);</div>
+  <div id="_mcePaste">header("Pragma: no-cache");</div>
+  <div id="_mcePaste">header("Content-Type:text/html;charset=UTF-8");</div>
+  <div id="_mcePaste">$unique_id = $_GET['sessid'];</div>
+  <div id="_mcePaste">$uploadvalues = <span style="color: #ff0000;">uploadprogress_get_info</span>($unique_id);</div>
+  <div id="_mcePaste">if (is_array($uploadvalues)) {</div>
+  <div id="_mcePaste">echo json_encode($uploadvalues);</div>
+  <div id="_mcePaste">} else {</div>
+  <div id="_mcePaste">//读取进度失败，另外处理逻辑</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">}</div>
+</blockquote>
+  <strong>二. 原理篇 </strong>
+  
+  <p>注意上一篇中的红色函数。</p>
+  
+  <p>下载到uploadprogress1.0.1进行源码分析，在代码中作了注释。
+  </p>
+<blockquote>static void uploadprogress_file_php_get_info(char * id, zval * return_value)</blockquote>
+  
+  <p>{</p>
+  
+  <p>char s[1024];</p>
+  
+  <p>char * filename;</p>
+  
+  <p>char * template;</p>
+  
+  <p>FILE *F;</p>
+  
+  <p>TSRMLS_FETCH();</p>
+  
+  <p>template = INI_STR("uploadprogress.file.filename_template"); <span style="color: #008000;">&lt;&lt;这里读取设置好的模板</span></p>
+  
+  <p>if (strcmp(template, "") == 0)  {</p>
+  
+  <p>return;</p>
+  
+  <p>} else {</p>
+  
+  <p>filename = uploadprogress_mk_filename( id, template );<span style="color: #008000;">&lt;&lt;&lt;存在的话，会创建</span></p>
+  
+  <p>if (!filename) return;</p>
+  
+  <p>F = VCWD_FOPEN(filename, "rb");</p>
+  
+  <p>if (F) {</p>
+  
+  <p>array_init(return_value);</p>
+  
+  <p>while ( fgets(s, 1000, F) ) {<span style="color: #008000;">&lt;&lt;&lt;从流中读取一字符串 *s结果数据的首地址；1000-1:一次读入数据块的长度,其默认值为1k，即1024;F文件指针</span></p>
+  
+  <p>char *k, *v, *e;</p>
+  
+  <p>int index = 0;</p>
+  
+  <p>e = strchr(s,'='); <span style="color: #008000;">&lt;&lt;&lt;查找字符串s中首次出现字符=的位置</span></p>
+  
+  <p>if (!e) continue;</p>
+  
+  <p>*e = 0; /* break the line into 2 parts */</p>
+  
+  <p>v = e+1;</p>
+  
+  <p>k = s;</p>
+  
+  <p>/* trim spaces in front of the name/value */</p>
+  
+  <p>while (*k &amp;&amp; *k &lt;= 32) k++;</p>
+  
+  <p>while (*v &amp;&amp; *v &lt;= 32) v++;</p>
+  
+  <p>/* trim spaces everywhere in the name */</p>
+  
+  <p>for (e=k; *e; e++) if (*e &lt;= 32) { *e = 0; break; }</p>
+  
+  <p>/* trim spaces only at the end of the value */</p>
+  
+  <p>/* http://pecl.php.net/bugs/bug.php?id=14525 */</p>
+  
+  <p>//for (e=v; *e; e++) if (*e &lt;= 32) { *e = 0; break; }</p>
+  
+  <p>if (v != NULL) {<span style="color: #008000;">&lt;&lt;&lt;当文件有内容时</span></p>
+  
+  <p>for (index = strlen(v); index &gt; 0; index--) {</p>
+  
+  <p>if (v[index] &gt; 32) break;<span style="color: #008000;">&lt;&lt;&lt;累计</span></p>
+  
+  <p>v[index] = 0;</p>
+  
+  <p>}</p>
+  
+  <p>}</p>
+  
+  <p>add_assoc_string( return_value, k, v, 1 );</p>
+  
+  <p>}</p>
+  
+  <p>fclose(F);</p>
+  
+  <p>}</p>
+  
+  <p>if (filename) efree(filename);</p>
+  
+  <p>return;</p>
+  
+  <p>}</p>
+  
+  <p>}
+  在源码中还能发现:
+  </p>
+<blockquote>PHP_MINIT_FUNCTION(uploadprogress)</blockquote>
+  
+  <p>{</p>
+  
+  <p>REGISTER_INI_ENTRIES();</p>
+  
+  <p>php_rfc1867_callback = uploadprogress_php_rfc1867_file;</p>
+  
+  <p>return SUCCESS;</p>
+  
+  <p>}
+  在MINIT中修改了php_rfc1867_callback，抽取uploadprogress_php_rfc1867_file的关键代码：
+  </p>
+<blockquote>upload_id = emalloc(strlen(*e_data-&gt;value) + 1);</blockquote>
+  
+  <p>strcpy(upload_id, *e_data-&gt;value);</p>
+  
+  <p>progress-&gt;upload_id = upload_id;</p>
+  
+  <p>progress-&gt;time_last  = time(NULL);</p>
+  
+  <p>progress-&gt;speed_average  = 0;</p>
+  
+  <p>progress-&gt;speed_last     = 0;</p>
+  
+  <p>progress-&gt;bytes_uploaded = read_bytes;</p>
+  
+  <p>progress-&gt;files_uploaded = 0;</p>
+  
+  <p>progress-&gt;est_sec        = 0;</p>
+  
+  <p>progress-&gt;identifier = uploadprogress_mk_filename(upload_id, template);<span style="color: #008000;">&lt;&lt;&lt;在指定的模板位置放下了临时文件</span></p>
+  
+  <p>progress-&gt;identifier_tmp = emalloc(strlen( progress-&gt;identifier) + 4);</p>
+  
+  <p>sprintf( progress-&gt;identifier_tmp, "%s.wr", progress-&gt;identifier );
+  关于php_rfc1867_callback是什么，可以看哥学社另一哥鸟哥的分析 <a href="http://www.laruence.com/2008/11/07/586.html">http://www.laruence.com/2008/11/07/586.html</a></p>
+  
+  <p><strong>三.总结</strong></p>
+  
+  <p>在探测临时文件大小的时候，APC和 uploadprogress其实是大同小异的方法，先记录，再取大小百分比。</p>
+  
+  <p>关于哥学社：
+  <a style="color: #0b3b8c; text-decoration: none;" title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。</p>
+  
+  <p>关于五四陈：<br>
+  54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br>
+  个人技术站点:<a style="color: #0b3b8c; text-decoration: none;" href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 cc0cc@126.com 联系到他。</p>
+  
+  <p>本文提及的文章：</p>
+  
+  <p><a href="http://www.php.net/releases/5_2_0.php">http://www.php.net/releases/5_2_0.php</a></p>
+  
+  <p><a href="http://www.ibm.com/developerworks/cn/opensource/os-php-v525/">http://www.ibm.com/developerworks/cn/opensource/os-php-v525/</a></p>
+  
+  <p><a href="http://www.laruence.com/2008/11/07/586.html">http://www.laruence.com/2008/11/07/586.html</a></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/04/14/tencent-microblogging-account/">腾讯微博账号</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-04-14T00:00:00+08:00" pubdate data-updated="true">2010-04-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>我的腾讯微博账号：</p>
+  
+  <p><a href="http://t.qq.com/chen_-">http://t.qq.com/chen_-</a></p>
+  
+  <p>欢迎fo我</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/33">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <em>34</em>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/35">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

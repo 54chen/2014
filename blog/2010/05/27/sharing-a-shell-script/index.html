@@ -1,0 +1,217 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>分享一个批量扫描ip地址的shell脚本 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="前言
+  假如您在维护上千台服务器，然后通过www.xxx.com发现打不开，然后有部分用户又说是可以打开的，现在要做的事情是找出来哪个机器可以用。
+  第一章 检查原理
+  有许多DNS反查的网站，可以反查你的域名的相关ip地址，然后把这些ip地址循环ping，有返回结果的说明那个服务器可用。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/05/27/sharing-a-shell-script">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">分享一个批量扫描ip地址的shell脚本</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-27T00:00:00+08:00" pubdate data-updated="true">2010-05-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img01.taobaocdn.com/bao/uploaded/i1/T1IOXBXe8iXXbdtJjb_093433.jpg" alt="人类">
+  </p>
+<h2><strong>前言</strong></h2>
+  假如您在维护上千台服务器，然后通过www.xxx.com发现打不开，然后有部分用户又说是可以打开的，现在要做的事情是找出来哪个机器可以用。
+  <h2><strong>第一章 检查原理</strong></h2>
+  有许多DNS反查的网站，可以反查你的域名的相关ip地址，然后把这些ip地址循环ping，有返回结果的说明那个服务器可用。比如说just-dnslookup等等网站。具体可以在网上找找。
+  <h2><strong>第二章 检查作</strong></h2>
+  在准备好数据后，将结果复制到脚本文件中的temp文件中，然后修改54chenPing.sh中的第二行，将awk中的$3修改为你的数据对应的列数。比如说你复制的内容的第三列的话就写$3，第四列就写$4。
+  <h2><strong>第三章 执行</strong></h2>
+  #sh 54chenPing.sh<br>
+  然后会有结果输出，持续输出返回结果的一个或者多个ip即是可用的服务器。
+  <h2><strong>第四章 代码</strong></h2>
+  <blockquote>#!/bin/sh<br>
+  cat temp | awk '{print $3}' &gt; ip.txt<br>
+  FLIST="`cat ip.txt|grep -v "#"`"<br>
+  for FILE in `echo "${FLIST}"`<br>
+  do<br>
+  ping ${FILE}&gt; tmp/${FILE}.txt&amp;<br>
+  done<br>
+  tail -f tmp/*</blockquote>
+  <h2><strong>第五章 下载</strong></h2>
+  <a href="http://www.54chen.com/54chenPing.tar.gz">点击下载&gt;&gt;&gt;</a>
+  <h2><strong>第六章 备注</strong></h2>
+  要经常更新temp文件，参见第一章。要知道哪台服务器是可用的，参见第三章。
+  <h2><strong>作者</strong></h2>
+  54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。个人技术站点:http://www.54chen.com/ 。可以通过电子邮件 cc0cc@126.com 联系到他。
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-27T00:00:00+08:00" pubdate data-updated="true">2010-05-27 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2010/05/26/water-nuclaer-blog-brother/" title="Previous Post: [纯水]庆祝数据开始注入nuclear系统和哥学社整装待发">« [纯水]庆祝数据开始注入nuclear系统和哥学社整装待发</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,305 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第二部分 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[文章作者：陈臻 本文版本：v1.0 最后修改：2009.7.17 转载请注明原文链接：http://www.54chen.com/_linux_/postgresql-bamboo-lucene-part2.html ] 书接上回。上回说到建立好一整套的中文分词和pgsql的环境，这回来说如何搜 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/07/17/postgresql-bamboo-lucene-part2">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[原创]使用postgreSQL+bamboo搭建比lucene方便N倍的全文搜索 第二部分</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-17T00:00:00+08:00" pubdate data-updated="true">2009-07-17 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.7.17 转载请注明原文链接：<a href="http://www.54chen.com/_linux_/postgresql-bamboo-lucene-part2.html">http://www.54chen.com/_linux_/postgresql-bamboo-lucene-part2.html</a> ]</p>
+  
+  <p>书接上回。上回说<a href="http://www.54chen.com/c/601">到建立好一整套的中文分词和pgsql的环境</a>，这回来说如何搜。</p>
+  
+  <p><strong>一、基础篇 </strong></p>
+  
+  <p>本回从一条sql开始：</p>
+  
+  <p><span class="MsgBodyText">select * from dbname where field_name @@ 'aa|bb' order by rank(field_name, 'aa|bb');</span></p>
+  
+  <p>从这个sql字面意思讲解：从 dbname这个表中查field_name匹配aa或者是bb的词，并且按照他们的匹配的RANK排序。</p>
+  
+  <p>基本上明白上面这段话后，来学习四个概念：<strong>tsvector、</strong><strong>tsquery、</strong>@@ 、<strong>gin。</strong></p>
+  
+  <p>1.<strong>tsvector:</strong></p>
+  
+  <p>在postgreSQL 8.3自带支持全文检索功能，在之前的版本中需要安装配置tsearch2才能使用。它提供两个数据类型（tsvector,tsquery），并且通过 动态检索自然语言文档的集合，定位到最匹配的查询结果，tsvector正是其中之一。</p>
+  
+  <p>一个tsvector的值是唯一分词的分类列表，把一话一句词格式化为不同的词条，在进行分词处理的时候，tsvector会自动去掉分词中重复的词条，按照一定的顺序装入。例如</p>
+  
+  <p>SELECT 'a fat cat sat on a mat and ate a fat rat'::tsvector;<br>
+  tsvector<br>
+  ----------------------------------------------------<br>
+  'a' 'on' 'and' 'ate' 'cat' 'fat' 'mat' 'rat' 'sat'</p>
+  
+  <p>通过tsvector把一个字符串按照空格进行分词，这可以把分词后的词按照出现的次数排成一排（还会按词长度）。</p>
+  
+  <p>对于英文和中文的全文检索我们还要看下面这条sql:</p>
+  
+  <p>SELECT to_tsvector('english', 'The Fat Rats');<br>
+  to_tsvector<br>
+  -----------------<br>
+  'fat':2 'rat':3</p>
+  
+  <p>to_tsvector函数来是tsvector规格化的，在其中可指定所使用的分词。</p>
+  
+  <p>2.<strong>tsquery：</strong></p>
+  
+  <p>顾名思义,tsquery,表示的应该是查询相关的.tsquery是存储用于检索的词条.并且可以联合使用boolean 作符来连接, &amp; (AND), | (OR), and ! (NOT). 使用括号(),可以强制分为一组.</p>
+  
+  <p>同时,tsquery 在做搜索的时候,也可以使用权重,并且每个词都可以使用一个或者多个权重标记,这样在检索的时候,会匹配相同权重的信息.跟上面的tsvector相同,tsquery也有一个to_tsquery函数.</p>
+  
+  <p>3.<strong>@@：</strong></p>
+  
+  <p>在postgresql中全文检索匹配作使用@@ <a href="http://www.54chen.com/c/441">作符</a>,如果一个<br>
+  tsvector(document) 匹配到 tsquery(query)则返回true.</p>
+  
+  <p>看一个简单的例子：</p>
+  
+  <p>SELECT 'a fat cat sat on a mat and ate a fat rat'::tsvector @@ 'cat &amp; rat'::tsquery;<br>
+  ?column?<br>
+  ----------<br>
+  t
+  我们在处理索引的时候还是要使用他们的函数如下：<br>
+  SELECT to_tsvector('fat cats ate fat rats') @@ to_tsquery('fat &amp; rat');<br>
+  ?column?<br>
+  ----------<br>
+  t
+  并且作符 @@ 可以使用text作为tsvector和tsquery.如下作符可以使使用的方法</p>
+  
+  <p>tsvector @@ tsquery<br>
+  tsquery  @@ tsvector<br>
+  text @@ tsquery<br>
+  text @@ text<br>
+  上面的前两种我们已经使用过了,但是后两种,<br>
+  text @@ tsquery 等同于 to_tsvector(x) @@ y.<br>
+  text @@ text 等同于 to_tsvector(x) @@ plainto_tsquery(y).（~）plainto_tsquery在后面讲。。。</p>
+  
+  <p><strong>4.gin:</strong></p>
+  
+  <p>gin是一种索引的名称，全文索引用的。</p>
+  
+  <p>我们可以通过创建gin索引来加速检索速度.例如</p>
+  
+  <p>CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector('english', body));</p>
+  
+  <p>创建索引可以有多种方式.索引的创建甚至可以连接两个列:<br>
+  CREATE INDEX pgweb_idx ON pgweb USING gin(to_tsvector('english', title || body));</p>
+  
+  <p><strong>二、提高篇</strong></p>
+  
+  <p>基础知识学完了，应该上阵了，为了实现全文检索，我们需要把一个文档创建一个tsvector 格式，并且通过tsquery实现用户的查询，在查询中我们返回一个按照重要性排序的查询结果。</p>
+  
+  <p>先看一个to_tsquery的sql:</p>
+  
+  <p>SELECT to_tsquery('english', 'Fat | Rats:AB');<br>
+  to_tsquery<br>
+  ------------------<br>
+  'fat' | 'rat':AB</p>
+  
+  <p>可以看出，to_tsquery函数在处理查询<a href="http://www.54chen.com/c/358">文本</a>的时候，查询文本的单个词之间要使用逻辑作符（&amp; (AND), | (OR) and ! (NOT)）连接（或者使用括号）。</p>
+  
+  <p>如果执行下面这条sql就会出错：</p>
+  
+  <p>SELECT to_tsquery('english', 'Fat  Rats');</p>
+  
+  <p>plainto_tsquery函数却可以提供一个标准的tsquery，如上面的<a href="http://www.54chen.com/c/216">例子</a>，plainto_tsquery会自动加上逻辑&amp;作符。<br>
+  SELECT plainto_tsquery('english', 'Fat  Rats');</p>
+  
+  <p>plainto_tsquery<br>
+  -----------------<br>
+  'fat' &amp; 'rat'<br>
+  但是plainto_tsquery函数不能够识别逻辑作符和权重标记。<br>
+  SELECT plainto_tsquery('english', 'The Fat &amp; Rats:C');<br>
+  plainto_tsquery<br>
+  ---------------------<br>
+  'fat' &amp; 'rat' &amp; 'c'</p>
+  
+  <p><strong>三、终结篇</strong></p>
+  
+  <p>看完上面的一堆后，千言万语汇成一句话，本文主要讲的是一条sql，在加了第一部分里所讲述的扩展后，使用下面的sql，从一个字段中搜一句话，还要排序出来：</p>
+  
+  <p>select * from tabname where to_tsvector('chinesecfg',textname) @@ plainto_tsquery('搜点啥') order by ts_rank(to_tsvector('chinesecfg',textname),plainto_tsquery('搜点啥')) limit 10;</p>
+  
+  <p>之前的create table create index就不写了。授人以渔才是关键。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-07-17T00:00:00+08:00" pubdate data-updated="true">2009-07-17 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>, <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/07/15/%E4%B8%80%E4%B8%AA%E6%8A%8Atortoisesvn%E8%BD%AC%E6%88%90%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%9A%84svn%E7%9A%84bat%E8%84%9A%E6%9C%AC/" title="Previous Post: 一个把TortoiseSVN转成命令行的svn的bat脚本">« 一个把TortoiseSVN转成命令行的svn的bat脚本</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/07/21/mediawiki-pgsql/" title="Next Post: [原创]mediawiki安装改进手记-使用mediawikit和postgresql搭建有强大搜索功能的wiki">[原创]mediawiki安装改进手记-使用mediawikit和postgresql搭建有强大搜索功能的wiki »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

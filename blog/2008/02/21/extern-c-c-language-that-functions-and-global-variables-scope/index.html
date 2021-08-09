@@ -1,0 +1,352 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>extern--C/C++语言中表明函数和全局变量作用范围 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="extern是C/C++语言中表明函数和全局变量作用范围（可见性）的关键字.
+  它告诉编译器，其声明的函数和变量可以在本模块或其它模块中使用。
+  1。对于extern变量来说，仅仅是一个变量的声明，其并不是在定义分配内存空间。如果该变量定义多次，会有连接错误
+  2。通常， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/02/21/extern-c-c-language-that-functions-and-global-variables-scope">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">extern--C/C++语言中表明函数和全局变量作用范围</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-02-21T00:00:00+08:00" pubdate data-updated="true">2008-02-21 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><strong>extern</strong>是C/C++语言中表明函数和全局变量<strong>作用范围</strong>（可见性）的关键字.<br>
+  它告诉编译器，其<strong>声明</strong>的函数和变量可以在本模块或其它模块中使用。
+  <span style="color: #ff0000; background-color: #ffffff;"><span style="color: #000000;">1。对于extern变量来说，</span>仅仅是一个变量的声明，其并不是在定义分配内存空间</span>。如果该变量定义多次，会有连接错误<br>
+  2。通常，<span style="color: #ff0000;"><strong>在模块的头文件中对本模块提供给其它模块引用的函数和全局变量以关键字extern声明。</strong><strong>也就是说c文件里面定义，如果该函数或者变量与给外面，则在h文件中用extern加以声明。所以外部文件只用include该h文件就可以了。</strong>而且编译阶段，外面是找不到该函数的，但是不报错。link阶段会从定义模块生成的目标代码中找到此函数。
+  </span><span style="color: #000000;">3。</span>与extern对应的关键字是static，被它修饰的全局变量和函数只能在本模块中使用。</p>
+  
+  <p>后面转载，阅读中。。。。。。。<br>
+  被extern "C"修饰的变量和函数是按照C语言方式编译和连接的；
+  <strong>未加extern “C”声明时的编译方式</strong></p>
+  
+  <p>　　首先看看C++中对类似C的函数是怎样编译的。</p>
+  
+  <p>作为一种面向对象的语言，C++支持函数重载，而过程式语言C则不支持。函数被C++编译后在符号库中的名字与C语言的不同。例如，假设某个函数的原型为：
+  </p>
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+  <tbody>
+  <tr>
+  <td>void foo( int x, int y );</td>
+  </tr>
+  </tbody>
+</table>
+  该函数被C编译器编译后在符号库中的名字为_foo，而C++编译器则会产生像_foo_int_int之类的名字（不同的编译器可能生成的名字不同，但是都采用了相同的机制，生成的新名字称为“mangled name”）。
+  
+  <p>_foo_int_int这样的名字包含了函数名、函数参数数量及类型信息，C++就是靠这种机制来实现函数重载的。例如，在C++中，函数void foo( int x, int y )与void foo( int x, float y )编译生成的符号是不相同的，后者为_foo_int_float。</p>
+  
+  <p>同样地，C++中的变量除支持局部变量外，还支持类成员变量和全局变量。用户所<a class="bluekey" href="http://www.yesky.com/key/4285/189285.html" target="_blank">编写</a>程序的类成员变量可能与全局变量同名，我们以"."来区分。而本质上，编译器在进行编译时，与函数的处理相似，也为类中的变量取了一个独一无二的名字，这个名字与用户程序中同名的全局变量名字不同。</p>
+  
+  <p><strong>未加extern "C"声明时的连接方式</strong></p>
+  
+  <p>假设在C++中，模块A的头文件如下：
+  </p>
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+  <tbody>
+  <tr>
+  <td>// 模块A头文件　moduleA.h<br>
+  #ifndef MODULE_A_H<br>
+  #define MODULE_A_H<br>
+  int foo( int x, int y );<br>
+  #endif</td>
+  </tr>
+  </tbody>
+</table>
+  在模块B中引用该函数：
+  <table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+  <tbody>
+  <tr>
+  <td>// 模块B实现文件　moduleB.cpp<br>
+  #include "moduleA.h"<br>
+  foo(2,3);</td>
+  </tr>
+  </tbody>
+</table>
+  实际上，在连接阶段，连接器会从模块A生成的目标文件moduleA.obj中寻找_foo_int_int这样的符号！
+  
+  <p><strong>加extern "C"声明后的编译和连接方式</strong></p>
+  
+  <p>加extern "C"声明后，模块A的头文件变为：
+  </p>
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+  <tbody>
+  <tr>
+  <td>// 模块A头文件　moduleA.h<br>
+  #ifndef MODULE_A_H<br>
+  #define MODULE_A_H<br>
+  extern "C" int foo( int x, int y );<br>
+  #endif</td>
+  </tr>
+  </tbody>
+</table>
+  在模块B的实现文件中仍然调用foo( 2,3 )，其结果是：
+  
+  <p>（1）模块A编译生成foo的目标代码时，没有对其名字进行特殊处理，采用了C语言的方式；</p>
+  
+  <p>（2）连接器在为模块B的目标代码寻找foo(2,3)调用时，寻找的是未经修改的符号名_foo。</p>
+  
+  <p>如果在模块A中函数声明了foo为extern "C"类型，而模块B中包含的是extern int foo( int x, int y ) ，则模块B找不到模块A中的函数；反之亦然。</p>
+  
+  <p>所以，可以用一句话概括extern “C”这个声明的真实目的（任何语言中的任何语法特性的诞生都不是随意而为的，来源于真实世界的需求驱动。我们在思考问题时，不能只停留在这个语言是怎么 做的，还要问一问它为什么要这么做，动机是什么，这样我们可以更深入地理解许多问题）：</p>
+  
+  <p>实现C++与C及其它语言的混合编程。</p>
+  
+  <p>明白了C++中extern "C"的设立动机，我们下面来具体分析extern "C"通常的<a class="bluekey" href="http://www.yesky.com/key/263/160263.html" target="_blank">使用技巧</a>。</p>
+  
+  <p>4.extern "C"的惯用法</p>
+  
+  <p>（1）在C++中引用C语言中的函数和变量，在包含C语言头文件（假设为cExample.h）时，需进行下列处理：
+  </p>
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+  <tbody>
+  <tr>
+  <td>extern "C"<br>
+  {
+  #include "cExample.h"<br>
+  }</td>
+  </tr>
+  </tbody>
+</table>
+  而在C语言的头文件中，对其外部函数只能指定为extern类型，C语言中不支持extern "C"声明，在.c文件中包含了extern "C"时会出现编译语法错误。
+  
+  <p>笔者编写的C++引用C函数例子工程中包含的三个文件的源代码如下：
+  </p>
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+  <tbody>
+  <tr>
+  <td>/* c语言头文件：cExample.h */<br>
+  #ifndef C_EXAMPLE_H<br>
+  #define C_EXAMPLE_H<br>
+  extern int add(int x,int y);<br>
+  #endif<br>
+  /* c语言实现文件：cExample.c */<br>
+  #include "cExample.h"<br>
+  int add( int x, int y )<br>
+  {
+  return x + y;<br>
+  }
+  // c++实现文件，调用add：cppFile.cpp<br>
+  extern "C"<br>
+  {
+  #include "cExample.h"<br>
+  }
+  int main(int argc, char* argv[])<br>
+  {
+  add(2,3);<br>
+  return 0;<br>
+  }</td>
+  </tr>
+  </tbody>
+</table>
+  如果C++调用一个C语言编写的.DLL时，当包括.DLL的头文件或声明接口函数时，应加extern "C" {　}。
+  
+  <p>（2）在C中引用C++语言中的函数和变量时，C++的头文件需添加extern "C"，但是在C语言中不能直接引用声明了extern "C"的该头文件，应该仅将C文件中将C++中定义的extern "C"函数声明为extern类型。</p>
+  
+  <p>笔者编写的C引用C++函数例子工程中包含的三个文件的源代码如下：
+  </p>
+<table border="1" width="90%" align="center" bgcolor="#e3e3e3" bordercolor="#cccccc">
+  <tbody>
+  <tr>
+  <td>//C++头文件 cppExample.h<br>
+  #ifndef CPP_EXAMPLE_H<br>
+  #define CPP_EXAMPLE_H<br>
+  extern "C" int add( int x, int y );<br>
+  #endif<br>
+  //C++实现文件 cppExample.cpp<br>
+  #include "cppExample.h"<br>
+  int add( int x, int y )<br>
+  {
+  return x + y;<br>
+  }
+  /* C实现文件 cFile.c<br>
+  /* 这样会编译出错：#include "cExample.h" */<br>
+  extern int add( int x, int y );<br>
+  int main( int argc, char* argv[] )<br>
+  {
+  add( 2, 3 );<br>
+  return 0;<br>
+  }</td>
+  </tr>
+  </tbody>
+</table>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-02-21T00:00:00+08:00" pubdate data-updated="true">2008-02-21 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2007/12/28/students-finishing-business-case-analysis-script/" title="Previous Post: 大学生创业案例分析讲稿整理">« 大学生创业案例分析讲稿整理</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/03/09/jquery-plug-n/" title="Next Post: Jquery的N个插件">Jquery的N个插件 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

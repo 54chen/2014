@@ -1,0 +1,540 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: 架构研究 | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/jia-gou-yan-jiu/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[过年十天技术阅读推荐汇总]]></title>
+      <link href="https://www.54chen.com/blog/2014/02/13/new-year-10-day/"/>
+      <updated>2014-02-13T11:34:08+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/02/13/new-year-10-day</id>
+      <content type="html"><![CDATA[<p>春节期间收集的各种有意思的技术微博，这里是汇总帖。技术方向包括了分布式、开源、产品、关键领域，等等。排名不分先后。</p>
+  
+  <ul>
+  <li>@温高铁</li>
+  </ul>
+  
+  
+  <p>各种数据库连接池性能对比 <a href="http://t.cn/zjVqSNg">http://t.cn/zjVqSNg</a> 结论:1) Druid是性能最好的数据库连接池，tomcat-jdbc和druid性能接近。2)proxool在激烈并发时会抛异常，完全不靠谱。 3) c3p0和proxool都相当慢，慢到影响sql执行效率的地步。4) bonecp性能并不优越，采用LinkedTransferQueue并没有能够获得性能提升</p>
+  
+  <!-- more -->
+  
+  
+  <ul>
+  <li>@jackyrong</li>
+  </ul>
+  
+  
+  <p>节日期间mysqlperformanceblog的三篇推荐文，分别是《安装完 MySQL 后必须调整的 10 项配置》（中文版见：<a href="http://t.cn/8FifoBq%EF%BC%89%EF%BC%8C%E5%88%86%E5%88%AB%E8%AE%B2%E8%A7%A3Percona">http://t.cn/8FifoBq%EF%BC%89%EF%BC%8C%E5%88%86%E5%88%AB%E8%AE%B2%E8%A7%A3Percona</a> Server线程池和事务负载的 <a href="http://t.cn/8Ff9I1P%EF%BC%8Chttp://t.cn/8F6Ramc">http://t.cn/8Ff9I1P%EF%BC%8Chttp://t.cn/8F6Ramc</a></p>
+  
+  <ul>
+  <li>@淘宝褚霸</li>
+  </ul>
+  
+  
+  <p>Erlang版本whatsapp push服务器达到百万链接的核心技术：<a href="http://t.cn/zWnh091">http://t.cn/zWnh091</a></p>
+  
+  <ul>
+  <li>@平凡的香草</li>
+  </ul>
+  
+  
+  <p>花了一些时间来学习并翻译 Optimizing Your Linux Stack for Maximum Mobile Web Performance 原文：<a href="http://t.cn/zjHaQit%EF%BC%8C">http://t.cn/zjHaQit%EF%BC%8C</a> 译文：<a href="http://t.cn/8kcpO36">http://t.cn/8kcpO36</a> ，可以增加备注。还没有校对，错误可能很多，欢迎增加备注。</p>
+  
+  <ul>
+  <li>@网路冷眼</li>
+  </ul>
+  
+  
+  <p>Intel公司发布今年建议开发者阅读清单前半部分:从硬件到软件，应有尽有，包罗万象，涵盖作系统、多核编程、嵌入式、安全等等当今主流IT技术主题，不是举荐自家技术的广告贴。据称得到众多技术专家、工程师的审阅。PDF格式，长达10页。<a href="http://t.cn/8F4NV0b">http://t.cn/8F4NV0b</a> 裂建议收藏</p>
+  
+  <ul>
+  <li>@RednaxelaFX</li>
+  </ul>
+  
+  
+  <p>刚才有朋友问：想跟踪Java程序中哪里new对象最多，有什么好办法。在最新的Oracle JDK7里自带的Java Flight Recorder正好能满足这种需求。只要看AllocObjectInNewTLAB和AllocObjectOutsideTLAB就能几乎无额外开销得到一个非精准的profile。虽说非精准但很多时候已经足以解决问题。用起来超方便。</p>
+  
+  <ul>
+  <li>@Binos_ICT</li>
+  </ul>
+  
+  
+  <p>System Troubleshooting：在系统不同层次应该选用的工具，这图太贴切了，大家收藏一下吧！
+  <br>
+  <img src="http://ww2.sinaimg.cn/bmiddle/4a1f59bfgw1eadqzmpa6jj20l00g6n08.jpg"></p>
+  
+  <ul>
+  <li>@SinaAppEngine</li>
+  </ul>
+  
+  
+  <p>【#SAE技术分享#】《Linux低级I/O深析》可以说一切存储系统的基础是系统调用: open , creat, seek , read, write, mmap &hellip;的运用，要想写个高性能FS，就要深入IO系统调用。这篇博文主要分析了作文件的内核数据结构的变化及相关tips。<a href="http://t.cn/zlwIdYZ">http://t.cn/zlwIdYZ</a></p>
+  
+  <ul>
+  <li>@developerWorks</li>
+  </ul>
+  
+  
+  <p>本文作者是 Dropbox 的运维工程师 Rajiv，他将系统的可伸缩性设计，尤其在资源有限、流量快速增长情况下的最佳实践分享给大家。《Dropbox 可伸缩性设计最佳实践分享》，<a href="http://t.cn/zj2V8fg">http://t.cn/zj2V8fg</a></p>
+  
+  <ul>
+  <li>@开源</li>
+  </ul>
+  
+  
+  <p>比 Protocol Buffers 还要快 4 倍的二进制对象序列化库 MessagePack ， 支持多种编程语言，包括 JavaScript <a href="http://t.cn/zj7ZyKU">http://t.cn/zj7ZyKU</a> 比JSON更快速也更轻巧。</p>
+  
+  <ul>
+  <li>@fengyuncrawl</li>
+  </ul>
+  
+  
+  <p> 数据结构与算法 这是近几年对大型数据库基础算法与数据结构写得最深入浅出，既有广度又有深度，确实是干货中的精品，如果能精通这长达208页ppt中所有算法与数据结构，其它犹如浮云，会有登高望远，一览众山小之感，所谓“五岳归来不看山，山归来不看岳” <a href="http://t.cn/zlbkbXx">http://t.cn/zlbkbXx</a></p>
+  
+  <ul>
+  <li>@周鸿祎</li>
+  </ul>
+  
+  
+  <p>【支点在哪里？】支点永远在用户的问题里——我为什么用你的产品？当时做奇虎，我们都是有经验的创业者，做了很多非常理性的思辨和讨论，总结出很多前卫的概念。但最后发现都挺扯淡。用户不会因为你的逻辑是对的，概念是新的，产业分析是对的，就认可你。用户只要一个答案：你的产品给我解决什么问题？</p>
+  
+  <ul>
+  <li>@何_登成</li>
+  </ul>
+  
+  
+  <p>通过全组的努力，将 @网易汪源 老大布置的阅读VLDB 2012数据库相关的12篇论文的任务完成，并用一下午时间完成了分享。都是超级好东西，大开眼界！内容涉及方方面面：列存；Flash Cache；分布式；索引；查询优化；新型数据库设计 等等。越权老大将论文题目分享出来，推荐给感兴趣的朋友！</p>
+  
+  <ul>
+  <li>@bluedavy_readonly</li>
+  </ul>
+  
+  
+  <p>常见的Java问题排查方法（包括：类加载、cpu us消耗高、内存问题、java进程crash或退出、硬件资源未到瓶颈，但吞吐量上不去），希望看到的同学能给予补充，无论是补充碰到的问题，还是补充解决方法： <a href="http://t.cn/zYkKIJv">http://t.cn/zYkKIJv</a></p>
+  
+  <ul>
+  <li>@极光推送</li>
+  </ul>
+  
+  
+  <p>网友 good-life 公开发布了”推聊“开源项目，一个基于极光推送的Android手机聊天系统 <a href="http://t.cn/zjqbYrG">http://t.cn/zjqbYrG</a> 这个项目最赞的点在于：他声称 3 分钟就可以运行起来整套系统</p>
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[《移动互联网技术挑战》－ssdc]]></title>
+      <link href="https://www.54chen.com/blog/2013/11/18/ssdc2013/"/>
+      <updated>2013-11-18T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/11/18/ssdc2013</id>
+      <content type="html"><![CDATA[<p><img src="http://image.slidesharecdn.com/ssdc-54chen-131117235043-phpapp01/95/slide-1-638.jpg" width="200" /></p>
+  
+  
+  
+  
+  <p>以下是上周末在苏州参加的活动使用的slide，<a href="http://softwaresuzhou.org">http://softwaresuzhou.org</a>。</p>
+  
+  
+  
+  
+  <p><iframe src="http://chen54.b0.upaiyun.com/1118/ssdc.html" width="344" height="292" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC;border-width:1px 1px 0;margin-bottom:5px" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="http://chen54.b0.upaiyun.com/1118/ssdc.html" title="ssdc-移动互联网技术挑战" target="_blank">看不到的同学请猛击这里 ssdc-移动互联网技术挑战</a> </strong> </div>
+  </p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[百人共用企业maven私服nexus迁移搭建手记]]></title>
+      <link href="https://www.54chen.com/blog/2013/11/01/maven-nexus-notes/"/>
+      <updated>2013-11-01T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/11/01/maven-nexus-notes</id>
+      <content type="html"><![CDATA[<p><img class="alignnone" title="nexus" src="http://chen54.b0.upaiyun.com/1101/nexus200x50.png" alt="nexus" width="200" height="55" /></p>
+  
+  
+  
+  
+  <p>三年前，小米的第一个nexus（版本1.8.0）在一台dell的办公机上安装完成。域名为http://www.a.com。</p>
+  
+  
+  
+  
+  <p>三年后，a.com时不时已经慢得不行了。特别一到周一，大家都在update snapshot的时候，完全陷入一种无尽的痛苦中。</p>
+  
+  
+  
+  
+  <p>然后弄来了一台专业server做这事情，域名为http://www.b.com。版本到官网一看，已经2.64了。日新月异！</p>
+  
+  
+  
+  
+  <p>看升级文档顿时没了兴趣考虑升级，全新从零安装。</p>
+  
+  
+  <!-- more -->
+  
+  
+  <p>最后的办法是，在新机器上安装新的，把老的仓库挑出来设置为proxy类型。然后启用了ldap，同时保障大家都有deploy权限的同时，最大保障大家的密码不明文出现，同时通过代理ngx来限制最大上传的包，同时规定了snapshot的使用规则，防止在线上使用snapshot。以下是详细记录：</p>
+  
+  
+  
+  
+  <p><strong>一、下载安装nexus和配置nginx</strong></p>
+  
+  
+  
+  
+  <p>找个磁盘分区不小的：</p>
+  
+  
+  
+  
+  <p>wget http://sxrelease.n.miliao.com/nexus-2.6.4-02-bundle.zip</p>
+  
+  
+  
+  
+  <p>unzip nexus-2.6.4-02-bundle.zip</p>
+  
+  
+  
+  
+  <p>bin/nexus start</p>
+  
+  
+  
+  
+  <p>然后就能用了。http://www.a.com:8081已经启动了。当然了，如果还不能访问，应该是iptables在捣乱，试一下iptables -F。</p>
+  
+  
+  
+  
+  <p>［nginx安装忽略］</p>
+  
+  
+  
+  
+  <p>然后再在此机器上配置一个nginx代理到8081端口上。只举是为了：1.分担jetty的访问压力，毕竟公司人已经越来越多了。2.好做后续更多的事情。
+  <div id="_mcePaste">server {</div>
+  <div id="_mcePaste">listen       80;</div>
+  <div id="_mcePaste">server_name  b.com;</div>
+  <div id="_mcePaste">location / {</div>
+  <div id="_mcePaste">rewrite ^/(.*)$  http://www.b.com/nexus/$1  permanent;</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">access_log  logs/nexus.access.log  main;</div>
+  <div id="_mcePaste">location /nexus {</div>
+  <div id="_mcePaste">proxy_pass         http://127.0.0.1:8081;</div>
+  <div id="_mcePaste">proxy_redirect     off;</div>
+  <div id="_mcePaste">proxy_set_header   Host             $host;</div>
+  <div id="_mcePaste">proxy_set_header   X-Real-IP        $remote_addr;</div>
+  <div id="_mcePaste">proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;</div>
+  <div id="_mcePaste">proxy_read_timeout  5m;</div>
+  <div id="_mcePaste">client_max_body_size       30m;</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">}</div>
+  <div id="_mcePaste">server {</div>
+  <div id="_mcePaste">listen       443;</div>
+  <div id="_mcePaste">server_name  b.com;</div>
+  <div id="_mcePaste">ssl on;</div>
+  <div id="_mcePaste">ssl_certificate ../ssl/b.com.crt;</div>
+  <div id="_mcePaste">ssl_certificate_key ../ssl/b.com.key;</div>
+  <div id="_mcePaste">....</div>
+  配置中，启用了443的https代理，有安全意识的工程师使用ldap的时候传输密码要安全一点。</p>
+  
+  
+  
+  
+  <p>proxy_read_timeout设置5分钟，是因为在下载包时，有可能需要去拉一些没见过的包，设长一点以防出现504。</p>
+  
+  
+  
+  
+  <p>client_max_body_size设置30m，如果再有巨大的奇怪包要deploy，不这么容易了，用来防止不明真相的群众往maven库里传乱七八糟的东西。</p>
+  
+  
+  
+  
+  <p><strong>二、设置nexus</strong></p>
+  
+  
+  
+  
+  <p>第一个设置，为了防止仓库爆仓。</p>
+  
+  
+  
+  
+  <p>login-&gt;scheduled tasks-&gt;add，添加一个定时清理目录的计划任务即可。最后一个选项“remove if released”需要慎重，平时开发可能不是特别正规的时候可能会snapshot和release都需要。</p>
+  
+  
+  
+  
+  <p>第二个设置，打开LDAP支持，让每个人都有权限。</p>
+  
+  
+  
+  
+  <p>login-&gt;security-&gt;ldap configuration，填写各种惨无人道的ldap参数，［此处需要求助IT］，然后security-&gt;roles-&gt;add-&gt;External Role Mapping，Realm选择LDAP，Role里如果没有数据，说明ldap没设置好，Role里选择一个组，点击create mapping。</p>
+  
+  
+  
+  
+  <p>然后在configuration中选择add，添加两个权限，一个是Nexus deployment role，一个是All maven repositories (Full control)。</p>
+  
+  
+  
+  
+  <p>然后在对应组的小伙伴们就有权限了。</p>
+  
+  
+  
+  
+  <p><strong>三、设置本地settings.xml</strong></p>
+  
+  
+  
+  
+  <p>把原来的settings文件的url从a.com改为b.com，普通的小伙伴即可使用新的仓库了。</p>
+  
+  
+  
+  
+  <p>要发包的小伙伴，因为ldap用户名密码明文写在文件里不好，于是就用下面的办法：
+  <h2 style="background-image: none; margin-bottom: 0.6em; padding-top: 0.5em; padding-bottom: 0.17em; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #aaaaaa; font-size: 19px; font-family: sans-serif; line-height: 19px;"><span class="mw-headline">step 1.先随意定义一个种子</span></h2>
+  <pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> localhost:54chen 54chen$ mvn --encrypt-master-password 123asdadfafdadf
+   {BHe/qKN8q30HBG3bAGbYLOVLnAqVRkzjb9/7yWs+Ks0=}</pre>
+  <pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> vim ~/.m2/settings-security.xml</pre>
+  <p style="margin: 0.4em 0px 0.5em; line-height: 19px; color: #000000; font-family: sans-serif; font-size: 13px;">写入内容：</p></p>
+  
+  
+  
+  
+  <p><pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;"> &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  &lt;settingsSecurity&gt;
+     &lt;master&gt;{BHe/qKN8q30HBG3bAGbYLOVLnAqVRkzjb9/7yWs+Ks0=}&lt;/master&gt;
+  &lt;/settingsSecurity&gt;</pre>
+  <h2 style="background-image: none; margin-bottom: 0.6em; padding-top: 0.5em; padding-bottom: 0.17em; border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #aaaaaa; font-size: 19px; font-family: sans-serif; line-height: 19px;"><span class="mw-headline">step 2.最终生成</span></h2>
+  <pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">mvn --encrypt-password 你的邮箱密码
+  {RxLx1asdfiafrjIHfXZDadfwveda23avsdv=}</pre>
+  <p style="margin: 0.4em 0px 0.5em; line-height: 19px; color: #000000; font-family: sans-serif; font-size: 13px;">然后修改：</p></p>
+  
+  
+  
+  
+  <p><pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">vim ~/.m2/settings.xml</pre>
+  <pre style="padding: 1em; border: 1px dashed #2f6fab; color: #000000; background-color: #f9f9f9; line-height: 1.1em;">&lt;server&gt;
+       &lt;id&gt;internal&lt;/id&gt;
+       &lt;username&gt;54chen&lt;/username&gt;
+       &lt;password&gt;{RxLx1asdfiafrjIHfXZDadfwveda23avsdv=}&lt;/password&gt;
+  &lt;/server&gt;</pre>
+  当然了，mvn的版本要在2.1.0以上才行。</p>
+  
+  
+  
+  
+  <p>然后对deploy过程中明文传输有顾虑的小伙伴，直接上https即可。</p>
+  
+  
+  
+  
+  <p><strong>四、在a.com中存在的包，在b.com中没有怎么办？</strong></p>
+  
+  
+  
+  
+  <p>其实很简单，先在a.com中定位404的包在什么repo中，复制下来在a中的repo位置，在b.com中新加一个repo，类型为proxy，同时将remote storage location写成a的。同时， 单击public repositories，调整刚加的repo到ordered repo中去，即可。</p>
+  
+  
+  
+  
+  <p>［后记］</p>
+  
+  
+  
+  
+  <p>标题有点大，解释一下，百人共用的保障，主要还是在nginx上，挡这一层之后，可以做很多事情，比如再加点cache之类的，实际情况下，所有用户减少过度的snapshot使用，也有一定帮助。</p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[移动互联网系统架构十大陷阱]]></title>
+      <link href="https://www.54chen.com/blog/2013/10/17/mi-trap/"/>
+      <updated>2013-10-17T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/10/17/mi-trap</id>
+      <content type="html"><![CDATA[<p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg" alt="移动互联网十宗罪" /></p>
+  
+  
+  
+  
+  <p>过去的三年，54chen一直奋斗在移动互联网一线，历经各种坑爹的情况。以下特做记录。</p>
+  
+  
+  
+  
+  <p><strong>Top 1.时不我待 连通性 </strong>
+  cmwap cmnet这样的词语以后应该都会消失在人世间。三年前，经常性地有移不动联不通手机连不上服务器机房的情况。两年前，这种情况要好了一些。一年前，改善很多。现在还存在。相信未来会越来越好，时代在召唤！解法，花钱找有“背景”的机房。</p>
+  
+  
+  <!-- more -->
+  
+  
+  <p><strong>Top 2.生不逢时 HTML5</strong>
+  在去年的网络情况下，HTML5依旧不适合用来做优秀的app。前几年的时候，网速各种烂的情况下，2G下的html5应用基本上完全不能用。现在好一点，开始有闲人把html5全部封装好native的调用，使其只做view的显示部分，但是，性能也是个大问题。当然了，同样地，相信未来会越来越好，同样是时代在召唤！解法，过几年再用。</p>
+  
+  
+  
+  
+  <p><strong>Top 3.环境恶劣 DNS</strong>
+  DNS解析也有失败的情况下，app做得再漂亮，请求也不可达。IP要比域名靠谱一些，却有别的问题。解法就是在客户端多留下点域名和ip，一个不能用换下一个。</p>
+  
+  
+  
+  
+  <p><strong>Top 4.车匪路霸 http拦截</strong>
+  运营商，可以干得出你想不到的事情。各种小广告帖你家防盗门上。所以你最好还是在header里声明好了:畜生，这个不是html，这是json，不要加广告!</p>
+  
+  
+  
+  
+  <p><strong>Top 5.五花八门 app添加按钮一定要克制</strong>
+  特别是android app，完全没有限制，或者统一标准，什么样的App都有，做一个大气的App，最重要的一点，看看能不能打开就是主要功能，手指点一下就能到重要功能。</p>
+  
+  
+  
+  
+  <p><strong>Top 6.逆流而上 完全不要在传统web上有所期待</strong>
+  除了新浪微博、QQ空间这种从传统web出的App之外，几乎不可能在完成一个App之后，能够让用户按你的引导打开一个网站。其难度不低于当年在传统广告商打完广告，等用户来访问网站一样。</p>
+  
+  
+  
+  
+  <p><strong>Top 7.天下大同 App上的sqlite与服务器的mysql数据同步，是个大麻烦</strong>
+  当App也有一个db在保存数据的时候，就会接二连三地出现数据不一致的问题。最好的解法，公司有个统一的同步机制，最好是固定的框架代码，让业务逻辑隔离开这个同步过程。当然，实际工作过程中，我们甚至还想把所有的云端数据只当成备份，干脆全部交给客户端工程师来完成逻辑，我们让cluster更加可靠和可扩展。</p>
+  
+  
+  
+  
+  <p><strong>Top 8.通则不痛 下载渠道要通畅</strong>
+  动则几M的包，下载不通畅，基本上分分钟新增用户就归零了。而且，要上CDN。这里有个坑，有些个CDN厂商的代理服务器可能会出现缓存有限的情况，文件太大会出现前半部分下载挺快，后面越下越慢，请谨慎使用。</p>
+  
+  
+  
+  
+  <p><strong>Top 9.兵贵中速 移动网络更新太快不是好事，太慢也不是好事</strong>
+  你看看哪个App天天在更新，已经不是web2.0时代了，亲！ 同时，不要慢速运转，你的伙伴们会养成拖拉的习惯。最好的办法，内部天天更新，外部月更新甚至是季更新。</p>
+  
+  
+  
+  
+  <p><strong>Top 10.未雨绸缪 一定要提前准备全体用户可以看到的公告条，以备不时之需</strong>
+  web2.0时代，我们要维护系统，在全部页面顶部加一个条：今天xx点全站维护。移动时代，这不太可能了，于是你会看到各种微博公告、微信公告、xx公告，反正就是不在自己家公告，因为自己家坏了要维护。</p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[如何写一手好文档（好代码）？]]></title>
+      <link href="https://www.54chen.com/blog/2013/09/23/how-to-document-code/"/>
+      <updated>2013-09-23T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/09/23/how-to-document-code</id>
+      <content type="html"><![CDATA[<p><img src="http://chen54.b0.upaiyun.com/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="document" /></p>
+  
+  
+  
+  
+  <p><span style="font-size:33px;font-weight:bold">好</span>久没见。</p>
+  
+  
+  
+  
+  <p>中秋去了一趟草原，放空了大脑，回来灵感突发，对文档、代码写法这方面的感悟多了些，特记录一下。
+  <img src="http://ww2.sinaimg.cn/bmiddle/663fba41jw1e8udr90gv4j218g0p0gr6.jpg" alt="54chen" /></p>
+  
+  
+  
+  
+  <p><strong>一、什么样的文档（代码）叫做“好”？</strong>
+  任何一篇文档，目标都是给别人看懂。<br />
+  任何一段代码，首先也都是别人能看爽了才是目标。</p>
+  
+  
+  
+  
+  <p>以上述“世界观”为准，很容易得到文档（代码）好不好的结论。</p>
+  
+  
+  <!-- more -->
+  
+  
+  <p>以80后小时候读的连环画为例，它就是优秀文档的典范。
+  <img src="http://ww3.sinaimg.cn/bmiddle/62014881jw1e8wgzgj8eyj20hf0go40k.jpg" alt="连环画" /></p>
+  
+  
+  
+  
+  <p><span style="font-size:33px;font-weight:bold">像</span>连环画这样优秀的文档，主要具备以下几个特点：<br />
+  1.长篇被分成小节。<br />
+  2.小节中关键页有图。<br />
+  3.描述言简意赅。<br />
+  4.页数固定不多。</p>
+  
+  
+  
+  
+  <p>典型地，如果在写文档（代码）时，能够做到上述四点，都是优秀的。<br />
+  比如：<br />
+  PHP文档造福了多少PHP程序员，让PHP这门语言流芳百世、追随者众多。在PHP文档中，每一小节都进行了特别归类; 在关键位置还有不少例子代码; 每个方法的作用也是言简意赅; 每一小节的数量都不是很多。</p>
+  
+  
+  
+  
+  <p>再来看nginx代码，完全是一个大型服务端软件构建的一个范例。只看src目录中的源码，从一开始就分成了core、event、http、mail、misc、os，这样相当清晰明了的层级结构和定义，让后续很多事情方便扩展; 每一部分的代码都能够让读者一眼看明白是做什么的; 每个细节的方法长度也不是特别长; 每个分类里的内容也相对是固定的，后续的改进都是在plugin上比较多。</p>
+  
+  
+  
+  
+  <p><strong>二、几种实际的土办法提高文档（代码）能力</strong>
+  在上述建立好了对好文档（好代码）的世界观之后，下面再分享一些总结出来的套路，如果前面世界观没理解透，只把这里的土办法理解了，也能写出来容易读的文档（代码）。</p>
+  
+  
+  
+  
+  <p><b>办法一、写文档先写段落标题，写代码先建分类目录（java叫做package）。</b>
+  在一切开始之前，如果无法下笔，则先想想要写代码架子都有哪些。</p>
+  
+  
+  
+  
+  <p><b>办法二、一级段落不要超过5个。</b>
+  这纯粹是个经验值，实际超过3个的时候已经开始有些遗忘前面的了。套在代码上，不要超过5种主要功能的目录，像nginx有6个，不过os和misc基本上都是固定不改的东西，所以常动的也只有4个而已。</p>
+  
+  
+  
+  
+  <p><b>办法三、不要没有段落画大饼</b>
+  这和办法二是相反的，因为人脑对内容的吸收是有阶梯的，越往后的内容越难记住。所以在适当的时候要歇一歇。套在代码上，就是不要搞一个大类，什么都能干。</p>
+  
+  
+  
+  
+  <p><b>办法四、尽可能让文档（代码）先少后多</b>
+  这个办法是指，让读代码的人先看一小部分，慢慢再“勾引”读者不断地深入。</p>
+  
+  
+  
+  
+  <p><span style="font-size:33px;font-weight:bold">好</span>了，上面的办法都实施之后，一手好湿就应该不远了。</p>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

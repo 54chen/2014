@@ -1,0 +1,1005 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2012-09-02 2012-09-02 00:00:00 +0800 在小米写服务端java代码，你只需要知道java语法，其他maven呀、nginx配置呀、高可用呀、负载均衡呀，统统都可以忽略，天然就是支持的，嗯，我说的是下一年的事情。 # …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/10">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/08/30/cloud-foundry-cloud_controller/">Cloud Foundry之cloud_controller代码解读</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-08-30T00:00:00+08:00" pubdate data-updated="true">2012-08-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloud">
+  <strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，cloud_controller是其管理界面的http rest api入口。</p>
+  
+  <p><strong>补课 rails</strong>
+  Rails基于MVC（模型- 视图- 控制器）设计模式。从视图中的Ajax应用，到控制器中的访问请求和反馈，到封装数据库的模型，Rails 为你提供一个纯Ruby的开发环境。<br>
+  习惯约定大于配置：<br>
+  model类位置app/models/xxx.rb<br>
+  controller位置app/controllers/xxx_controller.rc<br>
+  help位置app/helpers/xxx_helpers.rb<br>
+  view位置app/views/xxx<br>
+  对应布局app/views/layouts/xxx.rhtml xxx.rxml</p>
+  
+  <p><strong>开始cloud_controller</strong>
+  https://github.com/cloudfoundry/cloud_controller</p>
+  
+  <p>里面有两个项目，一个是cloud controller另一个是health_manager，今天要研究的是前者，下节说后者。</p>
+  
+  <p><strong>入口</strong>
+  bin/cloud_controller -&gt; config/boot.rb<br>
+  cloud_controller必需要求ruby1.9以上，因为其中有一个fiber需要ruby支持（传说中的Coroutine）。<br>
+  如果没有配置 cloud_controller使用nginx，则会启用Thin去启动Rack。（Thin是ruby内置的network server，Rack: a Ruby Webserver Interface）</p>
+  
+  <p><strong>app</strong>
+  以vmc push举例：<br>
+  vmc push的关键一请求：post apps<br>
+  对应app/controllers/apps_controller.rb</p>
+  
+  <p></p>
+<blockquote>def create<br>
+  	update_app_from_params(app)<br>
+  	检查各种参数并赋值<br>
+  	app.save! (app使用了ActiveRecord::Base，ActiveRecord是ruby用来做orm的东东，具体可以认为save!就是入库了)<br>
+          stage_app(app)<br>
+  		去nats注册：result = client.stage(request, AppConfig[:staging][:max_staging_runtime])</blockquote>
+  
+  <p>	
+  <strong>关键点</strong>
+  cloud_controller接收到请求记录到db:postgresql/sqlite(cloud_controller.yml中定义)。<br>
+  请求同时发送到nats等进一步处理。
+  <strong>
+  vmc push所做的事情</strong>
+  1．发一个POST到”apps”，创建一个app;  (本文只做了这一步的分析)<br>
+  2．发一个PUT到”apps/:name/application”，上传app;<br>
+  3．发一个GET到”apps/:name/”，取得app状态，看看是否已经启动；<br>
+  4．如果没有启动，发一个PUT到”apps/:name/”，使其启动。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/08/29/cloud-foundry-vmc/">Cloud Foundry之vmc代码解读</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-08-29T00:00:00+08:00" pubdate data-updated="true">2012-08-29 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="cloud">
+  <strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，vmc全称是The VMware Cloud CLI，是vmware的应用平台命令行接口。<br>
+  ubuntu安装vmc
+  </p>
+<blockquote>sudo gem install vmc</blockquote>
+  
+  <p><strong>常见的用法 </strong>
+  </p>
+<blockquote>vmc target api.paas.n.xiaomi.net<br>
+  vmc add-user<br>
+  vmc login<br>
+  vmc push
+  </blockquote>
+  
+  <p>vmc其实是使用ruby来实现的一整套的cli命令转化为http restful请求的对应工具。<br>
+  其代码位于：https://github.com/cloudfoundry/vmc<br>
+  git clone回来代码之后，下面对代码进行半瓶水解析法解析。</p>
+  
+  <p><strong>入口 </strong>
+  bin/vmc<br>
+  引用了 $github/vmc/lib/cli<br>
+  直接运行VMC::Cli::Runner.run<br>
+  位于：lib/cli/runner.rb</p>
+  
+  <p>看上去run会被执行。</p>
+  
+  <p><strong>进入到parse_command!方法中</strong></p>
+  
+  <p>以push为例：</p>
+  
+  <p> when 'push'<br>
+        usage('vmc push [appname] [--path PATH] [--url URL] [--instances N] [--mem] [--runtime RUNTIME] [--no-start]')<br>
+        if @args.size == 1<br>
+          set_cmd(:apps, :push, 1)<br>
+        else<br>
+          set_cmd(:apps, :push, 0)<br>
+        end</p>
+  
+  <p><strong>进入到set_cmd中设置变量</strong></p>
+  
+  <p>module Cli<br>
+      :Runner<br>
+       module Command<br>
+           :Apps</p>
+  
+  <p><strong>然后</strong>
+  cmd = VMC::Cli::Command.const_get(@namespace.to_s.capitalize)<br>
+  cmd.new(@options).send(@action, *@args.collect(&amp;:dup))</p>
+  
+  <p><strong>最终</strong>
+  </p>
+<blockquote>VMC::Cli::Command::Apps.new().send(push)<br>
+  （在ruby语法中，此处send方法是一个关键词，表示callMethod)</blockquote>
+  
+  <p><strong>
+  于是来到了lib/cli/commands/apps.rb</strong></p>
+  
+  <p></p>
+<blockquote>def push(appname=nil)<br>
+  	def do_push(appname=nil)<br>
+  	upload_app_bits(appname, @application)<br>
+  		def upload_app_bits(appname, path)<br>
+  		client.upload_app(appname, file, appcloud_resources)<br>
+  lib/vmc/clinet.rb<br>
+  		def upload_app<br>
+  			http_post(path(VMC::APPS_PATH, name, "application"), upload_data)<br>
+  			def http_post(path, body, content_type=nil)<br>
+  				def request(method, path, content_type = nil, payload = nil, headers = {})<br>
+  					perform_http_request<br>
+  						RestClient::Request.execute(req)
+  </blockquote>
+  
+  <p>于是就没有了（RestClient是ruby中一个rest库）。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/08/28/learn-ruby-ubuntu/">Ruby快速学习手记(ubuntu)</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-08-28T00:00:00+08:00" pubdate data-updated="true">2012-08-28 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1MQxKXkpmXXcK5RZ8_071520.jpg" alt="ruby">
+  ruby 1993年诞生于小。rails是用ruby写的web framework，所谓的ROR正是这一搭档。</p>
+  
+  <p><strong>ruby安装</strong></p>
+  
+  <p>ubuntu 10.04很简单，安装ruby和rails：<br>
+  sudo apt-get install ruby<br>
+  sudo apt-get install rails</p>
+  
+  <p><strong>小试牛刀</strong>
+  rails first_rails<br>
+  cd first_rails/<br>
+  ruby script/server<br>
+  浏览器打开127.0.0.1:3000 it's works!</p>
+  
+  <p><strong>IDE:eclipse</strong></p>
+  
+  <p><strong>语法特点</strong>
+  解释型<br>
+  适合文本处理，类似perl<br>
+  完全面向对象<br>
+  无分号<br>
+  方法定义关键字：def+end 木有大括号（{}）<br>
+  无需指定类型<br>
+  局部变量用小写字母或下划线开头即可<br>
+  全局变量用美元符作为前缀 $；而实例变量用 @ 开头；类变量用 @@ 开头；类名、模块名和常量应该用大写字母开头<br>
+  常量是以大写字母打头的变量（ruby的常量是可以改变的，但编译器会发出警告。）<br>
+  ruby中这样实例化类：car = Car.new
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/08/11/spring-static-class-maven-cobertura-site/">Testing and Mocking in spring2.5: Static Class、maven Site、cobertura</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-08-11T00:00:00+08:00" pubdate data-updated="true">2012-08-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="mock spring static class cobertura">
+  <strong>spring 2.5 与 junit 4.4</strong>
+  Spring 2.5.x不能用JUnit 4.5+.如果把使用了spring-test 2.5 的testcase升级到 junit 4.5会得到NoClassDefFoundError:</p>
+  
+  <p></p>
+<blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br>
+  org/junit/Assume$AssumptionViolatedException<br>
+  java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException 
+  </blockquote>
+  
+  <p>这是spring-test 2.5.x的一个bug. 其与JUnit 4.5不一致. 只能使用4.0-4.4.<br>
+  或者就是自己打patch.
+  <a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
+  
+  <p><strong>EasyMock 与 static Class</strong>
+  EasyMock未提到是否支持static methods.功能类经常是static的，是因为没有上下文环境依赖，但如果一定要mock他们，可以选择powerMock.</p>
+  
+  <p><strong>PowerMock、static Class、junit、spring</strong>
+  PowerMock 需要你添加 '@RunWith(PowerMockRunner.class)'.但 sping-test 需要你添加 '@RunWith(SpringJUnit4ClassRunner.class)'.
+  <a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
+  如果junit 4.7,PowerMock将RunWith替换为:<br>
+      @Rule<br>
+      public PowerMockRule rule = new PowerMockRule();<br>
+  http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
+  
+  <p><strong>冲突</strong>
+  Spring 2.5.x不能用JUnit 4.5+, 而PowerMockRule 只能用 JUnit 4.7.<br>
+  基本上在Java + Spring 2.5 &amp; JUnit 4.4环境下没啥简单的办法去mock static class了.</p>
+  
+  <p><strong>maven site 与 cobertura</strong>
+  当你运行 'mvn site' or  'mvn sonar:sonar', 在spring项目中你可能会得到:<br>
+  NoSuchBeanDefinitionException</p>
+  
+  <p>第一个答案:<br>
+  在test的application文件中添加:</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span> </span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>  </span></span></li></ol>
+</div>
+  
+  <p>第二个答案:<br>
+  'mvn site' 与 'mvn sonar:sonar' 会生成类在目录 ./generated-classes/cobertura 中.确保你想autowire的类都在正确的目录下扫描.</p>
+  
+  <p>-----------</p>
+  
+  <p><strong>spring 2.5 and junit 4.4</strong>
+  Spring 2.5.x is incompatible with JUnit 4.5+.If you upgrade to junit 4.5,all of your test case which uses the SpringJUnit4ClassRunner will get a NoClassDefFoundError:</p>
+  
+  <p></p>
+<blockquote>org.apache.maven.surefire.booter.SurefireExecutionException: org/junit/Assume$AssumptionViolatedException; nested exception is java.lang.NoClassDefFoundError: <br>
+  org/junit/Assume$AssumptionViolatedException<br>
+  java.lang.NoClassDefFoundError: org/junit/Assume$AssumptionViolatedException<br>
+   </blockquote>
+  
+  <p>It is an known issue with spring-test 2.5.x. It is incompatible with JUnit 4.5. Use 4.0-4.4.<br>
+  Or you can try the patch in the issue tracker.
+  <a href="http://jira.springframework.org/browse/SPR-5145">http://jira.springframework.org/browse/SPR-5145</a></p>
+  
+  <p><strong>EasyMock and static Class</strong>
+  EasyMock doesn't mention static methods.Utility methods should be most of the time static as they have no context and no dependencies.But when you need to mock it,you can you choose PowerMock.</p>
+  
+  <p><strong>PowerMock、static Class、junit、spring</strong>
+  PowerMock need you add '@RunWith(PowerMockRunner.class)' to your test code.But sping-test need you add '@RunWith(SpringJUnit4ClassRunner.class)'.
+  <a href="http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/">http://www.jayway.com/2010/12/28/using-powermock-with-spring-integration-testing/</a>
+  With junit 4.7,PowerMock can replace RunWith to:<br>
+      @Rule<br>
+      public PowerMockRule rule = new PowerMockRule();<br>
+  http://www.infoq.com/news/2009/07/junit-4.7-rules</p>
+  
+  <p><strong>conflict</strong>
+  Spring 2.5.x is incompatible with JUnit 4.5+, and that PowerMockRule is compatible with JUnit 4.7.<br>
+  Basically, There isn't an easy way to do this in Java + Spring 2.5 &amp; JUnit 4.4 at the moment.</p>
+  
+  <p><strong>maven site and cobertura</strong>
+  When you run 'mvn site' or  'mvn sonar:sonar' with spring project,you may get the error:<br>
+  NoSuchBeanDefinitionException</p>
+  
+  <p>The first answer:<br>
+  In your test application context add the line:</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">aop:config</span><span> </span><span class="attribute">proxy-target-class</span><span>=</span><span class="attribute-value">"true"</span><span class="tag">/&gt;</span><span>  </span></span></li></ol>
+</div>
+  
+  <p>The second answer:<br>
+  The 'mvn site' or 'mvn sonar:sonar' will generates class in ./generated-classes/cobertura.Make sure the classes that you want to autowire is all scan in right folder.
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/08/01/h2database-easymock-unit-test/">利用h2database和easymock轻松不依赖环境单元测试（rose等spring环境万能）</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-08-01T00:00:00+08:00" pubdate data-updated="true">2012-08-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1LbWjXndsXXccfjjX_085624.jpg" alt="h2database,easymock">
+  <strong>前言</strong>
+  写java时间久了，慢慢就变得自信了，也可能是变得懒了，或者是项目进度的原因，test case越写越少，越来越不写了。<br>
+  还有一个很大的原因是，DB环境不好搞，老是有垃圾数据，依赖的东西太多，有memcache、有别人的服务，等等等等，都是没有test case良好的理由。</p>
+  
+  <p>下面将以rose环境下，使用easy mock搞写第三方依赖和h2database搞写DB环境为例子，简单讲述如何轻松测试。</p>
+  
+  <p>完整代码可以在 <a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a> 下载到。</p>
+  
+  <p><strong>依赖的包介绍</strong>
+  spring-test：提供一些基础的spring环境的支持，如果你不是spring环境，可能不需要。<br>
+  h2：一个内存数据库，使用它的原因是，我们的业务大多数时候使用的都是mysql，而h2有一个mysql模式，可以支持绝大多数的mysql的SQL语句。<br>
+  easymock：以前在五四陈科学院提到过的利器，用来模拟各种调用的工具。</p>
+  
+  <p>pom定义为：</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span>      </span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.springframework</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>spring-test</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>2.5.6</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.h2database</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>h2</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.3.163</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>    </span></span></li>
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.easymock</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>easymockclassextension</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>2.4</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>test</span><span class="tag">&lt;/</span><span class="tag-name">scope</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>基础配置与schema.sql准备</strong>
+  在test/resources下我们需要两个关键的文件：applicationContext.xml  与 schema.sql</p>
+  
+  <p>applicationContext.xml定义了test执行时扫描的情况，同正常运行时使用的配置大同小异。不同在于需要替换db定义中的mysql driver为h2的driver，关键部分：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"driverClassName"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"org.h2.Driver"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"url"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>    </span></span></li>
+</ol>
+</div>
+  而schema.sql文件定义了初始化的表结构，这个文件的出现是因为h2与mysql还是有一定的语法区别的，不过在我的使用过程中，基本上只有create table的那个引擎声明是不支持的，所以喽，干掉先。
+  
+  <p><strong>H2下的DAO的Test的代码示例</strong>
+  在test case的初始化状态里需要导入schema.sql，代码如下：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span>Statement st = conn.createStatement();  </span></span></li>
+<li class=""><span>         st.execute(<span class="string">"drop all objects;"</span><span>);  </span></span></li>
+<li class="alt"><span>         st.execute(<span class="string">"runscript from '"</span><span> + </span><span class="keyword">new</span><span> DefaultResourceLoader().getResource(</span><span class="string">"schema.sql"</span><span>).getURL().toString() + </span><span class="string">"'"</span><span>);  </span></span></li>
+<li class=""><span>         st.close();  </span></li>
+</ol>
+</div>
+  而如果是spring/rose环境，则可以再加载上context.xml文件，代码如下：
+  <div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@RunWith</span><span>(SpringJUnit4ClassRunner.</span><span class="keyword">class</span><span>)  </span></span></li>
+<li class=""><span><span class="annotation">@ContextConfiguration</span><span>(locations = </span><span class="string">"classpath:applicationContext.xml"</span><span>)  </span></span></li>
+<li class="alt"><span><span class="keyword">public</span><span> </span><span class="keyword">class</span><span> TestDAOTest {  </span></span></li>
+</ol>
+</div>
+  然后就开始写测试代码：
+  <div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@Test</span><span>  </span></span></li>
+<li class=""><span>    <span class="keyword">public</span><span> </span><span class="keyword">void</span><span> getTestTest() {  </span></span></li>
+<li class="alt"><span>        com.chen.model.Test t = testDAO.getTest();  </span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>        Assert.assertEquals(<span class="number">111</span><span>, t.getId());  </span></span></li>
+<li class=""><span>    }  </span></li>
+</ol>
+</div>
+  <strong>
+  easymock的代码示例</strong>
+  
+  <p>easymock以前也提到过，这里再提一次：<a href="http://www.54chen.com/java-ee/spring-easymock-tutorial.html">http://www.54chen.com/java-ee/spring-easymock-tutorial.html</a>
+    </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@Test</span><span>  </span></span></li>
+<li class=""><span>  <span class="keyword">public</span><span> </span><span class="keyword">void</span><span> getTestTest() {  </span></span></li>
+<li class="alt"><span>      com.chen.model.Test t = <span class="keyword">new</span><span> com.chen.model.Test();  </span></span></li>
+<li class=""><span>      t.setId(<span class="number">1111</span><span>);  </span></span></li>
+<li class="alt"><span>      t.setMsg(<span class="string">"adfadf"</span><span>);  </span></span></li>
+<li class=""><span>      TestDAO testDAO = EasyMock.createMock(<span class="string">"testDAO"</span><span>, TestDAO.</span><span class="keyword">class</span><span>);  </span></span></li>
+<li class="alt"><span>      EasyMock.expect(testDAO.getTest()).andReturn(t);  </span></li>
+<li class=""><span>      EasyMock.replay(testDAO);  </span></li>
+<li class="alt"><span>      ReflectionTestUtils.setField(service, <span class="string">"testDAO"</span><span>, testDAO, TestDAO.</span><span class="keyword">class</span><span>);  </span></span></li>
+<li class=""><span>      t = service.getTest();  </span></li>
+<li class="alt"><span>      <span class="comment">// 确信使用了mock</span><span>  </span></span></li>
+<li class=""><span>      EasyMock.verify(testDAO);  </span></li>
+<li class="alt"><span>      Assert.assertEquals(<span class="number">1111</span><span>, t.getId());  </span></span></li>
+<li class=""><span>  }  </span></li>
+</ol>
+</div>
+  
+  <p>mock其他东西以此类推。</p>
+  
+  <p><strong>后序 </strong>
+  至此，已经可以mock一切了，你还有什么理由不写test case呢？<br>
+  本文完整代码可以在 <a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a> 下载到。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/07/25/zookeeper-curator/">Zookeeper客户端curator使用手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-07-25T00:00:00+08:00" pubdate data-updated="true">2012-07-25 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13M02XbRXXXX4FVU4_051626.jpg" alt="zookeeper">
+  <strong>一、简介</strong>
+      curator是Netflix公司开源的一个Zookeeper client library，用于简化zookeeper客户端编程，包含一下几个模块：</p>
+  
+  <p>    curator-client - zookeeper client封装，用于取代原生的zookeeper客户端，提供一些非常有用的客户端特性<br>
+      curator-framework - zookeeper api的高层封装，大大简化zookeeper客户端编程，添加了例如zookeeper连接管理、重试机制等<br>
+      curator-recipes - zookeeper recipes 基于curator-framework的实现（除2PC以外）</p>
+  
+  <p>    从github和maven上的消息来看，1.0.1的版本已经十分稳定，相对应的zk版本是3.3.x，还在开发中的版本是1.1.x，对应的版本是zk3.4.x。
+  <strong>二、依赖</strong></p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>            <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.netflix.curator</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>            <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>curator-framework</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>            <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0.1</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>
+  三、代码讲解</strong></p>
+  
+  <p>    以下代码以CuratorFramework为例：<br>
+    </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="keyword">public</span><span> </span><span class="keyword">static</span><span> </span><span class="keyword">void</span><span> main(String[] args) </span><span class="keyword">throws</span><span> Exception {  </span></span></li>
+<li class=""><span>     String path = <span class="string">"/test_path"</span><span>;  </span></span></li>
+<li class="alt"><span>     CuratorFramework client = CuratorFrameworkFactory.builder().connectString(<span class="string">"zookeeper.n.miliao.com:2181"</span><span>).namespace(</span><span class="string">"/brokers"</span><span>).retryPolicy(</span><span class="keyword">new</span><span> RetryNTimes(Integer.MAX_VALUE, </span><span class="number">1000</span><span>)).connectionTimeoutMs(</span><span class="number">5000</span><span>).build();  </span></span></li>
+<li class=""><span>     <span class="comment">// 启动 上面的namespace会作为一个最根的节点在使用时自动创建</span><span>  </span></span></li>
+<li class="alt"><span>     client.start();  </span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>     <span class="comment">// 创建一个节点</span><span>  </span></span></li>
+<li class=""><span>     client.create().forPath(<span class="string">"/head"</span><span>, </span><span class="keyword">new</span><span> </span><span class="keyword">byte</span><span>[</span><span class="number">0</span><span>]);  </span></span></li>
+<li class="alt"><span>  </span></li>
+<li class=""><span>     <span class="comment">// 异步地删除一个节点</span><span>  </span></span></li>
+<li class="alt"><span>     client.delete().inBackground().forPath(<span class="string">"/head"</span><span>);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>     <span class="comment">// 创建一个临时节点</span><span>  </span></span></li>
+<li class=""><span>     client.create().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(<span class="string">"/head/child"</span><span>, </span><span class="keyword">new</span><span> </span><span class="keyword">byte</span><span>[</span><span class="number">0</span><span>]);  </span></span></li>
+<li class="alt"><span>  </span></li>
+<li class=""><span>     <span class="comment">// 取数据</span><span>  </span></span></li>
+<li class="alt"><span>     client.getData().watched().inBackground().forPath(<span class="string">"/test"</span><span>);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>     <span class="comment">// 检查路径是否存在</span><span>  </span></span></li>
+<li class=""><span>     client.checkExists().forPath(path);  </span></li>
+<li class="alt"><span>  </span></li>
+<li class=""><span>     <span class="comment">// 异步删除</span><span>  </span></span></li>
+<li class="alt"><span>     client.delete().inBackground().forPath(<span class="string">"/head"</span><span>);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>     <span class="comment">// 注册观察者，当节点变动时触发</span><span>  </span></span></li>
+<li class=""><span>     client.getData().usingWatcher(<span class="keyword">new</span><span> Watcher() {  </span></span></li>
+<li class="alt"><span>         <span class="annotation">@Override</span><span>  </span></span></li>
+<li class=""><span>         <span class="keyword">public</span><span> </span><span class="keyword">void</span><span> process(WatchedEvent event) {  </span></span></li>
+<li class="alt"><span>             System.out.println(<span class="string">"node is changed"</span><span>);  </span></span></li>
+<li class=""><span>         }  </span></li>
+<li class="alt"><span>     }).inBackground().forPath(<span class="string">"/test"</span><span>);  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>     <span class="comment">// 结束使用</span><span>  </span></span></li>
+<li class=""><span>     client.close();  </span></li>
+<li class="alt"><span> }  </span></li>
+</ol>
+</div>
+  
+  <p><strong>四、方法说明
+  </strong>
+      create(): 发起一个create作. 可以组合其他方法 (比如mode 或background) 最后以forPath()方法结尾<br>
+      delete(): 发起一个删除作. 可以组合其他方法(version 或background) 最后以forPath()方法结尾<br>
+      checkExists(): 发起一个检查ZNode 是否存在的作. 可以组合其他方法(watch 或background) 最后以forPath()方法结尾<br>
+      getData(): 发起一个获取ZNode数据的作. 可以组合其他方法(watch, background 或get stat) 最后以forPath()方法结尾<br>
+      setData(): 发起一个设置ZNode数据的作. 可以组合其他方法(version 或background) 最后以forPath()方法结尾<br>
+      getChildren(): 发起一个获取ZNode子节点的作. 可以组合其他方法(watch, background 或get stat) 最后以forPath()方法结尾<br>
+      inTransaction(): 发起一个ZooKeeper事务. 可以组合create, setData, check, 和/或delete 为一个作, 然后commit() 提交 </p>
+  
+  <p><strong>五、五四陈点评</strong></p>
+  
+  <p>相比zookeeper常用的zkClient的确是平易近人了，上手容易，理解轻松，语法优美，至于是不是各种情况都处理了，还得靠实践检验。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/9">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <em>10</em>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/11">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

@@ -1,0 +1,386 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>优化器、激活函数、评价函数 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="以下是神经网络训练中经常会遇到的一些概念，进行了收集总结，供需要时查阅。 LSE-最小二乘法 按偏差平方和最小的原则选取拟合曲线，并且采取二项式方程为拟合曲线的方法,称为最小二乘法。 它通过最小化误差的平方和寻找数据的最佳函数匹配。 利用最小二乘法可以简便地求得未知的数据， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2017/05/19/optimizer">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">优化器、激活函数、评价函数</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2017-05-19T10:47:32+08:00" pubdate data-updated="true">2017-05-19 10:47:32 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>以下是神经网络训练中经常会遇到的一些概念，进行了收集总结，供需要时查阅。</p>
+  
+  <p><img src="http://chen54.b0.upaiyun.com/1127/c10d_bg.jpg"></p>
+  
+  <h2>LSE-最小二乘法</h2>
+  
+  <p>按偏差平方和最小的原则选取拟合曲线，并且采取二项式方程为拟合曲线的方法,称为最小二乘法。</p>
+  
+  <p>它通过最小化误差的平方和寻找数据的最佳函数匹配。</p>
+  
+  <p>利用最小二乘法可以简便地求得未知的数据，并使得这些求得的数据与实际数据之间误差的平方和为最小。</p>
+  
+  <!--more-->
+  
+  
+  <h2>GD-梯度下降算法</h2>
+  
+  <p>参考tf.train.GradientDescentOptimizer</p>
+  
+  <p>梯度下降（GD）是最小化风险函数、损失函数的一种常用方法，随机梯度下降和批量梯度下降是两种迭代求解思路。</p>
+  
+  <p>学习率是GD中最关键的参数，了每个梯度的大小，大了会反复振荡，小了会计算困难。</p>
+  
+  <h2>SGD-随机梯度下降算法</h2>
+  
+  <p>参考keras.optimizers.SGD</p>
+  
+  <p>为了解决GD里学习率的选择问题，SGD用随机的办法来减少计算学习率的次数。</p>
+  
+  <p>SGD伴随的一个问题是噪音较多，使得SGD并不是每次迭代都向着整体最优化方向。</p>
+  
+  <p>keras.optimizers.SGD(lr=0.01, momentum=0.0, decay=0.0, nesterov=False)</p>
+  
+  <p>参数：</p>
+  
+  <p>lr：大于0的浮点数，学习率</p>
+  
+  <p>momentum：大于0的浮点数，动量参，它模拟的是物体运动时的惯性，即更新的时候在一定程度上保留之前更新的方向，同时利用当前batch的梯度微调最终的更新方向。这样一来，可以在一定程度上增加稳定性，从而学习地更快，并且还有一定摆脱局部最优的能力，这个值在0-1之间，在训练开始时，由于梯度可能会很大，所以初始值一般选为0.5；当梯度不那么大时，改为0.9。</p>
+  
+  <p>decay：大于0的浮点数，每次更新后的学习率衰减值</p>
+  
+  <p>nesterov：布尔值，确定是否使用Nesterov动量-为true时，启用执行简单的梯度下降步骤。</p>
+  
+  <p>SGD通常训练时间更长，容易陷入鞍点，但是在好的初始化和学习率调度方案的情况下，结果更可靠。</p>
+  
+  <h2>Adagrad</h2>
+  
+  <p>参考keras.optimizers.Adagrad</p>
+  
+  <p>不建议修改keras Adagrad算法任何参数。</p>
+  
+  <p>会在学习的过程中自动调整 learning rate, 对于出现频率低的参数使用较大的 learning rate, 出现频率高的参数使用较小的 learning rate. 因此, 这种方法对于训练数据比较稀疏的情况比较适用. AdaGrad 可以提高 SGD 的鲁棒性。</p>
+  
+  <p>Adagrad 的缺点是,在深度学习中, 这种方法导致学习率的调整太激进, 因此常常过早结束了学习过程。</p>
+  
+  <h2>RMSprop</h2>
+  
+  <p>参考keras.optimizers.RMSprop</p>
+  
+  <p>RNN网络经常使用此算法，在keras里，推荐全部默认参数，除了学习率之外。</p>
+  
+  <p>RMSProp是一个非常高效的算法, 但是目前并没有发表。他改进了AdaGrad算法，也是一种自动调整学习率的算法。</p>
+  
+  <h2>Adadelta</h2>
+  
+  <p>参考 keras.optimizers.Adadelta</p>
+  
+  <p>不建议修改keras的默认参数。</p>
+  
+  <p>AdaGrad 方法比较激进, 会过早结束优化过程, AdaDelta 的目的就是为了解决这个问题. 在 AdaGrad 中对 learning rate 进行 normalize 的参数是使用之前所有时间得到的梯度的累积, AdaDelta 的是通过设置窗口 w, 只使用部分时间的梯度累积.</p>
+  
+  <h2>Adam</h2>
+  
+  <p>参考keras.optimizers.Adam</p>
+  
+  <p>adam算法来自于RMSprop的改进，论文中推荐的超参数为 eps=1e-6，bata1=0.9，beta2=0.999，keras参考此设置，也不建议修改。其效果相当于SGD+Nesterov Momentum再加上bias的纠正机制。</p>
+  
+  <p>在大部分实践过程中，数据比较稀疏的情况下，此算法比较通吃。</p>
+  
+  <h2>Adamax</h2>
+  
+  <p>参考keras.optimizers.Adamax</p>
+  
+  <p>是adam的一个变种，他对学习率变化的上限提供了更简单的范围。</p>
+  
+  <h2>Nadam</h2>
+  
+  <p>参考keras.optimizers.Nadam</p>
+  
+  <p>不推荐修改默认参数值。</p>
+  
+  <p>Nadam对学习率有了更强的约束，同时对梯度的更新也有更直接的影响。一般而言，在想使用带动量的RMSprop，或者Adam的地方，大多可以使用Nadam取得更好的效果。</p>
+  
+  <p>［后续为激活函数］</p>
+  
+  <h2>sigmoid-逻辑回归函数</h2>
+  
+  <p>参考keras激活函数activation-sigmoid。</p>
+  
+  <p>由于函数图像很像一个“S”型，所以该函数又叫 sigmoid。广义逻辑回归曲线可以模仿一些情况人口增长（ P ）的 S 形曲线。起初阶段大致是 指数增长 ；然后随着开始变得饱和，增加变慢；最后，达到成熟时增加停止。 函数。用于估计某种事物的可能性。可以用来回归，也可以用来分类，主要是二分类。它不像SVM直接给出一个分类的结果，而是这个样本属于正类或者负类的可能性是多少，当然在多分类的系统中给出的是属于不同类别的可能性，进而通过可能性来分类。</p>
+  
+  <h2>softmax-多元逻辑回归</h2>
+  
+  <p>参考tf.nn.softmax</p>
+  
+  <p>如果不是在[0,1]中取值，而是在K个类别中取值，这时问题就变为一个多分类问题。</p>
+  
+  <p>sigmoid函数只能分两类，而softmax能分多类，softmax是sigmoid的扩展。</p>
+  
+  <p>sigmoid将一个real value映射到（0,1）的区间（当然也可以是（-1,1）），这样可以用来做二分类。</p>
+  
+  <p>而softmax把一个k维的real value向量（a1,a2,a3,a4….）映射成一个（b1,b2,b3,b4….）其中bi是一个0-1的常数，然后可以根据bi的大小来进行多分类的任务，如取权重最大的一维。</p>
+  
+  <h2>tanh</h2>
+  
+  <p>tanh 网络的收敛速度要比sigmoid快。因为 tanh 的输出均值比 sigmoid 更接近 0，可降低所需的迭代次数。</p>
+  
+  <h2>ReLU</h2>
+  
+  <p>与传统的sigmoid激活函数相比，ReLU能够有效缓解梯度消失问题，从而直接以监督的方式训练深度神经网络，无需依赖无监督的逐层预训练，这也是2012年深度卷积神经网络在ILSVRC竞赛中取得里程碑式突破的重要原因之一。</p>
+  
+  <p>ReLU随着训练的推进，部分输入会落入硬饱和区，导致对应权重无法更新。这种现象被称为“神经元死亡”。</p>
+  
+  <p>ReLU还经常被“诟病”的一个问题是输出具有偏移现象，即输出均值恒大于零。偏移现象和 神经元死亡会共同影响网络的收敛性。</p>
+  
+  <p>PReLU是ReLU 和 LReLU的改进版本，具有非饱和性。RReLU是一种非确定性激活函数，其参数是随机的。这种随机性类似于一种噪声，能够在一定程度上起到正则效果。</p>
+  
+  <h2>ELU</h2>
+  
+  <p>融合了sigmoid和ReLU，左侧具有软饱和性，右侧无饱和性。右侧线性部分使得ELU能够缓解梯度消失，而左侧软饱能够让ELU对输入变化或噪声更鲁棒。ELU的输出均值接近于零，所以收敛速度更快。</p>
+  
+  <h2>Maxout</h2>
+  
+  <p>maxout网络能够近似任意连续函数，且当w2,b2,…,wn,bn为0时，退化为ReLU。Maxout能够缓解梯度消失，同时又规避了ReLU神经元死亡的缺点，但增加了参数和计算量。</p>
+  
+  <h2>softplus</h2>
+  
+  <p>softplus 是对 ReLU 的平滑逼近的解析函数形式。</p>
+  
+  <h2>softsign</h2>
+  
+  <p>类似tanh的非线性函数，很少被用到。</p>
+  
+  <p>［后续为损失函数］</p>
+  
+  <h2>loss function</h2>
+  
+  <p>用来评价训练数据的好坏函数。</p>
+  
+  <p>MSE = mean_squared_error 均方差：参数估计值与参数真值之差平方的期望值。最小二乘法的误差度量办法。而在实际应用中，通常会使用均方差（MSE）作为一项衡量指标。</p>
+  
+  <p>对于回归任务，一般都提供了mse损失函数（基于树的模型除外）。</p>
+  
+  <p>MAE = mean_absolute_error 平均绝对误差</p>
+  
+  <p>MAPE = mean_absolute_percentage_error 相对百分误差</p>
+  
+  <p>在现实数据中，往往会存在异常点，并且模型可能对异常点拟合得并不好，因此提高评价指标的鲁棒性至关重要，于是可以使用中位数来替代平均数，如MAPE。</p>
+  
+  <p>MSLE = mean_squared_logarithmic_error 对MSE加一层对数的优化</p>
+  
+  <p>KLD = kullback_leibler_divergence KL散度 从预测值概率分布Q到真值概率分布P的信息增益,用以度量两个分布的差异。</p>
+  
+  <p>cosine = cosine_proximity  即预测值与真实标签的余弦距离平均值的相反数。</p>
+  
+  <p>binary_crossentropy（亦称作对数损失，logloss） softmax作为最后一层常用的是代价函数是他。对数损失函数(logarithmicloss function) 或对数似然损失函数(log-likelihood loss function)都是他。</p>
+  
+  <p>categorical_crossentropy：亦称作多类的对数损失，注意使用该目标函数时，需要将标签转化为形如(nb_samples, nb_classes)的二值序列。</p>
+  
+  <p>sparse_categorical_crossentrop：如上，但接受稀疏标签。注意，使用该函数时仍然需要你的标签与输出值的维度相同，你可能需要在标签数据上增加一个维度：np.expand_dims(y,-1)。</p>
+  
+  <h2>Reference</h2>
+  
+  <p><a href="https://keras.io/optimizers/">https://keras.io/optimizers/</a></p>
+  
+  <p><a href="http://keras-cn.readthedocs.io/en/latest/other/objectives/">http://keras-cn.readthedocs.io/en/latest/other/objectives/</a></p>
+  
+  <p><a href="http://sebastianruder.com/optimizing-gradient-descent/index.html">http://sebastianruder.com/optimizing-gradient-descent/index.html</a></p>
+  
+  <p><a href="http://blog.csdn.net/viewcode/article/details/8794401">http://blog.csdn.net/viewcode/article/details/8794401</a></p>
+  
+  <p><a href="http://blog.jobbole.com/88521/">http://blog.jobbole.com/88521/</a></p>
+  
+  <p><a href="http://blog.csdn.net/u014422406/article/details/52805924">http://blog.csdn.net/u014422406/article/details/52805924</a></p>
+  
+  <p><a href="http://shuokay.com/2016/06/11/optimization/">http://shuokay.com/2016/06/11/optimization/</a></p>
+  
+  <p><a href="http://blog.csdn.net/xiaozhuge080/article/details/52688613">http://blog.csdn.net/xiaozhuge080/article/details/52688613</a></p>
+  
+  <p><a href="http://www.cnblogs.com/zhangbojiangfeng/p/6362963.html">http://www.cnblogs.com/zhangbojiangfeng/p/6362963.html</a></p>
+  
+  <p><a href="http://www.qingpingshan.com/bc/jsp/126064.html">http://www.qingpingshan.com/bc/jsp/126064.html</a></p>
+  
+  <p><a href="http://blog.csdn.net/u014595019/article/details/52562159">http://blog.csdn.net/u014595019/article/details/52562159</a></p>
+  
+  <p><a href="http://blog.csdn.net/mao_xiao_feng/article/details/53242235?locationNum=9&amp;fps=1">http://blog.csdn.net/mao_xiao_feng/article/details/53242235?locationNum=9&amp;fps=1</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2017-05-19T10:47:32+08:00" pubdate data-updated="true">2017-05-19 10:47:32 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/deeplearning/">deeplearning</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2017/02/09/deeplearning/" title="Previous Post: 利用深度学习解决直播支付风控">« 利用深度学习解决直播支付风控</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2017/07/04/how-to-build-caffe-1-dot-0-with-anaconda-python3/" title="Next Post: How to install caffe 1.0 with Anaconda python3 on centos7">How to install caffe 1.0 with Anaconda python3 on centos7 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

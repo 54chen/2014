@@ -1,0 +1,342 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Web相关 | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/webxiang-guan/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[又拍云cdn试用体验]]></title>
+      <link href="https://www.54chen.com/blog/2013/10/08/upai-cdn-test/"/>
+      <updated>2013-10-08T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2013/10/08/upai-cdn-test</id>
+      <content type="html"><![CDATA[<p><img src="http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg" alt="54chen又拍云试用体验报告" /></p>
+  
+  
+  
+  
+  <p><span style="font-size:33px;font-weight:bold">十</span>一之前，又拍云存储（upyun.com）市场部的谢静同学邮件我，让我试用又拍云的功能。之前在infoq或者是之类的技术讲座上有看到过又拍云的报道和技术架构讲解，印象还是不错的，本着支持创业提升期企业的态度，特写此文写下全部试用感受。</p>
+  
+  
+  <!-- more -->
+  
+  
+  <p><strong>用法</strong>
+  我的用法比较简单，因为diahosting给我提供的vps在，流量是个大问题，所以写博客时，基本都不上传大图片。遇到要上传的图片，之前基本都是两个地方，一是淘宝（嘿嘿，提醒淘宝的兄弟不要把那个上传的口关了哈，淘宝的cdn岗岗的！），二是新浪微博。</p>
+  
+  
+  
+  
+  <p>上述两个老办法的坏处：淘宝的话，每次上传打开步骤都老麻烦了，又是密码又是选上架之类的。微博呢，又老有那个水印。二者图片质量都不行，老是压缩得不行了。</p>
+  
+  
+  
+  
+  <p><span style="font-size:33px;font-weight:bold">申</span>请了又拍云存储之后，直接使用它的ftp功能，无压缩，cdn速度也岗岗的。<a href="http://www.54chen.com/architecture/how-to-document-code.html">http://www.54chen.com/architecture/how-to-document-code.html</a> 此文中第一个图即为又拍云提供。</p>
+  
+  
+  
+  
+  <p>使用记录（mac下纯ftp命令记录）：</p>
+  
+  
+  
+  
+  <p><blockquote>localhost:~ chenzhen$ mkdir -p 54chen-pic/1008<br />
+  localhost:~ chenzhen$ cd 54chen-pic/1008<br />
+  localhost:1008 chenzhen$ cp ~/Downloads/wallpaper_1282030786.jpg .<br />
+  localhost:1008 chenzhen$ ls<br />
+  wallpaper_1282030786.jpg</blockquote></p>
+  
+  
+  
+  
+  <p>localhost:1008 chenzhen$ ftp v2.ftp.upyun.com <br />
+  Connected to v2.ftp.upyun.com.<br />
+  220 Usoppe: King of Snipers Sniper King<br />
+  500 Command "AUTH" not understood.<br />
+  Name (v2.ftp.upyun.com:chenzhen): XXX/XXX<br />
+  331 Username ok, send password.<br />
+  Password:<br />
+  230 Login successful.<br />
+  Remote system type is UNIX.<br />
+  Using binary mode to transfer files.</p>
+  
+  
+  
+  
+  <p>ftp> mkdir 1008<br />
+  257 "/1008" directory created.</p>
+  
+  
+  
+  
+  <p>ftp> cd 1008<br />
+  250 "/1008" is the current directory.</p>
+  
+  
+  
+  
+  <p>ftp> put wal*   <br />
+  local: wallpaper_1282030786.jpg remote: wallpaper_1282030786.jpg<br />
+  200 Active data connection established.<br />
+  125 Data connection already open. Transfer starting.<br />
+  226 Transfer complete.<br />
+  43103 bytes sent in </p>
+  
+  
+  
+  
+  <p>以上作便得到了文章前面的图，url为http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg。</p>
+  
+  
+  
+  
+  <p><strong>优点</strong>
+  1.日志统计流量分析做得超级赞！<br />
+  2.作员和空间的分隔，可能会方便企业用户，不过个人用户可能没什么用，增加了学习成本。<br />
+  3.各种详细的api以及现成的sdk（但是我没用过）。</p>
+  
+  
+  
+  
+  <p><strong>缺点</strong>
+  1.upyun.com的官网太丑陋了，像是05年前的网站，各种图片像索质量巨差（可能和我用的retina屏有关），第一次打开的时候，我以为是个冒充又拍网的。<br />
+  2.没有web-ftp有点小遗憾。</p>
+  
+  
+  
+  
+  <p><strong>用处</strong>
+  如果你是一个苦逼创业团队，如果你有需求把apk\ipa包放在哪里，如果你有需求把css/js放在哪里，如果你没有足够多的资金又想有淘宝百度的下载速度，值得一试！</p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Ruby快速学习手记(ubuntu)]]></title>
+      <link href="https://www.54chen.com/blog/2012/08/28/learn-ruby-ubuntu/"/>
+      <updated>2012-08-28T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2012/08/28/learn-ruby-ubuntu</id>
+      <content type="html"><![CDATA[<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1MQxKXkpmXXcK5RZ8_071520.jpg" alt="ruby" />
+  ruby 1993年诞生于小。rails是用ruby写的web framework，所谓的ROR正是这一搭档。</p>
+  
+  
+  
+  
+  <p><strong>ruby安装</strong></p>
+  
+  
+  
+  
+  <p>ubuntu 10.04很简单，安装ruby和rails：<br />
+  sudo apt-get install ruby<br />
+  sudo apt-get install rails</p>
+  
+  
+  
+  
+  <p><strong>小试牛刀</strong>
+  rails first_rails<br />
+  cd first_rails/<br />
+  ruby script/server<br />
+  浏览器打开127.0.0.1:3000 it's works!</p>
+  
+  
+  
+  
+  <p><strong>IDE:eclipse</strong></p>
+  
+  
+  
+  
+  <p><strong>语法特点</strong>
+  解释型<br />
+  适合文本处理，类似perl<br />
+  完全面向对象<br />
+  无分号<br />
+  方法定义关键字：def+end 木有大括号（{}）<br />
+  无需指定类型<br />
+  局部变量用小写字母或下划线开头即可<br />
+  全局变量用美元符作为前缀 $；而实例变量用 @ 开头；类变量用 @@ 开头；类名、模块名和常量应该用大写字母开头<br />
+  常量是以大写字母打头的变量（ruby的常量是可以改变的，但编译器会发出警告。）<br />
+  ruby中这样实例化类：car = Car.new
+  </p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Nginx防hashdos模块使用帮助]]></title>
+      <link href="https://www.54chen.com/blog/2012/01/10/nginx-hashdos-help/"/>
+      <updated>2012-01-10T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2012/01/10/nginx-hashdos-help</id>
+      <content type="html"><![CDATA[<p><img src="http://wiki.nginx.org/local/nginx-logo.png" alt="nginx,hashdos" />
+  经过上周一周朋友们帮忙测试和bug fix，nginx_http_hashdos_module已经达到可以线上使用的水平，下面是使用记录。
+  <strong>下载</strong></p>
+  
+  
+  
+  
+  <p><blockquote>#wget --no-check-certificate https://github.com/54chen/nginx-http-hashdos-module/zipball/master<br />
+  #mv master nginx_hashdos.zip<br />
+  #unzip nginx_hashdos.zip</blockquote></p>
+  
+  
+  
+  
+  <p><strong>编译安装</strong></p>
+  
+  
+  
+  
+  <p><blockquote>#tar zxvf nginx-1.0.xx.tar.gz <br />
+  #cd nginx-1.0.xx/<br />
+  #./configure --prefix=/opt/soft/nginx --with-pcre --user=www --group=www --with-http_stub_status_module --with-http_ssl_module --add-module=../54chen-nginx-http-hashdos-module-f84d909<br />
+  #make && make install</blockquote></p>
+  
+  
+  
+  
+  <p><strong>配置注意事项</strong>
+  在http段，增加如下：
+  <blockquote>
+  hashdos on;<br />
+  body_max_count 1000;
+  </blockquote></p>
+  
+  
+  
+  
+  <p>在各自的location段，要按照业务情况来加：
+  <blockquote>client_body_buffer_size 2m;<br />
+  client_max_body_size 2m;</blockquote>
+  *上述两个值一定要相等。</p>
+  
+  
+  
+  
+  <p>如果是普通的discuz，上传上限是1m的，可以修改为1m。<br />
+  如果是没有上传功能的普通网站，建议修改为512k。
+  </p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[Nginx防hashdos模块释出]]></title>
+      <link href="https://www.54chen.com/blog/2012/01/06/nginx-hashdos-module/"/>
+      <updated>2012-01-06T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2012/01/06/nginx-hashdos-module</id>
+      <content type="html"><![CDATA[<p><img src="http://wiki.nginx.org/local/nginx-logo.png" alt="nginx hashdos" />
+  <font color="blue">2012.1.7 更新<br />
+  编译的时候推荐使用nginx-1.0以上版本，不要加--with-debug参数编译，（感谢agentzh指出）。</font></p>
+  
+  
+  
+  
+  <p>hashdos这个事，严格意义上不是各种语言的错了（不过perl的确处理得很好），但是用nginx来擦屁股要干净些。<br />
+  借鉴tomcat的作法，实现了下面这个nginx-http-hashdos-module，通过设置hashdos（默认on）的开关和body_max_count(默认值1000)，对nginx后面的服务进行安全防护，相比对php或者java进行patch，这或许是最好的办法了。</p>
+  
+  
+  
+  
+  <p><strong>nginx-http-hashdos-module项目地址</strong>
+  <a href="https://github.com/54chen/nginx-http-hashdos-module">https://github.com/54chen/nginx-http-hashdos-module</a></p>
+  
+  
+  
+  
+  <p><strong>如何使用</strong>
+  1.下载zip后保存到一个目录，如~/nginx-http-hashdos-module。<br />
+  2.cd nginx-1.0.9/<br />
+  3.重新编译和安装nginx<br />
+  ./configure --prefix=/opt/soft/nginx --with-pcre --user=www --group=www --with-http_stub_status_module --with-http_ssl_module --add-module=/path_to/nginx-http-hashdos-module/ && make && make install<br />
+  4.配置打开：<br />
+          hashdos on;<br />
+      body_max_count 1000;<br />
+      location ~ \.php$ {<br />
+            fastcgi_pass 127.0.0.1:9000;<br />
+            fastcgi_index index.php;<br />
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;<br />
+            include /opt/soft/nginx/conf/fastcgi_params;<br />
+        client_body_buffer_size  2m;<br />
+        client_max_body_size     2m;<br />
+          }</p>
+  
+  
+  
+  
+  <p><strong>注意事项</strong>
+  因为计算参数都在内存中进行，所以client_body_buffer_size 与 client_max_body_size 的值一定要相等。推荐2m。</p>
+  
+  
+  
+  
+  <p><strong>TODO</strong>
+  改进in-file时的post分析。</p>
+  
+  
+  
+  
+  <p><strong>原理</strong>
+  介于微博上有网友对此文扫一眼之后以为是简单通过client_body_buffer_size和client_max_body_size来做的判断，特加此节。<br />
+  nginx-reqeust-body在接到请求时，根据header中的声明，判断是保存在内存还是在硬盘中，当大小超过两个buf和client_body_buffer_size大小时，会写入临时文件。<br />
+  防止hashdos的终极目标是filter用户的输入，所以对用户的输入参数数量进行计数。超过1000（body_max_count的默认数量）时，返回一个413给攻击者。希望不要再渔到各种高级工程师。</p>
+  
+  
+  
+  
+  <p><a href="https://github.com/54chen/nginx-http-hashdos-module">https://github.com/54chen/nginx-http-hashdos-module</a></p>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[移动互联网api设计实践]]></title>
+      <link href="https://www.54chen.com/blog/2011/12/05/mobile-net-api-design/"/>
+      <updated>2011-12-05T00:00:00+08:00</updated>
+      <id>https://www.54chen.com/blog/2011/12/05/mobile-net-api-design</id>
+      <content type="html"><![CDATA[<p><img src="http://img02.taobaocdn.com/imgextra/i2/13078490/T28EicXgtXXXXXXXXX_!!13078490.jpg" alt="api quota perf design" />
+  过去一年时间里，都在做移动互联网下的API设计工作，所面对的情况可能是最具特色的了。如果你在尝试构架一整套的新的API供你的客户端使用，可以尝试以下的几点：
+  <strong>1）api所使用协议，要能够不怕被加js、加广告和各种代码。</strong>
+  各地的运营商，有习惯挂广告、加代码等等，要做的事情就是在客户端做各种解析判断。实践证明，这帮的设备是检测http协议的head头里的content-type，如果是html/text则会加，如果是text/json就不加了，所以，你。</p>
+  
+  
+  
+  
+  <p><strong>2）api可视化</strong>
+  你的app上架了，后端也布好了。然后呢，就天天看下载量。但后端好坏一问三不知。所以在设计api时，要提前回答以下问题：<br />
+  1.此时此刻，有多少个app正在调用这些api，每分钟多少个？<br />
+  2.他们（api）有快？<br />
+  3.能否很简单地通过浏览器快速debug？<br />
+  4.能否快速禁止单个用户？</p>
+  
+  
+  
+  
+  <p><strong>3）链路</strong>
+  在幅员辽阔的我国，总是一个地方到一个地方的IDC直接就ping不通（移动互联网下更甚）。于是需要花钱自己打通这些地方，没有专线，只有代理再代理。</p>
+  
+  
+  
+  
+  <p><strong>4）api quota与perfcounter</strong>
+  对api进行quota限制，针对每个api每个人，都有限额。<br />
+  这个限制的传统做法：<br />
+  1.每天的上限调用次数。每天半夜清空，一天一个量累计。<br />
+  2.每分钟的频度。这个防止有恶性的突发情况。<br />
+  上述二者，缺一不可。<br />
+  perfcounter用于对api的监控设计指标，如果一个api有异常，应当十分灵敏地得出结论，而不是误报连连。
+  </p>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

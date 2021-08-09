@@ -1,0 +1,159 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Thinking | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/thinking/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[如何做一个快速运转的大规模网络开发公司]]></title>
+      <link href="https://www.54chen.com/blog/2014/12/11/how-to-big-network/"/>
+      <updated>2014-12-11T11:12:21+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/12/11/how-to-big-network</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20141211/thinking.jpg></p>
+  
+  <p>受《精益创业》 <a href="http://www.duokan.com/book/35802">http://www.duokan.com/book/35802</a> 这本书影响甚多，然而在思考和实施的过程中，却又遇到各种各样的问题。</p>
+  
+  <p>不仅仅是一些令人苦恼的“人的问题”，还有一些，是无从下手、或者不知道未来是怎样的疑惑。</p>
+  
+  <p>以下，列出一些“看得见的未来”，因为是一些系统已经在线上服务过亿的用户，如果你在思考相同的问题，也许会有一些用处。</p>
+  
+  <h1>一.流程与制度</h1>
+  
+  <h2>1.代码质量</h2>
+  
+  <ul>
+  <li>没有经过适量单元测试的代码，不能发起code review。</li>
+  <li>codereview:每行code都经过超过两双眼睛阅读。</li>
+  <li>没有经过code review的代码不能进入代码库。</li>
+  <li>没有经过完整bvt测试的代码，不能merge到线上分支。</li>
+  <li>没有完成上述流程的代码，不应该被用户访问到。</li>
+  </ul>
+  
+  
+  <h2>2.故障报告</h2>
+  
+  <ul>
+  <li>实际上最有效的制度是postmortem制度，但往往在国内被称为“故障报告”。</li>
+  <li>如果在你的公司里，《故障报告》与工资是挂钩的，恭喜你，制度用错了。</li>
+  <li>故障报告的本意，是让发生的故障告诉所有的人，让所有的工程师都学到，这次故障的起因是什么、如何避免。</li>
+  <li>故障报告绝对不是用来惩罚和警告你犯错了。</li>
+  <li>不情愿的故障报告，宣告了这个制度在你司实施的失败。</li>
+  <li>经常性的重复的故障报告，一定是制度没有彻底实施或者招聘人员眼神错了（眼神错的几率小之又小）。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h2>总结</h2>
+  
+  <ul>
+  <li>做一个让所有工程师（包括开发测试运维）勇于出来告诉大家我哪里错了的制度。</li>
+  <li>不断去总结和完善故障中的处理办法。</li>
+  </ul>
+  
+  
+  <h1>二.工程</h1>
+  
+  <ul>
+  <li>从工程上，不断去提炼与归并，抽象出高度集成化的系统和服务。</li>
+  </ul>
+  
+  
+  <h2>1.storage</h2>
+  
+  <ul>
+  <li>越早的引入key-value的稳定高效存储，可以事半功倍，但一定要稳定高效（高性能、高可用性）。</li>
+  <li>类似key-value的业务写法，应该深入人心。</li>
+  <li>可以选择的开源的有一些类dynamo系统，使用会较复杂，也许直接使用mysql的table更加有效。</li>
+  </ul>
+  
+  
+  <h2>2.paas</h2>
+  
+  <ul>
+  <li>越早的引入paas平台，也可以事半功倍，但一定要是靠谱的平台。（市面上大量的开源平台，需要有一支团队研究它）</li>
+  <li>paas平台的目的，是统一了dev与op的接口层。</li>
+  <li>paas还可以为你的硬件和网络资源做出更准确的预估。</li>
+  </ul>
+  
+  
+  <h2>3.监控与报警</h2>
+  
+  <ul>
+  <li>越早的建立此平台，越能提升团队对线上问题的警觉性。</li>
+  <li>标准的监控与报警平台，有助于更加方便地了解整个环境的情况。</li>
+  <li>报警一定要命中要害，减少误报，更牛的要做到预报。</li>
+  </ul>
+  
+  
+  <h2>4.dbproxy layer</h2>
+  
+  <ul>
+  <li>此层需要有高手存在，会各种开发的dba。</li>
+  <li>目标是做好隔离、做好分区、做好自动化扩容。</li>
+  <li>这层建立好了，以后服务可用性大大提升。</li>
+  </ul>
+  
+  
+  <h2>5.异步事件服务</h2>
+  
+  <ul>
+  <li>此服务在人手多时可考虑。</li>
+  <li>写多线程程序不是容易的事情，把可异步处理的业务，在逻辑中交给一个专门的服务处理。</li>
+  <li>在这之前，需要统一rpc相关框架。</li>
+  </ul>
+  
+  
+  <h2>6.配置中心</h2>
+  
+  <ul>
+  <li>典型的开源产品zookeeper。</li>
+  <li>服务的发现与故障自动摘除。</li>
+  <li>最好对zookeeper进行一层权限包装，避免实习生干坏事。</li>
+  </ul>
+  
+  
+  <h2>7.服务框架</h2>
+  
+  <ul>
+  <li>典型的开源产品thrift。</li>
+  <li>内网的rpc框架，是让你服务与服务之间保持良好架构的必须品。</li>
+  <li>框架一定要快，一定要有各种可测量的指标。但是thrift是没有的，需要自己加。</li>
+  </ul>
+  
+  
+  <h2>8.web框架</h2>
+  
+  <ul>
+  <li>典型的开源产品rose spring play。</li>
+  <li>用于统一大家的代码结构，能够换岗维护。</li>
+  </ul>
+  
+  
+  <h2>9.代码规范</h2>
+  
+  <ul>
+  <li>不用讲了，就是为了美观。</li>
+  </ul>
+  
+  
+  <h2>10.文档规范</h2>
+  
+  <ul>
+  <li>不用讲了，就是为了可维护。</li>
+  <li>闲时多写，忙时少写。</li>
+  <li>但不能不写。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

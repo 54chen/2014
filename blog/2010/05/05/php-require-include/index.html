@@ -1,0 +1,281 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>从php核心代码看require和include的区别 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="前言
+  五一长假归来，休息长时间很有点不习惯，回到已经有些不适应了。
+  见到鸟哥的一文：深入理解PHP之require/include顺序 http://www.laruence.com/2010/05/04/1450.html
+  忍不住继续再深入了一下下，在此记录一下深入的过程，以供以后查阅。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/05/05/php-require-include">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">从php核心代码看require和include的区别</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-05T00:00:00+08:00" pubdate data-updated="true">2010-05-05 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><strong>前言</strong>
+  五一长假归来，休息长时间很有点不习惯，回到已经有些不适应了。<br>
+  见到鸟哥的一文：深入理解PHP之require/include顺序 <a href="http://www.laruence.com/2010/05/04/1450.html">http://www.laruence.com/2010/05/04/1450.html</a>
+  忍不住继续再深入了一下下，在此记录一下深入的过程，以供以后查阅。</p>
+  
+  <p><strong>普及</strong>
+  在php手册中：
+  </p>
+<blockquote>require() is identical to include()  except upon failure it will also produce a fatal E_ERROR  level error. In other words, it will halt the script whereas include() only emits a warning (E_WARNING) which allows the script to continue.</blockquote>
+  就是说在失败的时候，require是会中止php运行的，而include是可以继续运行的。<br>
+  倒底有什么样的区别呢？我们带着这个疑问来一起进入PHP的核心代码。<br>
+  下面是一个PHP运行过程的图（这个图是出自哪里的？鸟哥画的？）
+  <img src="http://img02.taobaocdn.com/bao/uploaded/i2/T1I1NzXa4xXXcL7xo6_062051.jpg" alt="php ">
+  
+  <p></p>
+<blockquote>补习一下：lex是代码扫描器，扫描代码用的，yacc是Yet Another Compiler Compiler，作用是把任何一种代码的语法转成yacc语法，yacc就是解析器（真TMD绕）。<br>
+  lex在c下的后缀是*.l  yacc是*.y</blockquote>
+  
+  <p><strong>正题</strong>
+  下面看作记录：
+  </p>
+<blockquote>cc@cc-laptop:/opt/workspace$ svn checkout http://svn.php.net/repository/php/php-src/branches/PHP_5_3 php-src-5.3<br>
+  从svn取最新的php源代码。
+  </blockquote>
+  开始深入：
+  <blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.l" -exec grep -Hn "require_once" {} \;<br>
+  ./Zend/zend_language_scanner.l:1093:"require_once" {<br>
+  寻找lex代码扫描器文件中出现require_once的地方，zend_language_scanner.l的1093行。<br>
+  1093  "require_once" {<br>
+  1094         return T_REQUIRE_ONCE;<br>
+  1095 }</blockquote>
+  
+  <p>然后再搜一下T_REQUIRE_ONCE,
+  </p>
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.y" -exec grep -Hn "T_INCLUDE" {} \;<br>
+  ./Zend/zend_language_parser.y:52:%left T_INCLUDE T_INCLUDE_ONCE T_EVAL T_REQUIRE T_REQUIRE_ONCE<br>
+  ./Zend/zend_language_parser.y:985:	|	T_INCLUDE expr 			{ zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  ./Zend/zend_language_parser.y:986:	|	T_INCLUDE_ONCE expr 	{ zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }</blockquote>
+  
+  <p>在985行附近，有这样一群代码：
+  </p>
+<blockquote>internal_functions_in_yacc:<br>
+  T_ISSET '(' isset_variables ')' { $$ = $3; }<br>
+  |       T_EMPTY '(' variable ')'        { zend_do_isset_or_isempty(ZEND_ISEMPTY, &amp;$$, &amp;$3 TSRMLS_CC); }<br>
+  |       T_INCLUDE expr                  { zend_do_include_or_eval(ZEND_INCLUDE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  |       T_INCLUDE_ONCE expr     { zend_do_include_or_eval(ZEND_INCLUDE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  |       T_EVAL '(' expr ')'     { zend_do_include_or_eval(ZEND_EVAL, &amp;$$, &amp;$3 TSRMLS_CC); }<br>
+  |       T_REQUIRE expr                  { zend_do_include_or_eval(ZEND_REQUIRE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  |       T_REQUIRE_ONCE expr             { zend_do_include_or_eval(ZEND_REQUIRE_ONCE, &amp;$$, &amp;$2 TSRMLS_CC); }<br>
+  ;</blockquote>
+  
+  <p>于是乎，我们需要继续深入寻找zend_do_include_or_eval，
+  </p>
+<blockquote>cc@cc-laptop:/opt/workspace/php-src-5.3$ find . -type f -name "*.c" -exec grep -Hn "zend_do_include_or_eval" {} \;<br>
+  ./Zend/zend_compile.c:4317:void zend_do_include_or_eval(int type, znode *result, const znode *op1 TSRMLS_DC) /*  */</blockquote>
+  
+  <p>zend_do_include_or_eval中组装了一个结构体，ZEND_INCLUDE_OR_EVAL。</p>
+  
+  <p>再在zend_vm_def.h中找到ZEND_VM_HANDLER(73, ZEND_INCLUDE_OR_EVAL, CONST|TMP|VAR|CV, ANY)：<br>
+  switch (Z_LVAL(opline-&gt;op2.u.constant)) {代码略}</p>
+  
+  <p>中间关键的一句是：<br>
+  new_op_array = compile_filename(Z_LVAL(opline-&gt;op2.u.constant), inc_filename TSRMLS_CC);</p>
+  
+  <p>在zend_complie.h文件中:<br>
+  ZEND_API zend_op_array *compile_filename(int type, zval *filename TSRMLS_DC);</p>
+  
+  <p>这个函数定义在zend_language_scaner.l文件中，找出最核心的代码：
+  </p>
+<blockquote>if (open_file_for_scanning(file_handle TSRMLS_CC)==FAILURE) {<br>
+  // require与include的差别：错误信息的显示级别（有bailout和无bailout）<br>
+  if (type==ZEND_REQUIRE) {   //require时<br>
+  zend_message_dispatcher(ZMSG_FAILED_REQUIRE_FOPEN, file_handle-&gt;filename TSRMLS_CC);<br>
+  zend_bailout();<br>
+  } else {<br>
+  zend_message_dispatcher(ZMSG_FAILED_INCLUDE_FOPEN, file_handle-&gt;filename TSRMLS_CC);<br>
+  }
+  compilation_successful=0;<br>
+  } else {代码略}</blockquote>
+  
+  <p>继续追踪zend_message_dispatcher可以在main/main.c文件中找到php_message_handler_for_zend函数：</p>
+  
+  <p></p>
+<blockquote>//include输出错误信息时的级别为：E_WARNING<br>
+  		case ZMSG_FAILED_INCLUDE_FOPEN:<br>
+  			php_error_docref("function.include" TSRMLS_CC, E_WARNING, "Failed opening '%s' for inclusion (include_path='%s')", php_strip_url_passwd((char *) data), STR_PRINT(PG(include_path)));<br>
+  			break;<br>
+  		//require输出错误信息时的级别为：E_COMPILE_ERROR<br>
+  代码略
+  </blockquote>
+  
+  <p><strong>总结</strong>
+  和开头PHP手册所说完全一致，require和include的区别在于，出现错误时，一个是error一个是warning。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-05T00:00:00+08:00" pubdate data-updated="true">2010-05-05 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

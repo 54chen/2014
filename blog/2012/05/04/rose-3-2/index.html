@@ -1,0 +1,250 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Rose手册第三章二节：controller层：拦截器支持 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="3.2.1 拦截器作用 面向切面编程（AOP）方法可以让一个项目更加关注核心逻辑，常见的一些最佳实践包括 权限 缓存 错误处理 延时加载 调试 持久化 资源池 等等。。。 而此处的拦截器目标是在controller层提供各种在controller执行前、执行后的代码切入，以达到各种可AOP的目标 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/05/04/rose-3-2">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Rose手册第三章二节：controller层：拦截器支持</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-05-04T00:00:00+08:00" pubdate data-updated="true">2012-05-04 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose">
+  <strong>3.2.1 拦截器作用</strong></p>
+  
+  <p>    面向切面编程（AOP）方法可以让一个项目更加关注核心逻辑，常见的一些最佳实践包括<br>
+          权限<br>
+          缓存<br>
+          错误处理<br>
+          延时加载<br>
+          调试<br>
+          持久化<br>
+          资源池<br>
+          等等。。。<br>
+      而此处的拦截器目标是在controller层提供各种在controller执行前、执行后的代码切入，以达到各种可AOP的目标。<br>
+      简单地说，拦截器能干的事情就是当你的项目写了一半时发现缺少啥全局要做的事情（比如需要验证权限），不用担心，搞一个拦截器就是了。</p>
+  
+  <p><strong>3.2.2 拦截器例子</strong></p>
+  
+  <p></p>
+<blockquote>public class AccessTrackInterceptor extends ControllerInterceptorAdapter {<br>
+      public AccessTrackInterceptor() {<br>
+      setPriority(29600);<br>
+      }<br>
+      @Override<br>
+      public Class extends Annotation&gt; getRequiredAnnotationClass() {<br>
+          return PriCheckRequired.class; // 这是一个注解，只有标过的controller才会接受这个拦截器的洗礼。<br>
+      }<br>
+      @Override<br>
+      public Object before(Invocation inv) throws Exception {<br>
+          // TODO ....<br>
+      return super.before(inv);<br>
+      }</blockquote>
+  
+  <p>    @Override<br>
+      public void afterCompletion(final Invocation inv, Throwable ex) throws Exception {<br>
+      // TODO ....<br>
+      }<br>
+  }
+  </p>
+  
+  <p><strong>需要注意几点：</strong></p>
+  
+  <p>    拦截器要放在controllers下(高级用法:打在rose-jar包里，参见5.1)<br>
+      继承net.paoding.rose.web.ControllerInterceptorAdapter<br>
+      按照实现的方法名，在controller执行前、中、后执行：<br>
+          before：在controller执行前执行。<br>
+          after：在controller执行中（后）执行，如果一个返回抛出了异常，则不会进来。<br>
+          afterCompletion：在controller执行后执行，不论是否异常，都会进来。<br>
+          isForAction：定义满足某条件的才会被拦截。</p>
+  
+  <p><strong>3.2.3 拦截器可动的位置细节</strong></p>
+  
+  <p>    上面都讲得差不多了，实际上还有不少地方可以拦截的：<br>
+          isForDispatcher：根据响应的情况判断是否拦截，比如说是正常请求、内部forward、还是include （但是没用过）<br>
+          setPriority：设置一个数字表示拦截优先级，当有多个拦截器时，要精准控制，数字小的内层，大的在外层，在最外层的before方法最先执行，大家都执行完后它的after才最后执行。<br>
+          round：这才是真正的controller执行中执行，不过用得很少。<br>
+          getRequiredAnnotationClass：返回一个Annotation class name，表示这个拦截器只对此Annotation标过的controller才生效。常用。</p>
+  
+  <p><strong>3.2.4 实际应用场景</strong></p>
+  
+  <p>    全站是否登录判断相关的逻辑，写在一个拦截器里，一次完成后，其他地方不再关心这个代码，在需要登录才能做的controller上注解一下，表示需要被执行拦截。<br>
+      日志收集的逻辑，在一个拦截器里进行当前的access log记录。<br>
+      权限体系的逻辑，写在一个拦截器里，在对应的作上作注解，拦截器中进行细节的判断，新加的api也只是需要一次注解就得到了权限的判断。</p>
+  
+  <p>[文中所提代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a>]<br>
+  常期更新版本在：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_2">https://github.com/XiaoMi/rose/tree/master/chapter_3_2</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-05-04T00:00:00+08:00" pubdate data-updated="true">2012-05-04 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

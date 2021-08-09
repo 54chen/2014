@@ -1,0 +1,68 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Tigase,im | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/tigase-im/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[tigase网络核心SockThread详解]]></title>
+      <link href="https://www.54chen.com/blog/2014/07/09/tigase-sockthread/"/>
+      <updated>2014-07-09T16:03:33+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/07/09/tigase-sockthread</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20140710/logo.png></p>
+  
+  <h2>总述</h2>
+  
+  <ul>
+  <li>SocketThread类是一个很底层的类，在初始化时调用了Selector.open（clientsSel）。</li>
+  <li>socketReadThread nThread个</li>
+  <li>socketWriteThread nThread个</li>
+  <li>ResultsListener nThread个</li>
+  <li>completionService一个，池化线程nThread个，在sockThread.run里被submit，ResultsListener里进行completionService.take().get()取出执行结果。</li>
+  <li>forCompletion有序队列一个，在socketThread.run里开始add，同一方法立即被从最小依次取出，然后submit给completionService。</li>
+  <li>waiting有序队列一个，recreateSelector阶段存在add，最大来源是addSocketService静态方法，在socketThread.run最后阶段的addAllWaiting时注册Channel时把waiting里的IOService取出做为附加对象绑定。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h2>重点方法</h2>
+  
+  <ul>
+  <li>主方法＋两个有序队列，一个是等待处理队列，一个是完成队列。</li>
+  <li>forCompletion完成队列里的内容，交由具体的completionService完成后，由ResultListener相关线程处理最终结果。</li>
+  <li>主方法：addSocketService。先判断是等发还是等收，取模进入对应的处理线程的wait队列。对应线程会由addAllWaiting触发网络绑定，主线程的死循环捕捉事件进行分发给completionService的动作。</li>
+  <li>addSocketService的IOService，应该是永远waitingToRead，有时waitingToSend。</li>
+  <li>主方法：removeSocketService。取消绑定对应的SelectionKey。</li>
+  </ul>
+  
+  
+  <h2>SocketIO</h2>
+  
+  <ul>
+  <li>对SocketChannel的封装。</li>
+  <li>用一个LinkedBlockingQueue来保存要发送的数据dataToSend。</li>
+  <li>做了真正的流量统计。</li>
+  </ul>
+  
+  
+  <h2>ConnectionOpenThread</h2>
+  
+  <ul>
+  <li>这个类启动了accept的端口等待接入。</li>
+  <li>接入后生成一个IOService，其中保存了socketChannel信息。</li>
+  <li>传递IOService到可以waiting队列后，取出其中的socketChannel绑定事件，即可收发。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

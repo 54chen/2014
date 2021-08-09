@@ -1,0 +1,250 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Riak源码阅读手记二 左右开弓 启动 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="目标系统(target system)
+  OTP系统定义里有这么一个东西：
+  可以被一般的erl脚本启动的系统叫基础目标系统；
+  除此之外还可以做运行时代码替换的系统叫简单目标系统；
+  如果还支持日志输出到文件、自动定时启动的话就叫做内嵌目标系统。 启动目标系统的方式
+  通过erlang/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/08/24/riak-cource-code">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Riak源码阅读手记二 左右开弓 启动</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-08-24T00:00:00+08:00" pubdate data-updated="true">2011-08-24 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1_EN.XadjXXbk3DE3_051340.jpg" alt="erlang riak 54chen">
+  <strong>目标系统(target system)</strong>
+  OTP系统定义里有这么一个东西：<br>
+  可以被一般的erl脚本启动的系统叫基础目标系统；<br>
+  除此之外还可以做运行时代码替换的系统叫简单目标系统；<br>
+  如果还支持日志输出到文件、自动定时启动的话就叫做内嵌目标系统。</p>
+  
+  <p><strong>启动目标系统的方式</strong>
+  通过erlang/OTP标准的reltool工具生成的目标系统，可以用多种方式灵活启动。<br>
+  第一种：</p>
+  
+  <p></p>
+<blockquote>os&gt; /usr/local/erl-target/bin/erl</blockquote>
+  
+  <p>这只启动了一个基础目标系统。基本没什么具体功能。</p>
+  
+  <p>第二种：</p>
+  
+  <p></p>
+<blockquote>os&gt; /usr/local/erl-target/bin/erl -boot /usr/local/erl-target/releases/FIRST/start</blockquote>
+  
+  <p>用-boot参数，这可以启动一个简单目标系统。releases/RELEASES文件可用来做热替换。</p>
+  
+  <p>第三种：</p>
+  
+  <p></p>
+<blockquote>bin/start
+  </blockquote>
+  
+  <p>这个脚本会去调用 bin/run_erl ，最终调用 bin/start_erl启动。run_erl是一个提供运行时日志输出到文件的封装。还提供了简单的机制attach到一个erlang shell。</p>
+  
+  <p><strong>自定义behaviour</strong></p>
+  
+  <p></p>
+<blockquote>-spec behaviour_info(atom()) -&gt; 'undefined' | [{atom(), arity()}].<br>
+  behaviour_info(callbacks) -&gt;
+      [{start,2},       % (Partition, Config)<br>
+       {stop,1},        % (State) <br>
+       {get,2},         % (State, BKey)<br>
+       {put,3},         % (State, BKey, Val)<br>
+       {list,1},        % (State)<br>
+       {list_bucket,2}, % (State, Bucket)<br>
+       {delete,2},      % (State, BKey)<br>
+       {drop,1},        % (State)<br>
+       {fold,3},        % (State, Folder, Acc), Folder({B,K},V,Acc)<br>
+       {is_empty,1},    % (State)<br>
+       {callback,3}];   % (State, Ref, Msg) -&gt;
+  behaviour_info(_Other) -&gt;
+      undefined.</blockquote>
+  
+  <p>上述就是一个自定义的behaviour，使用的时候：</p>
+  
+  <p></p>
+<blockquote>-behaviour(xxx).<br>
+  ...</blockquote>
+  
+  <p>有点类似java的interface.</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-08-24T00:00:00+08:00" pubdate data-updated="true">2011-08-24 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/zi-liao-wen-dang/">资料文档</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2011/08/22/riak-source/" title="Previous Post: riak源码阅读手记一 初出茅庐 项目入口">« riak源码阅读手记一 初出茅庐 项目入口</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

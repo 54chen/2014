@@ -1,0 +1,581 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part3）关键逻辑 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="/***
+  * Author: cc0cc
+  * E-mail: cc0cc@126.com
+  * WebSite: http://www.54chen.com
+  * Date: the Mid-Autumn Festival of 2008
+  * FileName: callbacks.c
+  * …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/09/14/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3%E7%A0%81%E5%A4%A7-3">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part3）关键逻辑</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-09-14T00:00:00+08:00" pubdate data-updated="true">2008-09-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+  * Date: the Mid-Autumn Festival of 2008<br>
+  * FileName: callbacks.c<br>
+  * Description: callbacks.c为事件处理的核心逻辑，是MyNet的中心<br>
+  ***/<br>
+  #ifdef HAVE_CONFIG_H<br>
+  # include &lt;config.h&gt;<br>
+  #endif<br>
+  #include &lt;gnome.h&gt;<br>
+  #include "Mythread.h"<br>
+  #include "connect.h"<br>
+  #include "callbacks.h"<br>
+  #include "interface.h"<br>
+  #include "support.h"</p>
+  
+  <p>gchar line2[255];//用来存去掉回车后的字符串<br>
+  void write_config(gchar *usr,gchar *pwd);//remember pwd<br>
+  void write_new_config();//first time to write config<br>
+  gchar * scape(gchar *line);//escapse the enter like '\n'<br>
+  /*<br>
+  * 关于mac和ip的：http://hi.baidu.com/cc0cc/blog/item/403cbb25a0cd9a6435a80fa7.html<br>
+  */<br>
+  char *get_mac();//return the mac address<br>
+  char *get_ip();//get ip address<br>
+  int get_socket();<br>
+  int tr_mac();//translate the mac address<br>
+  int CreateMutex();//a file like mutex （互斥体，用来保证只能同时运行一个此软件，后来被干掉啦：））<br>
+  int trayshow;</p>
+  
+  <p>/*这个是window1，也就是软件一打开的时候会执行这个函数*/<br>
+  void<br>
+  on_window1_show                        (GtkWidget       *widget,<br>
+                                          gpointer         user_data)<br>
+  {
+  /*<br>
+  //采访一下：为什么要把这段干掉？<br>
+  //A：因为在程序异常关闭的时候，老是不能自己删除掉原来的PID文件，于是就得手工去删除，实在是不爽，干脆不限制了。<br>
+  char runfile[1024]="";<br>
+  FILE *runfp;   <br>
+  sprintf(runfile,"%s/.mynet/run.pid",getenv("HOME"));</p>
+  
+  <p>if((runfp = fopen(runfile, "r")) != NULL)<br>
+      {   <br>
+      gtk_widget_hide(window1);<br>
+      getAtrBox = create_messagebox("错误","程序已经运行了！",0);<br>
+       gtk_widget_show (getAtrBox);<br>
+      }else{<br>
+          CreateMutex();<br>
+          }<br>
+  */<br>
+  username[0x40]=0;<br>
+  host[0x1E]=0;<br>
+  memcpy(host,SERVER,strlen((char *)SERVER));<br>
+  mac_addr[0x20]=0;<br>
+  mac_Hex[6]=0;<br>
+  ip_addr[0x20]=0;<br>
+  passwd[0x40]=0;<br>
+  server_type[0x40]=0;<br>
+  memcpy(server_type,"internet",strlen((char *)"internet"));</p>
+  
+  <p>gchar *line = ((char *) malloc(255));//is 255b enough?<br>
+  char cfgfile[1024]="";<br>
+  FILE *fp;   <br>
+     <br>
+  sprintf(cfgfile,"%s/.mynet/config",getenv("HOME"));<br>
+  if ((fp = fopen(cfgfile, "r")) == NULL)    write_new_config();//看出来这是在干什么了吗？这是把用户的当前设置给写进一个config文件，就算是windows里的注册表了<br>
+  else<br>
+      {<br>
+      fgets(line,254,fp);<br>
+      gtk_entry_set_text ((GtkEntry *)entry1,(const gchar *)scape(line));<br>
+      memcpy(username,scape(line),strlen(scape(line)));<br>
+      fgets(line,254,fp);<br>
+      gtk_entry_set_text ((GtkEntry *)entry2,(const gchar *)scape(line));   <br>
+      memcpy(passwd,scape(line),strlen(scape(line)));<br>
+      fgets(line,254,fp);<br>
+      memcpy(ip_addr,scape(line),strlen(scape(line)));<br>
+      fgets(line,254,fp);<br>
+      memcpy(host,scape(line),strlen(scape(line)));g_message("here1");<br>
+      //get_socket((char *)scape(line));//host to<br>
+          g_message("%c",&amp;line);<br>
+      fgets(line,254,fp);g_message("here3");<br>
+      memcpy(mac_addr,scape(line),strlen(scape(line)));g_message("here4");<br>
+      tr_mac();g_message("here5");<br>
+      }   <br>
+  g_message("mem now here:usr:%s\npwd:%s\nip:%s\nmac:%s\nserver:%s",username,passwd,ip_addr,mac_addr,host);<br>
+  free(line);<br>
+  }</p>
+  
+  <p>/*这是设置服务器的一个窗口*/<br>
+  void<br>
+  on_window2_show                        (GtkWidget       *widget,<br>
+                                          gpointer         user_data)<br>
+  {
+      gtk_entry_set_text ((GtkEntry *)entry3,(char *)ip_addr);</p>
+  
+  <p>    gtk_entry_set_text ((GtkEntry *)entry4,(char *)host);   </p>
+  
+  <p>    gtk_combo_box_append_text (GTK_COMBO_BOX (comboboxentry1),(char *)mac_addr);<br>
+      gtk_combo_box_set_active(GTK_COMBO_BOX (comboboxentry1),0);<br>
+     <br>
+  }</p>
+  
+  <p>/*这个是哪个button?...是设置属性的那个按钮*/<br>
+  void<br>
+  on_button3_clicked                     (GtkButton       *button,<br>
+                                          gpointer         user_data)<br>
+  {
+      GtkWidget *mac_set;<br>
+      mac_set = create_window2 ();<br>
+       gtk_widget_show (mac_set);<br>
+      return;<br>
+  }</p>
+  
+  <p>/*<br>
+  *这个是什么东东？ 记好了，这个在后面要用的，用来数数的计时的。<br>
+  */<br>
+  gint<br>
+  flash_timeout(gpointer data)<br>
+  {if(Acc_Keep_Link==-1){<br>
+      gtk_widget_hide_all (linkwindow);<br>
+      gtk_widget_show_all (window1);<br>
+      getAtrBox = create_messagebox("提示","与网络连接中断！",1);<br>
+       gtk_widget_show_all (getAtrBox);<br>
+      return FALSE;<br>
+      }<br>
+      create_tray(tray);<br>
+      return TRUE;<br>
+  }</p>
+  
+  <p>/*关键的一个来了！！这就是主界面中的连接按钮！主逻辑从它开始*/<br>
+  void<br>
+  on_button1_clicked                     (GtkButton       *button,<br>
+                                          gpointer         user_data)<br>
+  {   <br>
+  /*这个的意思是，如果连接的时候选择了记住密码，那么就要把用户名密码写进config文件去，不然的话就写个用户名得了*/<br>
+  if(gtk_toggle_button_get_active((GtkToggleButton *)checkbutton1))<br>
+  write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br>
+              (gchar *)gtk_entry_get_text ((GtkEntry *)entry2));<br>
+  else<br>
+  write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br>
+              "");   <br>
+  gtk_widget_hide_all (window1);//所有窗口隐藏掉。。。<br>
+  linkwindow = create_window3 ();//window3就是“请稍候”的那个窗口，大家都隐藏的时候它就要出来了<br>
+  gtk_widget_show_all (linkwindow);<br>
+  gint ptimer_flash=0;<br>
+  gtk_timeout_remove(ptimer_flash);<br>
+  ptimer_flash=gtk_timeout_add(15000,flash_timeout,NULL);    //这是一个计时器，每1.5秒执行一次flash_timeout<br>
+     <br>
+  pthread_t getaccess;<br>
+  Acc_Keep_Link=0;<br>
+  memcpy(username,(char *)gtk_entry_get_text ((GtkEntry *)entry1),strlen((char *)gtk_entry_get_text ((GtkEntry *)entry1)));<br>
+  memcpy(passwd,(char *)gtk_entry_get_text ((GtkEntry *)entry2),strlen((char *)gtk_entry_get_text ((GtkEntry *)entry2)));<br>
+  pthread_create(&amp;getaccess,NULL,Access_Thread,NULL);//这会创建一个叫getaccess的线程<br>
+  }</p>
+  
+  <p>/*垃圾按钮~~就是获取服务的那个按钮*/<br>
+  void<br>
+  on_button4_clicked                     (GtkButton       *button,<br>
+                                          gpointer         user_data)<br>
+  {
+  memcpy(host,(char *)gtk_entry_get_text ((GtkEntry *)entry4),strlen((gchar *)gtk_entry_get_text ((GtkEntry *)entry4)));<br>
+  write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br>
+              "");</p>
+  
+  <p>    get_socket((char *)gtk_entry_get_text ((GtkEntry *)entry4));<br>
+      getAtrBox = create_messagebox("提示","恭喜，获取服务成功！",1);<br>
+       gtk_widget_show (getAtrBox);<br>
+      return;//sorry i can not understand what is this<br>
+  }</p>
+  
+  <p>/*<br>
+  * 当断开网络时会用<br>
+  */<br>
+  void<br>
+  before_quit                      (GtkWidget       *widget,<br>
+                                          gpointer         user_data)<br>
+  {
+  /*<br>
+  char cfgfile[1024]="";<br>
+  sprintf(cfgfile,"%s/.mynet/run.pid",getenv("HOME"));<br>
+  unlink(cfgfile);//delete mutex file*/<br>
+     <br>
+  if(gtk_toggle_button_get_active((GtkToggleButton *)checkbutton1))<br>
+  write_config((gchar *)gtk_entry_get_text ((GtkEntry *)entry1),<br>
+              (gchar *)gtk_entry_get_text ((GtkEntry *)entry2));//remember the passwd<br>
+  close(sockfd);<br>
+  gtk_main_quit();<br>
+  }</p>
+  
+  <p>/*先说过的，用来写文件记录用户的基本信息的*/<br>
+  void write_new_config()<br>
+  {
+  int log;<br>
+  char filename[1024];<br>
+  char log_string[1024];<br>
+  char filepath[1024];<br>
+  char *dir;<br>
+  strcpy(log_string,"");<br>
+  strcat(log_string,"\n");memcpy(username,"0",strlen((char *)username));<br>
+  strcat(log_string,"\n");memcpy(passwd,"0",strlen((char *)passwd));<br>
+  get_ip();   <br>
+  strcat(log_string,(char *)ip_addr);strcat(log_string,"\n");<br>
+  strcat(log_string,SERVER);strcat(log_string,"\n");<br>
+  get_mac();tr_mac();<br>
+  strcat(log_string,(char *)mac_addr);strcat(log_string,"\n");<br>
+  dir=getenv("HOME");<br>
+  sprintf(filepath,"%s/.mynet/",dir);<br>
+  mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br>
+  chmod(filepath,0777);<br>
+  sprintf(filename,"%sconfig",filepath);<br>
+  log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br>
+  chmod(filename,0777);<br>
+  write(log,log_string,strlen(log_string));<br>
+  close(log);   <br>
+  }</p>
+  
+  <p>/*下面这个东东把line也就是存成文件了的用户名密码（原来是回车分隔的），这些东东一行一行地取出来*/<br>
+  gchar * scape(gchar *line)<br>
+  {
+  int i;<br>
+  int j;<br>
+  for(i=0;i&lt;254;i++)line2[i]=NULL;//这个主要目的是全部干成空的<br>
+  for(i=0;i&lt;254;i++){if((line[i]=='\n')||(line[i]=='\r'))break;}//一旦遇到回车直接就over掉<br>
+  for(j=0;j&lt;i;j++){line2[j]=line[j];/*g_message("%c",line[j]);*/}//复制到line2中<br>
+  return line2;<br>
+  }</p>
+  
+  <p>/*和write_new_config相比少个new，在用户名密码更改的时候才用的*/<br>
+  void write_config( gchar* usr, gchar* pwd)<br>
+  {
+  int log;<br>
+  char filename[1024];<br>
+  char log_string[1024];<br>
+  char filepath[1024];</p>
+  
+  <p>strcpy(log_string,"");<br>
+  strcat(log_string,usr);strcat(log_string,"\n");<br>
+  strcat(log_string,pwd);strcat(log_string,"\n");<br>
+  strcat(log_string,(char *)ip_addr);strcat(log_string,"\n");<br>
+  strcat(log_string,(char *)host);strcat(log_string,"\n");<br>
+  strcat(log_string,(char *)mac_addr);strcat(log_string,"\n");</p>
+  
+  <p>sprintf(filepath,"%s/.mynet/",getenv("HOME"));<br>
+  mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br>
+  chmod(filepath,0777);<br>
+  sprintf(filename,"%sconfig",filepath);<br>
+  log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br>
+  chmod(filename,0777);<br>
+  write(log,log_string,strlen(log_string));<br>
+  close(log);   <br>
+  }</p>
+  
+  <p>void<br>
+  delete_event                     (GtkButton       *button,<br>
+                                          gpointer         user_data)<br>
+  {
+  before_quit((GtkWidget *)button,(gpointer)user_data);<br>
+  }</p>
+  
+  <p>char *<br>
+  get_mac()<br>
+  {
+          int nSocket;<br>
+          struct ifreq struReq;<br>
+          nSocket = socket(PF_INET,SOCK_STREAM,0);<br>
+          memset(&amp;struReq,0,sizeof(struReq));<br>
+          strncpy(struReq.ifr_name, "eth0", sizeof(struReq.ifr_name));  <br>
+          ioctl(nSocket,SIOCGIFHWADDR,&amp;struReq);<br>
+          close(nSocket);<br>
+          //strcpy(mac_addr,(BYTE)ether_ntoa(struReq.ifr_hwaddr.sa_data));<br>
+          memcpy(mac_addr,(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data),strlen((char *)ether_ntoa(struReq.ifr_hwaddr.sa_data)));<br>
+          //g_message("\n get_mac: %s\n",(char *)ether_ntoa(struReq.ifr_hwaddr.sa_data)+1);<br>
+          //g_message("\n mem_mac : %s lenth:%d\n",mac_addr,strlen((char *)mac_addr));<br>
+          return 0;<br>
+  }</p>
+  
+  <p>char *<br>
+  get_ip()<br>
+  {
+             int sock;<br>
+             struct sockaddr_in sin;<br>
+             struct ifreq ifr;  <br>
+             sock = socket(AF_INET, SOCK_DGRAM, 0);<br>
+             if (sock == -1)<br>
+             {<br>
+                         perror("socket");<br>
+                         return "";                         <br>
+             }<br>
+              <br>
+             strncpy(ifr.ifr_name, "eth0", sizeof(ifr.ifr_name));      <br>
+     <br>
+             if (ioctl(sock, SIOCGIFADDR, &amp;ifr) &lt; 0)<br>
+             {<br>
+                         perror("ioctl");<br>
+                         return "";<br>
+             }</p>
+  
+  <p>           memcpy(&amp;sin, &amp;ifr.ifr_addr, sizeof(sin));  <br>
+             close(sock);<br>
+             memcpy(ip_addr,inet_ntoa(sin.sin_addr),strlen(inet_ntoa(sin.sin_addr)));<br>
+             //g_message("\n get_ip:eth0: %s\n",inet_ntoa(sin.sin_addr));<br>
+             //g_message("\n mem_ip: %s",ip_addr);<br>
+             return "";<br>
+  }</p>
+  
+  <p>int<br>
+  get_socket()<br>
+  { char *ser;<br>
+      ser=(gchar *)gtk_entry_get_text ((GtkEntry *)entry4);<br>
+      //digtalser<br>
+             sockfd=socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);<br>
+             if (sockfd == -1)<br>
+             {<br>
+                         perror("socket");<br>
+                         return 0;                         <br>
+             }<br>
+             client.sin_family=AF_INET;<br>
+             client.sin_port=htons(3848);<br>
+             //client.sin_addr=inet_addr(host);   <br>
+             inet_pton(AF_INET, ser, &amp;client.sin_addr);           <br>
+             //g_message("udp socket ok!%d",sockfd);<br>
+             return 1;<br>
+  }
+  int<br>
+  chToHex(int x)//字符转成十六进制用<br>
+  {
+  if(x&gt;=97&amp;&amp;x&lt;=102)x=x-87;<br>
+  else x=x-48;<br>
+  return x;<br>
+  }
+  int<br>
+  tr_mac()<br>
+  {
+  int p,i;</p>
+  
+  <p>p=0;<br>
+  for(i=0;i&lt;6;i++)<br>
+      {<br>
+      if (mac_addr[p+1]==':'){mac_Hex[i]=chToHex((int)mac_addr[p]);p+=2;}<br>
+        else{mac_Hex[i]=16*(chToHex((int)mac_addr[p]))+chToHex((char)mac_addr[p+1]);p+=3;}   <br>
+      }<br>
+  //g_message("%s",mac_addr);<br>
+  //for(i=0;i&lt;6;i++)<br>
+  //g_message("%d---%c-%c-%c-%c",mac_Hex[i],mac_addr[i],mac_addr[i+1],mac_addr[i+2],mac_addr[i+3]);<br>
+  return 0;<br>
+  }</p>
+  
+  <p>int<br>
+  CreateMutex()//a file like mutex<br>
+  {
+  int log;<br>
+  char filename[1024];<br>
+  char log_string[1024];<br>
+  char filepath[1024];<br>
+  char *dir;<br>
+  strcpy(log_string,"MyNet");<br>
+  dir=getenv("HOME");<br>
+  sprintf(filepath,"%s/.mynet/",dir);<br>
+  mkdir(filepath,O_RDWR|O_CREAT|O_TRUNC);<br>
+  chmod(filepath,0777);<br>
+  sprintf(filename,"%srun.pid",filepath);<br>
+  log=open(filename,O_RDWR|O_CREAT|O_TRUNC,0777);<br>
+  chmod(filename,0777);<br>
+  write(log,log_string,strlen(log_string));<br>
+  close(log);   <br>
+  return 1;   <br>
+  }</p>
+  
+  <p>void<br>
+  delete_getAtrBox()<br>
+  {
+  gtk_widget_hide (getAtrBox);<br>
+  }</p>
+  
+  <p>/***<br>
+  * Author: cc0cc<br>
+  * E-mail: cc0cc@126.com<br>
+  * WebSite: <a href="http://www.54chen.com">http://www.54chen.com</a>
+  * Date: the Mid-Autumn Festival of 2008<br>
+  * FileName: callbacks.c<br>
+  ***/<br>
+  Part4将讲述getaccess线程内的故事，该线程完整再现UDP拔号的情境，待续。。。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-09-14T00:00:00+08:00" pubdate data-updated="true">2008-09-14 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/09/14/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3%E7%A0%81%E5%A4%A7-2/" title="Previous Post: [中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part2）">« [中秋零献] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part2）</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/11/01/%E4%B8%AD%E7%A7%8B%E9%9B%B6%E7%8C%AE%E7%BB%AD%E9%9B%86-%E7%A5%9E%E5%B7%9E%E6%95%B0%E7%A0%818021x%E5%B1%80%E5%9F%9F%E7%BD%91udp%E6%8B%94%E5%8F%B7%E8%BD%AF%E4%BB%B6mynet-gnome%E6%BA%90%E4%BB%A3/" title="Next Post: [中秋零献续集] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part4）getaccess线程内的故事">[中秋零献续集] 神州数码802.1x局域网UDP拔号软件MyNet-Gnome源代码大分析（Part4）getaccess线程内的故事 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

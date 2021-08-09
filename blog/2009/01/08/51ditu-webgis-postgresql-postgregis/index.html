@@ -1,0 +1,276 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>51ditu等网站技术揭秘-利用开源框架搭建一整套的WEBGIS - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[文章作者：陈臻 本文版本：v1.0 最后修改：2009.1.8 转载请注明原文链接：http://www.54chen.com/c/387] 感谢老早前李兄做的tech talk，一直有人在问及51ditu和mapbar什么的都怎么做的，老是记不住这些开源的东东都什么名字，特做下记录。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/01/08/51ditu-webgis-postgresql-postgregis">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">51ditu等网站技术揭秘-利用开源框架搭建一整套的WEBGIS</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-01-08T00:00:00+08:00" pubdate data-updated="true">2009-01-08 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.1.8 转载请注明原文链接：<a href="http://www.54chen.com/c/387">http://www.54chen.com/c/387</a>]</p>
+  
+  <p>感谢老早前李兄做的tech talk，一直有人在问及51ditu和mapbar什么的都怎么做的，老是记不住这些开源的东东都什么名字，特做下记录。</p>
+  
+  <p>下图是一个完整的方案图：</p>
+  
+  <p><a href="http://www.54chen.com/wp-content/uploads/2009/01/e59bbee789871.jpg"><img class="alignnone size-full wp-image-388" title="e59bbee789871" src="http://www.54chen.com/wp-content/uploads/2009/01/e59bbee789871.jpg" alt="" width="500" height="185"></a></p>
+  
+  <p>其中所涉及的开源技术有：
+  </p>
+<h4> 
+  </h4>
+<table border="1" cellspacing="0" cellpadding="0" width="548">
+<colgroup span="1">
+<col span="2" width="152">
+<col span="1" width="128">
+<col span="1" width="160">
+<col span="1" width="256">
+</colgroup>
+  <tbody></tbody>
+  <tbody>
+  <tr height="96">
+  <td class="oa1" width="152" height="96"><span>软件名称</span></td>
+  <td class="oa2" width="152">
+<span>License</span> <span>类型</span>
+</td>
+  <td class="oa2" width="128">
+<span>编程</span> <span>语言</span>
+</td>
+  <td class="oa2" width="160"><span>运行环境</span></td>
+  <td class="oa3" width="256"><span>用途</span></td>
+  </tr>
+  <tr height="48">
+  <td class="oa4" width="152" height="48"><span>PostGIS</span></td>
+  <td class="oa5" width="152"><span>GPL</span></td>
+  <td class="oa5" width="128"><span>Plpgsql</span></td>
+  <td class="oa5" width="160"><span>Postgresql</span></td>
+  <td class="oa6" width="256"><span>存储数据</span></td>
+  </tr>
+  <tr height="67">
+  <td class="oa4" width="152" height="67"><span>MapServer</span></td>
+  <td class="oa5" width="152">
+<span>MapServer</span><span> License</span>
+</td>
+  <td class="oa5" width="128"><span>C++</span></td>
+  <td class="oa5" width="160"><span>UNIX like/ Windows</span></td>
+  <td class="oa6" width="256"><span>提供地图相关服务</span></td>
+  </tr>
+  <tr height="67">
+  <td class="oa4" width="152" height="67"><span>TileCache</span></td>
+  <td class="oa5" width="152"><span>BSD</span></td>
+  <td class="oa5" width="128"><span>Python</span></td>
+  <td class="oa5" width="160"><span>All Platform</span></td>
+  <td class="oa6" width="256"><span>图片缓存</span></td>
+  </tr>
+  <tr height="66">
+  <td class="oa4" width="152" height="66"><span>OpenLayers</span></td>
+  <td class="oa5" width="152"><span>BSD</span></td>
+  <td class="oa5" width="128">
+<span>Javascript</span><span> </span>
+</td>
+  <td class="oa5" width="160"><span>IE/Firefox</span></td>
+  <td class="oa6" width="256"><span>客户端展现控制</span></td>
+  </tr>
+  <tr height="67">
+  <td class="oa7" width="152" height="67"><span>GDAL/OGR</span></td>
+  <td class="oa8" width="152"><span>MIT License</span></td>
+  <td class="oa8" width="128"><span>C++</span></td>
+  <td class="oa8" width="160"><span>UNIX like/ Windows</span></td>
+  <td class="oa9" width="256"><span>数据格式导换</span></td>
+  </tr>
+  </tbody>
+</table>
+  
+  <h4>再简单解释下：</h4>
+  1.PostGis是PGSQL的一个扩展，<span>在遵循</span><span>OpenGIS</span><span>规范下，提供空间对象、空间索引、空间作函数和空间作符等空间信息服务功能。</span>
+  
+  <p>2.MapServer可以提供openGIS规范的各种接口。</p>
+  
+  <p>3.<span>MapServer</span><span>根据参数中指定的路径读取</span><span>mapfile</span><span>文件和</span><span>SLD</span><span>文件。</span></p>
+  
+  <p>4.<span>使用</span><span>SLD(Styled Layer Descriptors ), </span><span>Mapfile</span><span>控制地图显示样式。</span></p>
+  
+  <p>5.<span>根据</span><span>SLD</span><span>和</span><span>mapfile</span><span>的样式参数</span><span>,</span><span>配合</span><span>GD(Graphics Library)</span><span>进行的图形制作。</span></p>
+  
+  <p>6.查询只与pgsql有关</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-01-08T00:00:00+08:00" pubdate data-updated="true">2009-01-08 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/01/07/eclipse%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95jboss%E5%BA%94%E7%94%A8%E8%AE%BE%E7%BD%AE/" title="Previous Post: Eclipse远程调试JBoss应用设置(linux&amp;win版本)">« Eclipse远程调试JBoss应用设置(linux&amp;win版本)</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/01/12/%E5%8F%B0%E6%B9%BE%E7%9A%84%E9%9B%B6%E8%9B%8B%E6%9C%88%E5%8F%B0/" title="Next Post: 台湾的零蛋月台">台湾的零蛋月台 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

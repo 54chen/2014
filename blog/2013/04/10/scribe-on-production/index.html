@@ -1,0 +1,215 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Scribe的生产实践总结 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="一、scribe是什么
+  scribe是开源的分布式日志系统。这里两年前的使用手记。http://www.54chen.com/_linux_/log-server-scribe-helper.html。严格说它只是一个日志处理的节点，与分布式系统相比差很多复杂的节点间的控制过程。 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/04/10/scribe-on-production">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Scribe的生产实践总结</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-04-10T00:00:00+08:00" pubdate data-updated="true">2013-04-10 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T1a5J6XmhtXXbWyPE9_103845.jpg" alt="scribe">
+  <strong>一、scribe是什么</strong>
+  scribe是开源的分布式日志系统。这里两年前的使用手记。<a href="http://www.54chen.com/_linux_/log-server-scribe-helper.html">http://www.54chen.com/_linux_/log-server-scribe-helper.html</a>。严格说它只是一个日志处理的节点，与分布式系统相比差很多复杂的节点间的控制过程。不过也贵在它很精简，不容易出现问题。两年多时间以后，线上还没出现过一例scribed自己crash掉的情况。
+  <strong>二、scribe遇到master挂掉</strong>
+  生产环境中一般配置为一个primary(type=network)带一个secondary(type=file)，在遇到master挂掉的情况下，会直接写到本地磁盘。<br>
+  这个设置有非常多好处，当远程的master恢复了，本地磁盘的这些个日志还会被scribe给送回去。<br>
+  日常要监控这个事情的发生也很简单，一行脚本就可以：
+  <code>ALERT=`du -sb /tmp/scribe/|awk '{print $1}'`<br>
+  if [ ${ALERT} -ge 1024000 ]; then<br>
+    //alert<br>
+  fi</code></p>
+  
+  <p><strong>三、scribe自己挂掉</strong>
+  scribe自己挂掉要预防把业务堵死了，一定要用异步线程在写这个日志，如果本地的scribed挂了，那端口一定不在了，在new thrift连接的时候就会失败，可以在这个异步线程中去设定多久再重试，但这就是有损日志的了。<br>
+  日常监控一般可以直接看端口还在不在，不过一般不会挂（两年多还没见过）。<br>
+  比较文艺的做法可以用他给的ctrl.sh那个python脚本去读取scribed内部的perfcounter来报警。</p>
+  
+  <p><strong>四、scribe遇到master没挂但是网络不好</strong>
+  这个比较难受，网络一堵，很多天都追不上来。而且会出现恶性循环。所以还是要网络给力，最差要能传输不滞留日志。<br>
+  我米高人航军大侠搞了一个压缩过的传输scribed改造，还没试用，理论上数据量降了应该有一定缓解。</p>
+  
+  <p><strong>五、scribe与kafka对比</strong>
+  kafka是linkedin开源的一个日志分发系统，scala的，很牛B的一个系统，以cluster、去中心化、高效为特点，比起scribed来说，kafka是航空母舰，scribed是激流勇进那种冲锋舟，各有各的好处。<br>
+  从日志收集的需求来看，如果遇到前面4点的故障的话，使用kafka的话，要做的事情还不少。但如果出现中心化的故障的话，还是kafka不怕down机。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-04-10T00:00:00+08:00" pubdate data-updated="true">2013-04-10 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/03/27/mi-startup-server/" title="Previous Post: 移动互联网创业公司的服务器选择">« 移动互联网创业公司的服务器选择</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2013/05/22/xiaomi-6-12/" title="Next Post: 在6乘12中折腾">在6乘12中折腾 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

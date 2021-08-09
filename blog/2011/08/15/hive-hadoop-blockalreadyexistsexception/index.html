@@ -1,0 +1,239 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>记hadoop故障一例：BlockAlreadyExistsException - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="hive版本：0.7.0 hadoop版本：0.20.2 在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。 在hive执行时留下的蛛丝马迹：
+  Failed with exception org.apache.hadoop.hdfs.server.namenode. …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/08/15/hive-hadoop-blockalreadyexistsexception">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">记hadoop故障一例：BlockAlreadyExistsException</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-08-15T00:00:00+08:00" pubdate data-updated="true">2011-08-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="">
+  hive版本：0.7.0 hadoop版本：0.20.2 <br>
+  在线上跑了一个季度了，基本上没什么问题，今天突然出了问题。</p>
+  
+  <p>在hive执行时留下的蛛丝马迹：
+  </p>
+<blockquote>Failed with exception org.apache.hadoop.hdfs.server.namenode.NotReplicatedYetException: Not replicated yet:/tmp/hive-root/hive_2011-08-15_00-31-02_332_247809173824307798/-ext-10000/access_bucket-2011-08-14_00004<br>
+          at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getAdditionalBlock(FSNamesystem.java:1257)<br>
+          at org.apache.hadoop.hdfs.server.namenode.NameNode.addBlock(NameNode.java:422)<br>
+          at sun.reflect.GeneratedMethodAccessor2037.invoke(Unknown Source)<br>
+          at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)<br>
+          at java.lang.reflect.Method.invoke(Method.java:597)<br>
+          at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:508)<br>
+          at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:959)<br>
+          at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:955)<br>
+          at java.security.AccessController.doPrivileged(Native Method)<br>
+          at javax.security.auth.Subject.doAs(Subject.java:396)<br>
+          at org.apache.hadoop.ipc.Server$Handler.run(Server.java:953)</blockquote>
+  
+  <p>FAILED: Execution Error, return code 1 from org.apache.hadoop.hive.ql.exec.CopyTask</p>
+  
+  <p>在DN中发现：</p>
+  
+  <p></p>
+<blockquote>2011-08-15 00:47:09,138 INFO org.apache.hadoop.hdfs.server.datanode.DataNode: writeBlock blk_8964076545845199727_216399 received exception org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br>
+  2011-08-15 00:47:09,138 ERROR org.apache.hadoop.hdfs.server.datanode.DataNode: DatanodeRegistration(192.168.1.23:50010, storageID=DS-52195649-192.168.1.23-50010-1299427987620, infoPort=50075, ipcPort=50020):DataXceiver<br>
+  org.apache.hadoop.hdfs.server.datanode.BlockAlreadyExistsException: Block blk_8964076545845199727_216399 is valid, and cannot be written to.<br>
+          at org.apache.hadoop.hdfs.server.datanode.FSDataset.writeToBlock(FSDataset.java:983)<br>
+          at org.apache.hadoop.hdfs.server.datanode.BlockReceiver.<init>(BlockReceiver.java:98)<br>
+          at org.apache.hadoop.hdfs.server.datanode.DataXceiver.writeBlock(DataXceiver.java:259)<br>
+          at org.apache.hadoop.hdfs.server.datanode.DataXceiver.run(DataXceiver.java:103)<br>
+          at java.lang.Thread.run(Thread.java:662)</init>
+</blockquote>
+  
+  <p>2011-08-15 00:47:15,366 WARN org.apache.hadoop.util.Shell: Could not get disk usage information<br>
+  org.apache.hadoop.util.Shell$ExitCodeException: du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018_216371.meta': No such file or directory<br>
+  du: cannot access `/data/hadoop/data/dfs.data.dir/tmp/blk_-1540848236479330018': No such file or directory</p>
+  
+  <p>        at org.apache.hadoop.util.Shell.runCommand(Shell.java:195)<br>
+          at org.apache.hadoop.util.Shell.run(Shell.java:134)<br>
+          at org.apache.hadoop.fs.DU.access$200(DU.java:29)<br>
+          at org.apache.hadoop.fs.DU$DURefreshThread.run(DU.java:84)<br>
+          at java.lang.Thread.run(Thread.java:662)</p>
+  
+  <p> <br>
+  看着像是DN写入的时候遇到了服务不响应，追了一把，发现DN上全都忘记设置ulimit了，汗：<br>
+  ulimit -SHn 18912</p>
+  
+  <p><strong>参考：</strong>
+  http://www.cloudera.com/blog/2009/03/configuration-parameters-what-can-you-just-ignore/<br>
+  http://www.michael-noll.com/blog/2011/04/09/benchmarking-and-stress-testing-an-hadoop-cluster-with-terasort-testdfsio-nnbench-mrbench/<br>
+  http://sudhirvn.blogspot.com/2010/07/hadoop-error-logs-orgapachehadoophdfsse.html
+  </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-08-15T00:00:00+08:00" pubdate data-updated="true">2011-08-15 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

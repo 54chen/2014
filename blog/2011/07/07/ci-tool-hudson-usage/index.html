@@ -1,0 +1,222 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>持续构建工具hudson使用手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="hudson是一个强大的持续性构建服务器。（现在开发者们分了一个分支，改叫Jenkins。）我（54chen）在使用过程中的手记如下：
+  下载
+  地址：http://hudson-ci.org/
+  wget http://java.net/projects/hudson/downloads/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/07/07/ci-tool-hudson-usage">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">持续构建工具hudson使用手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-07-07T00:00:00+08:00" pubdate data-updated="true">2011-07-07 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1RgNyXjFsXXXG8Bva_092141.jpg" alt="hudson">
+  hudson是一个强大的持续性构建服务器。（现在开发者们分了一个分支，改叫Jenkins。）我（54chen）在使用过程中的手记如下：
+  <strong>下载</strong>
+  地址：http://hudson-ci.org/
+  </p>
+<blockquote>wget http://java.net/projects/hudson/downloads/download/war/hudson-2.0.1.war</blockquote>
+  速度不咋的，60k/s.
+  <strong>先决条件</strong>
+  系统：centos 5.5
+  <blockquote>resin4下不work，换成了tomcat。</blockquote>
+  <blockquote> cp /opt/soft/hudson/hudson-2.0.1.war /opt/soft/apache-tomcat-7.0.16/webapps/</blockquote>
+  <strong>遇到的问题</strong>
+  1）tomcat使用utf8环境。<br>
+   vim tomcat/conf/server.xml<br>
+   找到8080，加入一行 URIEncoding="UTF-8"。
+  
+  <p>2）maven不工作<br>
+  hudson启动后，系统管理里面，设置maven的地址：MAVEN_HOME指到maven的主目录，不是bin目录。</p>
+  
+  <p>3）svn不工作<br>
+  报re_version错误，在你的svn地址的最后面加上@HEAD</p>
+  
+  <p>4）hudson一切正常后，有svn bug
+  </p>
+<blockquote>FATAL: tried to access method hudson.scm.ChangeLogSet$Entry.setParent(Lhudson/scm/ChangeLogSet;)V from class hudson.scm.SubversionChangeLogSet
+  </blockquote>
+  
+  <p>报上面的错误，我（54chen）在http://issues.hudson-ci.org/browse/HUDSON-8885里找到更新新的svn插件即可。进入到系统管理的插件管理中，选中svn 插件，安装更新即可。</p>
+  
+  <p>5）定时执行<br>
+  建立job时，有一个选项是Build Triggers，勾选 Build periodically ，schedule填写：0 10,22 * * *表示每天10/22点执行。</p>
+  
+  <p>6）重启后jobs丢失<br>
+  jobs都是定义在$HUDSON_HOME里的，如果一开始的时候没有设置，jobs将放在~/.hudson下，当重启的时候，可能发生各种找不到原来的jobs的问题，此时需要确定原来的HUDSON_HOME是啥，现在的是啥，如果不一致就会出问题。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-07-07T00:00:00+08:00" pubdate data-updated="true">2011-07-07 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

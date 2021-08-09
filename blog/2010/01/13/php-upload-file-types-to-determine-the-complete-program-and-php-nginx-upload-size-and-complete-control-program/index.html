@@ -1,0 +1,276 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>PHP上传文件类型彻底判断方案及PHP＋nginx上传大小彻底控制方案 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="上回科学院发过一篇讲述上传判断的文章，位置是
+  PHP JAVA C上传文件如何准确判断文件类型－mime知识普及
+  本文目的在于，进一步更正前文所述的mime判断方式，以及增加一个nginx环境里的文件上传大小所影响的代码。 上传类型控制： 在我（54chen）工作中发现，其实修改文件的后缀， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/01/13/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">PHP上传文件类型彻底判断方案及PHP＋nginx上传大小彻底控制方案</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-01-13T00:00:00+08:00" pubdate data-updated="true">2010-01-13 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>上回科学院发过一篇讲述上传判断的文章，位置是
+  </p>
+<h3><a rel="bookmark" href="../cc/php-java-c-upload-files-how-to-accurately-determine-the-file-type-mime-literacy.html">PHP JAVA C上传文件如何准确判断文件类型－mime知识普及</a></h3>
+  本文目的在于，进一步更正前文所述的mime判断方式，以及增加一个nginx环境里的文件上传大小所影响的代码。
+  
+  <p><strong>上传类型控制：</strong></p>
+  
+  <p>在我（<a href="http://www.54chen.com">54chen</a>）工作中发现，其实修改文件的后缀，浏览器就会很傻瓜地传送错误的<a href="http://www.54chen.com/_linux_/everyone-network-intel-technology-symposium-record.html">mime</a>类型，所以前文的判断是一个半错误的方法（除了C代码是正确的）。</p>
+  
+  <p>网上流传一段PHP读取文件头判断文件类型的方法，有一些bug，经我（<a href="http://www.54chen.com/php-tech/mediawiki-pgsql.html">54chen</a>）修改实测，应该是这个样子：
+  </p>
+<blockquote>/**<br>
+  * 读取文件前几个字节 判断<a href="http://www.54chen.com/webfe/academy-of-sciences-in-recent-years-a-good-article-summing-up.html">文件</a>类型<br>
+  *
+  * @return String<br>
+  */<br>
+  function checkTitle($filename) {<br>
+  $file     = fopen($filename, "rb");<br>
+  $bin      = fread($file, 2); //只读2字节<br>
+  fclose($file);<br>
+  $strInfo  = @unpack("c2chars", $bin);<br>
+  $typeCode = intval($strInfo['chars1'].$strInfo['chars2']);<br>
+  $fileType = '';<br>
+  switch ($typeCode)<br>
+  {
+  case 7790:<br>
+  $fileType = 'exe';<br>
+  break;<br>
+  case 7784:<br>
+  $fileType = 'midi';<br>
+  break;<br>
+  case 8297:<br>
+  $fileType = 'rar';<br>
+  break;<br>
+  case 255216:<br>
+  $fileType = 'jpg';<br>
+  break;<br>
+  case 7173:<br>
+  $fileType = 'gif';<br>
+  break;<br>
+  case 6677:<br>
+  $fileType = 'bmp';<br>
+  break;<br>
+  case 13780:<br>
+  $fileType = 'png';<br>
+  break;<br>
+  default:<br>
+  $fileType = 'unknown'.$typeCode;<br>
+  }
+  //Fix<br>
+  if ($strInfo['chars1']=='-1' &amp;&amp; $strInfo['chars2']=='-40' ) {<br>
+  return 'jpg';<br>
+  }
+  if ($strInfo['chars1']=='-119' &amp;&amp; $strInfo['chars2']=='80' ) {<br>
+  return 'png';<br>
+  }
+  return $fileType;<br>
+  }</blockquote>
+  这代码可以非常正确地分出修改后的文件，从而达到阻止修改后缀名上传的情况。
+  
+  <p><strong>上传大小控制：</strong></p>
+  
+  <p>在PHP代码中直接读取$_FILE的size，而如果是特别大的文件，又使用了PHP＋<a href="http://www.54chen.com/architecture/54-chen-skills-the-whole-point-for-domain-names-using-nginx-and-javascript-to-do-a-simple-jump-to-inform-the-friendly-exchange-of-domain-names.html">nginx</a>的话，很有可能，超过2M的文件直接就被nginx就抛出来413错误了。</p>
+  
+  <p>解决的办法：</p>
+  
+  <p>修改/etc/nginx/nginx.conf</p>
+  
+  <p>找到对应域名的<a href="http://www.54chen.com/architecture/wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes.html">server</a>段：修改client_max_body_size的值，默认是2M。</p>
+  
+  <p>这样子还不够，如果不修改php.ini里的值，你会发现上传的文件用上面的代码判断类型的时候会出问题。</p>
+  
+  <p>修改/etc/php.ini</p>
+  
+  <p>找到upload_max_<a href="http://www.54chen.com/cc/php-java-c-upload-files-how-to-accurately-determine-the-file-type-mime-literacy.html">filesize</a>，修改这个值，默认是2M。</p>
+  
+  <p>一番折腾，类型和大小的控制基本上就完善了。
+  </p>
+<h2><strong><span style="color: #ff0000;">重要PS</span>：</strong></h2>
+  对于上传文件类型的判断，一直没有太好的办法，即使使用上面的代码，也有办法构造假的图片的（如何构造不再传播），有人使用getimagesize来判断，不失为一种好办法：
+  
+  <p>if(in_array($attach['ext'], array('jpg', 'jpeg', 'gif', 'png', 'swf', 'bmp')) &amp;&amp; function_exists('getimagesize') &amp;&amp; <a href="mailto:!@getimagesize(%24target">!@getimagesize($target</a>)) {<br>
+      @unlink($target);<br>
+      upload_error('post_attachment_ext_notallowed', $attacharray);<br>
+     }</p>
+  
+  <p>摘自dz代码。</p>
+  
+  <p>函数参考 <a href="http://cn2.php.net/getimagesize">http://cn2.php.net/getimagesize</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-01-13T00:00:00+08:00" pubdate data-updated="true">2010-01-13 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>, <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

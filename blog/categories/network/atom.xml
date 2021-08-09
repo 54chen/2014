@@ -1,0 +1,193 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Network | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/network/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[R U Ok--客户端网络优化实践]]></title>
+      <link href="https://www.54chen.com/blog/2015/06/03/are-u-ok/"/>
+      <updated>2015-06-03T16:11:08+08:00</updated>
+      <id>https://www.54chen.com/blog/2015/06/03/are-u-ok</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg></p>
+  
+  <p>当愤怒的用户，张牙舞爪地告诉你他遇到问题的时候，往往已经病入膏肓。－－题记</p>
+  
+  <p>作者同各地愤怒的用户亲密接触了很长的时间之后，做出了以下总结，希望对后来的人们能够有一点启发。</p>
+  
+  <h1>一、用户IP是个不可靠的东西</h1>
+  
+  <ul>
+  <li>在实际的案例中，使用用户的IP地址去IP库里找用户属于哪个地域哪个运营商。</li>
+  <li>不幸的是，IP库有可能不准。</li>
+  <li>更不幸的是，连IP地址都可能是错的。实际案例中，我们遇到了运营商级别的流量劫持，用户本来是浙江移动，在某些服务器取得的IP居然是江苏电信。</li>
+  <li>解决的办法：尽量不依赖IP，用smartDNS。或者多渠道纠正IP地址，使用本地客户端的运营商识别能力＋电话号码地域识别。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h1>二、用户不是傻子，他其实都知道自己网络是好是坏</h1>
+  
+  <ul>
+  <li>许多案例，用户都会告诉你，他的QQ是好的、微信是好的，为什么你不行？你不行！</li>
+  <li>看用户日志，感觉用户在撒谎。</li>
+  <li>然而这并没有什么卵用。</li>
+  <li>知道真相眼泪掉下来：用户在坏网络下时并不会反馈，而从坏网络－>好网络时，你如果还在原来的状态下，你不行，用户就愤怒了。</li>
+  <li>解决的办法：维护好socket的connect init->connecting->connected状态，任何用户的手动作，1）天线没变，除了connected状态外，都要转圈; 2）天线变了，除了connected状态外，都要重新开始。</li>
+  </ul>
+  
+  
+  <h1>三、用户的愤怒，还因为反应慢</h1>
+  
+  <ul>
+  <li>当socket正在创建时，用户手动重发一个数据，往往是采取转菊花和感叹号两个办法。</li>
+  <li>对用户的行为硬碰硬（立即感叹号），会立即引发用户的愤怒。</li>
+  <li>对用户的行为超过一定时间的转对抗（菊花），超过10秒即会引发用户的愤怒。</li>
+  <li>解决的办法：设置合适的timeout值。wifi下：connect timeout 1s，send data timeout 1s（明显的大数据包要区别对待）。4g/3g/2g下：connect timeout 1s，send data timeout 10s（明显的大数据包要区别对待）</li>
+  <li>connect timeout的情况处理：重新发起connect。换IP。</li>
+  <li>send data timeout的情况处理：重新发数据2次。reconnect new ip。</li>
+  </ul>
+  
+  
+  <h1>四、遇到了localDNS问题－不解析、乱解析</h1>
+  
+  <ul>
+  <li>dns问题最好的办法：方案中不用dns。退而选之，少用dns。</li>
+  </ul>
+  
+  
+  <h1>五、遇到了运营商加广告</h1>
+  
+  <ul>
+  <li>一般运营商只对http加广告</li>
+  <li>二逼运营商还对tcp加广告</li>
+  <li>解决的办法：parse数据失败时，reconnect新的地方。</li>
+  </ul>
+  
+  
+  <h1>六、遇到了协议、端口拦截</h1>
+  
+  <ul>
+  <li>常见问题</li>
+  <li>一个协议不行，换另一个。tcp|udp->http->websocket</li>
+  <li>一个端口不行，换另一个。80->443->8080->14000</li>
+  </ul>
+  
+  
+  <h1>七、遇到了EPIPE\ECONNRESET</h1>
+  
+  <ul>
+  <li>与服务器的连接中断后，send一次数据过去，如果能够到服务器，且服务器已经关了，会回一个RST，RST到了客户端，客户端此时read数据，将遇到ECONNRESET。</li>
+  <li>与服务器的连接中断后，send数据时时如果已经通过RST得到对方关了，返回EPIPE。</li>
+  <li>以为例，ECONNRESET的原因，是海外势力被发现后根本收不到数据或者数据乱了，就从server上关掉了socket，再过去的包就会回RST，我们再读就会显示ECONNRESET。</li>
+  <li>解决办法：只有timeout值得重试，其他都reconnect吧。</li>
+  </ul>
+  
+  
+  <h1>八、总结</h1>
+  
+  <ul>
+  <li>要想用户不愤怒，网坏时可坏，但网好要他也好。（迅速恢复）</li>
+  <li>客户端各种适应环境。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[网络IO型程序压力测试要点]]></title>
+      <link href="https://www.54chen.com/blog/2014/11/04/network-load-test/"/>
+      <updated>2014-11-04T18:23:05+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/11/04/network-load-test</id>
+      <content type="html"><![CDATA[<p><img src=http://chen54.b0.upaiyun.com/20141104/20141104.jpg></p>
+  
+  <h1>一.突破客户端端口数限制</h1>
+  
+  <ul>
+  <li>这是第一个会遇到的问题，同一IP地址，最大端口只能到65535。</li>
+  <li>现在能够直接找到的原因是TCP协议中（rfc793）定义了报头的端口长度为16位。（2<sup>16</sup>=65536）</li>
+  <li>但是从计算机网络的发展来看，端口长度定义同IPv4定义一样，都是当时的同志们拍脑袋的结果。</li>
+  </ul>
+  
+  
+  <h2>突破的办法</h2>
+  
+  <ul>
+  <li>一个机器绑定多个IP地址。</li>
+  <li>搞无数机器或者虚拟机。</li>
+  </ul>
+  
+  
+  <!--more-->
+  
+  
+  <h1>二.防止gc影响测试结论</h1>
+  
+  <ul>
+  <li>如果压力程序为java，要小心full gc导致单次请求时间加长。</li>
+  <li>从java角度，随时jstat -gcutil跟踪client的情况，很有必要。</li>
+  </ul>
+  
+  
+  <h2>一些推荐的参数</h2>
+  
+  <ul>
+  <li>24G的机器: -XX:ParallelCMSThreads=8 -Xms12G -Xmx12G -XX:PermSize=128m -XX:MaxPermSize=512m -XX:MaxDirectMemorySize=1280m</li>
+  <li>细节慢慢调。</li>
+  <li>如果业务逻辑不重的情况，gc未必有这么明显的影响。</li>
+  </ul>
+  
+  
+  <h1>三.防止客户端性能问题影响结论</h1>
+  
+  <ul>
+  <li>随时关注client的cpu load mem的情况。</li>
+  <li>loading test过程中由于client的性能问题，经常会影响结论。</li>
+  </ul>
+  
+  
+  <h2>推荐的办法</h2>
+  
+  <ul>
+  <li>定时记录各项数据，对比观察。</li>
+  </ul>
+  
+  
+  <h1>四.防止客户端线程数过多</h1>
+  
+  <ul>
+  <li>因为要模拟大量用户，很有可能去启动大量的线程。</li>
+  <li>线程的数量太多后基本都是自己先挂了。</li>
+  </ul>
+  
+  
+  <h2>解决</h2>
+  
+  <ul>
+  <li>用循环来近似模拟多用户。</li>
+  <li>使用scala akka erlang这样的并发模型。</li>
+  </ul>
+  
+  
+  <h1>五.其他一些细节</h1>
+  
+  <ul>
+  <li>同时连接数与同时发数据人数是两个天壤之别的数，前者对系统影响很小，后者的增长才是系统的压力所在。</li>
+  <li>尽可能模拟连接数与发数据人数目标比例。</li>
+  <li>平衡压力尽可能长的时间去压有可能会发现累积性问题。</li>
+  <li>机器越多越方便。</li>
+  </ul>
+  
+  ]]></content>
+    </entry>
+    
+  </feed>

@@ -1,0 +1,740 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2011-01-09 2011-01-09 00:00:00 +0800 明日道吉日，小米全员踏步进入朝阳区，新办公区，新气象，新挑战。 #
+  智者说：咱兄弟几个天天呆在一起时间比和自己老婆在一起的时间还要多得多，有事情一定不要急，慢慢来，要稳住。 #
+  [ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/26">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/01/06/nginx-access-log-post/">[Nginx]如何在access Log中记录post请求的参数</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-01-06T00:00:00+08:00" pubdate data-updated="true">2011-01-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://wiki.nginx.org/local/nginx-logo.png" alt="nginx log post data"></p>
+  
+  <p>移动互联网行业开发过程中，服务端经常会需要检查是否收到请求，收到什么样的请求，最简单的办法就是看nginx的access log，常见的nginx配置中access log一般都只有GET请求的参数，而POST请求的参数却不行。
+  <a href="http://wiki.nginx.org/NginxHttpCoreModule#.24request_body">http://wiki.nginx.org/NginxHttpCoreModule#.24request_body</a></p>
+  
+  <p></p>
+<blockquote>
+  $request_body</blockquote>
+  
+  <p>This variable(0.7.58+) contains the body of the request. The significance of this variable appears in locations with directives proxy_pass or fastcgi_pass. </p>
+  
+  <p>正如上文件所示，只需要使用$request_body即可打出post的数据，在现存的server段加上下面的设置即可：
+  </p>
+<blockquote><code>
+     log_format  access  '$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent $request_body  "$http_referer" "$http_user_agent" $http_x_forwarded_for';<br>
+     access_log  logs/test.access.log  access;</code></blockquote>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/12/27/ubuntu10-04-g7-desire-android-dev/">ubuntu10.04 下通过usb在G7（desire）上真机调试android程序的设置</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-12-27T00:00:00+08:00" pubdate data-updated="true">2010-12-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T1XlxVXeByXXbYuqZW_022510.jpg" alt="android" width="250"></p>
+  
+  <p>本文为android开发入门系列，以下是各节传送门：<br>
+  android 开发入门
+  <a href="http://www.54chen.com/_linux_/androiddev.html">http://www.54chen.com/_linux_/androiddev.html</a>
+  android开发入门2：概念建立
+  <a href="http://www.54chen.com/_linux_/androiddev2.html">http://www.54chen.com/_linux_/androiddev2.html</a></p>
+  
+  <p>一、工具介绍<br>
+  android-sdk-linux_x86/tools下有一堆工具，今天要用的是：Android Debug Bridge，在android开发过程中，这个工具是使用得最多的。（缩写adb，有点像gcc的gdb似的）
+  </p>
+<blockquote>  adb start-server             - 实际上它会启动一个 adb fork-server server<br>
+    adb kill-server              - kill掉<br>
+    adb devices                       - 列出所有的设备</blockquote>
+  
+  <p>二、设置usb权限<br>
+  因为ubuntu这样的系统都是默认以非root身份在运行的，要使用usb调试，需要sudo支持。
+  </p>
+<blockquote>$ lsusb<br>
+  Bus 005 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub<br>
+  Bus 004 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub<br>
+  Bus 003 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub<br>
+  Bus 002 Device 003: ID 413c:2106 Dell Computer Corp. <br>
+  Bus 002 Device 002: ID 0461:4d81 Primax Electronics, Ltd <br>
+  Bus 002 Device 001: ID 1d6b:0001 Linux Foundation 1.1 root hub<br>
+  Bus 001 Device 010: ID 0bb4:0c87 High Tech Computer Corp. <br>
+  Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub</blockquote>
+  列表中，Bus 001 Device 010: ID 0bb4:0c87 High Tech Computer Corp. 这一行为htc手机的usb使用端口，记录一下，id为0bb4（基于上所有的htc都是这个ID）。
+  
+  <p></p>
+<blockquote>$sudo vim /etc/udev/rules.d/70-android.rules</blockquote>
+  
+  <p>加入以下内容：
+  </p>
+<blockquote>SUBSYSTEM=="usb", SYSFS{idVendor}=="0bb4", MODE="0666"
+  </blockquote>
+  
+  <p>运行命令，重启udev：
+  </p>
+<blockquote>$sudo chmod a+rx /etc/udev/rules.d/70-android.rules<br>
+  $sudo service udev restart
+  </blockquote>
+  
+  <p>三、重新启动adb server<br>
+  (很重要)拔掉usb重新连上再执行：
+  </p>
+<blockquote>sudo ./adb kill-server<br>
+  ./adb devices<br>
+  ./adb root (这一步很重要 感谢小米科技小军献策)</blockquote>
+  
+  <p>四、使用usb进行调试<br>
+  eclispe&gt;run as&gt;android application 选择真实机器。</p>
+  
+  <p></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/12/23/java-example-whiletrue-thread-sleep/">[Java Example]你还在使用while(true) Thread.sleep吗？</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-12-23T00:00:00+08:00" pubdate data-updated="true">2010-12-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T1LfNVXl0lXXcCtPs9_103827.jpg" alt="java thread"></p>
+  
+  <p>做各种SERVICE的时候，常常会需要一个程序重复定时地执行，基本上常见的山寨写法都是如下所示：
+  </p>
+<blockquote>        while (true) {<br>
+              System.out.println("yours code");<br>
+              <br>
+              Thread.sleep(3000);<br>
+          }</blockquote>
+  
+  <p>但实际这样的写法可控性很低，JDK的java.util.concurrent中提供了大量的方法去控制一段代码定时执行，标准的改写上面的代码如下：
+  </p>
+<blockquote>ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);<br>
+  scheduler.scheduleWithFixedDelay(new Runner(), 0, 3, TimeUnit.SECONDS);<br>
+  public class Runner implements Runnable {<br>
+        public void run() {<br>
+               System.out.println("yours code");<br>
+        }<br>
+  }</blockquote>
+  
+  <p>scheduler下有很多的方法，达到的目的有：定时执行，执行完后一段时间再次执行；而Executors更有更多控制线程的方法，平时不可忽视。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/12/16/ssh-tunnle-andriod-usb0/">把手机当无线网卡-andriod Usb0 Ssh Tunnle</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-12-16T00:00:00+08:00" pubdate data-updated="true">2010-12-16 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>小公司人员增长快，随着台式机日益加多，网速越来越慢，而wifi使用者却还不慢。于是就有了本文。<br>
+  android手机通过usb共享网络很简单，只需要连上usb线后在手机设置里找到共享手机网络，打开即可。但是本文并非教如何连接usb线的。
+  <img src="http://img02.taobaocdn.com/imgextra/i2/T1JkFUXotsXXXHh4o2_044309.jpg" alt="ssh tunnel">
+  图1 usb绑定设置pc共享android手机上网<br>
+  ubuntu共享上网后，会发现连接不了线上的ssh，会等半天，报出no ruote。猜测是因为andriod手机的安全设置所致。其实本文重点讲如何ssh的。<br>
+  先用android下载一个支持ssh的工具：connectbot。</p>
+  
+  <p>打开软件，同时打开ubuntu，执行下面的语句安装sshd服务：<br>
+  apt-get install openSSL<br>
+  然后启动sshd服务。<br>
+  在connectbot中填写ubuntu机器ip，输入密码，ssh到ubuntu机器。
+  <img src="http://img02.taobaocdn.com/imgextra/i2/T1.6VUXeBEXXafGOk2_044426.jpg" alt="connectbot">
+  图2 用connectBot登录pc</p>
+  
+  <p>这时按下菜单键，选择端口转发。选远端端口，填写2222，转发到192.168.1.1:22，确定以后，这个转发就建立了。
+  <img src="http://img03.taobaocdn.com/imgextra/i3/T186VUXfFEXXbkLO.2_044528.jpg" alt="connectbot端口转发">
+  图3 connectBot端口转发<br>
+  然后到ubuntu上执行ssh 127.0.0.1 -p2222
+  <img src="http://img03.taobaocdn.com/imgextra/i3/T15AhUXk4yXXcLijU2_044624.jpg" alt="ssh tunnel">
+  图4 我建立的端口转发<br>
+  回车，输入192.168.1.1的密码，大功告成，成功利用端口转发打通了andriod手机共享usb0共享上网时的ssh。<br>
+  关于ssh tunnel，详细见：<a href="http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html">http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html</a></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/12/09/ganglia-nagios-install/">企业服务器监控及报警配置打造（ganglia and Nagios）-part 1</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-12-09T00:00:00+08:00" pubdate data-updated="true">2010-12-09 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img04.taobaocdn.com/imgextra/i4/T1G.0TXXlhXXa1KzfX_115619.jpg" alt="ganglia 54chen nagios">
+  </p>
+<blockquote>系统简介：<br>
+  Ganglia 是 UC Berkeley 发起的一个开源监视项目，设计用于测量数以千计的节点。每台计算机都运行一个收集和发送度量数据（如处理器速度、内存使用量等）的名为 gmond 的守护进程。它将从作系统和指定主机中收集。接收所有度量数据的主机可以显示这些数据并且可以将这些数据的精简表单传递到层次结构中。正因为有这种层次结构模式，才使得 Ganglia 可以实现良好的扩展。gmond 带来的系统负载非常少，这使得它成为在集群中各台计算机上运行的一段代码，而不会影响用户性能。</blockquote>
+  我（54chen）的服务器作系统:centos 5.5 x86_64 （六十四位centOS 5.5）
+  <strong>第一步，修改yum源</strong>
+  # cd /etc/yum.repos.d/<br>
+  #vim dag.repo<br>
+  写出如下信息：
+  <blockquote>[dag]<br>
+  name=Dag RPM Repository for Red Hat Enterprise Linux<br>
+  baseurl=http://apt.sw.be/redhat/el$releasever/en/$basearch/dag<br>
+  gpgcheck=1<br>
+  gpgkey=http://dag.wieers.com/rpm/packages/RPM-GPG-KEY.dag.txt<br>
+  enabled=1</blockquote>
+  <strong>第二步，通过yum安装所有依赖</strong>
+  yum -y install apr-devel apr-util check-devel cairo-devel pango-devel libxml2-devel \<br>
+  rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-devel \<br>
+  python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br>
+  pcre pcre-devel libpcre libconfuse libart_lgpl-develyum -y install apr-devel apr-util check-devel cairo-devel pango-devel libxml2-devel \<br>
+  rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-devel \<br>
+  python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br>
+  pcre pcre-devel libpcre libconfuse libart_lgpl-devel
+  <strong>第三步，通过yum安装rrdtool（画图的数据存储）</strong>
+  yum install -y rrdtool perl-rrdtool rrdtool-develyum install -y rrdtool perl-rrdtool rrdtool-devel
+  
+  <p><strong>第四步，通过rpm安装libconfuse依赖</strong>
+  </p>
+<blockquote>wget http://download.fedora.redhat.com/pub/epel/5/x86_64/libconfuse-2.5-4.el5.x86_64.rpm<br>
+  wget http://download.fedora.redhat.com/pub/epel/5/x86_64/libconfuse-devel-2.5-4.el5.x86_64.rpm<br>
+  rpm -ivh libconfuse-2.5-4.el5.x86_64.rpm<br>
+  rpm -ivh libconfuse-devel-2.5-4.el5.x86_64.rpm</blockquote>
+  <strong>第五步，下载源码安装</strong>
+  <blockquote>wget http://cdnetworks-kr-1.dl.sourceforge.net/project/ganglia/ganglia%20monitoring%20core/3.1.7/ganglia-3.1.7.tar.gz<br>
+  tar zxvf ganglia-3.1.7.tar.gz<br>
+  cd ganglia-3.1.7<br>
+  ./configure --with-gmetad --sysconfdir=/etc/ganglia<br>
+  make<br>
+  make install</blockquote>
+  <strong>第六步，安装 nginx php环境 略去（54chen的老文章里有多个安装nginx-php的文章，自查之。右侧有搜索框） </strong>
+  <blockquote>cp -a web/* /var/www/html/ganglia/<br>
+  cp gmetad/gmetad.init /etc/init.d/gmetad<br>
+  cp gmond/gmond.init /etc/init.d/gmond<br>
+  gmond -t | tee /etc/ganglia/gmond.conf<br>
+  mkdir -p /var/lib/ganglia/rrds<br>
+  chown nobody:nobody /var/lib/ganglia/rrds</blockquote>
+  <strong>第七步，启动gmond gmetad</strong>
+  <blockquote>/etc/init.d/gmond start<br>
+  /etc/init.d/gmetad start</blockquote>
+  <strong>Q&amp;A</strong>
+  1.gmetad错误处理<br>
+  检查 /var/lib/ganglia/rrds 是否建立 以及权限是不是正确
+  
+  <p>2.配置名称等不生效的原因<br>
+  gmetad/gmond restart可能会不起作用，直接kill.</p>
+  
+  <p>3.gmond起不来的原因<br>
+  udp设置有问题，多播模式，请修改那个默认的ip地址（那是一个不存在的地址，用来广播的，gmeta会从广播里抓出来分析），同一组cluster的机器使用同一个广播ip地址</p>
+  
+  <p>4.节点安装gmond（客户端）：不再需要rrdtool，不需要gmetad支持
+  </p>
+<blockquote>rpm -ivh libconfuse-2.5-4.el5.x86_64.rpm<br>
+  rpm -ivh libconfuse-devel-2.5-4.el5.x86_64.rpm</blockquote>
+  
+  <p>yum -y install apr-devel apr-util check-devel cairo-devel pango-devel libxml2-devel \<br>
+  rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-devel \<br>
+  python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br>
+  pcre pcre-devel libpcre libconfuse libart_lgpl-develyum -y install apr-devel apr-util check-devel cairo-devel pango-devel libxml2-devel \<br>
+  rpmbuild glib2-devel dbus-devel freetype-devel fontconfig-devel gcc-c++ expat-devel \<br>
+  python-devel libXrender-devel zlib libpng freetype libjpeg fontconfig gd libxml2 \<br>
+  pcre pcre-devel libpcre libconfuse libart_lgpl-devel</p>
+  
+  <p>./configure --prefix=/opt/soft/ganglia --sysconfdir=/opt/soft/ganglia/etc/<br>
+  make<br>
+  make install</p>
+  
+  <p>/opt/soft/ganglia/sbin/gmond --default_config &gt; /opt/soft/ganglia/etc/gmond.conf
+  修改cluster_name和多播的那个莫名其妙的ip地址启动即可。</p>
+  
+  <p>5.安装完成后为什么都正常只有空图却没有显示各节点的数据？<br>
+  我（54chen）被这个问题搞了半天，最后才发现是因为各节点的服务器时间有问题，<br>
+  * */2 * * * ntpdate time.windows.com放到crontab里，或者是直接执行一下ntpdate time.windows.com。</p>
+  
+  <p>6.为什么各个cluster的服务器互相乱窜？<br>
+  一定要注意，不同的cluster多播到各个不同的ip去，比如ABCD是一组，那全到239.2.11.71，而FGH是另一组，那就全到239.2.11.72。</p>
+  
+  <p>7.为什么gmond内外网ip地址乱串？<br>
+  在我的集群中，eth0 是我的系统的公共 IP 地址。但是，监视服务器将通过 eth1 与私有集群网络中的节点进行通信。我需要确保 Ganglia 使用的多点传送将与 eth1 绑定在一起。这可以通过创建 /etc/sysconfig/network-scripts/route-eth1 文件来完成。添加 239.2.11.71 dev eth1 内容。<br>
+  然后您可以使用 service network restart 重新启动网络并确保路由器显示此 IP 通过 eth1。注：您应当使用 239.2.11.71，因为这是 ganglia 的默认多点传送通道。如果使用其他通道或者增加更多通道，请更改它。</p>
+  
+  <p>8.为什么gmond里输出的xml里什么关键的数据也没有？<br>
+  注意看iptables,执行一下iptables -F试试。<br>
+  下一part讲述nagios搭配ganglia的报警设置。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/25">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <em>26</em>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/27">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

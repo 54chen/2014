@@ -1,0 +1,306 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>微信支付api.mch.weixin.qq.com域名解析慢原因：ipv6 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="有朋友在阿里云主机实现微信支付逻辑时，发现api.mch.weixin.qq.com的解析实在是太慢了。 因此出现了手动修改/etc/hosts的情况，当然了，哪天微信支付要是换个机房肯定要挂。 我们的机房也有相似的同题，专门记录一下。 表象 代码里用curl来请求微信，经常超时， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2016/06/18/wexin-resolve-slowly">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">微信支付api.mch.weixin.qq.com域名解析慢原因：ipv6</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2016-06-18T16:56:47+08:00" pubdate data-updated="true">2016-06-18 16:56:47 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>有朋友在阿里云主机实现微信支付逻辑时，发现api.mch.weixin.qq.com的解析实在是太慢了。</p>
+  
+  <p>因此出现了手动修改/etc/hosts的情况，当然了，哪天微信支付要是换个机房肯定要挂。</p>
+  
+  <p><img src="http://chen54.b0.upaiyun.com/1017/19300534019252134249137429843.jpg"></p>
+  
+  <p>我们的机房也有相似的同题，专门记录一下。</p>
+  
+  <!--more-->
+  
+  
+  <h2>表象</h2>
+  
+  <p>代码里用curl来请求微信，经常超时，这时使用wget试验：</p>
+  
+  <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mo">01</span> <span class="n">tmp</span><span class="p">]</span><span class="err">#</span> <span class="n">wget</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span>
+  <span class="o">--</span><span class="mi">2016</span><span class="o">-</span><span class="mo">06</span><span class="o">-</span><span class="mi">18</span> <span class="mi">14</span><span class="o">:</span><span class="mi">51</span><span class="o">:</span><span class="mo">03</span><span class="o">--</span>  <span class="nl">http</span><span class="p">:</span><span class="c1">//api.mch.weixin.qq.com/</span>
+  <span class="n">Resolving</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">...</span>  <span class="err">域名解析很久不出来</span></code></pre></div>
+  
+  
+  <h2>测试确认是ipv6问题</h2>
+  
+  <p>给wget加上-4，强制使用ipv4，如果很快，那基本上确定是ipv6惹的祸了。</p>
+  
+  <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="p">[</span><span class="n">root</span><span class="err">@</span><span class="mo">01</span> <span class="n">tmp</span><span class="p">]</span><span class="err">#</span> <span class="n">wget</span> <span class="o">-</span><span class="mi">4</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span>
+  <span class="o">--</span><span class="mi">2016</span><span class="o">-</span><span class="mo">06</span><span class="o">-</span><span class="mi">18</span> <span class="mi">17</span><span class="o">:</span><span class="mo">03</span><span class="o">:</span><span class="mi">52</span><span class="o">--</span>  <span class="nl">http</span><span class="p">:</span><span class="c1">//api.mch.weixin.qq.com/</span>
+  <span class="n">Resolving</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">...</span> <span class="mf">123.151.71.149</span><span class="p">,</span> <span class="mf">123.151.79.109</span>
+  <span class="n">Connecting</span> <span class="n">to</span> <span class="n">api</span><span class="p">.</span><span class="n">mch</span><span class="p">.</span><span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="o">|</span><span class="mf">123.151.71.149</span><span class="o">|:</span><span class="mf">80.</span><span class="p">..</span> <span class="n">connected</span><span class="p">.</span></code></pre></div>
+  
+  
+  <h2>代码分析</h2>
+  
+  <p>专门写个代码来测试ipv6的解析，用到系统函数getaddrinfo:</p>
+  
+  <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="cp">#include &lt;stdio.h&gt;</span>
+  <span class="cp">#include &lt;string.h&gt;</span>
+  <span class="cp">#include &lt;netdb.h&gt;</span>
+  <span class="cp">#include &lt;iostream&gt;</span>
+  <span class="cp">#include &lt;sys/types.h&gt;</span>
+  <span class="cp">#include &lt;sys/types.h&gt;</span>
+  <span class="cp">#include &lt;sys/socket.h&gt;</span>
+  <span class="cp">#include &lt;arpa/inet.h&gt;</span>
+  
+  
+  <span class="n">using</span> <span class="n">namespace</span> <span class="n">std</span><span class="p">;</span>
+  
+  <span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+  
+      <span class="k">struct</span> <span class="n">addrinfo</span> <span class="n">hints</span><span class="p">,</span><span class="o">*</span><span class="n">answer</span><span class="p">,</span><span class="o">*</span><span class="n">curr</span><span class="p">,</span><span class="o">*</span><span class="n">p</span><span class="p">;</span>
+  
+      <span class="kt">int</span> <span class="n">error</span><span class="p">;</span>
+  
+      <span class="n">memset</span><span class="p">(</span><span class="o">&amp;</span><span class="n">hints</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="k">sizeof</span> <span class="n">hints</span><span class="p">);</span>
+      <span class="n">hints</span><span class="p">.</span><span class="n">ai_family</span> <span class="o">=</span> <span class="n">AF_INET6</span><span class="p">;</span><span class="c1">//AF_UNSPEC; // use AF_INET6 to force IPv6</span>
+      <span class="n">hints</span><span class="p">.</span><span class="n">ai_socktype</span> <span class="o">=</span> <span class="n">SOCK_STREAM</span><span class="p">;</span><span class="c1">//SOCK_DGRAM; // SOCK_STREAM</span>
+  
+      <span class="k">if</span> <span class="p">((</span><span class="n">error</span> <span class="o">=</span> <span class="n">getaddrinfo</span><span class="p">(</span><span class="s">"api.mch.weixin.qq.com"</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">hints</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">answer</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">fprintf</span><span class="p">(</span><span class="n">stderr</span><span class="p">,</span> <span class="s">"getaddrinfo: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">gai_strerror</span><span class="p">(</span><span class="n">error</span><span class="p">));</span>
+          <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+      <span class="p">}</span> <span class="k">else</span> <span class="n">cout</span> <span class="o">&lt;&lt;</span><span class="s">"Success with a URL</span><span class="se">\n</span><span class="s">"</span><span class="p">;</span>
+  
+      <span class="kt">char</span> <span class="n">ipstr</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="n">curr</span> <span class="o">=</span> <span class="n">answer</span><span class="p">;</span> <span class="n">curr</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">;</span> <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">-&gt;</span><span class="n">ai_next</span><span class="p">)</span> <span class="p">{</span>
+          <span class="n">inet_ntop</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="o">&amp;</span><span class="p">(((</span><span class="k">struct</span> <span class="n">sockaddr_in</span> <span class="o">*</span><span class="p">)(</span><span class="n">curr</span><span class="o">-&gt;</span><span class="n">ai_addr</span><span class="p">))</span><span class="o">-&gt;</span><span class="n">sin_addr</span><span class="p">),</span><span class="n">ipstr</span><span class="p">,</span> <span class="mi">16</span><span class="p">);</span>
+          <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ipstr</span><span class="p">);</span>
+      <span class="p">}</span>
+  
+      <span class="n">freeaddrinfo</span><span class="p">(</span><span class="n">answer</span><span class="p">);</span>
+  
+  
+      <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+  <span class="p">}</span></code></pre></div>
+  
+  
+  <p>包含头文件</p>
+  
+  <p>netdb.h</p>
+  
+  <p>函数原型</p>
+  
+  <p>int getaddrinfo( const char <em>hostname, const char </em>service, const struct addrinfo *hints, struct addrinfo **result );</p>
+  
+  <p>参数说明</p>
+  
+  <p>hints：可以是一个空指针，也可以是一个指向某个addrinfo结构体的指针，调用者在这个结构中填入关于期望返回的信息类型的暗示。举例来说：如果指定的服务既支持TCP也支持UDP，那么调用者可以把hints结构中的ai_socktype成员设置成SOCK_DGRAM使得返回的仅仅是适用于数据报套接口的信息。而是否ipv6则由ai_family决定。</p>
+  
+  <p>result：本函数通过result指针参数返回一个指向addrinfo结构体链表的指针。</p>
+  
+  <p>返回值：0——成功，非0——出错</p>
+  
+  <h2>测试结果</h2>
+  
+  <p>ai_family为ipv6时，只会寻找ipv6的解析结果，一般域名也没设置。ai_family为AF_UNSPEC时，会先ipv6再ipv4的，而api.mch.weixin.qq.com这个域名的ipv6解析出奇的慢（qq.com却不慢，原因见后）。</p>
+  
+  <h2>解决办法</h2>
+  
+  <p>如果是curl，c可以强制指定ipv4，使用curl_easy_setopt(curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);</p>
+  
+  <p>其他语言的也参考此法。</p>
+  
+  <h2>测试代码下载</h2>
+  
+  <p><a href="https://github.com/54chen/dns_test">https://github.com/54chen/dns_test</a></p>
+  
+  <h2>深层原因分析</h2>
+  
+  <p>nslookup -query=AAAA api.mch.weixin.qq.com -debug 是找不到解析的（指定的AAAA就是ipv6），然后会发现一个SOA声明和他的上级weixin.qq.com有一个ipv6的CNAME，到了minorshort.weixin.qq.com，而这域名又是没有ipv6的解析的。</p>
+  
+  <p>目测ipv6找解析时是在这个SOA和CNAME的地方打圈了，微信的同学们是不是考虑让大伙好过一点，把这些个域名的ipv6设置去掉。</p>
+  
+  <div class="highlight"><pre><code class="language-c" data-lang="c"><span class="n">dig</span> <span class="err">@</span><span class="n">ns</span><span class="o">-</span><span class="n">tel1</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span> <span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span> <span class="n">AAAA</span>
+  
+  <span class="n">weixin</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span>        <span class="mi">43200</span>   <span class="n">IN</span>   <span class="n">SOA</span>  <span class="n">ns</span><span class="o">-</span><span class="n">tel1</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span> <span class="n">webmaster</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="p">.</span> <span class="mi">1293502040</span> <span class="mi">300</span> <span class="mi">600</span> <span class="mi">86400</span> <span class="mi">300</span></code></pre></div>
+  
+  
+  <p><input type="hidden" id="mid" name="mid" value="3987785364529324"></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2016-06-18T16:56:47+08:00" pubdate data-updated="true">2016-06-18 16:56:47 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/dns/">dns</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2016/05/25/a-story-about-sha1withrsa-slash-ras-slash-x509-with-c-slash-c-plus-plus/" title="Previous Post: 在c/c++中解决SHA1WithRSA/ras/X509的过程记录">« 在c/c++中解决SHA1WithRSA/ras/X509的过程记录</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2016/07/29/mi/" title="Next Post: 小米大树part1:基础架构之痛">小米大树part1:基础架构之痛 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

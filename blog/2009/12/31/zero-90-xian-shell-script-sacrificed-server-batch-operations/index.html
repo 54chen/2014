@@ -1,0 +1,225 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>［零九零献］献出服务器批量作shell脚本 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="现在是时间零九年最后一天的下午五点 值此年末岁初的佳节时期 54chen祝订阅没订阅科学院日志的朋友们 元旦快乐！ 特地送出shell脚本一个，适合用于经常性的和十台以上服务器打交道的同志们，解放双手。看码: 第一个文件 run.sh 功能 总控 运行的文件 是作时的入口 #!/bin/sh …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/12/31/zero-90-xian-shell-script-sacrificed-server-batch-operations">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">［零九零献］献出服务器批量作shell脚本</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-12-31T00:00:00+08:00" pubdate data-updated="true">2009-12-31 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>现在是时间零九年最后一天的下午五点</p>
+  
+  <p>值此年末岁初的佳节时期</p>
+  
+  <p>54chen祝订阅没订阅科学院日志的朋友们 元旦快乐！</p>
+  
+  <p>特地送出<a href="http://www.54chen.com/_linux_/linux-system-replacement-method-sshd-notes-from-from-academy-of-sciences.html">shell</a>脚本一个，适合用于经常性的和十台以上服务器打交道的同志们，解放双手。看码:</p>
+  
+  <p>第一个文件 run.sh 功能 总控 运行的文件 是作时的入口</p>
+  
+  <p>#!/bin/sh<br>
+  SERVER_FILE=server</p>
+  
+  <p>SERVER_LIST="`cat ${SERVER_FILE}|grep -v "#"`"</p>
+  
+  <p>for SERVER in `echo "${SERVER_LIST}"`<br>
+  do<br>
+  echo ${SERVER}<br>
+  sh runOne.sh ${SERVER};<br>
+  done;</p>
+  
+  <p>第二个文件 runOne.sh 功能 自定义每个服务器要进行的作的步骤</p>
+  
+  <p>#!/bin/sh<br>
+  host=$1<br>
+  ssh root@$host "yum -y install mysql-server" #上传<br>
+  scp my.cnf root@$host:/etc/my.cnf #作</p>
+  
+  <p>第三个文件 server 功能 记录有哪些服务器要作 ＃号可以<a href="http://www.54chen.com/_linux_/intelligent-dns-configuration-process.html">注释</a>不想作的机器</p>
+  
+  <p>#10.22.206.21<br>
+  10.22.206.22<br>
+  10.22.206.23<br>
+  10.22.206.24<br>
+  10.22.206.25</p>
+  
+  <p>使用的时候，先设置<a href="http://www.54chen.com/memo/%e7%94%a8ssh-tunnel%e4%b8%b4%e6%97%b6%e7%aa%81%e7%a0%b4%e8%b7%a8%e6%9c%ba%e6%88%bf%e7%9a%84%e9%99%90%e5%88%b6.html">server</a>文件，直接./run.sh 就开始执行，灵活鸡动，方便快捷。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-12-31T00:00:00+08:00" pubdate data-updated="true">2009-12-31 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/12/30/everyone-network-intel-technology-symposium-record/" title="Previous Post: 人人网－英特尔技术专题讨论会实录">« 人人网－英特尔技术专题讨论会实录</a>
+        
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

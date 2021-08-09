@@ -1,0 +1,230 @@
+  <?xml version="1.0" encoding="utf-8"?>
+  <feed xmlns="http://www.w3.org/2005/Atom">
+    <title><![CDATA[Category: Arch | 五四陈科学院]]></title>
+    <link href="https://www.54chen.com/blog/categories/arch/atom.xml" rel="self"/>
+    <link href="https://www.54chen.com/"/>
+    <updated>2017-12-29T18:10:29+08:00</updated>
+    <id>https://www.54chen.com/</id>
+    <author>
+      <name><![CDATA[54chen]]></name>
+    </author>
+    <generator uri="http://octopress.org/">Octopress</generator>
+  
+    
+    <entry>
+      <title type="html"><![CDATA[过去六年在小米搞(wa)错(keng)的几个技术细节]]></title>
+      <link href="https://www.54chen.com/blog/2016/04/26/mistake-in-six-years/"/>
+      <updated>2016-04-26T20:34:54+08:00</updated>
+      <id>https://www.54chen.com/blog/2016/04/26/mistake-in-six-years</id>
+      <content type="html"><![CDATA[<p>2010年的时候，我们开始最早的一波做小米的服务器的同学，基本都很少互联网经验，七拼八凑的把米聊上了线，这么多年过去了，很多技术框架沉淀到了公司各处团队中去了。</p>
+  
+  <p>今天再来看，其实有很多细节，当时真的没考虑（现在也是坑）。</p>
+  
+  <p><img src=http://www.oracle.com/technetwork/java/javaspotlight-189455.png></p>
+  
+  <!--more-->
+  
+  
+  <h2>细节一 用nginx的proxy_pass代理java上线不平滑</h2>
+  
+  <p>一个典型的架子，是nginx+resin/tomcat，然后在nginx上设置weight=1 max_fails=3 等等。</p>
+  
+  <p>在上线的时候，并没有平滑过度的手段（比如修改一下所有nginx配置拿掉一台之类的），所有的上线都是有损的。</p>
+  
+  <p>庆幸的是，移动互联网native的app，断个一两秒的不服务用户感觉不出来。</p>
+  
+  <h2>细节二 监控数据很多，有用的很少</h2>
+  
+  <p>线上故障的情况，不出意外就是一个模块和另一个模块之间发生了什么问题。</p>
+  
+  <p>过去的几年，我们始终没考虑过抽象出来这种数据。</p>
+  
+  <p>我们的监控数据全部是以单独一个模块自身的访问数据（qps、响应时长等），常见的问题是别人说访问你慢，访问老失败，你自己一看数据觉得还挺好。</p>
+  
+  <h2>细节三 为android ios配备了http框架</h2>
+  
+  <p>如果当时没有paoding-rose，我想我们会考虑做成一个标准的tcp server，中间用pb传输到手机。</p>
+  
+  <p>这样做的好处，在应对不好的移动网络的时候，http束手束脚，而tcp却得多。</p>
+  
+  <p>这一点我同样要点名嘲笑一个微博的客户端，在一样的坑里。</p>
+  
+  <h2>细节四 选java又没有语言级专家</h2>
+  
+  <p>如果当时选的是php，我想我们线上的服务在很多年后需要重启的会很少（由于nio或者其他什么泄漏之类的，最后服务就假死了，重启就能管很长时间）。</p>
+  
+  <p>当然了，现在来看，更倾向于选c/c++，至少老老实实的写不会有太大的坑，跑起来也稳定。</p>
+  
+  <h2>细节五 过于依赖关系型数据库mysql</h2>
+  
+  <p>用mysql没有什么错，使用方便，实现业务快。</p>
+  
+  <p>在中期要做多IDC容灾的时候，没办法了，实在是关系太复杂了，做不了。</p>
+  
+  <p>如果当时我们全部有key-value的，将大量的mysql做的事情放在业务代码里来，做多IDC简直是小菜一碟。</p>
+  
+  <p>而多IDC在一个互联网业务来看，上量了之后又是多么重要的一件事情。</p>
+  
+  <h2>细节六 过多使用rabbitmq</h2>
+  
+  <p>在需要削峰的项目上使用mq无可厚非，但是一个项目到处都在用mq的时候，简直是灾难（想一想，一个大系统，调用谁不清楚，谁在调用也不清楚，只知道自己在消费什么对象）。</p>
+  
+  <p>后期的时候，要想知道一个模块正在被谁调用基本无从查询了，因为这些开源的mq，根本不会考虑实际运维中的需求，出发点全部是如何快速的使用。</p>
+  
+  <h2>后记</h2>
+  
+  <p>细节有点多，坑都还在(还有一些坑已经爬出来了就不列在这里了)，依旧有后继的团队和项目在坑里，如果一个项目立志要做大做强，还是一开始就跳出这些坑吧。</p>
+  
+  <hr />
+  
+  <h2>English version</h2>
+  
+  <h2>Something wrong in the pass six years at XIAOMI server</h2>
+  
+  <p>We deployed MILIAO server, which was a sketchy version patched together, in 2010.The first team members that developed at XIAOMI sever-side were less experience in the internet field.</p>
+  
+  <p>The techlonogy frameworks have broadcasted to every team in XIAOMI after all these years.</p>
+  
+  <p>And now for a look at the techlonogy details,it was thought too little at that time.</p>
+  
+  <h2>Detail 1.nginx&rsquo;s pass_proxy which proxied java server is not graceful when deploying </h2>
+  
+  <p>A typical case is nginx worked with resin or tomcat,and there is a configration like &lsquo;weight=1 max_fails=3&rsquo; in nginx.</p>
+  
+  <p>There is not graceful when deploying the service.We dont have any load-balance tool.</p>
+  
+  <p>It is a relief that the users do not know out of service at the native app.</p>
+  
+  <h2>Detail 2.too many traffic data,too less is useful</h2>
+  
+  <p>No surprisingly,there is something wrong between one model call another one when it is out of service online.</p>
+  
+  <p>We have not thought about the model-call traffice data in the pass years.</p>
+  
+  <p>We have too many data like QPS and percentile but all of them are made by the servce be called rather than the caller.</p>
+  
+  <p>One question that frequently comes up was that looks all good by data but not good by the caller.</p>
+  
+  <h2>Detail 3.http framework for Android and Ios</h2>
+  
+  <p>Without pading-rose framework,I think we would develop a tcp server,which transfer data by protobuffer.</p>
+  
+  <p>It is better for Chinese network enviroment,because the tcp one is more free than the http one.</p>
+  
+  <p>The Weibo app is also designed by http.</p>
+  
+  <h2>Detail 4.java without specialist</h2>
+  
+  <p>I think the service online is not need restarted now if we had choose php at that time.</p>
+  
+  <p>Now I prefer c/c++.It is less problem.</p>
+  
+  <h2>Detail 5.depended too much on RDBS</h2>
+  
+  <p>It is not wrong that a project is designed by mysql.It is easy and quick.</p>
+  
+  <p>But it is difficult when you want to take the service to multi-IDC.It is impossible.</p>
+  
+  <p>Mult-IDC is a easy thing,if we have designed the service by key-value store.The logic must be done in project rather than in mysql.</p>
+  
+  <p>This is so important when your project have became greater.</p>
+  
+  <h2>Detail 6.depended too much on rabbitmq</h2>
+  
+  <p>It is doesnot matter that a peakedness project is designed by mq.It must be a disaster that a usual project is designed by mq everywhere.</p>
+  
+  <p>It is difficult to find the calling relationship.</p>
+  
+  <h2>PS</h2>
+  
+  <p>There are too many details.To avoid the wrong thing if your service will be greater.</p>
+  
+  <p><input type="hidden" id="mid" name="mid" value="3968627038512109" /></p>
+  ]]></content>
+    </entry>
+    
+    <entry>
+      <title type="html"><![CDATA[安全无小事－－技术团队防守一二三]]></title>
+      <link href="https://www.54chen.com/blog/2014/05/25/security/"/>
+      <updated>2014-05-25T13:56:31+08:00</updated>
+      <id>https://www.54chen.com/blog/2014/05/25/security</id>
+      <content type="html"><![CDATA[<p>事情的经过是这样的：</p>
+  
+  <p>那天在使用某创业团队的APP时，输入完了微博账号还需要他自己的账号，于是就发了条微博，</p>
+  
+  <p><img width="450" src=http://chen54.b0.upaiyun.com/20140525/1.png></p>
+  
+  <p>然后就有人@我是不是在说小米被脱库的事。。。呵呵！</p>
+  
+  <p>这里要讨论的是，如何让数千计的开发人员在安全防守安全编程上，得到有效的效果。有人说，我干了xx年，手上从来没有一个项目出过安全漏洞; 还有人说，我一个人做的x项目，也从来没有出现过安全漏洞; 呵呵，集体的智慧不由个人意志来控制，木桶漏水取决于最短的一块。</p>
+  
+  <h1>一、内防</h1>
+  
+  <!--more-->
+  
+  
+  <p>内防是需要苦练内功的一块，因为招聘标准不一导致技术团队的水平不一，一个上千人的技术团队，一定要有一定的固定流程进行上线质量的把控。</p>
+  
+  <h2>1.1 基础</h2>
+  
+  <p>基础包括了：基础代码框架、基础网络环境、基础硬件环境、基础系统环境。</p>
+  
+  <ul>
+  <li>基础代码框架：统一的去除xss\sql注入等第一层的框架服务，确保出现在每个技术人员的入职学习流程中。</li>
+  <li>基础网络环境：业务隔离和灵活兼顾的网络，对基础运维网络工程师有更高的要求，确保每一台新上线的机器都在正确安全的网络中。</li>
+  <li>基础硬件环境：确保新的硬件出现在正确安全的地方，安全性要求高的硬件有固定的选择。</li>
+  <li>基础系统环境：新系统的投入，有安全标准的套路安装和设置。</li>
+  </ul>
+  
+  
+  <h2>1.2 走查</h2>
+  
+  <p>走查使变动中的系统周期性也进行了安全检查。</p>
+  
+  <ul>
+  <li>收集：主要是收集服务，因为公司大了，各种小业务未必会拿得全，特别要关注边缘业务。一个非常好的点，就是在上线系统中进行收集。</li>
+  <li>查证：各种侦测手段，扫描脚本，应该流程化，代码化，尽可能缩短全公司运行时间，同时尽最大可能扩大面积。</li>
+  </ul>
+  
+  
+  <h2>1.3 紧跟</h2>
+  
+  <p>紧跟是各种开源软件如果正在被使用，需要对其安全变动公告进行紧跟。尽可能在重大漏洞发布后最短时间里解决，缩小影响时间。</p>
+  
+  <p>这里要求对全公司所使用的开源项目进行有效的登记记录工作，而且上千人的公司，很有可能会漏掉。一个非常好的点，就是在上线系统中进行开源项目检测。</p>
+  
+  <h2>1.4 重点</h2>
+  
+  <p>重点是指对经常报漏洞的项目进行重点关注，确保这些项目：1.不引用或保存重要数据 2.不与其他业务在受信网段 3.更加频繁的重复前面三点</p>
+  
+  <h2>1.5 重要</h2>
+  
+  <p>重要项目一定要坚持原则，绝对禁止数据的流动、绝对禁止明文重要数据的存放，即便是ceo说可以也不行。</p>
+  
+  <h1>二、外攻</h1>
+  
+  <p>外攻是指通过上面的一系列手段，依旧无法控制短板的项目或人出现，于是要做的事情就是尽一切手段尽快地把这短板找到。</p>
+  
+  <h2>2.1 外援</h2>
+  
+  <p>外援有很多，包括各种白帽平台、安全厂商平台。下血本也要和他们搞好关系，心甘情愿被敲诈，当有发现重大短板时第一时间取得联系是非常有效的。</p>
+  
+  <h2>2.2 自建</h2>
+  
+  <p>自建安全响应平台是对外援的补充，许多短板像xss sql注入都是很显而易见的问题，许多还不足以“下血本”，但积小成大，经常出现短板的团队，需要考虑技术培训等活动。</p>
+  
+  <h1>三、另类</h1>
+  
+  <p>非技术漏洞导致的泄密、个人管理密码被盗、密码被盗等类似的另类事件，要求各不应该出现扁平化的权限控制系统，每人控制一块，可以减少个人失误扩大变成灾难。</p>
+  
+  <h1>四、总结</h1>
+  
+  <p>一个互联网技术企业，绝对不是老板出多少钱就一定不会再出现安全漏洞的，也不是老板出的钱越多就越重视的，真正的重视体现在研发人员的日常工作中。</p>
+  
+  <p>你的企业没有出现过安全问题，不你的团队没有短板，更不你的线上没有漏洞，更不你的用户数据没有在黑市上买卖。</p>
+  
+  <p>不在乎有没有漏洞，就是认真。</p>
+  ]]></content>
+    </entry>
+    
+  </feed>

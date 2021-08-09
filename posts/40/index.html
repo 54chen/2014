@@ -1,0 +1,973 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[科学院手记]人人网新鲜事分享现场转播 2009-12-02 00:00:00 +0800 讲座已经开始，现在是人人网牛人张洁介绍。 ---- 现在是新鲜事后台架构牛人铁安在讲解新鲜事要完成的功能： 将一个用户产生的内容实时发送给与他相关的一群人。 尽可能地帮助用户保存内容。 现在面临的挑战 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/40">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/12/02/net-new-to-live-for-all-to-share/">[科学院手记]人人网新鲜事分享现场转播</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-12-02T00:00:00+08:00" pubdate data-updated="true">2009-12-02 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>讲座已经开始，现在是人人网牛人张洁介绍。</p>
+  
+  <p>----</p>
+  
+  <p>现在是新鲜事后台架构牛人铁安在讲解新鲜事要完成的功能：</p>
+  
+  <p>将一个用户产生的内容实时发送给与他相关的一群人。</p>
+  
+  <p>尽可能地帮助用户保存内容。</p>
+  
+  <p><strong>现在面临的挑战</strong></p>
+  
+  <p>分发压力：5000W*100 全天分发的总量在五十亿左右。每秒分发的次数是六万次每秒。</p>
+  
+  <p>现在有1.3t的内存占用。</p>
+  
+  <p>----</p>
+  
+  <p><strong>老版本的新鲜事结构</strong></p>
+  
+  <p>----</p>
+  
+  <p><strong>新的系统结构</strong></p>
+  
+  <p>分发之后，内容本体丢进cache和db，dispatch服务通知到相关的人，分发后来的结构保存一人一条到TC</p>
+  
+  <p>---</p>
+  
+  <p><strong>MENU</strong></p>
+  
+  <p><strong>技术细节部分</strong></p>
+  
+  <p>分发部分的策略优化：瞬间分发海量数据，光良首页的例子（一百万的粉丝同时产生）。产品策略优化。</p>
+  
+  <p>内存压缩技术：新鲜事内存结构(FlyWeight)，字符串压缩存储（QuickLZ）</p>
+  
+  <p><strong>新鲜事存储方案</strong></p>
+  
+  <p>----</p>
+  
+  <p>内存压缩技术：flyweight的设计</p>
+  
+  <p>只要对象存在，所有的指针都能找到正确的内容。</p>
+  
+  <p>boost::flyweight在高并发情况下有效率问题，自己实现了相同的功能。</p>
+  
+  <p>各种压缩办法的性能比较：</p>
+  
+  <p>QuickLZ的压缩比不是最高的，但解压缩是最快的；代码简单；支持追加方式的压缩；有成熟的商业应用。</p>
+  
+  <p>boost::multi_index介绍 用来做多视图显示的东东 提供三种不同的索引方式</p>
+  
+  <p>一段例子代码 c++代码。。。略鸟</p>
+  
+  <p>-------</p>
+  
+  <p><strong>新鲜事存储方案</strong></p>
+  
+  <p>TC+Direct IO + SSD</p>
+  
+  <p><a href="http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">key-value</a> DB的一个表。</p>
+  
+  <p>研究的三个开源项目：</p>
+  
+  <p>Hypertable</p>
+  
+  <p>tokyo tyrant</p>
+  
+  <p>MemcacheDB (哈哈，测试了两个张宴兄弟的东东，感叹一下下，<a href="http://www.54chen.com/817-multi-nginx-configuration-of-single-php-fpm-approach-from-academy-of-sciences/">张宴</a>兄弟在nginx和tt的文档贡献真是不浅)</p>
+  
+  <p><strong><a href="http://www.54chen.com/814-tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">TC</a>的测试结果</strong></p>
+  
+  <p>读取很少的数据的情况下读和写都很快，在几个G之内的数据文件，数据量增加到一定程度写入会持续下降。100G一秒只能写入六七百次。所以单纯使用TC是不现实的。</p>
+  
+  <p><strong>新的方案</strong></p>
+  
+  <p>所有的写合并；通过LOG保证Down机后数据恢复；使用TC保存索引；使用异步IO读写文件；使用DirectIO怎么OS的Cache策略；使用SSD解决大量的并发读取。</p>
+  
+  <p>SSD随机读和顺序读速度接近。五六万每次的速度。</p>
+  
+  <p>-------</p>
+  
+  <p>全场结束，答疑</p>
+  
+  <p>-------</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/12/01/the-pursuit-of-happyness/">当幸福来敲门</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-12-01T00:00:00+08:00" pubdate data-updated="true">2009-12-01 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>我们都一样<br>
+  一样的善良<br>
+  一样为需要的人打造一个天堂<br>
+  歌声是翅膀<br>
+  唱出了希望<br>
+  所有的付出只因爱的力量<br>
+  和你一样<br>
+  我们都一样<br>
+  谁在最需要的时候轻轻拍着我肩膀<br>
+  谁在最快乐的时候愿意和我分享<br>
+  日子那么长<br>
+  我在你身旁<br>
+  见证你成长<br>
+  永远为你鼓掌</p>
+  
+  <p>因为失去过，所以才懂得珍惜，因为失去过，所以才怕再次失去，因为失去过，所以才懂得享受幸福。</p>
+  
+  <p>当幸福来敲门</p>
+  
+  <p>史密斯先生随手提的笨重的仪器，具有压垮脆弱人生巨大的负荷，压抑的感觉充满心灵，持续不断。</p>
+  
+  <p>当幸福来敲门的时候</p>
+  
+  <p>最后喘出的气息，天高云淡的感觉，豁然开朗，理解幸福与快乐，学会幸福与快乐。</p>
+  
+  <p>一月之后，是新的一年，心情超好，呼，好久没有喘气的感觉。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/11/23/ubuntu910-inside-firefox-does-not-display-plug-in-solution-to-dns-flusher/">ubuntu9.10里的firefox不显示DNS Flusher插件的解决办法</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-23T00:00:00+08:00" pubdate data-updated="true">2009-11-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>ubuntu 9.10里的firefox是3.55版本的，DNS Flusher是个很好用的快速切换dns的插件。</p>
+  
+  <p>ubuntu下是大小写敏感的，而DNS Flusher的作者似乎只是个windows用户。
+  </p>
+<blockquote>修改这个文件：</blockquote>
+  
+  <p>vim /home/cc/.mozilla/firefox/icj6nr4a.default/extensions/{7d575baa-b543-11dc-8314-0800200c9a66}/chrome.manifest
+  (根据你的情况自己修改下目录)</p>
+  
+  <p>然后修改这个文件里的第一行和第二行里的两个overlay，将里面的<strong>dnsFlusher.xul</strong>都改成<strong>dnsflusher.xul</strong>，注意，只修改前面两个overlay，后面的content和skin无需修改。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/11/19/ubuntu-910-hangs-under-linuxqq-regular-solution/">Ubuntu 9.10下linuxqq经常挂掉的解决方案</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-19T00:00:00+08:00" pubdate data-updated="true">2009-11-19 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>ubuntu 9.10下linuxqq（官方的QQ，八百年不更新的那个了）
+  </p>
+<blockquote>sudo vim /usr/bin/qq</blockquote>
+  增加
+  <blockquote>#!/bin/sh</blockquote>
+  
+  <p>export GDK_NATIVE_WINDOWS=true</p>
+  
+  <p>cd /usr/share/tencent/qq/</p>
+  
+  <p>./qq
+  经试验正确无误。。。linuxqq不再挂。。。五四陈科学院小道报道</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/11/18/ubuntu-910-installation-to-configure-eclipse-subclipse-m2eclipse-svn-plug-ins-and-maven-plug-ins/">Ubuntu 9.10安装配置eclipse、subclipse、m2eclipse(svn插件和maven插件)</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-18T00:00:00+08:00" pubdate data-updated="true">2009-11-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>ntfs硬盘安装ubuntu 9.10方案见：
+  <a rel="bookmark" href="http://www.54chen.com/830-x200-ntfs-hard-disk-to-install-the-official-version-of-notes-from-ubuntu910/">x200 ntfs硬盘安装ubuntu9.10正式版手记</a>
+  eclispe 3.51安装：
+  </p>
+<blockquote>sudo apt-get install eclipse</blockquote>
+  整完会在应用程序中多出来一项“编程”。
+  
+  <p>此时的eclipse是以自带的jre来运行的，后面的maven插件会要求eclipse在jdk里运行，而不是jre里，所以再安装一下jdk:
+  </p>
+<blockquote>sudo apt-get install sun-java6-jdk</blockquote>
+  这样，jdk会安装到/usr/lib/jvm/java-6-sun
+  
+  <p>然后修改eclipse.ini
+  </p>
+<blockquote>sudo vim /usr/lib/eclipse/eclipse.ini</blockquote>
+  在-vmargs上一行加入：
+  <blockquote>-vm<br>
+  /usr/lib/jvm/java-6-sun-1.6.0.15/bin</blockquote>
+  
+  <p>(有回车)
+  同时选择一下window-&gt;preferences-&gt;java-&gt;installed jres增加对应目录的jre</p>
+  
+  <p>然后开始 Help-&gt;install new software</p>
+  
+  <p>subclipse http://subclipse.tigris.org/update_1.2.x</p>
+  
+  <p>安装好subclipse。subclipse提供了svn的支持。</p>
+  
+  <p>然后同样安装m2eclipse插件：</p>
+  
+  <p>m2eclipse比较麻烦，需要依次安装的有：
+  </p>
+<blockquote>emf http://download.eclipse.org/modeling/emf/updates/releases/</blockquote>
+  
+  <p>cdt http://download.eclipse.org/tools/cdt/releases/new</p>
+  
+  <p>wtp http://download.eclipse.org/webtools/updates</p>
+  
+  <p>ajdt http://download.eclipse.org/tools/ajdt/34/update</p>
+  
+  <p>zest or GEF http://download.eclipse.org/tools/gef/updates/releases/</p>
+  
+  <p>mylyn http://download.eclipse.org/tools/mylyn/update/e3.4
+  最后才是m2eclipse:
+  </p>
+<blockquote>http://m2eclipse.sonatype.org/update/</blockquote>
+  注意，在安装过程中，有些update的url里有不止一个版本的选项，注意适当选取。
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/11/17/x200-ntfs-hard-disk-to-install-the-official-version-of-notes-from-ubuntu910/">X200 ntfs硬盘安装ubuntu9.10正式版手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-17T00:00:00+08:00" pubdate data-updated="true">2009-11-17 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>09年10月31日，9.10发布了正式版本，科学院曾经出过两篇硬盘安装的手记，一个是8的一个是9.10测试版本的。地址是：
+  <a rel="bookmark" href="http://www.54chen.com/796-11-return-ubuntu-910-notes-from-the-hard-disk-installation/">[十一归来]ubuntu 9.10 硬盘安装手记</a>
+  <a rel="bookmark" href="http://www.54chen.com/372-ubuntu-810-desktop%e7%89%88%e6%9c%ac-%e7%a1%ac%e7%9b%98%e5%ae%89%e8%a3%85%e6%89%8b%e8%ae%b0/">ubuntu 8.10 desktop版本 硬盘安装手记</a></p>
+  
+  <p>先说平时我们用wingrub安装的时候，是不支持ntfs的，只能用grub for dos的grldr文件(grub4dos的这个文件支持ntfs)。</p>
+  
+  <p>下载iso文件：ubuntu-9.10-desktop-i386.iso</p>
+  
+  <p>同上一文，我列出使用的boot.ini和menu.lst:</p>
+  
+  <p>boot.ini
+  </p>
+<blockquote>[boot loader]<br>
+  timeout=30<br>
+  default=multi(0)disk(0)rdisk(0)partition(1)\WINDOWS<br>
+  [operating systems]<br>
+  multi(0)disk(0)rdisk(0)partition(1)\WINDOWS="Microsoft Windows XP Professional" /noexecute=optin /fastdetect<br>
+  C:\GRLDR="wingrub"</blockquote>
+  menu.lst
+  <blockquote>timeout 10</blockquote>
+  
+  <p>title Windows at (hd0,0)<br>
+  root (hd0,0)<br>
+  chainloader +1</p>
+  
+  <p>title install Ubuntu9.10<br>
+  root (hd0,0)<br>
+  kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu-9.10-desktop-i386.iso ro quiet splash –<br>
+  label check live-install<br>
+  initrd (hd0,0)/initrd.lz
+  然后，iso文件放在D盘，用RAR打开iso文件，解压出来initrd.lz和vmlinuz两个文件。</p>
+  
+  <p>重启电脑，进入desktop，双击安装。</p>
+  
+  <p>最后的时候运行一下umount -l /isodevice</p>
+  
+  <p>安装结束后，重启进系统，中文不全，选择一下最快的源，联网下语言包。</p>
+  
+  <p>thinpad x200 所有硬件全部正常可使用。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2009/11/11/all-networks-in-house-training-java-concurrent-programming-principles-synchronize-volatile-zhang-jie-heroes/">人人网内部培训：java并发编程原理-synchronize Volatile-张洁大侠</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-11-11T00:00:00+08:00" pubdate data-updated="true">2009-11-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>来自人人网内部培训的最新消息：</p>
+  
+  <p>时间今天下午不明时间，一群人在张洁大侠的培训下，对java并发编程原理-synchronize volatile等进行了激励的讨论和学习。出席本次会议的有。。。</p>
+  
+  <p>言归正传，说，并发，就会出现锁。</p>
+  
+  <p><strong>1.互斥锁实现算法</strong></p>
+  
+  <p>使用一个并发队列：
+  </p>
+<blockquote>do{</blockquote>
+  
+  <p>pre=head;</p>
+  
+  <p>newNode-&gt;next=prev;</p>
+  
+  <p>}while(!cas(head,prev,newNode));
+  此代码中<a href="http://www.54chen.com/34-tcp%e8%bf%9e%e6%8e%a5syn-ack-rst-utg-psh-fin/">cas</a>是作系统提供的compare and swap接口，能保证原子性作（类似memcache的<a href="http://www.54chen.com/814-tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles/">cas</a>）。</p>
+  
+  <p><strong>2.编译器指令优化使内存<a href="http://www.54chen.com/765-tokyo-cabinet-with-java-concurrent-test-the-performance/">指令</a>重排序与并发编程</strong></p>
+  
+  <p>并发的程序会受到指令重排序的影响，顺序执行的程序逻辑不会受影响。</p>
+  
+  <p>例子：
+  </p>
+<blockquote>int a=b=0;</blockquote>
+  
+  <p>Thead1</p>
+  
+  <p>{</p>
+  
+  <p>a=1;</p>
+  
+  <p>b=2</p>
+  
+  <p>}</p>
+  
+  <p>Thread2</p>
+  
+  <p>{</p>
+  
+  <p>if(b==2)</p>
+  
+  <p>{</p>
+  
+  <p>System.out.println(a); //这个a会是多少？</p>
+  
+  <p>}</p>
+  
+  <p>}
+  上例中Thread2并不一定会打出1来，因为在Thread1中的两个指令会被编译器优化时交换了顺序，出现了与我们想像中不一样的逻辑。</p>
+  
+  <p><strong>3.增加synchronize抑制内存指令重<span style="font-weight: normal;"><a href="http://www.54chen.com/784-the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java-part-2-client/">排序</a></span></strong></p>
+  
+  <p>synchronize的作用是什么呢，经常都说是同步，市面上的说法是，jvm在运行的时候，变量会在本地有一个内存区，另外还有一个主存区，同步的含义就是将本地的值同步到主存去。</p>
+  
+  <p>这个说法没有明确的错误，而且在一定程度上还能帮助你理解synchronize的作用，然而内部真正的原因，是利用synchronize建立内存屏障，使其能够抑制内存指令的重排序，从而使并发程序达到我们想像中的逻辑。
+  </p>
+<blockquote>int a=b=0;</blockquote>
+  
+  <p>Thead1</p>
+  
+  <p>{</p>
+  
+  <p>synchronized(this)</p>
+  
+  <p>{</p>
+  
+  <p>a=1;</p>
+  
+  <p>b=2;</p>
+  
+  <p>}</p>
+  
+  <p>}</p>
+  
+  <p>Thread2</p>
+  
+  <p>{</p>
+  
+  <p>synchronized(this)</p>
+  
+  <p>{</p>
+  
+  <p>if(b==2)</p>
+  
+  <p>{</p>
+  
+  <p>System.out.println(a); //这个a会是多少？</p>
+  
+  <p>}</p>
+  
+  <p>}</p>
+  
+  <p>}
+  这样子，代码就不会有逻辑上的问题。</p>
+  
+  <p><strong>4.增加volatile建立内存<span style="font-weight: normal;"><a href="http://www.54chen.com/111-plproxy%e9%83%a8%e7%bd%b2%e6%89%8b%e5%86%8c/">屏障</a></span></strong></p>
+  
+  <p>volatile简化了synchronized，原理是一样的。</p>
+  
+  <p>在增加了volatile后，那个变量所使用的位置就立起了一道 内存屏障，前后的指令顺序都不可打乱。
+  </p>
+<blockquote>int a=0;</blockquote>
+  
+  <p>volatile  int b=0;</p>
+  
+  <p>Thead1</p>
+  
+  <p>{</p>
+  
+  <p>a=1;</p>
+  
+  <p>b=2;</p>
+  
+  <p>}</p>
+  
+  <p>Thread2</p>
+  
+  <p>{</p>
+  
+  <p>if(b==2)</p>
+  
+  <p>{</p>
+  
+  <p>System.out.println(a); //这个a会是多少？</p>
+  
+  <p>}</p>
+  
+  <p>}
+  这就可以简化上一个程序。</p>
+  
+  <p><strong>5. synchronize的<a href="http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">object</a>（class\this）</strong>
+  </p>
+<blockquote>synchronized(object)</blockquote>
+  
+  <p>{</p>
+  
+  <p>dosomething();</p>
+  
+  <p>}
+  这里的object其实是为了使用其上的锁，代码等价如：
+  </p>
+<blockquote>object.lock.lock();</blockquote>
+  
+  <p>dosomething();</p>
+  
+  <p>object.condition.wait();</p>
+  
+  <p>object.lock.unlock();
+  【科学院两小时记忆版资料，非原版ppt内容，其中有误的地方定期更正】</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/39">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <em>40</em>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/41">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

@@ -1,0 +1,213 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>[警示]Nginx + PHP CGI的安全漏洞：fix_pathinfo - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="如果你正在使用nginx+php，请关注。 表像： 具体的重现过程，用php代码修改后缀名后上传，比如说www.xxx.com/1.jpg，访问的时候用www.xxx.com/1.jpg/xxx.php
+  这段jpg代码将会被执行！！！
+  http://docs.php.net/manual/zh/ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/05/20/nginx-php-cgi-of-security-hole">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">[警示]Nginx + PHP CGI的安全漏洞：fix_pathinfo</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-20T00:00:00+08:00" pubdate data-updated="true">2010-05-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img05.taobaocdn.com/bao/uploaded/i5/T1.RRAXjVDXXX7OsE8_070026.jpg" alt="php漏洞"></p>
+  
+  <p>如果你正在使用nginx+php，请关注。</p>
+  
+  <p><strong>表像：</strong></p>
+  
+  <p>具体的重现过程，用php代码修改后缀名后上传，比如说www.xxx.com/1.jpg，访问的时候用www.xxx.com/1.jpg/xxx.php
+  </p>
+<blockquote><strong><span style="color: #ff0000;">这段jpg代码将会被执行！！！</span></strong></blockquote>
+  <a href="http://docs.php.net/manual/zh/ini.core.php">http://docs.php.net/manual/zh/ini.core.php</a>
+  cgi.fix_pathinfo "1" PHP_INI_ALL 从 PHP 4.3.0 起可用 <strong><span style="color: #ff0000;">请注意：默认为1</span></strong>
+  
+  <p><strong>解决办法：</strong>
+  1.修改php.ini中的cgi.cgi.fix_pathinfo为0（<span style="text-decoration: underline;">即使你在php.ini中没有搜到，也要设置，没有搜到表示默认为1</span>）<br>
+  2.判断文件上传类型时使用严格的判断，至于怎么判断，参见：<a href="http://www.54chen.com/php-tech/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program.html">http://www.54chen.com/php-tech/php-upload-file-types-to-determine-the-complete-program-and-php-nginx-upload-size-and-complete-control-program.html</a>
+  3.把nginx的判断正则修改为去除/<br>
+  if ( $fastcgi_script_name ~ \..*\/.*php ) {<br>
+  return 403;<br>
+  }</p>
+  
+  <p>鸟哥在<a href="http://www.laruence.com/2010/05/20/1495.html">http://www.laruence.com/2010/05/20/1495.html</a>一文中提及此事。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-20T00:00:00+08:00" pubdate data-updated="true">2010-05-20 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2010/05/19/mysql-explain/" title="Previous Post: mysql explain详解">« mysql explain详解</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2010/05/20/update-ubuntu-1004-installed-hard-disk-notes/" title="Next Post: [更新]ubuntu 10.04 硬盘安装手记">[更新]ubuntu 10.04 硬盘安装手记 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

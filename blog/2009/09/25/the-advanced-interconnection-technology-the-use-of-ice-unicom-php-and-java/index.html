@@ -1,0 +1,348 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>“先进的互联互通技术”--使用ice联通php和java [Part 1 Server] - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="PHP没有中间件，导致了对很多麻烦。比如，对数据库的作必须要链接数据库，然后做SQL作。WEB程序直接作数据库的方法，这样会带来很多人为因素的事故隐患，以及管理上的麻烦，尤其是对大型的网站应用来说。规范的模式应该是，WEB程序传递参数到一个服务程序上， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/09/25/the-advanced-interconnection-technology-the-use-of-ice-unicom-php-and-java">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">“先进的互联互通技术”--使用ice联通php和java [Part 1 Server]</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-25T00:00:00+08:00" pubdate data-updated="true">2009-09-25 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>PHP没有中间件，导致了对很多麻烦。比如，对数据库的作必须要链接数据库，然后做SQL作。WEB程序直接作数据库的方法，这样会带来很多人为因素的事故隐患，以及管理上的麻烦，尤其是对大型的网站应用来说。规范的模式应该是，WEB程序传递参数到一个服务程序上，由该服务程序进行判断并最终作数据库或者其它数据文件，这样做到了明确权限控制，和业务类型集中管理。去年伴随着ICE的推出，<a href="http://www.54chen.com/611-%e5%8e%9f%e5%88%9bdiscuz-bbs%e7%bc%93%e5%ad%98%e6%95%b4%e4%bd%93%e6%96%b9%e6%a1%88/">PHP</a>终于有了可以使用的中间件。在PHP的发展史上，应该是一个里程碑。</p>
+  
+  <p><strong>ICE入门</strong></p>
+  
+  <p>ICE（Internet Communications Engine 网络通讯引擎），是由Corba原核心成员开发的一个开源中间件，据称其各种性能完全优于Corba。除此之外，我们第一次见到了直接支持PHP的中间件。</p>
+  
+  <p>ICE的安装，去http://www.zeroc.com/download.html 下载一个Ice针对PHP的安装包，按照说明安装上。</p>
+  
+  <p>ICE的使用：使用Slice（ICE的一种简单语法脚本），编写一个xx.ice文件。可以使用slice2cpp或slice2java等生成一个cpp或java的ICE框架程序，然后在这个框架程序中进行代码编写。ICE在PHP的应用继承了PHP的一贯传统——简单，只需要在php.ini中加载该xx.ice，在PHP中就可以使用了。
+  </p>
+<blockquote>ICE在PHP应用中的缺点，无法使用PHP编写Server端，其实这也是PHP的一个缺陷——没有完善的多进程和多线程管理机制。因此，Server端可以采用ICE所支持的其它语言进行编写，比如JAVA/C++/VB/PYTHON等。</blockquote>
+  <strong>开始传说中的“互联互通” </strong>
+  <blockquote><strong><span style="color: #ff0000;">本例以 Ice 3.2.1为例 下载的位置和参考的文档都在下面</span></strong></blockquote>
+  
+  <p><a href="http://www.zeroc.com/download_3_2_1.html">http://www.zeroc.com/download_3_2_1.html</a></p>
+  
+  <p><a href="http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592">http://www.zeroc.com/doc/Ice-3.2.1/manual/Slice.5.10.html#50592</a>
+  ICE其实是一个网络框架，入门说明中说了，PHP不能用来做服务端，在这里我们使用java来做服务端，用php来连java，达到传说中的“互联互通”。</p>
+  
+  <p>我们的服务端用Linux，客户端也用Linux（纯废话）。JAVA环境的搭建不在表述了。</p>
+  
+  <p>在下载可以看出来，服务器支持yum或者是rpm是多么幸福的一件事情，或者搞一份tar.gz的包下来configure make make install，大概也就是这样。好了这样子就表示安装结束了。。。
+  </p>
+<blockquote>安装之后的Ice相关路径:</blockquote>
+  
+  <p>slice2cpp,slice2java在/usr/bin/下</p>
+  
+  <p>Ice.jar 存储于 /usr/share/java/下</p>
+  
+  <p>相关的Ice的库存储于/usr/lib下.
+  第1步，建立<a href="http://www.54chen.com/736-dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized/">服务器</a>端的demo.<span class="hilite1">ice</span>的文件（注意代码里的半全角，如果是全角自行转成半角）：
+  </p>
+<blockquote>module Demo{</blockquote>
+  
+  <p>interface test{</p>
+  
+  <p>string   execute(string mth,string cmd);</p>
+  
+  <p>};</p>
+  
+  <p>};
+  第2步，执行: <span class="hilite2">slice2java</span> demo.<span class="hilite1">ice</span> 生成一堆文件。。。</p>
+  
+  <p>第3步，动手干活</p>
+  
+  <p>上一步执行完会在当前目录产生一个Demo目录,目录下自动生成:<br>
+  -rw-r--r--  1 root root 2316  4月 15 17:01 _testDelD.java<br>
+  -rw-r--r--  1 root root  560  4月 15 17:01 _testDel.java<br>
+  -rw-r--r--  1 root root 1929  4月 15 17:01 _testDelM.java<br>
+  -rw-r--r--  1 root root 4177  4月 15 17:01 _testDisp.java<br>
+  -rw-r--r--  1 root root 1070  4月 15 17:01 testHolder.java<br>
+  -rw-r--r--  1 root root  488  4月 15 17:01 test.java<br>
+  -rw-r--r--  1 root root  481  4月 15 17:01 _testOperations.java<br>
+  -rw-r--r--  1 root root  460  4月 15 17:01 _testOperationsNC.java<br>
+  -rw-r--r--  1 root root 5418  4月 15 17:01 testPrxHelper.java<br>
+  -rw-r--r--  1 root root  569  4月 15 17:01 testPrxHolder.java<br>
+  -rw-r--r--  1 root root  567  4月 15 17:01 testPrx.java<br>
+  到目前为止,demo.<span class="hilite1">ice</span>所以<span class="hilite1">Ice</span>接口部分的定义以及相关依赖都已经自动生成.</p>
+  
+  <p>我们要实现自己的execute方法,覆盖testPrx.java的同名<a href="http://www.54chen.com/272-%e5%a6%82%e4%bd%95%e5%af%b9%e4%bb%98%e6%97%a0%e8%89%af%e6%87%92%e6%83%b0ops%e7%9a%84%e5%8f%af%e8%80%bb%e7%9a%84%e9%99%90%e6%b5%81%e6%8e%aa%e6%96%bd/">方法</a>:
+  </p>
+<blockquote>//TestImp.java</blockquote>
+  
+  <p>package Demo;</p>
+  
+  <p>import Ice.Current;</p>
+  
+  <p>public class TestImp extends _testDisp{</p>
+  
+  <p><span> </span>public String execute(String mth, String cmd, Current __current) {</p>
+  
+  <p><span> </span>// TODO Auto-generated method stub</p>
+  
+  <p><span> </span>return mth+cmd;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p>}
+  第4步，建立一个Server服务在10000<a href="http://www.54chen.com/264-%e7%94%a8iptables%e5%81%9a%e4%b8%a4%e6%9c%ba%e4%b9%8b%e9%97%b4%e7%9a%84%e7%ab%af%e5%8f%a3%e8%bd%ac%e5%8f%91/">端口</a>进行侦听
+  </p>
+<blockquote>//Server.java</blockquote>
+  
+  <p>package Demo;</p>
+  
+  <p>public class Server {</p>
+  
+  <p><span> </span>public static void main(String[] args) {</p>
+  
+  <p><span> </span>int status = 0;</p>
+  
+  <p><span> </span>Ice.Communicator ic = null;</p>
+  
+  <p><span> </span>try {</p>
+  
+  <p><span> </span>ic = Ice.Util.initialize(args);</p>
+  
+  <p><span> </span>Ice.ObjectAdapter adapter = ic.createObjectAdapterWithEndpoints(</p>
+  
+  <p><span> </span>"TestAdapter", "default -p 10000");</p>
+  
+  <p><span> </span>Ice.Object object = new TestImp();</p>
+  
+  <p><span> </span>adapter.add(object, ic.stringToIdentity("TestAdapter"));</p>
+  
+  <p><span> </span>adapter.activate();</p>
+  
+  <p><span> </span>ic.waitForShutdown();</p>
+  
+  <p><span> </span>} catch (Ice.LocalException e) {</p>
+  
+  <p><span> </span>e.printStackTrace();</p>
+  
+  <p><span> </span>status = 1;</p>
+  
+  <p><span> </span>} catch (Exception e) {</p>
+  
+  <p><span> </span>System.err.println(e.getMessage());</p>
+  
+  <p><span> </span>status = 1;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>if (ic != null) {</p>
+  
+  <p><span> </span>// Clean up</p>
+  
+  <p><span> </span>//</p>
+  
+  <p><span> </span>try {</p>
+  
+  <p><span> </span>ic.destroy();</p>
+  
+  <p><span> </span>} catch (Exception e) {</p>
+  
+  <p><span> </span>System.err.println(e.getMessage());</p>
+  
+  <p><span> </span>status = 1;</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>}</p>
+  
+  <p><span> </span>System.exit(status);</p>
+  
+  <p><span> </span>}</p>
+  
+  <p>}
+  以上大部分代码都是框架生成，你只需要在里面填写TODO。把这个代码拖回来用eclipse打成jar包，注意，需要依赖ice.jar这个包，这个包可以在<a href="http://www.54chen.com">官方</a>网站下载到。<a href="http://www.zeroc.com/download_3_2_1.html">http://www.zeroc.com/download_3_2_1.html</a></p>
+  
+  <p>生成DemoServer.ajr后传到服务器，运行java -cp ./:Ice.jar:DemoServer.jar Demo.Server</p>
+  
+  <p>运行成功的条件是Ice.jar和DemoServer.jar都在一个目录里。（Ice.jar从下载地址下载）</p>
+  
+  <p>Server运行之后监听于10000端口，需要修改iptables，允许其他机器可以连接。<br>
+  编辑 iptables<br>
+  vi /etc/sysconfig/iptables
+  </p>
+<blockquote>
+<span>-A RH-Firewall-</span><span class="number">1</span><span>-INPUT -m state --state NEW -m tcp -p tcp --dport </span><span class="number">10000</span><span> -j ACCEPT </span>
+</blockquote>
+  <strong>继续深入互联互通</strong>
+  
+  <p>这一节完成了Server，一个10000端口的Server在等待着我们用PHP来联通中。下一节，我们将讲述：IcePHP环境的搭建，PHP调用Ice如何与JAVA互联互通，以及一个完整的Demo，保存好本节的代码，后面还有用处。[未完待续] </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-09-25T00:00:00+08:00" pubdate data-updated="true">2009-09-25 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>, <a class="category" href="/blog/categories/php/">php</a>, <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

@@ -1,0 +1,519 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Java线程控制器代码分享-根据cpu情况决定线程运行数量和情况 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="在人人网海量存储系统的存储引擎部分，为了提高CPU和网络的使用情况，使用了java多线程管理并行作的方式。 在java中控制线程是一件很简单的事情，jdk提供了诸多的方法，其中比常用的两个是notify()和wait()，一个是唤醒，一个等待线程，在下面的代码中，将看到一个线程分配器， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/02/02/java-thread-controller-code-sharing-according-to-cpu-circumstances-decide-the-number-and-circumstances-of-the-threads-running">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Java线程控制器代码分享-根据cpu情况决定线程运行数量和情况</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-02-02T00:00:00+08:00" pubdate data-updated="true">2010-02-02 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>在<a href="http://www.54chen.com/_linux_/nuclear-mass-storage-system-for-all-network-description.html">人人网海量存储系统</a>的存储引擎部分，为了提高CPU和网络的使用情况，使用了java多线程管理并行作的方式。</p>
+  
+  <p>在java中控制线程是一件很简单的事情，jdk提供了诸多的方法，其中比常用的两个是notify()和wait()，一个是唤醒，一个等待线程，在下面的代码中，将看到一个线程分配器，根据cpu的负载情况，自动完成对应线程的唤醒或者是等待作。整个过程是一个平滑的过程，不会因为线程的切换而导致机器负载出线锯齿。</p>
+  
+  <p>先看一个类，读取Linux系统TOP等指令拿到系统当前负载：
+  </p>
+<blockquote>import java.io.BufferedReader;<br>
+  import java.io.InputStreamReader;</blockquote>
+  
+  <p>/**<br>
+  * 节点的cpu 内存 磁盘空间 情况<br>
+  *
+  * @author zhen.chen<br>
+  *
+  */<br>
+  public class NodeLoadView {</p>
+  
+  <p>/**<br>
+  * 获取cpu使用情况<br>
+  *
+  * @return<br>
+  * @throws Exception<br>
+  */<br>
+  public double getCpuUsage() throws Exception {<br>
+  double cpuUsed = 0;</p>
+  
+  <p>Runtime rt = Runtime.getRuntime();<br>
+  Process p = rt.exec("/usr/bin/uptime");// 调用系统的“top"命令<br>
+  String[] strArray = null;<br>
+  BufferedReader in = null;<br>
+  try {<br>
+  in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br>
+  String str = null;<br>
+  while ((str = in.readLine()) != null) {<br>
+  strArray = str.split("load average: ");<br>
+  strArray = strArray[1].split(",");<br>
+  cpuUsed = Double.parseDouble(strArray[0]);<br>
+  }
+  } catch (Exception e) {<br>
+  e.printStackTrace();<br>
+  } finally {<br>
+  in.close();<br>
+  }
+  return cpuUsed;<br>
+  }</p>
+  
+  <p>/**<br>
+  * 内存监控<br>
+  *
+  * @return<br>
+  * @throws Exception<br>
+  */<br>
+  public double getMemUsage() throws Exception {</p>
+  
+  <p>double menUsed = 0;<br>
+  Runtime rt = Runtime.getRuntime();<br>
+  Process p = rt.exec("top -b -n 1");// 调用系统的“top"命令</p>
+  
+  <p>BufferedReader in = null;<br>
+  try {<br>
+  in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br>
+  String str = null;<br>
+  String[] strArray = null;</p>
+  
+  <p>while ((str = in.readLine()) != null) {<br>
+  int m = 0;</p>
+  
+  <p>if (str.indexOf(" R ") != -1) {// 只<a href="http://www.54chen.com/internetops/51ditu%e7%ad%89%e7%bd%91%e7%ab%99%e6%8a%80%e6%9c%af%e6%8f%ad%e7%a7%98-%e5%88%a9%e7%94%a8%e5%bc%80%e6%ba%90%e6%a1%86%e6%9e%b6%e6%90%ad%e5%bb%ba%e4%b8%80%e6%95%b4%e5%a5%97%e7%9a%84webgis.html">分析</a>正在运行的进程，top进程本身除外 &amp;&amp;<br>
+  //<br>
+  // System.out.println("------------------3-----------------");<br>
+  strArray = str.split(" ");<br>
+  for (String tmp : strArray) {<br>
+  if (tmp.trim().length() == 0)<br>
+  continue;</p>
+  
+  <p>if (++m == 10) {<br>
+  // 9)--第10列为mem的使用百分比(RedHat 9)</p>
+  
+  <p>menUsed += Double.parseDouble(tmp);</p>
+  
+  <p>}<br>
+  }</p>
+  
+  <p>}<br>
+  }
+  } catch (Exception e) {<br>
+  e.printStackTrace();<br>
+  } finally {<br>
+  in.close();<br>
+  }
+  return menUsed;<br>
+  }</p>
+  
+  <p>/**<br>
+  * 获取磁盘空间大小<br>
+  *
+  * @return<br>
+  * @throws Exception<br>
+  */<br>
+  public double getDeskUsage() throws Exception {<br>
+  double totalHD = 0;<br>
+  double usedHD = 0;<br>
+  Runtime rt = Runtime.getRuntime();<br>
+  Process p = rt.exec("df -hl");// df -hl 查看<a href="http://www.54chen.com/_linux_/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles.html">硬盘</a>空间</p>
+  
+  <p>BufferedReader in = null;<br>
+  try {<br>
+  in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br>
+  String str = null;<br>
+  String[] strArray = null;<br>
+  while ((str = in.readLine()) != null) {<br>
+  int m = 0;<br>
+  // if (flag &gt; 0) {<br>
+  // flag++;<br>
+  strArray = str.split(" ");<br>
+  for (String tmp : strArray) {<br>
+  if (tmp.trim().length() == 0)<br>
+  continue;<br>
+  ++m;<br>
+  // System.out.println("----tmp----" + tmp);<br>
+  if (tmp.indexOf("G") != -1) {<br>
+  if (m == 2) {<br>
+  // System.out.println("---G----" + tmp);<br>
+  if (!tmp.equals("") &amp;&amp; !tmp.equals("0"))<br>
+  totalHD += Double.parseDouble(tmp.substring(0,<br>
+  tmp.length() - 1)) * 1024;</p>
+  
+  <p>}<br>
+  if (m == 3) {<br>
+  // System.out.println("---G----" + tmp);<br>
+  if (!tmp.equals("none") &amp;&amp; !tmp.equals("0"))<br>
+  usedHD += Double.parseDouble(tmp.substring(0,<br>
+  tmp.length() - 1)) * 1024;</p>
+  
+  <p>}<br>
+  }
+  if (tmp.indexOf("M") != -1) {<br>
+  if (m == 2) {<br>
+  // System.out.println("---M---" + tmp);<br>
+  if (!tmp.equals("") &amp;&amp; !tmp.equals("0"))<br>
+  totalHD += Double.parseDouble(tmp.substring(0,<br>
+  tmp.length() - 1));</p>
+  
+  <p>}<br>
+  if (m == 3) {<br>
+  // System.out.println("---M---" + tmp);<br>
+  if (!tmp.equals("none") &amp;&amp; !tmp.equals("0"))<br>
+  usedHD += Double.parseDouble(tmp.substring(0,<br>
+  tmp.length() - 1));<br>
+  // System.out.println("----3----" + usedHD);<br>
+  }
+  }</p>
+  
+  <p>}</p>
+  
+  <p>// }<br>
+  }
+  } catch (Exception e) {<br>
+  e.printStackTrace();<br>
+  } finally {<br>
+  in.close();<br>
+  }
+  return (usedHD / totalHD) * 100;<br>
+  }
+  //<br>
+  //    public static void main(String[] args) throws Exception {<br>
+  //        NodeLoadView cpu = new NodeLoadView();<br>
+  //        System.out<br>
+  //                .println("---------------cpu used:" + cpu.getCpuUsage() + "%");<br>
+  //        System.out<br>
+  //                .println("---------------mem used:" + cpu.getMemUsage() + "%");<br>
+  //        System.out<br>
+  //                .println("---------------HD used:" + cpu.getDeskUsage() + "%");<br>
+  //        System.out.println("------------jvm监控----------------------");<br>
+  //        Runtime lRuntime = Runtime.getRuntime();<br>
+  //        System.out.println("--------------Free Momery:" + lRuntime.freeMemory()<br>
+  //                + "K");<br>
+  //        System.out.println("--------------Max Momery:" + lRuntime.maxMemory()<br>
+  //                + "K");<br>
+  //        System.out.println("--------------Total Momery:"<br>
+  //                + lRuntime.totalMemory() + "K");<br>
+  //        System.out.println("---------------Available Processors :"<br>
+  //                + lRuntime.availableProcessors());<br>
+  //    }<br>
+  }
+  再来看关键的一个类，THreadScheduler：
+  </p>
+<blockquote>import java.util.Map;</blockquote>
+  
+  <p>import org.apache.log4j.Logger;</p>
+  
+  <p>import test.NodeLoadView;<br>
+  public class ThreadScheduler {<br>
+  private static Logger logger = Logger.getLogger(ThreadScheduler.class.getName());<br>
+  private Map&lt;String, Thread&gt; runningThreadMap;<br>
+  private Map&lt;String, Thread&gt; waitingThreadMap;<br>
+  private boolean isFinished = false;<br>
+  private int runningSize;</p>
+  
+  <p>public ThreadScheduler (Map&lt;String, Thread&gt; runningThreadMap, Map&lt;String, Thread&gt; waitingThreadMap) {<br>
+  this.runningThreadMap = runningThreadMap;<br>
+  this.waitingThreadMap = waitingThreadMap;<br>
+  this.runningSize = waitingThreadMap.size();<br>
+  }</p>
+  
+  <p>/**<br>
+  * 开始调度线程<br>
+  * @author zhen.chen<br>
+  * @createTime 2010-1-28 上午11:04:52<br>
+  */<br>
+  public void schedule(){<br>
+  long sleepMilliSecond = 1 * 1000;<br>
+  int allowRunThreads = 15;<br>
+  // 一次启动的线程数，cpuLoad变大时以此值为参考递减<br>
+  int allowRunThreadsRef = 15;<br>
+  double cpuLoad = 0;// 0-15<br>
+  NodeLoadView load = new NodeLoadView();</p>
+  
+  <p>while (true) {<br>
+  try {<br>
+  cpuLoad = load.getCpuUsage();<br>
+  } catch (Exception e1) {<br>
+  e1.printStackTrace();<br>
+  }
+  // cpuLoad低 启动的线程多<br>
+  allowRunThreads = (int) Math.floor(allowRunThreadsRef - cpuLoad);<br>
+  // threads不能为0<br>
+  if (allowRunThreads &lt; 1) {<br>
+  allowRunThreads = 1;<br>
+  }
+  if (allowRunThreads &gt; allowRunThreadsRef) {<br>
+  allowRunThreads = allowRunThreadsRef;<br>
+  }
+  if (logger.isDebugEnabled()) {<br>
+  logger.debug("[ThreadScheduler]running Thread:" + runningThreadMap.size() + "; waiting Thread:" + waitingThreadMap.size() + "; cpu:" + cpuLoad + " allowRunThreads:" + allowRunThreads);<br>
+  }</p>
+  
+  <p>// 检查runningSize个线程的情况，满足条件则启动<br>
+  for (int x = 0; x &lt; runningSize; x++) {<br>
+  if (waitingThreadMap.get(x+"") != null) {<br>
+  if (allowRunThreadsRef &lt;= runningThreadMap.size()) {<br>
+  break;<br>
+  }
+  synchronized (waitingThreadMap.get(x+"")) {<br>
+  if (!waitingThreadMap.get(x+"").isAlive()) {<br>
+  waitingThreadMap.get(x+"").start();<br>
+  }else{<br>
+  waitingThreadMap.get(x+"").notify();<br>
+  }
+  }<br>
+  runningThreadMap.put(x+"", waitingThreadMap.get(x+""));<br>
+  waitingThreadMap.remove(x+"");<br>
+  }
+  }<br>
+  // 检查runningSize个线程的情况，满足条件则暂停<br>
+  for (int x = 0; x &lt; runningSize; x++) {<br>
+  if (runningThreadMap.size() &lt;= allowRunThreads) {<br>
+  break;<br>
+  }
+  if (runningThreadMap.get(x+"") != null) {<br>
+  synchronized (runningThreadMap.get(x+"")) {<br>
+  try {<br>
+  if (runningThreadMap.get(x+"").isAlive()) {<br>
+  runningThreadMap.get(x+"").wait();<br>
+  }else{<br>
+  continue;<br>
+  }
+  } catch (InterruptedException e) {<br>
+  e.printStackTrace();<br>
+  }
+  }<br>
+  waitingThreadMap.put(x+"", runningThreadMap.get(x));<br>
+  runningThreadMap.remove(x+"");<br>
+  }
+  }<br>
+  // 全部跑完，返回<br>
+  if (waitingThreadMap.size() == 0 &amp;&amp; runningThreadMap.size() == 0) {<br>
+  if (logger.isDebugEnabled()) {<br>
+  logger.debug("[ThreadScheduler] over.total Threads size:" + runningSize);<br>
+  }
+  this.isFinished = true;<br>
+  return;<br>
+  }
+  // 使主while循环慢一点<br>
+  try {<br>
+  Thread.sleep(sleepMilliSecond);<br>
+  } catch (InterruptedException e1) {<br>
+  e1.printStackTrace();<br>
+  }
+  }</p>
+  
+  <p>}</p>
+  
+  <p>public boolean isFinished() {<br>
+  return isFinished;<br>
+  }
+  }
+  <strong>这个类的作用：</strong></p>
+  
+  <p>1.接收runningThreadMap和waitingThreadMap两个<a href="http://www.54chen.com/_linux_/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles.html">map</a>，里面对应存了运行中的线程实例和等待中的<a href="http://www.54chen.com/_linux_/yahoo%e3%80%81tao%e4%ba%91%e8%ae%a1%e7%ae%97%e5%88%a9%e5%99%a8%e4%b9%8b%e2%80%9c%e4%ba%91%e2%80%9d%e7%ab%af%e7%9a%84%e5%b0%8f%e9%a3%9e%e8%b1%a1%e2%80%94hadoop.html">线程</a>实例。</p>
+  
+  <p>2.读cpu情况，自动判断要notify等待中的线程还是wait运行中的线程。</p>
+  
+  <p>3.两个map都结束，退出。（必须runningThreadMap内部的Thread自己将runningThreadMap对应的Thread remove掉）</p>
+  
+  <p><strong>如何使用：</strong>
+  </p>
+<blockquote>public class TestThread {<br>
+  public static class Runner extends Thread {<br>
+  public Runner(int j, Map&lt;String, Thread&gt; threadMap) {</blockquote>
+  
+  <p>}<br>
+  public void run() {<br>
+  // TODO 你的逻辑 完成后需要从threadMap中remove掉<br>
+  }
+  }</p>
+  
+  <p>public static void main(String[] args) {<br>
+  // 运行中的线程<br>
+  Map&lt;String, Thread&gt; threadMap = new HashMap&lt;String, Thread&gt;();<br>
+  // 正在<a href="http://www.54chen.com/cc/php-java-c-upload-files-how-to-accurately-determine-the-file-type-mime-literacy.html">等待</a>中的线程<br>
+  Map&lt;String, Thread&gt; waitThreadMap = new HashMap&lt;String, Thread&gt;();<br>
+  for (int j = 0; j &lt; args.length; j++) {<br>
+  Thread t = new Runner(j, threadMap);<br>
+  waitThreadMap.put(j + "", t);<br>
+  }</p>
+  
+  <p>ThreadScheduler threadScheduler = new ThreadScheduler(threadMap, waitThreadMap);<br>
+  threadScheduler.schedule();<br>
+  if (threadScheduler.isFinished() == false) {<br>
+  //没能正常结束<br>
+  }
+  }<br>
+  }</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-02-02T00:00:00+08:00" pubdate data-updated="true">2010-02-02 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

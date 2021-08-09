@@ -1,0 +1,213 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>跨系统共享键盘鼠标利器分享：synergy - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="是这样的张总, ?在家里的电脑上按了CTRL+C，然后在公司的电脑上再按CTRL+V是。。。肯定不行的。即使同一篇文章也不行。不不，多贵的电脑都不行。 --题记 端午归来，特此总结，实现上述难题，靠一利器：synergy 此利器可打通mac\linux\windows任意两者的联系， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/06/17/tool-for-cross-system-shared-keyboard-and-mouse-share-synergy">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">跨系统共享键盘鼠标利器分享：synergy</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-06-17T00:00:00+08:00" pubdate data-updated="true">2010-06-17 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T1MNNDXetkXXbMtWc5_054611.jpg" alt="世界杯马蜂窝">
+  是这样的张总, ?在家里的电脑上按了CTRL+C，然后在公司的电脑上再按CTRL+V是。。。肯定不行的。即使同一篇文章也不行。不不，多贵的电脑都不行。</p>
+  
+  <p>--题记</p>
+  
+  <p>端午归来，特此总结，实现上述难题，靠一利器：synergy</p>
+  
+  <p>此利器可打通mac\linux\windows任意两者的联系，使两个系统共享鼠标和键盘。下面以ubuntu 10.04与盗版windows XP为例。</p>
+  
+  <p>首先，在ubuntu下面，建立服务端。<br>
+  #sudo apt-get install synergy quicksynergy<br>
+  #quicksynergy<br>
+  启动后如图所示：
+  <img src="http://img05.taobaocdn.com/imgextra/i5/T12x8DXkpcXXaH5Js5_055323.jpg" alt="synergy">
+  只需要填写上下左右中的某一个位置修改成另一台机器的机器名，点击执行，常驻运行即可。</p>
+  
+  <p>然后，在windows下面，安装客户端。<br>
+  Synergy 1.3 Client<br>
+  安装运行后如图：
+  <img src="http://img08.taobaocdn.com/imgextra/i8/T1N3RDXlpBXXc8W3U5_055747.jpg" alt="Synergy 1.3 ">
+  输入Ubuntu机器的ip地址，点Start即可连上两机。</p>
+  
+  <p>连上之后，可以撤掉在你办公桌面上的一个键盘，鼠标移动到哪个桌面上，键盘针对哪个系统输入，非常好用，还支持复制粘贴，对上班时候用两台电脑的同学非常适用。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-06-17T00:00:00+08:00" pubdate data-updated="true">2010-06-17 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2010/06/16/dragon-boat-festival-beijing-figure/" title="Previous Post: 端午，，图">« 端午，，图</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2010/06/18/54chen-s-nosql/" title="Next Post: 54chen解读NoSQLDynamo">54chen解读NoSQLDynamo »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

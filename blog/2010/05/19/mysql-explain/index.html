@@ -1,0 +1,286 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Mysql Explain详解 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="doubanclaimed89ad216b01beaf
+  题注：感谢suchasplus兄弟在第一时间提示explain拼写错误~~~:) 对于经常使用mysql的兄弟们，对explain一定不会陌生。当你在一条SELECT语句前放上关键词EXPLAIN，MySQL解释它将如何处理SELECT， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/05/19/mysql-explain">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Mysql Explain详解</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-19T00:00:00+08:00" pubdate data-updated="true">2010-05-19 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p></p>
+<p style="text-align: center;"><img class="aligncenter" src="http://img07.taobaocdn.com/bao/uploaded/i7/T1cRdAXeVlXXbDaB72_044910.jpg" alt="mysql explain"></p>
+  
+  <p><span style="color: #ffffff;">doubanclaimed89ad216b01beaf</span>
+  题注：感谢suchasplus兄弟在第一时间提示explain拼写错误~~~:)</p>
+  
+  <p>对于经常使用mysql的兄弟们，对explain一定不会陌生。当你在一条SELECT语句前放上关键词EXPLAIN，MySQL解释它将如何处理SELECT，提供有关表如何联合和以什么次序的信息。<br>
+  借助于EXPLAIN，你可以知道<br>
+  1)你什么时候必须为表加入索引以得到一个使用索引找到记录的更快的SELECT。<br>
+  2)你也能知道优化器是否以一个最佳次序联结表。为了强制优化器对一个SELECT语句使用一个特定联结次序，增加一个STRAIGHT_JOIN子句。<br>
+  官方的关于explain的文档在http://dev.mysql.com/doc/refman/5.1/en/using-explain.html（英文），本文可作为官方文献的不完整通俗读物。
+  </p>
+<h2><strong>使用的方法</strong></h2>
+  EXPLAIN tbl_name<br>
+  或：<br>
+  EXPLAIN [EXTENDED] SELECT select_options
+  
+  <p>前者可以得出一个表的字段结构等等，后者主要是给出相关的一些索引信息，而今天要讲述的重点是后者。
+  </p>
+<h2>举例</h2>
+  mysql&gt; explain select * from event;<br>
+  +----+-------------+-------+------+---------------+------+---------+------+------+-------+<br>
+  | id | select_type | table | type | possible_keys | key  | key_len | ref  | rows | Extra |<br>
+  +----+-------------+-------+------+---------------+------+---------+------+------+-------+<br>
+  |  1 | SIMPLE      | event | ALL  | NULL          | NULL | NULL    | NULL |   13 |       |<br>
+  +----+-------------+-------+------+---------------+------+---------+------+------+-------+<br>
+  1 row in set (0.00 sec)
+  <h2><strong>各个属性的含义</strong></h2>
+  id<br>
+  select查询的序列号
+  
+  <p>select_type<br>
+  select查询的类型，主要是区别普通查询和联合查询、子查询之类的复杂查询。</p>
+  
+  <p>table<br>
+  输出的行所引用的表。</p>
+  
+  <p>type<br>
+  联合查询所使用的类型。<br>
+  type显示的是访问类型，是较为重要的一个指标，结果值从好到坏依次是：<br>
+  system &gt; const &gt; eq_ref &gt; ref &gt; fulltext &gt; ref_or_null &gt; index_merge &gt; unique_subquery &gt; index_subquery &gt; range &gt; index &gt; ALL<br>
+  一般来说，得保证查询至少达到range级别，最好能达到ref。</p>
+  
+  <p>possible_keys<br>
+  指出MySQL能使用哪个索引在该表中找到行。如果是空的，没有相关的索引。这时要提高性能，可通过检验WHERE子句，看是否引用某些字段，或者检查字段不是适合索引。</p>
+  
+  <p>key<br>
+  显示MySQL实际决定使用的键。如果没有索引被选择，键是NULL。</p>
+  
+  <p>key_len<br>
+  显示MySQL决定使用的键长度。如果键是NULL，长度就是NULL。文档提示特别注意这个值可以得出一个多重主键里mysql实际使用了哪一部分。</p>
+  
+  <p>ref<br>
+  显示哪个字段或常数与key一起被使用。</p>
+  
+  <p>rows<br>
+  这个数表示mysql要遍历多少数据才能找到，在innodb上是不准确的。</p>
+  
+  <p>Extra<br>
+  如果是Only index，这意味着信息只用索引树中的信息检索出的，这比扫描整个表要快。<br>
+  如果是where used，就是使用上了where限制。<br>
+  如果是impossible where 表示用不着where，一般就是没查出来啥。<br>
+  如果此信息显示Using filesort或者Using temporary的话会很吃力，WHERE和ORDER BY的索引经常无法兼顾，如果按照WHERE来确定索引，那么在ORDER BY时，就必然会引起Using filesort，这就要看是先过滤再排序划算，还是先排序再过滤划算。
+  </p>
+<h2><strong>常见的一些名词解释</strong></h2>
+  Using filesort<br>
+  MySQL需要额外的一次传递，以找出如何按排序顺序检索行。
+  
+  <p>Using index<br>
+  从只使用索引树中的信息而不需要进一步搜索读取实际的行来检索表中的列信息。</p>
+  
+  <p>Using temporary<br>
+  为了解决查询，MySQL需要创建一个临时表来容纳结果。</p>
+  
+  <p>ref<br>
+  对于每个来自于前面的表的行组合，所有有匹配索引值的行将从这张表中读取</p>
+  
+  <p>ALL<br>
+  完全没有索引的情况，性能非常地差劲。</p>
+  
+  <p>index<br>
+  与ALL相同，除了只有索引树被扫描。这通常比ALL快，因为索引文件通常比数据文件小。</p>
+  
+  <p>SIMPLE<br>
+  简单SELECT(不使用UNION或子查询)
+  </p>
+<h2><strong>关于哥学社</strong></h2>
+  <a style="color: #0b3b8c; text-decoration: none;" title="哥学社" href="http://www.54chen.com/blog-brother" target="_self">哥学社</a>是一个博客组织，以提高原创技术博客质量，为成员博客增加更有效评论，由来自腾讯、百度、盛大、人人网、新浪、奇虎、TOM等各大企业的哥们共同起草发起。
+  <h2><strong>关于五四陈</strong></h2>
+  54chen(陈臻)，人人网分布式存储研究人员，业余时间混迹于各技术组织且乐此不疲。目前关注实施PHP培训。对flex等前端技术有一点研究。<br>
+  个人技术站点:<a style="color: #0b3b8c; text-decoration: none;" href="http://www.54chen.com/">http://www.54chen.com/</a> 。可以通过电子邮件 cc0cc@126.com 联系到他。
+  <h2><strong>本文提及的文章</strong></h2>
+  <a href="http://dev.mysql.com/doc/refman/5.1/en/using-explain.html">http://dev.mysql.com/doc/refman/5.1/en/using-explain.html</a>
+  
+  <p><a href="http://dev.mysql.com/doc/refman/5.1/zh/optimization.html#explain">http://dev.mysql.com/doc/refman/5.1/zh/optimization.html#explain</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-05-19T00:00:00+08:00" pubdate data-updated="true">2010-05-19 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2010/05/17/qcon-beijing-2010-related-ppt-download/" title="Previous Post: Qcon2010相关ppt下载">« Qcon2010相关ppt下载</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2010/05/20/nginx-php-cgi-of-security-hole/" title="Next Post: [警示]Nginx + PHP CGI的安全漏洞：fix_pathinfo">[警示]Nginx + PHP CGI的安全漏洞：fix_pathinfo »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

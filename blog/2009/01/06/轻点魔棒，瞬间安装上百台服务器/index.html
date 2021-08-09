@@ -1,0 +1,224 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>轻点魔棒，瞬间安装上百台服务器 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="转自: 知道分子查看完整个人资料  http://hutuworm.blogspot.com   从前，我们一直在做装机民工这份很有前途的职业。自打若干年前 Red Hat 推出了Kickstart，此后我们顿觉身价倍增。不再需要刻了光盘一台一台地安装 Linux，只要搞定PXE、DHCP、 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/01/06/%E8%BD%BB%E7%82%B9%E9%AD%94%E6%A3%92%EF%BC%8C%E7%9E%AC%E9%97%B4%E5%AE%89%E8%A3%85%E4%B8%8A%E7%99%BE%E5%8F%B0%E6%9C%8D%E5%8A%A1%E5%99%A8">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">轻点魔棒，瞬间安装上百台服务器</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-01-06T00:00:00+08:00" pubdate data-updated="true">2009-01-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>转自: 知道分子<a href="http://www.blogger.com/profile/00767221594564607162" target="_blank">查看完整个人资料</a>  <a href="http://hutuworm.blogspot.com/" target="_blank">http://hutuworm.blogspot.com</a></p>
+  
+  <p> </p>
+  
+  <p>从前，我们一直在做装机民工这份很有前途的职业。自打若干年前 Red Hat 推出了Kickstart，此后我们顿觉身价倍增。不再需要刻了光盘一台一台地安装 <a href="http://www.54chen.com/c/356">Linux</a>，只要搞定PXE、DHCP、TFTP，还有那满屏眼花缭乱不知所云的 Kickstart脚本，我们就可以像哈里波特一样，轻点魔棒，瞬间安装上百台服务器。这一堆花里胡哨的东西可不是一般人都能整明白的，没有大专以上学 历，通不过英语四级，根本别想玩转。总而言之，这是一份多么有前途，多么有技术含量的工作啊。</p>
+  
+  <p>很不幸，Red Hat 最新发布了网络安装服务器套件Cobbler（补鞋匠），它已将 <a href="http://www.54chen.com/c/356">Linux</a>网络安装的技术门槛，从大专以上文化水平，成功降低到初中以下，连补鞋匠都能学会。对于我们这些在装机领域浸淫多年，经验丰富，老骥伏枥，志在 千里的民工兄弟们来说，不啻为一个晴天霹雳（}雷{）。</p>
+  
+  <p>Cobbler（<a href="https://fedorahosted.org/cobbler" target="_blank">https://fedorahosted.org/cobbler</a>）声称可以快速建立网络安装<a href="http://www.54chen.com/c/372">环境</a>（rapid setup ofnetwork installation environments），那么到底有多快呢？我在一台装有 Fedora 9的服务器上进行了测试，步骤如下：</p>
+  
+  <p>1. 安装相关软件：<br>
+       yum -y install cobbler tftp-server dhcp httpd xinetd     # 注意 /var/www/cobbler 目录必须具有足够容纳 Linux 安装文件的空间（移动，建软链接）</p>
+  
+  <p>2. 检查 cobbler <span class="t_tag" onclick="tagshow(event)">配置</span>：<br>
+       cobbler check   # 按提示解决相关问题，把 /etc/cobbler/settings 中的 server 和  next_server 设为本服务器的 IP 地址，manage_dhcp 设为 1，以便管理 DHCP</p>
+  
+  <p>3. 导入 Fedora 9 安装 DVD ISO 中的文件：<br>
+       mount -o loop Fedora9/x86_64/Fedora-9-x86_64-DVD.iso /mnt/dvd/    # 将ISO文件挂载到 /mnt/dvd 目录<br>
+       cobbler import --mirror=/mnt/dvd --name=FC9-x86-64      # 从 /mnt/dvd 目录导入所有安装文件，命名为 FC9-x86-64<br>
+       cobbler distro list          # 查看导入结果，应显示 FC9-64-i386 和 FC9-64-xen-i386</p>
+  
+  <p>4. 修改 DHCP 和 Kickstart 配置模板：<br>
+       vi /etc/cobbler/dhcp.template        # DHCP 配置模板，如果已经有一个 dhcpd.conf，可参照修改此模板<br>
+       vi /etc/cobbler/sample.ks            # Kickstart 配置模板</p>
+  
+  <p>5. 生成并同步所有配置：<br>
+       cobbler sync</p>
+  
+  <p>6. 启动相关服务：<br>
+       service xinetd start               # /etc/xinetd.d/tftp 中 disable = no<br>
+       service dhcpd start<br>
+       service cobblerd start</p>
+  
+  <p>曹植七步成诗，而 Cobbler 居然只需要六步。启动另一台新服务器，通过 PXE 启动进入蓝色的 Cobbler 安装界面，选择 Fedora 9 安装项，几分钟之内就能一气呵成，自动完成<span class="t_tag" onclick="tagshow(event)">系统</span>安装。[OVER] </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-01-06T00:00:00+08:00" pubdate data-updated="true">2009-01-06 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2009/01/05/%E8%88%AC%E8%8B%A5%E8%8F%A0%E8%90%9D%E8%9C%9C%E5%A4%9A%E5%BF%83%E7%BB%8F%E8%A7%A3/" title="Previous Post: 般若菠萝蜜多心经解">« 般若菠萝蜜多心经解</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/01/07/eclipse%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95jboss%E5%BA%94%E7%94%A8%E8%AE%BE%E7%BD%AE/" title="Next Post: Eclipse远程调试JBoss应用设置(linux&amp;win版本)">Eclipse远程调试JBoss应用设置(linux&amp;win版本) »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

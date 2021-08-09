@@ -1,0 +1,256 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Arduino学习手记二：写程序控制灯控制蜂鸣器红外 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="在上一节中，初步领会了基础，对电路板和ide有了一点感觉。
+  这里的目标是完成一个电路，通过红外传感头，用摇控器控制LED灯和蜂鸣器。 Arduino Libraries
+  arduino库函数，是一堆c/c++写的代码库，一般用来做一些固定的事情，对arduino的能力进行扩展， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/07/03/arduino-starter-2-led">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Arduino学习手记二：写程序控制灯控制蜂鸣器红外</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-07-03T00:00:00+08:00" pubdate data-updated="true">2013-07-03 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><a href="http://www.54chen.com/_linux_/arduino-starter-1.html">在上一节中</a>，初步领会了基础，对电路板和ide有了一点感觉。<br>
+  这里的目标是完成一个电路，通过红外传感头，用摇控器控制LED灯和蜂鸣器。</p>
+  
+  <p><strong>Arduino Libraries</strong>
+  arduino库函数，是一堆c/c++写的代码库，一般用来做一些固定的事情，对arduino的能力进行扩展，有点像php里的各种扩展，当然你也可以实现自己的库。</p>
+  
+  <p>在arduino代码中要使用库的时候，依次选sketch-&gt;import Library-&gt;xxx，它会自动在代码头上加上#include的代码。</p>
+  
+  <p>同时，也可以下载一个library.zip包，依次选择sketch-&gt;import Library-&gt;add Library，然后就加入了新的库。</p>
+  
+  <p>要在arduino IDE环境中删除一个已经引入的库，1.0.5及以上版本的IDE需要去～/documents/arduino/libraries下删除对应的目录(相传windows在C:/.../我的文档/arduino/libraries)。</p>
+  
+  <p><strong>IRremote库简介</strong>
+  官方网站：<a href="http://www.pjrc.com/teensy/td_libs_IRremote.html">http://www.pjrc.com/teensy/td_libs_IRremote.html</a>
+  作者：Ken Shirriff<br>
+  作用：接收和发送红外控制的代码库</p>
+  
+  <p><strong>接线</strong>
+  GND接线略去不提，220欧电阻＋LED灯之后，将LED接数字11。<br>
+  蜂鸣器接数字10。<br>
+  红外OUT接数字8。</p>
+  
+  <p>这里要提一下，红外接收头的圆鼓包的一面面向自己，最左一脚为OUT，中间为GND，最右为5V。</p>
+  
+  <p>如图所示：
+  <img src="http://ww3.sinaimg.cn/bmiddle/663fba41jw1e68t7z3gr6j20f10qodgt.jpg" alt="arduino"></p>
+  
+  <p><strong>程序</strong>
+  </p>
+<blockquote>#include <irremote.h></irremote.h>
+</blockquote>
+  
+  <p>#define LED 11<br>
+  #define BIZZER 10<br>
+  #define IR_IN 8 //红外接收</p>
+  
+  <p>IRrecv irrecv(IR_IN);   // 定义IRrecv 对象来接收红外线信号<br>
+  decode_results results;   //解码结果放在decode_results构造的对象results里</p>
+  
+  <p>void setup()<br>
+  {
+    pinMode(BIZZER,OUTPUT); <br>
+    pinMode(LED,OUTPUT); <br>
+    Serial.begin(9600);<br>
+    irrecv.enableIRIn(); // Start the receiver<br>
+  }</p>
+  
+  <p>void loop()<br>
+  {
+    if (irrecv.decode(&amp;results)) {<br>
+      Serial.println(results.value, HEX);<br>
+      irrecv.resume(); // Receive the next value<br>
+      digitalWrite(BIZZER,HIGH);<br>
+      digitalWrite(LED,HIGH);<br>
+      delay(50);</p>
+  
+  <p>    digitalWrite(BIZZER,LOW);<br>
+      digitalWrite(LED,LOW);<br>
+      delay(1050);<br>
+    } <br>
+  }</p>
+  
+  <p><strong>效果</strong>
+  按摇控器，蜂鸣器响一下同时灯闪一下。IRemote简化了大量的代码。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-07-03T00:00:00+08:00" pubdate data-updated="true">2013-07-03 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/07/02/arduino-starter-1/" title="Previous Post: arduino学习手记一：基础知识">« arduino学习手记一：基础知识</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2013/07/04/arduino-starter-3/" title="Next Post: arduino学习手记三：八位数码管">arduino学习手记三：八位数码管 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

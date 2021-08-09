@@ -1,0 +1,248 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>又拍云cdn试用体验 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="十一之前，又拍云存储（upyun.com）市场部的谢静同学邮件我，让我试用又拍云的功能。之前在infoq或者是之类的技术讲座上有看到过又拍云的报道和技术架构讲解，印象还是不错的，本着支持创业提升期企业的态度，特写此文写下全部试用感受。 用法
+  我的用法比较简单， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2013/10/08/upai-cdn-test">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">又拍云cdn试用体验</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-10-08T00:00:00+08:00" pubdate data-updated="true">2013-10-08 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg" alt="54chen又拍云试用体验报告"></p>
+  
+  <p><span style="font-size:33px;font-weight:bold">十</span>一之前，又拍云存储（upyun.com）市场部的谢静同学邮件我，让我试用又拍云的功能。之前在infoq或者是之类的技术讲座上有看到过又拍云的报道和技术架构讲解，印象还是不错的，本着支持创业提升期企业的态度，特写此文写下全部试用感受。</p>
+  <!-- more -->
+  <p><strong>用法</strong>
+  我的用法比较简单，因为diahosting给我提供的vps在，流量是个大问题，所以写博客时，基本都不上传大图片。遇到要上传的图片，之前基本都是两个地方，一是淘宝（嘿嘿，提醒淘宝的兄弟不要把那个上传的口关了哈，淘宝的cdn岗岗的！），二是新浪微博。</p>
+  
+  <p>上述两个老办法的坏处：淘宝的话，每次上传打开步骤都老麻烦了，又是密码又是选上架之类的。微博呢，又老有那个水印。二者图片质量都不行，老是压缩得不行了。</p>
+  
+  <p><span style="font-size:33px;font-weight:bold">申</span>请了又拍云存储之后，直接使用它的ftp功能，无压缩，cdn速度也岗岗的。<a href="http://www.54chen.com/architecture/how-to-document-code.html">http://www.54chen.com/architecture/how-to-document-code.html</a> 此文中第一个图即为又拍云提供。</p>
+  
+  <p>使用记录（mac下纯ftp命令记录）：</p>
+  
+  <p></p>
+<blockquote>localhost:~ chenzhen$ mkdir -p 54chen-pic/1008<br>
+  localhost:~ chenzhen$ cd 54chen-pic/1008<br>
+  localhost:1008 chenzhen$ cp ~/Downloads/wallpaper_1282030786.jpg .<br>
+  localhost:1008 chenzhen$ ls<br>
+  wallpaper_1282030786.jpg</blockquote>
+  
+  <p>localhost:1008 chenzhen$ ftp v2.ftp.upyun.com <br>
+  Connected to v2.ftp.upyun.com.<br>
+  220 Usoppe: King of Snipers Sniper King<br>
+  500 Command "AUTH" not understood.<br>
+  Name (v2.ftp.upyun.com:chenzhen): XXX/XXX<br>
+  331 Username ok, send password.<br>
+  Password:<br>
+  230 Login successful.<br>
+  Remote system type is UNIX.<br>
+  Using binary mode to transfer files.</p>
+  
+  <p>ftp&gt; mkdir 1008<br>
+  257 "/1008" directory created.</p>
+  
+  <p>ftp&gt; cd 1008<br>
+  250 "/1008" is the current directory.</p>
+  
+  <p>ftp&gt; put wal*   <br>
+  local: wallpaper_1282030786.jpg remote: wallpaper_1282030786.jpg<br>
+  200 Active data connection established.<br>
+  125 Data connection already open. Transfer starting.<br>
+  226 Transfer complete.<br>
+  43103 bytes sent in </p>
+  
+  <p>以上作便得到了文章前面的图，url为http://chen54.b0.upaiyun.com/1008/wallpaper_1282030786.jpg。</p>
+  
+  <p><strong>优点</strong>
+  1.日志统计流量分析做得超级赞！<br>
+  2.作员和空间的分隔，可能会方便企业用户，不过个人用户可能没什么用，增加了学习成本。<br>
+  3.各种详细的api以及现成的sdk（但是我没用过）。</p>
+  
+  <p><strong>缺点</strong>
+  1.upyun.com的官网太丑陋了，像是05年前的网站，各种图片像索质量巨差（可能和我用的retina屏有关），第一次打开的时候，我以为是个冒充又拍网的。<br>
+  2.没有web-ftp有点小遗憾。</p>
+  
+  <p><strong>用处</strong>
+  如果你是一个苦逼创业团队，如果你有需求把apk\ipa包放在哪里，如果你有需求把css/js放在哪里，如果你没有足够多的资金又想有淘宝百度的下载速度，值得一试！</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2013-10-08T00:00:00+08:00" pubdate data-updated="true">2013-10-08 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2013/09/23/how-to-document-code/" title="Previous Post: 如何写一手好文档（好代码）？">« 如何写一手好文档（好代码）？</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2013/10/17/mi-trap/" title="Next Post: 移动互联网系统架构十大陷阱">移动互联网系统架构十大陷阱 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

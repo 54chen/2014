@@ -1,0 +1,270 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Cloud Foundry之warden代码解读-part2 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="简介
+  cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。 代码位置在： https://github.com/cloudfoundry/warden 代码结构
+  |-- em-warden-client …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2012/10/09/cloud-foundry-warden-part2">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Cloud Foundry之warden代码解读-part2</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">2012-10-09 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img.taobaocdn.com/imgextra/i4/13078490/T2UAulXnlbXXXXXXXX_!!13078490.png" alt="warden"></p>
+  
+  <p><strong>简介</strong>
+  cloudfoundry是vmvare推出来的开源PaaS平台，warden是其核心部分的资源管理容器，完成了各种资源分配的事情。</p>
+  
+  <p>代码位置在： https://github.com/cloudfoundry/warden</p>
+  
+  <p><strong>代码结构</strong>
+  |-- em-warden-client   基于eventmachine的client 依赖 warden-client与warden-protocol 通过 unix socket来通讯<br>
+  |-- warden  巨复杂的warden实现，大部分是shell脚本+ruby，还有两个c实现。<br>
+  |-- warden-client   客户端驱动，提供与warden的阻塞式通讯client。依赖warden-protocol。其中的V1.rb对各自command进行解析之后的处理。这里有一个v1mode的概念， v1mode使用字符串，转为pb后与其他的一起使用protobuf。  <br>
+  `-- warden-protocol  依赖beefcake(protobuf library for Ruby)。protocol下有所有支持的pb生成格式。</p>
+  
+  <p><strong>小坑：ruby中的send方法</strong>
+  send其实就是动态地根据名字调用函数，传递后面的内容作为调用参数，api函数原型为：<br>
+  obj.send(symbol [, args...]) =&gt; obj</p>
+  
+  <p>在V1.rb中，所能的convert_xxxx_request方法都是这样被调用到的。</p>
+  
+  <p><strong>专注warden实现</strong>
+  src下四个C程序：<br>
+  |-- clone  用来快速复制一个环境  夹杂一堆的shell在其中运行<br>
+  |-- iomux  分成两个部分：iomux-spawn把子进程的pid写到stdout来标示它已经做好准备接收连接。在尝试连接之后一直等待。iomux-link是用来根据pid重新link到其上去。<br>
+  |-- oom   通过eventfd得到内存不够的通知<br>
+  `-- repquota  报告quota使用情况</p>
+  
+  <p>四个c程序将在编译后复制到root/linux/skeleton/bin中</p>
+  
+  <p><strong>其他目录：</strong>
+  |-- bin  下面有两个脚本文件，用来启动和进入命令行的<br>
+  |-- config  下面有一个配置文件，定义了linux下的配置<br>
+  |-- lib     所有的ruby代码<br>
+  |-- root   各种shell脚本，作cgroup之类的</p>
+  
+  <p><strong>启动warden</strong>
+  环境：<br>
+  chenzhen@ubuntu-chenzhen:~/warden/warden$ lsb_release -a<br>
+  No LSB modules are available.<br>
+  Distributor ID:	Ubuntu<br>
+  Description:	Ubuntu 12.04 LTS<br>
+  Release:	12.04<br>
+  Codename:	precise</p>
+  
+  <p></p>
+<blockquote>$cd warden/warden<br>
+  $sudo bundle exec rake setup[config/linux.yml]<br>
+  $sudo bundle exec rake warden:start[config/linux.yml]<br>
+  $ctrl+z <br>
+  $bg<br>
+  $sudo bundle exec bin/warden-repl<br>
+  $ping<br>
+  ...pong
+  </blockquote>
+  
+  <p><strong>调用过程：</strong></p>
+  
+  <p></p>
+<blockquote>bin/warden-repl &gt;&gt; lib/warden/repl.rb &gt;&gt; Warden::Client &gt;&gt; warden.sock  &gt;&gt; lib/warden/server.rb &lt;&lt; Warden::Server.run! &lt;&lt; Rakefile</blockquote>
+  
+  <p><strong>处理调用：</strong></p>
+  
+  <p></p>
+<blockquote>server.rb &gt; ClientConnection &gt; receive_request &gt; process(request) &gt;  process_container_request(request, container) &gt; base.rb &gt;  dispatch(request, &amp;blk) &gt; send(do_method, request, response, &amp;blk) -&gt; linux.rb &gt; do_xxx  &gt; shell script</blockquote>
+  
+  <p><strong>clone.c分析：</strong>
+  src/clone/clone.c: main -&gt;  <br>
+  	console.c: openpty -&gt; <br>
+  clone.c: daemonize -&gt; <br>
+  	barrier.c: barrier_open -&gt; <br>
+  clone.c: run("./hook-parent-before-clone.sh"); -&gt; <br>
+  clone.c: parent_clone_child -&gt;
+  	clone.c: pid = clone(start, stack, flags, h); -&gt;
+  		clone.c: start() -&gt;
+  			console_mount(&amp;h-&gt;console, "dev/console"); -&gt;
+  			pivot_root -&gt;
+  clone.c: run("./hook-parent-after-clone.sh"); -&gt;
+  clone.c: barrier_signal(&amp;h-&gt;barrier_parent); -&gt;
+  clone.c: barrier_wait(&amp;h-&gt;barrier_child);  </p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-10-09T00:00:00+08:00" pubdate data-updated="true">2012-10-09 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2012/09/20/travel/" title="Previous Post: 丰宁坝上草原自驾游">« 丰宁坝上草原自驾游</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2012/10/12/cloud-foundry-warden-part3/" title="Next Post: cloud foundry之warden代码解读-part3">cloud foundry之warden代码解读-part3 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

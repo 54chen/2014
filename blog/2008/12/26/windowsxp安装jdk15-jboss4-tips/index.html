@@ -1,0 +1,298 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>windowsXP安装jdk1.5 Jboss4 Antx Tips - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="1.jdk 1.5(也就是5) 文件名：java_ee_sdk-5_01-windows.exe 下载地址：http://cds-esd.sun.com/ESD28/JSCDL/java_ee_sdk/5.0_01-fcs/java_ee_sdk-5_01-windows.exe? …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/12/26/windowsxp%E5%AE%89%E8%A3%85jdk15-jboss4-tips">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">windowsXP安装jdk1.5 Jboss4 Antx Tips</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-12-26T00:00:00+08:00" pubdate data-updated="true">2008-12-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>1.jdk 1.5(也就是5)</p>
+  
+  <p>文件名：java_ee_sdk-5_01-windows.exe</p>
+  
+  <p>下载地址：http://cds-esd.sun.com/ESD28/JSCDL/java_ee_sdk/5.0_01-fcs/java_ee_sdk-5_01-windows.exe?AuthParam=1230186860_df7d73a40e743135e1323ad74ae1cd16&amp;TicketId=B%2Fw5lx%2BGTl1OShVEMlBdkgPg&amp;GroupName=CDS&amp;FilePath=/ESD28/JSCDL/java_ee_sdk/5.0_01-fcs/java_ee_sdk-5_01-windows.exe&amp;File=java_ee_sdk-5_01-windows.exe</p>
+  
+  <p>双击安装至：C:\Sun\SDK</p>
+  
+  <p>环境变量设置：</p>
+  
+  <p>JAVA_HOME：C:\Sun\SDK\jdk</p>
+  
+  <p>classpath：.;%JAVA_HOME%\lib\dt.jar;%JAVA_HOME%\lib\tools.jar;</p>
+  
+  <p>PATH：%JAVA_HOME%\bin;</p>
+  
+  <p> </p>
+  
+  <p>2.jboss 4.02</p>
+  
+  <p>文件名：jboss-4.0.2.zip</p>
+  
+  <p>下载地址：http://nchc.dl.sourceforge.net/sourceforge/jboss/jboss-4.0.2.zip</p>
+  
+  <p>双击解压缩到：D:\jboss\</p>
+  
+  <p>环境变量：</p>
+  
+  <p>JBOSS_PATH：D:\jboss\jboss-4.0.2</p>
+  
+  <p> </p>
+  
+  <p>3.antx</p>
+  
+  <p>svn co .... antx</p>
+  
+  <p>目录：D:\antx</p>
+  
+  <p>运行：build.bat</p>
+  
+  <p>环境变量：</p>
+  
+  <p>ANTX_HOME：D:\antx\dist\antx</p>
+  
+  <p>PATH：D:\antx\dist\antx\bin</p>
+  
+  <p> </p>
+  
+  <p>4.hesper</p>
+  
+  <p>代码： svn co hesper</p>
+  
+  <p>配置antx构建工程：C:\Documents and Settings\dongfangbai\antx.properties
+  </p>
+<blockquote>antx.properties释义：</blockquote>
+  
+  <p>antx.repository.project  = d:/antx/repository.project(二方库的位置，修改成你自己的)</p>
+  
+  <p>hesper.output  = D:/work/logs/hesper（hesper的日志指定目录，修改成你自己的）</p>
+  
+  <p>hesper.vmcommon.path  = D:/work/vmcommon（公共模板文件目录，修改成你自己的）
+  进入代码文件夹构建工程：antx reactor goals=default,eclipse</p>
+  
+  <p>导入eclipse：导入现有的工程-&gt;指向hesper主目录</p>
+  
+  <p> </p>
+  
+  <p>5.ear发布至jboss</p>
+  
+  <p>修改jboss配置(修改默认的发布目录为自己的开发目录，这样不用来回复制了)：</p>
+  
+  <p>D:\jboss\jboss-4.0.2\server\default\conf\jboss-service.xml
+  </p>
+<blockquote> &lt;attribute name="URLs"&gt;</blockquote>
+  
+  <p>         deploy/,file:/D:\dev\hesper\deploy\target（你自己的目录）</p>
+  
+  <p> &lt;/attribute&gt;</p>
+  
+  <p> 
+  修改jboss配置（修改默认端口为80）：</p>
+  
+  <p>D:\jboss\jboss-4.0.2\server\default\deploy\jbossweb-tomcat55.sar\server.xml</p>
+  
+  <p> 
+  </p>
+<blockquote> &lt;Connector port="80" address="${jboss.bind.address}"</blockquote>
+  
+  <p>         maxThreads="250" strategy="ms" maxHttpHeaderSize="8192"</p>
+  
+  <p>         emptySessionPath="true"</p>
+  
+  <p>         enableLookups="false" redirectPort="8443" acceptCount="100"</p>
+  
+  <p>         connectionTimeout="20000" disableUploadTimeout="true"/&gt;
+   </p>
+  
+  <p> </p>
+  
+  <p>修改jboss配置（加虚拟目录，这个是意思意思...说不好哪天会使用...）：</p>
+  
+  <p>D:\jboss\jboss-4.0.2\server\default\deploy\jbossweb-tomcat55.sar\server.xml</p>
+  
+  <p>找到&lt;Host name="localhost"</p>
+  
+  <p>            autoDeploy="false" deployOnStartup="false" deployXML="false"&gt; 下一行添加：
+  </p>
+<blockquote>&lt;Context   path="/h"   docBase="D:\dev\"   debug="0"   reloadable="false"/&gt;</blockquote>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-12-26T00:00:00+08:00" pubdate data-updated="true">2008-12-26 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/webxiang-guan/">web相关</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/12/24/%E6%88%91%E6%89%BF%E8%AE%A4%E6%88%91%E5%9C%9F-%E8%96%AA%E8%B5%84%E8%B0%83%E6%95%B4%E7%B3%BB%E7%BB%9F%E4%B9%8B%E5%9C%A3%E8%AF%9E%E7%89%88/" title="Previous Post: 我承认我土-薪资调整系统之圣诞版">« 我承认我土-薪资调整系统之圣诞版</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/12/29/java-ee%E4%B8%AD%E5%90%84%E7%A7%8D%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6/" title="Next Post: Java EE中各种打包文件">Java EE中各种打包文件 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

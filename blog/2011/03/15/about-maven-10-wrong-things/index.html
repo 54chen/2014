@@ -1,0 +1,229 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>关于maven，做错的十件事 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="maven管理的java项目越来越多，令人遗憾的是在使用maven的时候，多多少少都会遇到这样那样的问题，于是会有各种各样的解决办法，下面是一个列表，列出了使用maven的误区和解决办法。
+  1.频繁在所有项目使用mvn install并且随时在更新
+  这是我见过的最常见的问题， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/03/15/about-maven-10-wrong-things">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">关于maven，做错的十件事</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-03-15T00:00:00+08:00" pubdate data-updated="true">2011-03-15 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="java maven"></p>
+  
+  <p>maven管理的java项目越来越多，令人遗憾的是在使用maven的时候，多多少少都会遇到这样那样的问题，于是会有各种各样的解决办法，下面是一个列表，列出了使用maven的误区和解决办法。
+  <strong>1.频繁在所有项目使用mvn install并且随时在更新</strong>
+  这是我见过的最常见的问题，解决了这个问题有许多的好处。在maven的文档中找不到一句对这种情况的描述，不过我坚信一句话：每个artifact在maven仓库中都有一个家。<br>
+  在你的公司里，应该有一个仓库管理工具。每一个你开发的模块都应该发布到这个仓库上去。你可能会问，应该什么时候发布？答案是，每次在你的构建服务器构建之后，都需要发到仓库。我们通常都使用<a href="https://hudson.dev.java.net/">Hudson</a>来做这件事情，另外还有<a href="http://continuum.apache.org/">Continuum</a>和<a href="http://www.jetbrains.com/teamcity/">TeamCity</a>也还不错。</p>
+  
+  <p>现在，当你所有的项目都在仓库里有的时候，你的项目就不再需要不断地mvn install了。如果你修改一个模块，你只需要重建这个模块，其余依赖的模块会由maven自动从仓库中下载。</p>
+  
+  <p><strong>2.你和你的团队成员依靠复制.m2文件夹来解决项目里的依赖找不到的问题</strong>
+  这看起来很疯狂，不过这件事情经常发生。解决的办法，设置一名仓库管理员。一旦管理好了仓库，就不会再出现大家找u盘复制.m2文件夹的事情了。因为可以加速，你不应该把本地的仓库整个地删除掉，毕竟在本地读取仓库是最快的。</p>
+  
+  <p><strong>3. 你为了解决依赖找不到一个老版本构件的问题，把最新的pom文件修改了版本弄到了老文件里后安装</strong>
+  考虑到这种情况，有人把一个模块的版本从1.3-SNAPSHOT修改成了1.4-SNAPSHOT。你马上要去度假，所以呢你就不想再更新和安装1.3的版本了，而你的模块正好要依赖1.3版本的那个模块，你如何去弄到老的版本呢？嗯，你可以到处找找，在代码库里找到了这个模块的最新代码，而且版本还是1.3的，你更新了这个版本号并且进行了安装。或者你还可以把你的代码从1.4弄到1.3去，安装并祈祷能够正常工作。</p>
+  
+  <p>我想上面的解决办法都不是很好，同样，你的公司需要一个代码仓库管理员，如果有一次1.3-SNAPSHOT成功的构建，那就应该在仓库里存在一份，问题解决。</p>
+  
+  <p><strong>4. 你有许多shell脚本或者是批处理文件，它们通过你的模块的target文件来产生一个zip文件</strong>
+  maven有方法专门做这件事情，叫做“assemblies”。他们不是最容易安装的，但是一旦你安装好了，将与maven完全无缝结合，这要比许多山寨自制的脚本要平滑得多。这些山寨的脚本有许多的问题，比如说版本开始改变，模块被移动等等。</p>
+  
+  <p><strong>5.你有许多的xml在pom里，目的只是复制文件到发布时的文件夹去，而且它不成很好的工作，也不轻便</strong>
+  这和4正好是对立的，maven看上去不是为了复制文件而构建。如果你想复制你的包（诸如war,ear,zip文件），写一个ant shell bat文件都会很简单完成。</p>
+  
+  <p><strong>6.你在build的时候总是呆在“checking for updates from xxx-repo”而你不知道什么原因</strong>
+  这是一个很让有些人很气愤的事情，往往花费太多时间去找问题所在。也许这个事情正好可以让你去喝杯咖啡。尽管如此，这个问题的一些通常原因，就是你有一个快照版本的依赖，并且在你的pom文件中有一堆的仓库列表。maven不关心哪个包去哪个仓库里取，所以看上去是从所有的仓库里更新所有的包。<br>
+  如果你配置了你的maven安装时到指定的仓库里去寻找所有的包（在settings.xml里设置mirror），maven会只到这个仓库里寻找。当这个服务器在本地，将得到加速。用上仓库管理很重要，</p>
+  
+  <p><strong>7.如果你在release分支上写代码，你的trunk的构建将会失败（或者说是1.0-SNAPSHOT应该对所有人来说都是好用的）</strong>
+  有许多事情你应该记住，当给你的项目创建一个分枝的时候。其中之一是告诉你的构建服务器，并且其他模块需要修改版本为你的pom的声明。如果你忽略随后才做这事，当你想修改了分支里的代码又想在主干里开发时，你会遇到问题。<br>
+  这里有一个goal在发布插件里，叫做“branch”，靠运行“mvn release:branch”，maven可以为你自动重命名pom文件里的版本号。（免责声明，我还没试过这个命令。。。目前我经常只在创建了一个release的时候才打分支，在“mvn release:perform”后使用“mvn release:prepare”）</p>
+  
+  <p><strong>8.整个公司内容的依赖都是以-SNAPSHOT结束</strong>
+  快照对开发者来说很舒服，它几乎要完成了，但是迟早，你应该要停下你的脚步，发送你的包给世人，或者是你的同事。一直呆在快照版本有许多的问题。首先它减慢了你的构建速度。因为maven不得不去检查最后的快照是不是在更新了。其次，如果你的项目依赖于一个快照版本，你很难判断是依赖哪个版本的快照。构建可能会失败，只是因为你拿到了一个更新的快照。<br>
+  如果你依赖一个公司内部的模块，并且这个模块目前是好用的，那么修改所有的依赖为非快照版本后才发布，是一个不错的主意。这样我们才能知道，即使有家伙还在那个模块上疯狂写代码的时候，你的模块依旧可以构建通过，因为它依赖的是一个稳定的发布。</p>
+  
+  <p><strong>9.跑一下“mvn dependency:analyze”，没有使用和没有使用的依赖列表很长</strong>
+  这个很BT，但不知道准确依赖很危险。最大的问题是maven的传递依赖。</p>
+  
+  <p><strong>10.当有人发布了你使用的新版本的插件，你的构建就挂了</strong>
+  maven的插件不必写上版本，maven会找到最好的版本。当有新版本的插件的时候，你不必知道就会下载使用最新的。有时候，最好的判断不总是正确。根据经验，越新的越有bug。因此，明码标价写上你使用的插件的版本是有意义的</p>
+  
+  <p></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-03-15T00:00:00+08:00" pubdate data-updated="true">2011-03-15 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/java/">java</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

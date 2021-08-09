@@ -1,0 +1,397 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Hadoop Hive安装手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供完整的sql查询功能，可以将sql语句转换为 MapReduce任务进行运行。 其优点是学习成本低，可以通过类SQL语句快速实现简单的MapReduce统计，不必开发专门的MapReduce应用， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2011/04/02/hive-hadoop-how-to-install">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Hadoop Hive安装手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-04-02T00:00:00+08:00" pubdate data-updated="true">2011-04-02 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><img src="http://img02.taobaocdn.com/imgextra/i2/T116J6XhxoXXcdrwMU_014654.jpg" alt="hadoop hive">
+  hive是基于Hadoop的一个数据仓库工具，可以将结构化的数据文件映射为一张数据库表，并提供完整的sql查询功能，可以将sql语句转换为 MapReduce任务进行运行。 其优点是学习成本低，可以通过类SQL语句快速实现简单的MapReduce统计，不必开发专门的MapReduce应用，十分适合数据仓库的统计分析。</p>
+  
+  <p><strong>[网络环境设置]</strong>
+  vim /etc/hosts</p>
+  
+  <p></p>
+<blockquote>192.168.100.52 hadoop1<br>
+  192.168.99.34 hadoop2<br>
+  192.168.103.135 hadoop3</blockquote>
+  
+  <p>分别到对应机器执行：</p>
+  
+  <p></p>
+<blockquote>hostname hadoop1<br>
+  hostname hadoop2<br>
+  hostname hadoop3</blockquote>
+  
+  <p><strong>[打通机器]</strong></p>
+  
+  <p></p>
+<blockquote>hadoop1# ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa<br>
+  hadoop1# scp ~/.ssh/id_dsa.pub hadoop2:/root/<br>
+  hadoop1# scp ~/.ssh/id_dsa.pub hadoop3:/root/<br>
+  hadoop2# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys<br>
+  hadoop3# cat id_dsa.pub &gt;&gt; ~/.ssh/authorized_keys</blockquote>
+  
+  <p>验证：从hadoop1登录到hadoop2和hadoop3，不再需要密码。</p>
+  
+  <p><strong>[安装hadoop]</strong>
+  确保所有机器有 ssh rsync jdk<br>
+  确保设置了：<br>
+  export JAVA_HOME=/opt/soft/jdk</p>
+  
+  <p>hive在0.20.x的hadoop做了大量的测试，因此选择0.20</p>
+  
+  <p></p>
+<blockquote>cd /opt/soft/<br>
+  wget http://mirror.bjtu.edu.cn/apache/hadoop/core/hadoop-0.20.2/hadoop-0.20.2.tar.gz<br>
+  tar -zxvf hadoop-0.20.2.tar.gz<br>
+  cd hadoop-0.20.2/<br>
+  vim .bashrc<br>
+  export HADOOP_HOME=/opt/soft/hadoop-0.20.2</blockquote>
+  
+  <p>（重复以上作到另外两机器）</p>
+  
+  <p><strong>[配置hadoop]</strong>
+  vim conf/core-site.xml<br>
+  修改：</p>
+  
+  <p></p>
+<blockquote>&lt;configuration&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- 用于dfs命令模块中指定默认的文件系统协议 --&gt;<br>
+  &lt;name&gt;fs.default.name&lt;/name&gt;<br>
+  &lt;value&gt;hdfs://hadoop1:9000&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;/configuration&gt;</blockquote>
+  
+  <p>vim conf/hdfs-site.xml<br>
+  修改：</p>
+  
+  <p></p>
+<blockquote>&lt;configuration&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- DFS中存储文件命名空间信息的目录 --&gt;<br>
+  &lt;name&gt;dfs.name.dir&lt;/name&gt;<br>
+  &lt;value&gt;/opt/hadoop/data/dfs.name.dir&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- DFS中存储文件数据的目录 --&gt;<br>
+  &lt;name&gt;dfs.data.dir&lt;/name&gt;<br>
+  &lt;value&gt;/opt/hadoop/data/dfs.data.dir&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- 是否对DFS中的文件进行权限控制(测试中一般用false)--&gt;<br>
+  &lt;name&gt;dfs.permissions&lt;/name&gt;<br>
+  &lt;value&gt;false&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;/configuration&gt;</blockquote>
+  
+  <p>vim conf/mapred-site.xml<br>
+  修改：</p>
+  
+  <p></p>
+<blockquote>&lt;configuration&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- 用来作JobTracker的节点的(一般与NameNode保持一致) --&gt;<br>
+  &lt;name&gt;mapred.job.tracker&lt;/name&gt;<br>
+  &lt;value&gt;hadoop1:9001&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- map/reduce的系统目录（使用的HDFS的路径） --&gt;<br>
+  &lt;name&gt;mapred.system.dir&lt;/name&gt;<br>
+  &lt;value&gt;/opt/hadoop/system/mapred.system.dir&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;property&gt;<br>
+  &lt;!-- map/reduce的临时目录（可使用“,”隔开，设置多重路径来分摊磁盘IO） --&gt;<br>
+  &lt;name&gt;mapred.local.dir&lt;/name&gt;<br>
+  &lt;value&gt;/opt/hadoop/data/mapred.local.dir&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;/configuration&gt;</blockquote>
+  
+  <p>vim masters</p>
+  
+  <p></p>
+<blockquote>hadoop1</blockquote>
+  vim slaves
+  
+  <p></p>
+<blockquote>hadoop2<br>
+  hadoop3</blockquote>
+  
+  <p>scp conf/* hadoop2:/opt/soft/hadoop-0.20.2/conf/<br>
+  scp conf/* hadoop3:/opt/soft/hadoop-0.20.2/conf/</p>
+  
+  <p><strong>
+  [初始化]</strong></p>
+  
+  <p></p>
+<blockquote>cd $HADOOP_HOME/bin<br>
+  ./hadoop namenode -format</blockquote>
+  
+  <p>启动<br>
+  ./start-all.sh</p>
+  
+  <p><strong>[验证]</strong>
+  $HADOOP_HOME/bin/hadoop dfs -ls /<br>
+  打开 http://192.168.100.52:50030<br>
+  http://192.168.100.52:50070</p>
+  
+  <p><strong>
+  [搭建hive集群]</strong>
+  下载<br>
+  只需要在hadoop1机器上安装</p>
+  
+  <p></p>
+<blockquote>cd /opt/soft/hadoop-0.20.2<br>
+  wget http://mirror.bjtu.edu.cn/apache/hive/hive-0.7.0/hive-0.7.0.tar.gz<br>
+  tar zxvf hive-0.7.0.tar.gz<br>
+  cd hive-0.7.0<br>
+  vim ~/.bashrc<br>
+  export HIVE_HOME=/opt/soft/hadoop-0.20.2/hive-0.7.0</blockquote>
+  
+  <p>$HIVE_HOME/bin/hive<br>
+  &gt;create table tt(id int,name string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;<br>
+  &gt;select * from tt;<br>
+  &gt;drop table tt;</p>
+  
+  <p>试玩结束。</p>
+  
+  <p><strong>[配置hive]</strong>
+  准备mysql:hadoop1 user:hadoop pwd:hadoop</p>
+  
+  <p></p>
+<blockquote>&gt;create database hive<br>
+  &gt;GRANT all ON hive.* TO hadoop@% IDENTIFIED BY 'hadoop';<br>
+  &gt;FLUSH PRIVILEGES ;</blockquote>
+  
+  <p>vim $HIVE_HOME/conf/hive-site.xml</p>
+  
+  <p></p>
+<blockquote>
+  &lt;?xml version="1.0"?&gt;<br>
+  &lt;?xml-stylesheets type="text/xsl" href="configuration.xsl"?&gt;<br>
+  &lt;configuration&gt;<br>
+  &lt;property&gt;<br>
+  &lt;name&gt;hive.metastore.local&lt;/name&gt;<br>
+  &lt;value&gt;true&lt;/value&gt;<br>
+  &lt;/property&gt;</blockquote>
+  
+  <p>&lt;property&gt;<br>
+  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;<br>
+  &lt;value&gt;jdbc:mysql://hadoop1:3306/hive?createDatabaseIfNotExist=true&lt;/value&gt;<br>
+  &lt;/property&gt;</p>
+  
+  <p>&lt;property&gt;<br>
+  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;<br>
+  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;<br>
+  &lt;/property&gt;</p>
+  
+  <p>&lt;property&gt;<br>
+  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;<br>
+  &lt;value&gt;hadoop&lt;/value&gt;<br>
+  &lt;/property&gt;</p>
+  
+  <p>&lt;property&gt;<br>
+  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;<br>
+  &lt;value&gt;hadoop&lt;/value&gt;<br>
+  &lt;/property&gt;<br>
+  &lt;/configuration&gt;</p>
+  
+  <p><strong>[启动]</strong>
+  复制一个mysql-connector-java-5.1.10.jar到hive/lib下后：</p>
+  
+  <p></p>
+<blockquote>$HIVE_HOME/bin/hive<br>
+  &gt;create table tt(id int,name string) row format delimited fields terminated by ',' collection items terminated by "\n" stored as textfile;</blockquote>
+  
+  <p>如果报如下错：</p>
+  
+  <p></p>
+<blockquote>FAILED: Error in metadata: javax.jdo.JDOException: Couldnt obtain a new sequence (unique id) : Binary logging not possible. Message: Transaction level 'READ-COMMITTED' in InnoDB is not safe for binlog mode 'STATEMENT'</blockquote>
+  
+  <p>退出hive后，以root进入mysql执行：</p>
+  
+  <p></p>
+<blockquote>&gt;set global binlog_format='MIXED';</blockquote>
+  
+  <p>这是mysql的一个bug。</p>
+  
+  <p>安装结束。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-04-02T00:00:00+08:00" pubdate data-updated="true">2011-04-02 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/jia-gou-yan-jiu/">架构研究</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

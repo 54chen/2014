@@ -1,0 +1,256 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Ubuntu 8.10 Desktop版本 硬盘安装手记 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="[文章作者：陈臻 本文版本：v1.0 最后修改：2009.1.5 转载请注明原文链接：http://www.54chen.com/c/372] 折腾到半夜，特做记录。 1.ubuntu8.10 liveCD系统镜像文件下载： ubuntu-8.10-desktop-i386.iso http:// …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2009/01/05/ubuntu-810-desktop%E7%89%88%E6%9C%AC-%E7%A1%AC%E7%9B%98%E5%AE%89%E8%A3%85%E6%89%8B%E8%AE%B0">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Ubuntu 8.10 Desktop版本 硬盘安装手记</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-01-05T00:00:00+08:00" pubdate data-updated="true">2009-01-05 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>[文章作者：陈臻 本文版本：v1.0 最后修改：2009.1.5 转载请注明原文链接：<a href="http://www.54chen.com/c/372">http://www.54chen.com/c/372</a>]</p>
+  
+  <p>折腾到半夜，特做记录。</p>
+  
+  <p>1.ubuntu8.10 liveCD系统镜像文件下载：</p>
+  
+  <p>ubuntu-8.10-desktop-i386.iso</p>
+  
+  <p>http://ubuntu.interhost.co.il/intrepid/ubuntu-8.10-desktop-i386.iso（某一个镜像的地址）</p>
+  
+  <p>2.winGrub文件下载：</p>
+  
+  <p>WINGRB0206.EXE</p>
+  
+  <p>http://fedora.linuxsir.org/main/files/WINGRB0206.EXE</p>
+  
+  <p>3.安装WINGRB0206.EXE：</p>
+  
+  <p>双击，没啥说的。</p>
+  
+  <p>4.运行winGrub：</p>
+  
+  <p>第一次打开会有个BaseSetup，把勾都选上，选OK就行。</p>
+  
+  <p>主界面中：</p>
+  
+  <p>Profiles选default。</p>
+  
+  <p>Tools-&gt;Install Grub-&gt;Boot From 选Boot.ini，System Drive选C，Title随便写，TimeOut写30，-&gt;install</p>
+  
+  <p>完毕！</p>
+  
+  <p>5.修改menu.lst：</p>
+  
+  <p>从ubuntu-8.10-desktop-i386.iso的casper里解压出来vmlinuz和initrd.gz到C盘根目录，ubuntu-8.10-desktop-i386.iso文件放在任何一个盘的根目录，它会自己去找到的。</p>
+  
+  <p>在C:\GRUB\menu.lst里增加如下：</p>
+  
+  <p>title Install Ubuntu<br>
+  root (hd0,0)<br>
+  kernel (hd0,0)/vmlinuz boot=casper iso-scan/filename=/ubuntu-8.10-desktop-i386.iso ro quiet splash locale=zh_CN.UTF-8<br>
+  initrd (hd0,0)/initrd.gz</p>
+  
+  <p>保存，重启。</p>
+  
+  <p>6.选择从install Ubuntu进去：</p>
+  
+  <p>一直进啊进，到了liveCD的桌面。双击安装。</p>
+  
+  <p>问题来了，整个硬盘没有显示！使用ubuntu下的系统管理器可以看到系统加载了一个/isodevice的设备，这个就是加载的在F盘下的ubuntu镜像。我们要使用ubuntu下的终端输入sudo umount -l /isodevice来卸载掉它。-l这个参数必须加，否则不能卸载。然后在安装进程中点击后退，鼠标变成一个转动的圆圈，等两三分钟（视系统配置）就可以加载硬盘了。</p>
+  
+  <p>7.安装完成重新启动</p>
+  
+  <p>8.进入系统：</p>
+  
+  <p>这时会发现一半中文一半英文，听说是LiveCD版本的原因，中文支持不完整。</p>
+  
+  <p>这时先搜索最快的软件源服务器，然后在终端里输入</p>
+  
+  <p>sudo apt-get update 更新了列表后执行下列命令</p>
+  
+  <p>sudo apt-get install language-support-zh</p>
+  
+  <p>ThinkPad 系列，调整屏幕亮度，请使用“首选项”-“电源管理”.亮度选择那个条是反的。试了就知道了。</p>
+  
+  <p>完毕。</p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2009-01-05T00:00:00+08:00" pubdate data-updated="true">2009-01-05 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/12/29/java-ee%E4%B8%AD%E5%90%84%E7%A7%8D%E6%89%93%E5%8C%85%E6%96%87%E4%BB%B6/" title="Previous Post: Java EE中各种打包文件">« Java EE中各种打包文件</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2009/01/05/%E8%88%AC%E8%8B%A5%E8%8F%A0%E8%90%9D%E8%9C%9C%E5%A4%9A%E5%BF%83%E7%BB%8F%E8%A7%A3/" title="Next Post: 般若菠萝蜜多心经解">般若菠萝蜜多心经解 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

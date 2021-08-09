@@ -1,0 +1,1145 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="54chen weibo Memo 2010-02-28 2010-02-28 00:00:00 +0800 ［转发］状态帝 : 春晚刚完，央视开始筹备315晚会啦，这将是央视又一创收大项，春晚是给钱让你上，315是给钱让你不上。 # ［转发］
+  冷笑话 : 小张在国中教书， …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/37">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/02/23/php-fpm-configuration-sendmail/">PHP-FPM配置sendmail支持PHP发信</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-02-23T00:00:00+08:00" pubdate data-updated="true">2010-02-23 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>当下常用的环境CentOS+nginx+php-fpm+mysql.</p>
+  
+  <p>之前五四陈科学院曾有一文章是介绍<a href="http://www.54chen.com/uncategorized/gae-java%e6%94%af%e6%8c%81%e8%af%95%e7%94%a8%e6%89%8b%e8%ae%b0.html">环境</a>的配置的，挖一挖水，链接在这里：</p>
+  
+  <p><a href="http://www.54chen.com/architecture/wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes.html">wordpress nginx php-cgi mysql在128m内存下的vps安装和优化手记[原创]</a></p>
+  
+  <p>如果要使用<a href="http://www.54chen.com/flex/thousand-oaks-school-network-all-network-urgent-flash-as3-engineers-social-game-game-planning.html">mail</a>功能，需要按如下步骤作：</p>
+  
+  <p>第一步、安装sendmail</p>
+  
+  <p>yum install sendmail</p>
+  
+  <p>第二步、启动sendmail</p>
+  
+  <p>service sendmail start</p>
+  
+  <p>第三步、设置为auto start</p>
+  
+  <p>chkconfig sendmail on</p>
+  
+  <p>第四步、修改php-fpm.conf:</p>
+  
+  <p>搜索sendmail，去掉那一行两头的注释如下：
+  </p>
+<blockquote>&lt;value name="sendmail_path"&gt;/usr/sbin/sendmail -t -i&lt;/value&gt;</blockquote>
+  
+  <p>第五步、php-fpm reload </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/02/22/share-a-fixed-time-automatically-updates-a-simple-shell-script-svn/">分享一个固定时间自动更新svn的简单shell脚本</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-02-22T00:00:00+08:00" pubdate data-updated="true">2010-02-22 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>这是一个超级简单的<a href="http://www.54chen.com/_linux_/zero-90-xian-shell-script-sacrificed-server-batch-operations.html">脚本</a>，旨在提醒观众：在crontab最小精度只能到1分钟的情况下，可以使用这个作到1秒钟的间隔执行时间。</p>
+  
+  <p>看代码：
+  </p>
+<blockquote>#!/bin/sh<br>
+  while true<br>
+  do<br>
+  /usr/bin/svn up /data/web/club/ #(指定的要更新的目录)<br>
+  sleep 5<br>
+  done</blockquote>
+  原理很简单，利用shell中sleep的单位为秒作自动执行，如果要更加小的精度，估计可以利用这个基础之上多个同时执行:) 仅猜想，标准一些的作法还是用java或者是php的sleep（毫秒级的）。
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/02/20/bdb-method-of-operation-with-the-java-record-2/">用java作bdb的方法记录二</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-02-20T00:00:00+08:00" pubdate data-updated="true">2010-02-20 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>在科学院之前的一篇文章中，介绍过普通的作BDB的方法，见：
+  </p>
+<h1><a href="http://www.54chen.com/java-ee/java-using-the-bdb-notes-from-berkeley-db-java-api-records.html">java使用bdb手记（Berkeley DB Java api记录）</a></h1>
+  下文记录的是利用BDB的事务来完成的一个put和一个get方法的代码。其速度与原始的作方法相当。
+  
+  <p>================================================代码段==============================</p>
+  
+  <p>/**<br>
+  * @author zhen.chen<br>
+  * @createTime 2010-2-20 上午10:43:31<br>
+  */<br>
+  package com.renren.nuclear.storage;</p>
+  
+  <p>import java.io.File;<br>
+  import java.util.ArrayList;<br>
+  import java.util.List;</p>
+  
+  <p>import com.sleepycat.je.Cursor;<br>
+  import com.sleepycat.je.Database;<br>
+  import com.sleepycat.je.DatabaseConfig;<br>
+  import com.sleepycat.je.DatabaseEntry;<br>
+  import com.sleepycat.je.DatabaseException;<br>
+  import com.sleepycat.je.Environment;<br>
+  import com.sleepycat.je.EnvironmentConfig;<br>
+  import com.sleepycat.je.LockMode;<br>
+  import com.sleepycat.je.OperationStatus;<br>
+  import com.sleepycat.je.Transaction;</p>
+  
+  <p>public class Test {<br>
+  private static Environment env;<br>
+  private static Database db;<br>
+  private static long cacheSize = 1000 * 1024 * 1024;<br>
+  private static String path = "./bdb/";</p>
+  
+  <p>public static void main(String[] args) {<br>
+  EnvironmentConfig envConfig = new EnvironmentConfig();<br>
+  envConfig.setTransactional(true);<br>
+  envConfig.setAllowCreate(true);<br>
+  envConfig.setCacheSize(cacheSize);<br>
+  try {<br>
+  env = new Environment(new File(path), envConfig);<br>
+  } catch (DatabaseException e) {</p>
+  
+  <p>}<br>
+  open("nuclear");</p>
+  
+  <p>//写入<br>
+  put("aa","aaa");</p>
+  
+  <p>//取出<br>
+  get("aa");</p>
+  
+  <p>}</p>
+  
+  <p>/**<br>
+  * 写入作<br>
+  * @author www.54chen.com<br>
+  * @createTime 2010-2-20 上午11:04:43<br>
+  */<br>
+  public static void put(String key, String value){<br>
+  // open("nuclear");<br>
+  byte[] theKey = key.getBytes();<br>
+  byte[] theValue = value.getBytes();<br>
+  OperationStatus status = null;<br>
+  Transaction transaction = null;<br>
+  Cursor cursor = null;<br>
+  boolean succeeded = false;<br>
+  try {<br>
+  transaction = env.beginTransaction(null, null);<br>
+  cursor = db.openCursor(transaction, null);<br>
+  status = cursor.put(new DatabaseEntry(theKey), new DatabaseEntry(theValue));<br>
+  if (status != OperationStatus.SUCCESS){<br>
+  // TODO<br>
+  }</p>
+  
+  <p>succeeded = true;<br>
+  } catch (DatabaseException e) {</p>
+  
+  <p>} finally {<br>
+  attemptClose(cursor);<br>
+  if (succeeded)<br>
+  attemptCommit(transaction);<br>
+  else<br>
+  attemptAbort(transaction);<br>
+  }
+  }</p>
+  
+  <p>/**<br>
+  * 取出作<br>
+  * @author www.54chen.com<br>
+  * @createTime 2010-2-20 上午11:04:51<br>
+  */<br>
+  public static List&lt;String&gt; get(String key){<br>
+  ArrayList&lt;String&gt; nuclearStorageValue = new ArrayList&lt;String&gt;();</p>
+  
+  <p>DatabaseEntry queryKey = new DatabaseEntry();<br>
+  DatabaseEntry value = new DatabaseEntry();<br>
+  queryKey.setData(key.getBytes());<br>
+  Cursor cursor = null;<br>
+  try {<br>
+  cursor = db.openCursor(null, null);<br>
+  for(OperationStatus status = cursor.getSearchKey(queryKey, value, LockMode.READ_UNCOMMITTED); status == OperationStatus.SUCCESS; status = cursor.getNextDup(queryKey,value,LockMode.RMW)) {<br>
+  nuclearStorageValue.add(value.getData().toString());<br>
+  }
+  } catch (DatabaseException e) {</p>
+  
+  <p>} finally {<br>
+  attemptClose(cursor);<br>
+  }
+  return nuclearStorageValue;<br>
+  }</p>
+  
+  <p>/**<br>
+  * 打开DB<br>
+  * @author www.54chen.com<br>
+  * @createTime 2010-2-20 上午11:01:48<br>
+  */<br>
+  private static void open(String dbName) {<br>
+  DatabaseConfig dbConfig = new DatabaseConfig();<br>
+  dbConfig.setAllowCreate(true);<br>
+  dbConfig.setTransactional(true);<br>
+  try {<br>
+  db = env.openDatabase(null, dbName, dbConfig);<br>
+  } catch (DatabaseException e) {<br>
+  e.printStackTrace();<br>
+  }
+  }</p>
+  
+  <p>private static void attemptClose(Cursor cursor) {<br>
+  try {<br>
+  if (cursor != null)<br>
+  cursor.close();<br>
+  } catch (DatabaseException e) {<br>
+  // TODO logger<br>
+  }
+  }</p>
+  
+  <p>private static void attemptCommit(Transaction transaction) {<br>
+  try {<br>
+  transaction.commit();<br>
+  } catch (DatabaseException e) {<br>
+  attemptAbort(transaction);<br>
+  // TODO logger<br>
+  }
+  }</p>
+  
+  <p>private static void attemptAbort(Transaction transaction) {<br>
+  try {<br>
+  transaction.abort();<br>
+  } catch (Exception e) {<br>
+  // TODO logger<br>
+  }
+  }<br>
+  }</p>
+  
+  <p>============================================代码结束==================================</p>
+  
+  <p>代码是用游标作bdb的例子，在使用的时候可以在其基础上继续进一步修改。</p>
+  
+  <p>PS：人人网Nuclear系统的BDB引擎将可能会使用这样的作方法，目前我还在做速度上的调优，待有新的结果将第一时间公布给大家。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/02/08/php-open-source-projects-reading-lists-and-hook-methods-while-has_items-thme_ite-and-apply_filters/">解读PHP开源项目中列表和hook方法：while(has_items()): Thme_ite();和apply_filters</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-02-08T00:00:00+08:00" pubdate data-updated="true">2010-02-08 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>在<a href="http://www.54chen.com/architecture/wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes.html">wordpress</a>,lilina等开源项目中，常常会看到一些莫名的代码，来无影去无踪，看上去很有意味，特地拿来分析分析，看看一般的作法。</p>
+  
+  <p><strong>part 1  列表 循环显示</strong></p>
+  
+  <p>先看代码：
+  </p>
+<blockquote>&lt;?php<br>
+  $num = 0;<br>
+  if(has_items()) {<br>
+  while(has_items()): the_item();<br>
+  }
+  ?&gt;</blockquote>
+  以上代码，出自某开源项目。。。
+  
+  <p>再进入the_item()函数内部，可以看到一个关键的函数：
+  </p>
+<blockquote>* Returns the current item<br>
+  *
+  * @since 1.0<br>
+  *
+  * @return bool|stdClass False if item doesn't exist, otherwise returns the specified item<br>
+  */<br>
+  public function current_item() {<br>
+  $this-&gt;previous_item = $this-&gt;current_item;<br>
+  $this-&gt;current_item = '';</blockquote>
+  
+  <p>$item = each($this-&gt;items);<br>
+  $item = $item['value'];<br>
+  if(!$item)<br>
+  return false;</p>
+  
+  <p>$this-&gt;current_item = $item;<br>
+  $this-&gt;current_feed = $item-&gt;feed;</p>
+  
+  <p>return $item;<br>
+  }
+  这个关键的函数是each()，来看手册：
+  </p>
+<h1>each</h1>
+  <div class="refnamediv">
+<a name="AEN12322"></a>(PHP 3, PHP 4, PHP 5)</div>
+  
+  <p>each --       返回数组中当前的<a href="http://www.54chen.com/translate/dynamo-based-systems-designed-linkin-voldemort-voldemort-design-chinese-documents-i-am-a-chan-academy-of-sciences-translation-finalized.html">键／值</a>对并将数组指针向前移动一步
+  </p>
+<div class="refsect1">
+<a name="AEN12325"></a>
+  <h2>说明</h2>
+  array <strong class="methodname">each</strong> ( array &amp;array )</div>
+  
+  <p>返回 <var class="parameter">array</var> 数组中当前指针位置的键／值对并向前移动数组指针。键值对被返回为四个单元的数组，键名为      <var class="literal">0</var>，<var class="literal">1</var>，<var class="literal">key</var> 和 <var class="literal">value</var>。单元 <var class="literal">0</var> 和      <var class="literal">key</var> 包含有数组单元的键名，<var class="literal">1</var> 和      <var class="literal">value</var> 包含有数据。</p>
+  
+  <p>如果内部指针越过了数组的末端，则 <strong class="function">each()</strong> 返回 <tt class="constant"><strong>FALSE</strong></tt>。</p>
+  
+  <p>综合来看，其实就是一个做了一个游标一样的模型，利用each来作一个数组或者相似的结构，每次在显示的时候，都有对数据数组的本身作，而while里的has_item，只是作简单的判断有无而已。</p>
+  
+  <p><strong>part2 hook</strong></p>
+  
+  <p>第二种情况，是一个叫apply_filters的函数的<a href="http://www.54chen.com/architecture/wordpress-nginx-php-cgi-mysql-memory-in-the-128m-to-install-and-optimize-the-vps-notes.html">实现</a>。先看代码：
+  </p>
+<blockquote>function the_item() {<br>
+  global $lilina_items, $item;</blockquote>
+  
+  <p>$item = apply_filters('the_item', $lilina_items-&gt;current_item());<br>
+  }
+  这是lilina里的一个函数，要看的是这个apply_filters方法，有一个简单的例子：
+  </p>
+<blockquote>function example_hook($string, $arg1, $arg2)<br>
+  //Do stuff<br>
+  return $string;<br>
+  }
+  $value = apply_filters('example_hook', 'filter me', 'arg1', 'arg2');</blockquote>
+  apply_filters里面最关键的一个函数：
+  <h1>call_user_func_array</h1>
+  <div class="refnamediv">
+<a name="AEN50629"></a>(PHP 4 &gt;= 4.0.4, PHP 5)</div>
+  
+  <p>call_user_func_array --       Call a user function given with an array of parameters
+  </p>
+<div class="refsect1">
+<a name="AEN50632"></a>
+  <h2>Description</h2>
+  mixed <strong class="methodname">call_user_func_array</strong> ( callback function, array param_arr )</div>
+  
+  <p>Call a user defined function given by      <var class="parameter">function</var>, with      the <a href="http://www.54chen.com/php-tech/multi-nginx-configuration-of-single-php-fpm-approach-from-academy-of-sciences.html">parameters</a> in <var class="parameter">param_arr</var>.</p>
+  
+  <p>其实这些渐渐被遗忘的<a href="http://www.54chen.com/webfe/academy-of-sciences-in-recent-years-a-good-article-summing-up.html">函数</a>，在高手们的使用下，对项目化的开发很有优势，随手记之。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2010/02/02/java-thread-controller-code-sharing-according-to-cpu-circumstances-decide-the-number-and-circumstances-of-the-threads-running/">Java线程控制器代码分享-根据cpu情况决定线程运行数量和情况</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-02-02T00:00:00+08:00" pubdate data-updated="true">2010-02-02 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p>在<a href="http://www.54chen.com/_linux_/nuclear-mass-storage-system-for-all-network-description.html">人人网海量存储系统</a>的存储引擎部分，为了提高CPU和网络的使用情况，使用了java多线程管理并行作的方式。</p>
+  
+  <p>在java中控制线程是一件很简单的事情，jdk提供了诸多的方法，其中比常用的两个是notify()和wait()，一个是唤醒，一个等待线程，在下面的代码中，将看到一个线程分配器，根据cpu的负载情况，自动完成对应线程的唤醒或者是等待作。整个过程是一个平滑的过程，不会因为线程的切换而导致机器负载出线锯齿。</p>
+  
+  <p>先看一个类，读取Linux系统TOP等指令拿到系统当前负载：
+  </p>
+<blockquote>import java.io.BufferedReader;<br>
+  import java.io.InputStreamReader;</blockquote>
+  
+  <p>/**<br>
+  * 节点的cpu 内存 磁盘空间 情况<br>
+  *
+  * @author zhen.chen<br>
+  *
+  */<br>
+  public class NodeLoadView {</p>
+  
+  <p>/**<br>
+  * 获取cpu使用情况<br>
+  *
+  * @return<br>
+  * @throws Exception<br>
+  */<br>
+  public double getCpuUsage() throws Exception {<br>
+  double cpuUsed = 0;</p>
+  
+  <p>Runtime rt = Runtime.getRuntime();<br>
+  Process p = rt.exec("/usr/bin/uptime");// 调用系统的“top"命令<br>
+  String[] strArray = null;<br>
+  BufferedReader in = null;<br>
+  try {<br>
+  in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br>
+  String str = null;<br>
+  while ((str = in.readLine()) != null) {<br>
+  strArray = str.split("load average: ");<br>
+  strArray = strArray[1].split(",");<br>
+  cpuUsed = Double.parseDouble(strArray[0]);<br>
+  }
+  } catch (Exception e) {<br>
+  e.printStackTrace();<br>
+  } finally {<br>
+  in.close();<br>
+  }
+  return cpuUsed;<br>
+  }</p>
+  
+  <p>/**<br>
+  * 内存监控<br>
+  *
+  * @return<br>
+  * @throws Exception<br>
+  */<br>
+  public double getMemUsage() throws Exception {</p>
+  
+  <p>double menUsed = 0;<br>
+  Runtime rt = Runtime.getRuntime();<br>
+  Process p = rt.exec("top -b -n 1");// 调用系统的“top"命令</p>
+  
+  <p>BufferedReader in = null;<br>
+  try {<br>
+  in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br>
+  String str = null;<br>
+  String[] strArray = null;</p>
+  
+  <p>while ((str = in.readLine()) != null) {<br>
+  int m = 0;</p>
+  
+  <p>if (str.indexOf(" R ") != -1) {// 只<a href="http://www.54chen.com/internetops/51ditu%e7%ad%89%e7%bd%91%e7%ab%99%e6%8a%80%e6%9c%af%e6%8f%ad%e7%a7%98-%e5%88%a9%e7%94%a8%e5%bc%80%e6%ba%90%e6%a1%86%e6%9e%b6%e6%90%ad%e5%bb%ba%e4%b8%80%e6%95%b4%e5%a5%97%e7%9a%84webgis.html">分析</a>正在运行的进程，top进程本身除外 &amp;&amp;<br>
+  //<br>
+  // System.out.println("------------------3-----------------");<br>
+  strArray = str.split(" ");<br>
+  for (String tmp : strArray) {<br>
+  if (tmp.trim().length() == 0)<br>
+  continue;</p>
+  
+  <p>if (++m == 10) {<br>
+  // 9)--第10列为mem的使用百分比(RedHat 9)</p>
+  
+  <p>menUsed += Double.parseDouble(tmp);</p>
+  
+  <p>}<br>
+  }</p>
+  
+  <p>}<br>
+  }
+  } catch (Exception e) {<br>
+  e.printStackTrace();<br>
+  } finally {<br>
+  in.close();<br>
+  }
+  return menUsed;<br>
+  }</p>
+  
+  <p>/**<br>
+  * 获取磁盘空间大小<br>
+  *
+  * @return<br>
+  * @throws Exception<br>
+  */<br>
+  public double getDeskUsage() throws Exception {<br>
+  double totalHD = 0;<br>
+  double usedHD = 0;<br>
+  Runtime rt = Runtime.getRuntime();<br>
+  Process p = rt.exec("df -hl");// df -hl 查看<a href="http://www.54chen.com/_linux_/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles.html">硬盘</a>空间</p>
+  
+  <p>BufferedReader in = null;<br>
+  try {<br>
+  in = new BufferedReader(new InputStreamReader(p.getInputStream()));<br>
+  String str = null;<br>
+  String[] strArray = null;<br>
+  while ((str = in.readLine()) != null) {<br>
+  int m = 0;<br>
+  // if (flag &gt; 0) {<br>
+  // flag++;<br>
+  strArray = str.split(" ");<br>
+  for (String tmp : strArray) {<br>
+  if (tmp.trim().length() == 0)<br>
+  continue;<br>
+  ++m;<br>
+  // System.out.println("----tmp----" + tmp);<br>
+  if (tmp.indexOf("G") != -1) {<br>
+  if (m == 2) {<br>
+  // System.out.println("---G----" + tmp);<br>
+  if (!tmp.equals("") &amp;&amp; !tmp.equals("0"))<br>
+  totalHD += Double.parseDouble(tmp.substring(0,<br>
+  tmp.length() - 1)) * 1024;</p>
+  
+  <p>}<br>
+  if (m == 3) {<br>
+  // System.out.println("---G----" + tmp);<br>
+  if (!tmp.equals("none") &amp;&amp; !tmp.equals("0"))<br>
+  usedHD += Double.parseDouble(tmp.substring(0,<br>
+  tmp.length() - 1)) * 1024;</p>
+  
+  <p>}<br>
+  }
+  if (tmp.indexOf("M") != -1) {<br>
+  if (m == 2) {<br>
+  // System.out.println("---M---" + tmp);<br>
+  if (!tmp.equals("") &amp;&amp; !tmp.equals("0"))<br>
+  totalHD += Double.parseDouble(tmp.substring(0,<br>
+  tmp.length() - 1));</p>
+  
+  <p>}<br>
+  if (m == 3) {<br>
+  // System.out.println("---M---" + tmp);<br>
+  if (!tmp.equals("none") &amp;&amp; !tmp.equals("0"))<br>
+  usedHD += Double.parseDouble(tmp.substring(0,<br>
+  tmp.length() - 1));<br>
+  // System.out.println("----3----" + usedHD);<br>
+  }
+  }</p>
+  
+  <p>}</p>
+  
+  <p>// }<br>
+  }
+  } catch (Exception e) {<br>
+  e.printStackTrace();<br>
+  } finally {<br>
+  in.close();<br>
+  }
+  return (usedHD / totalHD) * 100;<br>
+  }
+  //<br>
+  //    public static void main(String[] args) throws Exception {<br>
+  //        NodeLoadView cpu = new NodeLoadView();<br>
+  //        System.out<br>
+  //                .println("---------------cpu used:" + cpu.getCpuUsage() + "%");<br>
+  //        System.out<br>
+  //                .println("---------------mem used:" + cpu.getMemUsage() + "%");<br>
+  //        System.out<br>
+  //                .println("---------------HD used:" + cpu.getDeskUsage() + "%");<br>
+  //        System.out.println("------------jvm监控----------------------");<br>
+  //        Runtime lRuntime = Runtime.getRuntime();<br>
+  //        System.out.println("--------------Free Momery:" + lRuntime.freeMemory()<br>
+  //                + "K");<br>
+  //        System.out.println("--------------Max Momery:" + lRuntime.maxMemory()<br>
+  //                + "K");<br>
+  //        System.out.println("--------------Total Momery:"<br>
+  //                + lRuntime.totalMemory() + "K");<br>
+  //        System.out.println("---------------Available Processors :"<br>
+  //                + lRuntime.availableProcessors());<br>
+  //    }<br>
+  再来看关键的一个类，THreadScheduler：
+  </p>
+<blockquote>import java.util.Map;</blockquote>
+  
+  <p>import org.apache.log4j.Logger;</p>
+  
+  <p>import test.NodeLoadView;<br>
+  public class ThreadScheduler {<br>
+  private static Logger logger = Logger.getLogger(ThreadScheduler.class.getName());<br>
+  private Map&lt;String, Thread&gt; runningThreadMap;<br>
+  private Map&lt;String, Thread&gt; waitingThreadMap;<br>
+  private boolean isFinished = false;<br>
+  private int runningSize;</p>
+  
+  <p>public ThreadScheduler (Map&lt;String, Thread&gt; runningThreadMap, Map&lt;String, Thread&gt; waitingThreadMap) {<br>
+  this.runningThreadMap = runningThreadMap;<br>
+  this.waitingThreadMap = waitingThreadMap;<br>
+  this.runningSize = waitingThreadMap.size();<br>
+  }</p>
+  
+  <p>/**<br>
+  * 开始调度线程<br>
+  * @author zhen.chen<br>
+  * @createTime 2010-1-28 上午11:04:52<br>
+  */<br>
+  public void schedule(){<br>
+  long sleepMilliSecond = 1 * 1000;<br>
+  int allowRunThreads = 15;<br>
+  // 一次启动的线程数，cpuLoad变大时以此值为参考递减<br>
+  int allowRunThreadsRef = 15;<br>
+  double cpuLoad = 0;// 0-15<br>
+  NodeLoadView load = new NodeLoadView();</p>
+  
+  <p>while (true) {<br>
+  try {<br>
+  cpuLoad = load.getCpuUsage();<br>
+  } catch (Exception e1) {<br>
+  e1.printStackTrace();<br>
+  }
+  // cpuLoad低 启动的线程多<br>
+  allowRunThreads = (int) Math.floor(allowRunThreadsRef - cpuLoad);<br>
+  // threads不能为0<br>
+  if (allowRunThreads &lt; 1) {<br>
+  allowRunThreads = 1;<br>
+  }
+  if (allowRunThreads &gt; allowRunThreadsRef) {<br>
+  allowRunThreads = allowRunThreadsRef;<br>
+  }
+  if (logger.isDebugEnabled()) {<br>
+  logger.debug("[ThreadScheduler]running Thread:" + runningThreadMap.size() + "; waiting Thread:" + waitingThreadMap.size() + "; cpu:" + cpuLoad + " allowRunThreads:" + allowRunThreads);<br>
+  }</p>
+  
+  <p>// 检查runningSize个线程的情况，满足条件则启动<br>
+  for (int x = 0; x &lt; runningSize; x++) {<br>
+  if (waitingThreadMap.get(x+"") != null) {<br>
+  if (allowRunThreadsRef &lt;= runningThreadMap.size()) {<br>
+  break;<br>
+  }
+  synchronized (waitingThreadMap.get(x+"")) {<br>
+  if (!waitingThreadMap.get(x+"").isAlive()) {<br>
+  waitingThreadMap.get(x+"").start();<br>
+  }else{<br>
+  waitingThreadMap.get(x+"").notify();<br>
+  }
+  }<br>
+  runningThreadMap.put(x+"", waitingThreadMap.get(x+""));<br>
+  waitingThreadMap.remove(x+"");<br>
+  }
+  }<br>
+  // 检查runningSize个线程的情况，满足条件则暂停<br>
+  for (int x = 0; x &lt; runningSize; x++) {<br>
+  if (runningThreadMap.size() &lt;= allowRunThreads) {<br>
+  break;<br>
+  }
+  if (runningThreadMap.get(x+"") != null) {<br>
+  synchronized (runningThreadMap.get(x+"")) {<br>
+  try {<br>
+  if (runningThreadMap.get(x+"").isAlive()) {<br>
+  runningThreadMap.get(x+"").wait();<br>
+  }else{<br>
+  continue;<br>
+  }
+  } catch (InterruptedException e) {<br>
+  e.printStackTrace();<br>
+  }
+  }<br>
+  waitingThreadMap.put(x+"", runningThreadMap.get(x));<br>
+  runningThreadMap.remove(x+"");<br>
+  }
+  }<br>
+  // 全部跑完，返回<br>
+  if (waitingThreadMap.size() == 0 &amp;&amp; runningThreadMap.size() == 0) {<br>
+  if (logger.isDebugEnabled()) {<br>
+  logger.debug("[ThreadScheduler] over.total Threads size:" + runningSize);<br>
+  this.isFinished = true;<br>
+  return;<br>
+  }
+  // 使主while循环慢一点<br>
+  try {<br>
+  Thread.sleep(sleepMilliSecond);<br>
+  } catch (InterruptedException e1) {<br>
+  e1.printStackTrace();<br>
+  }
+  }</p>
+  
+  <p>}</p>
+  
+  <p>public boolean isFinished() {<br>
+  return isFinished;<br>
+  }
+  }
+  <strong>这个类的作用：</strong></p>
+  
+  <p>1.接收runningThreadMap和waitingThreadMap两个<a href="http://www.54chen.com/_linux_/tokyo-cabinet-with-java-concurrent-test-the-performance-of-a-major-correction-articles.html">map</a>，里面对应存了运行中的线程实例和等待中的<a href="http://www.54chen.com/_linux_/yahoo%e3%80%81tao%e4%ba%91%e8%ae%a1%e7%ae%97%e5%88%a9%e5%99%a8%e4%b9%8b%e2%80%9c%e4%ba%91%e2%80%9d%e7%ab%af%e7%9a%84%e5%b0%8f%e9%a3%9e%e8%b1%a1%e2%80%94hadoop.html">线程</a>实例。</p>
+  
+  <p>2.读cpu情况，自动判断要notify等待中的线程还是wait运行中的线程。</p>
+  
+  <p>3.两个map都结束，退出。（必须runningThreadMap内部的Thread自己将runningThreadMap对应的Thread remove掉）</p>
+  
+  <p><strong>如何使用：</strong>
+  </p>
+<blockquote>public class TestThread {<br>
+  public static class Runner extends Thread {<br>
+  public Runner(int j, Map&lt;String, Thread&gt; threadMap) {</blockquote>
+  
+  <p>}<br>
+  public void run() {<br>
+  // TODO 你的逻辑 完成后需要从threadMap中remove掉<br>
+  }
+  }</p>
+  
+  <p>public static void main(String[] args) {<br>
+  // 运行中的线程<br>
+  Map&lt;String, Thread&gt; threadMap = new HashMap&lt;String, Thread&gt;();<br>
+  // 正在<a href="http://www.54chen.com/cc/php-java-c-upload-files-how-to-accurately-determine-the-file-type-mime-literacy.html">等待</a>中的线程<br>
+  Map&lt;String, Thread&gt; waitThreadMap = new HashMap&lt;String, Thread&gt;();<br>
+  for (int j = 0; j &lt; args.length; j++) {<br>
+  Thread t = new Runner(j, threadMap);<br>
+  waitThreadMap.put(j + "", t);<br>
+  }</p>
+  
+  <p>ThreadScheduler threadScheduler = new ThreadScheduler(threadMap, waitThreadMap);<br>
+  threadScheduler.schedule();<br>
+  if (threadScheduler.isFinished() == false) {<br>
+  //没能正常结束<br>
+  }
+  }<br>
+  }</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/36">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <em>37</em>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/38">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

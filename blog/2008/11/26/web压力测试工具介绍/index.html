@@ -1,0 +1,272 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>Web压力测试工具介绍 - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="1.http_load 下载地址：http://www.acme.com/software/http_load/ 实际运行： bash# http_load -rate 5 -seconds 10 urls -parallel 简写-p ：含义是并发的用户进程数。 -fetches 简写-f ： …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2008/11/26/web%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7%E4%BB%8B%E7%BB%8D">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">Web压力测试工具介绍</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-26T00:00:00+08:00" pubdate data-updated="true">2008-11-26 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p><strong>1.http_load</strong></p>
+  
+  <p>下载地址：<a href="http://www.acme.com/software/http_load/" target="_top">http://www.acme.com/software/http_load/</a></p>
+  
+  <p>实际运行：</p>
+  
+  <p>bash# http_load -rate 5 -seconds 10 urls
+  </p>
+<ul>
+  	<li>-parallel 简写-p ：含义是并发的用户进程数。</li>
+  	<li>-fetches 简写-f ：含义是总计的访问次数</li>
+  	<li>-rate 简写-r ：含义是每秒的访问频率</li>
+  	<li>-seconds简写-s ：含义是总计的访问时间</li>
+  	<li>urls.txt 是一个url 列表，每个url 单独的一行；不可以直接跟一个url，有些博客主说的可以跟一个url是错误的说法。</li>
+  </ul>
+  <pre>49 fetches, 2 max parallel, 289880 bytes, in 10.0145 seconds
+  5916 mean bytes/connection
+  4.89274 fetches/sec, 28945.1 bytes/sec
+  msecs/connect: 28.8932 mean, 44.243 max, 24.488 min
+  msecs/first-response: 63.5362 mean, 81.624 max, 57.803 min
+  HTTP response codes:
+  code 200 -- 49</pre>
+  <pre>解释：</pre>
+  <pre>
+  </pre>
+<ul>
+  	<li>49 fetches, 2 max parallel, 289880 bytes, in 10.0145 seconds</li>
+  	<li>说明在上面的测试中运行了49个请求，最大的并发进程数是2，总计传输的数据是289880bytes，运行的时间是10.0145秒</li>
+  </ul>
+  <div>
+  <ul>
+  	<li>5916 mean bytes/connection</li>
+  	<li>说明每一连接平均传输的数据量289880/49=5916</li>
+  </ul>
+  <div>
+  <ul>
+  	<li>4.89274 fetches/sec, 28945.1 bytes/sec</li>
+  	<li>说明每秒的响应请求为4.89274，每秒传递的数据为28945.1 bytes/sec</li>
+  </ul>
+  <div>
+  <ul>
+  	<li>msecs/connect: 28.8932 mean, 44.243 max, 24.488 min</li>
+  	<li>说明每连接的平均响应时间是28.8932 msecs，最大的响应时间44.243 msecs，最小的响应时间24.488 msecs</li>
+  </ul>
+  <div></div>
+  <ul>
+  	<li>msecs/first-response: 63.5362 mean, 81.624 max, 57.803 min</li>
+  </ul>
+  <div>
+  <ul>
+  	<li>HTTP response codes: code 200 — 49</li>
+  	<li>说明打开响应页面的类型，如果403的类型过多，那可能要注意是否系统遇到了瓶颈。</li>
+  </ul>
+  <div>
+  <ul>
+  	<li>一般会关注到的指标是fetches/sec、msecs/connect，它们分别对应的常用性能指标参数QPS-每秒响应用户数和response time，每连接响应用户时间。测试的结果主要也是看这两个值。当然仅有这两个指标并不能完成对性能的分析，我们还需要对服务器的cpu、men进行分析，才能得出结论；</li>
+  	<li>如果要测试HTTPS，需要在编译前指定Makefile中 <strong>SSL_TREE</strong> 的路径：一般为 <em>/usr</em> 或<em>/usr/local</em> 。</li>
+  </ul>
+  </div>
+  </div>
+  </div>
+  </div>
+  </div>
+   
+  
+  <p><strong>2.ab</strong>
+  </p>
+<pre>ab -n 1000 -c 50 http://www.domain.com/test.php</pre>
+  <pre>ab将同时向http://www.domain.com/test.php发出50个并发请求，共发出1000次。</pre>
+  <pre>有用的信息：</pre>
+  <pre>
+  <pre>Requests per second:    75.45 [#/sec] (mean)</pre>
+  </pre>
+  <pre>每秒钟可以处理的请求数为75.45个</pre>
+  <pre>
+  </pre>
+<ul>
+  	<li>若将请求数增加，看看服务器能否处理更大的压力，需要调节Apache的 <strong>MaxClients、ThreadsPerChild、MaxThreadsPerChild</strong> 等参数，基于httpd.conf中的MPM模块选择。</li>
+  	<li>若本地服务器不是Apache，请使用其它测试方法。</li>
+  </ul>
+  
+  <pre></pre>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2008-11-26T00:00:00+08:00" pubdate data-updated="true">2008-11-26 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>, <a class="category" href="/blog/categories/php/">php</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          <a class="basic-alignment left" href="/blog/2008/11/25/md5%E5%9C%A8%E7%BA%BF%E7%A0%B4%E8%A7%A3-md5-crack/" title="Previous Post: md5在线破解 MD5 crack">« md5在线破解 MD5 crack</a>
+        
+        
+          <a class="basic-alignment right" href="/blog/2008/11/27/php%E4%BB%A3%E7%A0%81%E7%9A%84%E4%BC%98%E4%B8%8E%E5%8A%A3/" title="Next Post: PHP代码的优与劣">PHP代码的优与劣 »</a>
+        
+      </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

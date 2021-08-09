@@ -1,0 +1,208 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>把手机当无线网卡-andriod Usb0 Ssh Tunnle - 五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="小公司人员增长快，随着台式机日益加多，网速越来越慢，而wifi使用者却还不慢。于是就有了本文。
+  android手机通过usb共享网络很简单，只需要连上usb线后在手机设置里找到共享手机网络，打开即可。但是本文并非教如何连接usb线的。 图1 usb绑定设置pc共享android手机上网 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/blog/2010/12/16/ssh-tunnle-andriod-usb0">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div>
+  <article class="hentry" role="article">
+    
+    <header>
+      
+        <h1 class="entry-title">把手机当无线网卡-andriod Usb0 Ssh Tunnle</h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-12-16T00:00:00+08:00" pubdate data-updated="true">2010-12-16 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+  <div class="entry-content">
+<p>小公司人员增长快，随着台式机日益加多，网速越来越慢，而wifi使用者却还不慢。于是就有了本文。<br>
+  android手机通过usb共享网络很简单，只需要连上usb线后在手机设置里找到共享手机网络，打开即可。但是本文并非教如何连接usb线的。
+  <img src="http://img02.taobaocdn.com/imgextra/i2/T1JkFUXotsXXXHh4o2_044309.jpg" alt="ssh tunnel">
+  图1 usb绑定设置pc共享android手机上网<br>
+  ubuntu共享上网后，会发现连接不了线上的ssh，会等半天，报出no ruote。猜测是因为andriod手机的安全设置所致。其实本文重点讲如何ssh的。<br>
+  先用android下载一个支持ssh的工具：connectbot。</p>
+  
+  <p>打开软件，同时打开ubuntu，执行下面的语句安装sshd服务：<br>
+  apt-get install openSSL<br>
+  然后启动sshd服务。<br>
+  在connectbot中填写ubuntu机器ip，输入密码，ssh到ubuntu机器。
+  <img src="http://img02.taobaocdn.com/imgextra/i2/T1.6VUXeBEXXafGOk2_044426.jpg" alt="connectbot">
+  图2 用connectBot登录pc</p>
+  
+  <p>这时按下菜单键，选择端口转发。选远端端口，填写2222，转发到192.168.1.1:22，确定以后，这个转发就建立了。
+  <img src="http://img03.taobaocdn.com/imgextra/i3/T186VUXfFEXXbkLO.2_044528.jpg" alt="connectbot端口转发">
+  图3 connectBot端口转发<br>
+  然后到ubuntu上执行ssh 127.0.0.1 -p2222
+  <img src="http://img03.taobaocdn.com/imgextra/i3/T15AhUXk4yXXcLijU2_044624.jpg" alt="ssh tunnel">
+  图4 我建立的端口转发<br>
+  回车，输入192.168.1.1的密码，大功告成，成功利用端口转发打通了andriod手机共享usb0共享上网时的ssh。<br>
+  关于ssh tunnel，详细见：<a href="http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html">http://www.54chen.com/_linux_/the-temporary-break-with-the-ssh-tunnel-restriction-cross-room.html</a></p>
+   
+  <p><br>原创文章如转载，请注明：转载自<a href="http://www.54chen.com">五四陈科学院</a>[<a href="http://www.54chen.com">http://www.54chen.com</a>] </p>
+  <img src="http://chen54.b0.upaiyun.com/wx/wx-2.gif" alt="捐款订阅54chen">
+  <br>
+  <a href="https://www.54chen.com/donate/">捐赠说明</a>
+  </div>
+  
+  
+    <footer>
+      <p class="meta">
+        
+    
+  
+  <span class="byline author vcard">Posted by <span class="fn">54chen</span></span>
+  
+        
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2010-12-16T00:00:00+08:00" pubdate data-updated="true">2010-12-16 00:00:00 +0800</time>
+        
+  
+  <span class="categories">
+    
+      <a class="category" href="/blog/categories/linux/">linux</a>
+    
+  </span>
+  
+  
+      </p>
+      
+        <div class="sharing">
+    
+    
+    
+  </div>
+  
+      
+      <p class="meta">
+        
+          </p>
+    </footer>
+  </article>
+  
+  </div>
+  
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+  
+      </div>
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </body>
+  </html>

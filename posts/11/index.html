@@ -1,0 +1,916 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Redis 测试办法tclsh入门手记 2012-07-16 00:00:00 +0800 一 什么是tclsh
+  tool command language
+  terminal control language
+  看上去两个都是。tcl和c语言有着天然的亲缘关系，相近的数据类型与控制结构，通过规范的 …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/11">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/07/16/redis-tcl/">Redis 测试办法tclsh入门手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-07-16T00:00:00+08:00" pubdate data-updated="true">2012-07-16 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="redis tcl">
+  <strong>一 什么是tclsh</strong>
+  tool command language<br>
+  terminal control language<br>
+  看上去两个都是。tcl和c语言有着天然的亲缘关系，相近的数据类型与控制结构，通过规范的 api，可以比较方便的用c进行tcl的扩展开发，当然不在本文的讨论范围。</p>
+  
+  <p><strong>二 变量</strong>
+  任何字符串均可作变量名。甚至空格也可以作为变量名。
+  <strong>
+  三 变量赋值</strong>
+  set Name xxxxx<br>
+  set Name "xxxxxxx"</p>
+  
+  <p><strong>四 数据类型</strong>
+  实际上只有一种数据类型：字符串<br>
+  数值计算只能用在expr命令中：<br>
+  %expr abs(sin($x))<br>
+  输出时非常类似C语言：set x [format "hello %-8.2f!" $y]</p>
+  
+  <p><strong>五 特殊的字符</strong>
+  $ 异常变量的值<br>
+  [] 展开一个命令的值<br>
+  "" 内容为一个整体，内支持$[]等<br>
+  {} 内容为一个整体，内不支持$[]及转义<br>
+  \  转义字符</p>
+  
+  <p>list 列<br>
+  llenght 列的长度</p>
+  
+  <p><strong>六 各种注意</strong>
+  如果表达式一端有字符串常量，一定要使用引号。<br>
+  source 相当于php的include似的。<br>
+  global <br>
+  load 加载外部的函数库（基本上都是加载C的）<br>
+  proc 就像一个函数</p>
+  
+  <p><strong>七 redis测试入口</strong>
+  最外层的make file会使用src下的make file的 test，当test接入时，最先会进行连接编译，然后运行runtest，runtest开始运行tcl脚本。</p>
+  
+  <p>tests/test_helper.tcl<br>
+  文件中设置了五个位于support下的tcl脚本。<br>
+  同时所有的test case记录在::all_tests中<br>
+  在helper末尾，对输入进行了循环检查，</p>
+  
+  <p>入口在：test_client_main，由末尾的if条件中调用。去test_client_main中取列表循环运行。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/07/11/rose-3-c/">rose手册第三章C节：DAO层：分表设置</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-07-11T00:00:00+08:00" pubdate data-updated="true">2012-07-11 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose"></p>
+  
+  <p>欢迎顺利进入本章，如果您的企业需要这一节的内容，那么说明用户量很有前途，如果使用了本节的内容，不防向cc0cc@126.com发信一封以表谢意，我们会很高兴收到各种反馈。</p>
+  
+  <p><strong>3.C.1 mysql分表的常规做法</strong></p>
+  
+  <p>以下是个人从业经验中的分表规则：</p>
+  
+  <p>    按照 id % 100 分为一百份<br>
+      按照 id % 16 分为十六份<br>
+      按照 id/10 % 10 分为十份<br>
+      按照 id%10 分为十份</p>
+  
+  <p>  以上分表规则特别在mysql中使用机会比较多，各有优势，没有对错，只有最好与最不好用。</p>
+  
+  <p><strong>3.C.2 使用分表第一步：添加新的依赖</strong></p>
+  
+  <p>要使用分表，需要添加新的依赖，由bmw提供的bmwutils。</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.54chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>bmwutils</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>0.0.2</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>3.C.3 使用分表第二步：设置applicationContext.xml分表规则</strong></p>
+  
+  <p>在开写代码之前，需要告诉DAO是哪个表需要分表，按照什么规则分，分多少份。</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="comments">&lt;!-- 以下配置为分表设置 --&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span> </span><span class="attribute">id</span><span>=</span><span class="attribute-value">"jade.routerInterpreter"</span><span> </span><span class="attribute">class</span><span>=</span><span class="attribute-value">"com.xiaomi.common.service.dal.routing.RewriteSQLInterpreter"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"routingConfigurator"</span><span> </span><span class="attribute">ref</span><span>=</span><span class="attribute-value">"jade.routingConfigurator"</span><span> </span><span class="tag">/&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span> </span><span class="attribute">id</span><span>=</span><span class="attribute-value">"jade.routingConfigurator"</span><span> </span><span class="attribute">class</span><span>=</span><span class="attribute-value">"com.xiaomi.common.service.dal.routing.RoutingConfigurator"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"partitions"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>              <span class="tag">&lt;</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>   </span></span></li>
+<li class=""><span>                   <span class="tag">&lt;</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>hash:test:id:test_{0}:100</span><span class="tag">&lt;/</span><span class="tag-name">value</span><span class="tag">&gt;</span><span>   </span></span></li>
+<li class="alt"><span>              <span class="tag">&lt;/</span><span class="tag-name">list</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p>    此处配置中，partitions参数为一个list，可以对多个table进行定义。<br>
+          hash:test:id:test_{0}:100 表示：使用hash这种办法，将test这个表，按照id的值，分成100份，每份的表名为test_x</p>
+  
+  <p><strong>3.C.4 使用分表第三步：bmwutils支持的分表办法</strong></p>
+  
+  <p>    (hash)上例中的hash: 最常用的 id % 100 就是这种办法。该办法会把传入的值先进行转为数字后与定义的份数进行取模（%）。<br>
+      (direct)最直接的一种：用的少一些，没有什么规则，直接根据第四个正则，与第三位传入的值进行替换。假设有个人名表，按照字母分表可以用。name_A,name_B,name_C...<br>
+      (round)轮循：根据设置，按照调用sql的情况，轮流使用各个表。<br>
+      (range)范围：一般用来做日期范围的分表，比如说微博类的，可变值为一个时间，当时间传入时，第三位支持log{yyyy} log{yyyy_MM}等时间格式的替换，可轻松做到按周、月、年分表。<br>
+      (xm-hash)小米hash：一种古怪的办法，按照传入值的十位进行取模的分表方案。<br>
+      (xm-str-hash)小米字符串hash：将字符串按照固定算法变成long之后，再按照小米hash逻辑处理。<br>
+      (hex-hash)16进制分表：固定256份以内，传入的值按照16进制转换后按hash求模。</p>
+  
+  <p><strong>3.C.5 使用分表第四步：写DAO代码@ShardBy</strong></p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT user_id, device_token FROM test where user_id =:id"</span><span>)  </span></span></li>
+<li class=""><span><span class="keyword">public</span><span> List&lt;Test&gt; getTestsById(</span><span class="annotation">@ShardBy</span><span> </span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"id"</span><span>) </span><span class="keyword">int</span><span> id);  </span></span></li>
+</ol>
+</div>
+  
+  <p>与不分表的dao相比，只多了一个shardBy，标识按照这个参数值分表。</p>
+  
+  <p>    文中所提及代码均在 <a href="https://github.com/XiaoMi/rose/tree/master/rose-example">https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br>
+      长期更新版本：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_C">https://github.com/XiaoMi/rose/tree/master/chapter_3_C</a></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/07/05/rose-3-b/">rose手册第三章B节：DAO层：DAO进阶：SQLParm支持和表达式SQL</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-07-05T00:00:00+08:00" pubdate data-updated="true">2012-07-05 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose"></p>
+  
+  <p><strong>3.B.1 SQLParam介绍：DAO方法传递参数</strong></p>
+  
+  <p>    SQLParam作为DAO支持中的参数传递使者，可以传递一个常见的变量，也可以是一个自定义的对象。<br>
+      比如：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"insert into test (id,msg) values (:t.id,:t.msg)"</span><span>)  </span></span></li>
+<li class=""><span> <span class="keyword">public</span><span> </span><span class="keyword">void</span><span> insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"t"</span><span>) Test test);  </span></span></li>
+</ol>
+</div>
+  
+  <p>    上列中Test对象通过t传递到sql执行中去，并且可以分别使用其中的属性。这感觉是不是很自然？</p>
+  
+  <p>    当然，如果是一个int、long、String等自在不言中。</p>
+  
+  <p>    当是list时，会有自动的batch作，将sql拆为多条sql执行。这个小技巧会在后面的章节里讲。平时很少用到。
+  <strong>
+  3.B.2 ReturnGeneratedKeys介绍：返回刚刚插入的ID号</strong></p>
+  
+  <p>    特别是使用mysql开发的广大劳苦大众，常常会使用到auto_increament的字段。<br>
+      当一条insert语句在执行的时候，我们常常会去需要拿它的当前的自增id是多少。</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@ReturnGeneratedKeys</span><span>  </span></span></li>
+<li class=""><span><span class="annotation">@SQL</span><span>(</span><span class="string">"insert into test (id,msg) values (:t.id,:t.msg)"</span><span>)  </span></span></li>
+<li class="alt"><span><span class="keyword">public</span><span> </span><span class="keyword">int</span><span> insertTest(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"t"</span><span>) Test test);  </span></span></li>
+</ol>
+</div>
+  
+  <p>    如上述代码所示，只需要加上一个@ReturnGeneratedKeys即可返回当前的id</p>
+  
+  <p><strong>3.B.2 表达式的支持</strong></p>
+  
+  <p>    多变的业务需求决定了我们的sql是复杂的，需要有条件地执行。<br>
+      如果每种条件都去写DAO中的SQL，那DAO的变得很大。<br>
+      常常会有动态产生sql的需求。</p>
+  
+  <p>    jade支持一些常规的表达式。</p>
+  
+  <p>    语法一：常见的变量赋值<br>
+          冒号（:）表示这是一个变量，比如上面的例子里的 :t.id，它会被一个值替换。</p>
+  
+  <p>    语法二：字符串连接<br>
+          连续的井号（##） 表示后面的变量作字符串连接<br>
+          如下例中的partition变量，还请不要误解，分表不是这样做的，下一章会介绍标准的分表设置。</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT user_id, device_token FROM test_##(:partition) LIMIT :limit"</span><span>)  </span></span></li>
+<li class=""><span><span class="keyword">public</span><span> List&lt;Test&gt; getTests(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>) </span><span class="keyword">int</span><span> partition, </span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"limit"</span><span>) </span><span class="keyword">int</span><span> limit);  </span></span></li>
+</ol>
+</div>
+  
+  <p>语法三：条件选择</p>
+  
+  <p>    井号if（#if{}）用于表示当条件满足时sql拼接。</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT user_id, device_token FROM test_##(:partition) #if(:user&gt;0){ where user_id=:user } LIMIT :limit"</span><span>)  </span></span></li>
+<li class=""><span>   <span class="keyword">public</span><span> List&lt;Test&gt; getTestsIf(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>) </span><span class="keyword">int</span><span> partition, </span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"limit"</span><span>) </span><span class="keyword">int</span><span> limit, </span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"user"</span><span>) </span><span class="keyword">int</span><span> user);   </span></span></li>
+</ol>
+</div>
+  
+  <p>    其他语法：还有for循环，实际使用少。<br>
+      典型地，一般的select in查询，可以直接传入list，例如下例中的ids变量：</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@SQL</span><span>(</span><span class="string">"SELECT user_id, device_token FROM test_##(:partition) where user_id in(:ids)"</span><span>)  </span></span></li>
+<li class=""><span><span class="keyword">public</span><span> List&lt;Test&gt; getTestsByIds(</span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"partition"</span><span>) </span><span class="keyword">int</span><span> partition, </span><span class="annotation">@SQLParam</span><span>(</span><span class="string">"ids"</span><span>) List&lt;Integer&gt; ids);  </span></span></li>
+</ol>
+</div>
+  
+  <p>文中所提及代码均在<a href="https://github.com/XiaoMi/rose/tree/master/rose-example"> https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。<br>
+  常年更新版本在：<a href="https://github.com/XiaoMi/rose">https://github.com/XiaoMi/rose</a></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/06/27/rose-3-a/">rose手册第三章A节：DAO层：DAO的基本配置与使用</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-06-27T00:00:00+08:00" pubdate data-updated="true">2012-06-27 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose">
+  本章开始进入对DB层的支持，同进也是日常开发用得最多的章节。
+  <strong>3.A.1 什么是jade？</strong></p>
+  
+  <p>    jade大概是java access data layer的意思吧，具体的来由，在章节写到末尾的时候，我再找qieqie和liaohan大侠们写一写编年史。<br>
+      用jade的好处在于，尽可能减少重复的从db把数据对bean进行装配的过程，统一入口，隔离业务逻辑，方便review。<br>
+      jade是在spring完成的数据层的良好实践总结，无缝接入rose中，可以算得上是rose亲密无间的好模块。</p>
+  
+  <p><strong>3.A.2 引入基础配置</strong></p>
+  
+  <p>    要开始使用jade，一定要先引用jade的基础包：</p>
+  
+  <p>pom.xml
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.54chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>paoding-rose-jade</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.1</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p>除了需要jade的包外，还需要引入数据源连接池的jar，这里使用了dbcp，还是在pom.xml中：</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>commons-dbcp</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>commons-dbcp</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.2.2</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>mysql</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>mysql-connector-java</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>5.1.10</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p>    在pom中引入了依赖之后，需要定义一个数据源，这里先不考虑多个数据源的情况。</p>
+  
+  <p>在war项目的applicationContext.xml中增加数据源定义：</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span> </span><span class="comments">&lt;!-- 数据源配置 dbcp --&gt;</span><span>  </span></span></li>
+<li class=""><span><span class="tag">&lt;</span><span class="tag-name">bean</span><span> </span><span class="attribute">id</span><span>=</span><span class="attribute-value">"jade.dataSource.com.chen.dao"</span><span> </span><span class="attribute">class</span><span>=</span><span class="attribute-value">"org.apache.commons.dbcp.BasicDataSource"</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="attribute">destroy-method</span><span>=</span><span class="attribute-value">"close"</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"driverClassName"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"com.mysql.jdbc.Driver"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"url"</span><span>  </span></span></li>
+<li class=""><span>        <span class="attribute">value</span><span>=</span><span class="attribute-value">"jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&amp;amp;characterEncoding=utf-8"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"username"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"test"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"password"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"test"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="comments">&lt;!-- 运行判断连接超时任务的时间间隔，单位为毫秒，默认为-1，即不执行任务。 --&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"timeBetweenEvictionRunsMillis"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"3600000"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="comments">&lt;!-- 连接的超时时间，默认为半小时。 --&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">property</span><span> </span><span class="attribute">name</span><span>=</span><span class="attribute-value">"minEvictableIdleTimeMillis"</span><span> </span><span class="attribute">value</span><span>=</span><span class="attribute-value">"3600000"</span><span class="tag">&gt;</span><span class="tag">&lt;/</span><span class="tag-name">property</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">bean</span><span class="tag">&gt;</span><span>   </span></span></li>
+</ol>
+</div>
+  
+  <p>    这里假设了mysql已经安装在本地了，用户名为test，密码为test。<br>
+      jade约定了bean的id为jade.dataSource.classPackageName。<br>
+      jade约定了这个bean的有效范围为classPackageName所有的DAO。<br>
+      jade约定了除非有专门的定义，所有的子目录也受bean上的classpackageName所影响。</p>
+  
+  <p><strong>3.A.3 第一个读取数据库的实例</strong></p>
+  
+  <p>    先需要准备一下数据库：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-sql" start="1">
+<li class="alt"><span><span class="keyword">create</span><span> </span><span class="keyword">table</span><span> test (</span><span class="keyword">int</span><span> id, </span><span class="keyword">varchar</span><span>(200) msg);  </span></span></li>
+<li class=""><span><span class="keyword">insert</span><span> </span><span class="keyword">into</span><span> test </span><span class="keyword">values</span><span>(111,'adfafafasdf');  </span></span></li>
+</ol>
+</div>
+  
+  <p>    然后准备简练的DAO声明：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@DAO</span><span>  </span></span></li>
+<li class=""><span><span class="keyword">public</span><span> </span><span class="keyword">interface</span><span> TestDAO {  </span></span></li>
+<li class="alt"><span>    <span class="annotation">@SQL</span><span>(</span><span class="string">"select id,msg from test limit 1"</span><span>)  </span></span></li>
+<li class=""><span>    <span class="keyword">public</span><span> Test getTest();  </span></span></li>
+<li class="alt"><span>}  </span></li>
+</ol>
+</div>
+  
+  <p>    Test是一个class，里面有标准的getter和setter。</p>
+  
+  <p>    然后从一个类去调用它：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@Service</span><span>  </span></span></li>
+<li class=""><span><span class="keyword">public</span><span> </span><span class="keyword">class</span><span> TestService {  </span></span></li>
+<li class="alt"><span>  </span></li>
+<li class=""><span>    <span class="annotation">@Autowired</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="keyword">private</span><span> TestDAO testDAO;  </span></span></li>
+<li class=""><span>  </span></li>
+<li class="alt"><span>    <span class="keyword">public</span><span> Test getTest() {  </span></span></li>
+<li class=""><span>        <span class="keyword">return</span><span> testDAO.getTest();  </span></span></li>
+<li class="alt"><span>    }  </span></li>
+<li class=""><span>}  </span></li>
+</ol>
+</div>
+  
+  <p>    当然也可以直接用controller就调用它显示了，当然这不是一个大型项目良好的架构，架构问题在最后的章节里讲述。
+  <strong>
+  3.A.4 查看演示代码</strong></p>
+  
+  <p>    rose-example项目的HelloController已经准备好了一个action做为此节的总结。</p>
+  
+  <p>    你可以将此节发布到resin或者tomcat后访问：http://127.0.0.1/3.10 查看结果。</p>
+  
+  <p>    文中所提及代码均在<a href="https://github.com/XiaoMi/rose/tree/master/rose-example"> https://github.com/XiaoMi/rose/tree/master/rose-example</a> 提供。</p>
+  
+  <p>    常期更新版：<a href="https://github.com/XiaoMi/rose/tree/master/chapter_3_A">https://github.com/XiaoMi/rose/tree/master/chapter_3_A</a></p>
+  
+  <p>    ×××小米C轮融资成功，不经意间过去的两年已经翻了数十倍，需要你加入，继续创造翻N倍的价值。chenzhen at xiaomi dot com。×××
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/06/18/rose-3-9/">Rose手册第三章九节：controller层：上传文件</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-06-18T00:00:00+08:00" pubdate data-updated="true">2012-06-18 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/bao/uploaded/i3/T1_9ahXlFfXXbwx8Z8_101515.jpg_210x210.jpg" alt="rose"></p>
+  
+  <p><strong>3.9.1 其实很简单</strong></p>
+  
+  <p>    添加依赖包:commons-io.jar<br>
+      html中使用 enctype="multipart/form-data",method="POST"<br>
+      直接看后端代码吧。</p>
+  
+  <p>   </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="annotation">@Post</span><span>(</span><span class="string">"/doUpload"</span><span>)  </span></span></li>
+<li class=""><span>   <span class="keyword">public</span><span> String doUpload(</span><span class="annotation">@Param</span><span>(</span><span class="string">"file"</span><span>) MultipartFile file) {  </span></span></li>
+<li class="alt"><span>       <span class="keyword">return</span><span> </span><span class="string">"@ upload ok!"</span><span> + file.getOriginalFilename();  </span></span></li>
+<li class=""><span>   }  </span></li>
+</ol>
+</div>
+  
+  <p><strong>3.9.2 其他</strong></p>
+  
+  <p>    可以同时接收所有的文件</p>
+  
+  <p></p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="comment">// 不声明@Param</span><span>  </span></span></li>
+<li class=""><span><span class="comment">// files可以是一个数组或者List</span><span>  </span></span></li>
+<li class="alt"><span><span class="keyword">public</span><span> String upload(MultipartFile[] files) {  </span></span></li>
+<li class=""><span>    <span class="keyword">return</span><span> </span><span class="string">"@ok-"</span><span> + Arrays.toString(files);  </span></span></li>
+<li class="alt"><span>}  </span></li>
+</ol>
+</div>
+  
+  <p>    同时也可以使用@Param传递不同的name。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <div class="pagination">
+    
+      <a href="/posts/10">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <em>11</em>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <a href="/posts/16">16</a>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/12">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>

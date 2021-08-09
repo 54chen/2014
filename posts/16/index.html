@@ -1,0 +1,851 @@
+<html class="no-js" lang="en">
+<!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <title>五四陈科学院</title>
+    <meta name="author" content="54chen">
+  
+    
+    <meta name="description" content="Nginx防hashdos模块释出 2012-01-06 00:00:00 +0800 2012.1.7 更新
+  编译的时候推荐使用nginx-1.0以上版本，不要加--with-debug参数编译，（感谢agentzh指出）。 hashdos这个事，严格意义上不是各种语言的错了（ …">
+    
+  
+    <!-- http://t.co/dKP3o1e -->
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+    
+    <link rel="canonical" href="https://www.54chen.com/posts/16">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+    <link href="/stylesheets/fkwb.css?v6" type="text/css" rel="stylesheet">  
+    <link href="/atom.xml" rel="alternate" title="五四陈科学院" type="application/atom+xml">
+    	<link rel="apple-touch-icon" href="touch-icon.png">
+  	<link rel="shortcut icon" href="/favicon.ico">
+  
+    
+  
+    <style type="text/css">.entry-content table {display: block;width: 100%;overflow: auto;word-break: normal;word-break: keep-all;}.entry-content table th {font-weight: bold;}.entry-content table th,.entry-content table td {padding: 6px 13px;border: 1px solid #ddd;}.entry-content table tr {background-color: #fff;border-top: 1px solid #ccc;}.entry-content table tr:nth-child(2n) {background-color: #f8f8f8;}</style>
+  </head>
+  
+  <body>
+    <header role="banner" class="banner_css"><a style="float:left" href="/"><img border="0" src="/images/54chen-logo.gif" alt="五四陈科学院-相信科学，分享技术." title="五四陈科学院-相信科学，分享技术.">
+  </a>
+  <div>
+      <a href="/">首页</a>
+      <a href="/blog/archives">归档</a>
+      <a href="/video">视频</a>
+      <a href="/about">关于</a>
+  
+      <a href="http://www.54chen.com" style="font-size:9px">想找旧版内容？</a>
+  </div>
+  <div class="subscription">
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+  
+  </div>
+  
+  </header>
+    <nav role="navigation"><ul class="subscription" data-subscription="rss">
+    <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+    
+  </ul>
+    
+  <form action="https://www.54chen.com/cgi" method="get">
+    <fieldset role="search">
+      
+      <input class="search" type="text" name="key" placeholder="Search">
+    </fieldset>
+  </form>
+    
+    <li><a href="/">Blog</a></li>
+    <li><a href="/blog/archives">Archives</a></li>
+  
+  </nav>
+    <div id="main">
+      <div id="content">
+        <div class="blog-index">
+    
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2012/01/06/nginx-hashdos-module/">Nginx防hashdos模块释出</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2012-01-06T00:00:00+08:00" pubdate data-updated="true">2012-01-06 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://wiki.nginx.org/local/nginx-logo.png" alt="nginx hashdos">
+  <font color="blue">2012.1.7 更新<br>
+  编译的时候推荐使用nginx-1.0以上版本，不要加--with-debug参数编译，（感谢agentzh指出）。</font></p>
+  
+  <p>hashdos这个事，严格意义上不是各种语言的错了（不过perl的确处理得很好），但是用nginx来擦屁股要干净些。<br>
+  借鉴tomcat的作法，实现了下面这个nginx-http-hashdos-module，通过设置hashdos（默认on）的开关和body_max_count(默认值1000)，对nginx后面的服务进行安全防护，相比对php或者java进行patch，这或许是最好的办法了。</p>
+  
+  <p><strong>nginx-http-hashdos-module项目地址</strong>
+  <a href="https://github.com/54chen/nginx-http-hashdos-module">https://github.com/54chen/nginx-http-hashdos-module</a></p>
+  
+  <p><strong>如何使用</strong>
+  1.下载zip后保存到一个目录，如~/nginx-http-hashdos-module。<br>
+  2.cd nginx-1.0.9/<br>
+  3.重新编译和安装nginx<br>
+  ./configure --prefix=/opt/soft/nginx --with-pcre --user=www --group=www --with-http_stub_status_module --with-http_ssl_module --add-module=/path_to/nginx-http-hashdos-module/ &amp;&amp; make &amp;&amp; make install<br>
+  4.配置打开：<br>
+          hashdos on;<br>
+  	body_max_count 1000;<br>
+  	location ~ \.php$ {<br>
+            fastcgi_pass 127.0.0.1:9000;<br>
+            fastcgi_index index.php;<br>
+            fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;<br>
+            include /opt/soft/nginx/conf/fastcgi_params;<br>
+  	  client_body_buffer_size  2m;<br>
+  	  client_max_body_size     2m;<br>
+          }</p>
+  
+  <p><strong>注意事项</strong>
+  因为计算参数都在内存中进行，所以client_body_buffer_size 与 client_max_body_size 的值一定要相等。推荐2m。</p>
+  
+  <p><strong>TODO</strong>
+  改进in-file时的post分析。</p>
+  
+  <p><strong>原理</strong>
+  介于微博上有网友对此文扫一眼之后以为是简单通过client_body_buffer_size和client_max_body_size来做的判断，特加此节。<br>
+  nginx-reqeust-body在接到请求时，根据header中的声明，判断是保存在内存还是在硬盘中，当大小超过两个buf和client_body_buffer_size大小时，会写入临时文件。<br>
+  防止hashdos的终极目标是filter用户的输入，所以对用户的输入参数数量进行计数。超过1000（body_max_count的默认数量）时，返回一个413给攻击者。希望不要再渔到各种高级工程师。</p>
+  
+  <p><a href="https://github.com/54chen/nginx-http-hashdos-module">https://github.com/54chen/nginx-http-hashdos-module</a></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/12/31/spicy-fish-2011-2/">水煮鱼杯2011年度不得不总结的十件事</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-31T00:00:00+08:00" pubdate data-updated="true">2011-12-31 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><strong>第一件：拖裤带爆，横尸遍野</strong>
+  辛卯年年间，宦官弄权，规食名以制。侠客XXX出国前夕，顺手翻出多年前收藏。<br>
+  CSDN、天涯、京东 三家官方确定被拖，其他家默。<br>
+  出来混，手里没几个库，已经没办法交流了。<br>
+  多年前天涯一帖子，疑是五毛所作所顶，憾无证据。今有密码反查，一网打尽。<br>
+  此次事件，中招数量以千万计。<br>
+  在遥远的西邦，早些时候也有中招，http://svn.php.net/viewvc/php/php-src/trunk/ext/standard/credits.c?r1=305420&amp;r2=306409&amp;pathrev=306409，见其中Wolegequ Gelivable。</p>
+  
+  <p><strong>第二件：亚马逊宕机，云计算阴影</strong>
+  4月份，亚马逊ec2服务宕机，连续40小时，号称永不宕机的云，宕机了。<br>
+  威胁在于，世界第一大的云都挂了，别的还用说吗。<br>
+  纽约时报：亚马逊事件或致云计算产业蒙上阴影。<br>
+  官方回应：事故原因是大量的硬盘坏了。</p>
+  
+  <p><strong>第三件：小米手机，一枝独秀</strong>
+  首批纯会员预订，两天30万台。购买1小时10万台。<br>
+  红海里开辟的蓝海，自然有各种势力出来攻击。大漠风烟间，一场天地变色的正邪之战，正在展开。<br>
+  说多了就像广告了，明年总结的时候再来看这条。</p>
+  
+  <p><strong>第四件：乔爷辞世，全网默哀</strong>
+  牛B的演讲技能，商业奇才，还能用什么来形容？<br>
+  奥巴马：乔布斯改变了我们看世界的方式。<br>
+  他在车库里建立了这个星球上最成功的公司之一，充分体现了佬人的创造力。通过使电脑个人化，将互联网装进我们的口袋里，他不但让人们可以享受到信息革命的成果，而且使这种革命变得直观和有趣。<br>
+  他的天赋和才华成为家喻户晓的故事，他为数以百万计的儿童和成年人都带来了快乐。史蒂夫很喜欢说，他过的每一天都像是最后一天。正如他所做到的，他改变了我们的生活，重新定义了所有行业，并实现了人类上最罕见的壮举之一：即他改变了我们每个人看这个世界的方式。</p>
+  
+  <p><strong>第五件：哥学社鸟哥，大战开发组</strong>
+  标题仅为凑字数。<br>
+  你还不知道<a href="http://www.blog-brother.com">哥学社</a>不要紧，不知道鸟哥不行，http://www.laruence.com，这一年他加入了php开发组，是成员中唯一的人，现在在百度。因为网名带鸟，又是哥，所以叫鸟哥。（与台湾那个《鸟哥的私房菜》那个鸟哥不是一个哥。不过哥学社正在尝试联系台湾鸟哥也加入。）</p>
+  
+  <p><strong>第六件：中概上市狂，员工直骂娘</strong>
+  这一年上市的有：人人网、360、网秦、世纪互联、凤凰新媒体、世纪佳缘。什么样公司都能上市。<br>
+  再来看ADS与普通股兑换比例：<br>
+  人人：1:3<br>
+  凤凰：1:8<br>
+  360:2:3<br>
+  网秦：1:5<br>
+  世纪互联：1:6<br>
+  世纪佳缘：2:3<br>
+  还有号称鲁花压榨专家的Ku6: 1:100<br>
+  1:3以下算厚道的，1:20以上的该推出去把创始人撸死，1:100的...</p>
+  
+  <p><strong>第七件：昔日团购风光，今日员工发慌</strong>
+  创始Groupon上市首日市值165.2亿美元。<br>
+  团购高管360天：从“烧钱”到被“追债”。<br>
+  后者为团购模仿者。<br>
+  Ｘ网现在遇到了“资金问题”，“不光是Ｘ网，全行业都在面临同样的问题”，急速发展的团购行业正在“踩刹车”。<br>
+  团购网站总数首次出现负增长，10月份仅新增16家团购网站，因页面无法访问、停止更新产品、业务转型等原因被视为停运的团购网站共计1017家，总数跌至4057家。<br>
+  关键词：追债、裁员、输血。<br>
+  这TMD哪是高科技企业？</p>
+  
+  <p><strong>第八件：坷，胜利吗</strong>
+  本是一小村，民风以彪悍形容不为过。<br>
+  鸟坑&gt;鸟抗&gt;wukan&gt;and so on。真的胜利了吗，以大连福佳为例。</p>
+  
+  <p><strong>第九件：开发安全，唐吉柯德</strong>
+  越来越多看到搞安全的人在嘲笑开发人员：水平低啊，不是一点两点。。。<br>
+  @搞开发的：多看看各种php、java、erlang、GO、mochiweb、spring、resin、tomcat、dynamo、gfs、object c。<br>
+  @搞安全的：多看看各种php、java、erlang、GO、mochiweb、spring、resin、tomcat、dynamo、gfs、object c。<br>
+  看看国内顶尖高人，微博都不愿意开。费口水。</p>
+  
+  <p><strong>第十件：哈希来潮，一个别跑</strong>
+  年底倒数第三天，关于hashtable攻击的消息不胫而走。tomcat/php/ms纷纷出来patch。无赖在国内很少有人关注。好吧，都留着吧，以后看哪个网站老板拖欠IT民工工资了啥的，帮他打不开网站。</p>
+  
+  <p>年底娱乐，你若当真，你就输了。
+  </p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/12/30/hashdos/">年终攻击hashDos-哈希表多碰撞实现拒绝服务-破解办法</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-30T00:00:00+08:00" pubdate data-updated="true">2011-12-30 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><strong>起因：</strong>
+  Wed, 28 Dec 2011 22:28:16 GMT apache tomcat公布了一个安全漏洞。<br>
+  http://mail-archives.apache.org/mod_mbox/www-announce/201112.mbox/%3C4EFB9800.5010106@apache.org%3E</p>
+  
+  <p><strong>漏洞原理：</strong>
+  依靠相应语言的hashtable/hashmap实现过程（request多为此结构），当不同的key存入时如果hash值相等则以链表方式连接在前面。此漏洞利用碰撞相同的hash值得到一个长链表，重新get时，map的计算过程会将时间复杂度巨增，原来一个简单的过程将变成一个很费cpu的过程。</p>
+  
+  <p><strong>影响到的：</strong>
+  最快时间tomcat公布了解决办法。<br>
+  php进行了升级。<br>
+  ms也发了公告http://technet.microsoft.com/en-us/security/bulletin/ms11-100。</p>
+  
+  <p><strong>解决办法：</strong>
+  <strong>tomcat</strong>
+  <strong>临时办法：</strong>
+  默认大小2097152，当maxPostSize=0时，不限制；maxPostSize=20971520时，为20M，改为一个小于10k的值，<strong>所有版本可用</strong>，会影响用户。
+  <strong>持久办法：</strong>
+  用新的版本，maxParameterCount默认值1000。
+  <strong>nginx</strong>
+  <strong>临时办法：</strong>
+  默认的最大请求body大小为8m，修改设置client_max_body_size=10k；此招为各种情况下万金油，会影响用户。
+  <strong>持久办法：</strong>
+  暂无，应该很快会有max_request_count的参数。
+  <strong>php</strong>
+  <strong>持久办法：</strong>
+  php升级到5.3.9，5.2需要打patch。详细见：http://www.laruence.com/2011/12/30/2440.html</p>
+  
+  <p><strong>后记</strong>
+  54chen人肉构造打到php，php立马100%，转到java（resin+spring+rose），轻松化解，没有反应。</p>
+  
+  <p><img src="http://img05.taobaocdn.com/bao/uploaded/i5/T1.RRAXjVDXXX7OsE8_070026.jpg" alt="hashDos,important"></p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/12/21/riak-1-0-2-install/">Riak 1.0.2安装手记</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-21T00:00:00+08:00" pubdate data-updated="true">2011-12-21 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://wiki.basho.com/images/logo_wiki.png" alt="riak">
+  <strong>准备三台机器：</strong>
+  r1<br>
+  r2<br>
+  r3</p>
+  
+  <p><strong>准备erlang环境：</strong>
+  Erlang &gt;= R14B03<br>
+  yum install gcc glibc-devel make ncurses-devel openssl-devel<br>
+  $ wget http://erlang.org/download/otp_src_R14B03.tar.gz<br>
+  $ tar zxvf otp_src_R14B03.tar.gz<br>
+  $ cd otp_src_R14B03<br>
+  $ ./configure &amp;&amp; make &amp;&amp; sudo make install</p>
+  
+  <p><strong>git环境(看上去是非必须的)：</strong>
+  yum -y install git</p>
+  
+  <p><strong>下载地址：</strong>
+  http://downloads.basho.com.s3-website-us-east-1.amazonaws.com/riak/CURRENT/riak-1.0.2.tar.gz
+  </p>
+<blockquote>
+  cd riak-1.0.2<br>
+  make rel</blockquote>
+  
+  <p><strong>修改配置文件后启动</strong>
+  riak start<br>
+  riak-admin join<br>
+  过程完全同0.142
+  <a href="http://www.54chen.com/_linux_/riak-source-install-run.html">http://www.54chen.com/_linux_/riak-source-install-run.html</a>
+  <strong>与0.1.42相比：</strong>
+  erlang环境要求R14B03及以上。低版本会出现this emulator supports only up to 149的make错误。</p>
+  
+  <p><strong>使用leveldb为存储引擎：</strong>
+  默认引擎还是bitcask，需要修改配置文件app.config<br>
+  {storage_backend, riak_kv_bitcask_backend}<br>
+  改为：<br>
+  {storage_backend, riak_kv_eleveldb_backend}</p>
+  
+  <p><strong>官方说明：</strong>
+  bitcask适用于key有限，而需要最大量的吞吐量和数据持久化情况。<br>
+  leveldb适用于大量的key。
+  <strong>
+  官方java client压力测试结果：</strong>
+  1cpu 8G的机器3个 笔记本运行压力程序 读写比3:1 6并发 1k大小的value  <br>
+  PB：2500ops  99.9%的作在22ms内。<br>
+  HTTP: 1000ops  99.9%的作在30ms内。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/12/14/maven-plugin/">Maven插件编写实例</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-14T00:00:00+08:00" pubdate data-updated="true">2011-12-14 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://maven.apache.org/images/maventxt_logo_200.gif" alt="apache maven"></p>
+  
+  <p><strong>概况</strong>
+  实现一个自定义的类，必须要继承自 org.apache.maven.plugin.AbstractMojo，同时实现execute方法。<br>
+  maven使用了在注释中写代码，BT的写法，所以注释里的@goal @parameter都是有含义的。</p>
+  
+  <p><strong>实例</strong>
+  </p>
+<div class="chen-hl"><ol class="dp-j" start="1"><li class="alt"><span><span>mvn hello:gogo  </span></span></li></ol></div>
+  这样的一个命令，到代码里，应该是如下过程
+  
+  <p><strong>进入</strong>
+  hello被叫做plugin的prefix，maven会去寻找以hello开头的插件。<br>
+  在插件的pom里必须定义其名字为hello开头的，例如：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>hello-maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li></ol>
+</div>
+  
+  <p><strong>goal目标</strong>
+  hello后面的gogo叫做goal，目标，则以注释中写代码的方式来完成：
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="comment">/**</span> </span></li>
+<li class=""><span><span class="comment">*@goal gogo</span> </span></li>
+<li class="alt"><span><span class="comment">**/</span><span>  </span></span></li>
+<li class=""><span>HelloMojo <span class="keyword">extends</span><span> AbstractMojo  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>需要的依赖</strong>
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span> <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>org.apache.maven</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span> <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>maven-plugin-api</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span> <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>3.0.3</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">dependency</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>必需的选项</strong>
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1"><li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">packaging</span><span class="tag">&gt;</span><span>maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">packaging</span><span class="tag">&gt;</span><span>  </span></span></li></ol>
+</div>
+  必需要是maven-plugin才能成功。
+  
+  <p><strong>参数</strong>
+  如果要传什么参数给插件，应该是
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-j" start="1">
+<li class="alt"><span><span class="comment">/**</span> </span></li>
+<li class=""><span><span class="comment">* if false all compression is off (default is true)</span> </span></li>
+<li class="alt"><span><span class="comment">*</span> </span></li>
+<li class=""><span><span class="comment">* @parameter expression="${hello.enabled}" default-value="true"</span> </span></li>
+<li class="alt"><span><span class="comment">*/</span><span>  </span></span></li>
+<li class=""><span><span class="keyword">private</span><span> Boolean enabled=</span><span class="keyword">true</span><span>;  </span></span></li>
+</ol>
+</div>
+  
+  <p><strong>使用时项目定义</strong>
+  然后在使用的项目里，需要定义的有
+  </p>
+<div class="chen-hl">
+<div class="bar"></div>
+<ol class="dp-xml" start="1">
+<li class="alt"><span><span class="tag">&lt;</span><span class="tag-name">plugin</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>com.chen</span><span class="tag">&lt;/</span><span class="tag-name">groupId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>demo-maven-plugin</span><span class="tag">&lt;/</span><span class="tag-name">artifactId</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>1.0</span><span class="tag">&lt;/</span><span class="tag-name">version</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>    <span class="tag">&lt;</span><span class="tag-name">configuration</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>        <span class="tag">&lt;</span><span class="tag-name">goalPrefix</span><span class="tag">&gt;</span><span>hello</span><span class="tag">&lt;/</span><span class="tag-name">goalPrefix</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span>        <span class="tag">&lt;</span><span class="tag-name">enabled</span><span class="tag">&gt;</span><span>false</span><span class="tag">&lt;/</span><span class="tag-name">enabled</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class=""><span>    <span class="tag">&lt;/</span><span class="tag-name">configuration</span><span class="tag">&gt;</span><span>  </span></span></li>
+<li class="alt"><span><span class="tag">&lt;/</span><span class="tag-name">plugin</span><span class="tag">&gt;</span><span>  </span></span></li>
+</ol>
+</div>
+  
+  <p>然后执行上述命令时自然可以执行HelloMojo的execute方法。</p>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+    
+      <article>
+        
+    <header>
+      
+        <h1 class="entry-title"><a href="/blog/2011/12/07/velocity-china-2011-ppt-dow/">Velocity2011讲师经验总结及velocity2011的ppt下载</a></h1>
+      
+      
+        <p class="meta">
+          
+  
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  
+  <time datetime="2011-12-07T00:00:00+08:00" pubdate data-updated="true">2011-12-07 00:00:00 +0800</time>
+          
+        </p>
+      
+    </header>
+  
+  
+    <div class="entry-content entry-content1">
+<p><img src="http://img03.taobaocdn.com/imgextra/i3/T13gR3Xa4cXXcFX9c3_050845.jpg" alt="velocity"></p>
+  
+  <p>总结：<br>
+  1）会场有点小，比较热<br>
+  2）讲的东西为了照顾更多人，比较片面，如果有想听深入的同学，可以参加我们<a href="http://blog-brother.com" target="_blank">哥学社</a>的吃喝会。<br>
+  3）会上遇到了douban强宁大侠、安全宝的冯大侠、还有一位来自清华的主任、以及各位一线的朋友恕不能一一列出，深感荣幸。</p>
+  
+  <p></p>
+<div style="width:425px" id="__ss_10490088">
+<strong style="display:block;margin:12px 0 4px"><a href="http://www.slideshare.net/54chen/ss-10490088" title="互联网创业服务器运维工具集">互联网创业服务器运维工具集</a></strong><object id="__sse10490088" width="425" height="355"><param name="movie" value="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-111206183925-phpapp01&amp;stripped_title=ss-10490088&amp;userName=54chen">
+<param name="allowFullScreen" value="true">
+<param name="allowScriptAccess" value="always">
+<param name="wmode" value="transparent">
+<embed name="__sse10490088" src="http://static.slidesharecdn.com/swf/ssplayer2.swf?doc=random-111206183925-phpapp01&amp;stripped_title=ss-10490088&amp;userName=54chen" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="transparent" width="425" height="355"></embed></object><div style="padding:5px 0 12px">View more <a href="http://www.slideshare.net/">presentations</a> from <a href="http://www.slideshare.net/54chen">zhen chen</a>.</div>
+</div>
+  </div>
+    
+    
+  
+  
+      </article>
+    
+  
+  
+  <div class="pagination">
+    
+      <a href="/posts/15">« Prev</a>
+    
+  
+    
+      
+        <a href="/">1</a>
+      
+    
+      
+        <a href="/posts/2">2</a>
+      
+    
+      
+        <a href="/posts/3">3</a>
+      
+    
+      
+        <a href="/posts/4">4</a>
+      
+    
+      
+        <a href="/posts/5">5</a>
+      
+    
+      
+        <a href="/posts/6">6</a>
+      
+    
+      
+        <a href="/posts/7">7</a>
+      
+    
+      
+        <a href="/posts/8">8</a>
+      
+    
+      
+        <a href="/posts/9">9</a>
+      
+    
+      
+        <a href="/posts/10">10</a>
+      
+    
+      
+        <a href="/posts/11">11</a>
+      
+    
+      
+        <a href="/posts/12">12</a>
+      
+    
+      
+        <a href="/posts/13">13</a>
+      
+    
+      
+        <a href="/posts/14">14</a>
+      
+    
+      
+        <a href="/posts/15">15</a>
+      
+    
+      
+        <em>16</em>
+      
+    
+      
+        <a href="/posts/17">17</a>
+      
+    
+      
+        <a href="/posts/18">18</a>
+      
+    
+      
+        <a href="/posts/19">19</a>
+      
+    
+      
+        <a href="/posts/20">20</a>
+      
+    
+      
+        <a href="/posts/21">21</a>
+      
+    
+      
+        <a href="/posts/22">22</a>
+      
+    
+      
+        <a href="/posts/23">23</a>
+      
+    
+      
+        <a href="/posts/24">24</a>
+      
+    
+      
+        <a href="/posts/25">25</a>
+      
+    
+      
+        <a href="/posts/26">26</a>
+      
+    
+      
+        <a href="/posts/27">27</a>
+      
+    
+      
+        <a href="/posts/28">28</a>
+      
+    
+      
+        <a href="/posts/29">29</a>
+      
+    
+      
+        <a href="/posts/30">30</a>
+      
+    
+      
+        <a href="/posts/31">31</a>
+      
+    
+      
+        <a href="/posts/32">32</a>
+      
+    
+      
+        <a href="/posts/33">33</a>
+      
+    
+      
+        <a href="/posts/34">34</a>
+      
+    
+      
+        <a href="/posts/35">35</a>
+      
+    
+      
+        <a href="/posts/36">36</a>
+      
+    
+      
+        <a href="/posts/37">37</a>
+      
+    
+      
+        <a href="/posts/38">38</a>
+      
+    
+      
+        <a href="/posts/39">39</a>
+      
+    
+      
+        <a href="/posts/40">40</a>
+      
+    
+      
+        <a href="/posts/41">41</a>
+      
+    
+      
+        <a href="/posts/42">42</a>
+      
+    
+      
+        <a href="/posts/43">43</a>
+      
+    
+      
+        <a href="/posts/44">44</a>
+      
+    
+      
+        <a href="/posts/45">45</a>
+      
+    
+      
+        <a href="/posts/46">46</a>
+      
+    
+      
+        <a href="/posts/47">47</a>
+      
+    
+      
+        <a href="/posts/48">48</a>
+      
+    
+      
+        <a href="/posts/49">49</a>
+      
+    
+      
+        <a href="/posts/50">50</a>
+      
+    
+      
+        <a href="/posts/51">51</a>
+      
+    
+      
+        <a href="/posts/52">52</a>
+      
+    
+      
+        <a href="/posts/53">53</a>
+      
+    
+      
+        <a href="/posts/54">54</a>
+      
+    
+      
+        <a href="/posts/55">55</a>
+      
+    
+      
+        <a href="/posts/56">56</a>
+      
+    
+  
+    
+      <a href="/posts/17">Next »</a>
+    
+  </div>
+  
+  
+    <div class="pagination">
+      <a href="/blog/archives">Blog Archives</a>
+    </div>
+  </div>
+  <aside class="sidebar">
+    
+      
+    
+  </aside>
+  
+    </div>
+    <footer role="contentinfo" class="footer_css">  <script src="/javascripts/modernizr-2.0.js"></script>
+    <script src="/javascripts/libs/jquery.min.js"></script>
+    <script src="/javascripts/octopress.js" type="text/javascript"></script>
+    Copyright © 2017 - 54chen -
+  
+  </footer>
+    
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  </div>
+</body>
+  </html>
