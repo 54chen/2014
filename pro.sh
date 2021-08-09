@@ -4,8 +4,8 @@
   	echo $file
 	#file2=${file/twitter/weibo}
 	#sed -i '' 's/name\=\"q\"\ placeholder\=\"Search\"/name\=\"key\"\ placeholder\=\"Search\"/g' $file
-	sed -i '' 's/http\:\/\/54chen/https\:\/\/www\.54chen/g' $file
-#	sed -i '' 's///g' $file
+	sed -i '' 's/"http\:\/\/www\.54chen\.com\" style="/"http\:\/\/blog\.54chen\.com\" style="color\:white;/g' $file
+	sed -i '' 's/想找旧版内容/想找最新内容/g' $file
 
 
 	#mv $( dirname "$file" ) $( dirname "$file2" )
